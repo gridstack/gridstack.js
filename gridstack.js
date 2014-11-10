@@ -252,21 +252,24 @@
                 self.grid.move_node(node, x, y);
                 self._update_container_height();
             }
-        }).resizable({
-            autoHide: true,
-            handles: 'se',
-            minHeight: this.opts.cell_height - 10,
-            minWidth: 70,
-
-            start: on_start_moving,
-            stop: on_end_moving,
-            resize: function (event, ui) {
-                var width = Math.round(ui.size.width / cell_width),
-                    height = Math.round(ui.size.height / cell_height);
-                self.grid.move_node(node, node.x, node.y, width, height);
-                self._update_container_height();
-            }
         });
+        if (!el.attr('data-gs-no-resize')) {
+            el.resizable({
+                autoHide: true,
+                handles: 'se',
+                minHeight: this.opts.cell_height - 10,
+                minWidth: 70,
+
+                start: on_start_moving,
+                stop: on_end_moving,
+                resize: function (event, ui) {
+                    var width = Math.round(ui.size.width / cell_width),
+                        height = Math.round(ui.size.height / cell_height);
+                    self.grid.move_node(node, node.x, node.y, width, height);
+                    self._update_container_height();
+                }
+            });
+        }
     };
 
     GridStack.prototype.add_widget = function (el, x, y, width, height) {

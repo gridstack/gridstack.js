@@ -28,8 +28,8 @@
     z-index: 100;
 }
 
-.grid-stack-item.ui-draggable-dragging .box,
-.grid-stack-item.ui-resizable-resizing .box {
+.grid-stack-item.ui-draggable-dragging .grid-stack-item-content,
+.grid-stack-item.ui-resizable-resizing .grid-stack-item-content {
     box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
     opacity: 0.8;
 }
