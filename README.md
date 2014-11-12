@@ -17,6 +17,55 @@ Usage
 Coming soon...
 
 
+## Use with knockout.js
+
+```javascript
+ko.components.register('dashboard-grid', {
+    viewModel: {
+        createViewModel: function (params, componentInfo) {
+            var ViewModel = function (params, componentInfo) {
+                var grid = null;
+
+                this.widgets = params.widgets;
+
+                this.afterAddWidget = function (items) {
+                    _.each(items, function (item) {
+                        item = $(item);
+                        if (item.data('_gridstack_node'))
+                            return;
+
+                        if (grid == null) {
+                            grid = $(componentInfo.element).find('.grid-stack').gridstack({
+                                auto: false
+                            }).data('gridstack');
+                        }
+
+                        grid.add_widget(item);
+                    }, this);
+                };
+
+            };
+
+            return new ViewModel(params, componentInfo);
+        }
+    },
+    template: [
+        '<div class="grid-stack">',
+        '   <!-- ko foreach: widgets, afterRender: afterAddWidget -->',
+        '       <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': x, \'data-gs-y\': y, \'data-gs-width\': width, \'data-gs-height\': height}"><span data-bind="text: $index"></span></div>',
+        '   <!-- /ko -->',
+        '</div>'
+    ].join('\n')
+});
+```
+
+and HTML:
+
+```html
+<div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+```
+
+
 License
 =======
 
