@@ -17,9 +17,10 @@ Usage
 
 ## Requirements
 
-* http://underscorejs.org (>= 3.1.0)
-* http://jquery.com (>= 1.11.1)
-* http://jqueryui.com (>= 1.11.2)
+* http://underscorejs.org (>= 1.7.0)
+* http://jquery.com (>= 1.11.0)
+* http://jqueryui.com (>= 1.11.0)
+* (Optional) http://knockoutjs.com (>= 3.2.0)
 
 Coming soon...
 
@@ -37,8 +38,6 @@ ko.components.register('dashboard-grid', {
                 this.afterAddWidget = function (items) {
                     _.each(items, function (item) {
                         item = $(item);
-                        if (item.data('_gridstack_node'))
-                            return;
 
                         if (grid == null) {
                             grid = $(componentInfo.element).find('.grid-stack').gridstack({
