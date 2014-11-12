@@ -169,7 +169,8 @@
             placeholder_class: 'grid-stack-placeholder',
             handle: '.grid-stack-item-content',
             cell_height: 60,
-            vertical_margin: 20
+            vertical_margin: 20,
+            auto: true
         });
 
         this.grid = new GridStackEngine(this.opts.width, function (nodes) {
@@ -182,9 +183,11 @@
             });
         });
 
-        this.container.find('.' + this.opts.item_class).each(function (index, el) {
-            self._prepare_element(el);
-        });
+        if (this.opts.auto) {
+            this.container.find('.' + this.opts.item_class).each(function (index, el) {
+                self._prepare_element(el);
+            });
+        }
 
         this.placeholder = $('<div class="' + this.opts.placeholder_class + ' ' + this.opts.item_class + '"><div class="placeholder-content" /></div>').hide();
         this.container.append(this.placeholder);
