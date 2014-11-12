@@ -17,9 +17,9 @@ Usage
 
 ## Requirements
 
-* http://underscorejs.org
-* http://jquery.com
-* http://jqueryui.com
+* http://underscorejs.org (>= 3.1.0)
+* http://jquery.com (>= 1.11.1)
+* http://jqueryui.com (>= 1.11.2)
 
 Coming soon...
 
