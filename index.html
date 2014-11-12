@@ -146,8 +146,6 @@ ko.components.register('dashboard-grid', {
                 this.afterAddWidget = function (items) {
                     _.each(items, function (item) {
                         item = $(item);
-                        if (item.data('_gridstack_node'))
-                            return;
 
                         if (grid == null) {
                             grid = $(componentInfo.element).find('.grid-stack').gridstack({
