@@ -47,6 +47,9 @@ ko.components.register('dashboard-grid', {
                         }
 
                         grid.add_widget(item);
+                        ko.utils.domNodeDisposal.addDisposeCallback(item[0], function () {
+                            grid.remove_widget(item);
+                        });
                     }, this);
                 };
 
