@@ -15,8 +15,13 @@ Please visit http://troolee.github.io/gridstack.js/ for demo.
 Usage
 =====
 
-Coming soon...
+## Requirements
 
+* http://underscorejs.org
+* http://jquery.com
+* http://jqueryui.com
+
+Coming soon...
 
 ## Use with knockout.js
 
