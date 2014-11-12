@@ -283,12 +283,14 @@
         if (typeof height != 'undefined') el.attr('data-gs-height', height);
         this.container.append(el);
         this._prepare_element(el);
+        this._update_container_height();
     };
 
     GridStack.prototype.remove_widget = function (el) {
         var node = $(el).data('_gridstack_node');
         this.grid.remove_node(node);
         el.remove();
+        this._update_container_height();
     };
 
     scope.GridStackUI = GridStack;
