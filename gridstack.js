@@ -292,8 +292,8 @@
 
     $.fn.gridstack = function (opts) {
         return this.each(function () {
-            if (!$(this).data('_gridstack')) {
-                $(this).data('_gridstack', new GridStack(this, opts));
+            if (!$(this).data('gridstack')) {
+                $(this).data('gridstack', new GridStack(this, opts));
             }
         });
     };
