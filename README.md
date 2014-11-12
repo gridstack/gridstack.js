@@ -1,7 +1,8 @@
 gridstack.js
 ============
 
-gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build draggable responsive bootstrap v3 friendly layouts.
+gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build 
+draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com)
 
 Inspired by [gridster.js](http://gridster.net). Built with love.
 
@@ -52,7 +53,11 @@ ko.components.register('dashboard-grid', {
     template: [
         '<div class="grid-stack">',
         '   <!-- ko foreach: widgets, afterRender: afterAddWidget -->',
-        '       <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': x, \'data-gs-y\': y, \'data-gs-width\': width, \'data-gs-height\': height}"><span data-bind="text: $index"></span></div>',
+        '       <div class="grid-stack-item" data-bind="attr: {',
+        '               \'data-gs-x\': x, \'data-gs-y\': y,',
+        '               \'data-gs-width\': width, \'data-gs-height\': height}">',
+        '           <span data-bind="text: $index"></span>',
+        '       </div>',
         '   <!-- /ko -->',
         '</div>'
     ].join('\n')
