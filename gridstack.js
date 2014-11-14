@@ -64,6 +64,7 @@
         node.y = parseInt('' + node.y);
         node.width = parseInt('' + node.width);
         node.height = parseInt('' + node.height);
+        node.auto_position = node.auto_position || false;
 
         if (node.width > this.width) {
             node.width = this.width;
@@ -120,7 +121,24 @@
 
         node._id = ++id_seq;
         node._dirty = true;
+
+        if (node.auto_position) {
+            this.nodes = _.sortBy(this.nodes, function (n) { return n.x + n.y * this.width; }, this);
+
+            for (var i = 0; ; ++i) {
+                var x = i % this.width, y = Math.floor(i / this.width);
+                if (!_.find(this.nodes, function (n) {
+                    return Utils.is_intercepted({x: x, y: y, width: node.width, height: node.height}, n);
+                })) {
+                    node.x = x;
+                    node.y = y;
+                    break;
+                }
+            }
+        }
+
         this.nodes.push(node);
+
         this._fix_collisions(node);
         this._pack_nodes();
         this._notify();
@@ -189,7 +207,7 @@
         this.grid = new GridStackEngine(this.opts.width, function (nodes) {
             _.each(nodes, function (n) {
                 if (n._id == null) {
-                    n.el.remove();
+                    //n.el.remove();
                 }
                 else {
                     n.el
@@ -229,6 +247,7 @@
             min_width: el.attr('data-gs-min-width'),
             max_height: el.attr('data-gs-max-height'),
             min_height: el.attr('data-gs-min-height'),
+            auto_position: el.attr('data-gs-auto-position'),
             el: el
         });
         el.data('_gridstack_node', node);
@@ -295,12 +314,13 @@
         }
     };
 
-    GridStack.prototype.add_widget = function (el, x, y, width, height) {
+    GridStack.prototype.add_widget = function (el, x, y, width, height, auto_position) {
         el = $(el);
         if (typeof x != 'undefined') el.attr('data-gs-x', x);
         if (typeof y != 'undefined') el.attr('data-gs-y', y);
         if (typeof width != 'undefined') el.attr('data-gs-width', width);
         if (typeof height != 'undefined') el.attr('data-gs-height', height);
+        if (typeof auto_position != 'undefined') el.attr('data-gs-auto-position', auto_position);
         this.container.append(el);
         this._prepare_element(el);
         this._update_container_height();
