@@ -24,6 +24,15 @@ Usage
 
 Coming soon...
 
+## Item attributes
+
+- `data-gs-x`, `data-gs-y` - element position
+- `data-gs-width`, `data-gs-height` - element size
+- `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
+- `data-gs-no-resize` - disable element resizing
+- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to first available
+    position
+
 ## Use with knockout.js
 
 ```javascript
