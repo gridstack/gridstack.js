@@ -80,6 +80,10 @@ Usage
 Occurs when widgets change their position/size
 
 ```javascript
+    var serialize_widget_map = function (items) {
+        console.log(items);
+    };
+
     $('.grid-stack').on('change', function (e, items) {
         serialize_widget_map(items);
     });
@@ -111,7 +115,7 @@ Removes widget from the grid.
 
 Parameters:
 
-- `el` - widget to add
+- `el` - widget to remove
 
 ## Use with knockout.js
 
