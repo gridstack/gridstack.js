@@ -22,8 +22,6 @@ Usage
 * http://jqueryui.com (>= 1.11.0)
 * (Optional) http://knockoutjs.com (>= 3.2.0)
 
-Coming soon...
-
 ## Basic usage
 
 ```html
