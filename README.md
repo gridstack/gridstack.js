@@ -24,14 +24,25 @@ Usage
 
 Coming soon...
 
+## Options
+
+- `width` - amount of columns (default: 12)
+- `item_class` - widget class (default: 'grid-stack-item')
+- `placeholder_class` - class for placeholder (default: 'grid-stack-placeholder')
+- `handle` - draggable handle selector (default: '.grid-stack-item-content')
+- `cell_height` - one cell height (default: 60)
+- `vertical_margin` - vertical gap size (default: 20)
+- `auto` - if `false` it tells to do not initialize existing items (default: true)
+- `min_width` - minimal width. If window width is less grid will be shown in one-column mode (default: 768)
+
 ## Item attributes
 
 - `data-gs-x`, `data-gs-y` - element position
 - `data-gs-width`, `data-gs-height` - element size
 - `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
 - `data-gs-no-resize` - disable element resizing
-- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to first available
-    position
+- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first 
+    available position
 
 ## Use with knockout.js
 
