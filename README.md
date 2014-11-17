@@ -72,6 +72,39 @@ Usage
 - `data-gs-no-resize` - disable element resizing
 - `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first 
     available position
+    
+## Events
+
+### onchange 
+
+Occurs when widgets change their position/size
+
+```javascript
+    $('.grid-stack').on('change', function (e, items) {
+        serialize_widget_map(items);
+    });
+```
+
+## API
+
+### add_widget(el, x, y, width, height, auto_position)
+
+Creates new widget.
+
+Parameters:
+
+- `el` - widget to add
+- `x`, `y`, `width`, `height` - widget position/dimensions (Optional)
+- `auto_position` - if `true` then `x`, `y` parameters will be ignored and widget will be places on the first available
+position
+
+### remove_widget(el)
+
+Removes widget from the grid.
+
+Parameters:
+
+- `el` - widget to add
 
 ## Use with knockout.js
 
