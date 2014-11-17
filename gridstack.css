@@ -128,3 +128,17 @@
 .grid-stack-item[data-gs-y="17"] { top: 1360px; }
 .grid-stack-item[data-gs-y="18"] { top: 1440px; }
 .grid-stack-item[data-gs-y="19"] { top: 1520px; }
+
+@media (max-width: 768px) {
+    .grid-stack-item {
+        position: relative !important;
+        width: auto !important;
+        left: 0 !important;
+        top: auto !important;
+        margin-bottom: 20px;
+    }
+
+    .grid-stack {
+        height: auto !important;
+    }
+}
