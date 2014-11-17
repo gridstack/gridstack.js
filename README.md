@@ -99,9 +99,9 @@ Parameters:
 position
 
 ```javascript
-$('.grid-stack).gridstack();
+$('.grid-stack').gridstack();
 
-var grid = $('.grid-stack).data('gridstack');
+var grid = $('.grid-stack').data('gridstack');
 grid.add_widget(el, 0, 0, 3, 2, true);
 ```
 
