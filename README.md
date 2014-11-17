@@ -98,6 +98,13 @@ Parameters:
 - `auto_position` - if `true` then `x`, `y` parameters will be ignored and widget will be places on the first available
 position
 
+```javascript
+$('.grid-stack).gridstack();
+
+var grid = $('.grid-stack).data('gridstack');
+grid.add_widget(el, 0, 0, 3, 2, true);
+```
+
 ### remove_widget(el)
 
 Removes widget from the grid.
