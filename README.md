@@ -24,6 +24,25 @@ Usage
 
 Coming soon...
 
+## Basic usage
+
+```html
+    <div class="grid-stack">
+        <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2"><div class="grid-stack-item-content"></div></div>
+        <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4"><div class="grid-stack-item-content"></div></div>
+    </div>
+    
+    <script type="text/javascript">
+    $(function () {
+        var options = {
+            cell_height: 80,
+            vertical_margin: 10
+        };
+        $('.grid-stack).gridstack(options);
+    });
+    </script>
+```
+
 ## Options
 
 - `width` - amount of columns (default: 12)
@@ -34,6 +53,10 @@ Coming soon...
 - `vertical_margin` - vertical gap size (default: 20)
 - `auto` - if `false` it tells to do not initialize existing items (default: true)
 - `min_width` - minimal width. If window width is less grid will be shown in one-column mode (default: 768)
+
+## Grid attributes
+
+ - `data-gs-width` - grid width
 
 ## Item attributes
 
