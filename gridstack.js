@@ -16,7 +16,7 @@
     };
 
     GridStackEngine.prototype._fix_collisions = function (node) {
-        this.nodes = _.sortBy(this.nodes, function (n) { return -(n.x + n.y * this.width); }, this);
+        this._sort_nodes(-1);
 
         while (true) {
             var collision_node = _.find(this.nodes, function (n) {
@@ -30,8 +30,13 @@
         }
     };
 
+    GridStackEngine.prototype._sort_nodes = function (dir) {
+        dir = dir != -1 ? 1 : -1;
+        this.nodes = _.sortBy(this.nodes, function (n) { return dir * (n.x + n.y * this.width); }, this);
+    };
+
     GridStackEngine.prototype._pack_nodes = function () {
-        this.nodes = _.sortBy(this.nodes, function (n) { return n.x + n.y * this.width; }, this);
+        this._sort_nodes();
 
         _.each(this.nodes, function (n, i) {
             while (n.y > 0) {
@@ -123,7 +128,7 @@
         node._dirty = true;
 
         if (node.auto_position) {
-            this.nodes = _.sortBy(this.nodes, function (n) { return n.x + n.y * this.width; }, this);
+            this._sort_nodes();
 
             for (var i = 0; ; ++i) {
                 var x = i % this.width, y = Math.floor(i / this.width);
@@ -190,7 +195,7 @@
     };
 
     var GridStack = function (el, opts) {
-        var self = this;
+        var self = this, one_column_mode;
 
         this.container = $(el);
 
@@ -201,13 +206,14 @@
             handle: '.grid-stack-item-content',
             cell_height: 60,
             vertical_margin: 20,
-            auto: true
+            auto: true,
+            min_width: 768
         });
 
         this.grid = new GridStackEngine(this.opts.width, function (nodes) {
             _.each(nodes, function (n) {
                 if (n._id == null) {
-                    //n.el.remove();
+                    n.el.remove();
                 }
                 else {
                     n.el
@@ -228,10 +234,46 @@
         this.placeholder = $('<div class="' + this.opts.placeholder_class + ' ' + this.opts.item_class + '"><div class="placeholder-content" /></div>').hide();
         this.container.append(this.placeholder);
         this.container.height((this.grid.get_grid_height()) * (this.opts.cell_height + this.opts.vertical_margin) - this.opts.vertical_margin);
+
+        var on_resize_handler = function () {
+            if (self._is_one_column_mode()) {
+                if (one_column_mode)
+                    return;
+
+                one_column_mode = true;
+
+                _.each(self.grid.nodes, function (node) {
+                    node.el.draggable('disable');
+                    if (!node.el.attr('data-gs-no-resize')) {
+                        node.el.resizable('disable');
+                    }
+                });
+            }
+            else {
+                if (!one_column_mode)
+                    return;
+
+                one_column_mode = false;
+
+                _.each(self.grid.nodes, function (node) {
+                    node.el.draggable('enable');
+                    if (!node.el.attr('data-gs-no-resize')) {
+                        node.el.resizable('enable');
+                    }
+                });
+            }
+        };
+
+        $(window).resize(on_resize_handler);
+        on_resize_handler();
     };
 
     GridStack.prototype._update_container_height = function () {
         this.container.height(this.grid.get_grid_height() * (this.opts.cell_height + this.opts.vertical_margin) - this.opts.vertical_margin);
+    };
+
+    GridStack.prototype._is_one_column_mode = function () {
+        return $(window).width() <= this.opts.min_width;
     };
 
     GridStack.prototype._prepare_element = function (el) {
@@ -279,6 +321,12 @@
                 .removeAttr('style');
             self._update_container_height();
             self.container.trigger('change', [self.grid.get_dirty_nodes()]);
+
+            self.grid._sort_nodes();
+            _.each(self.grid.nodes, function (node) {
+                node.el.detach();
+                self.container.append(node.el);
+            });
         };
 
         el.draggable({
@@ -295,6 +343,11 @@
                 self._update_container_height();
             }
         });
+
+        if (this._is_one_column_mode()) {
+            el.draggable('disable');
+        }
+
         if (!el.attr('data-gs-no-resize')) {
             el.resizable({
                 autoHide: true,
@@ -311,6 +364,10 @@
                     self._update_container_height();
                 }
             });
+
+            if (this._is_one_column_mode()) {
+                el.resizable('disable');
+            }
         }
     };
 
