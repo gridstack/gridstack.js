@@ -130,7 +130,34 @@
                 </div>
             </div>
 
-            <p>Coming soon...</p>
+            <h3>Basic Usage</h3>
+            
+            <pre><code class="html">
+&lt;div class=&quot;grid-stack&quot;&gt;
+    &lt;div class=&quot;grid-stack-item&quot; 
+        data-gs-x=&quot;0&quot; data-gs-y=&quot;0&quot; 
+        data-gs-width=&quot;4&quot; data-gs-height=&quot;2&quot;&gt;
+            &lt;div class=&quot;grid-stack-item-content&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;grid-stack-item&quot; 
+        data-gs-x=&quot;4&quot; data-gs-y=&quot;0&quot; 
+        data-gs-width=&quot;4&quot; data-gs-height=&quot;4&quot;&gt;
+            &lt;div class=&quot;grid-stack-item-content&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script type=&quot;text/javascript&quot;&gt;
+$(function () {
+    var options = {
+        cell_height: 80,
+        vertical_margin: 10
+    };
+    $('.grid-stack').gridstack(options);
+});
+&lt;/script&gt;
+            </code></pre>
+
+            <p>For more samples and documentation please visit <a href="https://github.com/troolee/gridstack.js">https://github.com/troolee/gridstack.js</a>.</p>
 
             <h3>Use with knockout.js</h3>
 
@@ -225,7 +252,7 @@ ko.components.register('dashboard-grid', {
     <!-- Custom Theme JavaScript -->
     <script src="freelancer/js/freelancer.js"></script>
 
-    <script src="gridstack.js"></script>
+    <script src="jquery.gridstack.js"></script>
     <script type="text/javascript">
         hljs.initHighlightingOnLoad();
         $(function () {
