@@ -62,7 +62,7 @@ Usage
 
 ## Grid attributes
 
- - `data-gs-width` - grid width
+ - `data-gs-width` - amount of columns
 
 ## Item attributes
 
@@ -169,6 +169,12 @@ and HTML:
 ```html
 <div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
 ```
+
+
+Changes
+=======
+
+#### v0.1.0 (2014-11-18)
 
 
 License
