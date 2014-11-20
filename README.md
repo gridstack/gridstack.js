@@ -175,6 +175,11 @@ and HTML:
 Changes
 =======
 
+#### v0.1.1 (development version)
+
+- add `float` option
+- fix default css rule for inner content
+
 #### v0.1.0 (2014-11-18)
 
 Very first version.
