@@ -8,8 +8,9 @@
 
     var id_seq = 0;
 
-    var GridStackEngine = function (width, onchange) {
+    var GridStackEngine = function (width, onchange, float) {
         this.width = width;
+        this.float = float || false;
 
         this.nodes = [];
         this.onchange = onchange || function () {};
@@ -38,28 +39,47 @@
     GridStackEngine.prototype._pack_nodes = function () {
         this._sort_nodes();
 
-        _.each(this.nodes, function (n, i) {
-            while (n.y > 0) {
-                var new_y = n.y - 1;
-                var can_be_moved = i == 0;
+        if (this.float) {
+            _.each(this.nodes, function (n, i) {
+                if (n._updating || typeof n._orig_y == 'undefined' || n.y == n._orig_y)
+                    return;
 
-                if (i > 0) {
-                    var collision_node = _.chain(this.nodes)
-                        .first(i)
-                        .find(function (bn) {
-                            return Utils.is_intercepted({x: n.x, y: new_y, width: n.width, height: n.height}, bn);
-                        })
-                        .value();
-                    can_be_moved = typeof collision_node == 'undefined';
-                }
+                var collision_node = _.chain(this.nodes)
+                    .find(function (bn) {
+                        return n != bn && Utils.is_intercepted({x: n.x, y: n._orig_y, width: n.width, height: n.height}, bn);
+                    })
+                    .value();
 
-                if (!can_be_moved) {
-                    break;
+                if (!collision_node) {
+                    n._dirty = true;
+                    n.y = n._orig_y;
                 }
-                n._dirty = n.y != new_y;
-                n.y = new_y;
-            }
-        }, this);
+            }, this);
+        }
+        else {
+            _.each(this.nodes, function (n, i) {
+                while (n.y > 0) {
+                    var new_y = n.y - 1;
+                    var can_be_moved = i == 0;
+
+                    if (i > 0) {
+                        var collision_node = _.chain(this.nodes)
+                            .first(i)
+                            .find(function (bn) {
+                                return Utils.is_intercepted({x: n.x, y: new_y, width: n.width, height: n.height}, bn);
+                            })
+                            .value();
+                        can_be_moved = typeof collision_node == 'undefined';
+                    }
+
+                    if (!can_be_moved) {
+                        break;
+                    }
+                    n._dirty = n.y != new_y;
+                    n.y = new_y;
+                }
+            }, this);
+        }
     };
 
     GridStackEngine.prototype._prepare_node = function (node, moving) {
@@ -194,6 +214,20 @@
         return _.reduce(this.nodes, function (memo, n) { return Math.max(memo, n.y + n.height); }, 0);
     };
 
+    GridStackEngine.prototype.begin_update = function (node) {
+        _.each(this.nodes, function (n) {
+            n._orig_y = n.y;
+        });
+        node._updating = true;
+    };
+
+    GridStackEngine.prototype.end_update = function () {
+        var n = _.find(this.nodes, function (n) { return n._updating; });
+        if (n) {
+            n._updating = false;
+        }
+    };
+
     var GridStack = function (el, opts) {
         var self = this, one_column_mode;
 
@@ -207,7 +241,8 @@
             cell_height: 60,
             vertical_margin: 20,
             auto: true,
-            min_width: 768
+            min_width: 768,
+            float: false
         });
 
         this.grid = new GridStackEngine(this.opts.width, function (nodes) {
@@ -223,7 +258,7 @@
                         .attr('data-gs-height', n.height);
                 }
             });
-        });
+        }, this.opts.float);
 
         if (this.opts.auto) {
             this.container.find('.' + this.opts.item_class).each(function (index, el) {
@@ -299,6 +334,7 @@
         var on_start_moving = function (event, ui) {
             var o = $(this);
             self.grid.clean_nodes();
+            self.grid.begin_update(node);
             cell_width = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
             self.placeholder
                 .attr('data-gs-x', o.attr('data-gs-x'))
@@ -321,6 +357,8 @@
                 .removeAttr('style');
             self._update_container_height();
             self.container.trigger('change', [self.grid.get_dirty_nodes()]);
+
+            self.grid.end_update();
 
             self.grid._sort_nodes();
             _.each(self.grid.nodes, function (node) {
