@@ -71,6 +71,7 @@ Usage
 - `data-gs-width`, `data-gs-height` - element size
 - `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
 - `data-gs-no-resize` - disable element resizing
+- `data-gs-no-move` - disable element moving 
 - `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first 
     available position
     
