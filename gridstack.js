@@ -90,6 +90,8 @@
         node.width = parseInt('' + node.width);
         node.height = parseInt('' + node.height);
         node.auto_position = node.auto_position || false;
+        node.no_resize = node.no_resize || false;
+        node.no_move = node.no_move || false;
 
         if (node.width > this.width) {
             node.width = this.width;
@@ -278,8 +280,10 @@
                 one_column_mode = true;
 
                 _.each(self.grid.nodes, function (node) {
-                    node.el.draggable('disable');
-                    if (!node.el.attr('data-gs-no-resize')) {
+                    if (!node.no_move) {
+                        node.el.draggable('disable');
+                    }
+                    if (!node.no_resize) {
                         node.el.resizable('disable');
                     }
                 });
@@ -291,8 +295,10 @@
                 one_column_mode = false;
 
                 _.each(self.grid.nodes, function (node) {
-                    node.el.draggable('enable');
-                    if (!node.el.attr('data-gs-no-resize')) {
+                    if (!node.no_move) {
+                        node.el.draggable('enable');
+                    }
+                    if (!node.no_resize) {
                         node.el.resizable('enable');
                     }
                 });
@@ -325,6 +331,8 @@
             max_height: el.attr('data-gs-max-height'),
             min_height: el.attr('data-gs-min-height'),
             auto_position: el.attr('data-gs-auto-position'),
+            no_resize: el.attr('data-gs-no-resize'),
+            no_move: el.attr('data-gs-no-move'),
             el: el
         });
         el.data('_gridstack_node', node);
@@ -367,26 +375,28 @@
             });
         };
 
-        el.draggable({
-            handle: this.opts.handle,
-            scroll: true,
-            appendTo: 'body',
+        if (!node.no_move) {
+            el.draggable({
+                handle: this.opts.handle,
+                scroll: true,
+                appendTo: 'body',
 
-            start: on_start_moving,
-            stop: on_end_moving,
-            drag: function (event, ui) {
-                var x = Math.round(ui.position.left / cell_width),
-                    y = Math.floor(ui.position.top / cell_height);
-                self.grid.move_node(node, x, y);
-                self._update_container_height();
+                start: on_start_moving,
+                stop: on_end_moving,
+                drag: function (event, ui) {
+                    var x = Math.round(ui.position.left / cell_width),
+                        y = Math.floor(ui.position.top / cell_height);
+                    self.grid.move_node(node, x, y);
+                    self._update_container_height();
+                }
+            });
+
+            if (this._is_one_column_mode()) {
+                el.draggable('disable');
             }
-        });
-
-        if (this._is_one_column_mode()) {
-            el.draggable('disable');
         }
 
-        if (!el.attr('data-gs-no-resize')) {
+        if (!node.no_resize) {
             el.resizable({
                 autoHide: true,
                 handles: 'se',
