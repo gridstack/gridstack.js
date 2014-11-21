@@ -119,6 +119,20 @@ Parameters:
 
 - `el` - widget to remove
 
+### resizable(el, val)
+
+Enables/Disables resizing.
+
+- `el` - widget to modify
+- `val` - if `true` widget will be resizable. 
+
+### movable(el, val)
+
+Enables/Disables moving.
+
+- `el` - widget to modify
+- `val` - if `true` widget will be draggable. 
+
 ## Use with knockout.js
 
 ```javascript
@@ -178,6 +192,8 @@ Changes
 
 #### v0.1.1 (development version)
 
+- add `resizable` and `movable` API methods
+- add `data-gs-no-move` attribute
 - add `float` option
 - fix default css rule for inner content
 
