@@ -119,6 +119,24 @@ Parameters:
 
 - `el` - widget to remove
 
+### resize(el, width, \[height\])
+
+Changes widget size
+
+Parameters:
+
+- `el` - widget to resize
+- `width`, `height` - new dimensions
+
+### move(el, x, \[y\])
+
+Changes widget position
+
+Parameters:
+
+- `el` - widget to move
+- `x`, `y` - new position
+
 ### resizable(el, val)
 
 Enables/Disables resizing.
@@ -192,6 +210,7 @@ Changes
 
 #### v0.1.1 (development version)
 
+- add `resize` and `move` API methods 
 - add `resizable` and `movable` API methods
 - add `data-gs-no-move` attribute
 - add `float` option
