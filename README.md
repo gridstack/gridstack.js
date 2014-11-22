@@ -126,7 +126,7 @@ Changes widget size
 Parameters:
 
 - `el` - widget to resize
-- `width`, `height` - new dimensions
+- `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
 
 ### move(el, x, \[y\])
 
@@ -135,7 +135,7 @@ Changes widget position
 Parameters:
 
 - `el` - widget to move
-- `x`, `y` - new position
+- `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
 
 ### resizable(el, val)
 
