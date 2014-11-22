@@ -17,6 +17,7 @@
     bottom: 0;
     width: auto;
     z-index: 0 !important;
+    overflow: auto;
 }
 
 .grid-stack-placeholder .placeholder-content {
