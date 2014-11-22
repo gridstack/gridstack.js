@@ -180,10 +180,10 @@
     };
 
     GridStackEngine.prototype.move_node = function (node, x, y, width, height, no_pack) {
-        if (typeof x == 'undefined') x = node.x;
-        if (typeof y == 'undefined') y = node.y;
-        if (typeof width == 'undefined') width = node.width;
-        if (typeof height == 'undefined') height = node.height;
+        if (typeof x != 'number') x = node.x;
+        if (typeof y != 'number') y = node.y;
+        if (typeof width != 'number') width = node.width;
+        if (typeof height != 'number') height = node.height;
 
         if (typeof node.max_width != 'undefined') width = Math.min(width, node.max_width);
         if (typeof node.max_height != 'undefined') height = Math.min(height, node.max_height);
