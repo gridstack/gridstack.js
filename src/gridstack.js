@@ -472,6 +472,50 @@
         return this;
     };
 
+    GridStack.prototype._update_element = function (el, callback) {
+        el = $(el).first();
+        var node = el.data('_gridstack_node');
+        if (typeof node == 'undefined') {
+            return;
+        }
+
+        var self = this;
+
+        self.grid.clean_nodes();
+        self.grid.begin_update(node);
+
+        callback.call(this, el, node);
+
+        self._update_container_height();
+        self.container.trigger('change', [self.grid.get_dirty_nodes()]);
+
+        self.grid.end_update();
+
+        self.grid._sort_nodes();
+        _.each(self.grid.nodes, function (node) {
+            node.el.detach();
+            self.container.append(node.el);
+        });
+    };
+
+    GridStack.prototype.resize = function (el, width, height) {
+        this._update_element(el, function (el, node) {
+            width = (width != null && typeof width != 'undefined') ? width : node.width;
+            height = (height != null && typeof height != 'undefined') ? height : node.height;
+
+            this.grid.move_node(node, node.x, node.y, width, height);
+        });
+    };
+
+    GridStack.prototype.move = function (el, x, y) {
+        this._update_element(el, function (el, node) {
+            x = (x != null && typeof x != 'undefined') ? x : node.x;
+            y = (y != null && typeof y != 'undefined') ? y : node.y;
+
+            this.grid.move_node(node, x, y, node.width, node.height);
+        });
+    };
+
     scope.GridStackUI = GridStack;
 
     $.fn.gridstack = function (opts) {
