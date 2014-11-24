@@ -3,6 +3,12 @@
     var Utils = {
         is_intercepted: function (a, b) {
             return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
+        },
+
+        sort: function (nodes, dir, width) {
+            width = width || _.chain(nodes).map(function (node) { return node.x + node.width; }).max().value();
+            dir = dir != -1 ? 1 : -1;
+            return _.sortBy(nodes, function (n) { return dir * (n.x + n.y * width); });
         }
     };
 
@@ -32,8 +38,7 @@
     };
 
     GridStackEngine.prototype._sort_nodes = function (dir) {
-        dir = dir != -1 ? 1 : -1;
-        this.nodes = _.sortBy(this.nodes, function (n) { return dir * (n.x + n.y * this.width); }, this);
+        this.nodes = Utils.sort(this.nodes, dir, this.width);
     };
 
     GridStackEngine.prototype._pack_nodes = function () {
