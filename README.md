@@ -119,6 +119,10 @@ Parameters:
 
 - `el` - widget to remove
 
+### remove_all()
+
+Removes all widgets from the grid.
+
 ### resize(el, width, \[height\])
 
 Changes widget size
@@ -149,7 +153,17 @@ Enables/Disables resizing.
 Enables/Disables moving.
 
 - `el` - widget to modify
-- `val` - if `true` widget will be draggable. 
+- `val` - if `true` widget will be draggable.
+ 
+## Utils
+
+### GridStackUI.Utils.sort(nodes, \[dir\], \[width\])
+
+Sorts array of nodes
+
+- `nodes` - array to sort
+- `dir` - `1` for asc, `-1` for desc
+- `width` - width of the grid. If it is `undefined` it will be calculated automatically.
 
 ## Use with knockout.js
 
