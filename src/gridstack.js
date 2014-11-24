@@ -439,6 +439,14 @@
         this._update_container_height();
     };
 
+    GridStack.prototype.remove_all = function () {
+        _.each(this.grid.nodes, function (node) {
+            node.el.remove();
+        });
+        this.grid.nodes = [];
+        this._update_container_height();
+    };
+
     GridStack.prototype.resizable = function (el, val) {
         el = $(el);
         el.each(function (index, el) {
