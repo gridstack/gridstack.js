@@ -224,6 +224,8 @@ Changes
 
 #### v0.1.1 (development version)
 
+- add `GridStackUI.Utils.sort` utility function
+- add `remove_all` API method
 - add `resize` and `move` API methods 
 - add `resizable` and `movable` API methods
 - add `data-gs-no-move` attribute
