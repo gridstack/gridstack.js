@@ -163,7 +163,7 @@ Sorts array of nodes
 
 - `nodes` - array to sort
 - `dir` - `1` for asc, `-1` for desc
-- `width` - width of the grid. If it is `undefined` it will be calculated automatically.
+- `width` - width of the grid. If `undefined` the width will be calculated automatically.
 
 ## Use with knockout.js
 
