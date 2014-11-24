@@ -523,6 +523,8 @@
 
     scope.GridStackUI = GridStack;
 
+    scope.GridStackUI.Utils = Utils;
+
     $.fn.gridstack = function (opts) {
         return this.each(function () {
             if (!$(this).data('gridstack')) {
