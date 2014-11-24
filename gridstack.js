@@ -3,6 +3,12 @@
     var Utils = {
         is_intercepted: function (a, b) {
             return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
+        },
+
+        sort: function (nodes, dir, width) {
+            width = width || _.chain(nodes).map(function (node) { return node.x + node.width; }).max().value();
+            dir = dir != -1 ? 1 : -1;
+            return _.sortBy(nodes, function (n) { return dir * (n.x + n.y * width); });
         }
     };
 
@@ -32,8 +38,7 @@
     };
 
     GridStackEngine.prototype._sort_nodes = function (dir) {
-        dir = dir != -1 ? 1 : -1;
-        this.nodes = _.sortBy(this.nodes, function (n) { return dir * (n.x + n.y * this.width); }, this);
+        this.nodes = Utils.sort(this.nodes, dir, this.width);
     };
 
     GridStackEngine.prototype._pack_nodes = function () {
@@ -321,6 +326,8 @@
         var self = this;
         el = $(el);
 
+        el.addClass(this.opts.item_class);
+
         var node = self.grid.add_node({
             x: el.attr('data-gs-x'),
             y: el.attr('data-gs-y'),
@@ -432,6 +439,14 @@
         this._update_container_height();
     };
 
+    GridStack.prototype.remove_all = function () {
+        _.each(this.grid.nodes, function (node) {
+            node.el.remove();
+        });
+        this.grid.nodes = [];
+        this._update_container_height();
+    };
+
     GridStack.prototype.resizable = function (el, val) {
         el = $(el);
         el.each(function (index, el) {
@@ -517,6 +532,8 @@
     };
 
     scope.GridStackUI = GridStack;
+
+    scope.GridStackUI.Utils = Utils;
 
     $.fn.gridstack = function (opts) {
         return this.each(function () {
