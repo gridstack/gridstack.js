@@ -326,6 +326,8 @@
         var self = this;
         el = $(el);
 
+        el.addClass(this.opts.item_class);
+
         var node = self.grid.add_node({
             x: el.attr('data-gs-x'),
             y: el.attr('data-gs-y'),
