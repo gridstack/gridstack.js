@@ -77,7 +77,7 @@ Usage
     
 ## Events
 
-### onchange 
+### onchange(items)
 
 Occurs when widgets change their position/size
 
@@ -90,6 +90,43 @@ Occurs when widgets change their position/size
         serialize_widget_map(items);
     });
 ```
+
+### ondragstart(event, ui)
+
+```javascript
+    $('.grid-stack').on('dragstart', function (event, ui) {
+        var grid = this;
+        var element = event.target;
+    });
+```
+
+### ondragstop(event, ui)
+
+```javascript
+    $('.grid-stack').on('dragstop', function (event, ui) {
+        var grid = this;
+        var element = event.target;
+    });
+```
+
+### onresizestart(event, ui)
+
+```javascript
+    $('.grid-stack').on('resizestart', function (event, ui) {
+        var grid = this;
+        var element = event.target;
+    });
+```
+
+### onresizestop(event, ui)
+
+```javascript
+    $('.grid-stack').on('resizestop', function (event, ui) {
+        var grid = this;
+        var element = event.target;
+    });
+```
+
 
 ## API
 
