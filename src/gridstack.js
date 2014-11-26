@@ -291,9 +291,9 @@
                 for (var i = self._styles._max; i < max_height; ++i) {
                     var css;
                     css = '.' + self.opts._class + ' .' + self.opts.item_class + '[data-gs-height="' + (i + 1) + '"] { height: ' + (self.opts.cell_height * (i + 1) + self.opts.vertical_margin * i) + 'px; }';
-                    self._styles.insertRule(css);
+                    self._styles.insertRule(css, i);
                     css = '.' + self.opts._class + ' .' + self.opts.item_class + '[data-gs-y="' + (i) + '"] { top: ' + (self.opts.cell_height * i + self.opts.vertical_margin * i) + 'px; }';
-                    self._styles.insertRule(css);
+                    self._styles.insertRule(css, i);
                 }
                 self._styles._max = max_height;
             }
