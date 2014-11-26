@@ -9,6 +9,20 @@
             width = width || _.chain(nodes).map(function (node) { return node.x + node.width; }).max().value();
             dir = dir != -1 ? 1 : -1;
             return _.sortBy(nodes, function (n) { return dir * (n.x + n.y * width); });
+        },
+
+        create_stylesheet: function () {
+            var style = document.createElement("style");
+
+            // style.setAttribute("media", "screen")
+            // style.setAttribute("media", "only screen and (max-width : 1024px)")
+
+            // WebKit hack :(
+            style.appendChild(document.createTextNode(""));
+
+            document.head.appendChild(style);
+
+            return style.sheet;
         }
     };
 
@@ -249,10 +263,16 @@
             vertical_margin: 20,
             auto: true,
             min_width: 768,
-            float: false
+            float: false,
+            _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0)
         });
 
+        this.container.addClass(this.opts._class);
+        this._styles = Utils.create_stylesheet();
+        this._styles._max = 0;
+
         this.grid = new GridStackEngine(this.opts.width, function (nodes) {
+            var max_height = 0;
             _.each(nodes, function (n) {
                 if (n._id == null) {
                     n.el.remove();
@@ -263,8 +283,20 @@
                         .attr('data-gs-y', n.y)
                         .attr('data-gs-width', n.width)
                         .attr('data-gs-height', n.height);
+                    max_height = Math.max(max_height, n.y + n.height);
                 }
             });
+            max_height += 10;
+            if (max_height > self._styles._max) {
+                for (var i = self._styles._max; i < max_height; ++i) {
+                    var css;
+                    css = '.' + self.opts._class + ' .' + self.opts.item_class + '[data-gs-height="' + (i + 1) + '"] { height: ' + (self.opts.cell_height * (i + 1) + self.opts.vertical_margin * i) + 'px; }';
+                    self._styles.insertRule(css);
+                    css = '.' + self.opts._class + ' .' + self.opts.item_class + '[data-gs-y="' + (i) + '"] { top: ' + (self.opts.cell_height * i + self.opts.vertical_margin * i) + 'px; }';
+                    self._styles.insertRule(css);
+                }
+                self._styles._max = max_height;
+            }
         }, this.opts.float);
 
         if (this.opts.auto) {
@@ -335,7 +367,7 @@
             height: el.attr('data-gs-height'),
             max_width: el.attr('data-gs-max-width'),
             min_width: el.attr('data-gs-min-width'),
-            max_height: el.attr('data-gs-max-height'),
+            max_height: el.attr('data-gs-max-height') || 100,
             min_height: el.attr('data-gs-min-height'),
             auto_position: el.attr('data-gs-auto-position'),
             no_resize: el.attr('data-gs-no-resize'),
