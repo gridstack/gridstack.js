@@ -224,6 +224,7 @@ Changes
 
 #### v0.1.1 (development version)
 
+- auto-generate css rules (widgets `height` and `top`)
 - add `GridStackUI.Utils.sort` utility function
 - add `remove_all` API method
 - add `resize` and `move` API methods 
