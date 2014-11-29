@@ -101,7 +101,7 @@
         }
     };
 
-    GridStackEngine.prototype._prepare_node = function (node, moving) {
+    GridStackEngine.prototype._prepare_node = function (node, resizing) {
         node = _.defaults(node || {}, {width: 1, height: 1, x: 0, y: 0 });
 
         node.x = parseInt('' + node.x);
@@ -128,11 +128,11 @@
         }
 
         if (node.x + node.width > this.width) {
-            if (moving) {
-                node.x = this.width - node.width;
+            if (resizing) {
+                node.width = this.width - node.x;
             }
             else {
-                node.width = this.width - node.x;
+                node.x = this.width - node.width;
             }
         }
 
@@ -213,7 +213,7 @@
             return node;
         }
 
-        var moving = node.x != x;
+        var resizing = node.width != width;
         node._dirty = true;
 
         node.x = x;
@@ -221,7 +221,7 @@
         node.width = width;
         node.height = height;
 
-        node = this._prepare_node(node, moving);
+        node = this._prepare_node(node, resizing);
 
         this._fix_collisions(node);
         if (!no_pack) {
@@ -255,7 +255,7 @@
         this.container = $(el);
 
         this.opts = _.defaults(opts || {}, {
-            width: 12,
+            width: this.container.attr('data-gs-width') || 12,
             item_class: 'grid-stack-item',
             placeholder_class: 'grid-stack-placeholder',
             handle: '.grid-stack-item-content',
