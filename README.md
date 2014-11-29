@@ -54,6 +54,7 @@ Usage
 - `auto` - if `false` it tells to do not initialize existing items (default: true)
 - `cell_height` - one cell height (default: 60)
 - `handle` - draggable handle selector (default: '.grid-stack-item-content')
+- `height` - maximum rows amount. Default is `0` which means no maximum rows
 - `float` - enable floating widgets (default: false)
 - `item_class` - widget class (default: 'grid-stack-item')
 - `min_width` - minimal width. If window width is less grid will be shown in one-column mode (default: 768)
@@ -64,6 +65,7 @@ Usage
 ## Grid attributes
 
  - `data-gs-width` - amount of columns
+ - `data-gs-height` - maximum rows amount. Default is `0` which means no maximum rows.
 
 ## Item attributes
 
@@ -261,6 +263,7 @@ Changes
 
 #### v0.1.1 (development version)
 
+- add `height` option
 - auto-generate css rules (widgets `height` and `top`)
 - add `GridStackUI.Utils.sort` utility function
 - add `remove_all` API method
@@ -269,6 +272,7 @@ Changes
 - add `data-gs-no-move` attribute
 - add `float` option
 - fix default css rule for inner content
+- minor fixes
 
 #### v0.1.0 (2014-11-18)
 
