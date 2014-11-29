@@ -25,28 +25,28 @@ Usage
 ## Basic usage
 
 ```html
-    <div class="grid-stack">
-        <div class="grid-stack-item" 
-            data-gs-x="0" data-gs-y="0" 
-            data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content"></div>
-        </div>
-        <div class="grid-stack-item" 
-            data-gs-x="4" data-gs-y="0" 
-            data-gs-width="4" data-gs-height="4">
-                <div class="grid-stack-item-content"></div>
-        </div>
+<div class="grid-stack">
+    <div class="grid-stack-item" 
+        data-gs-x="0" data-gs-y="0" 
+        data-gs-width="4" data-gs-height="2">
+            <div class="grid-stack-item-content"></div>
     </div>
-    
-    <script type="text/javascript">
-    $(function () {
-        var options = {
-            cell_height: 80,
-            vertical_margin: 10
-        };
-        $('.grid-stack').gridstack(options);
-    });
-    </script>
+    <div class="grid-stack-item" 
+        data-gs-x="4" data-gs-y="0" 
+        data-gs-width="4" data-gs-height="4">
+            <div class="grid-stack-item-content"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var options = {
+        cell_height: 80,
+        vertical_margin: 10
+    };
+    $('.grid-stack').gridstack(options);
+});
+</script>
 ```
 
 ## Options
@@ -84,49 +84,49 @@ Usage
 Occurs when widgets change their position/size
 
 ```javascript
-    var serialize_widget_map = function (items) {
-        console.log(items);
-    };
+var serialize_widget_map = function (items) {
+    console.log(items);
+};
 
-    $('.grid-stack').on('change', function (e, items) {
-        serialize_widget_map(items);
-    });
+$('.grid-stack').on('change', function (e, items) {
+    serialize_widget_map(items);
+});
 ```
 
 ### ondragstart(event, ui)
 
 ```javascript
-    $('.grid-stack').on('dragstart', function (event, ui) {
-        var grid = this;
-        var element = event.target;
-    });
+$('.grid-stack').on('dragstart', function (event, ui) {
+    var grid = this;
+    var element = event.target;
+});
 ```
 
 ### ondragstop(event, ui)
 
 ```javascript
-    $('.grid-stack').on('dragstop', function (event, ui) {
-        var grid = this;
-        var element = event.target;
-    });
+$('.grid-stack').on('dragstop', function (event, ui) {
+    var grid = this;
+    var element = event.target;
+});
 ```
 
 ### onresizestart(event, ui)
 
 ```javascript
-    $('.grid-stack').on('resizestart', function (event, ui) {
-        var grid = this;
-        var element = event.target;
-    });
+$('.grid-stack').on('resizestart', function (event, ui) {
+    var grid = this;
+    var element = event.target;
+});
 ```
 
 ### onresizestop(event, ui)
 
 ```javascript
-    $('.grid-stack').on('resizestop', function (event, ui) {
-        var grid = this;
-        var element = event.target;
-    });
+$('.grid-stack').on('resizestop', function (event, ui) {
+    var grid = this;
+    var element = event.target;
+});
 ```
 
 
