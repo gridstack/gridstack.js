@@ -28,11 +28,12 @@
 
     var id_seq = 0;
 
-    var GridStackEngine = function (width, onchange, float) {
+    var GridStackEngine = function (width, onchange, float, height, items) {
         this.width = width;
         this.float = float || false;
+        this.height = height || 0;
 
-        this.nodes = [];
+        this.nodes = items || [];
         this.onchange = onchange || function () {};
     };
 
@@ -198,6 +199,23 @@
         this._notify(node);
     };
 
+    GridStackEngine.prototype.can_move_node = function (node, x, y, width, height) {
+        if (!this.height)
+            return true;
+
+        var cloned_node;
+        var clone = new GridStackEngine(
+            this.width,
+            null,
+            this.float,
+            0,
+            _.map(this.nodes, function (n) { if (n == node) { cloned_node = $.extend({}, n); return cloned_node; } return $.extend({}, n) }));
+
+        clone.move_node(cloned_node, x, y, width, height);
+
+        return clone.get_grid_height() <= this.height;
+    };
+
     GridStackEngine.prototype.move_node = function (node, x, y, width, height, no_pack) {
         if (typeof x != 'number') x = node.x;
         if (typeof y != 'number') y = node.y;
@@ -255,7 +273,8 @@
         this.container = $(el);
 
         this.opts = _.defaults(opts || {}, {
-            width: this.container.attr('data-gs-width') || 12,
+            width: parseInt(this.container.attr('data-gs-width')) || 12,
+            height: parseInt(this.container.attr('data-gs-height')) || 0,
             item_class: 'grid-stack-item',
             placeholder_class: 'grid-stack-placeholder',
             handle: '.grid-stack-item-content',
@@ -297,7 +316,7 @@
                 }
                 self._styles._max = max_height;
             }
-        }, this.opts.float);
+        }, this.opts.float, this.opts.height);
 
         if (this.opts.auto) {
             this.container.find('.' + this.opts.item_class).each(function (index, el) {
@@ -424,6 +443,9 @@
             drag: function (event, ui) {
                 var x = Math.round(ui.position.left / cell_width),
                     y = Math.floor(ui.position.top / cell_height);
+                if (self.opts.height && !self.grid.can_move_node(node, x, y, node.width, node.height)) {
+                    return;
+                }
                 self.grid.move_node(node, x, y);
                 self._update_container_height();
             }
@@ -438,6 +460,9 @@
             resize: function (event, ui) {
                 var width = Math.round(ui.size.width / cell_width),
                     height = Math.round(ui.size.height / cell_height);
+                if (self.opts.height && !self.grid.can_move_node(node, node.x, node.y, width, height)) {
+                    return;
+                }
                 self.grid.move_node(node, node.x, node.y, width, height);
                 self._update_container_height();
             }
