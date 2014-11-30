@@ -261,7 +261,7 @@ and HTML:
 Changes
 =======
 
-#### v0.1.1 (development version)
+#### v0.2.0 (2014-11-30)
 
 - add `height` option
 - auto-generate css rules (widgets `height` and `top`)
