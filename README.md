@@ -263,6 +263,7 @@ Changes
 
 #### v0.2.1 (Current development version)
 
+- fix `y` coordinate calculation when dragging (issue #18)
 - fix `remove_widget` (issue #16)
 
 
