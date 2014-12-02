@@ -490,7 +490,8 @@
     };
 
     GridStack.prototype.remove_widget = function (el) {
-        var node = $(el).data('_gridstack_node');
+        el = $(el);
+        var node = el.data('_gridstack_node');
         this.grid.remove_node(node);
         el.remove();
         this._update_container_height();
