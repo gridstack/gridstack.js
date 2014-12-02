@@ -395,7 +395,7 @@
         });
         el.data('_gridstack_node', node);
 
-        var cell_width, cell_height = this.opts.cell_height + this.opts.vertical_margin / 2;
+        var cell_width, cell_height = this.opts.cell_height + this.opts.vertical_margin;
 
         var on_start_moving = function (event, ui) {
             var o = $(this);
@@ -442,7 +442,7 @@
             stop: on_end_moving,
             drag: function (event, ui) {
                 var x = Math.round(ui.position.left / cell_width),
-                    y = Math.floor(ui.position.top / cell_height);
+                    y = Math.floor((ui.position.top + cell_height/2) / cell_height);
                 if (self.opts.height && !self.grid.can_move_node(node, x, y, node.width, node.height)) {
                     return;
                 }
