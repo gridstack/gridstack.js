@@ -263,7 +263,7 @@ Changes
 
 #### v0.2.1 (Current development version)
 
-- fix `remove_widget` (#16)
+- fix `remove_widget` (issue #16)
 
 
 #### v0.2.0 (2014-11-30)
