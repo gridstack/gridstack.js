@@ -288,7 +288,6 @@
         });
 
         this.container.addClass(this.opts._class);
-        this.set_animation(this.opts.animate);
         this._styles = Utils.create_stylesheet();
         this._styles._max = 0;
 
@@ -325,6 +324,8 @@
                 self._prepare_element(el);
             });
         }
+
+        this.set_animation(this.opts.animate);
 
         this.placeholder = $('<div class="' + this.opts.placeholder_class + ' ' + this.opts.item_class + '"><div class="placeholder-content" /></div>').hide();
         this.container.append(this.placeholder);
