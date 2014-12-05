@@ -54,12 +54,12 @@ $(function () {
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` it tells to do not initialize existing items (default: `true`)
 - `cell_height` - one cell height (default: `60`)
-- `handle` - draggable handle selector (default: '.grid-stack-item-content')
+- `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `height` - maximum rows amount. Default is `0` which means no maximum rows
 - `float` - enable floating widgets (default: `false`)
-- `item_class` - widget class (default: 'grid-stack-item')
+- `item_class` - widget class (default: `'grid-stack-item'`)
 - `min_width` - minimal width. If window width is less grid will be shown in one-column mode (default: `768`)
-- `placeholder_class` - class for placeholder (default: 'grid-stack-placeholder')
+- `placeholder_class` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `vertical_margin` - vertical gap size (default: `20`)
 - `width` - amount of columns (default: `12`)
 
