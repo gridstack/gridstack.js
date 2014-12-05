@@ -101,3 +101,20 @@
         height: auto !important;
     }
 }
+
+.grid-stack.grid-stack-animate .grid-stack-item {
+    -webkit-transition: left .3s, top .3s, height .3s, width .3s;
+    -moz-transition: left .3s, top .3s, height .3s, width .3s;
+    -o-transition: left .3s, top .3s, height .3s, width .3s;
+    -ms-transition: left .3s, top .3s, height .3s, width .3s;
+    transition: left .3s, top .3s, height .3s, width .3s;
+}
+/*Don't animate the placeholder or when dragging/resizing*/
+.grid-stack.grid-stack-animate .grid-stack-item.ui-draggable-dragging,
+.grid-stack.grid-stack-animate .grid-stack-item.ui-resizable-resizing,
+.grid-stack.grid-stack-animate .grid-stack-item.grid-stack-placeholder{
+    -webkit-transition: left .0s, top .0s, height .0s, width .0s;
+    -moz-transition: left .0s, top .0s, height .0s, width .0s;
+    -o-transition: left .0s, top .0s, height .0s, width .0s;
+    transition:  left .0s, top .0s, height .0s, width .0s;
+}
