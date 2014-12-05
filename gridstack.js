@@ -283,7 +283,8 @@
             auto: true,
             min_width: 768,
             float: false,
-            _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0)
+            _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0),
+            animate: Boolean(this.container.attr('data-gs-animate')) || false
         });
 
         this.container.addClass(this.opts._class);
@@ -323,6 +324,8 @@
                 self._prepare_element(el);
             });
         }
+
+        this.set_animation(this.opts.animate);
 
         this.placeholder = $('<div class="' + this.opts.placeholder_class + ' ' + this.opts.item_class + '"><div class="placeholder-content" /></div>').hide();
         this.container.append(this.placeholder);
@@ -427,10 +430,12 @@
             self.grid.end_update();
 
             self.grid._sort_nodes();
-            _.each(self.grid.nodes, function (node) {
-                node.el.detach();
-                self.container.append(node.el);
-            });
+            setTimeout(function() { //if animating, delay detaching & reattaching all elements until animation finishes
+                _.each(self.grid.nodes, function (node) {
+                    node.el.detach();
+                    self.container.append(node.el);
+                });
+            }, (self.opts.animate ? 300 : 0));
         };
 
         el.draggable({
@@ -476,6 +481,15 @@
             el.resizable('disable');
         }
     };
+
+    GridStack.prototype.set_animation = function (enable) {
+        if (enable) {
+            this.container.addClass('grid-stack-animate');
+        }
+        else {
+            this.container.removeClass('grid-stack-animate');
+        }
+    }
 
     GridStack.prototype.add_widget = function (el, x, y, width, height, auto_position) {
         el = $(el);
