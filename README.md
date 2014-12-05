@@ -18,7 +18,7 @@ Usage
 ## Requirements
 
 * http://underscorejs.org (>= 1.7.0)
-* http://jquery.com (>= 1.11.0)
+* http://jquery.com (>= 1.11.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable 
 * http://jqueryui.com (>= 1.11.0)
 * (Optional) http://knockoutjs.com (>= 3.2.0)
 
