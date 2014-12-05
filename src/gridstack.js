@@ -284,7 +284,7 @@
             min_width: 768,
             float: false,
             _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0),
-            animate: false
+            animate: Boolean(this.container.attr('data-gs-animate')) || false
         });
 
         this.container.addClass(this.opts._class);
