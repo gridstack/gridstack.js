@@ -145,6 +145,9 @@ Parameters:
 - `auto_position` - if `true` then `x`, `y` parameters will be ignored and widget will be places on the first available
 position
 
+Widget will be always placed even if result height will be more then grid height. You need to use `will_it_fit` method
+before call `add_widget` for additional check.
+
 ```javascript
 $('.grid-stack').gridstack();
 
@@ -195,7 +198,22 @@ Enables/Disables moving.
 
 - `el` - widget to modify
 - `val` - if `true` widget will be draggable.
+
+### will_it_fit(x, y, width, height, auto_position)
+
+Returns `true` if the `height` of the grid will be less the vertical constraint. Always returns `true` if grid doesn't
+have `height` constraint.
+
+```javascript
+if (grid.will_it_fit(new_node.x, new_node.y, new_node.width, new_node.height, true)) {
+    grid.add_widget(new_node.x, new_node.y, new_node.width, new_node.height, true);
+}
+else {
+    alert('Not enough free space to please the widget');
+}
+```
  
+
 ## Utils
 
 ### GridStackUI.Utils.sort(nodes, \[dir\], \[width\])
@@ -265,6 +283,8 @@ Changes
 
 #### v0.2.1 (Current development version)
 
+- add `will_it_fit` API method
+- fix auto-positioning (issue #20)
 - add animation (thanks to @ishields)
 - fix `y` coordinate calculation when dragging (issue #18)
 - fix `remove_widget` (issue #16)
