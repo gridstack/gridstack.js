@@ -288,6 +288,7 @@ Changes
 - add animation (thanks to @ishields)
 - fix `y` coordinate calculation when dragging (issue #18)
 - fix `remove_widget` (issue #16)
+- minor fixes
 
 
 #### v0.2.0 (2014-11-30)
