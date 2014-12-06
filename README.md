@@ -78,6 +78,9 @@ $(function () {
 - `data-gs-no-move` - disable element moving 
 - `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first 
     available position
+- `data-gs-locked` - the widget will be locked. It means another widgets couldn't move it during dragging or resizing.
+The widget is still can be dragged or resized. You need to add `data-gs-no-resize` and `data-gs-no-move` attributes
+to completely lock the widget.
     
 ## Events
 
@@ -154,6 +157,13 @@ $('.grid-stack').gridstack();
 var grid = $('.grid-stack').data('gridstack');
 grid.add_widget(el, 0, 0, 3, 2, true);
 ```
+
+### locked(el, val)
+
+Locks/unlocks widget.
+
+- `el` - widget to modify.
+- `val` - if `true` widget will be locked. 
 
 ### remove_widget(el)
 
@@ -283,6 +293,7 @@ Changes
 
 #### v0.2.1 (Current development version)
 
+- add widgets locking (issue #19)
 - add `will_it_fit` API method
 - fix auto-positioning (issue #20)
 - add animation (thanks to @ishields)
