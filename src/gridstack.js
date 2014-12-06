@@ -64,15 +64,19 @@
                 if (n._updating || typeof n._orig_y == 'undefined' || n.y == n._orig_y)
                     return;
 
-                var collision_node = _.chain(this.nodes)
-                    .find(function (bn) {
-                        return n != bn && Utils.is_intercepted({x: n.x, y: n._orig_y, width: n.width, height: n.height}, bn);
-                    })
-                    .value();
+                var new_y = n.y;
+                while (new_y >= n._orig_y) {
+                    var collision_node = _.chain(this.nodes)
+                        .find(function (bn) {
+                            return n != bn && Utils.is_intercepted({x: n.x, y: new_y, width: n.width, height: n.height}, bn);
+                        })
+                        .value();
 
-                if (!collision_node) {
-                    n._dirty = true;
-                    n.y = n._orig_y;
+                    if (!collision_node) {
+                        n._dirty = true;
+                        n.y = new_y;
+                    }
+                    --new_y;
                 }
             }, this);
         }
