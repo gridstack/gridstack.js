@@ -209,7 +209,7 @@ if (grid.will_it_fit(new_node.x, new_node.y, new_node.width, new_node.height, tr
     grid.add_widget(new_node.x, new_node.y, new_node.width, new_node.height, true);
 }
 else {
-    alert('Not enough free space to please the widget');
+    alert('Not enough free space to place the widget');
 }
 ```
  
