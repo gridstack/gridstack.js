@@ -82,6 +82,8 @@
         }
         else {
             _.each(this.nodes, function (n, i) {
+                if (n.locked)
+                    return;
                 while (n.y > 0) {
                     var new_y = n.y - 1;
                     var can_be_moved = i == 0;
