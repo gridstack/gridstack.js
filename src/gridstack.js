@@ -219,6 +219,20 @@
         return clone.get_grid_height() <= this.height;
     };
 
+    GridStackEngine.prototype.can_be_placed_with_respect_to_height = function (node) {
+        if (!this.height)
+            return true;
+
+        var clone = new GridStackEngine(
+            this.width,
+            null,
+            this.float,
+            0,
+            _.map(this.nodes, function (n) { return $.extend({}, n) }));
+        clone.add_node(node);
+        return clone.get_grid_height() <= this.height;
+    };
+
     GridStackEngine.prototype.move_node = function (node, x, y, width, height, no_pack) {
         if (typeof x != 'number') x = node.x;
         if (typeof y != 'number') y = node.y;
@@ -492,7 +506,7 @@
         else {
             this.container.removeClass('grid-stack-animate');
         }
-    }
+    };
 
     GridStack.prototype.add_widget = function (el, x, y, width, height, auto_position) {
         el = $(el);
@@ -504,6 +518,11 @@
         this.container.append(el);
         this._prepare_element(el);
         this._update_container_height();
+    };
+
+    GridStack.prototype.will_it_fit = function (x, y, width, height, auto_position) {
+        var node = {x: x, y: y, width: width, height: height, auto_position: auto_position};
+        return this.grid.can_be_placed_with_respect_to_height(node);
     };
 
     GridStack.prototype.remove_widget = function (el) {
