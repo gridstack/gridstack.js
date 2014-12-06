@@ -174,6 +174,9 @@
 
             for (var i = 0; ; ++i) {
                 var x = i % this.width, y = Math.floor(i / this.width);
+                if (x + node.width > this.width) {
+                    continue;
+                }
                 if (!_.find(this.nodes, function (n) {
                     return Utils.is_intercepted({x: x, y: y, width: node.width, height: node.height}, n);
                 })) {
