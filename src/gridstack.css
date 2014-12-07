@@ -102,7 +102,7 @@
     }
 }
 
-.grid-stack.grid-stack-animate .grid-stack-item {
+.grid-stack.grid-stack-animate, .grid-stack.grid-stack-animate .grid-stack-item {
     -webkit-transition: left .3s, top .3s, height .3s, width .3s;
     -moz-transition: left .3s, top .3s, height .3s, width .3s;
     -o-transition: left .3s, top .3s, height .3s, width .3s;
