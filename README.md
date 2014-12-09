@@ -291,7 +291,7 @@ and HTML:
 Changes
 =======
 
-#### v0.2.1 (Current development version)
+#### v0.2.1
 
 - add widgets locking (issue #19)
 - add `will_it_fit` API method
