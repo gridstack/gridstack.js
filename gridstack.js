@@ -685,7 +685,10 @@
         if (typeof val == 'undefined') {
             return this.opts.cell_height;
         }
-        this.opts.cell_height = parseInt(val) || this.opts.cell_height;
+        val = parseInt(val);
+        if (val == this.opts.cell_height)
+            return;
+        this.opts.cell_height = val || this.opts.cell_height;
         this._update_styles();
     };
 
