@@ -291,6 +291,10 @@ and HTML:
 Changes
 =======
 
+#### v0.2.2 (current development version)
+
+- fix boolean attributes (issue #31)
+
 #### v0.2.1 (2014-12-09)
 
 - add widgets locking (issue #19)
