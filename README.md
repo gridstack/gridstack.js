@@ -158,6 +158,23 @@ var grid = $('.grid-stack').data('gridstack');
 grid.add_widget(el, 0, 0, 3, 2, true);
 ```
 
+### cell_height()
+
+Gets current cell height.
+
+### cell_height(val)
+
+Update current cell height. This method rebuilds an internal CSS stylesheet. Note: You can expect performance issues if
+call this method too often.
+
+```javascript
+grid.cell_height(grid.cell_width() * 1.2);
+```
+
+### cell_width()
+
+Gets current cell width.
+
 ### locked(el, val)
 
 Locks/unlocks widget.
@@ -293,6 +310,7 @@ Changes
 
 #### v0.2.2 (current development version)
 
+- add `cell_height`/`cell_width` API methods
 - fix boolean attributes (issue #31)
 
 #### v0.2.1 (2014-12-09)
