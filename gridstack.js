@@ -23,6 +23,16 @@
             document.head.appendChild(style);
 
             return style.sheet;
+        },
+
+        toBool: function (v) {
+            if (typeof v == 'boolean')
+                return v;
+            if (typeof v == 'string') {
+                v = v.toLowerCase();
+                return !(v == '' || v == 'no' || v == 'false' || v == '0');
+            }
+            return Boolean(v);
         }
     };
 
@@ -423,10 +433,10 @@
             min_width: el.attr('data-gs-min-width'),
             max_height: el.attr('data-gs-max-height') || 100,
             min_height: el.attr('data-gs-min-height'),
-            auto_position: el.attr('data-gs-auto-position'),
-            no_resize: el.attr('data-gs-no-resize'),
-            no_move: el.attr('data-gs-no-move'),
-            locked: el.attr('data-gs-locked'),
+            auto_position: Utils.toBool(el.attr('data-gs-auto-position')),
+            no_resize: Utils.toBool(el.attr('data-gs-no-resize')),
+            no_move: Utils.toBool(el.attr('data-gs-no-move')),
+            locked: Utils.toBool(el.attr('data-gs-locked')),
             el: el
         });
         el.data('_gridstack_node', node);
@@ -532,7 +542,7 @@
         if (typeof y != 'undefined') el.attr('data-gs-y', y);
         if (typeof width != 'undefined') el.attr('data-gs-width', width);
         if (typeof height != 'undefined') el.attr('data-gs-height', height);
-        if (typeof auto_position != 'undefined') el.attr('data-gs-auto-position', auto_position);
+        if (typeof auto_position != 'undefined') el.attr('data-gs-auto-position', auto_position ? 'yes' : null);
         this.container.append(el);
         this._prepare_element(el);
         this._update_container_height();
