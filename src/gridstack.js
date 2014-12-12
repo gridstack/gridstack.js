@@ -348,17 +348,7 @@
                     max_height = Math.max(max_height, n.y + n.height);
                 }
             });
-            max_height += 10;
-            if (max_height > self._styles._max) {
-                for (var i = self._styles._max; i < max_height; ++i) {
-                    var css;
-                    css = '.' + self.opts._class + ' .' + self.opts.item_class + '[data-gs-height="' + (i + 1) + '"] { height: ' + (self.opts.cell_height * (i + 1) + self.opts.vertical_margin * i) + 'px; }';
-                    self._styles.insertRule(css, i);
-                    css = '.' + self.opts._class + ' .' + self.opts.item_class + '[data-gs-y="' + (i) + '"] { top: ' + (self.opts.cell_height * i + self.opts.vertical_margin * i) + 'px; }';
-                    self._styles.insertRule(css, i);
-                }
-                self._styles._max = max_height;
-            }
+            self._update_styles(max_height + 10);
         }, this.opts.float, this.opts.height);
 
         if (this.opts.auto) {
@@ -410,6 +400,28 @@
         on_resize_handler();
     };
 
+    GridStack.prototype._update_styles = function (max_height) {
+        if (typeof max_height == 'undefined') {
+            max_height = this._styles._max;
+            this._styles._max = 0;
+            while (this._styles.rules.length) {
+                this._styles.removeRule(0);
+            }
+            this._update_container_height();
+        }
+
+        if (max_height > this._styles._max) {
+            for (var i = this._styles._max; i < max_height; ++i) {
+                var css;
+                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-height="' + (i + 1) + '"] { height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
+                this._styles.insertRule(css, i);
+                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-y="' + (i) + '"] { top: ' + (this.opts.cell_height * i + this.opts.vertical_margin * i) + 'px; }';
+                this._styles.insertRule(css, i);
+            }
+            this._styles._max = max_height;
+        }
+    };
+
     GridStack.prototype._update_container_height = function () {
         this.container.height(this.grid.get_grid_height() * (this.opts.cell_height + this.opts.vertical_margin) - this.opts.vertical_margin);
     };
@@ -441,13 +453,14 @@
         });
         el.data('_gridstack_node', node);
 
-        var cell_width, cell_height = this.opts.cell_height + this.opts.vertical_margin;
+        var cell_width, cell_height;
 
         var on_start_moving = function (event, ui) {
             var o = $(this);
             self.grid.clean_nodes();
             self.grid.begin_update(node);
             cell_width = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
+            cell_height = self.opts.cell_height + self.opts.vertical_margin;
             self.placeholder
                 .attr('data-gs-x', o.attr('data-gs-x'))
                 .attr('data-gs-y', o.attr('data-gs-y'))
@@ -666,6 +679,22 @@
 
             this.grid.move_node(node, x, y, node.width, node.height);
         });
+    };
+
+    GridStack.prototype.cell_height = function (val) {
+        if (typeof val == 'undefined') {
+            return this.opts.cell_height;
+        }
+        val = parseInt(val);
+        if (val == this.opts.cell_height)
+            return;
+        this.opts.cell_height = val || this.opts.cell_height;
+        this._update_styles();
+    };
+
+    GridStack.prototype.cell_width = function () {
+        var o = this.container.find('.' + this.opts.item_class).first();
+        return Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
     };
 
     scope.GridStackUI = GridStack;
