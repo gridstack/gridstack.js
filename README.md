@@ -310,6 +310,7 @@ Changes
 
 #### v0.2.2 (current development version)
 
+- fix grid initialization
 - add `cell_height`/`cell_width` API methods
 - fix boolean attributes (issue #31)
 

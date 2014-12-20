@@ -352,8 +352,16 @@
         }, this.opts.float, this.opts.height);
 
         if (this.opts.auto) {
+            var elements = [];
             this.container.find('.' + this.opts.item_class).each(function (index, el) {
-                self._prepare_element(el);
+                el = $(el);
+                elements.push({
+                    el: el,
+                    i: parseInt(el.attr('data-gs-x')) + parseInt(el.attr('data-gs-y')) * parseInt(el.attr('data-gs-width'))
+                });
+            });
+            _.chain(elements).sortBy(function (x) { return x.i; }).each(function (i) {
+                self._prepare_element(i.el);
             });
         }
 
