@@ -50,9 +50,14 @@
     GridStackEngine.prototype._fix_collisions = function (node) {
         this._sort_nodes(-1);
 
+        var nn = node, has_locked = Boolean(_.find(this.nodes, function (n) { return n.locked }));
+        if (!this.float && !has_locked) {
+            nn = {x: 0, y: node.y, width: this.width, height: node.height};
+        }
+
         while (true) {
             var collision_node = _.find(this.nodes, function (n) {
-                return n != node && Utils.is_intercepted(n, node);
+                return n != node && Utils.is_intercepted(n, nn);
             }, this);
             if (typeof collision_node == 'undefined') {
                 return;
