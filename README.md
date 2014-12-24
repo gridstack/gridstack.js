@@ -308,7 +308,7 @@ and HTML:
 Changes
 =======
 
-#### v0.2.2 (current development version)
+#### v0.2.2 (2014-12-23)
 
 - fix grid initialization
 - add `cell_height`/`cell_width` API methods
