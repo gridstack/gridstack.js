@@ -306,10 +306,10 @@ and HTML:
 
 ## Change grid width
 
-To addition to `width` option, CSS rules for `.grid-stack-item[data-gs-width="X"]` and 
-`.grid-stack-item[data-gs-x="X"]` have to be changed accordingly (see #38). 
+To change grid width (columns count), to addition to `width` option, CSS rules 
+for `.grid-stack-item[data-gs-width="X"]` and  `.grid-stack-item[data-gs-x="X"]` have to be changed accordingly. 
 
-For 3-column grid you need to rewrite CSS to be:
+For instance for 3-column grid you need to rewrite CSS to be:
 
 ```css
 .grid-stack-item[data-gs-width="3"]  { width: 100% }
@@ -332,6 +332,8 @@ For 4-column grid it should be:
 .grid-stack-item[data-gs-x="2"]  { left: 50% }
 .grid-stack-item[data-gs-x="1"]  { left: 25% }
 ```
+
+and so on.
 
 
 Changes
