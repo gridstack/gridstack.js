@@ -368,7 +368,7 @@ and so on.
 Changes
 =======
 
-#### v0.2.3 (currently development version)
+#### v0.2.3 (development version)
 
 - improved touch devices support
 - add `always_show_resize_handle` option
