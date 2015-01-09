@@ -88,7 +88,7 @@
                         <hr class="star-light">
                         <p>gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column
                         grid. It allows you to build draggable responsive bootstrap v3 friendly layouts.
-                        It also works great with <a href="http://knockoutjs.com">knockout.js</a></p>
+                        It also works great with <a href="http://knockoutjs.com">knockout.js</a> and touch devices.</p>
 
                         <p>Inspired by <a href="http://gridster.net">gridster.js</a>. Built with love.</p>
                     </div>
@@ -161,61 +161,6 @@ $(function () {
 
             <p>For more samples and documentation please visit <a href="https://github.com/troolee/gridstack.js">https://github.com/troolee/gridstack.js</a>.</p>
 
-            <h3>Use with knockout.js</h3>
-
-            <pre><code class="javascript">
-ko.components.register('dashboard-grid', {
-    viewModel: {
-        createViewModel: function (params, componentInfo) {
-            var ViewModel = function (params, componentInfo) {
-                var grid = null;
-
-                this.widgets = params.widgets;
-
-                this.afterAddWidget = function (items) {
-                    _.each(items, function (item) {
-                        item = $(item);
-
-                        if (grid == null) {
-                            grid = $(componentInfo.element).find('.grid-stack').gridstack({
-                                auto: false
-                            }).data('gridstack');
-                        }
-
-                        grid.add_widget(item);
-                        ko.utils.domNodeDisposal.addDisposeCallback(item[0], function () {
-                            grid.remove_widget(item);
-                        });
-                    }, this);
-                };
-
-            };
-
-            return new ViewModel(params, componentInfo);
-        }
-    },
-    template: [
-        '&lt;div class=&quot;grid-stack&quot;&gt;',
-        '   &lt;!-- ko foreach: widgets, afterRender: afterAddWidget --&gt;',
-        '       &lt;div class=&quot;grid-stack-item&quot; data-bind=&quot;attr: {',
-        '           \'data-gs-x\': x,',
-        '           \'data-gs-y\': y,',
-        '           \'data-gs-width\': width,',
-        '           \'data-gs-height\': height',
-        '       }&quot;&gt;',
-        '           &lt;span data-bind=&quot;text: $index&quot;&gt;&lt;/span&gt;',
-        '       &lt;/div&gt;',
-        '   &lt;!-- /ko --&gt;',
-        '&lt;/div&gt;'
-    ].join('\n')
-});
-            </code></pre>
-            
-            <p>and HTML:</p>
-            
-            <pre><code class="html">
-&lt;div data-bind=&quot;component: {name: 'dashboard-grid', params: $data}&quot;&gt;&lt;/div&gt;
-            </code></pre>
         </div>
     </section>
 
