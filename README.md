@@ -2,7 +2,8 @@ gridstack.js
 ============
 
 gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build 
-draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com)
+draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com) and
+touch devices.
 
 Inspired by [gridster.js](http://gridster.net). Built with love.
 
@@ -257,6 +258,15 @@ Sorts array of nodes
 
 Please use [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch) to make jQuery UI Draggable/Resizable
 working on touch-based devices.
+
+```html
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="jquery-ui.min.js"></script>
+<script src="jquery.ui.touch-punch.min.js"></script>
+
+<script src="gridstack.js"></script>
+```
 
 Also `always_show_resize_handle` option may be useful:
 
