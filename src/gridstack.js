@@ -331,7 +331,8 @@
             min_width: 768,
             float: false,
             _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0),
-            animate: Boolean(this.container.attr('data-gs-animate')) || false
+            animate: Boolean(this.container.attr('data-gs-animate')) || false,
+            always_show_resize_handle: opts.always_show_resize_handle || false
         });
 
         this.container.addClass(this.opts._class);
@@ -524,7 +525,7 @@
                 self._update_container_height();
             }
         }).resizable({
-            autoHide: true,
+            autoHide: !this.opts.always_show_resize_handle,
             handles: 'se',
             minHeight: this.opts.cell_height - 10,
             minWidth: 70,

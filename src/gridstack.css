@@ -97,6 +97,10 @@
         margin-bottom: 20px;
     }
 
+    .grid-stack-item .ui-resizable-handle {
+        display: none;
+    }
+
     .grid-stack {
         height: auto !important;
     }

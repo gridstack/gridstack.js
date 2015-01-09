@@ -51,6 +51,8 @@ $(function () {
 
 ## Options
 
+- `always_show_resize_handle` - if `true` the resizing handles are shown even the user is not hovering over the widget 
+    (default: `false`) 
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` it tells to do not initialize existing items (default: `true`)
 - `cell_height` - one cell height (default: `60`)
@@ -251,6 +253,22 @@ Sorts array of nodes
 - `dir` - `1` for asc, `-1` for desc
 - `width` - width of the grid. If `undefined` the width will be calculated automatically.
 
+## Touch devices support
+
+Please use (jQuery UI Touch Punch)[https://github.com/furf/jquery-ui-touch-punch] to make jQuery UI Draggable/Resizable
+working on touch-based devices.
+
+Also `always_show_resize_handle` option may be useful:
+
+```javascript
+$(function () {
+    var options = {
+        always_show_resize_handle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    };
+    $('.grid-stack').gridstack(options);
+});
+```
+
 ## Use with knockout.js
 
 ```javascript
@@ -338,6 +356,11 @@ and so on.
 
 Changes
 =======
+
+#### v0.2.3 (currently development version)
+
+- improved touch devices support
+- add `always_show_resize_handle` option
 
 #### v0.2.2 (2014-12-23)
 
