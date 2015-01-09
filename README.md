@@ -261,8 +261,8 @@ Please use [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch
 working on touch-based devices.
 
 ```html
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="underscore-min.js"></script>
+<script src="jquery.min.js"></script>
 <script src="jquery-ui.min.js"></script>
 <script src="jquery.ui.touch-punch.min.js"></script>
 
