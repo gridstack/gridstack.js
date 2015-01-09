@@ -260,7 +260,8 @@ ko.components.register('dashboard-grid', {
         hljs.initHighlightingOnLoad();
         $(function () {
             $('.grid-stack').gridstack({
-                width: 12
+                width: 12,
+                always_show_resize_handle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
             });
         });
     </script>
