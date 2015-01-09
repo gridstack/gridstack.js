@@ -18,10 +18,11 @@ Usage
 
 ## Requirements
 
-* http://underscorejs.org (>= 1.7.0)
-* http://jquery.com (>= 1.11.0) 
-* http://jqueryui.com (>= 1.11.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
-* (Optional) http://knockoutjs.com (>= 3.2.0)
+* [underscore.js](http://underscorejs.org) (>= 1.7.0)
+* [jQuery](http://jquery.com( (>= 1.11.0) 
+* [jQuery UI](http://jqueryui.com) (>= 1.11.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
+* (Optional) [knockout.js](http://knockoutjs.com) (>= 3.2.0)
+* (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
 
 ## Basic usage
 
