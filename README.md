@@ -255,7 +255,7 @@ Sorts array of nodes
 
 ## Touch devices support
 
-Please use (jQuery UI Touch Punch)[https://github.com/furf/jquery-ui-touch-punch] to make jQuery UI Draggable/Resizable
+Please use [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch) to make jQuery UI Draggable/Resizable
 working on touch-based devices.
 
 Also `always_show_resize_handle` option may be useful:
