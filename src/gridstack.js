@@ -19,17 +19,17 @@
 
             // WebKit hack :(
             //ie8 support
-			if(style.styleSheet) { 
-				style.styleSheet.cssText = cssText;
-			} else { 
-				style.appendChild(document.createTextNode(cssText));
-			}
+	    if(style.styleSheet) { 
+		style.styleSheet.cssText = cssText;
+	    } else { 
+		style.appendChild(document.createTextNode(cssText));
+	    }
 
             document.getElementsByTagName("head")[0].appendChild(style);
             
-			if(style.styleSheet) {
+	    if(style.styleSheet) {
             	return style.styleSheet;
-			}
+	    }
             else {
             	return style.sheet;
             }
@@ -441,19 +441,19 @@
                 var style = 'height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px;';
                 
                 if(this._styles.insertRule) {
-				    this._styles.insertRule(selector + '{' + style + '}', i);
-				} else {
-				    this._styles.addRule(selector,style, i);
-				}
+		    this._styles.insertRule(selector + '{' + style + '}', i);
+		} else {
+		    this._styles.addRule(selector,style, i);
+		}
 				
                 selector = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-y="' + (i) + '"]';
                 style = 'top: ' + (this.opts.cell_height * i + this.opts.vertical_margin * i) + 'px; ';
                 
                 if(this._styles.insertRule) {
-				    this._styles.insertRule(selector + '{' + style + '}', i);
-				} else {
-				    this._styles.addRule(selector,style, i);
-				}
+		    this._styles.insertRule(selector + '{' + style + '}', i);
+		} else {
+		    this._styles.addRule(selector,style, i);
+		}
             }
             this._styles._max = max_height;
         }
