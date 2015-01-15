@@ -1,6 +1,6 @@
 (function( gridStack ) {
     if ( typeof define === "function" && define.amd ) {
-	define([ "jquery", 'underscore' ], gridStack );
+	define([ "jquery", "underscore", "jquery-ui" ], gridStack );
     } else {
 	gridStack( jQuery, _ );
     }
