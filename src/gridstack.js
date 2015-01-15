@@ -1,4 +1,11 @@
-(function (scope, _) {
+(function( gridStack ) {
+    if ( typeof define === "function" && define.amd ) {
+	define([ "jquery", "underscore", "jqueryui" ], gridStack );
+    } else {
+	gridStack( jQuery, _ );
+    }
+}(function( $, _ ) {
+    var scope = window;
 
     var Utils = {
         is_intercepted: function (a, b) {
@@ -18,11 +25,21 @@
             // style.setAttribute("media", "only screen and (max-width : 1024px)")
 
             // WebKit hack :(
-            style.appendChild(document.createTextNode(""));
+            //ie8 support
+	    if(style.styleSheet) { 
+		style.styleSheet.cssText = cssText;
+	    } else { 
+		style.appendChild(document.createTextNode(cssText));
+	    }
 
-            document.head.appendChild(style);
-
-            return style.sheet;
+            document.getElementsByTagName("head")[0].appendChild(style);
+            
+	    if(style.styleSheet) {
+            	return style.styleSheet;
+	    }
+            else {
+            	return style.sheet;
+            }
         },
 
         toBool: function (v) {
@@ -426,11 +443,24 @@
 
         if (max_height > this._styles._max) {
             for (var i = this._styles._max; i < max_height; ++i) {
-                var css;
-                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-height="' + (i + 1) + '"] { height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
-                this._styles.insertRule(css, i);
-                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-y="' + (i) + '"] { top: ' + (this.opts.cell_height * i + this.opts.vertical_margin * i) + 'px; }';
-                this._styles.insertRule(css, i);
+                //ie8 support
+                var selector = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-height="' + (i + 1) + '"]';
+                var style = 'height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px;';
+                
+                if(this._styles.insertRule) {
+		    this._styles.insertRule(selector + '{' + style + '}', i);
+		} else {
+		    this._styles.addRule(selector,style, i);
+		}
+				
+                selector = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-y="' + (i) + '"]';
+                style = 'top: ' + (this.opts.cell_height * i + this.opts.vertical_margin * i) + 'px; ';
+                
+                if(this._styles.insertRule) {
+		    this._styles.insertRule(selector + '{' + style + '}', i);
+		} else {
+		    this._styles.addRule(selector,style, i);
+		}
             }
             this._styles._max = max_height;
         }
@@ -723,4 +753,4 @@
         });
     };
 
-})(window, _);
+}));
