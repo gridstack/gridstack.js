@@ -1,4 +1,11 @@
-(function (scope, _) {
+(function( factory ) {
+    if ( typeof define === "function" && define.amd ) {
+	define([ "jquery", 'underscore' ], factory );
+    } else {
+	factory( jQuery, _ );
+    }
+}(function( $, _ ) {
+    var scope = window;
 
     var Utils = {
         is_intercepted: function (a, b) {
@@ -746,4 +753,4 @@
         });
     };
 
-})(window, _);
+}));
