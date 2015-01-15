@@ -1,8 +1,8 @@
-(function( factory ) {
+(function( gridStack ) {
     if ( typeof define === "function" && define.amd ) {
-	define([ "jquery", 'underscore' ], factory );
+	define([ "jquery", 'underscore' ], gridStack );
     } else {
-	factory( jQuery, _ );
+	gridStack( jQuery, _ );
     }
 }(function( $, _ ) {
     var scope = window;
