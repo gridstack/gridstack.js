@@ -7,6 +7,53 @@ touch devices.
 
 Inspired by [gridster.js](http://gridster.net). Built with love.
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Demo](#demo)
+- [Usage](#usage)
+  - [Requirements](#requirements)
+  - [Basic usage](#basic-usage)
+  - [Options](#options)
+  - [Grid attributes](#grid-attributes)
+  - [Item attributes](#item-attributes)
+  - [Events](#events)
+    - [onchange(items)](#onchangeitems)
+    - [ondragstart(event, ui)](#ondragstartevent-ui)
+    - [ondragstop(event, ui)](#ondragstopevent-ui)
+    - [onresizestart(event, ui)](#onresizestartevent-ui)
+    - [onresizestop(event, ui)](#onresizestopevent-ui)
+  - [API](#api)
+    - [add_widget(el, x, y, width, height, auto_position)](#add_widgetel-x-y-width-height-auto_position)
+    - [cell_height()](#cell_height)
+    - [cell_height(val)](#cell_heightval)
+    - [cell_width()](#cell_width)
+    - [locked(el, val)](#lockedel-val)
+    - [remove_widget(el)](#remove_widgetel)
+    - [remove_all()](#remove_all)
+    - [resize(el, width, height)](#resizeel-width-height)
+    - [move(el, x, y)](#moveel-x-y)
+    - [resizable(el, val)](#resizableel-val)
+    - [movable(el, val)](#movableel-val)
+    - [will_it_fit(x, y, width, height, auto_position)](#will_it_fitx-y-width-height-auto_position)
+  - [Utils](#utils)
+    - [GridStackUI.Utils.sort(nodes, dir, width)](#gridstackuiutilssortnodes-dir-width)
+  - [Touch devices support](#touch-devices-support)
+  - [Use with knockout.js](#use-with-knockoutjs)
+  - [Change grid width](#change-grid-width)
+  - [Load grid from array](#load-grid-from-array)
+- [Changes](#changes)
+      - [v0.2.3 (development version)](#v023-development-version)
+      - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
+      - [v0.2.1 (2014-12-09)](#v021-2014-12-09)
+      - [v0.2.0 (2014-11-30)](#v020-2014-11-30)
+      - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+
 Demo
 ====
 
@@ -198,7 +245,7 @@ Parameters:
 
 Removes all widgets from the grid.
 
-### resize(el, width, \[height\])
+### resize(el, width, height)
 
 Changes widget size
 
@@ -207,7 +254,7 @@ Parameters:
 - `el` - widget to resize
 - `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
 
-### move(el, x, \[y\])
+### move(el, x, y)
 
 Changes widget position
 
@@ -247,13 +294,13 @@ else {
 
 ## Utils
 
-### GridStackUI.Utils.sort(nodes, \[dir\], \[width\])
+### GridStackUI.Utils.sort(nodes, dir, width)
 
 Sorts array of nodes
 
 - `nodes` - array to sort
-- `dir` - `1` for asc, `-1` for desc
-- `width` - width of the grid. If `undefined` the width will be calculated automatically.
+- `dir` - `1` for asc, `-1` for desc (optional)
+- `width` - width of the grid. If `undefined` the width will be calculated automatically (optional).
 
 ## Touch devices support
 
