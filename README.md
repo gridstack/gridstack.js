@@ -285,15 +285,17 @@ $(function () {
 ```javascript
 ko.components.register('dashboard-grid', {
     viewModel: {
-        createViewModel: function (params, componentInfo) {
-            var ViewModel = function (params, componentInfo) {
+        createViewModel: function (controller, componentInfo) {
+            var ViewModel = function (controller, componentInfo) {
                 var grid = null;
 
-                this.widgets = params.widgets;
+                this.widgets = controller.widgets;
 
                 this.afterAddWidget = function (items) {
                     _.each(items, function (item) {
                         item = $(item);
+                        if (item.data('_gridstack_node') || item[0].nodeType != 1)
+                            return;
 
                         if (grid == null) {
                             grid = $(componentInfo.element).find('.grid-stack').gridstack({
@@ -307,23 +309,34 @@ ko.components.register('dashboard-grid', {
                         });
                     }, this);
                 };
-
             };
 
-            return new ViewModel(params, componentInfo);
+            return new ViewModel(controller, componentInfo);
         }
     },
-    template: [
-        '<div class="grid-stack">',
-        '   <!-- ko foreach: widgets, afterRender: afterAddWidget -->',
-        '       <div class="grid-stack-item" data-bind="attr: {',
-        '               \'data-gs-x\': x, \'data-gs-y\': y,',
-        '               \'data-gs-width\': width, \'data-gs-height\': height}">',
-        '           <span data-bind="text: $index"></span>',
-        '       </div>',
-        '   <!-- /ko -->',
-        '</div>'
-    ].join('\n')
+    template:
+        [
+            '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
+            '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height}">',
+            '       <div class="grid-stack-item-content" data-bind="text: $index"></div>',
+            '   </div>',
+            '</div>'
+        ].join('\n')
+});
+
+$(function () {
+    var Controller = function (widgets) {
+        this.widgets = ko.observableArray(widgets);
+    };
+
+    var widgets = [
+        {x: 0, y: 0, width: 2, height: 2},
+        {x: 2, y: 0, width: 4, height: 2},
+        {x: 6, y: 0, width: 2, height: 4},
+        {x: 1, y: 2, width: 4, height: 2}
+    ];
+
+    ko.applyBindings(new Controller(widgets));
 });
 ```
 
