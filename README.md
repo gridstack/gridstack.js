@@ -346,6 +346,9 @@ and HTML:
 <div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
 ```
 
+See [example](http://troolee.github.io/gridstack.js/demo/knockout.html).
+
+
 ## Change grid width
 
 To change grid width (columns count), to addition to `width` option, CSS rules 
