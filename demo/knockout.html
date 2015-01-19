@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Knockout.js demo</title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.2/gridstack.min.js"/>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.1/gridstack.min.css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
+    <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.2.0/knockout-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.2/gridstack.min.js"></script>
+
+    <style type="text/css">
+        .grid-stack {
+            background: lightgoldenrodyellow;
+        }
+
+        .grid-stack-item-content {
+            color: #2c3e50;
+            text-align: center;
+            background-color: #18bc9c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1>knockout.js Demo</h1>
+
+        <div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+    </div>
+
+
+    <script type="text/javascript">
+        ko.components.register('dashboard-grid', {
+            viewModel: {
+                createViewModel: function (controller, componentInfo) {
+                    var ViewModel = function (controller, componentInfo) {
+                        var grid = null;
+
+                        this.widgets = controller.widgets;
+
+                        this.afterAddWidget = function (items) {
+                            _.each(items, function (item) {
+                                item = $(item);
+                                if (item.data('_gridstack_node') || item[0].nodeType != 1)
+                                    return;
+
+                                if (grid == null) {
+                                    grid = $(componentInfo.element).find('.grid-stack').gridstack({
+                                        auto: false
+                                    }).data('gridstack');
+                                }
+
+                                grid.add_widget(item);
+                                ko.utils.domNodeDisposal.addDisposeCallback(item[0], function () {
+                                    grid.remove_widget(item);
+                                });
+                            }, this);
+                        };
+                    };
+
+                    return new ViewModel(controller, componentInfo);
+                }
+            },
+            template:
+                [
+                    '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
+                    '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height}">',
+                    '       <div class="grid-stack-item-content" data-bind="text: $index"></div>',
+                    '   </div>',
+                    '</div>'
+                ].join('\n')
+        });
+
+        $(function () {
+            var Controller = function (widgets) {
+                this.widgets = ko.observableArray(widgets);
+            };
+
+            var widgets = [
+                {x: 0, y: 0, width: 2, height: 2},
+                {x: 2, y: 0, width: 4, height: 2},
+                {x: 6, y: 0, width: 2, height: 4},
+                {x: 1, y: 2, width: 4, height: 2}
+            ];
+
+            ko.applyBindings(new Controller(widgets));
+        });
+    </script>
+</body>
+</html>
