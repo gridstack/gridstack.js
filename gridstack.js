@@ -1,4 +1,18 @@
-(function (scope, _) {
+//     gridstack.js 0.2.3-dev
+//     http://troolee.github.io/gridstack.js/
+//     (c) 2014-2015 Pavel Reznikov
+//     gridstack.js may be freely distributed under the MIT license.
+
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery', 'underscore'], factory);
+    }
+    else {
+        factory(jQuery, _);
+    }
+})(function ($, _) {
+
+    var scope = window;
 
     var Utils = {
         is_intercepted: function (a, b) {
@@ -712,4 +726,5 @@
         });
     };
 
-})(window, _);
+    return scope.GridStackUI;
+});
