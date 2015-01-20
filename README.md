@@ -458,6 +458,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- fix nodes sorting
 - improved touch devices support
 - add `always_show_resize_handle` option
 
