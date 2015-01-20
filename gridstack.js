@@ -384,7 +384,10 @@
 
                 one_column_mode = true;
 
+                self.grid._sort_nodes();
                 _.each(self.grid.nodes, function (node) {
+                    self.container.append(node.el);
+
                     if (!node.no_move) {
                         node.el.draggable('disable');
                     }
@@ -498,14 +501,6 @@
             self.container.trigger('change', [self.grid.get_dirty_nodes()]);
 
             self.grid.end_update();
-
-            self.grid._sort_nodes();
-            setTimeout(function() { //if animating, delay detaching & reattaching all elements until animation finishes
-                _.each(self.grid.nodes, function (node) {
-                    node.el.detach();
-                    self.container.append(node.el);
-                });
-            }, (self.opts.animate ? 300 : 0));
         };
 
         el.draggable({
@@ -669,12 +664,6 @@
         self.container.trigger('change', [self.grid.get_dirty_nodes()]);
 
         self.grid.end_update();
-
-        self.grid._sort_nodes();
-        _.each(self.grid.nodes, function (node) {
-            node.el.detach();
-            self.container.append(node.el);
-        });
     };
 
     GridStack.prototype.resize = function (el, width, height) {
