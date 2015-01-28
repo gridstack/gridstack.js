@@ -29,6 +29,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [cell_height()](#cell_height)
     - [cell_height(val)](#cell_heightval)
     - [cell_width()](#cell_width)
+    - [get_cell_from_pixel(position)](#get_cell_from_pixelposition)
     - [locked(el, val)](#lockedel-val)
     - [remove_widget(el)](#remove_widgetel)
     - [remove_all()](#remove_all)
@@ -468,6 +469,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- add `get_cell_from_pixel` (thanks to @juchi)
 - AMD support
 - fix nodes sorting
 - improved touch devices support
