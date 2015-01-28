@@ -226,6 +226,16 @@ grid.cell_height(grid.cell_width() * 1.2);
 
 Gets current cell width.
 
+### get_cell_from_pixel(position)
+
+Get the position of the cell under a pixel on screen.
+
+Parameters :
+
+- `position` - the position of the pixel to resolve in absolute coordinates, as an object with `top` and `left`properties
+
+Returns an object with properties `x` and `y` i.e. the column and row in the grid.
+
 ### locked(el, val)
 
 Locks/unlocks widget.
