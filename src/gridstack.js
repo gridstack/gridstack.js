@@ -714,6 +714,17 @@
         return Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
     };
 
+    GridStack.prototype.get_cell_from_pixel = function(position) {
+        var containerPos = this.container.position();
+        var relativeLeft = position.left - containerPos.left;
+        var relativeTop = position.top - containerPos.top;
+
+        var column_width = Math.floor(this.container.width() / this.opts.width);
+        var row_height = this.opts.cell_height + this.opts.vertical_margin;
+
+        return {x: Math.floor(relativeLeft / column_width), y: Math.floor(relativeTop / row_height)};
+    };
+
     scope.GridStackUI = GridStack;
 
     scope.GridStackUI.Utils = Utils;
