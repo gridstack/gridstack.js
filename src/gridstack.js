@@ -582,6 +582,8 @@
         this.container.append(el);
         this._prepare_element(el);
         this._update_container_height();
+
+        return el;
     };
 
     GridStack.prototype.will_it_fit = function (x, y, width, height, auto_position) {

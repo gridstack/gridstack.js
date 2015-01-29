@@ -191,7 +191,7 @@ $('.grid-stack').on('resizestop', function (event, ui) {
 
 ### add_widget(el, x, y, width, height, auto_position)
 
-Creates new widget.
+Creates new widget and returns it.
 
 Parameters:
 
