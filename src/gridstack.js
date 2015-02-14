@@ -446,6 +446,10 @@
                 var css;
                 css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-height="' + (i + 1) + '"] { height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
                 this._styles.insertRule(css, i);
+                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-min-height="' + (i + 1) + '"] { min-height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
+                this._styles.insertRule(css, i);
+                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-max-height="' + (i + 1) + '"] { max-height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
+                this._styles.insertRule(css, i);
                 css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-y="' + (i) + '"] { top: ' + (this.opts.cell_height * i + this.opts.vertical_margin * i) + 'px; }';
                 this._styles.insertRule(css, i);
             }

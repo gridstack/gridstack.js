@@ -75,6 +75,32 @@
 .grid-stack-item[data-gs-width="2"]  { width: 16.66666667% }
 .grid-stack-item[data-gs-width="1"]  { width: 8.33333333% }
 
+.grid-stack-item[data-gs-min-width="12"] { min-width: 100% }
+.grid-stack-item[data-gs-min-width="11"] { min-width: 91.66666667% }
+.grid-stack-item[data-gs-min-width="10"] { min-width: 83.33333333% }
+.grid-stack-item[data-gs-min-width="9"]  { min-width: 75% }
+.grid-stack-item[data-gs-min-width="8"]  { min-width: 66.66666667% }
+.grid-stack-item[data-gs-min-width="7"]  { min-width: 58.33333333% }
+.grid-stack-item[data-gs-min-width="6"]  { min-width: 50% }
+.grid-stack-item[data-gs-min-width="5"]  { min-width: 41.66666667% }
+.grid-stack-item[data-gs-min-width="4"]  { min-width: 33.33333333% }
+.grid-stack-item[data-gs-min-width="3"]  { min-width: 25% }
+.grid-stack-item[data-gs-min-width="2"]  { min-width: 16.66666667% }
+.grid-stack-item[data-gs-min-width="1"]  { min-width: 8.33333333% }
+
+.grid-stack-item[data-gs-max-width="12"] { max-width: 100% }
+.grid-stack-item[data-gs-max-width="11"] { max-width: 91.66666667% }
+.grid-stack-item[data-gs-max-width="10"] { max-width: 83.33333333% }
+.grid-stack-item[data-gs-max-width="9"]  { max-width: 75% }
+.grid-stack-item[data-gs-max-width="8"]  { max-width: 66.66666667% }
+.grid-stack-item[data-gs-max-width="7"]  { max-width: 58.33333333% }
+.grid-stack-item[data-gs-max-width="6"]  { max-width: 50% }
+.grid-stack-item[data-gs-max-width="5"]  { max-width: 41.66666667% }
+.grid-stack-item[data-gs-max-width="4"]  { max-width: 33.33333333% }
+.grid-stack-item[data-gs-max-width="3"]  { max-width: 25% }
+.grid-stack-item[data-gs-max-width="2"]  { max-width: 16.66666667% }
+.grid-stack-item[data-gs-max-width="1"]  { max-width: 8.33333333% }
+
 .grid-stack-item[data-gs-x="12"] { left: 100% }
 .grid-stack-item[data-gs-x="11"] { left: 91.66666667% }
 .grid-stack-item[data-gs-x="10"] { left: 83.33333333% }
