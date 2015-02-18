@@ -651,6 +651,16 @@
         return this;
     };
 
+    GridStack.prototype.disable = function () {
+        this.movable(this.container.find('.' + this.opts.item_class), false);
+        this.resizable(this.container.find('.' + this.opts.item_class), false);
+    };
+
+    GridStack.prototype.enable = function () {
+        this.movable(this.container.find('.' + this.opts.item_class), true);
+        this.resizable(this.container.find('.' + this.opts.item_class), true);
+    };
+
     GridStack.prototype.locked = function (el, val) {
         el = $(el);
         el.each(function (index, el) {
