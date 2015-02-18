@@ -29,6 +29,8 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [cell_height()](#cell_height)
     - [cell_height(val)](#cell_heightval)
     - [cell_width()](#cell_width)
+    - [disable()](#disable)
+    - [enable()](#enable)
     - [get_cell_from_pixel(position)](#get_cell_from_pixelposition)
     - [locked(el, val)](#lockedel-val)
     - [remove_widget(el)](#remove_widgetel)
@@ -226,6 +228,24 @@ grid.cell_height(grid.cell_width() * 1.2);
 ### cell_width()
 
 Gets current cell width.
+
+### disable()
+
+Disables widgets moving/resizing. This is a shortcut for:
+
+```javascript
+grid.movable('.grid-stack-item', false);
+grid.resizable('.grid-stack-item', false);
+```
+
+### enable()
+
+Enables widgets moving/resizing. This is a shortcut for:
+
+```javascript
+grid.movable('.grid-stack-item', true);
+grid.resizable('.grid-stack-item', true);
+```
 
 ### get_cell_from_pixel(position)
 
@@ -469,6 +489,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- add `disable`/`enable` methods
 - add `get_cell_from_pixel` (thanks to @juchi)
 - AMD support
 - fix nodes sorting
