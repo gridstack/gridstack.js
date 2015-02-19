@@ -351,6 +351,7 @@
 
         this.container.addClass(this.opts._class);
         this._styles = Utils.create_stylesheet();
+        this._h_styles = Utils.create_stylesheet();
         this._styles._max = 0;
 
         this.grid = new GridStackEngine(this.opts.width, function (nodes) {
@@ -369,6 +370,7 @@
                 }
             });
             self._update_styles(max_height + 10);
+            self._update_horizontal_styles(self.opts.width);
         }, this.opts.float, this.opts.height);
 
         if (this.opts.auto) {
@@ -454,6 +456,27 @@
                 this._styles.insertRule(css, i);
             }
             this._styles._max = max_height;
+        }
+    };
+
+    GridStack.prototype._update_horizontal_styles = function(columns) {
+        while (this._h_styles.cssRules.length) {
+            this._h_styles.deleteRule(0);
+        }
+
+        var commonSelector = '.' + this.opts._class + ' .' + this.opts.item_class;
+        for (var i = 0; i < columns; i++) {
+            var col_width = 100 / columns;
+            var col_index = i + 1;
+            var css;
+            css = commonSelector + '[data-gs-width="' + col_index + '"] { width: ' + (col_index * col_width) + '%; }';
+            this._h_styles.insertRule(css, i);
+            css = commonSelector + '[data-gs-min-width="' + col_index + '"] { min-width: ' + (col_index * col_width) + '%; }';
+            this._h_styles.insertRule(css, 2 * i + 1);
+            css = commonSelector + '[data-gs-max-width="' + col_index + '"] { max-width: ' + (col_index * col_width) + '%; }';
+            this._h_styles.insertRule(css, 3 * i + 2);
+            css = commonSelector + '[data-gs-x="' + col_index + '"] { left: ' + (col_index * col_width) + '%; }';
+            this._h_styles.insertRule(css, 4 * i + 3);
         }
     };
 
