@@ -426,38 +426,6 @@ and HTML:
 
 See [example](http://troolee.github.io/gridstack.js/demo/knockout.html).
 
-
-## Change grid width
-
-To change grid width (columns count), to addition to `width` option, CSS rules 
-for `.grid-stack-item[data-gs-width="X"]` and  `.grid-stack-item[data-gs-x="X"]` have to be changed accordingly. 
-
-For instance for 3-column grid you need to rewrite CSS to be:
-
-```css
-.grid-stack-item[data-gs-width="3"]  { width: 100% }
-.grid-stack-item[data-gs-width="2"]  { width: 66.66666667% }
-.grid-stack-item[data-gs-width="1"]  { width: 33.33333333% }
-
-.grid-stack-item[data-gs-x="2"]  { left: 66.66666667% }
-.grid-stack-item[data-gs-x="1"]  { left: 33.33333333% }
-```
-
-For 4-column grid it should be:
-
-```css
-.grid-stack-item[data-gs-width="4"]  { width: 100% }
-.grid-stack-item[data-gs-width="3"]  { width: 75% }
-.grid-stack-item[data-gs-width="2"]  { width: 50% }
-.grid-stack-item[data-gs-width="1"]  { width: 25% }
-
-.grid-stack-item[data-gs-x="3"]  { left: 75% }
-.grid-stack-item[data-gs-x="2"]  { left: 50% }
-.grid-stack-item[data-gs-x="1"]  { left: 25% }
-```
-
-and so on.
-
 ## Load grid from array
 
 ```javascript
