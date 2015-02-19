@@ -435,8 +435,8 @@
         if (typeof max_height == 'undefined') {
             max_height = this._styles._max;
             this._styles._max = 0;
-            while (this._styles.rules.length) {
-                this._styles.removeRule(0);
+            while (this._styles.cssRules.length) {
+                this._styles.deleteRule(0);
             }
             this._update_container_height();
         }
