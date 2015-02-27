@@ -27,16 +27,18 @@
 
         create_stylesheet: function () {
             var style = document.createElement("style");
-
-            // style.setAttribute("media", "screen")
-            // style.setAttribute("media", "only screen and (max-width : 1024px)")
-
-            // WebKit hack :(
             style.appendChild(document.createTextNode(""));
-
             document.head.appendChild(style);
-
             return style.sheet;
+        },
+
+        insert_css_rule: function (sheet, selector, rules, index) {
+            if("insertRule" in sheet) {
+                sheet.insertRule(selector + "{" + rules + "}", index);
+            }
+            else if("addRule" in sheet) {
+                sheet.addRule(selector, rules, index);
+            }
         },
 
         toBool: function (v) {
@@ -443,15 +445,27 @@
 
         if (max_height > this._styles._max) {
             for (var i = this._styles._max; i < max_height; ++i) {
-                var css;
-                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-height="' + (i + 1) + '"] { height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
-                this._styles.insertRule(css, i);
-                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-min-height="' + (i + 1) + '"] { min-height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
-                this._styles.insertRule(css, i);
-                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-max-height="' + (i + 1) + '"] { max-height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
-                this._styles.insertRule(css, i);
-                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-y="' + (i) + '"] { top: ' + (this.opts.cell_height * i + this.opts.vertical_margin * i) + 'px; }';
-                this._styles.insertRule(css, i);
+                var prefix = '.' + this.opts._class + ' .' + this.opts.item_class;
+                Utils.insert_css_rule(this._styles,
+                    prefix + '[data-gs-height="' + (i + 1) + '"]',
+                    'height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px;',
+                    i
+                );
+                Utils.insert_css_rule(this._styles,
+                    prefix + '[data-gs-min-height="' + (i + 1) + '"]',
+                    'min-height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px;',
+                    i
+                );
+                Utils.insert_css_rule(this._styles,
+                    prefix + '[data-gs-max-height="' + (i + 1) + '"]',
+                    'max-height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px;',
+                    i
+                );
+                Utils.insert_css_rule(this._styles,
+                    prefix + '[data-gs-y="' + i + '"]',
+                    'top: ' + (this.opts.cell_height * i + this.opts.vertical_margin * i) + 'px;',
+                    i
+                );
             }
             this._styles._max = max_height;
         }
