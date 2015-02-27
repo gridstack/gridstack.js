@@ -34,7 +34,7 @@
             else {
                 style.appendChild(document.createTextNode(""));
             }
-            document.head.appendChild(style);
+            document.getElementsByTagName('head')[0].appendChild(style);
             return style.sheet;
         },
 
