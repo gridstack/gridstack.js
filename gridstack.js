@@ -33,10 +33,10 @@
         },
 
         insert_css_rule: function (sheet, selector, rules, index) {
-            if("insertRule" in sheet) {
+            if(typeof sheet.insertRule === 'function') {
                 sheet.insertRule(selector + "{" + rules + "}", index);
             }
-            else if("addRule" in sheet) {
+            else if(typeof sheet.addRule === 'function') {
                 sheet.addRule(selector, rules, index);
             }
         },
@@ -437,8 +437,13 @@
         if (typeof max_height == 'undefined') {
             max_height = this._styles._max;
             this._styles._max = 0;
+            var f = function () {};
+            if (typeof this._styles.removeRule === 'function')
+                f = this._styles.removeRule;
+            else if (typeof this._styles.deleteRule === 'function')
+                f = this._styles.deleteRule;
             while (this._styles.rules.length) {
-                this._styles.removeRule(0);
+                f(0);
             }
             this._update_container_height();
         }
