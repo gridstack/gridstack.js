@@ -424,14 +424,14 @@ See [example](http://troolee.github.io/gridstack.js/demo/knockout.html).
 **Notes:** It's very important to exclude training spaces after widget template:
 
 ```
-    template:
-        [
-            '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-            '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
-            '       ....',
-            '   </div>', // <-- NO SPACE **AFTER** </div>
-            '</div> '    // <-- NO SPACE **BEFORE** </div>
-        ].join('')       // <-- JOIN WITH **EMPTY** STRING 
+template:
+    [
+        '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
+        '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+        '       ....',
+        '   </div>', // <-- NO SPACE **AFTER** </div>
+        '</div> '    // <-- NO SPACE **BEFORE** </div>
+    ].join('')       // <-- JOIN WITH **EMPTY** STRING 
 ```
 
 Otherwise `addDisposeCallback` won't work.
