@@ -27,7 +27,13 @@
 
         create_stylesheet: function () {
             var style = document.createElement("style");
-            style.appendChild(document.createTextNode(""));
+            style.setAttribute("type", "text/css");
+            if (style.styleSheet) {
+                style.styleSheet.cssText = "";
+            }
+            else {
+                style.appendChild(document.createTextNode(""));
+            }
             document.head.appendChild(style);
             return style.sheet;
         },
