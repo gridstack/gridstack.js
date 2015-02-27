@@ -74,14 +74,7 @@
                     return new ViewModel(controller, componentInfo);
                 }
             },
-            template:
-                [
-                    '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-                    '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
-                    '       <div class="grid-stack-item-content"><button data-bind="click: $root.delete_widget">Delete me</button></div>',
-                    '   </div>',
-                    '</div> '
-                ].join('')
+            template: { element: 'gridstack-template' }
         });
 
         $(function () {
@@ -116,5 +109,12 @@
             ko.applyBindings(controller);
         });
     </script>
+
+    <template id="gridstack-template">
+        <div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">
+           <div class="grid-stack-item" data-bind="attr: {'data-gs-x': $data.x, 'data-gs-y': $data.y, 'data-gs-width': $data.width, 'data-gs-height': $data.height, 'data-gs-auto-position': $data.auto_position}">
+               <div class="grid-stack-item-content"><button data-bind="click: $root.delete_widget">Delete me</button></div>
+           </div></div><!-- <---- NO SPACE BETWEEN THESE CLOSING TAGS -->
+    </template>
 </body>
 </html>
