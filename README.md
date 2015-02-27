@@ -419,7 +419,7 @@ and HTML:
 <div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
 ```
 
-See [example](http://troolee.github.io/gridstack.js/demo/knockout.html).
+See examples: [example 1](http://troolee.github.io/gridstack.js/demo/knockout.html), [example 2](http://troolee.github.io/gridstack.js/demo/knockout2.html).
 
 **Notes:** It's very important to exclude training spaces after widget template:
 
