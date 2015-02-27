@@ -446,6 +446,10 @@
                 var css;
                 css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-height="' + (i + 1) + '"] { height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
                 this._styles.insertRule(css, i);
+                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-min-height="' + (i + 1) + '"] { min-height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
+                this._styles.insertRule(css, i);
+                css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-max-height="' + (i + 1) + '"] { max-height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px; }';
+                this._styles.insertRule(css, i);
                 css = '.' + this.opts._class + ' .' + this.opts.item_class + '[data-gs-y="' + (i) + '"] { top: ' + (this.opts.cell_height * i + this.opts.vertical_margin * i) + 'px; }';
                 this._styles.insertRule(css, i);
             }
@@ -582,6 +586,8 @@
         this.container.append(el);
         this._prepare_element(el);
         this._update_container_height();
+
+        return el;
     };
 
     GridStack.prototype.will_it_fit = function (x, y, width, height, auto_position) {
@@ -722,6 +728,17 @@
     GridStack.prototype.cell_width = function () {
         var o = this.container.find('.' + this.opts.item_class).first();
         return Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
+    };
+
+    GridStack.prototype.get_cell_from_pixel = function(position) {
+        var containerPos = this.container.position();
+        var relativeLeft = position.left - containerPos.left;
+        var relativeTop = position.top - containerPos.top;
+
+        var column_width = Math.floor(this.container.width() / this.opts.width);
+        var row_height = this.opts.cell_height + this.opts.vertical_margin;
+
+        return {x: Math.floor(relativeLeft / column_width), y: Math.floor(relativeTop / row_height)};
     };
 
     scope.GridStackUI = GridStack;
