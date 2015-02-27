@@ -370,22 +370,17 @@ ko.components.register('dashboard-grid', {
                 this.widgets = controller.widgets;
 
                 this.afterAddWidget = function (items) {
-                    _.each(items, function (item) {
-                        item = $(item);
-                        if (item.data('_gridstack_node') || item[0].nodeType != 1)
-                            return;
+                    if (grid == null) {
+                        grid = $(componentInfo.element).find('.grid-stack').gridstack({
+                            auto: false
+                        }).data('gridstack');
+                    }
 
-                        if (grid == null) {
-                            grid = $(componentInfo.element).find('.grid-stack').gridstack({
-                                auto: false
-                            }).data('gridstack');
-                        }
-
-                        grid.add_widget(item);
-                        ko.utils.domNodeDisposal.addDisposeCallback(item[0], function () {
-                            grid.remove_widget(item);
-                        });
-                    }, this);
+                    var item = _.find(items, function (i) { return i.nodeType == 1 });
+                    grid.add_widget(item);
+                    ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
+                        grid.remove_widget(item);
+                    });
                 };
             };
 
@@ -395,11 +390,11 @@ ko.components.register('dashboard-grid', {
     template:
         [
             '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-            '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height}">',
-            '       <div class="grid-stack-item-content" data-bind="text: $index"></div>',
+            '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+            '       <div class="grid-stack-item-content">...</div>',
             '   </div>',
-            '</div>'
-        ].join('\n')
+            '</div> '
+        ].join('')
 });
 
 $(function () {
@@ -425,6 +420,21 @@ and HTML:
 ```
 
 See [example](http://troolee.github.io/gridstack.js/demo/knockout.html).
+
+**Notes:** It's very important to exclude training spaces after widget template:
+
+```
+    template:
+        [
+            '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
+            '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+            '       ....',
+            '   </div>', // <-- NO SPACE **AFTER** </div>
+            '</div> '    // <-- NO SPACE **BEFORE** </div>
+        ].join('')       // <-- JOIN WITH **EMPTY** STRING 
+```
+
+Otherwise `addDisposeCallback` won't work.
 
 
 ## Change grid width
