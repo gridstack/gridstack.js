@@ -45,7 +45,11 @@
     bottom: 0;
     right: 15px;
 
+    font-size: 10px;
+
+    display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -54,8 +58,10 @@
     -webkit-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     transform: rotate(90deg);
+}
 
-    font-size: 10px;
+:root .grid-stack-item .ui-resizable-handle {
+    filter: none;
 }
 
 .grid-stack-item .ui-resizable-handle::before {
