@@ -7,8 +7,8 @@
     padding: 0;
 }
 
-.grid-stack-item .grid-stack-item-content,
-.grid-stack-item .placeholder-content {
+.grid-stack-item > .grid-stack-item-content,
+.grid-stack-item > .placeholder-content {
     margin: 0;
     position: absolute;
     top: 0;
@@ -20,7 +20,7 @@
     overflow: auto;
 }
 
-.grid-stack-placeholder .placeholder-content {
+.grid-stack-placeholder > .placeholder-content {
     border: 1px dashed lightgray;
 }
 
@@ -29,26 +29,28 @@
     z-index: 100;
 }
 
-.grid-stack-item.ui-draggable-dragging .grid-stack-item-content,
-.grid-stack-item.ui-resizable-resizing .grid-stack-item-content {
+.grid-stack-item.ui-draggable-dragging > .grid-stack-item-content,
+.grid-stack-item.ui-resizable-resizing > .grid-stack-item-content {
     box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
     opacity: 0.8;
 }
 
-.grid-stack-item .ui-resizable-handle {
-    padding: 3px;
-    margin: 3px 0;
-    cursor: nwse-resize;
+.grid-stack-item > .ui-resizable-handle {
+}
+
+:root .grid-stack-item > .ui-resizable-handle {
+    filter: none;
+}
+
+.grid-stack-item > .ui-resizable-se {
+    text-align: right;
     color: gray;
 
-    position: absolute;
-    bottom: 0;
-    right: 15px;
-
-    font-size: 10px;
+    padding: 2px 3px 0 0;
+    margin: 0;
 
     display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 10px/1 FontAwesome;
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;
@@ -60,13 +62,58 @@
     transform: rotate(90deg);
 }
 
-:root .grid-stack-item .ui-resizable-handle {
-    filter: none;
+/** Uncomment this to show bottom-left resize handle **/
+/*
+.grid-stack-item > .ui-resizable-sw {
+    text-align: right;
+    color: gray;
+
+    padding: 2px 3px 0 0;
+    margin: 0;
+
+    display: inline-block;
+    font: normal normal normal 10px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
-.grid-stack-item .ui-resizable-handle::before {
+.grid-stack-item .ui-resizable-sw::before {
     content: "\f065";
 }
+*/
+
+.grid-stack-item > .ui-resizable-se::before {
+    content: "\f065";
+}
+
+.ui-resizable-handle {
+    position: absolute;
+    font-size: 0.1px;
+    display: block;
+    -ms-touch-action: none;
+    touch-action: none;
+}
+
+.grid-stack-item.ui-resizable-disabled > .ui-resizable-handle,
+.grid-stack-item.ui-resizable-autohide > .ui-resizable-handle {
+    display: none;
+}
+
+.grid-stack-item > .ui-resizable-nw { cursor: nw-resize; width: 20px; height: 20px; left: 10px; top: 0; }
+.grid-stack-item > .ui-resizable-n  { cursor: n-resize;  height: 10px; top: 0; left: 25px; right: 25px; }
+.grid-stack-item > .ui-resizable-ne { cursor: ne-resize; width: 20px; height: 20px; right: 10px; top: 0; }
+.grid-stack-item > .ui-resizable-e  { cursor: e-resize;  width: 10px; right: 10px; top: 15px; bottom: 15px; }
+.grid-stack-item > .ui-resizable-se { cursor: se-resize; width: 20px; height: 20px; right: 10px; bottom: 0; }
+.grid-stack-item > .ui-resizable-s  { cursor: s-resize;  height: 10px; left: 25px; bottom: 0; right: 25px; }
+.grid-stack-item > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px; left: 10px; bottom: 0; }
+.grid-stack-item > .ui-resizable-w  { cursor: w-resize;  width: 10px; left: 10px; top: 15px; bottom: 15px; }
 
 .grid-stack-item { min-width: 8.33333333% }
 
