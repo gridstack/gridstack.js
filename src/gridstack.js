@@ -434,6 +434,8 @@
     };
 
     GridStack.prototype._update_styles = function (max_height) {
+        var prefix = '.' + this.opts._class + ' .' + this.opts.item_class;
+
         if (typeof max_height == 'undefined') {
             max_height = this._styles._max;
             this._styles._max = 0;
@@ -448,9 +450,12 @@
             this._update_container_height();
         }
 
+        if (this._styles._max == 0) {
+            Utils.insert_css_rule(this._styles, prefix, 'min-height: ' + (this.opts.cell_height) + 'px;', 0);
+        }
+
         if (max_height > this._styles._max) {
             for (var i = this._styles._max; i < max_height; ++i) {
-                var prefix = '.' + this.opts._class + ' .' + this.opts.item_class;
                 Utils.insert_css_rule(this._styles,
                     prefix + '[data-gs-height="' + (i + 1) + '"]',
                     'height: ' + (this.opts.cell_height * (i + 1) + this.opts.vertical_margin * i) + 'px;',

@@ -68,6 +68,8 @@
     content: "\f065";
 }
 
+.grid-stack-item { min-width: 8.33333333% }
+
 .grid-stack-item[data-gs-width="12"] { width: 100% }
 .grid-stack-item[data-gs-width="11"] { width: 91.66666667% }
 .grid-stack-item[data-gs-width="10"] { width: 83.33333333% }
