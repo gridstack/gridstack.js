@@ -362,7 +362,7 @@
             draggable: _.defaults(opts.draggable || {}, {
                 handle: '.grid-stack-item-content',
                 scroll: true,
-                appendTo: 'body',
+                appendTo: 'body'
             })
         });
 
