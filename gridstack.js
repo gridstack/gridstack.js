@@ -354,7 +354,16 @@
             float: false,
             _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0),
             animate: Boolean(this.container.attr('data-gs-animate')) || false,
-            always_show_resize_handle: opts.always_show_resize_handle || false
+            always_show_resize_handle: opts.always_show_resize_handle || false,
+            resizable: _.defaults(opts.resizable || {}, {
+                autoHide: !(opts.always_show_resize_handle || false),
+                handles: 'se'
+            }),
+            draggable: _.defaults(opts.draggable || {}, {
+                handle: '.grid-stack-item-content',
+                scroll: true,
+                appendTo: 'body',
+            })
         });
 
         this.container.addClass(this.opts._class);
@@ -551,11 +560,7 @@
             self.grid.end_update();
         };
 
-        el.draggable({
-            handle: this.opts.handle,
-            scroll: true,
-            appendTo: 'body',
-
+        el.draggable(_.extend(this.opts.draggable, {
             start: on_start_moving,
             stop: on_end_moving,
             drag: function (event, ui) {
@@ -567,24 +572,23 @@
                 self.grid.move_node(node, x, y);
                 self._update_container_height();
             }
-        }).resizable({
-            autoHide: !this.opts.always_show_resize_handle,
-            handles: 'se',
+        })).resizable(_.extend(this.opts.resizable, {
             minHeight: this.opts.cell_height - 10,
-            minWidth: 70,
 
             start: on_start_moving,
             stop: on_end_moving,
             resize: function (event, ui) {
-                var width = Math.round(ui.size.width / cell_width),
+                var x = Math.round(ui.position.left / cell_width),
+                    y = Math.floor((ui.position.top + cell_height/2) / cell_height),
+                    width = Math.round(ui.size.width / cell_width),
                     height = Math.round(ui.size.height / cell_height);
-                if (!self.grid.can_move_node(node, node.x, node.y, width, height)) {
+                if (!self.grid.can_move_node(node, x, y, width, height)) {
                     return;
                 }
-                self.grid.move_node(node, node.x, node.y, width, height);
+                self.grid.move_node(node, x, y, width, height);
                 self._update_container_height();
             }
-        });
+        }));
 
         if (node.no_move || this._is_one_column_mode()) {
             el.draggable('disable');
