@@ -46,6 +46,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
   - [Use with knockout.js](#use-with-knockoutjs)
   - [Change grid width](#change-grid-width)
   - [Load grid from array](#load-grid-from-array)
+  - [Override resizable/draggable options](#override-resizabledraggable-options)
 - [Changes](#changes)
       - [v0.2.3 (development version)](#v023-development-version)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
@@ -108,12 +109,14 @@ $(function () {
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` it tells to do not initialize existing items (default: `true`)
 - `cell_height` - one cell height (default: `60`)
+- `draggable` - allows to owerride jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'}`) 
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `height` - maximum rows amount. Default is `0` which means no maximum rows
 - `float` - enable floating widgets (default: `false`)
 - `item_class` - widget class (default: `'grid-stack-item'`)
 - `min_width` - minimal width. If window width is less grid will be shown in one-column mode (default: `768`)
 - `placeholder_class` - class for placeholder (default: `'grid-stack-placeholder'`)
+- `resizable` - allows to owerride jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
 - `vertical_margin` - vertical gap size (default: `20`)
 - `width` - amount of columns (default: `12`)
 
@@ -493,12 +496,28 @@ _.each(serialization, function (node) {
 });
 ```
 
+## Override resizable/draggable options
+
+You can override default `resizable`/`draggable` options. For instance to enable other then bottom right resizing handle
+you can init gridsack like:
+
+```javascript
+$('.grid-stack').gridstack({
+    resizable: {
+        handles: 'e, se, s, sw, w'
+    }
+});
+```
+
+Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their behaviour may be unexpected.
+
 
 Changes
 =======
 
 #### v0.2.3 (development version)
 
+- allow to override `resizable`/`draggable` options
 - add `disable`/`enable` methods
 - add `get_cell_from_pixel` (thanks to @juchi)
 - AMD support
