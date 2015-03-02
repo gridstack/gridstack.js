@@ -368,7 +368,8 @@
 
         this.container.addClass(this.opts._class);
         this._styles = Utils.create_stylesheet();
-        this._styles._max = 0;
+        if (this._styles != null)
+            this._styles._max = 0;
 
         this.grid = new GridStackEngine(this.opts.width, function (nodes) {
             var max_height = 0;
@@ -449,6 +450,10 @@
     };
 
     GridStack.prototype._update_styles = function (max_height) {
+        if (this._styles == null) {
+            return;
+        }
+
         var prefix = '.' + this.opts._class + ' .' + this.opts.item_class;
 
         if (typeof max_height == 'undefined') {
