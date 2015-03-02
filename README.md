@@ -47,6 +47,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
   - [Change grid width](#change-grid-width)
   - [Load grid from array](#load-grid-from-array)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
+  - [IE8 support](#ie8-support)
 - [Changes](#changes)
       - [v0.2.3 (development version)](#v023-development-version)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
@@ -510,6 +511,51 @@ $('.grid-stack').gridstack({
 ```
 
 Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their behaviour may be unexpected.
+
+## IE8 support
+
+Support of IE8 is quite limited and is not a goal at this time. As far as IE8 doesn't support DOM Level 2 I cannot manipulate with
+CSS stylesheet dynamically. As a workaround you can do following:
+
+- Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/troolee/6edfea5857f4cd73e6f1)).
+- Include this CSS:
+
+```html
+<!--[if lt IE 9]>
+<link rel="stylesheet" href="gridstack-ie8.css"/>
+<![endif]-->
+```
+
+- You can use this python script to generate such kind of CSS:
+
+```python
+#!/usr/bin/env python
+
+height = 60
+margin = 20
+N = 100
+
+print '.grid-stack > .grid-stack-item { min-height: %(height)spx }' % {'height': height}
+
+for i in range(N):
+	h = height * (i + 1) + margin * i
+	print '.grid-stack > .grid-stack-item[data-gs-height="%(index)s"] { height: %(height)spx }' % {'index': i + 1, 'height': h}
+
+for i in range(N):
+	h = height * (i + 1) + margin * i
+	print '.grid-stack > .grid-stack-item[data-gs-min-height="%(index)s"] { min-height: %(height)spx }' % {'index': i + 1, 'height': h}
+
+for i in range(N):
+	h = height * (i + 1) + margin * i
+	print '.grid-stack > .grid-stack-item[data-gs-max-height="%(index)s"] { max-height: %(height)spx }' % {'index': i + 1, 'height': h}
+
+for i in range(N):
+	h = height * i + margin * i
+	print '.grid-stack > .grid-stack-item[data-gs-y="%(index)s"] { top: %(height)spx }' % {'index': i , 'height': h}
+```
+
+There are at least two more issues with gridstack in IE8 with jQueryUI resizable (it seems it doesn't work) and 
+droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/troolee/gridstack.js/issues/76 
 
 
 Changes
