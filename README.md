@@ -515,7 +515,7 @@ Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their beh
 ## IE8 support
 
 Support of IE8 is quite limited and is not a goal at this time. As far as IE8 doesn't support DOM Level 2 I cannot manipulate with
-CSS stylesheet dynamically. As a workaround you can do following:
+CSS stylesheet dynamically. As a workaround you can do the following:
 
 - Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/troolee/6edfea5857f4cd73e6f1)).
 - Include this CSS:
