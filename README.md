@@ -473,6 +473,22 @@ For 4-column grid it should be:
 
 and so on.
 
+Here is a SASS code snipped which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/troolee/gridstack.js/issues/81)):
+
+```sass
+.grid-stack-item {
+
+    $gridstack-columns: 12;
+
+    @for $i from 1 through $gridstack-columns {
+        &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
+        &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
+        &.grid-stack-item[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
+        &.grid-stack-item[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+    }
+}
+```
+
 ## Save grid to array
 
 Because gridstack doesn't track any kind of user-defined widget id there is no reason to make serialization to be part
