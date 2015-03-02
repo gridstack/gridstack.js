@@ -45,6 +45,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
   - [Touch devices support](#touch-devices-support)
   - [Use with knockout.js](#use-with-knockoutjs)
   - [Change grid width](#change-grid-width)
+  - [Save grid to array](#save-grid-to-array)
   - [Load grid from array](#load-grid-from-array)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [IE8 support](#ie8-support)
@@ -472,6 +473,29 @@ For 4-column grid it should be:
 
 and so on.
 
+## Save grid to array
+
+Because gridstack doesn't track any kind of user-defined widget id there is no reason to make serialization to be part
+of gridstack API. To serialize grid you can simply do something like this (let's say you store widget id inside `data-custom-id` 
+attribute):
+
+```javascript
+var res = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
+    el = $(el);
+    var node = el.data('_gridstack_node');
+    return {
+        id: el.attr('data-custom-id'),
+        x: node.x,
+        y: node.y,
+        width: node.width,
+        height: node.height
+    };
+});
+alert(JSON.stringify(res));
+```
+
+You can also use `onchange` event if you need to save only changed widgets right away they have been changed. 
+
 ## Load grid from array
 
 ```javascript
@@ -496,6 +520,8 @@ _.each(serialization, function (node) {
         node.x, node.y, node.width, node.height);
 });
 ```
+
+If you're using knockout there is no need for such method at all.
 
 ## Override resizable/draggable options
 
