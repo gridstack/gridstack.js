@@ -578,8 +578,6 @@
                 self._update_container_height();
             }
         })).resizable(_.extend(this.opts.resizable, {
-            minHeight: this.opts.cell_height - 10,
-
             start: on_start_moving,
             stop: on_end_moving,
             resize: function (event, ui) {
