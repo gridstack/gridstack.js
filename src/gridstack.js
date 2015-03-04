@@ -465,7 +465,7 @@
             else if (typeof this._styles.deleteRule === 'function')
                 f = this._styles.deleteRule;
             while (this._styles.rules.length) {
-                f(0);
+                f.call(this._styles, 0);
             }
             this._update_container_height();
         }
