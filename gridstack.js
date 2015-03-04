@@ -465,7 +465,7 @@
             else if (typeof this._styles.deleteRule === 'function')
                 f = this._styles.deleteRule;
             while (this._styles.rules.length) {
-                f(0);
+                f.call(this._styles, 0);
             }
             this._update_container_height();
         }
@@ -578,8 +578,6 @@
                 self._update_container_height();
             }
         })).resizable(_.extend(this.opts.resizable, {
-            minHeight: this.opts.cell_height - 10,
-
             start: on_start_moving,
             stop: on_end_moving,
             resize: function (event, ui) {
