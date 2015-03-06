@@ -26,9 +26,11 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [onresizestop(event, ui)](#onresizestopevent-ui)
   - [API](#api)
     - [add_widget(el, x, y, width, height, auto_position)](#add_widgetel-x-y-width-height-auto_position)
+    - [batch_update()](#batch_update)
     - [cell_height()](#cell_height)
     - [cell_height(val)](#cell_heightval)
     - [cell_width()](#cell_width)
+    - [commit()](#commit)
     - [disable()](#disable)
     - [enable()](#enable)
     - [get_cell_from_pixel(position)](#get_cell_from_pixelposition)
@@ -218,6 +220,10 @@ var grid = $('.grid-stack').data('gridstack');
 grid.add_widget(el, 0, 0, 3, 2, true);
 ```
 
+### batch_update()
+
+Initailizes batch updates. You will see no changes until `commit` method is called. 
+
 ### cell_height()
 
 Gets current cell height.
@@ -234,6 +240,10 @@ grid.cell_height(grid.cell_width() * 1.2);
 ### cell_width()
 
 Gets current cell width.
+
+### commit()
+
+Finishes batch updates. Updates DOM nodes. You must call it after `batch_update`.
 
 ### disable()
 
@@ -616,6 +626,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- add `batch_update`/`commit` methods
 - add `update` method
 - allow to override `resizable`/`draggable` options
 - add `disable`/`enable` methods

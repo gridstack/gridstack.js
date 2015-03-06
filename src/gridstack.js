@@ -67,6 +67,23 @@
 
         this.nodes = items || [];
         this.onchange = onchange || function () {};
+
+        this._update_counter = 0;
+        this._float = this.float;
+    };
+
+    GridStackEngine.prototype.batch_update = function () {
+        this._update_counter = 1;
+        this.float = true;
+    };
+
+    GridStackEngine.prototype.commit = function () {
+        this._update_counter = 0;
+        if (this._update_counter == 0) {
+            this.float = this._float;
+            this._pack_nodes();
+            this._notify();
+        }
     };
 
     GridStackEngine.prototype._fix_collisions = function (node) {
@@ -188,6 +205,9 @@
     };
 
     GridStackEngine.prototype._notify = function () {
+        if (this._update_counter) {
+            return;
+        }
         var deleted_nodes = Array.prototype.slice.call(arguments, 1).concat(this.get_dirty_nodes());
         deleted_nodes = deleted_nodes.concat(this.get_dirty_nodes());
         this.onchange(deleted_nodes);
@@ -502,6 +522,9 @@
     };
 
     GridStack.prototype._update_container_height = function () {
+        if (this.grid._update_counter) {
+            return;
+        }
         this.container.height(this.grid.get_grid_height() * (this.opts.cell_height + this.opts.vertical_margin) - this.opts.vertical_margin);
     };
 
@@ -787,6 +810,15 @@
         var row_height = this.opts.cell_height + this.opts.vertical_margin;
 
         return {x: Math.floor(relativeLeft / column_width), y: Math.floor(relativeTop / row_height)};
+    };
+
+    GridStack.prototype.batch_update = function () {
+        this.grid.batch_update();
+    };
+
+    GridStack.prototype.commit = function () {
+        this.grid.commit();
+        this._update_container_height()
     };
 
     scope.GridStackUI = GridStack;
