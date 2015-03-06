@@ -751,6 +751,17 @@
         });
     };
 
+    GridStack.prototype.update = function (el, x, y, width, height) {
+        this._update_element(el, function (el, node) {
+            x = (x != null && typeof x != 'undefined') ? x : node.x;
+            y = (y != null && typeof y != 'undefined') ? y : node.y;
+            width = (width != null && typeof width != 'undefined') ? width : node.width;
+            height = (height != null && typeof height != 'undefined') ? height : node.height;
+
+            this.grid.move_node(node, x, y, width, height);
+        });
+    };
+
     GridStack.prototype.cell_height = function (val) {
         if (typeof val == 'undefined') {
             return this.opts.cell_height;

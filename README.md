@@ -39,6 +39,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [move(el, x, y)](#moveel-x-y)
     - [resizable(el, val)](#resizableel-val)
     - [movable(el, val)](#movableel-val)
+    - [update(el, x, y, width, height)](#updateel-x-y-width-height)
     - [will_it_fit(x, y, width, height, auto_position)](#will_it_fitx-y-width-height-auto_position)
   - [Utils](#utils)
     - [GridStackUI.Utils.sort(nodes, dir, width)](#gridstackuiutilssortnodes-dir-width)
@@ -312,6 +313,16 @@ Enables/Disables moving.
 
 - `el` - widget to modify
 - `val` - if `true` widget will be draggable.
+
+### update(el, x, y, width, height)
+
+Parameters:
+
+- `el` - widget to move
+- `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
+- `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
+
+Updates widget position/size.
 
 ### will_it_fit(x, y, width, height, auto_position)
 
@@ -605,6 +616,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- add `update` method
 - allow to override `resizable`/`draggable` options
 - add `disable`/`enable` methods
 - add `get_cell_from_pixel` (thanks to @juchi)
