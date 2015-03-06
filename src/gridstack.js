@@ -545,7 +545,7 @@
             height: el.attr('data-gs-height'),
             max_width: el.attr('data-gs-max-width'),
             min_width: el.attr('data-gs-min-width'),
-            max_height: el.attr('data-gs-max-height') || 100,
+            max_height: el.attr('data-gs-max-height'),
             min_height: el.attr('data-gs-min-height'),
             auto_position: Utils.toBool(el.attr('data-gs-auto-position')),
             no_resize: Utils.toBool(el.attr('data-gs-no-resize')),
