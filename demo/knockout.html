@@ -39,6 +39,7 @@
 
         <div>
             <button data-bind="click: add_new_widget">Add new widget</button>
+            <button data-bind="click: change_cell_height">Change Cell Height</button>
         </div>
 
         <br>
@@ -103,6 +104,11 @@
                 this.delete_widget = function (item) {
                     self.widgets.remove(item);
                 };
+
+                this.change_cell_height = function (item) {
+                    var grid = $('.grid-stack').data('gridstack');
+                    grid.cell_height(50 + 100 * Math.random());
+                }.bind(this);
             };
 
             var widgets = [
