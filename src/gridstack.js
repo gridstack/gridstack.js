@@ -25,9 +25,10 @@
             return _.sortBy(nodes, function (n) { return dir * (n.x + n.y * width); });
         },
 
-        create_stylesheet: function () {
+        create_stylesheet: function (id) {
             var style = document.createElement("style");
             style.setAttribute("type", "text/css");
+            style.setAttribute("data-gs-id", id);
             if (style.styleSheet) {
                 style.styleSheet.cssText = "";
             }
@@ -387,9 +388,7 @@
         });
 
         this.container.addClass(this.opts._class);
-        this._styles = Utils.create_stylesheet();
-        if (this._styles != null)
-            this._styles._max = 0;
+        this._init_styles();
 
         this.grid = new GridStackEngine(this.opts.width, function (nodes) {
             var max_height = 0;
@@ -469,6 +468,16 @@
         on_resize_handler();
     };
 
+    GridStack.prototype._init_styles = function () {
+        if (this._styles_id) {
+            $('[data-gs-id="' + this._styles_id + '"]').remove();
+        }
+        this._styles_id = 'gridstack-style-' + (Math.random() * 100000).toFixed();
+        this._styles = Utils.create_stylesheet(this._styles_id);
+        if (this._styles != null)
+            this._styles._max = 0;
+    };
+
     GridStack.prototype._update_styles = function (max_height) {
         if (this._styles == null) {
             return;
@@ -478,15 +487,7 @@
 
         if (typeof max_height == 'undefined') {
             max_height = this._styles._max;
-            this._styles._max = 0;
-            var f = function () {};
-            if (typeof this._styles.removeRule === 'function')
-                f = this._styles.removeRule;
-            else if (typeof this._styles.deleteRule === 'function')
-                f = this._styles.deleteRule;
-            while (this._styles.rules.length) {
-                f.call(this._styles, 0);
-            }
+            this._init_styles();
             this._update_container_height();
         }
 
