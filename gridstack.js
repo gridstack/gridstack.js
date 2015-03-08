@@ -470,10 +470,10 @@
 
     GridStack.prototype._init_styles = function () {
         if (this._styles_id) {
-            $('link[rel=stylesheet][data-gs-id=' + this._styles_id + ']').remove();
+            $('[data-gs-id="' + this._styles_id + '"]').remove();
         }
         this._styles_id = 'gridstack-style-' + (Math.random() * 100000).toFixed();
-        this._styles = Utils.create_stylesheet();
+        this._styles = Utils.create_stylesheet(this._styles_id);
         if (this._styles != null)
             this._styles._max = 0;
     };
