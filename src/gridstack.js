@@ -107,6 +107,14 @@
         }
     };
 
+    GridStackEngine.prototype.is_area_empty = function (x, y, width, height) {
+        var nn = {x: x || 0, y: y || 0, width: width || 1, height: height || 1};
+        var collision_node = _.find(this.nodes, function (n) {
+            return Utils.is_intercepted(n, nn);
+        }, this);
+        return collision_node == null;
+    };
+
     GridStackEngine.prototype._sort_nodes = function (dir) {
         this.nodes = Utils.sort(this.nodes, dir, this.width);
     };
@@ -829,6 +837,10 @@
     GridStack.prototype.commit = function () {
         this.grid.commit();
         this._update_container_height()
+    };
+
+    GridStack.prototype.is_area_empty = function (x, y, width, height) {
+        return this.grid.is_area_empty(x, y, width, height);
     };
 
     scope.GridStackUI = GridStack;

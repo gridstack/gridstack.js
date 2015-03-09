@@ -34,6 +34,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [disable()](#disable)
     - [enable()](#enable)
     - [get_cell_from_pixel(position)](#get_cell_from_pixelposition)
+    - [is_area_empty(x, y, width, height)](#is_area_emptyx-y-width-height)
     - [locked(el, val)](#lockedel-val)
     - [remove_widget(el)](#remove_widgetel)
     - [remove_all()](#remove_all)
@@ -273,6 +274,10 @@ Parameters :
 - `position` - the position of the pixel to resolve in absolute coordinates, as an object with `top` and `left`properties
 
 Returns an object with properties `x` and `y` i.e. the column and row in the grid.
+
+### is_area_empty(x, y, width, height)
+
+Checks if specified area is empty.
 
 ### locked(el, val)
 
@@ -634,6 +639,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- add `is_area_empty` method
 - nested grids
 - add `batch_update`/`commit` methods
 - add `update` method
