@@ -36,7 +36,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [get_cell_from_pixel(position)](#get_cell_from_pixelposition)
     - [is_area_empty(x, y, width, height)](#is_area_emptyx-y-width-height)
     - [locked(el, val)](#lockedel-val)
-    - [remove_widget(el)](#remove_widgetel)
+    - [remove_widget(el, detach_node)](#remove_widgetel-detach_node)
     - [remove_all()](#remove_all)
     - [resize(el, width, height)](#resizeel-width-height)
     - [move(el, x, y)](#moveel-x-y)
@@ -286,13 +286,14 @@ Locks/unlocks widget.
 - `el` - widget to modify.
 - `val` - if `true` widget will be locked. 
 
-### remove_widget(el)
+### remove_widget(el, detach_node)
 
 Removes widget from the grid.
 
 Parameters:
 
-- `el` - widget to remove
+- `el` - widget to remove.
+- `detach_node` - if `false` DOM node won't be removed from the tree (Optional. Default `true`).
 
 ### remove_all()
 

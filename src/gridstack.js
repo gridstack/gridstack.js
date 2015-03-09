@@ -673,12 +673,16 @@
         return this.grid.can_be_placed_with_respect_to_height(node);
     };
 
-    GridStack.prototype.remove_widget = function (el) {
+    GridStack.prototype.remove_widget = function (el, detach_node) {
+        detach_node = typeof detach_node === 'undefined' ? true : detach_node;
         el = $(el);
         var node = el.data('_gridstack_node');
         this.grid.remove_node(node);
-        el.remove();
         this._update_container_height();
+        if (detach_node)
+            el.remove();
+        else
+            el.data('_gridstack_node', null);
     };
 
     GridStack.prototype.remove_all = function () {
@@ -694,7 +698,7 @@
         el.each(function (index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined') {
+            if (typeof node == 'undefined' || node == null) {
                 return;
             }
 
@@ -714,7 +718,7 @@
         el.each(function (index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined') {
+            if (typeof node == 'undefined' || node == null) {
                 return;
             }
 
@@ -744,7 +748,7 @@
         el.each(function (index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined') {
+            if (typeof node == 'undefined' || node == null) {
                 return;
             }
 
@@ -757,7 +761,7 @@
     GridStack.prototype._update_element = function (el, callback) {
         el = $(el).first();
         var node = el.data('_gridstack_node');
-        if (typeof node == 'undefined') {
+        if (typeof node == 'undefined' || node == null) {
             return;
         }
 
