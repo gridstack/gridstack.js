@@ -634,6 +634,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- nested grids
 - add `batch_update`/`commit` methods
 - add `update` method
 - allow to override `resizable`/`draggable` options
