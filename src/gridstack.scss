@@ -26,7 +26,6 @@ $animation_speed: .3s;
         bottom: 0;
         width: auto;
         z-index: 0 !important;
-        overflow: auto;
     }
 
     > .grid-stack-item {
@@ -43,7 +42,8 @@ $animation_speed: .3s;
             bottom: 0;
             width: auto;
             z-index: 0 !important;
-            overflow: auto;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         > .ui-resizable-handle {

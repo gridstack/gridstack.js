@@ -52,6 +52,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
   - [Load grid from array](#load-grid-from-array)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [IE8 support](#ie8-support)
+  - [Nested grids](#nested-grids)
 - [Changes](#changes)
       - [v0.2.3 (development version)](#v023-development-version)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
@@ -619,6 +620,13 @@ for i in range(N):
 
 There are at least two more issues with gridstack in IE8 with jQueryUI resizable (it seems it doesn't work) and 
 droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/troolee/gridstack.js/issues/76 
+
+
+## Nested grids
+
+Gridstack may be nested. All nested grids have an additional class `grid-stack-nested` which is assigned automatically 
+during initialization. 
+See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/nested.html)
 
 
 Changes
