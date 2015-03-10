@@ -678,17 +678,16 @@
         el = $(el);
         var node = el.data('_gridstack_node');
         this.grid.remove_node(node);
+        el.removeData('_gridstack_node');
         this._update_container_height();
         if (detach_node)
             el.remove();
-        else
-            el.data('_gridstack_node', null);
     };
 
-    GridStack.prototype.remove_all = function () {
+    GridStack.prototype.remove_all = function (detach_node) {
         _.each(this.grid.nodes, function (node) {
-            node.el.remove();
-        });
+            this.remove_widget(node.el, detach_node);
+        }, this);
         this.grid.nodes = [];
         this._update_container_height();
     };
