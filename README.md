@@ -538,6 +538,8 @@ var res = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
 alert(JSON.stringify(res));
 ```
 
+See example: [Serialization demo](http://troolee.github.io/gridstack.js/demo/serialization.html)
+
 You can also use `onchange` event if you need to save only changed widgets right away they have been changed. 
 
 ## Load grid from array
@@ -564,6 +566,8 @@ _.each(serialization, function (node) {
         node.x, node.y, node.width, node.height);
 });
 ```
+
+See example: [Serialization demo](http://troolee.github.io/gridstack.js/demo/serialization.html)
 
 If you're using knockout there is no need for such method at all.
 
