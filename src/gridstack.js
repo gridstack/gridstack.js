@@ -153,7 +153,7 @@
 
                     if (i > 0) {
                         var collision_node = _.chain(this.nodes)
-                            .first(i)
+                            .take(i)
                             .find(function (bn) {
                                 return Utils.is_intercepted({x: n.x, y: new_y, width: n.width, height: n.height}, bn);
                             })
