@@ -5,7 +5,7 @@
 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'underscore'], factory);
+        define(['jquery', 'lodash'], factory);
     }
     else {
         factory(jQuery, _);
@@ -435,7 +435,7 @@
             });
             _.chain(elements).sortBy(function (x) { return x.i; }).each(function (i) {
                 self._prepare_element(i.el);
-            });
+            }).value();
         }
 
         this.set_animation(this.opts.animate);

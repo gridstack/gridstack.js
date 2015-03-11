@@ -76,11 +76,13 @@ Usage
 
 ## Requirements
 
-* [underscore.js](http://underscorejs.org) (>= 1.7.0)
+* [lodash.js](https://lodash.com) (>= 3.5.0)
 * [jQuery](http://jquery.com) (>= 1.11.0) 
 * [jQuery UI](http://jqueryui.com) (>= 1.11.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
 * (Optional) [knockout.js](http://knockoutjs.com) (>= 3.2.0)
 * (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
+
+Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
 
 ## Basic usage
 
@@ -372,7 +374,7 @@ Please use [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch
 working on touch-based devices.
 
 ```html
-<script src="underscore-min.js"></script>
+<script src="lodash.min.js"></script>
 <script src="jquery.min.js"></script>
 <script src="jquery-ui.min.js"></script>
 <script src="jquery.ui.touch-punch.min.js"></script>
@@ -644,6 +646,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- add support of lodash.js
 - add `is_area_empty` method
 - nested grids
 - add `batch_update`/`commit` methods
