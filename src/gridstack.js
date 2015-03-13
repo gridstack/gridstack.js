@@ -359,6 +359,9 @@
     };
 
     GridStackEngine.prototype.end_update = function () {
+        _.each(this.nodes, function (n) {
+            n._orig_y = n.y;
+        });
         var n = _.find(this.nodes, function (n) { return n._updating; });
         if (n) {
             n._updating = false;
