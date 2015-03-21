@@ -6,7 +6,10 @@
     "Pavel Reznikov <pashka.reznikov@gmail.com>"
   ],
   "description": "gridstack.js is a jQuery plugin for widget layout",
-  "main": "dist/gridstack.min.js",
+  "main": [
+    "dist/gridstack.js",
+    "dist/gridstack.css"
+  ],
   "moduleType": [
     "amd"
   ],
