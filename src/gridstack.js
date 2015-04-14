@@ -429,11 +429,12 @@
 
         if (this.opts.auto) {
             var elements = [];
+            var _this = this;
             this.container.children('.' + this.opts.item_class).each(function (index, el) {
                 el = $(el);
                 elements.push({
                     el: el,
-                    i: parseInt(el.attr('data-gs-x')) + parseInt(el.attr('data-gs-y')) * parseInt(el.attr('data-gs-width'))
+                    i: parseInt(el.attr('data-gs-x')) + parseInt(el.attr('data-gs-y')) * _this.opts.width // Use opts.width as weight for Y
                 });
             });
             _.chain(elements).sortBy(function (x) { return x.i; }).each(function (i) {
