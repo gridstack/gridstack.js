@@ -181,6 +181,10 @@
         node.auto_position = node.auto_position || false;
         node.no_resize = node.no_resize || false;
         node.no_move = node.no_move || false;
+        node.relativeX = new Array();
+        node.relativeY = new Array();
+        node.relativeWidth = new Array();
+        node.relativeHeight = new Array();
 
         if (node.width > this.width) {
             node.width = this.width;
@@ -379,7 +383,8 @@
         this.opts = _.defaults(opts || {}, {
             width: parseInt(this.container.attr('data-gs-width')) || 12,
             height: parseInt(this.container.attr('data-gs-height')) || 0,
-            item_class: 'grid-stack-item',
+            item_class: opts.item_class,
+            _item_class_selector: '.' + opts.item_class.replace(/\ /g, '.'), 
             placeholder_class: 'grid-stack-placeholder',
             handle: '.grid-stack-item-content',
             cell_height: 60,
@@ -429,7 +434,7 @@
 
         if (this.opts.auto) {
             var elements = [];
-            this.container.children('.' + this.opts.item_class).each(function (index, el) {
+            this.container.children(this.opts._item_class_selector).each(function (index, el) {
                 el = $(el);
                 elements.push({
                     el: el,
@@ -502,7 +507,7 @@
             return;
         }
 
-        var prefix = '.' + this.opts._class + ' .' + this.opts.item_class;
+        var prefix = '.' + this.opts._class + ' ' + this.opts._item_class_selector;
 
         if (typeof max_height == 'undefined') {
             max_height = this._styles._max;
@@ -671,6 +676,46 @@
         return el;
     };
 
+    GridStack.prototype.resize_grid = function (newColumnCount) { 
+        if (this.grid.width !== newColumnCount) {
+            var oldColumnCount = this.grid.width;
+            this.grid.width = newColumnCount;
+
+            _.each(this.grid.nodes, function (node) {
+                var $el = $(node.el);
+                var node = $el.data('_gridstack_node');
+
+                // These are custom data positions for favourite 
+                // locations to try to pack/snap back to upon resize. 
+                node.relativeX[oldColumnCount] = node.x;
+                node.relativeY[oldColumnCount] = node.y;
+                node.relativeWidth[oldColumnCount] = node.width;
+                node.relativeHeight[oldColumnCount] = node.height;
+
+                var preferredX = node.relativeX[newColumnCount];
+                var preferredY = node.relativeY[newColumnCount];
+                var preferredW = node.relativeWidth[newColumnCount];
+                var preferredH = node.relativeHeight[newColumnCount];
+                if (typeof preferredX === 'number' &&
+                    typeof preferredY === 'number' &&
+                    typeof preferredW === 'number' &&
+                    typeof preferredH === 'number') {
+                    node.x = preferredX;
+                    node.y = preferredY;
+                    node.width = preferredW;
+                    node.height = preferredH;
+                }
+                node._dirty = true;
+                node = this.grid._prepare_node(node, false);
+                this.grid._fix_collisions(node);
+
+                this.grid._pack_nodes();
+                this.grid._notify(); 
+            }, this);
+            this._update_container_height();
+        }
+    }; 
+
     GridStack.prototype.will_it_fit = function (x, y, width, height, auto_position) {
         var node = {x: x, y: y, width: width, height: height, auto_position: auto_position};
         return this.grid.can_be_placed_with_respect_to_height(node);
@@ -736,13 +781,13 @@
     };
 
     GridStack.prototype.disable = function () {
-        this.movable(this.container.children('.' + this.opts.item_class), false);
-        this.resizable(this.container.children('.' + this.opts.item_class), false);
+        this.movable(this.container.children(this.opts._item_class_selector), false);
+        this.resizable(this.container.children(this.opts._item_class_selector), false);
     };
 
     GridStack.prototype.enable = function () {
-        this.movable(this.container.children('.' + this.opts.item_class), true);
-        this.resizable(this.container.children('.' + this.opts.item_class), true);
+        this.movable(this.container.children(this.opts._item_class_selector), true);
+        this.resizable(this.container.children(this.opts._item_class_selector), true);
     };
 
     GridStack.prototype.locked = function (el, val) {
@@ -821,7 +866,7 @@
     };
 
     GridStack.prototype.cell_width = function () {
-        var o = this.container.children('.' + this.opts.item_class).first();
+        var o = this.container.children(this.opts._item_class_selector).first();
         return Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
     };
 
