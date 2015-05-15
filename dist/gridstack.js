@@ -429,11 +429,12 @@
 
         if (this.opts.auto) {
             var elements = [];
+            var _this = this;
             this.container.children('.' + this.opts.item_class).each(function (index, el) {
                 el = $(el);
                 elements.push({
                     el: el,
-                    i: parseInt(el.attr('data-gs-x')) + parseInt(el.attr('data-gs-y')) * parseInt(el.attr('data-gs-width'))
+                    i: parseInt(el.attr('data-gs-x')) + parseInt(el.attr('data-gs-y')) * _this.opts.width // Use opts.width as weight for Y
                 });
             });
             _.chain(elements).sortBy(function (x) { return x.i; }).each(function (i) {
@@ -590,6 +591,9 @@
                 .attr('data-gs-height', o.attr('data-gs-height'))
                 .show();
             node.el = self.placeholder;
+
+            el.resizable('option', 'minWidth', cell_width * (node.min_width || 1));
+            el.resizable('option', 'minHeight', self.opts.cell_height * (node.min_height || 1));
         };
 
         var on_end_moving = function (event, ui) {
