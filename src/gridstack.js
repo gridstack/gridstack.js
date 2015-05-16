@@ -707,11 +707,12 @@
                 }
                 node._dirty = true;
                 node = this.grid._prepare_node(node, false);
-                this.grid._fix_collisions(node);
-
-                this.grid._pack_nodes();
-                this.grid._notify(); 
             }, this);
+
+            this.grid._fix_collisions(node);
+            this.grid._pack_nodes();
+            this.grid._notify(); 
+            
             this._update_container_height();
         }
     }; 
