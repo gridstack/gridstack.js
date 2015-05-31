@@ -5,7 +5,7 @@
 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'lodash'], factory);
+        define(['jquery', 'lodash', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/mouse', 'jquery-ui/draggable', 'jquery-ui/resizable'], factory);
     }
     else {
         factory(jQuery, _);
