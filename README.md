@@ -116,7 +116,7 @@ $(function () {
 - `always_show_resize_handle` - if `true` the resizing handles are shown even if the user is not hovering over the widget 
     (default: `false`) 
 - `animate` - turns animation on (default: `false`)
-- `auto` - if `false` it tells to not initialize existing items (default: `true`)
+- `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cell_height` - one cell height (default: `60`)
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'}`) 
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
