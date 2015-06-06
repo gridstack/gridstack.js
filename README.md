@@ -113,17 +113,17 @@ $(function () {
 
 ## Options
 
-- `always_show_resize_handle` - if `true` the resizing handles are shown even the user is not hovering over the widget 
+- `always_show_resize_handle` - if `true` the resizing handles are shown even if the user is not hovering over the widget 
     (default: `false`) 
 - `animate` - turns animation on (default: `false`)
-- `auto` - if `false` it tells to do not initialize existing items (default: `true`)
+- `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cell_height` - one cell height (default: `60`)
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'}`) 
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `height` - maximum rows amount. Default is `0` which means no maximum rows
 - `float` - enable floating widgets (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/float.html)
 - `item_class` - widget class (default: `'grid-stack-item'`)
-- `min_width` - minimal width. If window width is less grid will be shown in one-column mode (default: `768`)
+- `min_width` - minimal width. If window width is less, grid will be shown in one-column mode (default: `768`)
 - `placeholder_class` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
 - `vertical_margin` - vertical gap size (default: `20`)
@@ -144,8 +144,8 @@ $(function () {
 - `data-gs-no-move` - disable element moving 
 - `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first 
     available position
-- `data-gs-locked` - the widget will be locked. It means another widgets couldn't move it during dragging or resizing.
-The widget is still can be dragged or resized. You need to add `data-gs-no-resize` and `data-gs-no-move` attributes
+- `data-gs-locked` - the widget will be locked. It means another widget wouldn't be able to move it during dragging or resizing.
+The widget can still be dragged or resized. You need to add `data-gs-no-resize` and `data-gs-no-move` attributes
 to completely lock the widget.
     
 ## Events
@@ -214,8 +214,8 @@ Parameters:
 - `auto_position` - if `true` then `x`, `y` parameters will be ignored and widget will be places on the first available
 position
 
-Widget will be always placed even if result height will be more then grid height. You need to use `will_it_fit` method
-before call `add_widget` for additional check.
+Widget will be always placed even if result height is more than actual grid height. You need to use `will_it_fit` method
+before calling `add_widget` for additional check.
 
 ```javascript
 $('.grid-stack').gridstack();
@@ -350,7 +350,7 @@ have `height` constraint.
 
 ```javascript
 if (grid.will_it_fit(new_node.x, new_node.y, new_node.width, new_node.height, true)) {
-    grid.add_widget(new_node.x, new_node.y, new_node.width, new_node.height, true);
+    grid.add_widget(new_node.el, new_node.x, new_node.y, new_node.width, new_node.height, true);
 }
 else {
     alert('Not enough free space to place the widget');
