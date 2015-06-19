@@ -5,7 +5,7 @@
 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'lodash'], factory);
+        define(['jquery', 'lodash', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/mouse', 'jquery-ui/draggable', 'jquery-ui/resizable'], factory);
     }
     else {
         factory(jQuery, _);
@@ -550,7 +550,7 @@
     };
 
     GridStack.prototype._is_one_column_mode = function () {
-        return $(window).width() <= this.opts.min_width;
+        return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <= this.opts.min_width;
     };
 
     GridStack.prototype._prepare_element = function (el) {
