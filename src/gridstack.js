@@ -608,7 +608,9 @@
                 .attr('data-gs-height', node.height)
                 .removeAttr('style');
             self._update_container_height();
-            self.container.trigger('change', [self.grid.get_dirty_nodes()]);
+            var elements = self.grid.get_dirty_nodes();
+            if (elements && elements.length)
+                self.container.trigger('change', [elements]);
 
             self.grid.end_update();
         };
@@ -780,7 +782,9 @@
         callback.call(this, el, node);
 
         self._update_container_height();
-        self.container.trigger('change', [self.grid.get_dirty_nodes()]);
+        var elements = self.grid.get_dirty_nodes();
+        if (elements && elements.length)
+            self.container.trigger('change', [elements]);
 
         self.grid.end_update();
     };
