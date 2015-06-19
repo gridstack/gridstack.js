@@ -5,7 +5,7 @@
 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'lodash'], factory);
+        define(['jquery', 'lodash', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/mouse', 'jquery-ui/draggable', 'jquery-ui/resizable'], factory);
     }
     else {
         factory(jQuery, _);
@@ -445,7 +445,6 @@
         this.set_animation(this.opts.animate);
 
         this.placeholder = $('<div class="' + this.opts.placeholder_class + ' ' + this.opts.item_class + '"><div class="placeholder-content" /></div>').hide();
-        this.container.append(this.placeholder);
         this.container.height((this.grid.get_grid_height()) * (this.opts.cell_height + this.opts.vertical_margin) - this.opts.vertical_margin);
 
         var on_resize_handler = function () {
@@ -550,7 +549,7 @@
     };
 
     GridStack.prototype._is_one_column_mode = function () {
-        return $(window).width() <= this.opts.min_width;
+        return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <= this.opts.min_width;
     };
 
     GridStack.prototype._prepare_element = function (el) {
@@ -579,6 +578,7 @@
         var cell_width, cell_height;
 
         var on_start_moving = function (event, ui) {
+            self.container.append(self.placeholder);
             var o = $(this);
             self.grid.clean_nodes();
             self.grid.begin_update(node);
@@ -597,6 +597,7 @@
         };
 
         var on_end_moving = function (event, ui) {
+            self.placeholder.detach();
             var o = $(this);
             node.el = o;
             self.placeholder.hide();
