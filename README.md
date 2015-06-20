@@ -49,6 +49,8 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
   - [Touch devices support](#touch-devices-support)
   - [Use with knockout.js](#use-with-knockoutjs)
   - [Change grid width](#change-grid-width)
+  - [Extra CSS](#extra-css)
+    - [Different grid widths](#different-grid-widths)
   - [Save grid to array](#save-grid-to-array)
   - [Load grid from array](#load-grid-from-array)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
@@ -519,6 +521,25 @@ Here is a SASS code snipped which can make life easier (Thanks to @ascendantofra
 }
 ```
 
+Or you can include `gridstack-extra.css`. See below for more details.
+
+## Extra CSS
+
+There are few extra CSS batteries in `gridstack-extra.css` (`gridstack-extra.min.css`).
+ 
+### Different grid widths
+
+You can use other than 12 grid width:
+
+```html
+<div class="grid-stack grid-stack-N">...</div>
+```
+```javascript
+$('.grid-stack').gridstack({width: N});
+```
+
+See example: [2 grids demo](http://troolee.github.io/gridstack.js/demo/two.html)
+
 ## Save grid to array
 
 Because gridstack doesn't track any kind of user-defined widget id there is no reason to make serialization to be part
@@ -646,6 +667,7 @@ Changes
 
 #### v0.2.3 (development version)
 
+- gridstack-extra.css
 - add support of lodash.js
 - add `is_area_empty` method
 - nested grids
