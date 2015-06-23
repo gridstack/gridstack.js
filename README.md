@@ -665,7 +665,7 @@ See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/neste
 Changes
 =======
 
-#### v0.2.3 (development version)
+#### v0.2.3 (2015-06-23)
 
 - gridstack-extra.css
 - add support of lodash.js
