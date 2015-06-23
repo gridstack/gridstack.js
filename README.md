@@ -57,7 +57,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
   - [IE8 support](#ie8-support)
   - [Nested grids](#nested-grids)
 - [Changes](#changes)
-      - [v0.2.3 (development version)](#v023-development-version)
+      - [v0.2.3 (2015-06-23)](#v023-2015-06-23)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
       - [v0.2.1 (2014-12-09)](#v021-2014-12-09)
       - [v0.2.0 (2014-11-30)](#v020-2014-11-30)
