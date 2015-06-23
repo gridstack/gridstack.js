@@ -57,6 +57,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
   - [IE8 support](#ie8-support)
   - [Nested grids](#nested-grids)
 - [Changes](#changes)
+      - [v0.2.4 (development version)](#v024-development-version)
       - [v0.2.3 (2015-06-23)](#v023-2015-06-23)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
       - [v0.2.1 (2014-12-09)](#v021-2014-12-09)
@@ -664,6 +665,8 @@ See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/neste
 
 Changes
 =======
+
+#### v0.2.4 (development version)
 
 #### v0.2.3 (2015-06-23)
 
