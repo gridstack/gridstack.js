@@ -381,6 +381,7 @@
             height: parseInt(this.container.attr('data-gs-height')) || 0,
             item_class: 'grid-stack-item',
             placeholder_class: 'grid-stack-placeholder',
+            placeholder_text: '',
             handle: '.grid-stack-item-content',
             cell_height: 60,
             vertical_margin: 20,
@@ -444,7 +445,12 @@
 
         this.set_animation(this.opts.animate);
 
+<<<<<<< HEAD
+        this.placeholder = $('<div class="' + this.opts.placeholder_class + ' ' + this.opts.item_class + '"><div class="placeholder-content">' + this.opts.placeholder_text + '</div></div>').hide();
+        this.container.append(this.placeholder);
+=======
         this.placeholder = $('<div class="' + this.opts.placeholder_class + ' ' + this.opts.item_class + '"><div class="placeholder-content" /></div>').hide();
+>>>>>>> b5b6ff441088704dd7a4905da06eeae3d8a885c7
         this.container.height((this.grid.get_grid_height()) * (this.opts.cell_height + this.opts.vertical_margin) - this.opts.vertical_margin);
 
         var on_resize_handler = function () {
