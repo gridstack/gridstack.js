@@ -668,6 +668,8 @@ Changes
 
 #### v0.2.4 (development version)
 
+- fix closure compiler/linter warnings
+
 #### v0.2.3 (2015-06-23)
 
 - gridstack-extra.css
