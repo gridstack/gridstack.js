@@ -62,16 +62,16 @@
 
     var id_seq = 0;
 
-    var GridStackEngine = function(width, onchange, float, height, items) {
+    var GridStackEngine = function(width, onchange, float_mode, height, items) {
         this.width = width;
-        this.float = float || false;
+        this['float'] = float_mode || false;
         this.height = height || 0;
 
         this.nodes = items || [];
         this.onchange = onchange || function() {};
 
         this._update_counter = 0;
-        this._float = this.float;
+        this._float = this['float'];
     };
 
     GridStackEngine.prototype.batch_update = function() {
