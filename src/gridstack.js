@@ -465,7 +465,6 @@
 
         var on_resize_handler = function() {
             if(is_no_cell_height) {
-                console.log('no cel height');
                 self.cell_height(self.cell_width());
             }
             if (self._is_one_column_mode()) {
