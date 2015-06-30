@@ -379,7 +379,7 @@
     };
 
     var GridStack = function(el, opts) {
-        var self = this, one_column_mode;
+        var self = this, one_column_mode, is_no_cell_height;
 
         this.container = $(el);
 
@@ -411,6 +411,7 @@
             })
         });
         this.opts.is_nested = is_nested;
+        is_no_cell_height = !this.opts.cell_height;
 
         this.container.addClass(this.opts._class);
         if (is_nested) {
@@ -463,6 +464,10 @@
             this.opts.vertical_margin);
 
         var on_resize_handler = function() {
+            if(is_no_cell_height) {
+                console.log('no cel height');
+                self.cell_height(self.cell_width());
+            }
             if (self._is_one_column_mode()) {
                 if (one_column_mode)
                     return;
