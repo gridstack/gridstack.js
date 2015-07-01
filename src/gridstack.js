@@ -568,13 +568,14 @@
         }
     };
 
-    GridStack.prototype.add_widget = function (el, x, y, width, height, auto_position) {
+    GridStack.prototype.add_widget = function (el, options) {
         el = $(el);
-        if (typeof x != 'undefined') el.attr('data-gs-x', x);
-        if (typeof y != 'undefined') el.attr('data-gs-y', y);
-        if (typeof width != 'undefined') el.attr('data-gs-width', width);
-        if (typeof height != 'undefined') el.attr('data-gs-height', height);
-        if (typeof auto_position != 'undefined') el.attr('data-gs-auto-position', auto_position ? 'yes' : null);
+        if (typeof options.x !== 'undefined')          el.attr('data-gs-x', options.x);
+        if (typeof options.y !== 'undefined')          el.attr('data-gs-y', options.y);
+        if (typeof options.width !== 'undefined')      el.attr('data-gs-width', options.width);
+        if (typeof options.height !== 'undefined')     el.attr('data-gs-height', options.height);
+        if (typeof options.max_height !== 'undefined') el.attr('data-gs-max-height', options.max_height);
+        if (typeof auto_position !== 'undefined')      el.attr('data-gs-auto-position', options.auto_position ? 'yes' : null);
         this.container.append(el);
         this._prepare_element(el);
         this._update_container_height();
