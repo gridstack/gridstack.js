@@ -397,6 +397,7 @@
             auto: true,
             min_width: 768,
             float: false,
+            static_grid: false,
             _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0),
             animate: Boolean(this.container.attr('data-gs-animate')) || false,
             always_show_resize_handle: opts.always_show_resize_handle || false,
@@ -473,6 +474,9 @@
                 _.each(self.grid.nodes, function(node) {
                     self.container.append(node.el);
 
+                    if (self.opts.static_grid) {
+                        return;
+                    }
                     if (!node.no_move) {
                         node.el.draggable('disable');
                     }
@@ -486,6 +490,10 @@
                     return;
 
                 one_column_mode = false;
+
+                if (self.opts.static_grid) {
+                    return;
+                }
 
                 _.each(self.grid.nodes, function(node) {
                     if (!node.no_move) {
@@ -592,6 +600,10 @@
             el: el
         });
         el.data('_gridstack_node', node);
+
+        if (self.opts.static_grid) {
+            return;
+        }
 
         var cell_width, cell_height;
 
