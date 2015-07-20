@@ -687,6 +687,7 @@ Changes
 
 - fix closure compiler/linter warnings
 - add `static_grid` option.
+- add `min_width`/`min_height` methods (Thanks to @cvillemure)
 
 #### v0.2.3 (2015-06-23)
 
