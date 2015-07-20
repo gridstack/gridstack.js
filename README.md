@@ -36,6 +36,8 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [get_cell_from_pixel(position)](#get_cell_from_pixelposition)
     - [is_area_empty(x, y, width, height)](#is_area_emptyx-y-width-height)
     - [locked(el, val)](#lockedel-val)
+    - [min_width(el, val)](#min_widthel-val)
+    - [min_height(el, val)](#min_heightel-val)
     - [remove_widget(el, detach_node)](#remove_widgetel-detach_node)
     - [remove_all()](#remove_all)
     - [resize(el, width, height)](#resizeel-width-height)
@@ -291,6 +293,20 @@ Locks/unlocks widget.
 
 - `el` - widget to modify.
 - `val` - if `true` widget will be locked. 
+
+### min_width(el, val)
+
+Set the minWidth for a widget.
+
+- `el` - widget to modify.
+- `val` - A numeric value of the number of columns
+
+### min_height(el, val)
+
+Set the minHeight for a widget.
+
+- `el` - widget to modify.
+- `val` - A numeric value of the number of rows
 
 ### remove_widget(el, detach_node)
 
