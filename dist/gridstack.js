@@ -797,6 +797,40 @@
         return this;
     };
 
+	GridStack.prototype.min_height = function (el, val) {
+		el = $(el);
+		el.each(function (index, el) {
+			el = $(el);
+			var node = el.data('_gridstack_node');
+			if (typeof node == 'undefined' || node == null) {
+				return;
+			}
+
+			if(!isNaN(val)){
+				node.min_height = (val || false);
+				el.attr('data-gs-min-height', val);
+			}
+		});
+		return this;
+	};
+
+	GridStack.prototype.min_width = function (el, val) {
+		el = $(el);
+		el.each(function (index, el) {
+			el = $(el);
+			var node = el.data('_gridstack_node');
+			if (typeof node == 'undefined' || node == null) {
+				return;
+			}
+
+			if(!isNaN(val)){
+				node.min_width = (val || false);
+				el.attr('data-gs-min-width', val);
+			}
+		});
+		return this;
+	};
+
     GridStack.prototype._update_element = function(el, callback) {
         el = $(el).first();
         var node = el.data('_gridstack_node');
