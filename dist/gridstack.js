@@ -511,6 +511,21 @@
         $(window).resize(this.on_resize_handler);
         this.on_resize_handler();
     };
+    
+    GridStack.prototype._trigger_change_event = function(forceTrigger) {
+        var elements = this.grid.get_dirty_nodes();
+        var hasChanges = false;
+
+        var eventParams = [];
+        if (elements && elements.length) {
+            eventParams.push(elements);
+            hasChanges = true;
+        }
+
+        if (hasChanges || forceTrigger === true) {
+            this.container.trigger('change', eventParams);
+        }
+    };
 
     GridStack.prototype._init_styles = function() {
         if (this._styles_id) {
@@ -640,9 +655,7 @@
                 .attr('data-gs-height', node.height)
                 .removeAttr('style');
             self._update_container_height();
-            var elements = self.grid.get_dirty_nodes();
-            if (elements && elements.length)
-                self.container.trigger('change', [elements]);
+            self._trigger_change_event();
 
             self.grid.end_update();
         };
@@ -706,6 +719,7 @@
         this.container.append(el);
         this._prepare_element(el);
         this._update_container_height();
+        this._trigger_change_event(true);
 
         return el;
     };
@@ -724,6 +738,7 @@
         this._update_container_height();
         if (detach_node)
             el.remove();
+        this._trigger_change_event(true);
     };
 
     GridStack.prototype.remove_all = function(detach_node) {
@@ -857,9 +872,7 @@
         callback.call(this, el, node);
 
         self._update_container_height();
-        var elements = self.grid.get_dirty_nodes();
-        if (elements && elements.length)
-            self.container.trigger('change', [elements]);
+        self._trigger_change_event();
 
         self.grid.end_update();
     };
