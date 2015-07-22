@@ -39,7 +39,9 @@
             document.getElementsByTagName('head')[0].appendChild(style);
             return style.sheet;
         },
-
+        remove_stylesheet: function(id) {
+            $("STYLE[data-gs-id=" + id +"]").remove();
+        },
         insert_css_rule: function(sheet, selector, rules, index) {
             if (typeof sheet.insertRule === 'function') {
                 sheet.insertRule(selector + '{' + rules + '}', index);
@@ -463,7 +465,7 @@
             this.grid.get_grid_height() * (this.opts.cell_height + this.opts.vertical_margin) -
             this.opts.vertical_margin);
 
-        var on_resize_handler = function() {
+        this.on_resize_handler = function() {
             if (self._is_one_column_mode()) {
                 if (one_column_mode)
                     return;
@@ -506,8 +508,8 @@
             }
         };
 
-        $(window).resize(on_resize_handler);
-        on_resize_handler();
+        $(window).resize(this.on_resize_handler);
+        this.on_resize_handler();
     };
 
     GridStack.prototype._init_styles = function() {
@@ -730,6 +732,15 @@
         }, this);
         this.grid.nodes = [];
         this._update_container_height();
+    };
+
+    GridStack.prototype.destroy = function() {
+        $(window).off("resize", this.on_resize_handler);
+        this.disable();
+        this.container.remove();
+        Utils.remove_stylesheet(this._styles_id);
+        if (this.grid)
+            this.grid = null; 
     };
 
     GridStack.prototype.resizable = function(el, val) {
