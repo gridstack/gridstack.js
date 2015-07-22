@@ -158,7 +158,7 @@ to completely lock the widget.
 
 ### onchange(items)
 
-Occurs when widgets change their position/size
+Occurs when adding/removing widgets or existing widgets change their position/size
 
 ```javascript
 var serialize_widget_map = function (items) {
