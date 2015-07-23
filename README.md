@@ -31,6 +31,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [cell_height(val)](#cell_heightval)
     - [cell_width()](#cell_width)
     - [commit()](#commit)
+    - [destroy()](#destroy)
     - [disable()](#disable)
     - [enable()](#enable)
     - [get_cell_from_pixel(position)](#get_cell_from_pixelposition)
@@ -254,6 +255,10 @@ Gets current cell width.
 ### commit()
 
 Finishes batch updates. Updates DOM nodes. You must call it after `batch_update`.
+
+### destroy()
+
+Destroys a grid instance. 
 
 ### disable()
 
@@ -687,6 +692,8 @@ Changes
 
 - fix closure compiler/linter warnings
 - add `static_grid` option.
+- add `min_width`/`min_height` methods (Thanks to @cvillemure)
+- add `destroy` method (Thanks to @zspitzer)
 
 #### v0.2.3 (2015-06-23)
 

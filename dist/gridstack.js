@@ -39,7 +39,9 @@
             document.getElementsByTagName('head')[0].appendChild(style);
             return style.sheet;
         },
-
+        remove_stylesheet: function(id) {
+            $("STYLE[data-gs-id=" + id +"]").remove();
+        },
         insert_css_rule: function(sheet, selector, rules, index) {
             if (typeof sheet.insertRule === 'function') {
                 sheet.insertRule(selector + '{' + rules + '}', index);
@@ -463,7 +465,7 @@
             this.grid.get_grid_height() * (this.opts.cell_height + this.opts.vertical_margin) -
             this.opts.vertical_margin);
 
-        var on_resize_handler = function() {
+        this.on_resize_handler = function() {
             if (self._is_one_column_mode()) {
                 if (one_column_mode)
                     return;
@@ -506,8 +508,23 @@
             }
         };
 
-        $(window).resize(on_resize_handler);
-        on_resize_handler();
+        $(window).resize(this.on_resize_handler);
+        this.on_resize_handler();
+    };
+    
+    GridStack.prototype._trigger_change_event = function(forceTrigger) {
+        var elements = this.grid.get_dirty_nodes();
+        var hasChanges = false;
+
+        var eventParams = [];
+        if (elements && elements.length) {
+            eventParams.push(elements);
+            hasChanges = true;
+        }
+
+        if (hasChanges || forceTrigger === true) {
+            this.container.trigger('change', eventParams);
+        }
     };
 
     GridStack.prototype._init_styles = function() {
@@ -638,9 +655,7 @@
                 .attr('data-gs-height', node.height)
                 .removeAttr('style');
             self._update_container_height();
-            var elements = self.grid.get_dirty_nodes();
-            if (elements && elements.length)
-                self.container.trigger('change', [elements]);
+            self._trigger_change_event();
 
             self.grid.end_update();
         };
@@ -704,6 +719,7 @@
         this.container.append(el);
         this._prepare_element(el);
         this._update_container_height();
+        this._trigger_change_event(true);
 
         return el;
     };
@@ -722,6 +738,7 @@
         this._update_container_height();
         if (detach_node)
             el.remove();
+        this._trigger_change_event(true);
     };
 
     GridStack.prototype.remove_all = function(detach_node) {
@@ -730,6 +747,15 @@
         }, this);
         this.grid.nodes = [];
         this._update_container_height();
+    };
+
+    GridStack.prototype.destroy = function() {
+        $(window).off("resize", this.on_resize_handler);
+        this.disable();
+        this.container.remove();
+        Utils.remove_stylesheet(this._styles_id);
+        if (this.grid)
+            this.grid = null; 
     };
 
     GridStack.prototype.resizable = function(el, val) {
@@ -797,6 +823,40 @@
         return this;
     };
 
+	GridStack.prototype.min_height = function (el, val) {
+		el = $(el);
+		el.each(function (index, el) {
+			el = $(el);
+			var node = el.data('_gridstack_node');
+			if (typeof node == 'undefined' || node == null) {
+				return;
+			}
+
+			if(!isNaN(val)){
+				node.min_height = (val || false);
+				el.attr('data-gs-min-height', val);
+			}
+		});
+		return this;
+	};
+
+	GridStack.prototype.min_width = function (el, val) {
+		el = $(el);
+		el.each(function (index, el) {
+			el = $(el);
+			var node = el.data('_gridstack_node');
+			if (typeof node == 'undefined' || node == null) {
+				return;
+			}
+
+			if(!isNaN(val)){
+				node.min_width = (val || false);
+				el.attr('data-gs-min-width', val);
+			}
+		});
+		return this;
+	};
+
     GridStack.prototype._update_element = function(el, callback) {
         el = $(el).first();
         var node = el.data('_gridstack_node');
@@ -812,9 +872,7 @@
         callback.call(this, el, node);
 
         self._update_container_height();
-        var elements = self.grid.get_dirty_nodes();
-        if (elements && elements.length)
-            self.container.trigger('change', [elements]);
+        self._trigger_change_event();
 
         self.grid.end_update();
     };
