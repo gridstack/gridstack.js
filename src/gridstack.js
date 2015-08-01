@@ -393,7 +393,7 @@
             height: parseInt(this.container.attr('data-gs-height')) || 0,
             item_class: 'grid-stack-item',
             placeholder_class: 'grid-stack-placeholder',
-            handle: '.grid-stack-item-content',
+            handle: 'grid-stack-item-content',
             cell_height: 60,
             vertical_margin: 20,
             auto: true,
@@ -408,7 +408,7 @@
                 handles: 'se'
             }),
             draggable: _.defaults(opts.draggable || {}, {
-                handle: '.grid-stack-item-content',
+                handle: '.' + opts.handle,
                 scroll: false,
                 appendTo: 'body'
             })
