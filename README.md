@@ -45,7 +45,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [remove_all()](#remove_all)
     - [resize(el, width, height)](#resizeel-width-height)
     - [resizable(el, val)](#resizableel-val)
-    - [set_static(val)](#set_staticstatic_value)	
+    - [set_static(static_value)](#set_staticstatic_value)
     - [update(el, x, y, width, height)](#updateel-x-y-width-height)
     - [will_it_fit(x, y, width, height, auto_position)](#will_it_fitx-y-width-height-auto_position)
   - [Utils](#utils)

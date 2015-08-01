@@ -416,6 +416,9 @@
         this.opts.is_nested = is_nested;
 
         this.container.addClass(this.opts._class);
+
+        this._set_static_class();
+
         if (is_nested) {
             this.container.addClass('grid-stack-nested');
         }
@@ -944,6 +947,21 @@
 
     GridStack.prototype.is_area_empty = function(x, y, width, height) {
         return this.grid.is_area_empty(x, y, width, height);
+    };
+
+    GridStack.prototype.set_static = function(static_value) {
+        this.opts.static_grid = (static_value === true);
+        this._set_static_class();
+    };
+
+    GridStack.prototype._set_static_class = function() {
+        var static_class_name = 'grid-stack-static';
+        
+        if (this.opts.static_grid === true) {
+            this.container.addClass(static_class_name);
+        } else {
+            this.container.removeClass(static_class_name);
+        }
     };
 
     scope.GridStackUI = GridStack;
