@@ -39,12 +39,13 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [locked(el, val)](#lockedel-val)
     - [min_width(el, val)](#min_widthel-val)
     - [min_height(el, val)](#min_heightel-val)
+    - [movable(el, val)](#movableel-val)
+    - [move(el, x, y)](#moveel-x-y)
     - [remove_widget(el, detach_node)](#remove_widgetel-detach_node)
     - [remove_all()](#remove_all)
     - [resize(el, width, height)](#resizeel-width-height)
-    - [move(el, x, y)](#moveel-x-y)
     - [resizable(el, val)](#resizableel-val)
-    - [movable(el, val)](#movableel-val)
+    - [set_static(val)](#set_staticstatic_value)	
     - [update(el, x, y, width, height)](#updateel-x-y-width-height)
     - [will_it_fit(x, y, width, height, auto_position)](#will_it_fitx-y-width-height-auto_position)
   - [Utils](#utils)
@@ -132,7 +133,7 @@ $(function () {
 - `min_width` - minimal width. If window width is less, grid will be shown in one-column mode (default: `768`)
 - `placeholder_class` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
-- `static_grid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable. 
+- `static_grid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `vertical_margin` - vertical gap size (default: `20`)
 - `width` - amount of columns (default: `12`)
 
@@ -313,6 +314,22 @@ Set the minHeight for a widget.
 - `el` - widget to modify.
 - `val` - A numeric value of the number of rows
 
+### movable(el, val)
+
+Enables/Disables moving.
+
+- `el` - widget to modify
+- `val` - if `true` widget will be draggable.
+
+### move(el, x, y)
+
+Changes widget position
+
+Parameters:
+
+- `el` - widget to move
+- `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
+
 ### remove_widget(el, detach_node)
 
 Removes widget from the grid.
@@ -335,15 +352,6 @@ Parameters:
 - `el` - widget to resize
 - `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
 
-### move(el, x, y)
-
-Changes widget position
-
-Parameters:
-
-- `el` - widget to move
-- `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
-
 ### resizable(el, val)
 
 Enables/Disables resizing.
@@ -351,12 +359,11 @@ Enables/Disables resizing.
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable. 
 
-### movable(el, val)
+### set_static(static_value)
 
-Enables/Disables moving.
+Toggle the grid static state.  Also toggle the `grid-stack-static` class.
 
-- `el` - widget to modify
-- `val` - if `true` widget will be draggable.
+- `static_value` - if `true` the grid become static. 
 
 ### update(el, x, y, width, height)
 
