@@ -627,6 +627,22 @@
 
         var cell_width, cell_height;
 
+        var drag_or_resize = function(event, ui) {
+            var x = Math.round(ui.position.left / cell_width),
+                y = Math.floor((ui.position.top + cell_height / 2) / cell_height),
+                width, height;
+            if (event.type != "drag") {
+                width = Math.round(ui.size.width / cell_width);
+                height = Math.round(ui.size.height / cell_height);
+            }
+
+            if (!self.grid.can_move_node(node, x, y, width, height)) {
+                return;
+            }
+            self.grid.move_node(node, x, y, width, height);
+            self._update_container_height();
+        };
+
         var on_start_moving = function(event, ui) {
             self.container.append(self.placeholder);
             var o = $(this);
@@ -663,34 +679,17 @@
             self.grid.end_update();
         };
 
-        el.draggable(_.extend(this.opts.draggable, {
-            start: on_start_moving,
-            stop: on_end_moving,
-            drag: function(event, ui) {
-                var x = Math.round(ui.position.left / cell_width),
-                    y = Math.floor((ui.position.top + cell_height / 2) / cell_height);
-                if (!self.grid.can_move_node(node, x, y, node.width, node.height)) {
-                    return;
-                }
-                self.grid.move_node(node, x, y);
-                self._update_container_height();
-            },
+        el
+        .draggable(_.extend(this.opts.draggable, {
             containment: this.opts.is_nested ? this.container.parent() : null
-        })).resizable(_.extend(this.opts.resizable, {
-            start: on_start_moving,
-            stop: on_end_moving,
-            resize: function(event, ui) {
-                var x = Math.round(ui.position.left / cell_width),
-                    y = Math.floor((ui.position.top + cell_height / 2) / cell_height),
-                    width = Math.round(ui.size.width / cell_width),
-                    height = Math.round(ui.size.height / cell_height);
-                if (!self.grid.can_move_node(node, x, y, width, height)) {
-                    return;
-                }
-                self.grid.move_node(node, x, y, width, height);
-                self._update_container_height();
-            }
-        }));
+        }))
+        .on("dragstart", on_start_moving)
+        .on("dragstop", on_end_moving)
+        .on("drag", drag_or_resize)
+        .resizable(_.extend(this.opts.resizable, {}))
+        .on("resizestart", on_start_moving)
+        .on("resizestop", on_end_moving)
+        .on("resize", drag_or_resize);
 
         if (node.no_move || this._is_one_column_mode()) {
             el.draggable('disable');
