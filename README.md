@@ -31,17 +31,21 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [cell_height(val)](#cell_heightval)
     - [cell_width()](#cell_width)
     - [commit()](#commit)
+    - [destroy()](#destroy)
     - [disable()](#disable)
     - [enable()](#enable)
     - [get_cell_from_pixel(position)](#get_cell_from_pixelposition)
     - [is_area_empty(x, y, width, height)](#is_area_emptyx-y-width-height)
     - [locked(el, val)](#lockedel-val)
+    - [min_width(el, val)](#min_widthel-val)
+    - [min_height(el, val)](#min_heightel-val)
+    - [movable(el, val)](#movableel-val)
+    - [move(el, x, y)](#moveel-x-y)
     - [remove_widget(el, detach_node)](#remove_widgetel-detach_node)
     - [remove_all()](#remove_all)
     - [resize(el, width, height)](#resizeel-width-height)
-    - [move(el, x, y)](#moveel-x-y)
     - [resizable(el, val)](#resizableel-val)
-    - [movable(el, val)](#movableel-val)
+    - [set_static(static_value)](#set_staticstatic_value)
     - [update(el, x, y, width, height)](#updateel-x-y-width-height)
     - [will_it_fit(x, y, width, height, auto_position)](#will_it_fitx-y-width-height-auto_position)
   - [Utils](#utils)
@@ -49,13 +53,16 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
   - [Touch devices support](#touch-devices-support)
   - [Use with knockout.js](#use-with-knockoutjs)
   - [Change grid width](#change-grid-width)
+  - [Extra CSS](#extra-css)
+    - [Different grid widths](#different-grid-widths)
   - [Save grid to array](#save-grid-to-array)
   - [Load grid from array](#load-grid-from-array)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [IE8 support](#ie8-support)
   - [Nested grids](#nested-grids)
 - [Changes](#changes)
-      - [v0.2.3 (development version)](#v023-development-version)
+      - [v0.2.4 (development version)](#v024-development-version)
+      - [v0.2.3 (2015-06-23)](#v023-2015-06-23)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
       - [v0.2.1 (2014-12-09)](#v021-2014-12-09)
       - [v0.2.0 (2014-11-30)](#v020-2014-11-30)
@@ -126,6 +133,7 @@ $(function () {
 - `min_width` - minimal width. If window width is less, grid will be shown in one-column mode (default: `768`)
 - `placeholder_class` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
+- `static_grid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `vertical_margin` - vertical gap size (default: `20`)
 - `width` - amount of columns (default: `12`)
 
@@ -152,7 +160,7 @@ to completely lock the widget.
 
 ### onchange(items)
 
-Occurs when widgets change their position/size
+Occurs when adding/removing widgets or existing widgets change their position/size
 
 ```javascript
 var serialize_widget_map = function (items) {
@@ -249,6 +257,10 @@ Gets current cell width.
 
 Finishes batch updates. Updates DOM nodes. You must call it after `batch_update`.
 
+### destroy()
+
+Destroys a grid instance. 
+
 ### disable()
 
 Disables widgets moving/resizing. This is a shortcut for:
@@ -288,6 +300,36 @@ Locks/unlocks widget.
 - `el` - widget to modify.
 - `val` - if `true` widget will be locked. 
 
+### min_width(el, val)
+
+Set the minWidth for a widget.
+
+- `el` - widget to modify.
+- `val` - A numeric value of the number of columns
+
+### min_height(el, val)
+
+Set the minHeight for a widget.
+
+- `el` - widget to modify.
+- `val` - A numeric value of the number of rows
+
+### movable(el, val)
+
+Enables/Disables moving.
+
+- `el` - widget to modify
+- `val` - if `true` widget will be draggable.
+
+### move(el, x, y)
+
+Changes widget position
+
+Parameters:
+
+- `el` - widget to move
+- `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
+
 ### remove_widget(el, detach_node)
 
 Removes widget from the grid.
@@ -310,15 +352,6 @@ Parameters:
 - `el` - widget to resize
 - `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
 
-### move(el, x, y)
-
-Changes widget position
-
-Parameters:
-
-- `el` - widget to move
-- `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
-
 ### resizable(el, val)
 
 Enables/Disables resizing.
@@ -326,12 +359,11 @@ Enables/Disables resizing.
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable. 
 
-### movable(el, val)
+### set_static(static_value)
 
-Enables/Disables moving.
+Toggle the grid static state.  Also toggle the `grid-stack-static` class.
 
-- `el` - widget to modify
-- `val` - if `true` widget will be draggable.
+- `static_value` - if `true` the grid become static. 
 
 ### update(el, x, y, width, height)
 
@@ -519,6 +551,25 @@ Here is a SASS code snipped which can make life easier (Thanks to @ascendantofra
 }
 ```
 
+Or you can include `gridstack-extra.css`. See below for more details.
+
+## Extra CSS
+
+There are few extra CSS batteries in `gridstack-extra.css` (`gridstack-extra.min.css`).
+ 
+### Different grid widths
+
+You can use other than 12 grid width:
+
+```html
+<div class="grid-stack grid-stack-N">...</div>
+```
+```javascript
+$('.grid-stack').gridstack({width: N});
+```
+
+See example: [2 grids demo](http://troolee.github.io/gridstack.js/demo/two.html)
+
 ## Save grid to array
 
 Because gridstack doesn't track any kind of user-defined widget id there is no reason to make serialization to be part
@@ -644,8 +695,16 @@ See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/neste
 Changes
 =======
 
-#### v0.2.3 (development version)
+#### v0.2.4 (development version)
 
+- fix closure compiler/linter warnings
+- add `static_grid` option.
+- add `min_width`/`min_height` methods (Thanks to @cvillemure)
+- add `destroy` method (Thanks to @zspitzer)
+
+#### v0.2.3 (2015-06-23)
+
+- gridstack-extra.css
 - add support of lodash.js
 - add `is_area_empty` method
 - nested grids
