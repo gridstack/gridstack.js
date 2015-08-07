@@ -641,6 +641,7 @@
             }
             self.grid.move_node(node, x, y, width, height);
             self._update_container_height();
+            event.stopPropagation();
         };
 
         var on_start_moving = function(event, ui) {
@@ -660,6 +661,7 @@
 
             el.resizable('option', 'minWidth', cell_width * (node.min_width || 1));
             el.resizable('option', 'minHeight', self.opts.cell_height * (node.min_height || 1));
+            event.stopPropagation();
         };
 
         var on_end_moving = function(event, ui) {
@@ -677,6 +679,7 @@
             self._trigger_change_event();
 
             self.grid.end_update();
+            event.stopPropagation();
         };
 
         el
