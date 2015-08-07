@@ -26,7 +26,7 @@
             return _.sortBy(nodes, function(n) { return dir * (n.x + n.y * width); });
         },
 
-        create_stylesheet: function(id) {
+        create_stylesheet: function(id, target) {
             var style = document.createElement('style');
             style.setAttribute('type', 'text/css');
             style.setAttribute('data-gs-id', id);
@@ -36,7 +36,7 @@
             else {
                 style.appendChild(document.createTextNode(''));
             }
-            document.getElementsByTagName('head')[0].appendChild(style);
+            (target || document.getElementsByTagName('head')[0]).appendChild(style);
             return style.sheet;
         },
         remove_stylesheet: function(id) {
@@ -399,6 +399,7 @@
             auto: true,
             min_width: 768,
             float: false,
+            styleInjectionTarget: null,
             static_grid: false,
             _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0),
             animate: Boolean(this.container.attr('data-gs-animate')) || false,
@@ -514,7 +515,7 @@
         $(window).resize(this.on_resize_handler);
         this.on_resize_handler();
     };
-    
+
     GridStack.prototype._trigger_change_event = function(forceTrigger) {
         var elements = this.grid.get_dirty_nodes();
         var hasChanges = false;
@@ -535,7 +536,7 @@
             $('[data-gs-id="' + this._styles_id + '"]').remove();
         }
         this._styles_id = 'gridstack-style-' + (Math.random() * 100000).toFixed();
-        this._styles = Utils.create_stylesheet(this._styles_id);
+        this._styles = Utils.create_stylesheet(this._styles_id, this.opts.styleInjectionTarget);
         if (this._styles != null)
             this._styles._max = 0;
     };
@@ -758,7 +759,7 @@
         this.container.remove();
         Utils.remove_stylesheet(this._styles_id);
         if (this.grid)
-            this.grid = null; 
+            this.grid = null;
     };
 
     GridStack.prototype.resizable = function(el, val) {
@@ -956,7 +957,7 @@
 
     GridStack.prototype._set_static_class = function() {
         var static_class_name = 'grid-stack-static';
-        
+
         if (this.opts.static_grid === true) {
             this.container.addClass(static_class_name);
         } else {
