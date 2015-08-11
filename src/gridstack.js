@@ -384,10 +384,10 @@
                 one_column_mode = true;
 
                 _.each(self.grid.nodes, function (node) {
-                    if (!node.no_move) {
+                    if (!node.no_move && this.opts.draggable !== false) {
                         node.el.draggable('disable');
                     }
-                    if (!node.no_resize) {
+                    if (!node.no_resize && this.opts.resizable !== false) {
                         node.el.resizable('disable');
                     }
                 });
@@ -399,10 +399,10 @@
                 one_column_mode = false;
 
                 _.each(self.grid.nodes, function (node) {
-                    if (!node.no_move) {
+                    if (!node.no_move && this.opts.draggable !== false) {
                         node.el.draggable('enable');
                     }
-                    if (!node.no_resize) {
+                    if (!node.no_resize && this.opts.resizable !== false) {
                         node.el.resizable('enable');
                     }
                 });
@@ -548,11 +548,11 @@
             });
         }
 
-        if (node.no_move || this._is_one_column_mode()) {
+        if ((node.no_move || this._is_one_column_mode()) && this.opts.draggable !== false) {
             el.draggable('disable');
         }
 
-        if (node.no_resize || this._is_one_column_mode()) {
+        if ((node.no_resize || this._is_one_column_mode()) && this.opts.resizable !== false) {
             el.resizable('disable');
         }
 
@@ -612,11 +612,13 @@
             }
 
             node.no_resize = !(val || false);
-            if (node.no_resize) {
-                el.resizable('disable');
-            }
-            else {
-                el.resizable('enable');
+            if (this.opts.resizable !== false) {
+              if (node.no_resize) {
+                  el.resizable('disable');
+              }
+              else {
+                  el.resizable('enable');
+              }
             }
         });
         return this;
@@ -632,11 +634,13 @@
             }
 
             node.no_move = !(val || false);
-            if (node.no_move) {
-                el.draggable('disable');
-            }
-            else {
-                el.draggable('enable');
+            if (this.opts.draggable !== false) {
+              if (node.no_move) {
+                  el.draggable('disable');
+              }
+              else {
+                  el.draggable('enable');
+              }
             }
         });
         return this;
