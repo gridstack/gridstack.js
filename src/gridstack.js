@@ -548,11 +548,11 @@
             });
         }
 
-        if (node.no_move || this._is_one_column_mode()) {
+        if ((node.no_move || this._is_one_column_mode()) && this.opts.draggable !== false) {
             el.draggable('disable');
         }
 
-        if (node.no_resize || this._is_one_column_mode()) {
+        if ((node.no_resize || this._is_one_column_mode()) && this.opts.resizable !== false) {
             el.resizable('disable');
         }
 
