@@ -677,6 +677,12 @@
             self._trigger_change_event();
 
             self.grid.end_update();
+
+            var nested_grid = o.find('.grid-stack');
+            if (nested_grid.length && event.type == 'resizestop') {
+                nested_grid.data('gridstack').on_resize_handler();
+                nested_grid.find('.grid-stack-item').trigger('resizestop');
+            }
         };
 
         el
