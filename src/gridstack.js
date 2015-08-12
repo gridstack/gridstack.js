@@ -641,7 +641,6 @@
             }
             self.grid.move_node(node, x, y, width, height);
             self._update_container_height();
-            event.stopPropagation();
         };
 
         var on_start_moving = function(event, ui) {
@@ -661,7 +660,6 @@
 
             el.resizable('option', 'minWidth', cell_width * (node.min_width || 1));
             el.resizable('option', 'minHeight', self.opts.cell_height * (node.min_height || 1));
-            event.stopPropagation();
         };
 
         var on_end_moving = function(event, ui) {
@@ -679,7 +677,6 @@
             self._trigger_change_event();
 
             self.grid.end_update();
-            event.stopPropagation();
         };
 
         el
@@ -970,10 +967,21 @@
 
     scope.GridStackUI.Utils = Utils;
 
+    function event_stop_propagate(event) {
+        event.stopPropagation();
+    }
     $.fn.gridstack = function(opts) {
         return this.each(function() {
-            if (!$(this).data('gridstack')) {
-                $(this).data('gridstack', new GridStack(this, opts));
+            var o = $(this);
+            if (!o.data('gridstack')) {
+                o
+                    .data('gridstack', new GridStack(this, opts))
+                    .on('dragstart', event_stop_propagate)
+                    .on('dragstop', event_stop_propagate)
+                    .on('drag', event_stop_propagate)
+                    .on('resizestart', event_stop_propagate)
+                    .on('resizestop', event_stop_propagate)
+                    .on('resize', event_stop_propagate);
             }
         });
     };
