@@ -686,16 +686,16 @@
         };
 
         el
-        .draggable(_.extend(this.opts.draggable, {
-            containment: this.opts.is_nested ? this.container.parent() : null
-        }))
-        .on("dragstart", on_start_moving)
-        .on("dragstop", on_end_moving)
-        .on("drag", drag_or_resize)
-        .resizable(_.extend(this.opts.resizable, {}))
-        .on("resizestart", on_start_moving)
-        .on("resizestop", on_end_moving)
-        .on("resize", drag_or_resize);
+            .draggable(_.extend(this.opts.draggable, {
+                containment: this.opts.is_nested ? this.container.parent() : null
+            }))
+            .on('dragstart', on_start_moving)
+            .on('dragstop', on_end_moving)
+            .on('drag', drag_or_resize)
+            .resizable(_.extend(this.opts.resizable, {}))
+            .on('resizestart', on_start_moving)
+            .on('resizestop', on_end_moving)
+            .on('resize', drag_or_resize);
 
         if (node.no_move || this._is_one_column_mode()) {
             el.draggable('disable');
