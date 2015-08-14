@@ -6,6 +6,11 @@
     "type": "git",
     "url": "git+https://github.com/troolee/gridstack.js.git"
   },
+  "scripts": {
+    "uglify": "uglifyjs src/gridstack.js -o dist/gridstack.min.js --source-map dist/gridstack.min.map -p 5 -c -m",
+    "scss" : "scss -t compressed --sourcemap=none src/gridstack.scss dist/gridstack.min.css; scss -t expanded --sourcemap=none src/gridstack.scss src/gridstack.css; scss -t expanded --sourcemap=none src/gridstack.scss dist/gridstack.css",
+    "prepublish": "npm run uglify; npm run scss"
+  },
   "keywords": [
     "gridstack",
     "grid",
