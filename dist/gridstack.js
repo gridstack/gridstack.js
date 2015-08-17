@@ -107,7 +107,7 @@
         }else{
             _.each(collision_nodes,function(collision_node){
                 self.move_node(collision_node, collision_node.x , node.y + node.height,
-                collision_node.width, collision_node.height, true);  
+                collision_node.width, collision_node.height, true);
             });
         }
     };
@@ -682,7 +682,7 @@
                         return;
                     }
                     self.grid.move_node(node, x, y);
-                    self._update_container_height();                   
+                    self._update_container_height();
                 }
 
             },
@@ -723,14 +723,16 @@
         }
     };
 
-    GridStack.prototype.add_widget = function(el, x, y, width, height, auto_position) {
+    GridStack.prototype.add_widget = function(el, x, y, width, height, auto_position, attach_node) {
         el = $(el);
         if (typeof x != 'undefined') el.attr('data-gs-x', x);
         if (typeof y != 'undefined') el.attr('data-gs-y', y);
         if (typeof width != 'undefined') el.attr('data-gs-width', width);
         if (typeof height != 'undefined') el.attr('data-gs-height', height);
         if (typeof auto_position != 'undefined') el.attr('data-gs-auto-position', auto_position ? 'yes' : null);
-        this.container.append(el);
+        if(attach_node) {
+            this.container.append(el);
+        }
         this._prepare_element(el);
         this._update_container_height();
         this._trigger_change_event(true);
