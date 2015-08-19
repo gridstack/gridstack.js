@@ -14,6 +14,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
 - [Demo](#demo)
 - [Usage](#usage)
   - [Requirements](#requirements)
+  - [Rails integration](#rails-integration)
   - [Basic usage](#basic-usage)
   - [Options](#options)
   - [Grid attributes](#grid-attributes)
@@ -90,6 +91,10 @@ Usage
 * (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
 
 Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
+
+## Rails integration
+
+For rails users, integration of gridstack.js and its dependencies can be done through [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
 
 ## Basic usage
 
