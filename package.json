@@ -6,6 +6,13 @@
     "type": "git",
     "url": "git+https://github.com/troolee/gridstack.js.git"
   },
+  "scripts": {
+    "copy": "cp src/gridstack.js src/gridstack.css src/gridstack-extra.css dist/",
+    "uglify": "uglifyjs src/gridstack.js -o dist/gridstack.min.js --source-map dist/gridstack.min.map -p 5 -c -m",
+    "css" : "scss --precision 8 -t compressed --sourcemap=none src/gridstack.scss dist/gridstack.min.css; scss --precision 8 -t expanded --sourcemap=none src/gridstack.scss src/gridstack.css",
+    "css-extra" : "scss --precision 8 -t compressed --sourcemap=none src/gridstack-extra.scss dist/gridstack-extra.min.css; scss --precision 8 -t expanded --sourcemap=none src/gridstack-extra.scss src/gridstack-extra.css; scss --precision 8 -t expanded --sourcemap=none src/gridstack-extra.scss dist/gridstack-extra.css",
+    "prepublish": "npm run uglify; npm run css; npm run css-extra; npm run copy"
+  },
   "keywords": [
     "gridstack",
     "grid",
