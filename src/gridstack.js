@@ -446,7 +446,7 @@
         if (this.opts.auto) {
             var elements = [];
             var _this = this;
-            this.container.children('.' + this.opts.item_class).each(function(index, el) {
+            this.container.children('.' + this.opts.item_class + ':not(.' + this.opts.placeholder_class + ')').each(function(index, el) {
                 el = $(el);
                 elements.push({
                     el: el,
@@ -514,7 +514,7 @@
         $(window).resize(this.on_resize_handler);
         this.on_resize_handler();
     };
-    
+
     GridStack.prototype._trigger_change_event = function(forceTrigger) {
         var elements = this.grid.get_dirty_nodes();
         var hasChanges = false;
@@ -758,7 +758,7 @@
         this.container.remove();
         Utils.remove_stylesheet(this._styles_id);
         if (this.grid)
-            this.grid = null; 
+            this.grid = null;
     };
 
     GridStack.prototype.resizable = function(el, val) {
@@ -956,7 +956,7 @@
 
     GridStack.prototype._set_static_class = function() {
         var static_class_name = 'grid-stack-static';
-        
+
         if (this.opts.static_grid === true) {
             this.container.addClass(static_class_name);
         } else {
