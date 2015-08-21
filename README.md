@@ -1,7 +1,7 @@
 gridstack.js
 ============
 
-gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build 
+gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build
 draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com)
 
 Inspired by [gridster.js](http://gridster.net). Built with love.
@@ -18,21 +18,22 @@ Usage
 ## Requirements
 
 * http://underscorejs.org (>= 1.7.0)
-* http://jquery.com (>= 1.11.0) 
+* http://jquery.com (>= 1.11.0).
 * http://jqueryui.com (>= 1.11.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
 * (Optional) http://knockoutjs.com (>= 3.2.0)
+* (Optional) https://github.com/gabceb/jquery-browser-plugin. For IE's versions without DOM Level2 support.
 
 ## Basic usage
 
 ```html
 <div class="grid-stack">
-    <div class="grid-stack-item" 
-        data-gs-x="0" data-gs-y="0" 
+    <div class="grid-stack-item"
+        data-gs-x="0" data-gs-y="0"
         data-gs-width="4" data-gs-height="2">
             <div class="grid-stack-item-content"></div>
     </div>
-    <div class="grid-stack-item" 
-        data-gs-x="4" data-gs-y="0" 
+    <div class="grid-stack-item"
+        data-gs-x="4" data-gs-y="0"
         data-gs-width="4" data-gs-height="4">
             <div class="grid-stack-item-content"></div>
     </div>
@@ -65,7 +66,7 @@ $(function () {
 
 ## Grid attributes
 
-- `data-gs-animate` - turns animation on 
+- `data-gs-animate` - turns animation on
 - `data-gs-width` - amount of columns
 - `data-gs-height` - maximum rows amount. Default is `0` which means no maximum rows.
 
@@ -75,13 +76,13 @@ $(function () {
 - `data-gs-width`, `data-gs-height` - element size
 - `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
 - `data-gs-no-resize` - disable element resizing
-- `data-gs-no-move` - disable element moving 
-- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first 
+- `data-gs-no-move` - disable element moving
+- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first
     available position
 - `data-gs-locked` - the widget will be locked. It means another widgets couldn't move it during dragging or resizing.
 The widget is still can be dragged or resized. You need to add `data-gs-no-resize` and `data-gs-no-move` attributes
 to completely lock the widget.
-    
+
 ## Events
 
 ### onchange(items)
@@ -180,7 +181,7 @@ Gets current cell width.
 Locks/unlocks widget.
 
 - `el` - widget to modify.
-- `val` - if `true` widget will be locked. 
+- `val` - if `true` widget will be locked.
 
 ### remove_widget(el)
 
@@ -217,7 +218,7 @@ Parameters:
 Enables/Disables resizing.
 
 - `el` - widget to modify
-- `val` - if `true` widget will be resizable. 
+- `val` - if `true` widget will be resizable.
 
 ### movable(el, val)
 
@@ -239,7 +240,7 @@ else {
     alert('Not enough free space to place the widget');
 }
 ```
- 
+
 
 ## Utils
 
@@ -331,7 +332,7 @@ Changes
 - auto-generate css rules (widgets `height` and `top`)
 - add `GridStackUI.Utils.sort` utility function
 - add `remove_all` API method
-- add `resize` and `move` API methods 
+- add `resize` and `move` API methods
 - add `resizable` and `movable` API methods
 - add `data-gs-no-move` attribute
 - add `float` option
