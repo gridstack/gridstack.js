@@ -36,6 +36,20 @@
         }
     };
 
+    if ($.browser.msie && $.browser.version < 9) {
+        CSSStyleSheet.prototype.insertRule = function (css) {
+          this.cssText += css;
+        };
+
+        Utils.create_stylesheet = function () {
+          var style = document.createElement("style");
+          var head = document.getElementsByTagName("head")[0];
+          head.appendChild(style);
+
+          return style.styleSheet;
+        };
+    }
+
     var id_seq = 0;
 
     var GridStackEngine = function (width, onchange, float, height, items) {
