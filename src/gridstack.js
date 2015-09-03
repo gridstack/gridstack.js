@@ -589,7 +589,7 @@
                                   'width: auto !important; ' +
                                   'left: 0 !important; ' +
                                   'top: auto !important; ' +
-                                  'margin-bottom: $vertical_padding; ' +
+                                  'margin-bottom: 20px; ' +
                               '}' +
                               '.grid-stack-item .ui-resizable-handle { display: none; } ' +
                               '.grid-stack { height: auto !important; }',
