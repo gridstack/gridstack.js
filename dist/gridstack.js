@@ -383,6 +383,8 @@
     var GridStack = function(el, opts) {
         var self = this, one_column_mode;
 
+        opts = opts || {};
+
         this.container = $(el);
 
         opts.item_class = opts.item_class || 'grid-stack-item';
@@ -394,6 +396,7 @@
             item_class: 'grid-stack-item',
             placeholder_class: 'grid-stack-placeholder',
             handle: '.grid-stack-item-content',
+            handle_class: null,
             cell_height: 60,
             vertical_margin: 20,
             auto: true,
@@ -408,7 +411,7 @@
                 handles: 'se'
             }),
             draggable: _.defaults(opts.draggable || {}, {
-                handle: '.grid-stack-item-content',
+                handle: opts.handle_class || (opts.handle ? '.' + opts.handle : '') || '.grid-stack-item-content',
                 scroll: false,
                 appendTo: 'body'
             })
