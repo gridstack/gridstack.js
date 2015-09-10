@@ -449,7 +449,7 @@
         if (this.opts.auto) {
             var elements = [];
             var _this = this;
-            this.container.children('.' + this.opts.item_class).each(function(index, el) {
+            this.container.children('.' + this.opts.item_class + ':not(.' + this.opts.placeholder_class + ')').each(function(index, el) {
                 el = $(el);
                 elements.push({
                     el: el,
