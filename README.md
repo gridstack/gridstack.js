@@ -50,7 +50,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [update(el, x, y, width, height)](#updateel-x-y-width-height)
     - [will_it_fit(x, y, width, height, auto_position)](#will_it_fitx-y-width-height-auto_position)
   - [Utils](#utils)
-    - [GridStackUI.Utils.sort(nodes [, dir [, width]])](#gridstackuiutilssortnodes-dir-width)
+    - [GridStackUI.Utils.sort(nodes[, dir[, width]])](#gridstackuiutilssortnodes-dir-width)
   - [Touch devices support](#touch-devices-support)
   - [Use with knockout.js](#use-with-knockoutjs)
   - [Change grid width](#change-grid-width)
@@ -397,7 +397,7 @@ else {
 
 ## Utils
 
-### GridStackUI.Utils.sort(nodes [, dir [, width]])
+### GridStackUI.Utils.sort(nodes[, dir[, width]])
 
 Sorts array of nodes
 
