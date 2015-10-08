@@ -383,6 +383,8 @@
     var GridStack = function(el, opts) {
         var self = this, one_column_mode;
 
+        opts = opts || {};
+
         this.container = $(el);
 
         opts.item_class = opts.item_class || 'grid-stack-item';
@@ -394,6 +396,7 @@
             item_class: 'grid-stack-item',
             placeholder_class: 'grid-stack-placeholder',
             handle: '.grid-stack-item-content',
+            handle_class: null,
             cell_height: 60,
             vertical_margin: 20,
             auto: true,
@@ -408,7 +411,7 @@
                 handles: 'se'
             }),
             draggable: _.defaults(opts.draggable || {}, {
-                handle: '.grid-stack-item-content',
+                handle: (opts.handle_class ? '.' + opts.handle_class : (opts.handle ? opts.handle : '')) || '.grid-stack-item-content',
                 scroll: false,
                 appendTo: 'body'
             })
@@ -416,6 +419,9 @@
         this.opts.is_nested = is_nested;
 
         this.container.addClass(this.opts._class);
+
+        this._set_static_class();
+
         if (is_nested) {
             this.container.addClass('grid-stack-nested');
         }
@@ -443,7 +449,7 @@
         if (this.opts.auto) {
             var elements = [];
             var _this = this;
-            this.container.children('.' + this.opts.item_class).each(function(index, el) {
+            this.container.children('.' + this.opts.item_class + ':not(.' + this.opts.placeholder_class + ')').each(function(index, el) {
                 el = $(el);
                 elements.push({
                     el: el,
@@ -511,7 +517,7 @@
         $(window).resize(this.on_resize_handler);
         this.on_resize_handler();
     };
-    
+
     GridStack.prototype._trigger_change_event = function(forceTrigger) {
         var elements = this.grid.get_dirty_nodes();
         var hasChanges = false;
@@ -755,7 +761,7 @@
         this.container.remove();
         Utils.remove_stylesheet(this._styles_id);
         if (this.grid)
-            this.grid = null; 
+            this.grid = null;
     };
 
     GridStack.prototype.resizable = function(el, val) {
@@ -944,6 +950,21 @@
 
     GridStack.prototype.is_area_empty = function(x, y, width, height) {
         return this.grid.is_area_empty(x, y, width, height);
+    };
+
+    GridStack.prototype.set_static = function(static_value) {
+        this.opts.static_grid = (static_value === true);
+        this._set_static_class();
+    };
+
+    GridStack.prototype._set_static_class = function() {
+        var static_class_name = 'grid-stack-static';
+
+        if (this.opts.static_grid === true) {
+            this.container.addClass(static_class_name);
+        } else {
+            this.container.removeClass(static_class_name);
+        }
     };
 
     scope.GridStackUI = GridStack;

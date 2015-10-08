@@ -14,6 +14,7 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
 - [Demo](#demo)
 - [Usage](#usage)
   - [Requirements](#requirements)
+  - [Rails integration](#rails-integration)
   - [Basic usage](#basic-usage)
   - [Options](#options)
   - [Grid attributes](#grid-attributes)
@@ -45,11 +46,11 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [remove_all()](#remove_all)
     - [resize(el, width, height)](#resizeel-width-height)
     - [resizable(el, val)](#resizableel-val)
-    - [set_static(val)](#set_staticstatic_value)	
+    - [set_static(static_value)](#set_staticstatic_value)
     - [update(el, x, y, width, height)](#updateel-x-y-width-height)
     - [will_it_fit(x, y, width, height, auto_position)](#will_it_fitx-y-width-height-auto_position)
   - [Utils](#utils)
-    - [GridStackUI.Utils.sort(nodes, dir, width)](#gridstackuiutilssortnodes-dir-width)
+    - [GridStackUI.Utils.sort(nodes[, dir[, width]])](#gridstackuiutilssortnodes-dir-width)
   - [Touch devices support](#touch-devices-support)
   - [Use with knockout.js](#use-with-knockoutjs)
   - [Change grid width](#change-grid-width)
@@ -91,6 +92,10 @@ Usage
 
 Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
 
+## Rails integration
+
+For rails users, integration of gridstack.js and its dependencies can be done through [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
+
 ## Basic usage
 
 ```html
@@ -127,6 +132,7 @@ $(function () {
 - `cell_height` - one cell height (default: `60`)
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'}`) 
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
+- `handle_class` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
 - `height` - maximum rows amount. Default is `0` which means no maximum rows
 - `float` - enable floating widgets (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/float.html)
 - `item_class` - widget class (default: `'grid-stack-item'`)
@@ -392,7 +398,7 @@ else {
 
 ## Utils
 
-### GridStackUI.Utils.sort(nodes, dir, width)
+### GridStackUI.Utils.sort(nodes[, dir[, width]])
 
 Sorts array of nodes
 
