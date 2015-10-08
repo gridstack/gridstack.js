@@ -87,7 +87,6 @@ $animation_speed: .3s;
         
         > .ui-resizable-se {
             display: inline-block;
-            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
             @include vendor(transform, rotate(90deg));
         }
         
@@ -124,7 +123,6 @@ $animation_speed: .3s;
 /*
 .grid-stack > .grid-stack-item > .ui-resizable-sw {
     display: inline-block;
-    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     @include vendor(transform, rotate(180deg));
 }
 */
