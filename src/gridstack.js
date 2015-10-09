@@ -8,10 +8,9 @@
         define(['jquery', 'lodash', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/mouse', 'jquery-ui/draggable',
             'jquery-ui/resizable'], factory);
     }
-    else if(typeof exports !== 'undefined') {
-      var _ = require("lodash");
+    else if (typeof exports !== 'undefined') {
       try { jQuery = require('jquery'); } catch(e) {}
-      factory(jQuery, _);
+      factory(jQuery, require("lodash"));
     }
     else {
         factory(jQuery, _);
