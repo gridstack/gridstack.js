@@ -10,7 +10,8 @@
     }
     else if (typeof exports !== 'undefined') {
       try { jQuery = require('jquery'); } catch(e) {}
-      factory(jQuery, require("lodash"));
+      try { _ = require('lodash'); } catch(e) {}
+      factory(jQuery, _);
     }
     else {
         factory(jQuery, _);
