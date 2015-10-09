@@ -8,6 +8,11 @@
         define(['jquery', 'lodash', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/mouse', 'jquery-ui/draggable',
             'jquery-ui/resizable'], factory);
     }
+    else if(typeof exports !== 'undefined') {
+      var _ = require("lodash");
+      try { jQuery = require('jquery'); } catch(e) {}
+      factory(jQuery, _);
+    }
     else {
         factory(jQuery, _);
     }
