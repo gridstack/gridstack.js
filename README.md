@@ -621,7 +621,7 @@ var grid = $('.grid-stack').data('gridstack');
 grid.remove_all();
 
 _.each(serialization, function (node) {
-    grid.add_widget($('<div><div class="grid-stack-item-content" /><div/>'), 
+    grid.add_widget($('<div><div class="grid-stack-item-content" /></div>'), 
         node.x, node.y, node.width, node.height);
 });
 ```
