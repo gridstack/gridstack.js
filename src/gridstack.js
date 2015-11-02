@@ -812,11 +812,13 @@
     GridStack.prototype.disable = function() {
         this.movable(this.container.children('.' + this.opts.item_class), false);
         this.resizable(this.container.children('.' + this.opts.item_class), false);
+        this.container.trigger('disable');
     };
 
     GridStack.prototype.enable = function() {
         this.movable(this.container.children('.' + this.opts.item_class), true);
         this.resizable(this.container.children('.' + this.opts.item_class), true);
+        this.container.trigger('enable');
     };
 
     GridStack.prototype.locked = function(el, val) {
