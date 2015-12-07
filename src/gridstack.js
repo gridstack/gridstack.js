@@ -427,6 +427,21 @@
         on_resize_handler(this.opts);
     };
 
+    GridStack.prototype._trigger_change_event = function(forceTrigger) {
+        var elements = this.grid.get_dirty_nodes();
+        var hasChanges = false;
+
+        var eventParams = [];
+        if (elements && elements.length) {
+            eventParams.push(elements);
+            hasChanges = true;
+        }
+
+        if (hasChanges || forceTrigger === true) {
+            this.container.trigger('change', eventParams);
+        }
+    };
+
     GridStack.prototype._update_styles = function (max_height) {
         if (typeof max_height == 'undefined') {
             max_height = this._styles._max;
@@ -508,7 +523,7 @@
                 .attr('data-gs-height', node.height)
                 .removeAttr('style');
             self._update_container_height();
-            self.container.trigger('change', [self.grid.get_dirty_nodes()]);
+            self._trigger_change_event();
 
             self.grid.end_update();
 
@@ -593,6 +608,7 @@
         this.container.append(el);
         this._prepare_element(el, options);
         this._update_container_height();
+        this._trigger_change_event(true);
     };
 
     GridStack.prototype.will_it_fit = function (x, y, width, height, auto_position) {
@@ -606,6 +622,7 @@
         this.grid.remove_node(node);
         el.remove();
         this._update_container_height();
+        this._trigger_change_event(true);
     };
 
     GridStack.prototype.remove_all = function () {
@@ -690,7 +707,7 @@
         callback.call(this, el, node);
 
         self._update_container_height();
-        self.container.trigger('change', [self.grid.get_dirty_nodes()]);
+        this._trigger_change_event(true);
 
         self.grid.end_update();
 
