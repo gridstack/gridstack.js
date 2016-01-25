@@ -147,6 +147,7 @@ $(function () {
 - `static_grid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `vertical_margin` - vertical gap size (default: `20`)
 - `width` - amount of columns (default: `12`)
+- `drag_constraint` - container to which the drag will be constrained. If dragging outside of it, the move placeholder will be set back to its initial position. Useful if one wants to add behavior when dragging onto other elements of the app.
 
 ## Grid attributes
 
