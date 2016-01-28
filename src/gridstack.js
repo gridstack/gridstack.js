@@ -660,6 +660,10 @@
 
             el.resizable('option', 'minWidth', cell_width * (node.min_width || 1));
             el.resizable('option', 'minHeight', self.opts.cell_height * (node.min_height || 1));
+
+            if (event.type == 'resizestart') {
+                o.find('.grid-stack-item').trigger('resizestart');
+            }
         };
 
         var on_end_moving = function(event, ui) {
