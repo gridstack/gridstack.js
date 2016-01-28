@@ -989,7 +989,8 @@
                     .on('drag', event_stop_propagate)
                     .on('resizestart', event_stop_propagate)
                     .on('resizestop', event_stop_propagate)
-                    .on('resize', event_stop_propagate);
+                    .on('resize', event_stop_propagate)
+                    .on('change', event_stop_propagate);
             }
         });
     };
