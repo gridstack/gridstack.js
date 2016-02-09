@@ -1,12 +1,17 @@
 //     gridstack.js 0.2.4-dev
 //     http://troolee.github.io/gridstack.js/
-//     (c) 2014-2015 Pavel Reznikov
+//     (c) 2014-2016 Pavel Reznikov
 //     gridstack.js may be freely distributed under the MIT license.
 
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'lodash', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/mouse', 'jquery-ui/draggable',
             'jquery-ui/resizable'], factory);
+    }
+    else if (typeof exports !== 'undefined') {
+      try { jQuery = require('jquery'); } catch(e) {}
+      try { _ = require('lodash'); } catch(e) {}
+      factory(jQuery, _);
     }
     else {
         factory(jQuery, _);
@@ -99,9 +104,9 @@
         }
 
         while (true) {
-            var collision_node = _.find(this.nodes, function(n) {
+            var collision_node = _.find(this.nodes, _.bind(function(n) {
                 return n != node && Utils.is_intercepted(n, nn);
-            }, this);
+            }, this));
             if (typeof collision_node == 'undefined') {
                 return;
             }
@@ -112,9 +117,9 @@
 
     GridStackEngine.prototype.is_area_empty = function(x, y, width, height) {
         var nn = {x: x || 0, y: y || 0, width: width || 1, height: height || 1};
-        var collision_node = _.find(this.nodes, function(n) {
+        var collision_node = _.find(this.nodes, _.bind(function(n) {
             return Utils.is_intercepted(n, nn);
-        }, this);
+        }, this));
         return collision_node == null;
     };
 
@@ -126,7 +131,7 @@
         this._sort_nodes();
 
         if (this.float) {
-            _.each(this.nodes, function(n, i) {
+            _.each(this.nodes, _.bind(function(n, i) {
                 if (n._updating || typeof n._orig_y == 'undefined' || n.y == n._orig_y)
                     return;
 
@@ -145,10 +150,10 @@
                     }
                     --new_y;
                 }
-            }, this);
+            }, this));
         }
         else {
-            _.each(this.nodes, function(n, i) {
+            _.each(this.nodes, _.bind(function(n, i) {
                 if (n.locked)
                     return;
                 while (n.y > 0) {
@@ -171,7 +176,7 @@
                     n._dirty = n.y != new_y;
                     n.y = new_y;
                 }
-            }, this);
+            }, this));
         }
     };
 
@@ -748,9 +753,9 @@
     };
 
     GridStack.prototype.remove_all = function(detach_node) {
-        _.each(this.grid.nodes, function(node) {
+        _.each(this.grid.nodes, _.bind(function(node) {
             this.remove_widget(node.el, detach_node);
-        }, this);
+        }, this));
         this.grid.nodes = [];
         this._update_container_height();
     };
@@ -796,9 +801,11 @@
             node.no_move = !(val || false);
             if (node.no_move) {
                 el.draggable('disable');
+                el.removeClass('ui-draggable-handle');
             }
             else {
                 el.draggable('enable');
+                el.addClass('ui-draggable-handle');
             }
         });
         return this;
@@ -807,11 +814,13 @@
     GridStack.prototype.disable = function() {
         this.movable(this.container.children('.' + this.opts.item_class), false);
         this.resizable(this.container.children('.' + this.opts.item_class), false);
+        this.container.trigger('disable');
     };
 
     GridStack.prototype.enable = function() {
         this.movable(this.container.children('.' + this.opts.item_class), true);
         this.resizable(this.container.children('.' + this.opts.item_class), true);
+        this.container.trigger('enable');
     };
 
     GridStack.prototype.locked = function(el, val) {
