@@ -214,6 +214,21 @@ $('.grid-stack').on('resizestop', function (event, ui) {
 });
 ```
 
+### disable(event)
+
+```javascipt
+$('.grid-stack').on('disable', function(event) {
+    var grid = event.target;
+});
+```
+
+### enable(event)
+
+```javascipt
+$('.grid-stack').on('enable', function(event) {
+    var grid = event.target;
+});
+```
 
 ## API
 
