@@ -640,7 +640,7 @@
             var o = $(this);
             self.grid.clean_nodes();
             self.grid.begin_update(node);
-            cell_width = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
+            cell_width = o.outerWidth() / o.attr('data-gs-width');
             cell_height = self.opts.cell_height + self.opts.vertical_margin;
             self.placeholder
                 .attr('data-gs-x', o.attr('data-gs-x'))
@@ -650,7 +650,7 @@
                 .show();
             node.el = self.placeholder;
 
-            el.resizable('option', 'minWidth', cell_width * (node.min_width || 1));
+            el.resizable('option', 'minWidth', Math.round(cell_width * (node.min_width || 1)));
             el.resizable('option', 'minHeight', self.opts.cell_height * (node.min_height || 1));
         };
 
