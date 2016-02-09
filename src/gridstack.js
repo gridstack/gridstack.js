@@ -1,6 +1,6 @@
 //     gridstack.js 0.2.4-dev
 //     http://troolee.github.io/gridstack.js/
-//     (c) 2014-2015 Pavel Reznikov
+//     (c) 2014-2016 Pavel Reznikov
 //     gridstack.js may be freely distributed under the MIT license.
 
 (function(factory) {
