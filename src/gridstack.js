@@ -104,9 +104,9 @@
         }
 
         while (true) {
-            var collision_node = _.find(this.nodes, function(n) {
+            var collision_node = _.find(this.nodes, _.bind(function(n) {
                 return n != node && Utils.is_intercepted(n, nn);
-            }, this);
+            }, this));
             if (typeof collision_node == 'undefined') {
                 return;
             }
@@ -117,9 +117,9 @@
 
     GridStackEngine.prototype.is_area_empty = function(x, y, width, height) {
         var nn = {x: x || 0, y: y || 0, width: width || 1, height: height || 1};
-        var collision_node = _.find(this.nodes, function(n) {
+        var collision_node = _.find(this.nodes, _.bind(function(n) {
             return Utils.is_intercepted(n, nn);
-        }, this);
+        }, this));
         return collision_node == null;
     };
 
@@ -131,7 +131,7 @@
         this._sort_nodes();
 
         if (this.float) {
-            _.each(this.nodes, function(n, i) {
+            _.each(this.nodes, _.bind(function(n, i) {
                 if (n._updating || typeof n._orig_y == 'undefined' || n.y == n._orig_y)
                     return;
 
@@ -150,10 +150,10 @@
                     }
                     --new_y;
                 }
-            }, this);
+            }, this));
         }
         else {
-            _.each(this.nodes, function(n, i) {
+            _.each(this.nodes, _.bind(function(n, i) {
                 if (n.locked)
                     return;
                 while (n.y > 0) {
@@ -176,7 +176,7 @@
                     n._dirty = n.y != new_y;
                     n.y = new_y;
                 }
-            }, this);
+            }, this));
         }
     };
 
@@ -753,9 +753,9 @@
     };
 
     GridStack.prototype.remove_all = function(detach_node) {
-        _.each(this.grid.nodes, function(node) {
+        _.each(this.grid.nodes, _.bind(function(node) {
             this.remove_widget(node.el, detach_node);
-        }, this);
+        }, this));
         this.grid.nodes = [];
         this._update_container_height();
     };
