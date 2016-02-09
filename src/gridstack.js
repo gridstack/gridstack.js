@@ -801,9 +801,11 @@
             node.no_move = !(val || false);
             if (node.no_move) {
                 el.draggable('disable');
+                el.removeClass('ui-draggable-handle');
             }
             else {
                 el.draggable('enable');
+                el.addClass('ui-draggable-handle');
             }
         });
         return this;
