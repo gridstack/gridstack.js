@@ -25,6 +25,8 @@ Inspired by [gridster.js](http://gridster.net). Built with love.
     - [ondragstop(event, ui)](#ondragstopevent-ui)
     - [onresizestart(event, ui)](#onresizestartevent-ui)
     - [onresizestop(event, ui)](#onresizestopevent-ui)
+    - [disable(event)](#disableevent)
+    - [enable(event)](#enableevent)
   - [API](#api)
     - [add_widget(el, x, y, width, height, auto_position)](#add_widgetel-x-y-width-height-auto_position)
     - [batch_update()](#batch_update)
