@@ -70,7 +70,6 @@
 }
 .grid-stack > .grid-stack-item > .ui-resizable-se {
   display: inline-block;
-  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
@@ -296,8 +295,11 @@
 /*
 .grid-stack > .grid-stack-item > .ui-resizable-sw {
     display: inline-block;
-    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
-    @include vendor(transform, rotate(180deg));
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 */
 @media (max-width: 768px) {
