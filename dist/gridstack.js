@@ -408,7 +408,7 @@
             min_width: 768,
             float: false,
             static_grid: false,
-            _class: 'grid-stack-' + (Math.random() * 10000).toFixed(0),
+            _class: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
             animate: Boolean(this.container.attr('data-gs-animate')) || false,
             always_show_resize_handle: opts.always_show_resize_handle || false,
             resizable: _.defaults(opts.resizable || {}, {
