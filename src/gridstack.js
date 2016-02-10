@@ -590,6 +590,18 @@
             }
             this._styles._max = max_height;
         }
+
+        Utils.insert_css_rule(this._styles, '@media (max-width: ' + this.opts.min_width + 'px)',
+                              '.grid-stack-item { ' +
+                                  'position: relative !important; ' +
+                                  'width: auto !important; ' +
+                                  'left: 0 !important; ' +
+                                  'top: auto !important; ' +
+                                  'margin-bottom: 20px; ' +
+                              '}' +
+                              '.grid-stack-item .ui-resizable-handle { display: none; } ' +
+                              '.grid-stack { height: auto !important; }',
+        0);
     };
 
     GridStack.prototype._update_container_height = function() {
