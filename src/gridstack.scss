@@ -1,7 +1,7 @@
-$gridstack-columns: 12;
-$horizontal_padding: 20px;
-$vertical_padding: 20px;
-$animation_speed: .3s;
+$gridstack-columns: 12 !default;
+$horizontal_padding: 20px !default;
+$vertical_padding: 20px !default;
+$animation_speed: .3s !default;
 
 @mixin vendor($property, $value...){
     -webkit-#{$property}:$value;
