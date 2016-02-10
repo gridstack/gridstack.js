@@ -1,4 +1,4 @@
-$gridstack-columns: 12;
+$gridstack-columns: 12 !default;
 
 @mixin grid-stack-items($gridstack-columns) {
     .grid-stack.grid-stack-#{$gridstack-columns} {
