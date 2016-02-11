@@ -781,6 +781,7 @@
     };
 
     GridStack.prototype.resizable = function(el, val) {
+        var self = this;
         el = $(el);
         el.each(function(index, el) {
             el = $(el);
@@ -790,7 +791,7 @@
             }
 
             node.no_resize = !(val || false);
-            if (node.no_resize) {
+            if (node.no_resize || self._is_one_column_mode()) {
                 el.resizable('disable');
             }
             else {
@@ -801,6 +802,7 @@
     };
 
     GridStack.prototype.movable = function(el, val) {
+        var self = this;
         el = $(el);
         el.each(function(index, el) {
             el = $(el);
@@ -810,7 +812,7 @@
             }
 
             node.no_move = !(val || false);
-            if (node.no_move) {
+            if (node.no_move || self._is_one_column_mode()) {
                 el.draggable('disable');
                 el.removeClass('ui-draggable-handle');
             }
