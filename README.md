@@ -141,6 +141,7 @@ $(function () {
 - `item_class` - widget class (default: `'grid-stack-item'`)
 - `min_width` - minimal width. If window width is less, grid will be shown in one-column mode. You need also update your css file (`@media (max-width: 768px) {...}`) with corresponding value (default: `768`)
 - `placeholder_class` - class for placeholder (default: `'grid-stack-placeholder'`)
+- `placeholder_text` - placeholder default content (default: `''`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
 - `static_grid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `vertical_margin` - vertical gap size (default: `20`)
@@ -735,6 +736,7 @@ Changes
 - add `static_grid` option.
 - add `min_width`/`min_height` methods (Thanks to @cvillemure)
 - add `destroy` method (Thanks to @zspitzer)
+- add `placeholder_text` option (Thanks to @slauyama)
 
 #### v0.2.3 (2015-06-23)
 

@@ -16,6 +16,7 @@
   bottom: 0;
   width: auto;
   z-index: 0 !important;
+  text-align: center;
 }
 
 .grid-stack > .grid-stack-item {
