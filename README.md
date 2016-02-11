@@ -32,6 +32,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
     - [enable(event)](#enableevent)
   - [API](#api)
     - [add_widget(el, x, y, width, height, auto_position)](#add_widgetel-x-y-width-height-auto_position)
+    - [make_widget(el)](#make_widgetel)
     - [batch_update()](#batch_update)
     - [cell_height()](#cell_height)
     - [cell_height(val)](#cell_heightval)
@@ -255,6 +256,23 @@ $('.grid-stack').gridstack();
 
 var grid = $('.grid-stack').data('gridstack');
 grid.add_widget(el, 0, 0, 3, 2, true);
+```
+
+### make_widget(el)
+
+If you add elements to your gridstack container by hand, you have to tell gridstack afterwards to make them widgets. If you want gridstack to add the elements for you, use `add_widget` instead.
+Makes the given element a widget and returns it.
+
+Parameters:
+
+- `el` - element to convert to a widget
+
+```javascript
+$('.grid-stack').gridstack();
+
+$('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="1"></div>')
+var grid = $('.grid-stack').data('gridstack');
+grid.make_widget('gsi-1');
 ```
 
 ### batch_update()

@@ -747,6 +747,15 @@
         return el;
     };
 
+    GridStack.prototype.make_widget = function(el) {
+        el = $(el);
+        this._prepare_element(el);
+        this._update_container_height();
+        this._trigger_change_event(true);
+
+        return el;
+    };
+
     GridStack.prototype.will_it_fit = function(x, y, width, height, auto_position) {
         var node = {x: x, y: y, width: width, height: height, auto_position: auto_position};
         return this.grid.can_be_placed_with_respect_to_height(node);
