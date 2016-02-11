@@ -3,6 +3,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-doctoc');
 
     grunt.initConfig({
         sass: {
@@ -44,8 +45,17 @@ module.exports = function (grunt) {
                     'dist/gridstack.min.js': ['src/gridstack.js']
                 }
             }
+        },
+
+        doctoc: {
+            options: {
+                removeAd: false
+            },
+            readme: {
+                target: "./README.md"
+            }
         }
     });
 
-    grunt.registerTask('default', ['sass', 'cssmin', 'copy', 'uglify']);
+    grunt.registerTask('default', ['sass', 'cssmin', 'copy', 'uglify', 'doctoc']);
 };
