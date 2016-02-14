@@ -708,8 +708,8 @@
                 drag: drag_or_resize
             }))
             .resizable(_.extend(this.opts.resizable, {
-                resizestart: on_start_moving,
-                resizestop: on_end_moving,
+                start: on_start_moving,
+                stop: on_end_moving,
                 resize: drag_or_resize
             }));
 
