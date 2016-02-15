@@ -755,6 +755,8 @@ Changes
 - add `min_width`/`min_height` methods (Thanks to @cvillemure)
 - add `destroy` method (Thanks to @zspitzer)
 - add `placeholder_text` option (Thanks to @slauyama)
+- add `handle_class` option.
+- add `make_widget` method.
 - lodash v 4.x support (Thanks to Andy Robbins)
 
 #### v0.2.3 (2015-06-23)
