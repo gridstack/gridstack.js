@@ -70,7 +70,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [IE8 support](#ie8-support)
   - [Nested grids](#nested-grids)
 - [Changes](#changes)
-      - [v0.2.4 (development version)](#v024-development-version)
+      - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
       - [v0.2.3 (2015-06-23)](#v023-2015-06-23)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
       - [v0.2.1 (2014-12-09)](#v021-2014-12-09)
@@ -748,7 +748,7 @@ See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/neste
 Changes
 =======
 
-#### v0.2.4 (development version)
+#### v0.2.4 (2016-02-15)
 
 - fix closure compiler/linter warnings
 - add `static_grid` option.
