@@ -1,8 +1,10 @@
-//     gridstack.js 0.2.5-dev
-//     http://troolee.github.io/gridstack.js/
-//     (c) 2014-2016 Pavel Reznikov
-//     gridstack.js may be freely distributed under the MIT license.
-
+/**
+ * gridstack.js 0.2.5-dev
+ * http://troolee.github.io/gridstack.js/
+ * (c) 2014-2016 Pavel Reznikov
+ * gridstack.js may be freely distributed under the MIT license.
+ * @preserve
+*/
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'lodash', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/mouse', 'jquery-ui/draggable',
