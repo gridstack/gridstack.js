@@ -1009,7 +1009,9 @@
         this.opts.vertical_margin_unit = heightData.unit;
         this.opts.vertical_margin = heightData.height;
 
-        !noUpdate && this._update_styles();
+        if (!noUpdate) {
+            this._update_styles();
+        }
     };
 
     GridStack.prototype.cell_height = function (val, noUpdate) {
@@ -1030,7 +1032,9 @@
         this.opts.cell_height_unit = heightData.unit;
         this.opts.cell_height = heightData.height;
 
-        !noUpdate && this._update_styles();
+        if (!noUpdate) {
+            this._update_styles();
+        }
     };
 
     GridStack.prototype.cell_width = function() {
