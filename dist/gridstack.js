@@ -1,8 +1,10 @@
-//     gridstack.js 0.2.4-dev
-//     http://troolee.github.io/gridstack.js/
-//     (c) 2014-2016 Pavel Reznikov
-//     gridstack.js may be freely distributed under the MIT license.
-
+/**
+ * gridstack.js 0.2.5-dev
+ * http://troolee.github.io/gridstack.js/
+ * (c) 2014-2016 Pavel Reznikov
+ * gridstack.js may be freely distributed under the MIT license.
+ * @preserve
+*/
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'lodash', 'jquery-ui/core', 'jquery-ui/widget', 'jquery-ui/mouse', 'jquery-ui/draggable',
@@ -702,15 +704,16 @@
 
         el
             .draggable(_.extend(this.opts.draggable, {
-                containment: this.opts.is_nested ? this.container.parent() : null
+                containment: this.opts.is_nested ? this.container.parent() : null,
+                start: on_start_moving,
+                stop: on_end_moving,
+                drag: drag_or_resize
             }))
-            .on('dragstart', on_start_moving)
-            .on('dragstop', on_end_moving)
-            .on('drag', drag_or_resize)
-            .resizable(_.extend(this.opts.resizable, {}))
-            .on('resizestart', on_start_moving)
-            .on('resizestop', on_end_moving)
-            .on('resize', drag_or_resize);
+            .resizable(_.extend(this.opts.resizable, {
+                start: on_start_moving,
+                stop: on_end_moving,
+                resize: drag_or_resize
+            }));
 
         if (node.no_move || this._is_one_column_mode()) {
             el.draggable('disable');
@@ -1003,22 +1006,12 @@
 
     scope.GridStackUI.Utils = Utils;
 
-    function event_stop_propagate(event) {
-        event.stopPropagation();
-    }
     $.fn.gridstack = function(opts) {
         return this.each(function() {
             var o = $(this);
             if (!o.data('gridstack')) {
                 o
-                    .data('gridstack', new GridStack(this, opts))
-                    .on('dragstart', event_stop_propagate)
-                    .on('dragstop', event_stop_propagate)
-                    .on('drag', event_stop_propagate)
-                    .on('resizestart', event_stop_propagate)
-                    .on('resizestop', event_stop_propagate)
-                    .on('resize', event_stop_propagate)
-                    .on('change', event_stop_propagate);
+                    .data('gridstack', new GridStack(this, opts));
             }
         });
     };

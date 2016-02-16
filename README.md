@@ -18,6 +18,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
 - [Demo](#demo)
 - [Usage](#usage)
   - [Requirements](#requirements)
+  - [Install](#install)
   - [Basic usage](#basic-usage)
   - [Options](#options)
   - [Grid attributes](#grid-attributes)
@@ -70,7 +71,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [IE8 support](#ie8-support)
   - [Nested grids](#nested-grids)
 - [Changes](#changes)
-      - [v0.2.4 (development version)](#v024-development-version)
+      - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
       - [v0.2.3 (2015-06-23)](#v023-2015-06-23)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
       - [v0.2.1 (2014-12-09)](#v021-2014-12-09)
@@ -99,6 +100,29 @@ Usage
 * (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
 
 Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
+
+## Install
+
+* Using CDN:
+
+```html
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.4/gridstack.min.css" />
+<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.4/gridstack.min.js'></script>
+```
+
+* Using bower:
+
+```bash
+$ bower install gridstack
+```
+
+* Using npm:
+
+```bash
+$ npm install gridstack
+```
+
+You can download files from `dist` directory as well.
 
 ## Basic usage
 
@@ -748,13 +772,15 @@ See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/neste
 Changes
 =======
 
-#### v0.2.4 (development version)
+#### v0.2.4 (2016-02-15)
 
 - fix closure compiler/linter warnings
 - add `static_grid` option.
 - add `min_width`/`min_height` methods (Thanks to @cvillemure)
 - add `destroy` method (Thanks to @zspitzer)
 - add `placeholder_text` option (Thanks to @slauyama)
+- add `handle_class` option.
+- add `make_widget` method.
 - lodash v 4.x support (Thanks to Andy Robbins)
 
 #### v0.2.3 (2015-06-23)

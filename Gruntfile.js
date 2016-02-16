@@ -38,7 +38,8 @@ module.exports = function (grunt) {
         uglify: {
             options: {
                 sourceMap: true,
-                sourceMapName: 'dist/gridstack.min.map'
+                sourceMapName: 'dist/gridstack.min.map',
+                preserveComments: 'some'
             },
             dist: {
                 files: {
