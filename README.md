@@ -781,7 +781,7 @@ Changes
 
 #### v0.2.5-dev (Development version)
 
-- `cell_height` and `vertical_margin` can now be string (e.g. '3em', '20px')
+- `cell_height` and `vertical_margin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs)
 
 #### v0.2.4 (2016-02-15)
 
