@@ -127,7 +127,7 @@ You can download files from `dist` directory as well.
 
 ## Basic usage
 
-```
+```html
 <div class="grid-stack">
     <div class="grid-stack-item"
         data-gs-x="0" data-gs-y="0"
@@ -252,7 +252,7 @@ $('.grid-stack').on('resizestop', function (event, ui) {
 
 ### disable(event)
 
-```javascipt
+```javascript
 $('.grid-stack').on('disable', function(event) {
     var grid = event.target;
 });
@@ -260,7 +260,7 @@ $('.grid-stack').on('disable', function(event) {
 
 ### enable(event)
 
-```javascipt
+```javascript
 $('.grid-stack').on('enable', function(event) {
     var grid = event.target;
 });
@@ -479,7 +479,7 @@ Sorts array of nodes
 Please use [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch) to make jQuery UI Draggable/Resizable
 working on touch-based devices.
 
-```
+```html
 <script src="lodash.min.js"></script>
 <script src="jquery.min.js"></script>
 <script src="jquery-ui.min.js"></script>
@@ -556,7 +556,7 @@ $(function () {
 
 and HTML:
 
-```
+```html
 <div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
 ```
 
@@ -564,7 +564,7 @@ See examples: [example 1](http://troolee.github.io/gridstack.js/demo/knockout.ht
 
 **Notes:** It's very important to exclude training spaces after widget template:
 
-```
+```javascript
 template:
     [
         '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
@@ -621,7 +621,7 @@ and so on.
 
 Here is a SASS code snipped which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/troolee/gridstack.js/issues/81)):
 
-```
+```sass
 .grid-stack-item {
 
     $gridstack-columns: 12;
@@ -645,7 +645,7 @@ There are few extra CSS batteries in `gridstack-extra.css` (`gridstack-extra.min
 
 You can use other than 12 grid width:
 
-```
+```html
 <div class="grid-stack grid-stack-N">...</div>
 ```
 ```javascript
@@ -731,7 +731,7 @@ CSS stylesheet dynamically. As a workaround you can do the following:
 - Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/troolee/6edfea5857f4cd73e6f1)).
 - Include this CSS:
 
-```
+```html
 <!--[if lt IE 9]>
 <link rel="stylesheet" href="gridstack-ie8.css"/>
 <![endif]-->
