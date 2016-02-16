@@ -126,7 +126,7 @@ You can download files from `dist` directory as well.
 
 ## Basic usage
 
-```html
+```
 <div class="grid-stack">
     <div class="grid-stack-item"
         data-gs-x="0" data-gs-y="0"
@@ -157,7 +157,10 @@ $(function () {
     (default: `false`)
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
-- `cell_height` - one cell height (default: `60`)
+- `cell_height` - one cell height (default: `60`). Can be:
+ - an integer (px)
+ - a string (ex: '10em', '100px', '10rem')
+ - 0 or null, in which case the library will not generate styles for rows. Everything will have to be defined in CSS files.
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'}`)
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handle_class` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
@@ -169,7 +172,9 @@ $(function () {
 - `placeholder_text` - placeholder default content (default: `''`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
 - `static_grid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
-- `vertical_margin` - vertical gap size (default: `20`)
+- `vertical_margin` - vertical gap size (default: `20`). Can be:
+ - an integer (px)
+ - a string (ex: '2em', '20px', '2rem')
 - `width` - amount of columns (default: `12`)
 
 ## Grid attributes
@@ -177,6 +182,7 @@ $(function () {
 - `data-gs-animate` - turns animation on
 - `data-gs-width` - amount of columns
 - `data-gs-height` - maximum rows amount. Default is `0` which means no maximum rows.
+- `data-gs-current-height` - current rows amount. Set by the library only. Can be used by the CSS rules.
 
 ## Item attributes
 
@@ -472,7 +478,7 @@ Sorts array of nodes
 Please use [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch) to make jQuery UI Draggable/Resizable
 working on touch-based devices.
 
-```html
+```
 <script src="lodash.min.js"></script>
 <script src="jquery.min.js"></script>
 <script src="jquery-ui.min.js"></script>
@@ -549,7 +555,7 @@ $(function () {
 
 and HTML:
 
-```html
+```
 <div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
 ```
 
@@ -614,7 +620,7 @@ and so on.
 
 Here is a SASS code snipped which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/troolee/gridstack.js/issues/81)):
 
-```sass
+```
 .grid-stack-item {
 
     $gridstack-columns: 12;
@@ -638,7 +644,7 @@ There are few extra CSS batteries in `gridstack-extra.css` (`gridstack-extra.min
 
 You can use other than 12 grid width:
 
-```html
+```
 <div class="grid-stack grid-stack-N">...</div>
 ```
 ```javascript
@@ -724,7 +730,7 @@ CSS stylesheet dynamically. As a workaround you can do the following:
 - Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/troolee/6edfea5857f4cd73e6f1)).
 - Include this CSS:
 
-```html
+```
 <!--[if lt IE 9]>
 <link rel="stylesheet" href="gridstack-ie8.css"/>
 <![endif]-->
