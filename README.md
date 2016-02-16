@@ -18,6 +18,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
 - [Demo](#demo)
 - [Usage](#usage)
   - [Requirements](#requirements)
+  - [Install](#install)
   - [Basic usage](#basic-usage)
   - [Options](#options)
   - [Grid attributes](#grid-attributes)
@@ -99,6 +100,29 @@ Usage
 * (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
 
 Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
+
+## Install
+
+* Using CDN:
+
+```html
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.4/gridstack.min.css" />
+<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.4/gridstack.min.js'></script>
+```
+
+* Using bower:
+
+```bash
+$ bower install gridstack
+```
+
+* Using npm:
+
+```bash
+$ npm install gridstack
+```
+
+You can download files from `dist` directory as well.
 
 ## Basic usage
 
