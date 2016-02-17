@@ -176,6 +176,7 @@ $(function () {
  - an integer (px)
  - a string (ex: '2em', '20px', '2rem')
 - `width` - amount of columns (default: `12`)
+- `drag_constraint` - container to which the drag will be constrained. If dragging outside of it, the move placeholder will be set back to its initial position. Useful if one wants to add behavior when dragging onto other elements of the app.
 
 ## Grid attributes
 
