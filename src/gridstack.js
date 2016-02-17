@@ -88,6 +88,10 @@
         this.float = true;
     };
 
+    GridStackEngine.prototype.getNodeDataByDOMEl = function(el) {
+        return _.find(this.nodes, function (n) { return el.get(0) === n.el.get(0); });
+    };
+
     GridStackEngine.prototype.commit = function() {
         this._update_counter = 0;
         if (this._update_counter == 0) {
@@ -805,6 +809,10 @@
         detach_node = typeof detach_node === 'undefined' ? true : detach_node;
         el = $(el);
         var node = el.data('_gridstack_node');
+        if(!node) {
+            node = this.grid.getNodeDataByDOMEl(el);
+        }
+
         this.grid.remove_node(node);
         el.removeData('_gridstack_node');
         this._update_container_height();
