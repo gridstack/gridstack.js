@@ -2,8 +2,7 @@ gridstack.js
 ============
 
 gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build
-draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com) and
-touch devices.
+draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com), [angular.js](https://angularjs.org) and touch devices.
 
 Inspired by [gridster.js](http://gridster.net). Built with love.
 
@@ -71,6 +70,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [IE8 support](#ie8-support)
   - [Nested grids](#nested-grids)
 - [Changes](#changes)
+      - [v0.2.5-dev (Development version)](#v025-dev-development-version)
       - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
       - [v0.2.3 (2015-06-23)](#v023-2015-06-23)
       - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
@@ -157,7 +157,10 @@ $(function () {
     (default: `false`)
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
-- `cell_height` - one cell height (default: `60`)
+- `cell_height` - one cell height (default: `60`). Can be:
+ - an integer (px)
+ - a string (ex: '10em', '100px', '10rem')
+ - 0 or null, in which case the library will not generate styles for rows. Everything will have to be defined in CSS files.
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'}`)
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handle_class` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
@@ -169,7 +172,9 @@ $(function () {
 - `placeholder_text` - placeholder default content (default: `''`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
 - `static_grid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
-- `vertical_margin` - vertical gap size (default: `20`)
+- `vertical_margin` - vertical gap size (default: `20`). Can be:
+ - an integer (px)
+ - a string (ex: '2em', '20px', '2rem')
 - `width` - amount of columns (default: `12`)
 
 ## Grid attributes
@@ -177,6 +182,7 @@ $(function () {
 - `data-gs-animate` - turns animation on
 - `data-gs-width` - amount of columns
 - `data-gs-height` - maximum rows amount. Default is `0` which means no maximum rows.
+- `data-gs-current-height` - current rows amount. Set by the library only. Can be used by the CSS rules.
 
 ## Item attributes
 
@@ -245,7 +251,7 @@ $('.grid-stack').on('resizestop', function (event, ui) {
 
 ### disable(event)
 
-```javascipt
+```javascript
 $('.grid-stack').on('disable', function(event) {
     var grid = event.target;
 });
@@ -253,7 +259,7 @@ $('.grid-stack').on('disable', function(event) {
 
 ### enable(event)
 
-```javascipt
+```javascript
 $('.grid-stack').on('enable', function(event) {
     var grid = event.target;
 });
@@ -557,7 +563,7 @@ See examples: [example 1](http://troolee.github.io/gridstack.js/demo/knockout.ht
 
 **Notes:** It's very important to exclude training spaces after widget template:
 
-```
+```javascript
 template:
     [
         '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
@@ -771,6 +777,10 @@ See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/neste
 
 Changes
 =======
+
+#### v0.2.5-dev (Development version)
+
+- `cell_height` and `vertical_margin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs)
 
 #### v0.2.4 (2016-02-15)
 
