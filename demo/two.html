@@ -75,7 +75,7 @@
                 var grid = $(this).data('gridstack');
 
                 _.each(items, function (node) {
-                    grid.add_widget($('<div><div class="grid-stack-item-content" /><div/>'),
+                    grid.addWidget($('<div><div class="grid-stack-item-content" /><div/>'),
                         node.x, node.y, node.width, node.height);
                 }, this);
             });
