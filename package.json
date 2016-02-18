@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "0.2.3",
+  "version": "0.2.5-dev",
   "description": "gridstack.js is a jQuery plugin for widget layout",
   "main": "dist/gridstack.js",
   "repository": {
@@ -19,5 +19,13 @@
   "bugs": {
     "url": "https://github.com/troolee/gridstack.js/issues"
   },
-  "homepage": "http://troolee.github.io/gridstack.js/"
+  "homepage": "http://troolee.github.io/gridstack.js/",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-contrib-cssmin": "^0.14.0",
+    "grunt-contrib-uglify": "^0.10.1",
+    "grunt-sass": "^1.1.0",
+    "grunt-doctoc": "^0.1.1"
+  }
 }

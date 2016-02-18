@@ -1,7 +1,7 @@
-$gridstack-columns: 12;
-$horizontal_padding: 20px;
-$vertical_padding: 20px;
-$animation_speed: .3s;
+$gridstack-columns: 12 !default;
+$horizontal_padding: 20px !default;
+$vertical_padding: 20px !default;
+$animation_speed: .3s !default;
 
 @mixin vendor($property, $value...){
     -webkit-#{$property}:$value;
@@ -26,6 +26,7 @@ $animation_speed: .3s;
         bottom: 0;
         width: auto;
         z-index: 0 !important;
+        text-align: center;
     }
 
     > .grid-stack-item {
@@ -53,21 +54,21 @@ $animation_speed: .3s;
             -ms-touch-action: none;
             touch-action: none;
         }
-        
+
         &.ui-resizable-disabled > .ui-resizable-handle,
         &.ui-resizable-autohide > .ui-resizable-handle { display: none; }
-        
+
         &.ui-draggable-dragging,
         &.ui-resizable-resizing {
             z-index: 100;
-            
+
             > .grid-stack-item-content,
             > .grid-stack-item-content {
                 box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
                 opacity: 0.8;
             }
         }
-        
+
         > .ui-resizable-se,
         > .ui-resizable-sw {
             text-align: right;
@@ -81,16 +82,15 @@ $animation_speed: .3s;
             text-rendering: auto;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            
+
             &::before { content: "\f065"; }
         }
-        
+
         > .ui-resizable-se {
             display: inline-block;
-            filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
             @include vendor(transform, rotate(90deg));
         }
-        
+
         > .ui-resizable-nw { cursor: nw-resize; width: 20px; height: 20px; left: 10px; top: 0; }
         > .ui-resizable-n  { cursor: n-resize;  height: 10px; top: 0; left: 25px; right: 25px; }
         > .ui-resizable-ne { cursor: ne-resize; width: 20px; height: 20px; right: 10px; top: 0; }
@@ -99,7 +99,7 @@ $animation_speed: .3s;
         > .ui-resizable-s  { cursor: s-resize;  height: 10px; left: 25px; bottom: 0; right: 25px; }
         > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px; left: 10px; bottom: 0; }
         > .ui-resizable-w  { cursor: w-resize;  width: 10px; left: $horizontal_padding / 2; top: 15px; bottom: 15px; }
-        
+
         @for $i from 1 through $gridstack-columns {
             &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
             &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
@@ -107,8 +107,8 @@ $animation_speed: .3s;
             &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
         }
     }
-    
-    &.grid-stack-animate, 
+
+    &.grid-stack-animate,
     &.grid-stack-animate .grid-stack-item {
         @include vendor(transition, left $animation_speed, top $animation_speed, height $animation_speed, width $animation_speed);
     }
@@ -124,7 +124,6 @@ $animation_speed: .3s;
 /*
 .grid-stack > .grid-stack-item > .ui-resizable-sw {
     display: inline-block;
-    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
     @include vendor(transform, rotate(180deg));
 }
 */
@@ -136,7 +135,7 @@ $animation_speed: .3s;
         left: 0 !important;
         top: auto !important;
         margin-bottom: $vertical_padding;
-        
+
         .ui-resizable-handle { display: none; }
     }
 

@@ -1,0 +1,14 @@
+{
+	"preset": "google",
+	"validateIndentation": "\t",
+	"maximumLineLength": 120,
+	"jsDoc": {
+		"checkAnnotations": {
+			"preset": "jsdoc3",
+			"extra": {
+				"preserve": true
+			}
+		}
+	},
+	"requireCamelCaseOrUpperCaseIdentifiers": true
+}
