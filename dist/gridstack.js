@@ -1112,7 +1112,7 @@
         var height = val;
         var heightUnit = 'px';
         if (height && _.isString(height)) {
-            var match = height.match(/^([0-9]*\.[0-9]+|[0-9]+)(px|em|rem|vh|vw)?$/);
+            var match = height.match(/^([0-9]+)(px|em|rem)?$/);
             if (!match) {
                 throw new Error('Invalid height');
             }
