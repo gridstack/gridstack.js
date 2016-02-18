@@ -38,7 +38,7 @@
         <h1>knockout.js Demo</h1>
 
         <div>
-            <button data-bind="click: add_new_widget">Add new widget</button>
+            <button data-bind="click: addNewWidget">Add new widget</button>
         </div>
 
         <br>
@@ -64,9 +64,9 @@
                             }
 
                             var item = _.find(items, function (i) { return i.nodeType == 1 });
-                            grid.add_widget(item);
+                            grid.addWidget(item);
                             ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
-                                grid.remove_widget(item);
+                                grid.removeWidget(item);
                             });
                         };
                     };
@@ -83,7 +83,7 @@
 
                 this.widgets = ko.observableArray(widgets);
 
-                this.add_new_widget = function () {
+                this.addNewWidget = function () {
                     this.widgets.push({
                         x: 0,
                         y: 0,
@@ -91,10 +91,12 @@
                         height: Math.floor(1 + 3 * Math.random()),
                         auto_position: true
                     });
+                    return false;
                 };
 
-                this.delete_widget = function (item) {
+                this.deleteWidget = function (item) {
                     self.widgets.remove(item);
+                    return false;
                 };
             };
 
@@ -113,7 +115,7 @@
     <template id="gridstack-template">
         <div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">
            <div class="grid-stack-item" data-bind="attr: {'data-gs-x': $data.x, 'data-gs-y': $data.y, 'data-gs-width': $data.width, 'data-gs-height': $data.height, 'data-gs-auto-position': $data.auto_position}">
-               <div class="grid-stack-item-content"><button data-bind="click: $root.delete_widget">Delete me</button></div>
+               <div class="grid-stack-item-content"><button data-bind="click: $root.deleteWidget">Delete me</button></div>
            </div></div><!-- <---- NO SPACE BETWEEN THESE CLOSING TAGS -->
     </template>
 </body>

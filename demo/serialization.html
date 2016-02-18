@@ -60,7 +60,7 @@
             $('.grid-stack').gridstack(options);
 
             new function () {
-                this.serialized_data = [
+                this.serializedData = [
                     {x: 0, y: 0, width: 2, height: 2},
                     {x: 3, y: 1, width: 1, height: 2},
                     {x: 4, y: 1, width: 1, height: 1},
@@ -73,17 +73,18 @@
 
                 this.grid = $('.grid-stack').data('gridstack');
 
-                this.load_grid = function () {
-                    this.grid.remove_all();
-                    var items = GridStackUI.Utils.sort(this.serialized_data);
+                this.loadGrid = function () {
+                    this.grid.removeAll();
+                    var items = GridStackUI.Utils.sort(this.serializedData);
                     _.each(items, function (node) {
-                        this.grid.add_widget($('<div><div class="grid-stack-item-content" /><div/>'),
+                        this.grid.addWidget($('<div><div class="grid-stack-item-content" /><div/>'),
                             node.x, node.y, node.width, node.height);
                     }, this);
+                    return false;
                 }.bind(this);
 
-                this.save_grid = function () {
-                    this.serialized_data = _.map($('.grid-stack > .grid-stack-item:visible'), function (el) {
+                this.saveGrid = function () {
+                    this.serializedData = _.map($('.grid-stack > .grid-stack-item:visible'), function (el) {
                         el = $(el);
                         var node = el.data('_gridstack_node');
                         return {
@@ -93,18 +94,20 @@
                             height: node.height
                         };
                     }, this);
-                    $('#saved-data').val(JSON.stringify(this.serialized_data, null, '    '));
+                    $('#saved-data').val(JSON.stringify(this.serializedData, null, '    '));
+                    return false;
                 }.bind(this);
 
-                this.clear_grid = function () {
-                    this.grid.remove_all();
+                this.clearGrid = function () {
+                    this.grid.removeAll();
+                    return false;
                 }.bind(this);
 
-                $('#save-grid').click(this.save_grid);
-                $('#load-grid').click(this.load_grid);
-                $('#clear-grid').click(this.clear_grid);
+                $('#save-grid').click(this.saveGrid);
+                $('#load-grid').click(this.loadGrid);
+                $('#clear-grid').click(this.clearGrid);
 
-                this.load_grid();
+                this.loadGrid();
             };
         });
     </script>
