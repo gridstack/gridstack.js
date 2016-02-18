@@ -68,18 +68,19 @@
 
                 this.grid = $('.grid-stack').data('gridstack');
 
-                this.add_new_widget = function () {
+                this.addNewWidget = function () {
                     var node = this.items.pop() || {
                                 x: 12 * Math.random(),
                                 y: 5 * Math.random(),
                                 width: 1 + 3 * Math.random(),
                                 height: 1 + 3 * Math.random()
                             };
-                    this.grid.add_widget($('<div><div class="grid-stack-item-content" /><div/>'),
+                    this.grid.addWidget($('<div><div class="grid-stack-item-content" /><div/>'),
                         node.x, node.y, node.width, node.height);
+                    return false;
                 }.bind(this);
 
-                $('#add-new-widget').click(this.add_new_widget);
+                $('#add-new-widget').click(this.addNewWidget);
             };
         });
     </script>
