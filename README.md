@@ -310,7 +310,7 @@ Update current cell height. This method rebuilds an internal CSS stylesheet. Not
 call this method too often.
 
 ```javascript
-grid.cellHeight(grid.cell_width() * 1.2);
+grid.cellHeight(grid.cellWidth() * 1.2);
 ```
 
 ### cellWidth()
