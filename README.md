@@ -33,7 +33,6 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
     - [enable(event)](#enableevent)
   - [API](#api)
     - [addWidget(el, x, y, width, height, autoPosition)](#addwidgetel-x-y-width-height-autoposition)
-    - [makeWidget(el)](#makewidgetel)
     - [batchUpdate()](#batchupdate)
     - [cellHeight()](#cellheight)
     - [cellHeight(val)](#cellheightval)
@@ -45,6 +44,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
     - [getCellFromPixel(position)](#getcellfrompixelposition)
     - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
     - [locked(el, val)](#lockedel-val)
+    - [makeWidget(el)](#makewidgetel)
     - [minWidth(el, val)](#minwidthel-val)
     - [minHeight(el, val)](#minheightel-val)
     - [movable(el, val)](#movableel-val)
@@ -295,23 +295,6 @@ var grid = $('.grid-stack').data('gridstack');
 grid.addWidget(el, 0, 0, 3, 2, true);
 ```
 
-### makeWidget(el)
-
-If you add elements to your gridstack container by hand, you have to tell gridstack afterwards to make them widgets. If you want gridstack to add the elements for you, use `add_widget` instead.
-Makes the given element a widget and returns it.
-
-Parameters:
-
-- `el` - element to convert to a widget
-
-```javascript
-$('.grid-stack').gridstack();
-
-$('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="1"></div>')
-var grid = $('.grid-stack').data('gridstack');
-grid.makeWidget('gsi-1');
-```
-
 ### batchUpdate()
 
 Initailizes batch updates. You will see no changes until `commit` method is called.
@@ -379,6 +362,23 @@ Locks/unlocks widget.
 
 - `el` - widget to modify.
 - `val` - if `true` widget will be locked.
+
+### makeWidget(el)
+
+If you add elements to your gridstack container by hand, you have to tell gridstack afterwards to make them widgets. If you want gridstack to add the elements for you, use `add_widget` instead.
+Makes the given element a widget and returns it.
+
+Parameters:
+
+- `el` - element to convert to a widget
+
+```javascript
+$('.grid-stack').gridstack();
+
+$('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="1"></div>')
+var grid = $('.grid-stack').data('gridstack');
+grid.makeWidget('gsi-1');
+```
 
 ### minWidth(el, val)
 
