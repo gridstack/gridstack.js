@@ -1117,7 +1117,7 @@
                 throw new Error('Invalid height');
             }
             heightUnit = match[2];
-            height = parseInt(match[1]);
+            height = parseFloat(match[1]);
         }
         return {height: height, unit: heightUnit};
     }

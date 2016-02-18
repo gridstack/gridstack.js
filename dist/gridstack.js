@@ -1112,12 +1112,12 @@
         var height = val;
         var heightUnit = 'px';
         if (height && _.isString(height)) {
-            var match = height.match(/^([0-9]+)(px|em|rem)?$/);
+            var match = height.match(/^([0-9]*\.[0-9]+|[0-9]+)(px|em|rem|vh|vw)?$/);
             if (!match) {
                 throw new Error('Invalid height');
             }
             heightUnit = match[2];
-            height = parseInt(match[1]);
+            height = parseFloat(match[1]);
         }
         return {height: height, unit: heightUnit};
     }
