@@ -99,7 +99,6 @@ Usage
 * [lodash.js](https://lodash.com) (>= 3.5.0)
 * [jQuery](http://jquery.com) (>= 1.11.0)
 * [jQuery UI](http://jqueryui.com) (>= 1.11.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
-* (Optional) [knockout.js](http://knockoutjs.com) (>= 3.2.0)
 * (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
 
 Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
