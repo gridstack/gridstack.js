@@ -45,8 +45,10 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
     - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
     - [locked(el, val)](#lockedel-val)
     - [makeWidget(el)](#makewidgetel)
-    - [minWidth(el, val)](#minwidthel-val)
+    - [maxHeight(el, val)](#maxheightel-val)
     - [minHeight(el, val)](#minheightel-val)
+    - [maxWidth(el, val)](#maxwidthel-val)
+    - [minWidth(el, val)](#minwidthel-val)
     - [movable(el, val)](#movableel-val)
     - [move(el, x, y)](#moveel-x-y)
     - [removeWidget(el, detachNode)](#removewidgetel-detachnode)
@@ -380,19 +382,33 @@ var grid = $('.grid-stack').data('gridstack');
 grid.makeWidget('gsi-1');
 ```
 
-### minWidth(el, val)
+### maxHeight(el, val)
 
-Set the minWidth for a widget.
+Set the `maxHeight` for a widget.
+
+- `el` - widget to modify.
+- `val` - A numeric value of the number of rows
+
+### minHeight(el, val)
+
+Set the `minHeight` for a widget.
+
+- `el` - widget to modify.
+- `val` - A numeric value of the number of rows
+
+### maxWidth(el, val)
+
+Set the `maxWidth` for a widget.
 
 - `el` - widget to modify.
 - `val` - A numeric value of the number of columns
 
-### minHeight(el, val)
+### minWidth(el, val)
 
-Set the minHeight for a widget.
+Set the `minWidth` for a widget.
 
 - `el` - widget to modify.
-- `val` - A numeric value of the number of rows
+- `val` - A numeric value of the number of columns
 
 ### movable(el, val)
 
@@ -787,8 +803,9 @@ Changes
 
 #### v0.2.5-dev (Development version)
 
-- `cell_height` and `vertical_margin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs)
 - update names to respect js naming convention
+- `cellHeight` and `verticalMargin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs)
+- add `maxWidth`/`maxHeight` methods.
 
 #### v0.2.4 (2016-02-15)
 
