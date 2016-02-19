@@ -757,10 +757,6 @@
         });
         el.data('_gridstack_node', node);
 
-        if (self.opts.staticGrid) {
-            return;
-        }
-
         var cellWidth;
         var cellHeight;
 
@@ -843,11 +839,11 @@
                 resize: dragOrResize
             }));
 
-        if (node.noMove || this._isOneColumnMode()) {
+        if (node.noMove || this._isOneColumnMode() || this.opts.staticGrid) {
             el.draggable('disable');
         }
 
-        if (node.noResize || this._isOneColumnMode()) {
+        if (node.noResize || this._isOneColumnMode() || this.opts.staticGrid) {
             el.resizable('disable');
         }
 
@@ -962,6 +958,14 @@
             }
         });
         return this;
+    };
+
+    GridStack.prototype.enableMove = function(doEnable) {
+        this.movable(this.container.children('.' + this.opts.itemClass), doEnable);
+    };
+
+    GridStack.prototype.enableResize = function(doEnable) {
+        this.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
     };
 
     GridStack.prototype.disable = function() {
@@ -1195,6 +1199,8 @@
 
     GridStack.prototype.setStatic = function(staticValue) {
         this.opts.staticGrid = (staticValue === true);
+        this.enableMove(!staticValue);
+        this.enableResize(!staticValue);
         this._setStaticClass();
     };
 
