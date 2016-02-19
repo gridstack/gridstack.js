@@ -641,7 +641,7 @@
         }
         this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
         this._styles = Utils.createStylesheet(this._stylesId);
-        if (this._styles != null) {
+        if (this._styles !== null) {
             this._styles._max = 0;
         }
     };
@@ -1008,7 +1008,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined' || node == null) {
+            if (typeof node === 'undefined' || node === null) {
                 return;
             }
 
@@ -1025,7 +1025,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined' || node == null) {
+            if (typeof node === 'undefined' || node === null) {
                 return;
             }
 
@@ -1042,7 +1042,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined' || node == null) {
+            if (typeof node === 'undefined' || node === null) {
                 return;
             }
 
@@ -1059,7 +1059,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined' || node == null) {
+            if (typeof node === 'undefined' || node === null) {
                 return;
             }
 
