@@ -4,6 +4,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-doctoc');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
     grunt.initConfig({
         sass: {
@@ -55,8 +56,12 @@ module.exports = function (grunt) {
             readme: {
                 target: "./README.md"
             }
+        },
+
+        jshint: {
+            all: ['src/*.js']
         }
     });
 
-    grunt.registerTask('default', ['sass', 'cssmin', 'copy', 'uglify', 'doctoc']);
+    grunt.registerTask('default', ['sass', 'cssmin', 'copy', 'uglify', 'doctoc', 'jshint']);
 };
