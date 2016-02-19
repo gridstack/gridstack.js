@@ -41,6 +41,8 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
     - [destroy()](#destroy)
     - [disable()](#disable)
     - [enable()](#enable)
+    - [enableMove(doEnable)](#enablemovedoenable)
+    - [enableResize(doEnable)](#enableresizedoenable)
     - [getCellFromPixel(position)](#getcellfrompixelposition)
     - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
     - [locked(el, val)](#lockedel-val)
@@ -341,6 +343,22 @@ Enables widgets moving/resizing. This is a shortcut for:
 ```javascript
 grid.movable('.grid-stack-item', true);
 grid.resizable('.grid-stack-item', true);
+```
+
+### enableMove(doEnable)
+
+Enables/disables grid moving (current and added widgets). This is a shortcut for:
+
+```javascript
+grid.movable(this.container.children('.' + this.opts.itemClass), doEnable);
+```
+
+### enableResize(doEnable)
+
+Enables/disables grid resizing (current and added widgets). This is a shortcut for:
+
+```javascript
+grid.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
 ```
 
 ### getCellFromPixel(position)
@@ -805,6 +823,7 @@ Changes
 - update names to respect js naming convention
 - `cellHeight` and `verticalMargin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs)
 - add `maxWidth`/`maxHeight` methods.
+- add `enableMove`/`enableResize` methods.
 
 #### v0.2.4 (2016-02-15)
 
