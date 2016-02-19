@@ -1290,6 +1290,7 @@
     scope.GridStackUI = GridStack;
 
     scope.GridStackUI.Utils = Utils;
+    scope.GridStackUI.Engine = GridStackEngine;
 
     $.fn.gridstack = function(opts) {
         return this.each(function() {
