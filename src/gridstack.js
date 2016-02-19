@@ -509,7 +509,9 @@
                     '.grid-stack-item-content',
                 scroll: false,
                 appendTo: 'body'
-            })
+            }),
+            disableDrag: opts.disableDrag || false,
+            disableResize: opts.disableResize || false
         });
         this.opts.isNested = isNested;
 
@@ -582,10 +584,10 @@
                     if (self.opts.staticGrid) {
                         return;
                     }
-                    if (!node.noMove) {
+                    if (node.noMove || self.opts.disableDrag) {
                         node.el.draggable('disable');
                     }
-                    if (!node.noResize) {
+                    if (node.noResize || self.opts.disableResize) {
                         node.el.resizable('disable');
                     }
                 });
@@ -601,10 +603,10 @@
                 }
 
                 _.each(self.grid.nodes, function(node) {
-                    if (!node.noMove) {
+                    if (!node.noMove && !self.opts.disableDrag) {
                         node.el.draggable('enable');
                     }
-                    if (!node.noResize) {
+                    if (!node.noResize && !self.opts.disableResize) {
                         node.el.resizable('enable');
                     }
                 });
@@ -839,11 +841,11 @@
                 resize: dragOrResize
             }));
 
-        if (node.noMove || this._isOneColumnMode() || this.opts.staticGrid) {
+        if (node.noMove || this._isOneColumnMode() || this.opts.staticGrid || this.opts.disableDrag) {
             el.draggable('disable');
         }
 
-        if (node.noResize || this._isOneColumnMode() || this.opts.staticGrid) {
+        if (node.noResize || this._isOneColumnMode() || this.opts.staticGrid || this.opts.disableResize) {
             el.resizable('disable');
         }
 
@@ -960,12 +962,18 @@
         return this;
     };
 
-    GridStack.prototype.enableMove = function(doEnable) {
+    GridStack.prototype.enableMove = function(doEnable, includeNewWidgets) {
         this.movable(this.container.children('.' + this.opts.itemClass), doEnable);
+        if (includeNewWidgets) {
+            this.opts.disableDrag = !doEnable;
+        }
     };
 
-    GridStack.prototype.enableResize = function(doEnable) {
+    GridStack.prototype.enableResize = function(doEnable, includeNewWidgets) {
         this.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
+        if (includeNewWidgets) {
+            this.opts.disableResize = !doEnable;
+        }
     };
 
     GridStack.prototype.disable = function() {

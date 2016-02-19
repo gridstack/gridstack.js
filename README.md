@@ -41,8 +41,8 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
     - [destroy()](#destroy)
     - [disable()](#disable)
     - [enable()](#enable)
-    - [enableMove(doEnable)](#enablemovedoenable)
-    - [enableResize(doEnable)](#enableresizedoenable)
+    - [enableMove(doEnable, includeNewWidgets)](#enablemovedoenable-includenewwidgets)
+    - [enableResize(doEnable, includeNewWidgets)](#enableresizedoenable-includenewwidgets)
     - [getCellFromPixel(position)](#getcellfrompixelposition)
     - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
     - [locked(el, val)](#lockedel-val)
@@ -57,7 +57,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
     - [removeAll()](#removeall)
     - [resize(el, width, height)](#resizeel-width-height)
     - [resizable(el, val)](#resizableel-val)
-    - [setStatic(static_value)](#setstaticstatic_value)
+    - [setStatic(staticValue)](#setstaticstaticvalue)
     - [update(el, x, y, width, height)](#updateel-x-y-width-height)
     - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
   - [Utils](#utils)
@@ -147,8 +147,8 @@ You can download files from `dist` directory as well.
 <script type="text/javascript">
 $(function () {
     var options = {
-        cell_height: 80,
-        vertical_margin: 10
+        cellHeight: 80,
+        verticalMargin: 10
     };
     $('.grid-stack').gridstack(options);
 });
@@ -171,6 +171,8 @@ when they will be completely removed.
  - an integer (px)
  - a string (ex: '10em', '100px', '10rem')
  - 0 or null, in which case the library will not generate styles for rows. Everything will have to be defined in CSS files.
+- `disableDrag` - disallows dragging of widgets (default: `false`).
+- `disableResize` - disallows resizing of widgets (default: `false`).
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'}`)
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
@@ -288,8 +290,8 @@ Parameters:
 - `autoPosition` - if `true` then `x`, `y` parameters will be ignored and widget will be places on the first available
 position
 
-Widget will be always placed even if result height is more than actual grid height. You need to use `will_it_fit` method
-before calling `add_widget` for additional check.
+Widget will be always placed even if result height is more than actual grid height. You need to use `willItFit` method
+before calling `addWidget` for additional check.
 
 ```javascript
 $('.grid-stack').gridstack();
@@ -345,17 +347,17 @@ grid.movable('.grid-stack-item', true);
 grid.resizable('.grid-stack-item', true);
 ```
 
-### enableMove(doEnable)
+### enableMove(doEnable, includeNewWidgets)
 
-Enables/disables grid moving (current and added widgets). This is a shortcut for:
+Enables/disables widget moving. `includeNewWidgets` will force new widgets to be draggable as per `doEnable`'s value by changing the `disableDrag` grid option. This is a shortcut for:
 
 ```javascript
 grid.movable(this.container.children('.' + this.opts.itemClass), doEnable);
 ```
 
-### enableResize(doEnable)
+### enableResize(doEnable, includeNewWidgets)
 
-Enables/disables grid resizing (current and added widgets). This is a shortcut for:
+Enables/disables widget resizing. `includeNewWidgets` will force new widgets to be resizable as per `doEnable`'s value by changing the `disableResize` grid option.  This is a shortcut for:
 
 ```javascript
 grid.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
@@ -384,7 +386,7 @@ Locks/unlocks widget.
 
 ### makeWidget(el)
 
-If you add elements to your gridstack container by hand, you have to tell gridstack afterwards to make them widgets. If you want gridstack to add the elements for you, use `add_widget` instead.
+If you add elements to your gridstack container by hand, you have to tell gridstack afterwards to make them widgets. If you want gridstack to add the elements for you, use `addWidget` instead.
 Makes the given element a widget and returns it.
 
 Parameters:
@@ -472,11 +474,11 @@ Enables/Disables resizing.
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable.
 
-### setStatic(static_value)
+### setStatic(staticValue)
 
 Toggle the grid static state.  Also toggle the `grid-stack-static` class.
 
-- `static_value` - if `true` the grid become static.
+- `staticValue` - if `true` the grid become static.
 
 ### update(el, x, y, width, height)
 
@@ -532,7 +534,7 @@ Also `alwaysShowResizeHandle` option may be useful:
 ```javascript
 $(function () {
     var options = {
-        always_show_resize_handle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+        alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
     };
     $('.grid-stack').gridstack(options);
 });
@@ -570,7 +572,7 @@ ko.components.register('dashboard-grid', {
     template:
         [
             '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-            '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+            '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.autoPosition}">',
             '       <div class="grid-stack-item-content">...</div>',
             '   </div>',
             '</div> '
@@ -607,7 +609,7 @@ See examples: [example 1](http://troolee.github.io/gridstack.js/demo/knockout.ht
 template:
     [
         '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-        '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+        '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.autoPosition}">',
         '       ....',
         '   </div>', // <-- NO SPACE **AFTER** </div>
         '</div> '    // <-- NO SPACE **BEFORE** </div>
