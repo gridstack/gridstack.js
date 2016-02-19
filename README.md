@@ -822,10 +822,12 @@ Changes
 
 #### v0.2.5-dev (Development version)
 
-- update names to respect js naming convention
-- `cellHeight` and `verticalMargin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs)
+- update names to respect js naming convention.
+- `cellHeight` and `verticalMargin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs).
 - add `maxWidth`/`maxHeight` methods.
 - add `enableMove`/`enableResize` methods.
+- fix window resize issue #331.
+- add options `disableDrag` and `disableResize`.
 
 #### v0.2.4 (2016-02-15)
 
