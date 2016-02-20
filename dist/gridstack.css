@@ -6,6 +6,14 @@
   position: relative;
 }
 
+.grid-stack.grid-stack-rtl {
+  direction: ltr;
+}
+
+.grid-stack.grid-stack-rtl > .grid-stack-item {
+  direction: rtl;
+}
+
 .grid-stack .grid-stack-placeholder > .placeholder-content {
   border: 1px dashed lightgray;
   margin: 0;
@@ -358,13 +366,6 @@
   transition: left 0s, top 0s, height 0s, width 0s;
 }
 
-/** Uncomment this to show bottom-left resize handle **/
-/*
-.grid-stack > .grid-stack-item > .ui-resizable-sw {
-    display: inline-block;
-    @include vendor(transform, rotate(180deg));
-}
-*/
 @media (max-width: 768px) {
   .grid-stack-item {
     position: relative !important;
