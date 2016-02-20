@@ -13,5 +13,6 @@
 	"requireCamelCaseOrUpperCaseIdentifiers": true,
 	"validateLineBreaks": false,
 	"requireTrailingComma": false,
+	"disallowTrailingWhitespace": true,
 	"excludeFiles": ["dist/*.js", "demo/*"]
 }
