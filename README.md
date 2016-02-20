@@ -438,7 +438,7 @@ Changes
 - fix window resize issue #331.
 - add options `disableDrag` and `disableResize`.
 - fix `batchUpdate`/`commit` (Thank to @radiolips)
-- remove dependency from FontAwesome
+- remove dependency of FontAwesome
 
 #### v0.2.4 (2016-02-15)
 
