@@ -1,6 +1,6 @@
 {
-	"preset": "google",
-	"validateIndentation": "\t",
+	"preset": "node-style-guide",
+	"validateIndentation": 4,
 	"maximumLineLength": 120,
 	"jsDoc": {
 		"checkAnnotations": {
@@ -10,5 +10,8 @@
 			}
 		}
 	},
-	"requireCamelCaseOrUpperCaseIdentifiers": true
+	"requireCamelCaseOrUpperCaseIdentifiers": true,
+	"validateLineBreaks": false,
+	"requireTrailingComma": false,
+	"excludeFiles": ["dist/*.js"]
 }

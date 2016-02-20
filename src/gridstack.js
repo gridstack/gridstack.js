@@ -22,8 +22,8 @@
 
     var obsolete = function(f, oldName, newName) {
         var wrapper = function() {
-            console.warn('gridstack.js: Function `' + oldName + '` is deprecated as of v0.2.5 and has been replaced with `' +
-                newName + '`. It will be **completely** removed in v1.0.');
+            console.warn('gridstack.js: Function `' + oldName + '` is deprecated as of v0.2.5 and has been replaced ' +
+            'with `' + newName + '`. It will be **completely** removed in v1.0.');
             return f.apply(this, arguments);
         };
         wrapper.prototype = f.prototype;
@@ -633,7 +633,7 @@
     };
 
     GridStack.prototype._initStyles = function() {
-        if (!this.opts.cellHeight) { //that will be handled by CSS
+        if (!this.opts.cellHeight) { // That will be handled by CSS
             return ;
         }
         if (this._stylesId) {
@@ -660,7 +660,7 @@
             this._initStyles();
             this._updateContainerHeight();
         }
-        if (!this.opts.cellHeight) { //the rest will be handled by CSS
+        if (!this.opts.cellHeight) { // The rest will be handled by CSS
             return ;
         }
         if (this._styles._max !== 0 && maxHeight <= this._styles._max) {
@@ -669,12 +669,14 @@
 
         if (!this.opts.verticalMargin || this.opts.cellHeightUnit === this.opts.verticalMarginUnit) {
             getHeight = function(nbRows, nbMargins) {
-                return (self.opts.cellHeight * nbRows + self.opts.verticalMargin * nbMargins) + self.opts.cellHeightUnit;
+                return (self.opts.cellHeight * nbRows + self.opts.verticalMargin * nbMargins) +
+                    self.opts.cellHeightUnit;
             };
         } else {
             getHeight = function(nbRows, nbMargins) {
                 if (!nbRows || !nbMargins) {
-                    return (self.opts.cellHeight * nbRows + self.opts.verticalMargin * nbMargins) + self.opts.cellHeightUnit;
+                    return (self.opts.cellHeight * nbRows + self.opts.verticalMargin * nbMargins) +
+                        self.opts.cellHeightUnit;
                 }
                 return 'calc(' + ((self.opts.cellHeight * nbRows) + self.opts.cellHeightUnit) + ' + ' +
                     ((self.opts.verticalMargin * nbMargins) + self.opts.verticalMarginUnit) + ')';
@@ -1156,11 +1158,9 @@
         if (typeof val == 'undefined') {
             if (this.opts.cellHeight) {
                 return this.opts.cellHeight;
-            } else {
-                var o = this.container.children('.' + this.opts.itemClass).first();
-                return Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
             }
-
+            var o = this.container.children('.' + this.opts.itemClass).first();
+            return Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
         }
         var heightData = parseHeight(val);
 

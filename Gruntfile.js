@@ -1,10 +1,11 @@
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-doctoc');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-jscs');
 
     grunt.initConfig({
         sass: {
@@ -54,14 +55,18 @@ module.exports = function (grunt) {
                 removeAd: false
             },
             readme: {
-                target: "./README.md"
+                target: './README.md'
             }
         },
 
         jshint: {
             all: ['src/*.js']
-        }
+        },
+
+        jscs: {
+            all: ['*.js', 'src/*.js', ],
+        },
     });
 
-    grunt.registerTask('default', ['sass', 'cssmin', 'copy', 'uglify', 'doctoc', 'jshint']);
+    grunt.registerTask('default', ['sass', 'cssmin', 'copy', 'uglify', 'doctoc', 'jshint', 'jscs']);
 };
