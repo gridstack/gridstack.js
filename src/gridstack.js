@@ -153,6 +153,11 @@
         }
     };
 
+    // For Meteor support: https://github.com/troolee/gridstack.js/pull/272
+    GridStackEngine.prototype.getNodeDataByDOMEl = function(el) {
+        return _.find(this.nodes, function(n) { return el.get(0) === n.el.get(0); });
+    };
+
     GridStackEngine.prototype._fixCollisions = function(node) {
         var self = this;
         this._sortNodes(-1);
@@ -932,6 +937,12 @@
         detachNode = typeof detachNode === 'undefined' ? true : detachNode;
         el = $(el);
         var node = el.data('_gridstack_node');
+
+        // For Meteor support: https://github.com/troolee/gridstack.js/pull/272
+        if (!node) {
+            node = this.grid.getNodeDataByDOMEl(el);
+        }
+
         this.grid.removeNode(node);
         el.removeData('_gridstack_node');
         this._updateContainerHeight();
