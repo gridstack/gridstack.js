@@ -16,6 +16,14 @@ $animation_speed: .3s !default;
 .grid-stack {
     position: relative;
 
+    &.grid-stack-rtl {
+        direction: ltr;
+
+        > .grid-stack-item {
+            direction: rtl;
+        }
+    }
+
     .grid-stack-placeholder > .placeholder-content {
         border: 1px dashed lightgray;
         margin: 0;

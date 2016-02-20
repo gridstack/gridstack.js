@@ -528,8 +528,18 @@
                 appendTo: 'body'
             }),
             disableDrag: opts.disableDrag || false,
-            disableResize: opts.disableResize || false
+            disableResize: opts.disableResize || false,
+            rtl: 'auto'
         });
+
+        if (this.opts.rtl === 'auto') {
+            this.opts.rtl = this.container.css('direction') === 'rtl';
+        }
+
+        if (this.opts.rtl) {
+            this.container.addClass('grid-stack-rtl');
+        }
+
         this.opts.isNested = isNested;
 
         this.cellHeight(this.opts.cellHeight, true);

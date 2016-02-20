@@ -439,6 +439,7 @@ Changes
 - add options `disableDrag` and `disableResize`.
 - fix `batchUpdate`/`commit` (Thank to @radiolips)
 - remove dependency from FontAwesome
+- RTL support
 
 #### v0.2.4 (2016-02-15)
 
