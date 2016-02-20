@@ -6,6 +6,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-doctoc');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jscs');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     grunt.initConfig({
         sass: {
@@ -72,6 +73,27 @@ module.exports = function(grunt) {
 
         jscs: {
             all: ['*.js', 'src/*.js', ],
+        },
+
+        watch: {
+            scripts: {
+                files: ['src/*.js'],
+                tasks: ['uglify', 'jshint', 'jscs'],
+                options: {
+                },
+            },
+            styles: {
+                files: ['src/*.scss'],
+                tasks: ['sass', 'cssmin'],
+                options: {
+                },
+            },
+            docs: {
+                files: ['README.md', 'doc/README.md'],
+                tasks: ['doctoc'],
+                options: {
+                },
+            },
         },
     });
 
