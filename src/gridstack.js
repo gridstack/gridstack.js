@@ -98,6 +98,20 @@
 
         _isAddNodeIntercepted: function(n) {
             return Utils.isIntercepted({x: this.x, y: this.y, width: this.node.width, height: this.node.height}, n);
+        },
+
+        parseHeight: function(val) {
+            var height = val;
+            var heightUnit = 'px';
+            if (height && _.isString(height)) {
+                var match = height.match(/^([0-9]*\.[0-9]+|[0-9]+)(px|em|rem|vh|vw)?$/);
+                if (!match) {
+                    throw new Error('Invalid height');
+                }
+                heightUnit = match[2];
+                height = parseFloat(match[1]);
+            }
+            return {height: height, unit: heightUnit};
         }
     };
 
@@ -1125,26 +1139,12 @@
         });
     };
 
-    function parseHeight(val) {
-        var height = val;
-        var heightUnit = 'px';
-        if (height && _.isString(height)) {
-            var match = height.match(/^([0-9]*\.[0-9]+|[0-9]+)(px|em|rem|vh|vw)?$/);
-            if (!match) {
-                throw new Error('Invalid height');
-            }
-            heightUnit = match[2];
-            height = parseFloat(match[1]);
-        }
-        return {height: height, unit: heightUnit};
-    }
-
     GridStack.prototype.verticalMargin = function(val, noUpdate) {
         if (typeof val == 'undefined') {
             return this.opts.verticalMargin;
         }
 
-        var heightData = parseHeight(val);
+        var heightData = Utils.parseHeight(val);
 
         if (this.opts.verticalMarginUnit === heightData.unit && this.opts.height === heightData.height) {
             return ;
@@ -1165,7 +1165,7 @@
             var o = this.container.children('.' + this.opts.itemClass).first();
             return Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
         }
-        var heightData = parseHeight(val);
+        var heightData = Utils.parseHeight(val);
 
         if (this.opts.cellHeightUnit === heightData.heightUnit && this.opts.height === heightData.height) {
             return ;
