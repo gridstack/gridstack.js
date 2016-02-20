@@ -55,8 +55,15 @@ module.exports = function(grunt) {
                 removeAd: false
             },
             readme: {
-                target: './README.md'
-            }
+                options: {
+                    target: './README.md'
+                }
+            },
+            doc: {
+                options: {
+                    target: './doc/README.md'
+                }
+            },
         },
 
         jshint: {
