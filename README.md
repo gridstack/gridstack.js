@@ -441,6 +441,8 @@ Changes
 - remove dependency of FontAwesome
 - RTL support
 - `'auto'` value for `cellHeight` option
+- fix `setStatic` method
+- add `setAnimate` method to API
 
 #### v0.2.4 (2016-02-15)
 
