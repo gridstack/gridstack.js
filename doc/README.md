@@ -72,7 +72,7 @@ gridstack.js API
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
-- `rtl` - if `true` turns grid to RTL. Possible values `true`, `false`, `'auto'` (default `'auto'`) See [example](http://troolee.github.io/gridstack.js/demo/rtl.html)
+- `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default `'auto'`) See [example](http://troolee.github.io/gridstack.js/demo/rtl.html)
 - `staticGrid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `verticalMargin` - vertical gap size (default: `20`). Can be:
  - an integer (px)
