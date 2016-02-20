@@ -111,14 +111,6 @@ $animation_speed: .3s !default;
     }
 }
 
-/** Uncomment this to show bottom-left resize handle **/
-/*
-.grid-stack > .grid-stack-item > .ui-resizable-sw {
-    display: inline-block;
-    @include vendor(transform, rotate(180deg));
-}
-*/
-
 @media (max-width: 768px) {
     .grid-stack-item {
         position: relative !important;
