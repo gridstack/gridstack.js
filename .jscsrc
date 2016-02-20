@@ -13,5 +13,5 @@
 	"requireCamelCaseOrUpperCaseIdentifiers": true,
 	"validateLineBreaks": false,
 	"requireTrailingComma": false,
-	"excludeFiles": ["dist/*.js"]
+	"excludeFiles": ["dist/*.js", "demo/*"]
 }
