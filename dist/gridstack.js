@@ -1256,6 +1256,25 @@
         }
     };
 
+    GridStack.prototype._updateNodeWidths = function(oldWidth, newWidth) {
+        this.grid._sortNodes();
+        this.grid.batchUpdate();
+        var node = {};
+        for (var i = 0; i < this.grid.nodes.length; i++) {
+            node = this.grid.nodes[i];
+            this.update(node.el, Math.round(node.x * newWidth / oldWidth), undefined,
+                Math.round(node.width * newWidth / oldWidth), undefined);
+        }
+        this.grid.commit();
+    };
+
+    GridStack.prototype.setGridWidth = function(gridWidth) {
+        this.container.removeClass('grid-stack-' + this.opts.width);
+        this._updateNodeWidths(this.opts.width, gridWidth);
+        this.opts.width = gridWidth;
+        this.container.addClass('grid-stack-' + gridWidth);
+    };
+
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
     GridStackEngine.prototype.batch_update = obsolete(GridStackEngine.prototype.batchUpdate);
     GridStackEngine.prototype._fix_collisions = obsolete(GridStackEngine.prototype._fixCollisions,
