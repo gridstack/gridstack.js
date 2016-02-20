@@ -443,6 +443,7 @@ Changes
 - `'auto'` value for `cellHeight` option
 - fix `setStatic` method
 - add `setAnimation` method to API
+- add `setGridWidth` method ([#227](https://github.com/troolee/gridstack.js/issues/227))
 
 #### v0.2.4 (2016-02-15)
 

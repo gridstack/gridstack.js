@@ -43,6 +43,7 @@ gridstack.js API
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
+  - [setGridWidth(gridWidth)](#setgridwidthgridwidth)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
@@ -371,6 +372,12 @@ Enables/Disables resizing.
 Toggle the grid animation state.  Toggles the `grid-stack-animate` class.
 
 - `doAnimate` - if `true` the grid will animate.
+
+### setGridWidth(gridWidth)
+
+(Experimental) Modify number of columns in the grid. Will attempt to update existing widgets to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css`.
+
+- `gridWidth` - Integer between 1 and 12.
 
 ### setStatic(staticValue)
 
