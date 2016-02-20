@@ -131,8 +131,8 @@
     };
 
     GridStackEngine.prototype.commit = function() {
-        this._updateCounter = 0;
-        if (this._updateCounter === 0) {
+        if (this._updateCounter !== 0) {
+            this._updateCounter = 0;
             this.float = this._float;
             this._packNodes();
             this._notify();
@@ -269,6 +269,9 @@
     };
 
     GridStackEngine.prototype.cleanNodes = function() {
+        if (this._updateCounter) {
+            return;
+        }
         _.each(this.nodes, function(n) {n._dirty = false; });
     };
 
