@@ -444,7 +444,7 @@
 
     var GridStack = function(el, opts) {
         var self = this;
-        var oneColumnMode;
+        var oneColumnMode, isAutoCellHeight;
 
         opts = opts || {};
 
@@ -542,7 +542,12 @@
 
         this.opts.isNested = isNested;
 
-        this.cellHeight(this.opts.cellHeight, true);
+        isAutoCellHeight = this.opts.cellHeight === 'auto';
+        if (isAutoCellHeight) {
+            self.cellHeight(self.cellWidth(), true);
+        } else {
+            this.cellHeight(this.opts.cellHeight, true);
+        }
         this.verticalMargin(this.opts.verticalMargin, true);
 
         this.container.addClass(this.opts._class);
@@ -596,7 +601,15 @@
 
         this._updateContainerHeight();
 
+        this._updateHeightsOnResize = _.throttle(function() {
+            self.cellHeight(self.cellWidth(), false);
+        }, 100);
+
         this.onResizeHandler = function() {
+            if (isAutoCellHeight) {
+                self._updateHeightsOnResize();
+            }
+
             if (self._isOneColumnMode()) {
                 if (oneColumnMode) {
                     return;
@@ -660,9 +673,6 @@
     };
 
     GridStack.prototype._initStyles = function() {
-        if (!this.opts.cellHeight) { // That will be handled by CSS
-            return ;
-        }
         if (this._stylesId) {
             $('[data-gs-id="' + this._stylesId + '"]').remove();
         }
@@ -674,7 +684,7 @@
     };
 
     GridStack.prototype._updateStyles = function(maxHeight) {
-        if (this._styles === null) {
+        if (this._styles === null || typeof this._styles === 'undefined') {
             return;
         }
 

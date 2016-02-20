@@ -440,6 +440,7 @@ Changes
 - fix `batchUpdate`/`commit` (Thank to @radiolips)
 - remove dependency of FontAwesome
 - RTL support
+- `'auto'` value for `cellHeight` option
 
 #### v0.2.4 (2016-02-15)
 

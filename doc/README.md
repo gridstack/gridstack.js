@@ -59,7 +59,8 @@ gridstack.js API
 - `cellHeight` - one cell height (default: `60`). Can be:
  - an integer (px)
  - a string (ex: '10em', '100px', '10rem')
- - 0 or null, in which case the library will not generate styles for rows. Everything will have to be defined in CSS files.
+ - 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
+ - `'auto'` - height will be calculated from cell width.
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'}`)
