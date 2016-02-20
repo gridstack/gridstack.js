@@ -78,7 +78,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['src/*.js'],
-                tasks: ['uglify', 'jshint', 'jscs'],
+                tasks: ['uglify', 'copy'],
                 options: {
                 },
             },
@@ -97,5 +97,5 @@ module.exports = function(grunt) {
         },
     });
 
-    grunt.registerTask('default', ['sass', 'cssmin', 'copy', 'uglify', 'doctoc', 'jshint', 'jscs']);
+    grunt.registerTask('default', ['sass', 'cssmin', 'jshint', 'jscs', 'copy', 'uglify', 'doctoc']);
 };
