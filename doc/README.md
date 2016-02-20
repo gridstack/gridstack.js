@@ -42,7 +42,7 @@ gridstack.js API
   - [removeAll()](#removeall)
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
-  - [setAnimate(doAnimate)](#setanimatedoanimate)
+  - [setAnimation(doAnimate)](#setanimationdoanimate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
@@ -366,7 +366,7 @@ Enables/Disables resizing.
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable.
 
-### setAnimate(doAnimate)
+### setAnimation(doAnimate)
 
 Toggle the grid animation state.  Toggles the `grid-stack-animate` class.
 
