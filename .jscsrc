@@ -14,5 +14,6 @@
 	"validateLineBreaks": false,
 	"requireTrailingComma": false,
 	"disallowTrailingWhitespace": true,
+	"requireCapitalizedComments": false,
 	"excludeFiles": ["dist/*.js", "demo/*"]
 }
