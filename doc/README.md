@@ -17,7 +17,7 @@ gridstack.js API
   - [disable(event)](#disableevent)
   - [enable(event)](#enableevent)
 - [API](#api)
-  - [addWidget(el, x, y, width, height, autoPosition)](#addwidgetel-x-y-width-height-autoposition)
+  - [addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
   - [cellHeight()](#cellheight)
   - [cellHeight(val)](#cellheightval)
@@ -174,16 +174,21 @@ $('.grid-stack').on('enable', function(event) {
 
 ## API
 
-### addWidget(el, x, y, width, height, autoPosition)
+### addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])
 
 Creates new widget and returns it.
 
 Parameters:
 
 - `el` - widget to add
-- `x`, `y`, `width`, `height` - widget position/dimensions (Optional)
+- `x`, `y`, `width`, `height` - widget position/dimensions (optional)
 - `autoPosition` - if `true` then `x`, `y` parameters will be ignored and widget will be places on the first available
-position
+position (optional)
+- `minWidth` minimum width allowed during resize/creation (optional)
+- `maxWidth` maximum width allowed during resize/creation (optional)
+- `minHeight` minimum height allowed during resize/creation (optional)
+- `maxHeight` maximum height allowed during resize/creation (optional)
+- `id` value for `data-gs-id` (optional)
 
 Widget will be always placed even if result height is more than actual grid height. You need to use `willItFit` method
 before calling `addWidget` for additional check.
