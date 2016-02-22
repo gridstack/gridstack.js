@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="rtl">
 <head>
     <!--[if lt IE 9]>
     <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Knockout.js demo</title>
+    <title>RTL demo</title>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="../dist/gridstack.css"/>
@@ -27,14 +27,13 @@
 
         .grid-stack-item-content {
             color: #2c3e50;
-            text-align: center;
             background-color: #18bc9c;
         }
     </style>
 </head>
 <body>
     <div class="container-fluid">
-        <h1>knockout.js Demo</h1>
+        <h1>RTL Demo</h1>
 
         <div>
             <button data-bind="click: addNewWidget">Add new widget</button>
@@ -77,7 +76,7 @@
                 [
                     '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
                     '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
-                    '       <div class="grid-stack-item-content"><button data-bind="click: $root.deleteWidget">Delete me</button></div>',
+                    '       <div class="grid-stack-item-content"><center><button data-bind="click: $root.deleteWidget">Delete me</button><br><h5 data-bind="text: index" /></center><br><p>lorem ipsum</p></div>',
                     '   </div>',
                     '</div> '
                 ].join('')
@@ -107,10 +106,10 @@
             };
 
             var widgets = [
-                {x: 0, y: 0, width: 2, height: 2},
-                {x: 2, y: 0, width: 4, height: 2},
-                {x: 6, y: 0, width: 2, height: 4},
-                {x: 1, y: 2, width: 4, height: 2}
+                {x: 0, y: 0, width: 2, height: 2, index: 1},
+                {x: 2, y: 0, width: 4, height: 2, index: 2},
+                {x: 6, y: 0, width: 2, height: 4, index: 3},
+                {x: 1, y: 2, width: 4, height: 2, index: 4}
             ];
 
             var controller = new Controller(widgets);
