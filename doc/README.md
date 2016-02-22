@@ -28,7 +28,7 @@ gridstack.js API
   - [enable()](#enable)
   - [enableMove(doEnable, includeNewWidgets)](#enablemovedoenable-includenewwidgets)
   - [enableResize(doEnable, includeNewWidgets)](#enableresizedoenable-includenewwidgets)
-  - [getCellFromPixel(position)](#getcellfrompixelposition)
+  - [getCellFromPixel(position[, useOffset])](#getcellfrompixelposition-useoffset)
   - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
   - [locked(el, val)](#lockedel-val)
   - [makeWidget(el)](#makewidgetel)
@@ -262,13 +262,14 @@ Enables/disables widget resizing. `includeNewWidgets` will force new widgets to 
 grid.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
 ```
 
-### getCellFromPixel(position)
+### getCellFromPixel(position[, useOffset])
 
 Get the position of the cell under a pixel on screen.
 
 Parameters :
 
-- `position` - the position of the pixel to resolve in absolute coordinates, as an object with `top` and `left`properties
+- `position` - the position of the pixel to resolve in absolute coordinates, as an object with `top` and `left` properties
+- `useOffset` - if `true`, value will be based on offset vs position (Optional. Default `false`). Useful when grid is within `position: relative` element.
 
 Returns an object with properties `x` and `y` i.e. the column and row in the grid.
 
