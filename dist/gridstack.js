@@ -534,7 +534,9 @@
             }),
             disableDrag: opts.disableDrag || false,
             disableResize: opts.disableResize || false,
-            rtl: 'auto'
+            rtl: 'auto',
+            removable: false,
+            removeTimeout: 2000
         });
 
         if (this.opts.rtl === 'auto') {
@@ -805,15 +807,71 @@
 
         var cellWidth;
         var cellHeight;
+        var removeTimeout;
+
+        var setupRemovingTimeout = function() {
+            if (removeTimeout || !self.opts.removable) {
+                return;
+            }
+            removeTimeout = setTimeout(function() {
+                el.addClass('grid-stack-item-removing');
+                node._isAboutToRemove = true;
+            }, self.opts.removeTimeout);
+        };
+        var clearRemovingTimeout = function() {
+            if (!removeTimeout) {
+                return;
+            }
+            clearTimeout(removeTimeout);
+            removeTimeout = null;
+            el.removeClass('grid-stack-item-removing');
+            node._isAboutToRemove = false;
+        };
 
         var dragOrResize = function(event, ui) {
             var x = Math.round(ui.position.left / cellWidth);
             var y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
             var width;
             var height;
+
             if (event.type != 'drag') {
                 width = Math.round(ui.size.width / cellWidth);
                 height = Math.round(ui.size.height / cellHeight);
+            }
+
+            if (event.type == 'drag') {
+                if (x < 0 || x >= self.grid.width || y < 0) {
+                    setupRemovingTimeout();
+
+                    x = node._beforeDragX;
+                    y = node._beforeDragY;
+
+                    self.placeholder.detach();
+                    self.placeholder.hide();
+                    self.grid.removeNode(node);
+                    self._updateContainerHeight();
+
+                    node._temporaryRemoved = true;
+                } else {
+                    clearRemovingTimeout();
+
+                    if (node._temporaryRemoved) {
+                        self.grid.addNode(node);
+                        self.placeholder
+                            .attr('data-gs-x', x)
+                            .attr('data-gs-y', y)
+                            .attr('data-gs-width', width)
+                            .attr('data-gs-height', height)
+                            .show();
+                        self.container.append(self.placeholder);
+                        node.el = self.placeholder;
+                        node._temporaryRemoved = false;
+                    }
+                }
+            } else if (event.type == 'resize')  {
+                if (x < 0) {
+                    return;
+                }
             }
 
             if (!self.grid.canMoveNode(node, x, y, width, height)) {
@@ -838,6 +896,8 @@
                 .attr('data-gs-height', o.attr('data-gs-height'))
                 .show();
             node.el = self.placeholder;
+            node._beforeDragX = node.x;
+            node._beforeDragY = node.y;
 
             el.resizable('option', 'minWidth', cellWidth * (node.minWidth || 1));
             el.resizable('option', 'minHeight', strictCellHeight * (node.minHeight || 1));
@@ -848,18 +908,39 @@
         };
 
         var onEndMoving = function(event, ui) {
+            var forceNotify = false;
             self.placeholder.detach();
             var o = $(this);
             node.el = o;
             self.placeholder.hide();
-            o
-                .attr('data-gs-x', node.x)
-                .attr('data-gs-y', node.y)
-                .attr('data-gs-width', node.width)
-                .attr('data-gs-height', node.height)
-                .removeAttr('style');
+
+            if (node._isAboutToRemove) {
+                forceNotify = true;
+                el.removeData('_gridstack_node');
+                el.remove();
+            } else {
+                clearRemovingTimeout();
+                if (!node._temporaryRemoved) {
+                    o
+                        .attr('data-gs-x', node.x)
+                        .attr('data-gs-y', node.y)
+                        .attr('data-gs-width', node.width)
+                        .attr('data-gs-height', node.height)
+                        .removeAttr('style');
+                } else {
+                    o
+                        .attr('data-gs-x', node._beforeDragX)
+                        .attr('data-gs-y', node._beforeDragY)
+                        .attr('data-gs-width', node.width)
+                        .attr('data-gs-height', node.height)
+                        .removeAttr('style');
+                    node.x = node._beforeDragX;
+                    node.y = node._beforeDragY;
+                    self.grid.addNode(node);
+                }
+            }
             self._updateContainerHeight();
-            self._triggerChangeEvent();
+            self._triggerChangeEvent(forceNotify);
 
             self.grid.endUpdate();
 

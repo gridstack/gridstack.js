@@ -33,6 +33,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [IE8 support](#ie8-support)
   - [Nested grids](#nested-grids)
+  - [Resizing active grid](#resizing-active-grid)
 - [Changes](#changes)
       - [v0.2.5-dev (Development version)](#v025-dev-development-version)
       - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
@@ -426,6 +427,12 @@ during initialization.
 See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/nested.html)
 
 
+## Resizing active grid
+
+Resizing on-the-fly is possible, though experimental. This may be used to make gridstack responsive. gridstack will change the total number of columns and will attempt to update the width and x values of each widget to be more logical.
+See example: [Responsive grid demo](http://troolee.github.io/gridstack.js/demo/responsive.html)
+
+
 Changes
 =======
 
@@ -444,6 +451,7 @@ Changes
 - fix `setStatic` method
 - add `setAnimation` method to API
 - add `setGridWidth` method ([#227](https://github.com/troolee/gridstack.js/issues/227))
+- add `removable`/`removeTimeout`
 
 #### v0.2.4 (2016-02-15)
 

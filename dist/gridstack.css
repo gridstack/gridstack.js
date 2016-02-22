@@ -83,7 +83,6 @@
 }
 
 .grid-stack > .grid-stack-item > .ui-resizable-se {
-  display: inline-block;
   -webkit-transform: rotate(-45deg);
   -moz-transform: rotate(-45deg);
   -ms-transform: rotate(-45deg);
@@ -153,6 +152,10 @@
   left: 10px;
   top: 15px;
   bottom: 15px;
+}
+
+.grid-stack > .grid-stack-item.ui-draggable-dragging > .ui-resizable-handle {
+  display: none !important;
 }
 
 .grid-stack > .grid-stack-item[data-gs-width='1'] {

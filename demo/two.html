@@ -11,7 +11,6 @@
     <title>Two grids demo</title>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css"/>
     <link rel="stylesheet" href="../dist/gridstack.css"/>
     <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
 
@@ -34,6 +33,14 @@
             color: #2c3e50;
             text-align: center;
             background-color: #18bc9c;
+        }
+
+        #grid2 .grid-stack-item-content {
+            background-color: #9caabc;
+        }
+
+        .grid-stack-item-removing {
+            opacity: 0.5;
         }
     </style>
 </head>
@@ -58,7 +65,8 @@
         $(function () {
             var options = {
                 width: 6,
-                float: true
+                float: true,
+                removable: true
             };
             $('#grid1').gridstack(options);
             $('#grid2').gridstack(options);

@@ -86,9 +86,9 @@ $animation_speed: .3s !default;
         }
 
         > .ui-resizable-se {
-            display: inline-block;
             @include vendor(transform, rotate(-45deg));
         }
+
 
         > .ui-resizable-nw { cursor: nw-resize; width: 20px; height: 20px; left: 10px; top: 0; }
         > .ui-resizable-n  { cursor: n-resize;  height: 10px; top: 0; left: 25px; right: 25px; }
@@ -98,6 +98,12 @@ $animation_speed: .3s !default;
         > .ui-resizable-s  { cursor: s-resize;  height: 10px; left: 25px; bottom: 0; right: 25px; }
         > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px; left: 10px; bottom: 0; }
         > .ui-resizable-w  { cursor: w-resize;  width: 10px; left: $horizontal_padding / 2; top: 15px; bottom: 15px; }
+
+        &.ui-draggable-dragging {
+            &> .ui-resizable-handle {
+                display: none !important;
+            }
+        }
 
         @for $i from 1 through $gridstack-columns {
             &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
