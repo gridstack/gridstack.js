@@ -1041,10 +1041,14 @@
         this._updateContainerHeight();
     };
 
-    GridStack.prototype.destroy = function() {
+    GridStack.prototype.destroy = function(detachGrid) {
         $(window).off('resize', this.onResizeHandler);
         this.disable();
-        this.container.remove();
+        if (typeof detachGrid != 'undefined' && !detachGrid) {
+            this.removeAll(true);
+        } else {
+            this.container.remove();
+        }
         Utils.removeStylesheet(this._stylesId);
         if (this.grid) {
             this.grid = null;
