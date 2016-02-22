@@ -1,6 +1,8 @@
 gridstack.js
 ============
 
+[![Build Status](https://travis-ci.org/troolee/gridstack.js.svg?branch=master)](https://travis-ci.org/troolee/gridstack.js)
+
 gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build
 draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com), [angular.js](https://angularjs.org) and touch devices.
 
