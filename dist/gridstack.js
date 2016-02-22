@@ -1300,8 +1300,9 @@
         return Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
     };
 
-    GridStack.prototype.getCellFromPixel = function(position) {
-        var containerPos = this.container.position();
+    GridStack.prototype.getCellFromPixel = function(position, useOffset) {
+        var containerPos = (typeof useOffset != 'undefined' && useOffset) ?
+            this.container.offset() : this.container.position();
         var relativeLeft = position.left - containerPos.left;
         var relativeTop = position.top - containerPos.top;
 

@@ -453,6 +453,7 @@ Changes
 - add `setGridWidth` method ([#227](https://github.com/troolee/gridstack.js/issues/227))
 - add `removable`/`removeTimeout`
 - add `detachGrid` parameter to `destroy` method ([#216](https://github.com/troolee/gridstack.js/issues/216))
+- add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/troolee/gridstack.js/issues/237))
 
 #### v0.2.4 (2016-02-15)
 
