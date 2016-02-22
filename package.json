@@ -25,12 +25,15 @@
   },
   "homepage": "http://troolee.github.io/gridstack.js/",
   "devDependencies": {
+    "coveralls": "^2.11.6",
     "grunt": "^0.4.5",
     "grunt-contrib-copy": "^0.8.2",
     "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-uglify": "^0.10.1",
+    "grunt-contrib-watch": "^0.6.1",
     "grunt-doctoc": "^0.1.1",
+    "grunt-jscs": "^2.7.0",
     "grunt-sass": "^1.1.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.21",
@@ -38,8 +41,6 @@
     "karma-jasmine": "^0.3.7",
     "karma-phantomjs-launcher": "^1.0.0",
     "phantomjs": "^2.1.3",
-    "phantomjs-prebuilt": "^2.1.4",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-jscs": "^2.7.0"
+    "phantomjs-prebuilt": "^2.1.4"
   }
 }
