@@ -50,7 +50,7 @@
         createStylesheet: function(id) {
             var style = document.createElement('style');
             style.setAttribute('type', 'text/css');
-            style.setAttribute('data-gs-id', id);
+            style.setAttribute('data-gs-style-id', id);
             if (style.styleSheet) {
                 style.styleSheet.cssText = '';
             } else {
@@ -61,7 +61,7 @@
         },
 
         removeStylesheet: function(id) {
-            $('STYLE[data-gs-id=' + id + ']').remove();
+            $('STYLE[data-gs-style-id=' + id + ']').remove();
         },
 
         insertCSSRule: function(sheet, selector, rules, index) {
@@ -681,7 +681,7 @@
 
     GridStack.prototype._initStyles = function() {
         if (this._stylesId) {
-            $('[data-gs-id="' + this._stylesId + '"]').remove();
+            Utils.removeStylesheet(this._stylesId);
         }
         this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
         this._styles = Utils.createStylesheet(this._stylesId);
@@ -801,7 +801,8 @@
             noResize: Utils.toBool(el.attr('data-gs-no-resize')),
             noMove: Utils.toBool(el.attr('data-gs-no-move')),
             locked: Utils.toBool(el.attr('data-gs-locked')),
-            el: el
+            el: el,
+            id: el.attr('data-gs-id')
         });
         el.data('_gridstack_node', node);
 
@@ -985,13 +986,19 @@
         }
     };
 
-    GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition) {
+    GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition, minWidth, maxWidth,
+        minHeight, maxHeight, id) {
         el = $(el);
         if (typeof x != 'undefined') { el.attr('data-gs-x', x); }
         if (typeof y != 'undefined') { el.attr('data-gs-y', y); }
         if (typeof width != 'undefined') { el.attr('data-gs-width', width); }
         if (typeof height != 'undefined') { el.attr('data-gs-height', height); }
         if (typeof autoPosition != 'undefined') { el.attr('data-gs-auto-position', autoPosition ? 'yes' : null); }
+        if (typeof minWidth != 'undefined') { el.attr('data-gs-min-width', minWidth); }
+        if (typeof maxWidth != 'undefined') { el.attr('data-gs-max-width', maxWidth); }
+        if (typeof minHeight != 'undefined') { el.attr('data-gs-min-height', minHeight); }
+        if (typeof maxHeight != 'undefined') { el.attr('data-gs-max-height', maxHeight); }
+        if (typeof id != 'undefined') { el.attr('data-gs-id', id); }
         this.container.append(el);
         this._prepareElement(el);
         this._updateContainerHeight();
