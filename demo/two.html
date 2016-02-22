@@ -35,6 +35,14 @@
             text-align: center;
             background-color: #18bc9c;
         }
+
+        #grid2 .grid-stack-item-content {
+            background-color: #9caabc;
+        }
+
+        .grid-stack-item-removing {
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +66,8 @@
         $(function () {
             var options = {
                 width: 6,
-                float: true
+                float: true,
+                removable: true
             };
             $('#grid1').gridstack(options);
             $('#grid2').gridstack(options);
