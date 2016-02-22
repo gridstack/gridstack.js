@@ -23,7 +23,7 @@ gridstack.js API
   - [cellHeight(val)](#cellheightval)
   - [cellWidth()](#cellwidth)
   - [commit()](#commit)
-  - [destroy()](#destroy)
+  - [destroy([detachGrid])](#destroydetachgrid)
   - [disable()](#disable)
   - [enable()](#enable)
   - [enableMove(doEnable, includeNewWidgets)](#enablemovedoenable-includenewwidgets)
@@ -38,8 +38,8 @@ gridstack.js API
   - [minWidth(el, val)](#minwidthel-val)
   - [movable(el, val)](#movableel-val)
   - [move(el, x, y)](#moveel-x-y)
-  - [removeWidget(el, detachNode)](#removewidgetel-detachnode)
-  - [removeAll()](#removeall)
+  - [removeWidget(el[, detachNode])](#removewidgetel-detachnode)
+  - [removeAll([detachNode])](#removealldetachnode)
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
@@ -220,9 +220,13 @@ Gets current cell width.
 
 Finishes batch updates. Updates DOM nodes. You must call it after `batchUpdate`.
 
-### destroy()
+### destroy([detachGrid])
 
 Destroys a grid instance.
+
+Parameters:
+
+- `detachGrid` - if `false` nodes and grid will not be removed from the DOM (Optional. Default `true`).
 
 ### disable()
 
@@ -340,18 +344,22 @@ Parameters:
 - `el` - widget to move
 - `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
 
-### removeWidget(el, detachNode)
+### removeWidget(el[, detachNode])
 
 Removes widget from the grid.
 
 Parameters:
 
 - `el` - widget to remove.
-- `detachNode` - if `false` DOM node won't be removed from the tree (Optional. Default `true`).
+- `detachNode` - if `false` node won't be removed from the DOM (Optional. Default `true`).
 
-### removeAll()
+### removeAll([detachNode])
 
 Removes all widgets from the grid.
+
+Parameters:
+
+- `detachNode` - if `false` nodes won't be removed from the DOM (Optional. Default `true`).
 
 ### resize(el, width, height)
 

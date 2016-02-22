@@ -452,6 +452,7 @@ Changes
 - add `setAnimation` method to API
 - add `setGridWidth` method ([#227](https://github.com/troolee/gridstack.js/issues/227))
 - add `removable`/`removeTimeout`
+- add `detachGrid` parameter to `destroy` method ([#216](https://github.com/troolee/gridstack.js/issues/216))
 
 #### v0.2.4 (2016-02-15)
 
