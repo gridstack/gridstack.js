@@ -87,11 +87,6 @@
             return n != this.node && Utils.isIntercepted(n, this.nn);
         },
 
-        _didCollideFloat: function(bn) {
-            return this.n != bn &&
-                Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
-        },
-
         _didCollide: function(bn) {
             return Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
         },
