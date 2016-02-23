@@ -132,6 +132,9 @@
 
         this._updateCounter = 0;
         this._float = this.float;
+
+        this._addedNodes = [];
+        this._removedNodes = [];
     };
 
     GridStackEngine.prototype.batchUpdate = function() {
@@ -293,7 +296,7 @@
         return _.filter(this.nodes, function(n) { return n._dirty; });
     };
 
-    GridStackEngine.prototype.addNode = function(node) {
+    GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
         node = this._prepareNode(node);
 
         if (typeof node.maxWidth != 'undefined') { node.width = Math.min(node.width, node.maxWidth); }
@@ -322,6 +325,9 @@
         }
 
         this.nodes.push(node);
+        if (typeof triggerAddEvent != 'undefined' && triggerAddEvent) {
+            this._addedNodes.push(_.clone(node));
+        }
 
         this._fixCollisions(node);
         this._packNodes();
@@ -330,6 +336,7 @@
     };
 
     GridStackEngine.prototype.removeNode = function(node) {
+        this._removedNodes.push(_.clone(node));
         node._id = null;
         this.nodes = _.without(this.nodes, node);
         this._packNodes();
@@ -674,6 +681,20 @@
         }
     };
 
+    GridStack.prototype._triggerAddEvent = function() {
+        if (this.grid._addedNodes && this.grid._addedNodes.length > 0) {
+            this.container.trigger('added', [_.map(this.grid._addedNodes, _.clone)]);
+            this.grid._addedNodes = [];
+        }
+    };
+
+    GridStack.prototype._triggerRemoveEvent = function() {
+        if (this.grid._removedNodes && this.grid._removedNodes.length > 0) {
+            this.container.trigger('removed', [_.map(this.grid._removedNodes, _.clone)]);
+            this.grid._removedNodes = [];
+        }
+    };
+
     GridStack.prototype._initStyles = function() {
         if (this._stylesId) {
             Utils.removeStylesheet(this._stylesId);
@@ -778,7 +799,8 @@
             this.opts.minWidth;
     };
 
-    GridStack.prototype._prepareElement = function(el) {
+    GridStack.prototype._prepareElement = function(el, triggerAddEvent) {
+        triggerAddEvent = typeof triggerAddEvent != 'undefined' ? triggerAddEvent : false;
         var self = this;
         el = $(el);
 
@@ -798,7 +820,7 @@
             locked: Utils.toBool(el.attr('data-gs-locked')),
             el: el,
             id: el.attr('data-gs-id')
-        });
+        }, triggerAddEvent);
         el.data('_gridstack_node', node);
 
         var cellWidth;
@@ -995,7 +1017,8 @@
         if (typeof maxHeight != 'undefined') { el.attr('data-gs-max-height', maxHeight); }
         if (typeof id != 'undefined') { el.attr('data-gs-id', id); }
         this.container.append(el);
-        this._prepareElement(el);
+        this._prepareElement(el, true);
+        this._triggerAddEvent();
         this._updateContainerHeight();
         this._triggerChangeEvent(true);
 
@@ -1004,7 +1027,8 @@
 
     GridStack.prototype.makeWidget = function(el) {
         el = $(el);
-        this._prepareElement(el);
+        this._prepareElement(el, true);
+        this._triggerAddEvent();
         this._updateContainerHeight();
         this._triggerChangeEvent(true);
 
@@ -1033,6 +1057,7 @@
             el.remove();
         }
         this._triggerChangeEvent(true);
+        this._triggerRemoveEvent();
     };
 
     GridStack.prototype.removeAll = function(detachNode) {

@@ -471,6 +471,7 @@ Changes
 - add `detachGrid` parameter to `destroy` method ([#216](https://github.com/troolee/gridstack.js/issues/216))
 - add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/troolee/gridstack.js/issues/237))
 - add `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `id` parameters to `addWidget` ([#188](https://github.com/troolee/gridstack.js/issues/188))
+- add `added` and `removed` events for when a widget is added or removed, respectively. ([#54](https://github.com/troolee/gridstack.js/issues/54))
 
 #### v0.2.4 (2016-02-15)
 
