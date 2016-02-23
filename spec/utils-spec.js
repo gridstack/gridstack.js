@@ -39,5 +39,23 @@ describe('gridstack utils', function() {
 
     });
 
+    describe('test isIntercepted', function() {
+        var src = {x: 3, y: 2, width: 3, height: 2};
+
+        it('should intercept.', function() {
+            expect(utils.isIntercepted(src, {x: 0, y: 0, width: 4, height: 3})).toEqual(true);
+            expect(utils.isIntercepted(src, {x: 0, y: 0, width: 40, height: 30})).toEqual(true);
+            expect(utils.isIntercepted(src, {x: 3, y: 2, width: 3, height: 2})).toEqual(true);
+            expect(utils.isIntercepted(src, {x: 5, y: 3, width: 3, height: 2})).toEqual(true);
+        });
+
+        it('shouldn\'t intercept.', function() {
+            expect(utils.isIntercepted(src, {x: 0, y: 0, width: 3, height: 2})).toEqual(false);
+            expect(utils.isIntercepted(src, {x: 0, y: 0, width: 13, height: 2})).toEqual(false);
+            expect(utils.isIntercepted(src, {x: 1, y: 4, width: 13, height: 2})).toEqual(false);
+            expect(utils.isIntercepted(src, {x: 0, y: 3, width: 3, height: 2})).toEqual(false);
+            expect(utils.isIntercepted(src, {x: 6, y: 3, width: 3, height: 2})).toEqual(false);
+        });
+    });
 
 });
