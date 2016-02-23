@@ -87,11 +87,6 @@
             return n != this.node && Utils.isIntercepted(n, this.nn);
         },
 
-        _didCollideFloat: function(bn) {
-            return this.n != bn &&
-                Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
-        },
-
         _didCollide: function(bn) {
             return Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
         },
@@ -108,7 +103,7 @@
                 if (!match) {
                     throw new Error('Invalid height');
                 }
-                heightUnit = match[2];
+                heightUnit = match[2] || 'px';
                 height = parseFloat(match[1]);
             }
             return {height: height, unit: heightUnit};
@@ -1450,6 +1445,7 @@
     scope.GridStackUI = GridStack;
 
     scope.GridStackUI.Utils = Utils;
+    scope.GridStackUI.Engine = GridStackEngine;
 
     $.fn.gridstack = function(opts) {
         return this.each(function() {
