@@ -50,7 +50,7 @@
         createStylesheet: function(id) {
             var style = document.createElement('style');
             style.setAttribute('type', 'text/css');
-            style.setAttribute('data-gs-id', id);
+            style.setAttribute('data-gs-style-id', id);
             if (style.styleSheet) {
                 style.styleSheet.cssText = '';
             } else {
@@ -61,7 +61,7 @@
         },
 
         removeStylesheet: function(id) {
-            $('STYLE[data-gs-id=' + id + ']').remove();
+            $('STYLE[data-gs-style-id=' + id + ']').remove();
         },
 
         insertCSSRule: function(sheet, selector, rules, index) {
@@ -87,11 +87,6 @@
             return n != this.node && Utils.isIntercepted(n, this.nn);
         },
 
-        _didCollideFloat: function(bn) {
-            return this.n != bn &&
-                Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
-        },
-
         _didCollide: function(bn) {
             return Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
         },
@@ -108,7 +103,7 @@
                 if (!match) {
                     throw new Error('Invalid height');
                 }
-                heightUnit = match[2];
+                heightUnit = match[2] || 'px';
                 height = parseFloat(match[1]);
             }
             return {height: height, unit: heightUnit};
@@ -137,6 +132,9 @@
 
         this._updateCounter = 0;
         this._float = this.float;
+
+        this._addedNodes = [];
+        this._removedNodes = [];
     };
 
     GridStackEngine.prototype.batchUpdate = function() {
@@ -182,7 +180,7 @@
         var collisionNode = _.find(this.nodes, _.bind(function(n) {
             return Utils.isIntercepted(n, nn);
         }, this));
-        return collisionNode === null;
+        return collisionNode === null || typeof collisionNode === 'undefined';
     };
 
     GridStackEngine.prototype._sortNodes = function(dir) {
@@ -282,7 +280,7 @@
         if (this._updateCounter) {
             return;
         }
-        var deletedNodes = Array.prototype.slice.call(arguments, 1).concat(this.getDirtyNodes());
+        var deletedNodes = Array.prototype.slice.call(arguments, 0);
         deletedNodes = deletedNodes.concat(this.getDirtyNodes());
         this.onchange(deletedNodes);
     };
@@ -298,7 +296,7 @@
         return _.filter(this.nodes, function(n) { return n._dirty; });
     };
 
-    GridStackEngine.prototype.addNode = function(node) {
+    GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
         node = this._prepareNode(node);
 
         if (typeof node.maxWidth != 'undefined') { node.width = Math.min(node.width, node.maxWidth); }
@@ -327,6 +325,9 @@
         }
 
         this.nodes.push(node);
+        if (typeof triggerAddEvent != 'undefined' && triggerAddEvent) {
+            this._addedNodes.push(_.clone(node));
+        }
 
         this._fixCollisions(node);
         this._packNodes();
@@ -335,6 +336,7 @@
     };
 
     GridStackEngine.prototype.removeNode = function(node) {
+        this._removedNodes.push(_.clone(node));
         node._id = null;
         this.nodes = _.without(this.nodes, node);
         this._packNodes();
@@ -679,9 +681,23 @@
         }
     };
 
+    GridStack.prototype._triggerAddEvent = function() {
+        if (this.grid._addedNodes && this.grid._addedNodes.length > 0) {
+            this.container.trigger('added', [_.map(this.grid._addedNodes, _.clone)]);
+            this.grid._addedNodes = [];
+        }
+    };
+
+    GridStack.prototype._triggerRemoveEvent = function() {
+        if (this.grid._removedNodes && this.grid._removedNodes.length > 0) {
+            this.container.trigger('removed', [_.map(this.grid._removedNodes, _.clone)]);
+            this.grid._removedNodes = [];
+        }
+    };
+
     GridStack.prototype._initStyles = function() {
         if (this._stylesId) {
-            $('[data-gs-id="' + this._stylesId + '"]').remove();
+            Utils.removeStylesheet(this._stylesId);
         }
         this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
         this._styles = Utils.createStylesheet(this._stylesId);
@@ -783,7 +799,8 @@
             this.opts.minWidth;
     };
 
-    GridStack.prototype._prepareElement = function(el) {
+    GridStack.prototype._prepareElement = function(el, triggerAddEvent) {
+        triggerAddEvent = typeof triggerAddEvent != 'undefined' ? triggerAddEvent : false;
         var self = this;
         el = $(el);
 
@@ -801,8 +818,9 @@
             noResize: Utils.toBool(el.attr('data-gs-no-resize')),
             noMove: Utils.toBool(el.attr('data-gs-no-move')),
             locked: Utils.toBool(el.attr('data-gs-locked')),
-            el: el
-        });
+            el: el,
+            id: el.attr('data-gs-id')
+        }, triggerAddEvent);
         el.data('_gridstack_node', node);
 
         var cellWidth;
@@ -985,15 +1003,22 @@
         }
     };
 
-    GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition) {
+    GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition, minWidth, maxWidth,
+        minHeight, maxHeight, id) {
         el = $(el);
         if (typeof x != 'undefined') { el.attr('data-gs-x', x); }
         if (typeof y != 'undefined') { el.attr('data-gs-y', y); }
         if (typeof width != 'undefined') { el.attr('data-gs-width', width); }
         if (typeof height != 'undefined') { el.attr('data-gs-height', height); }
         if (typeof autoPosition != 'undefined') { el.attr('data-gs-auto-position', autoPosition ? 'yes' : null); }
+        if (typeof minWidth != 'undefined') { el.attr('data-gs-min-width', minWidth); }
+        if (typeof maxWidth != 'undefined') { el.attr('data-gs-max-width', maxWidth); }
+        if (typeof minHeight != 'undefined') { el.attr('data-gs-min-height', minHeight); }
+        if (typeof maxHeight != 'undefined') { el.attr('data-gs-max-height', maxHeight); }
+        if (typeof id != 'undefined') { el.attr('data-gs-id', id); }
         this.container.append(el);
-        this._prepareElement(el);
+        this._prepareElement(el, true);
+        this._triggerAddEvent();
         this._updateContainerHeight();
         this._triggerChangeEvent(true);
 
@@ -1002,7 +1027,8 @@
 
     GridStack.prototype.makeWidget = function(el) {
         el = $(el);
-        this._prepareElement(el);
+        this._prepareElement(el, true);
+        this._triggerAddEvent();
         this._updateContainerHeight();
         this._triggerChangeEvent(true);
 
@@ -1031,6 +1057,7 @@
             el.remove();
         }
         this._triggerChangeEvent(true);
+        this._triggerRemoveEvent();
     };
 
     GridStack.prototype.removeAll = function(detachNode) {
@@ -1041,10 +1068,14 @@
         this._updateContainerHeight();
     };
 
-    GridStack.prototype.destroy = function() {
+    GridStack.prototype.destroy = function(detachGrid) {
         $(window).off('resize', this.onResizeHandler);
         this.disable();
-        this.container.remove();
+        if (typeof detachGrid != 'undefined' && !detachGrid) {
+            this.removeAll(true);
+        } else {
+            this.container.remove();
+        }
         Utils.removeStylesheet(this._stylesId);
         if (this.grid) {
             this.grid = null;
@@ -1296,8 +1327,9 @@
         return Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
     };
 
-    GridStack.prototype.getCellFromPixel = function(position) {
-        var containerPos = this.container.position();
+    GridStack.prototype.getCellFromPixel = function(position, useOffset) {
+        var containerPos = (typeof useOffset != 'undefined' && useOffset) ?
+            this.container.offset() : this.container.position();
         var relativeLeft = position.left - containerPos.left;
         var relativeTop = position.top - containerPos.top;
 
@@ -1438,6 +1470,7 @@
     scope.GridStackUI = GridStack;
 
     scope.GridStackUI.Utils = Utils;
+    scope.GridStackUI.Engine = GridStackEngine;
 
     $.fn.gridstack = function(opts) {
         return this.each(function() {
