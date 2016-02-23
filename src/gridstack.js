@@ -103,7 +103,7 @@
                 if (!match) {
                     throw new Error('Invalid height');
                 }
-                heightUnit = match[2];
+                heightUnit = match[2] || 'px';
                 height = parseFloat(match[1]);
             }
             return {height: height, unit: heightUnit};
