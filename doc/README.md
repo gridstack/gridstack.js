@@ -9,13 +9,15 @@ gridstack.js API
 - [Grid attributes](#grid-attributes)
 - [Item attributes](#item-attributes)
 - [Events](#events)
-  - [onchange(items)](#onchangeitems)
-  - [ondragstart(event, ui)](#ondragstartevent-ui)
-  - [ondragstop(event, ui)](#ondragstopevent-ui)
-  - [onresizestart(event, ui)](#onresizestartevent-ui)
-  - [onresizestop(event, ui)](#onresizestopevent-ui)
+  - [added(event, items)](#addedevent-items)
+  - [change(event, items)](#changeevent-items)
   - [disable(event)](#disableevent)
+  - [dragstart(event, ui)](#dragstartevent-ui)
+  - [dragstop(event, ui)](#dragstopevent-ui)
   - [enable(event)](#enableevent)
+  - [removed(event, items)](#removedevent-items)
+  - [resizestart(event, ui)](#resizestartevent-ui)
+  - [resizestop(event, ui)](#resizestopevent-ui)
 - [API](#api)
   - [addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
@@ -106,53 +108,28 @@ to completely lock the widget.
 
 ## Events
 
-### onchange(items)
+### added(event, items)
+
+```javascript
+$('.grid-stack').on('added', function(event, items) {
+    for (var i = 0; i < items.length; i++) {
+      console.log('item added');
+      console.log(items[i]);
+    }
+});
+```
+
+### change(event, items)
 
 Occurs when adding/removing widgets or existing widgets change their position/size
 
 ```javascript
-var serializeWidgetMap = function (items) {
+var serializeWidgetMap = function(items) {
     console.log(items);
 };
 
-$('.grid-stack').on('change', function (e, items) {
+$('.grid-stack').on('change', function(event, items) {
     serializeWidgetMap(items);
-});
-```
-
-### ondragstart(event, ui)
-
-```javascript
-$('.grid-stack').on('dragstart', function (event, ui) {
-    var grid = this;
-    var element = event.target;
-});
-```
-
-### ondragstop(event, ui)
-
-```javascript
-$('.grid-stack').on('dragstop', function (event, ui) {
-    var grid = this;
-    var element = event.target;
-});
-```
-
-### onresizestart(event, ui)
-
-```javascript
-$('.grid-stack').on('resizestart', function (event, ui) {
-    var grid = this;
-    var element = event.target;
-});
-```
-
-### onresizestop(event, ui)
-
-```javascript
-$('.grid-stack').on('resizestop', function (event, ui) {
-    var grid = this;
-    var element = event.target;
 });
 ```
 
@@ -164,11 +141,58 @@ $('.grid-stack').on('disable', function(event) {
 });
 ```
 
+### dragstart(event, ui)
+
+```javascript
+$('.grid-stack').on('dragstart', function(event, ui) {
+    var grid = this;
+    var element = event.target;
+});
+```
+
+### dragstop(event, ui)
+
+```javascript
+$('.grid-stack').on('dragstop', function(event, ui) {
+    var grid = this;
+    var element = event.target;
+});
+```
+
 ### enable(event)
 
 ```javascript
 $('.grid-stack').on('enable', function(event) {
     var grid = event.target;
+});
+```
+
+### removed(event, items)
+
+```javascript
+$('.grid-stack').on('removed', function(event, items) {
+    for (var i = 0; i < items.length; i++) {
+      console.log('item removed');
+      console.log(items[i]);
+    }
+});
+```
+
+### resizestart(event, ui)
+
+```javascript
+$('.grid-stack').on('resizestart', function(event, ui) {
+    var grid = this;
+    var element = event.target;
+});
+```
+
+### resizestop(event, ui)
+
+```javascript
+$('.grid-stack').on('resizestop', function(event, ui) {
+    var grid = this;
+    var element = event.target;
 });
 ```
 
