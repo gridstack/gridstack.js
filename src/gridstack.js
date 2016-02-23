@@ -277,7 +277,7 @@
         if (this._updateCounter) {
             return;
         }
-        var deletedNodes = Array.prototype.slice.call(arguments, 1).concat(this.getDirtyNodes());
+        var deletedNodes = Array.prototype.slice.call(arguments, 0);
         deletedNodes = deletedNodes.concat(this.getDirtyNodes());
         this.onchange(deletedNodes);
     };
