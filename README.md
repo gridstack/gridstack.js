@@ -3,6 +3,8 @@ gridstack.js
 
 [![Build Status](https://travis-ci.org/troolee/gridstack.js.svg?branch=master)](https://travis-ci.org/troolee/gridstack.js)
 [![Coverage Status](https://coveralls.io/repos/github/troolee/gridstack.js/badge.svg?branch=master)](https://coveralls.io/github/troolee/gridstack.js?branch=master)
+[![Dependency Status](https://david-dm.org/troolee/gridstack.js.svg)](https://david-dm.org/troolee/gridstack.js)
+[![devDependency Status](https://david-dm.org/troolee/gridstack.js/dev-status.svg)](https://david-dm.org/troolee/gridstack.js#info=devDependencies)
 
 gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build
 draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com), [angular.js](https://angularjs.org) and touch devices.
@@ -37,6 +39,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [IE8 support](#ie8-support)
   - [Nested grids](#nested-grids)
   - [Resizing active grid](#resizing-active-grid)
+- [The Team](#the-team)
 - [Changes](#changes)
       - [v0.2.5-dev (Development version)](#v025-dev-development-version)
       - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
@@ -84,6 +87,8 @@ $ bower install gridstack
 ```
 
 * Using npm:
+
+[![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
 ```bash
 $ npm install gridstack
@@ -434,6 +439,14 @@ See example: [Nested grid demo](http://troolee.github.io/gridstack.js/demo/neste
 
 Resizing on-the-fly is possible, though experimental. This may be used to make gridstack responsive. gridstack will change the total number of columns and will attempt to update the width and x values of each widget to be more logical.
 See example: [Responsive grid demo](http://troolee.github.io/gridstack.js/demo/responsive.html)
+
+
+The Team
+========
+
+gridstack.js is currently maintained by [Pavel Reznikov](https://github.com/troolee), [Dylan Weiss](https://github.com/radiolips)
+and [Kevin Dietrich](https://github.com/kdietrich). And we appreciate [all contributors](https://github.com/troolee/gridstack.js/graphs/contributors)
+for help.
 
 
 Changes

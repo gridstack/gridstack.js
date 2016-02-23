@@ -87,11 +87,6 @@
             return n != this.node && Utils.isIntercepted(n, this.nn);
         },
 
-        _didCollideFloat: function(bn) {
-            return this.n != bn &&
-                Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
-        },
-
         _didCollide: function(bn) {
             return Utils.isIntercepted({x: this.n.x, y: this.newY, width: this.n.width, height: this.n.height}, bn);
         },
@@ -108,7 +103,7 @@
                 if (!match) {
                     throw new Error('Invalid height');
                 }
-                heightUnit = match[2];
+                heightUnit = match[2] || 'px';
                 height = parseFloat(match[1]);
             }
             return {height: height, unit: heightUnit};
@@ -182,7 +177,7 @@
         var collisionNode = _.find(this.nodes, _.bind(function(n) {
             return Utils.isIntercepted(n, nn);
         }, this));
-        return collisionNode === null;
+        return collisionNode === null || typeof collisionNode === 'undefined';
     };
 
     GridStackEngine.prototype._sortNodes = function(dir) {
@@ -282,7 +277,7 @@
         if (this._updateCounter) {
             return;
         }
-        var deletedNodes = Array.prototype.slice.call(arguments, 1).concat(this.getDirtyNodes());
+        var deletedNodes = Array.prototype.slice.call(arguments, 0);
         deletedNodes = deletedNodes.concat(this.getDirtyNodes());
         this.onchange(deletedNodes);
     };
