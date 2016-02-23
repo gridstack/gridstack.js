@@ -58,4 +58,40 @@ describe('gridstack utils', function() {
         });
     });
 
+    describe('test createStylesheet/removeStylesheet', function() {
+
+        it('should create/remove style DOM', function() {
+            var _id = 'test-123';
+
+            utils.createStylesheet(_id);
+
+            var style = $('STYLE[data-gs-style-id=' + _id + ']');
+
+            expect(style.size()).toEqual(1);
+            expect(style.prop('tagName')).toEqual('STYLE');
+
+            utils.removeStylesheet(_id)
+
+            style = $('STYLE[data-gs-style-id=' + _id + ']');
+
+            expect(style.size()).toEqual(0);
+        });
+
+    });
+
+    describe('test parseHeight', function() {
+
+        it('should parse height value', function() {
+            expect(utils.parseHeight(12)).toEqual(jasmine.objectContaining({height: 12, unit: 'px'}));
+            expect(utils.parseHeight('12px')).toEqual(jasmine.objectContaining({height: 12, unit: 'px'}));
+            expect(utils.parseHeight('12.3px')).toEqual(jasmine.objectContaining({height: 12.3, unit: 'px'}));
+            expect(utils.parseHeight('12.3em')).toEqual(jasmine.objectContaining({height: 12.3, unit: 'em'}));
+            expect(utils.parseHeight('12.3rem')).toEqual(jasmine.objectContaining({height: 12.3, unit: 'rem'}));
+            expect(utils.parseHeight('12.3vh')).toEqual(jasmine.objectContaining({height: 12.3, unit: 'vh'}));
+            expect(utils.parseHeight('12.3vw')).toEqual(jasmine.objectContaining({height: 12.3, unit: 'vw'}));
+            expect(utils.parseHeight('12.5')).toEqual(jasmine.objectContaining({height: 12.5, unit: 'px'}));
+            expect(function() { utils.parseHeight('12.5 df'); }).toThrowError('Invalid height');
+        });
+
+    });
 });
