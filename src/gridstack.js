@@ -177,7 +177,7 @@
         var collisionNode = _.find(this.nodes, _.bind(function(n) {
             return Utils.isIntercepted(n, nn);
         }, this));
-        return collisionNode === null;
+        return collisionNode === null || typeof collisionNode === 'undefined';
     };
 
     GridStackEngine.prototype._sortNodes = function(dir) {
