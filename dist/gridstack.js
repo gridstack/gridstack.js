@@ -335,12 +335,15 @@
         return node;
     };
 
-    GridStackEngine.prototype.removeNode = function(node) {
+    GridStackEngine.prototype.removeNode = function(node, detachNode) {
+        detachNode = typeof detachNode === 'undefined' ? true : detachNode;
         this._removedNodes.push(_.clone(node));
         node._id = null;
         this.nodes = _.without(this.nodes, node);
         this._packNodes();
-        this._notify(node);
+        if (detachNode) {
+            this._notify(node);
+        }
     };
 
     GridStackEngine.prototype.canMoveNode = function(node, x, y, width, height) {
@@ -1083,7 +1086,7 @@
             node = this.grid.getNodeDataByDOMEl(el);
         }
 
-        this.grid.removeNode(node);
+        this.grid.removeNode(node, detachNode);
         el.removeData('_gridstack_node');
         this._updateContainerHeight();
         if (detachNode) {
