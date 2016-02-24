@@ -444,7 +444,7 @@ See example: [Responsive grid demo](http://troolee.github.io/gridstack.js/demo/r
 ## Using AniJS
 
 Using AniJS with gridstack is a breeze. In the following example, a listener is added that gets triggered by a widget being added.
-See example: [AniJS demo](http://troolee.github.io/gridstack.js/demo/anijs.html)
+See widgets wiggle! [AniJS demo](http://troolee.github.io/gridstack.js/demo/anijs.html)
 
 The Team
 ========
@@ -473,7 +473,7 @@ Changes
 - add `setAnimation` method to API
 - add `setGridWidth` method ([#227](https://github.com/troolee/gridstack.js/issues/227))
 - add `removable`/`removeTimeout`
-- add `detachGrid` parameter to `destroy` method ([#216](https://github.com/troolee/gridstack.js/issues/216))
+- add `detachGrid` parameter to `destroy` method ([#216](https://github.com/troolee/gridstack.js/issues/216)) (thanks @jhpedemonte)
 - add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/troolee/gridstack.js/issues/237))
 - add `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `id` parameters to `addWidget` ([#188](https://github.com/troolee/gridstack.js/issues/188))
 - add `added` and `removed` events for when a widget is added or removed, respectively. ([#54](https://github.com/troolee/gridstack.js/issues/54))
@@ -487,7 +487,7 @@ Changes
 - add `placeholder_text` option (Thanks to @slauyama)
 - add `handle_class` option.
 - add `make_widget` method.
-- lodash v 4.x support (Thanks to Andy Robbins)
+- lodash v 4.x support (Thanks to @andrewr88)
 
 #### v0.2.3 (2015-06-23)
 
