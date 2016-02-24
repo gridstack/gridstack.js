@@ -157,4 +157,76 @@ describe('gridstack engine', function() {
             ]);
         });
     });
+
+    describe('test _packNodes', function () {
+        describe('using not float mode', function () {
+            var engine;
+
+            var findNode = function (engine, id) {
+                return _.find(engine.nodes, function(i) { return i._id === id });
+            }
+
+            beforeEach(function () {
+                engine = new GridStackUI.Engine(12, null, false);
+            });
+
+            it('shouldn\'t pack one node with y coord eq 0', function () {
+                engine.nodes = [
+                    {x: 0, y: 0, width: 1, height: 1, _id: 1},
+                ];
+
+                engine._packNodes();
+
+                expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
+                expect(findNode(engine, 1)._dirty).toBeFalsy();
+            });
+
+            it('should pack one node correctly', function () {
+                engine.nodes = [
+                    {x: 0, y: 1, width: 1, height: 1, _id: 1},
+                ];
+
+                engine._packNodes();
+
+                expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1, _dirty: true}));
+            });
+
+            it('should pack nodes correctly', function () {
+                engine.nodes = [
+                    {x: 0, y: 1, width: 1, height: 1, _id: 1},
+                    {x: 0, y: 5, width: 1, height: 1, _id: 2},
+                ];
+
+                engine._packNodes();
+
+                expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1, _dirty: true}));
+                expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 1, width: 1, height: 1, _dirty: true}));
+            });
+
+            it('should pack nodes correctly', function () {
+                engine.nodes = [
+                    {x: 0, y: 5, width: 1, height: 1, _id: 1},
+                    {x: 0, y: 1, width: 1, height: 1, _id: 2},
+                ];
+
+                engine._packNodes();
+
+                expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1, _dirty: true}));
+                expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 1, width: 1, height: 1, _dirty: true}));
+            });
+
+            it('should respect locked nodes', function () {
+                engine.nodes = [
+                    {x: 0, y: 1, width: 1, height: 1, _id: 1, locked: true},
+                    {x: 0, y: 5, width: 1, height: 1, _id: 2},
+                ];
+
+                engine._packNodes();
+
+                expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 1, width: 1, height: 1}));
+                expect(findNode(engine, 1)._dirty).toBeFalsy();
+                expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 2, width: 1, height: 1, _dirty: true}));
+            });
+        });
+    });
 });
