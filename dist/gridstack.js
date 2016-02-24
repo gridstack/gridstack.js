@@ -336,11 +336,12 @@
     };
 
     GridStackEngine.prototype.removeNode = function(node, detachNode) {
+        detachNode = typeof detachNode === 'undefined' ? true : detachNode;
         this._removedNodes.push(_.clone(node));
         node._id = null;
         this.nodes = _.without(this.nodes, node);
         this._packNodes();
-        if (typeof detachNode != 'undefined' && detachNode) {
+        if (detachNode) {
             this._notify(node);
         }
     };
