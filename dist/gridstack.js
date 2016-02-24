@@ -664,6 +664,30 @@
 
         $(window).resize(this.onResizeHandler);
         this.onResizeHandler();
+
+        if (typeof self.opts.removable === 'string') {
+            var trashZone = $(self.opts.removable);
+            if (!trashZone.data('droppable')) {
+                trashZone.droppable({});
+            }
+            trashZone
+                .on('dropover', function(event, ui) {
+                    var el = $(ui.draggable);
+                    var node = el.data('_gridstack_node');
+                    if (node._grid !== self) {
+                        return;
+                    }
+                    self._setupRemovingTimeout(el);
+                })
+                .on('dropout', function(event, ui) {
+                    var el = $(ui.draggable);
+                    var node = el.data('_gridstack_node');
+                    if (node._grid !== self) {
+                        return;
+                    }
+                    self._clearRemovingTimeout(el);
+                });
+        }
     };
 
     GridStack.prototype._triggerChangeEvent = function(forceTrigger) {
@@ -799,6 +823,32 @@
             this.opts.minWidth;
     };
 
+    GridStack.prototype._setupRemovingTimeout = function(el) {
+        var self = this;
+        var node = $(el).data('_gridstack_node');
+
+        if (node._removeTimeout || !self.opts.removable) {
+            return;
+        }
+        node._removeTimeout = setTimeout(function() {
+            el.addClass('grid-stack-item-removing');
+            node._isAboutToRemove = true;
+        }, self.opts.removeTimeout);
+    };
+
+    GridStack.prototype._clearRemovingTimeout = function(el) {
+        var self = this;
+        var node = $(el).data('_gridstack_node');
+
+        if (!node._removeTimeout) {
+            return;
+        }
+        clearTimeout(node._removeTimeout);
+        node._removeTimeout = null;
+        el.removeClass('grid-stack-item-removing');
+        node._isAboutToRemove = false;
+    };
+
     GridStack.prototype._prepareElement = function(el, triggerAddEvent) {
         triggerAddEvent = typeof triggerAddEvent != 'undefined' ? triggerAddEvent : false;
         var self = this;
@@ -819,32 +869,13 @@
             noMove: Utils.toBool(el.attr('data-gs-no-move')),
             locked: Utils.toBool(el.attr('data-gs-locked')),
             el: el,
-            id: el.attr('data-gs-id')
+            id: el.attr('data-gs-id'),
+            _grid: self
         }, triggerAddEvent);
         el.data('_gridstack_node', node);
 
         var cellWidth;
         var cellHeight;
-        var removeTimeout;
-
-        var setupRemovingTimeout = function() {
-            if (removeTimeout || !self.opts.removable) {
-                return;
-            }
-            removeTimeout = setTimeout(function() {
-                el.addClass('grid-stack-item-removing');
-                node._isAboutToRemove = true;
-            }, self.opts.removeTimeout);
-        };
-        var clearRemovingTimeout = function() {
-            if (!removeTimeout) {
-                return;
-            }
-            clearTimeout(removeTimeout);
-            removeTimeout = null;
-            el.removeClass('grid-stack-item-removing');
-            node._isAboutToRemove = false;
-        };
 
         var dragOrResize = function(event, ui) {
             var x = Math.round(ui.position.left / cellWidth);
@@ -859,7 +890,9 @@
 
             if (event.type == 'drag') {
                 if (x < 0 || x >= self.grid.width || y < 0) {
-                    setupRemovingTimeout();
+                    if (self.opts.removable === true) {
+                        self._setupRemovingTimeout(el);
+                    }
 
                     x = node._beforeDragX;
                     y = node._beforeDragY;
@@ -871,7 +904,7 @@
 
                     node._temporaryRemoved = true;
                 } else {
-                    clearRemovingTimeout();
+                    self._clearRemovingTimeout(el);
 
                     if (node._temporaryRemoved) {
                         self.grid.addNode(node);
@@ -937,7 +970,7 @@
                 el.removeData('_gridstack_node');
                 el.remove();
             } else {
-                clearRemovingTimeout();
+                self._clearRemovingTimeout(el);
                 if (!node._temporaryRemoved) {
                     o
                         .attr('data-gs-x', node.x)
