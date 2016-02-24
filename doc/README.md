@@ -77,8 +77,7 @@ gridstack.js API
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
-- `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a jQuery selector string, in this case
-widgets will be removable by dropping at there (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/two.html)
+- `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a jQuery selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/two.html)
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](http://troolee.github.io/gridstack.js/demo/rtl.html)
 - `staticGrid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
