@@ -1105,7 +1105,7 @@
         $(window).off('resize', this.onResizeHandler);
         this.disable();
         if (typeof detachGrid != 'undefined' && !detachGrid) {
-            this.removeAll(true);
+            this.removeAll(false);
         } else {
             this.container.remove();
         }
