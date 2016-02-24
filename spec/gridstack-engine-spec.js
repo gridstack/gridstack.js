@@ -108,6 +108,42 @@ describe('gridstack engine', function() {
         });
     });
 
+    describe('test batchUpdate/commit', function () {
+        var engine;
+
+        beforeAll(function () {
+            engine = new GridStackUI.Engine(12)
+        });
+
+        it('should work on not float grids', function () {
+            expect(engine.float).toEqual(false);
+            engine.batchUpdate();
+            expect(engine._updateCounter).toBeGreaterThan(0);
+            expect(engine.float).toEqual(true);
+            engine.commit();
+            expect(engine._updateCounter).toEqual(0);
+            expect(engine.float).toEqual(false);
+        });
+    });
+
+    describe('test batchUpdate/commit', function () {
+        var engine;
+
+        beforeAll(function () {
+            engine = new GridStackUI.Engine(12, null, true)
+        });
+
+        it('should work on float grids', function () {
+            expect(engine.float).toEqual(true);
+            engine.batchUpdate();
+            expect(engine._updateCounter).toBeGreaterThan(0);
+            expect(engine.float).toEqual(true);
+            engine.commit();
+            expect(engine._updateCounter).toEqual(0);
+            expect(engine.float).toEqual(true);
+        });
+    });
+
     describe('test _notify', function() {
         var engine;
         var spy;
