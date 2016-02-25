@@ -1360,7 +1360,7 @@
 
     GridStack.prototype.cellWidth = function() {
         var o = this.container.children('.' + this.opts.itemClass).first();
-        return Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
+        return Math.ceil(o.outerWidth() / parseInt(o.attr('data-gs-width'), 10));
     };
 
     GridStack.prototype.getCellFromPixel = function(position, useOffset) {
