@@ -1466,7 +1466,7 @@
     GridStack.prototype._update_container_height = obsolete(GridStack.prototype._updateContainerHeight,
         '_update_container_height', '_updateContainerHeight');
     GridStack.prototype._is_one_column_mode = obsolete(GridStack.prototype._isOneColumnMode,
-        '_is_one_column_mode',' _isOneColumnMode');
+        '_is_one_column_mode','_isOneColumnMode');
     GridStack.prototype._prepare_element = obsolete(GridStack.prototype._prepareElement,
         '_prepare_element', '_prepareElement');
     GridStack.prototype.set_animation = obsolete(GridStack.prototype.setAnimation,
