@@ -671,7 +671,9 @@
         if (typeof self.opts.removable === 'string') {
             var trashZone = $(self.opts.removable);
             if (!trashZone.data('droppable')) {
-                trashZone.droppable({});
+                trashZone.droppable({
+                    accept: '.' + self.opts.itemClass
+                });
             }
             trashZone
                 .on('dropover', function(event, ui) {
