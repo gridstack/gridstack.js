@@ -576,7 +576,9 @@
             var maxHeight = 0;
             _.each(nodes, function(n) {
                 if (n._id === null) {
-                    n.el.remove();
+                    if (n.el) {
+                        n.el.remove();
+                    }
                 } else {
                     n.el
                         .attr('data-gs-x', n.x)
