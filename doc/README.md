@@ -48,6 +48,7 @@ gridstack.js API
   - [setGridWidth(gridWidth, doNotPropagate)](#setgridwidthgridwidth-donotpropagate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
+  - [verticalMargin(value, noUpdate)](#verticalmarginvalue-noupdate)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
 - [Utils](#utils)
   - [GridStackUI.Utils.sort(nodes[, dir[, width]])](#gridstackuiutilssortnodes-dir-width)
@@ -437,6 +438,13 @@ Parameters:
 - `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
 
 Updates widget position/size.
+
+### verticalMargin(value, noUpdate)
+
+Parameters:
+
+- `value` - new vertical margin value.
+- `noUpdate` - if true, styles will not be updated.
 
 ### willItFit(x, y, width, height, autoPosition)
 
