@@ -37,6 +37,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Load grid from array](#load-grid-from-array)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [IE8 support](#ie8-support)
+  - [Use with require.js](#use-with-requirejs)
   - [Nested grids](#nested-grids)
   - [Resizing active grid](#resizing-active-grid)
   - [Using AniJS](#using-anijs)
@@ -427,6 +428,12 @@ for i in range(N):
 
 There are at least two more issues with gridstack in IE8 with jQueryUI resizable (it seems it doesn't work) and
 droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/troolee/gridstack.js/issues/76
+
+## Use with require.js
+
+If you're using require.js and a single file jQueryUI please check out this
+[Stackoverflow question](http://stackoverflow.com/questions/35582945/redundant-dependencies-with-requirejs) to get it
+working properly.
 
 
 ## Nested grids
