@@ -537,7 +537,9 @@
             disableResize: opts.disableResize || false,
             rtl: 'auto',
             removable: false,
-            removeTimeout: 2000
+            removeTimeout: 2000,
+            verticalMarginUnit: 'px',
+            cellHeightUnit: 'px'
         });
 
         if (this.opts.rtl === 'auto') {
