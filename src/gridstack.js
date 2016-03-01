@@ -771,6 +771,7 @@
                     self.grid.removeNode(node);
                     self.placeholder.detach();
                     self._updateContainerHeight();
+                    el.data('_gridstack_node', el.data('_gridstack_node_orig'));
                 },
                 drop: function(event, ui) {
                     self.placeholder.detach();
@@ -791,7 +792,6 @@
                         .removeAttr('style')
                         .enableSelection()
                         .removeData('draggable')
-                        // .unbind('.draggable')
                         .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
                         .unbind('drag', onDrag);
                     self.container.append(el);
@@ -952,7 +952,6 @@
     };
 
     GridStack.prototype._clearRemovingTimeout = function(el) {
-        var self = this;
         var node = $(el).data('_gridstack_node');
 
         if (!node._removeTimeout) {
@@ -1052,9 +1051,13 @@
         };
 
         var onEndMoving = function(event, ui) {
+            var o = $(this);
+            if (!o.data('_gridstack_node')) {
+                return;
+            }
+
             var forceNotify = false;
             self.placeholder.detach();
-            var o = $(this);
             node.el = o;
             self.placeholder.hide();
 
