@@ -361,7 +361,7 @@ describe('gridstack', function() {
         });
     });
 
-    describe('grid obsolete warnings', function() {
+    describe('grid method obsolete warnings', function() {
         beforeEach(function() {
             document.body.insertAdjacentHTML(
                 'afterbegin', gridstackHTML);
@@ -629,6 +629,277 @@ describe('gridstack', function() {
             var grid = $('.grid-stack').data('gridstack');
             grid._trigger_change_event();
             expect(console.warn).toHaveBeenCalledWith('gridstack.js: Function `_trigger_change_event` is deprecated as of v0.2.5 and has been replaced with `_triggerChangeEvent`. It will be **completely** removed in v1.0.');
+        });
+    });
+
+    describe('grid opts obsolete warnings', function() {
+        beforeEach(function() {
+            document.body.insertAdjacentHTML(
+                'afterbegin', gridstackHTML);
+        });
+        afterEach(function() {
+            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+        });
+        it('should log a warning if handle_class is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                handle_class: 'grid-stack-header'
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `handle_class` is deprecated as of v0.2.5 and has been replaced with `handleClass`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if item_class is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                item_class: 'grid-stack-item'
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `item_class` is deprecated as of v0.2.5 and has been replaced with `itemClass`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if placeholder_class is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                placeholder_class: 'grid-stack-placeholder'
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `placeholder_class` is deprecated as of v0.2.5 and has been replaced with `placeholderClass`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if placeholder_text is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                placeholder_text: 'placeholder'
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `placeholder_text` is deprecated as of v0.2.5 and has been replaced with `placeholderText`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if cell_height is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cell_height: 80,
+                verticalMargin: 10
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `cell_height` is deprecated as of v0.2.5 and has been replaced with `cellHeight`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if vertical_margin is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                vertical_margin: 10
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `vertical_margin` is deprecated as of v0.2.5 and has been replaced with `verticalMargin`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if min_width is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                min_width: 2
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `min_width` is deprecated as of v0.2.5 and has been replaced with `minWidth`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if static_grid is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                static_grid: false
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `static_grid` is deprecated as of v0.2.5 and has been replaced with `staticGrid`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if is_nested is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                is_nested: false
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `is_nested` is deprecated as of v0.2.5 and has been replaced with `isNested`. It will be **completely** removed in v1.0.');
+        });
+        it('should log a warning if always_show_resize_handle is set.', function() {
+            console.warn = jasmine.createSpy('log');
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                always_show_resize_handle: false
+
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `always_show_resize_handle` is deprecated as of v0.2.5 and has been replaced with `alwaysShowResizeHandle`. It will be **completely** removed in v1.0.');
+        });
+    });
+
+    describe('grid method _packNodes with float', function() {
+        beforeEach(function() {
+            document.body.insertAdjacentHTML(
+                'afterbegin', gridstackHTML);
+        });
+        afterEach(function() {
+            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+        });
+        it('should allow same x, y coordinates for widgets.', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                float: true
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            var items = $('.grid-stack-item');
+            var $el;
+            var $oldEl;
+            for (var i = 0; i < items.length; i++) {
+                $el = $(grid.addWidget(items[i]));
+                $oldEl = $(items[i]);
+                expect(parseInt($oldEl.attr('data-gs-x'), 10)).toBe(parseInt($el.attr('data-gs-x'), 10));
+                expect(parseInt($oldEl.attr('data-gs-y'), 10)).toBe(parseInt($el.attr('data-gs-y'), 10));
+            }
+        });
+        it('should not allow same x, y coordinates for widgets.', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            var items = $('.grid-stack-item');
+            var $el;
+            var $oldEl;
+            var newY;
+            var oldY;
+            for (var i = 0; i < items.length; i++) {
+                $oldEl = $.extend(true, {}, $(items[i]));
+                newY = parseInt($oldEl.attr('data-gs-y'), 10) + 5;
+                $oldEl.attr('data-gs-y', newY);
+                $el = $(grid.addWidget($oldEl));
+                expect(parseInt($el.attr('data-gs-y'), 10)).not.toBe(newY);
+            }
+        });
+    });
+
+    describe('grid method addWidget with all parameters', function() {
+        beforeEach(function() {
+            document.body.insertAdjacentHTML(
+                'afterbegin', gridstackHTML);
+        });
+        afterEach(function() {
+            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+        });
+        it('should allow same x, y coordinates for widgets.', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                float: true
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            var widgetHTML =
+                '   <div class="grid-stack-item">' +
+                '       <div class="grid-stack-item-content"></div>' +
+                '   </div>';
+            var widget = grid.addWidget(widgetHTML, 6, 7, 2, 3, false, 1, 4, 2, 5, 'coolWidget');
+            var $widget = $(widget);
+            expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
+            expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(7);
+            expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(2);
+            expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(3);
+            expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+            expect(parseInt($widget.attr('data-gs-min-width'), 10)).toBe(1);
+            expect(parseInt($widget.attr('data-gs-max-width'), 10)).toBe(4);
+            expect(parseInt($widget.attr('data-gs-min-height'), 10)).toBe(2);
+            expect(parseInt($widget.attr('data-gs-max-height'), 10)).toBe(5);
+            expect($widget.attr('data-gs-id')).toBe('coolWidget');
+        });
+    });
+
+    describe('grid method addWidget with autoPosition true', function() {
+        beforeEach(function() {
+            document.body.insertAdjacentHTML(
+                'afterbegin', gridstackHTML);
+        });
+        afterEach(function() {
+            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+        });
+        it('should change x, y coordinates for widgets.', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            var widgetHTML =
+                '   <div class="grid-stack-item">' +
+                '       <div class="grid-stack-item-content"></div>' +
+                '   </div>';
+            var widget = grid.addWidget(widgetHTML, 9, 7, 2, 3, true);
+            var $widget = $(widget);
+            expect(parseInt($widget.attr('data-gs-x'), 10)).not.toBe(6);
+            expect(parseInt($widget.attr('data-gs-y'), 10)).not.toBe(7);
+        });
+    });
+
+    describe('grid.destroy()', function() {
+        beforeEach(function() {
+            document.body.insertAdjacentHTML(
+                'afterbegin', gridstackHTML);
+        });
+        afterEach(function() {
+            //document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+        });
+        it('should cleanup gridstack', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            grid.destroy();
+            expect($('.grid-stack').length).toBe(0);
+            expect(grid.grid).toBe(null);
+        });
+        it('should cleanup gridstack but leave elements', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            grid.destroy(false);
+            //console.log(grid.grid.nodes);
+            expect($('.grid-stack').length).toBe(1);
+            expect($('.grid-stack-item').length).toBe(2);
+            expect(grid.grid).toBe(null);
         });
     });
 });

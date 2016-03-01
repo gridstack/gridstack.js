@@ -477,10 +477,6 @@
             opts.placeholderText = opts.placeholder_text;
             obsoleteOpts('placeholder_text', 'placeholderText');
         }
-        if (typeof opts.item_class !== 'undefined') {
-            opts.itemClass = opts.item_class;
-            obsoleteOpts('item_class', 'itemClass');
-        }
         if (typeof opts.cell_height !== 'undefined') {
             opts.cellHeight = opts.cell_height;
             obsoleteOpts('cell_height', 'cellHeight');
