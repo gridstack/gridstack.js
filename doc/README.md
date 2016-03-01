@@ -45,7 +45,7 @@ gridstack.js API
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
-  - [setGridWidth(gridWidth)](#setgridwidthgridwidth)
+  - [setGridWidth(gridWidth, doNotPropagate)](#setgridwidthgridwidth-donotpropagate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
