@@ -1538,10 +1538,13 @@
         this.grid.commit();
     };
 
-    GridStack.prototype.setGridWidth = function(gridWidth) {
+    GridStack.prototype.setGridWidth = function(gridWidth,doNotPropagate) {
         this.container.removeClass('grid-stack-' + this.opts.width);
-        this._updateNodeWidths(this.opts.width, gridWidth);
+        if (doNotPropagate !== true) {
+            this._updateNodeWidths(this.opts.width, gridWidth);
+        }
         this.opts.width = gridWidth;
+        this.grid.width = gridWidth;
         this.container.addClass('grid-stack-' + gridWidth);
     };
 

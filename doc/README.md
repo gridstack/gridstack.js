@@ -415,11 +415,12 @@ Toggle the grid animation state.  Toggles the `grid-stack-animate` class.
 
 - `doAnimate` - if `true` the grid will animate.
 
-### setGridWidth(gridWidth)
+### setGridWidth(gridWidth, doNotPropagate)
 
 (Experimental) Modify number of columns in the grid. Will attempt to update existing widgets to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css`.
 
 - `gridWidth` - Integer between 1 and 12.
+- `doNotPropagate` - if true existing widgets will not be updated.
 
 ### setStatic(staticValue)
 
