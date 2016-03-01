@@ -479,11 +479,12 @@ Changes
 - fix `setStatic` method
 - add `setAnimation` method to API
 - add `setGridWidth` method ([#227](https://github.com/troolee/gridstack.js/issues/227))
-- add `removable`/`removeTimeout`
+- add `removable`/`removeTimeout` *(experimental)*
 - add `detachGrid` parameter to `destroy` method ([#216](https://github.com/troolee/gridstack.js/issues/216)) (thanks @jhpedemonte)
 - add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/troolee/gridstack.js/issues/237))
 - add `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `id` parameters to `addWidget` ([#188](https://github.com/troolee/gridstack.js/issues/188))
 - add `added` and `removed` events for when a widget is added or removed, respectively. ([#54](https://github.com/troolee/gridstack.js/issues/54))
+- add `acceptWidgets` parameter. Widgets can now be draggable between grids or from outside *(experimental)*
 
 #### v0.2.4 (2016-02-15)
 
