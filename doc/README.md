@@ -45,7 +45,7 @@ gridstack.js API
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
-  - [setGridWidth(gridWidth)](#setgridwidthgridwidth)
+  - [setGridWidth(gridWidth, doNotPropagate)](#setgridwidthgridwidth-donotpropagate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
@@ -56,6 +56,8 @@ gridstack.js API
 
 ## Options
 
+- `acceptWidgets` - if `true` of jquery selector the grid will accept widgets dragged from other grids or from
+ outside (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/two.html)
 - `alwaysShowResizeHandle` - if `true` the resizing handles are shown even if the user is not hovering over the widget
     (default: `false`)
 - `animate` - turns animation on (default: `false`)
@@ -413,11 +415,12 @@ Toggle the grid animation state.  Toggles the `grid-stack-animate` class.
 
 - `doAnimate` - if `true` the grid will animate.
 
-### setGridWidth(gridWidth)
+### setGridWidth(gridWidth, doNotPropagate)
 
 (Experimental) Modify number of columns in the grid. Will attempt to update existing widgets to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css`.
 
 - `gridWidth` - Integer between 1 and 12.
+- `doNotPropagate` - if true existing widgets will not be updated.
 
 ### setStatic(staticValue)
 
