@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>gridstack.js tests</title>
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../dist/gridstack.css"/>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+    <script src="../../../dist/gridstack.js"></script>
+
+    <style type="text/css">
+        .grid-stack {
+            background: lightgoldenrodyellow;
+        }
+
+        .grid-stack-item-content {
+            color: #2c3e50;
+            text-align: center;
+            background-color: #18bc9c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1>gridstack.js tests</h1>
+
+        <br/>
+
+        <div class="grid-stack" id="grid">
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(function() {
+            var options = {
+                height: 5
+            };
+            $('.grid-stack').gridstack(options);
+
+            new function() {
+                var items = [
+                    {x: 0, y: 0, width: 2, height: 2},
+                    {x: 2, y: 5, width: 1, height: 1}
+                ];
+
+                this.grid = $('.grid-stack').data('gridstack');
+                this.grid.removeAll();
+                items = GridStackUI.Utils.sort(items);
+                var id = 0;
+                _.each(items, function(node) {
+                    var w = $('<div><div class="grid-stack-item-content" /><div/>');
+                    w.attr('id', 'item-' + (++id));
+                    this.grid.addWidget(w,
+                        node.x, node.y, node.width, node.height);
+                }, this);
+            };
+        });
+    </script>
+</body>
+</html>

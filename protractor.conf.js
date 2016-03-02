@@ -4,6 +4,9 @@ exports.config = {
     capabilities: {
         browserName: 'firefox',
         version: '',
-        platform: 'ANY'
+        platform: 'ANY',
+        loggingPrefs: {
+            browser: 'SEVERE'
+        }
     },
 };
