@@ -1,0 +1,12 @@
+"ignore": [
+	"dist/**",
+	"node_modules/**",
+	"demo/**",
+	"coverage/**"
+],
+"test": [
+	"spec/**"
+],
+"critics": {
+	"lint": "jshint"
+}
