@@ -7,6 +7,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-protractor-runner');
+    grunt.loadNpmTasks('grunt-contrib-connect');
 
     grunt.initConfig({
         sass: {
@@ -95,7 +97,25 @@ module.exports = function(grunt) {
                 },
             },
         },
+
+        protractor: {
+            options: {
+                configFile: 'protractor.conf.js',
+            },
+            all: {}
+        },
+
+        connect: {
+            all: {
+                options: {
+                    port: 8080,
+                    hostname: 'localhost',
+                    base: '.',
+                },
+            },
+        },
     });
 
     grunt.registerTask('default', ['sass', 'cssmin', 'jshint', 'jscs', 'copy', 'uglify', 'doctoc']);
+    grunt.registerTask('e2e-test', ['connect', 'protractor']);
 };
