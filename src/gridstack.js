@@ -367,6 +367,10 @@
                 return $.extend({}, n);
             }));
 
+        if (typeof clonedNode === 'undefined') {
+            return true;
+        }
+
         clone.moveNode(clonedNode, x, y, width, height);
 
         var res = true;
