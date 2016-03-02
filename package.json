@@ -42,6 +42,7 @@
     "grunt-doctoc": "^0.1.1",
     "grunt-jscs": "^2.7.0",
     "grunt-protractor-runner": "^3.0.0",
+    "grunt-protractor-webdriver": "^0.2.5",
     "grunt-sass": "^1.1.0",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.21",

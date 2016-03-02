@@ -1,3 +1,4 @@
+// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -9,6 +10,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-protractor-runner');
     grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-protractor-webdriver');
 
     grunt.initConfig({
         sass: {
@@ -114,8 +116,16 @@ module.exports = function(grunt) {
                 },
             },
         },
+
+        protractor_webdriver: {
+            all: {
+                options: {
+                    command: 'webdriver-manager start',
+                }
+            }
+        }
     });
 
     grunt.registerTask('default', ['sass', 'cssmin', 'jshint', 'jscs', 'copy', 'uglify', 'doctoc']);
-    grunt.registerTask('e2e-test', ['connect', 'protractor']);
+    grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };
