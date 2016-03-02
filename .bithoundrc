@@ -2,7 +2,7 @@
 	"ignore": [
 		"dist/**",
 		"**/node_modules/**",
-		"**/bower_components/**"
+		"**/bower_components/**",
 		"**/demo/**",
 		"**/coverage/**"
 	],
