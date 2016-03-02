@@ -1,12 +1,15 @@
-"ignore": [
-	"dist/**",
-	"node_modules/**",
-	"demo/**",
-	"coverage/**"
-],
-"test": [
-	"spec/**"
-],
-"critics": {
-	"lint": "jshint"
+{
+	"ignore": [
+		"dist/**",
+		"**/node_modules/**",
+		"**/bower_components/**"
+		"**/demo/**",
+		"**/coverage/**"
+	],
+	"test": [
+		"**/spec/**"
+	],
+	"critics": {
+		"lint": "jshint"
+	}
 }
