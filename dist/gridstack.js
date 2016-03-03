@@ -1,5 +1,5 @@
 /**
- * gridstack.js 0.2.5-dev
+ * gridstack.js 0.2.5
  * http://troolee.github.io/gridstack.js/
  * (c) 2014-2016 Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
@@ -99,7 +99,7 @@
             var height = val;
             var heightUnit = 'px';
             if (height && _.isString(height)) {
-                var match = height.match(/^([0-9]*\.[0-9]+|[0-9]+)(px|em|rem|vh|vw)?$/);
+                var match = height.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw)?$/);
                 if (!match) {
                     throw new Error('Invalid height');
                 }
@@ -367,6 +367,10 @@
                 return $.extend({}, n);
             }));
 
+        if (typeof clonedNode === 'undefined') {
+            return true;
+        }
+
         clone.moveNode(clonedNode, x, y, width, height);
 
         var res = true;
@@ -477,10 +481,6 @@
             opts.placeholderText = opts.placeholder_text;
             obsoleteOpts('placeholder_text', 'placeholderText');
         }
-        if (typeof opts.item_class !== 'undefined') {
-            opts.itemClass = opts.item_class;
-            obsoleteOpts('item_class', 'itemClass');
-        }
         if (typeof opts.cell_height !== 'undefined') {
             opts.cellHeight = opts.cell_height;
             obsoleteOpts('cell_height', 'cellHeight');
@@ -541,7 +541,9 @@
             disableResize: opts.disableResize || false,
             rtl: 'auto',
             removable: false,
-            removeTimeout: 2000
+            removeTimeout: 2000,
+            verticalMarginUnit: 'px',
+            cellHeightUnit: 'px'
         });
 
         if (this.opts.rtl === 'auto') {
@@ -1538,10 +1540,13 @@
         this.grid.commit();
     };
 
-    GridStack.prototype.setGridWidth = function(gridWidth) {
+    GridStack.prototype.setGridWidth = function(gridWidth,doNotPropagate) {
         this.container.removeClass('grid-stack-' + this.opts.width);
-        this._updateNodeWidths(this.opts.width, gridWidth);
+        if (doNotPropagate !== true) {
+            this._updateNodeWidths(this.opts.width, gridWidth);
+        }
         this.opts.width = gridWidth;
+        this.grid.width = gridWidth;
         this.container.addClass('grid-stack-' + gridWidth);
     };
 
