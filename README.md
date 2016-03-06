@@ -27,6 +27,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Basic usage](#basic-usage)
   - [Migrating to v0.2.5](#migrating-to-v025)
   - [API Documentation](#api-documentation)
+  - [Questions and Answers (Q&A)](#questions-and-answers-q&a)
   - [Touch devices support](#touch-devices-support)
   - [Use with knockout.js](#use-with-knockoutjs)
   - [Use with angular.js](#use-with-angularjs)
@@ -135,6 +136,13 @@ when they will be completely removed.
 ## API Documentation
 
 Please check out `doc/README.md` for more information about gridstack.js API.
+
+## Questions and Answers (Q&A)
+
+Please feel free to as a questions here in issues, using [Stackoverflow](http://stackoverflow.com/search?q=gridstack) or [Slack chat](https://gridstackjs.troolee.com).
+We will glad to answer and help you as soon as we can.
+
+Also please check our FAQ `doc/FAQ.md` before asking in case the answer is already there.
 
 ## Touch devices support
 
