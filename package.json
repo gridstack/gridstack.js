@@ -32,6 +32,7 @@
   "devDependencies": {
     "coveralls": "^2.11.6",
     "grunt": "^0.4.5",
+    "doctoc": "^1.0.0",
     "grunt-contrib-copy": "^0.8.2",
     "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-jshint": "^1.0.0",
