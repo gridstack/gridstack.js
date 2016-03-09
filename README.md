@@ -60,7 +60,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
 Demo
 ====
 
-Please visit http://troolee.github.io/gridstack.js/ for demo.
+Please visit http://troolee.github.io/gridstack.js/ for demo. Or check out [these example](http://troolee.github.io/gridstack.js/demo/).
 
 
 Usage
