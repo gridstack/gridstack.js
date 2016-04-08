@@ -667,6 +667,8 @@
                     if (!node.noResize && !self.opts.disableResize) {
                         node.el.resizable('enable');
                     }
+
+                    node.el.trigger('resize')
                 });
             }
         };
