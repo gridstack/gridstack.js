@@ -646,6 +646,8 @@
                     if (node.noResize || self.opts.disableResize) {
                         node.el.resizable('disable');
                     }
+
+                    node.el.trigger('resize');
                 });
             } else {
                 if (!oneColumnMode) {
@@ -665,6 +667,8 @@
                     if (!node.noResize && !self.opts.disableResize) {
                         node.el.resizable('enable');
                     }
+
+                    node.el.trigger('resize');
                 });
             }
         };
