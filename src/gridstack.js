@@ -668,7 +668,7 @@
                         node.el.resizable('enable');
                     }
 
-                    node.el.trigger('resize')
+                    node.el.trigger('resize');
                 });
             }
         };
