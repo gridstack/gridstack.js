@@ -800,6 +800,9 @@
                         .removeData('draggable')
                         .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
                         .unbind('drag', onDrag);
+                    if(el.find('div.ui-resizable-handle').length >0){
+                        el.find('div.ui-resizable-handle').remove()
+                    }    
                     self.container.append(el);
                     self._prepareElementByNode(el, node);
                     self._updateContainerHeight();
