@@ -676,32 +676,30 @@
         $(window).resize(this.onResizeHandler);
         this.onResizeHandler();
 
-        if (typeof self.opts.removable === 'string') {
+        if (!self.opts.staticGrid && typeof self.opts.removable === 'string') {
             var trashZone = $(self.opts.removable);
             if (!trashZone.data('droppable')) {
                 trashZone.droppable({
                     accept: '.' + self.opts.itemClass
                 });
             }
-            if(!self.opts.staticGrid){
-              trashZone
-                .on('dropover', function(event, ui) {
-                    var el = $(ui.draggable);
-                    var node = el.data('_gridstack_node');
-                    if (node._grid !== self) {
-                        return;
-                    }
-                    self._setupRemovingTimeout(el);
-                })
-                .on('dropout', function(event, ui) {
-                    var el = $(ui.draggable);
-                    var node = el.data('_gridstack_node');
-                    if (node._grid !== self) {
-                        return;
-                    }
-                    self._clearRemovingTimeout(el);
-                });
-            }
+            trashZone
+              .on('dropover', function(event, ui) {
+                  var el = $(ui.draggable);
+                  var node = el.data('_gridstack_node');
+                  if (node._grid !== self) {
+                      return;
+                  }
+                  self._setupRemovingTimeout(el);
+              })
+              .on('dropout', function(event, ui) {
+                  var el = $(ui.draggable);
+                  var node = el.data('_gridstack_node');
+                  if (node._grid !== self) {
+                      return;
+                  }
+                  self._clearRemovingTimeout(el);
+              });
         }
 
         if (!self.opts.staticGrid && self.opts.acceptWidgets) {
@@ -1157,8 +1155,8 @@
         }, triggerAddEvent);
         el.data('_gridstack_node', node);
 
-        if(!this.opts.staticGrid) {
-          this._prepareElementsByNode(el, node);
+        if (!this.opts.staticGrid) {
+            this._prepareElementsByNode(el, node);
         }
     };
 

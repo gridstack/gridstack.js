@@ -676,7 +676,7 @@
         $(window).resize(this.onResizeHandler);
         this.onResizeHandler();
 
-        if (typeof self.opts.removable === 'string') {
+        if (!self.opts.staticGrid && typeof self.opts.removable === 'string') {
             var trashZone = $(self.opts.removable);
             if (!trashZone.data('droppable')) {
                 trashZone.droppable({
@@ -684,25 +684,25 @@
                 });
             }
             trashZone
-                .on('dropover', function(event, ui) {
-                    var el = $(ui.draggable);
-                    var node = el.data('_gridstack_node');
-                    if (node._grid !== self) {
-                        return;
-                    }
-                    self._setupRemovingTimeout(el);
-                })
-                .on('dropout', function(event, ui) {
-                    var el = $(ui.draggable);
-                    var node = el.data('_gridstack_node');
-                    if (node._grid !== self) {
-                        return;
-                    }
-                    self._clearRemovingTimeout(el);
-                });
+              .on('dropover', function(event, ui) {
+                  var el = $(ui.draggable);
+                  var node = el.data('_gridstack_node');
+                  if (node._grid !== self) {
+                      return;
+                  }
+                  self._setupRemovingTimeout(el);
+              })
+              .on('dropout', function(event, ui) {
+                  var el = $(ui.draggable);
+                  var node = el.data('_gridstack_node');
+                  if (node._grid !== self) {
+                      return;
+                  }
+                  self._clearRemovingTimeout(el);
+              });
         }
 
-        if (self.opts.acceptWidgets) {
+        if (!self.opts.staticGrid && self.opts.acceptWidgets) {
             var draggingElement = null;
 
             var onDrag = function(event, ui) {
@@ -801,7 +801,7 @@
                         .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
                         .unbind('drag', onDrag);
                     self.container.append(el);
-                    self._prepareElementByNode(el, node);
+                    self._prepareElementsByNode(el, node);
                     self._updateContainerHeight();
                     self._triggerChangeEvent();
 
@@ -969,7 +969,7 @@
         node._isAboutToRemove = false;
     };
 
-    GridStack.prototype._prepareElementByNode = function(el, node) {
+    GridStack.prototype._prepareElementsByNode = function(el, node) {
         var self = this;
 
         var cellWidth;
@@ -1119,11 +1119,11 @@
                 resize: dragOrResize
             }));
 
-        if (node.noMove || this._isOneColumnMode() || this.opts.staticGrid || this.opts.disableDrag) {
+        if (node.noMove || this._isOneColumnMode() || this.opts.disableDrag) {
             el.draggable('disable');
         }
 
-        if (node.noResize || this._isOneColumnMode() || this.opts.staticGrid || this.opts.disableResize) {
+        if (node.noResize || this._isOneColumnMode() || this.opts.disableResize) {
             el.resizable('disable');
         }
 
@@ -1155,7 +1155,9 @@
         }, triggerAddEvent);
         el.data('_gridstack_node', node);
 
-        this._prepareElementByNode(el, node);
+        if (!this.opts.staticGrid) {
+            this._prepareElementsByNode(el, node);
+        }
     };
 
     GridStack.prototype.setAnimation = function(enable) {
