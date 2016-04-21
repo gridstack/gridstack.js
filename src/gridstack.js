@@ -1253,7 +1253,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined' || node === null) {
+            if (self.opts.staticGrid || typeof node == 'undefined' || node === null) {
                 return;
             }
 
@@ -1273,7 +1273,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined' || node === null) {
+            if (self.opts.staticGrid || typeof node == 'undefined' || node === null) {
                 return;
             }
 
