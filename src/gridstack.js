@@ -715,6 +715,7 @@
                     node._added = true;
 
                     node.el = el;
+                    node.autoPosition = true;
                     node.x = x;
                     node.y = y;
                     self.grid.cleanNodes();
@@ -733,13 +734,12 @@
                     node._beforeDragY = node.y;
 
                     self._updateContainerHeight();
-                } else {
-                    if (!self.grid.canMoveNode(node, x, y)) {
-                        return;
-                    }
-                    self.grid.moveNode(node, x, y);
-                    self._updateContainerHeight();
                 }
+                if (!self.grid.canMoveNode(node, x, y)) {
+                    return;
+                }
+                self.grid.moveNode(node, x, y);
+                self._updateContainerHeight();
             };
 
             $(self.container).droppable({
