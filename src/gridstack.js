@@ -459,6 +459,7 @@
     var GridStack = function(el, opts) {
         var self = this;
         var oneColumnMode, isAutoCellHeight;
+        var first = true;
 
         opts = opts || {};
 
@@ -557,7 +558,8 @@
         this.opts.isNested = isNested;
 
         isAutoCellHeight = this.opts.cellHeight === 'auto';
-        if (isAutoCellHeight) {
+        if (isAutoCellHeight && first) {
+            first = false;
             self.cellHeight(self.cellWidth(), true);
         } else {
             this.cellHeight(this.opts.cellHeight, true);
@@ -622,7 +624,7 @@
         }, 100);
 
         this.onResizeHandler = function() {
-            if (isAutoCellHeight) {
+            if (isAutoCellHeight && first) {
                 self._updateHeightsOnResize();
             }
 
@@ -771,13 +773,15 @@
                 },
                 out: function(event, ui) {
                     var el = $(ui.draggable);
-                    el.unbind('drag', onDrag);
                     var node = el.data('_gridstack_node');
-                    node.el = null;
-                    self.grid.removeNode(node);
-                    self.placeholder.detach();
-                    self._updateContainerHeight();
-                    el.data('_gridstack_node', el.data('_gridstack_node_orig'));
+                    if (node && node._grid != self && node._added) {
+                        el.unbind('drag', onDrag);
+                        node.el = null;
+                        self.grid.removeNode(node);
+                        self.placeholder.detach();
+                        self._updateContainerHeight();
+                        el.data('_gridstack_node', el.data('_gridstack_node_orig'));
+                    }
                 },
                 drop: function(event, ui) {
                     self.placeholder.detach();
@@ -788,6 +792,9 @@
                     el.data('_gridstack_node', node);
                     $(ui.draggable).remove();
                     node.el = el;
+                    delete node._added;
+                    delete node._temporary;
+                    delete node._temporaryRemoved;
                     self.placeholder.hide();
                     el
                         .attr('data-gs-x', node.x)
@@ -800,6 +807,9 @@
                         .removeData('draggable')
                         .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
                         .unbind('drag', onDrag);
+                    if(el.find('div.ui-resizable-handle').length >0){
+                        el.find('div.ui-resizable-handle').remove()
+                    }
                     self.container.append(el);
                     self._prepareElementByNode(el, node);
                     self._updateContainerHeight();
@@ -985,9 +995,9 @@
                 width = Math.round(ui.size.width / cellWidth);
                 height = Math.round(ui.size.height / cellHeight);
             }
-
+            var n = el.data('_gridstack_node');
             if (event.type == 'drag') {
-                if (x < 0 || x >= self.grid.width || y < 0) {
+                if (x < 0 || x >= self.grid.width || y < 0 || (n && n._added)){
                     if (self.opts.removable === true) {
                         self._setupRemovingTimeout(el);
                     }
@@ -1486,8 +1496,13 @@
     };
 
     GridStack.prototype.cellWidth = function() {
-        var o = this.container.children('.' + this.opts.itemClass).first();
-        return Math.ceil(o.outerWidth() / parseInt(o.attr('data-gs-width'), 10));
+        if(this.container.children('.' + this.opts.itemClass).length >0) {
+            var o = this.container.children('.' + this.opts.itemClass).first();
+            return Math.ceil(o.outerWidth() / parseInt(o.attr('data-gs-width'), 10));
+        }else{
+            var o = this.container;
+            return Math.ceil(o.outerWidth() / this.opts.width);
+        }
     };
 
     GridStack.prototype.getCellFromPixel = function(position, useOffset) {
@@ -1641,6 +1656,7 @@
     $.fn.gridstack = function(opts) {
         return this.each(function() {
             var o = $(this);
+            // 设置 new gridstack 到 data属性里
             if (!o.data('gridstack')) {
                 o
                     .data('gridstack', new GridStack(this, opts));
