@@ -68,7 +68,7 @@ Usage
 
 ## Requirements
 
-* [lodash.js](https://lodash.com) (>= 3.5.0)
+* [lodash.js](https://lodash.com) (>= 3.5.0, full build)
 * [jQuery](http://jquery.com) (>= 1.11.0)
 * [jQuery UI](http://jqueryui.com) (>= 1.11.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
 * (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
