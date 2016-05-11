@@ -810,6 +810,21 @@
             });
         }
     };
+    
+    GridStack.prototype._triggerUpdatedEvent = function(forceTrigger) {
+        var elements = this.grid.getDirtyNodes();
+        var hasChanges = false;
+
+        var eventParams = [];
+        if (elements && elements.length) {
+            eventParams.push(elements);
+            hasChanges = true;
+        }
+
+        if (hasChanges || forceTrigger === true) {
+            this.container.trigger('updated', eventParams);
+        }
+    };
 
     GridStack.prototype._triggerChangeEvent = function(forceTrigger) {
         var elements = this.grid.getDirtyNodes();
@@ -1094,6 +1109,7 @@
             }
             self._updateContainerHeight();
             self._triggerChangeEvent(forceNotify);
+            self._triggerUpdatedEvent(forceNotify);
 
             self.grid.endUpdate();
 
@@ -1414,7 +1430,8 @@
 
         self._updateContainerHeight();
         self._triggerChangeEvent();
-
+        
+        self._triggerUpdatedEvent();
         self.grid.endUpdate();
     };
 
@@ -1591,6 +1608,8 @@
         'can_be_placed_with_respect_to_height', 'canBePlacedWithRespectToHeight');
     GridStack.prototype._trigger_change_event = obsolete(GridStack.prototype._triggerChangeEvent,
         '_trigger_change_event', '_triggerChangeEvent');
+    GridStack.prototype._trigger_update_event = obsolete(GridStack.prototype._triggerUpdateEvent,
+        '_trigger_update_event', '_triggerUpdateEvent');
     GridStack.prototype._init_styles = obsolete(GridStack.prototype._initStyles,
         '_init_styles', '_initStyles');
     GridStack.prototype._update_styles = obsolete(GridStack.prototype._updateStyles,
