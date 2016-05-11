@@ -811,7 +811,7 @@
         }
     };
     
-    GridStack.prototype._triggerUpdatedEvent = function(forceTrigger) {
+    GridStack.prototype._triggerUpdateEvent = function(forceTrigger) {
         var elements = this.grid.getDirtyNodes();
         var hasChanges = false;
 
@@ -822,7 +822,7 @@
         }
 
         if (hasChanges || forceTrigger === true) {
-            this.container.trigger('updated', eventParams);
+            this.container.trigger('update', eventParams);
         }
     };
 
@@ -1109,7 +1109,7 @@
             }
             self._updateContainerHeight();
             self._triggerChangeEvent(forceNotify);
-            self._triggerUpdatedEvent(forceNotify);
+            self._triggerUpdateEvent(forceNotify);
 
             self.grid.endUpdate();
 
@@ -1431,7 +1431,7 @@
         self._updateContainerHeight();
         self._triggerChangeEvent();
         
-        self._triggerUpdatedEvent();
+        self._triggerUpdateEvent();
         self.grid.endUpdate();
     };
 
