@@ -1109,9 +1109,9 @@
             }
             self._updateContainerHeight();
             self._triggerChangeEvent(forceNotify);
-            self._triggerUpdateEvent(forceNotify);
 
             self.grid.endUpdate();
+            self._triggerUpdateEvent(forceNotify);
 
             var nestedGrids = o.find('.grid-stack');
             if (nestedGrids.length && event.type == 'resizestop') {
@@ -1431,8 +1431,8 @@
         self._updateContainerHeight();
         self._triggerChangeEvent();
         
-        self._triggerUpdateEvent();
         self.grid.endUpdate();
+        self._triggerUpdateEvent();
     };
 
     GridStack.prototype.resize = function(el, width, height) {
