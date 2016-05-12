@@ -810,7 +810,7 @@
             });
         }
     };
-    
+
     GridStack.prototype._triggerUpdateEvent = function(forceTrigger) {
         var elements = this.grid.getDirtyNodes();
         var hasChanges = false;
@@ -1430,7 +1430,7 @@
 
         self._updateContainerHeight();
         self._triggerChangeEvent();
-        
+
         self.grid.endUpdate();
         self._triggerUpdateEvent();
     };
