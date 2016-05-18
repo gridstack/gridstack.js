@@ -811,6 +811,21 @@
         }
     };
 
+    GridStack.prototype._triggerUpdateEvent = function(forceTrigger) {
+        var elements = this.grid.getDirtyNodes();
+        var hasChanges = false;
+
+        var eventParams = [];
+        if (elements && elements.length) {
+            eventParams.push(elements);
+            hasChanges = true;
+        }
+
+        if (hasChanges || forceTrigger === true) {
+            this.container.trigger('update', eventParams);
+        }
+    };
+
     GridStack.prototype._triggerChangeEvent = function(forceTrigger) {
         var elements = this.grid.getDirtyNodes();
         var hasChanges = false;
@@ -1037,7 +1052,7 @@
             self.grid.beginUpdate(node);
             cellWidth = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
             var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
-            cellHeight = self.container.height() / parseInt(self.container.attr('data-gs-current-height'));
+            cellHeight = self.opts.cellHeight + self.opts.verticalMargin;
             self.placeholder
                 .attr('data-gs-x', o.attr('data-gs-x'))
                 .attr('data-gs-y', o.attr('data-gs-y'))
@@ -1096,6 +1111,7 @@
             self._triggerChangeEvent(forceNotify);
 
             self.grid.endUpdate();
+            self._triggerUpdateEvent(forceNotify);
 
             var nestedGrids = o.find('.grid-stack');
             if (nestedGrids.length && event.type == 'resizestop') {
@@ -1416,6 +1432,7 @@
         self._triggerChangeEvent();
 
         self.grid.endUpdate();
+        self._triggerUpdateEvent();
     };
 
     GridStack.prototype.resize = function(el, width, height) {
@@ -1498,8 +1515,8 @@
         var relativeLeft = position.left - containerPos.left;
         var relativeTop = position.top - containerPos.top;
 
-        var columnWidth = Math.floor(this.container.width() / this.opts.width);
-        var rowHeight = Math.floor(this.container.height() / parseInt(this.container.attr('data-gs-current-height')));
+        var columnWidth = this.container.width() / this.opts.width;
+        var rowHeight = this.opts.cellHeight + this.opts.verticalMargin;
 
         return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
     };
@@ -1591,6 +1608,8 @@
         'can_be_placed_with_respect_to_height', 'canBePlacedWithRespectToHeight');
     GridStack.prototype._trigger_change_event = obsolete(GridStack.prototype._triggerChangeEvent,
         '_trigger_change_event', '_triggerChangeEvent');
+    GridStack.prototype._trigger_update_event = obsolete(GridStack.prototype._triggerUpdateEvent,
+        '_trigger_update_event', '_triggerUpdateEvent');
     GridStack.prototype._init_styles = obsolete(GridStack.prototype._initStyles,
         '_init_styles', '_initStyles');
     GridStack.prototype._update_styles = obsolete(GridStack.prototype._updateStyles,
