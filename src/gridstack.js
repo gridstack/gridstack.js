@@ -1035,9 +1035,9 @@
             var o = $(this);
             self.grid.cleanNodes();
             self.grid.beginUpdate(node);
-            cellWidth = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
-            var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
+            cellWidth = o.outerWidth() / self.opts.width;
             cellHeight = self.opts.cellHeight + self.opts.verticalMargin;
+
             self.placeholder
                 .attr('data-gs-x', o.attr('data-gs-x'))
                 .attr('data-gs-y', o.attr('data-gs-y'))
@@ -1048,8 +1048,8 @@
             node._beforeDragX = node.x;
             node._beforeDragY = node.y;
 
-            el.resizable('option', 'minWidth', cellWidth * (node.minWidth || 1));
-            el.resizable('option', 'minHeight', strictCellHeight * (node.minHeight || 1));
+            el.resizable('option', 'minWidth', Math.ceil(cellWidth * (node.minWidth || 1)));
+            el.resizable('option', 'minHeight', Math.ceil(Math.strictCellHeight * (node.minHeight || 1)));
 
             if (event.type == 'resizestart') {
                 o.find('.grid-stack-item').trigger('resizestart');
