@@ -1035,7 +1035,7 @@
             var o = $(this);
             self.grid.cleanNodes();
             self.grid.beginUpdate(node);
-            cellWidth = o.outerWidth() / self.opts.width;
+            cellWidth = o.outerWidth() / o.attr('data-gs-width');
             cellHeight = self.opts.cellHeight + self.opts.verticalMargin;
 
             self.placeholder
