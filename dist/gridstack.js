@@ -398,6 +398,11 @@
             this.float,
             0,
             _.map(this.nodes, function(n) { return $.extend({}, n); }));
+
+        if (this.height == 1 && !this.isAreaEmpty(node.x, node.y, node.width, node.height)){
+            return false;
+        }
+
         clone.addNode(node);
         return clone.getGridHeight() <= this.height;
     };
