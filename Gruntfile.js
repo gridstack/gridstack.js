@@ -69,6 +69,11 @@ module.exports = function(grunt) {
                     target: './doc/README.md'
                 }
             },
+            faq: {
+                options: {
+                    target: './doc/FAQ.md'
+                }
+            },
         },
 
         jshint: {
@@ -93,7 +98,7 @@ module.exports = function(grunt) {
                 },
             },
             docs: {
-                files: ['README.md', 'doc/README.md'],
+                files: ['README.md', 'doc/README.md', 'doc/FAQ.md'],
                 tasks: ['doctoc'],
                 options: {
                 },
