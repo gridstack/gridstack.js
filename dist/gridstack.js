@@ -1035,7 +1035,7 @@
             var o = $(this);
             self.grid.cleanNodes();
             self.grid.beginUpdate(node);
-            cellWidth = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
+            cellWidth = o.outerWidth() / o.attr('data-gs-width');
             var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
             cellHeight = self.container.height() / parseInt(self.container.attr('data-gs-current-height'));
             self.placeholder
@@ -1048,7 +1048,7 @@
             node._beforeDragX = node.x;
             node._beforeDragY = node.y;
 
-            el.resizable('option', 'minWidth', cellWidth * (node.minWidth || 1));
+            el.resizable('option', 'minWidth', Math.ceil(cellWidth) * (node.minWidth || 1));
             el.resizable('option', 'minHeight', strictCellHeight * (node.minHeight || 1));
 
             if (event.type == 'resizestart') {
