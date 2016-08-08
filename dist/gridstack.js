@@ -1035,9 +1035,9 @@
             var o = $(this);
             self.grid.cleanNodes();
             self.grid.beginUpdate(node);
-            cellWidth = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
-            var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
-            cellHeight = self.container.height() / parseInt(self.container.attr('data-gs-current-height'));
+            cellWidth = o.outerWidth() / o.attr('data-gs-width');
+            cellHeight = self.opts.cellHeight + self.opts.verticalMargin;
+
             self.placeholder
                 .attr('data-gs-x', o.attr('data-gs-x'))
                 .attr('data-gs-y', o.attr('data-gs-y'))
@@ -1048,8 +1048,8 @@
             node._beforeDragX = node.x;
             node._beforeDragY = node.y;
 
-            el.resizable('option', 'minWidth', cellWidth * (node.minWidth || 1));
-            el.resizable('option', 'minHeight', strictCellHeight * (node.minHeight || 1));
+            el.resizable('option', 'minWidth', Math.ceil(cellWidth * (node.minWidth || 1)));
+            el.resizable('option', 'minHeight', Math.ceil(Math.strictCellHeight * (node.minHeight || 1)));
 
             if (event.type == 'resizestart') {
                 o.find('.grid-stack-item').trigger('resizestart');
@@ -1498,8 +1498,8 @@
         var relativeLeft = position.left - containerPos.left;
         var relativeTop = position.top - containerPos.top;
 
-        var columnWidth = Math.floor(this.container.width() / this.opts.width);
-        var rowHeight = Math.floor(this.container.height() / parseInt(this.container.attr('data-gs-current-height')));
+        var columnWidth = this.container.width() / this.opts.width;
+        var rowHeight = this.opts.cellHeight + this.opts.verticalMargin;
 
         return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
     };
