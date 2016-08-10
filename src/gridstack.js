@@ -1,5 +1,5 @@
 /**
- * gridstack.js 0.2.5
+ * gridstack.js 0.2.6-dev
  * http://troolee.github.io/gridstack.js/
  * (c) 2014-2016 Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
@@ -508,7 +508,7 @@
         // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 
         opts.itemClass = opts.itemClass || 'grid-stack-item';
-        var isNested = this.container.closest('.' + opts.itemClass).size() > 0;
+        var isNested = this.container.closest('.' + opts.itemClass).length > 0;
 
         this.opts = _.defaults(opts || {}, {
             width: parseInt(this.container.attr('data-gs-width')) || 12,
@@ -684,22 +684,22 @@
                 });
             }
             trashZone
-              .on('dropover', function(event, ui) {
-                  var el = $(ui.draggable);
-                  var node = el.data('_gridstack_node');
-                  if (node._grid !== self) {
-                      return;
-                  }
-                  self._setupRemovingTimeout(el);
-              })
-              .on('dropout', function(event, ui) {
-                  var el = $(ui.draggable);
-                  var node = el.data('_gridstack_node');
-                  if (node._grid !== self) {
-                      return;
-                  }
-                  self._clearRemovingTimeout(el);
-              });
+                .on('dropover', function(event, ui) {
+                    var el = $(ui.draggable);
+                    var node = el.data('_gridstack_node');
+                    if (node._grid !== self) {
+                        return;
+                    }
+                    self._setupRemovingTimeout(el);
+                })
+                .on('dropout', function(event, ui) {
+                    var el = $(ui.draggable);
+                    var node = el.data('_gridstack_node');
+                    if (node._grid !== self) {
+                        return;
+                    }
+                    self._clearRemovingTimeout(el);
+                });
         }
 
         if (!self.opts.staticGrid && self.opts.acceptWidgets) {

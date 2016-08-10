@@ -67,14 +67,14 @@ describe('gridstack utils', function() {
 
             var style = $('STYLE[data-gs-style-id=' + _id + ']');
 
-            expect(style.size()).toEqual(1);
+            expect(style.length).toEqual(1);
             expect(style.prop('tagName')).toEqual('STYLE');
 
             utils.removeStylesheet(_id)
 
             style = $('STYLE[data-gs-style-id=' + _id + ']');
 
-            expect(style.size()).toEqual(0);
+            expect(style.length).toEqual(0);
         });
 
     });
