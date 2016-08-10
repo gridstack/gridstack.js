@@ -475,6 +475,10 @@ Changes
 =======
 
 #### v0.2.6-dev (Development version)
+
+- update requirements to the latest versions
+- fix jQuery `size()`
+
 #### v0.2.5 (2016-03-02)
 
 - update names to respect js naming convention.
