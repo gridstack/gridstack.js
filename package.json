@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "0.2.5",
+  "version": "0.2.6-dev",
   "description": "gridstack.js is a jQuery plugin for widget layout",
   "main": "dist/gridstack.js",
   "repository": {
@@ -25,9 +25,9 @@
   },
   "homepage": "http://troolee.github.io/gridstack.js/",
   "dependencies": {
-    "jquery": "^2.2.1",
-    "jquery-ui": "^1.10.5",
-    "lodash": "^4.5.1"
+    "jquery": "^3.1.0",
+    "jquery-ui": "^1.12.0",
+    "lodash": "^4.14.2"
   },
   "devDependencies": {
     "connect": "^3.4.1",
@@ -42,14 +42,14 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-doctoc": "^0.1.1",
     "grunt-jscs": "^2.8.0",
-    "grunt-protractor-runner": "^3.0.0",
+    "grunt-protractor-runner": "^3.2.0",
     "grunt-protractor-webdriver": "^0.2.5",
     "grunt-sass": "^1.1.0",
     "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-coverage": "^0.5.5",
+    "karma": "^1.1.2",
+    "karma-coverage": "^1.1.1",
     "karma-coveralls": "^1.1.2",
-    "karma-jasmine": "^0.3.7",
+    "karma-jasmine": "^1.0.2",
     "karma-phantomjs-launcher": "^1.0.0",
     "phantomjs-prebuilt": "^2.1.5",
     "serve-static": "^1.10.2"
