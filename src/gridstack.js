@@ -684,22 +684,22 @@
                 });
             }
             trashZone
-              .on('dropover', function(event, ui) {
-                  var el = $(ui.draggable);
-                  var node = el.data('_gridstack_node');
-                  if (node._grid !== self) {
-                      return;
-                  }
-                  self._setupRemovingTimeout(el);
-              })
-              .on('dropout', function(event, ui) {
-                  var el = $(ui.draggable);
-                  var node = el.data('_gridstack_node');
-                  if (node._grid !== self) {
-                      return;
-                  }
-                  self._clearRemovingTimeout(el);
-              });
+                .on('dropover', function(event, ui) {
+                    var el = $(ui.draggable);
+                    var node = el.data('_gridstack_node');
+                    if (node._grid !== self) {
+                        return;
+                    }
+                    self._setupRemovingTimeout(el);
+                })
+                .on('dropout', function(event, ui) {
+                    var el = $(ui.draggable);
+                    var node = el.data('_gridstack_node');
+                    if (node._grid !== self) {
+                        return;
+                    }
+                    self._clearRemovingTimeout(el);
+                });
         }
 
         if (!self.opts.staticGrid && self.opts.acceptWidgets) {
