@@ -1,0 +1,15 @@
+{
+	"ignore": [
+		"dist/**",
+		"**/node_modules/**",
+		"**/bower_components/**",
+		"**/demo/**",
+		"**/coverage/**"
+	],
+	"test": [
+		"**/spec/**"
+	],
+	"critics": {
+		"lint": "jshint"
+	}
+}
