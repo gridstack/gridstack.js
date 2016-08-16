@@ -176,21 +176,31 @@ describe('gridstack engine', function() {
             expect(spy.callback).toHaveBeenCalledWith([
                 engine.nodes[0],
                 engine.nodes[1]
-            ]);
+            ], true);
         });
 
-        it('should by called with extra passed dirty nodes', function() {
-            var n1 = {idx: -1},
-                n2 = {idx: -2};
+        it('should by called with extra passed node to be removed', function() {
+            var n1 = {idx: -1};
 
-            engine._notify(n1, n2);
+            engine._notify(n1);
 
             expect(spy.callback).toHaveBeenCalledWith([
                 n1,
-                n2,
                 engine.nodes[0],
                 engine.nodes[1]
-            ]);
+            ], true);
+        });
+
+        it('should by called with extra passed node to be removed and should maintain false parameter', function() {
+            var n1 = {idx: -1};
+
+            engine._notify(n1, false);
+
+            expect(spy.callback).toHaveBeenCalledWith([
+                n1,
+                engine.nodes[0],
+                engine.nodes[1]
+            ], false);
         });
     });
 
