@@ -476,8 +476,9 @@ Changes
 
 #### v0.2.6-dev (Development version)
 
-- update requirements to the latest versions
-- fix jQuery `size()`
+- update requirements to the latest versions of jQuery and jquery-ui.
+- fix jQuery `size()` ([#486](https://github.com/troolee/gridstack.js/issues/486)).
+- update _notify to allow detach ([#141](https://github.com/troolee/gridstack.js/issues/411)).
 
 #### v0.2.5 (2016-03-02)
 
