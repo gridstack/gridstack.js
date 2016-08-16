@@ -281,12 +281,14 @@
     };
 
     GridStackEngine.prototype._notify = function() {
+        var args = Array.prototype.slice.call(arguments, 0);
+        args[0] = typeof args[0] === 'undefined' ? [] : [args[0]];
+        args[1] = typeof args[1] === 'undefined' ? true : args[1];
         if (this._updateCounter) {
             return;
         }
-        var deletedNodes = Array.prototype.slice.call(arguments, 0);
-        deletedNodes = deletedNodes.concat(this.getDirtyNodes());
-        this.onchange(deletedNodes);
+        var deletedNodes = args[0].concat(this.getDirtyNodes());
+        this.onchange(deletedNodes, args[1]);
     };
 
     GridStackEngine.prototype.cleanNodes = function() {
@@ -345,9 +347,7 @@
         node._id = null;
         this.nodes = _.without(this.nodes, node);
         this._packNodes();
-        if (detachNode) {
-            this._notify(node);
-        }
+        this._notify(node, detachNode);
     };
 
     GridStackEngine.prototype.canMoveNode = function(node, x, y, width, height) {
@@ -578,10 +578,11 @@
 
         this._initStyles();
 
-        this.grid = new GridStackEngine(this.opts.width, function(nodes) {
+        this.grid = new GridStackEngine(this.opts.width, function(nodes, detachNode) {
+            detachNode = typeof detachNode === 'undefined' ? true : detachNode;
             var maxHeight = 0;
             _.each(nodes, function(n) {
-                if (n._id === null) {
+                if (detachNode && n._id === null) {
                     if (n.el) {
                         n.el.remove();
                     }
