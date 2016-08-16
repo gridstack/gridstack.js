@@ -975,6 +975,9 @@
     };
 
     GridStack.prototype._prepareElementsByNode = function(el, node) {
+        if (typeof $.ui === 'undefined') {
+            return;
+        }
         var self = this;
 
         var cellWidth;
@@ -1160,9 +1163,7 @@
         }, triggerAddEvent);
         el.data('_gridstack_node', node);
 
-        if (!this.opts.staticGrid) {
-            this._prepareElementsByNode(el, node);
-        }
+        this._prepareElementsByNode(el, node);
     };
 
     GridStack.prototype.setAnimation = function(enable) {
@@ -1258,7 +1259,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (self.opts.staticGrid || typeof node == 'undefined' || node === null) {
+            if (typeof node == 'undefined' || node === null || typeof $.ui === 'undefined') {
                 return;
             }
 
@@ -1278,7 +1279,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (self.opts.staticGrid || typeof node == 'undefined' || node === null) {
+            if (typeof node == 'undefined' || node === null || typeof $.ui === 'undefined') {
                 return;
             }
 
