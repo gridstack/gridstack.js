@@ -986,6 +986,8 @@
         var dragOrResize = function(event, ui) {
             var x = Math.round(ui.position.left / cellWidth);
             var y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
+            var yTop = Math.floor(ui.position.top / cellHeight);
+            var yBottom = Math.floor((ui.position.top + cellHeight) / cellHeight);
             var width;
             var height;
 
@@ -995,7 +997,7 @@
             }
 
             if (event.type == 'drag') {
-                if (x < 0 || x >= self.grid.width || y < 0) {
+                if (x < 0 || x >= self.grid.width || yTop < 0 || yBottom > self.grid.height) {
                     if (self.opts.removable === true) {
                         self._setupRemovingTimeout(el);
                     }
