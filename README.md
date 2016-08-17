@@ -480,6 +480,7 @@ Changes
 - fix jQuery `size()` ([#486](https://github.com/troolee/gridstack.js/issues/486)).
 - update _notify to allow detach ([#411](https://github.com/troolee/gridstack.js/issues/411)).
 - fix code that checks for jquery-ui ([#481](https://github.com/troolee/gridstack.js/issues/481)).
+- fix `cellWidth` calculation on empty grid
 
 #### v0.2.5 (2016-03-02)
 
