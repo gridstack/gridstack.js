@@ -1043,7 +1043,7 @@
             var o = $(this);
             self.grid.cleanNodes();
             self.grid.beginUpdate(node);
-            cellWidth = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
+            cellWidth = self.cellWidth();
             var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
             cellHeight = self.container.height() / parseInt(self.container.attr('data-gs-current-height'));
             self.placeholder
@@ -1494,8 +1494,7 @@
     };
 
     GridStack.prototype.cellWidth = function() {
-        var o = this.container.children('.' + this.opts.itemClass).first();
-        return Math.ceil(o.outerWidth() / parseInt(o.attr('data-gs-width'), 10));
+        return Math.round(this.container.outerWidth() / this.opts.width);
     };
 
     GridStack.prototype.getCellFromPixel = function(position, useOffset) {
