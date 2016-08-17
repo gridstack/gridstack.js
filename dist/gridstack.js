@@ -1115,13 +1115,13 @@
         };
 
         el
-            .draggable(_.extend(this.opts.draggable, {
+            .draggable(_.extend({}, this.opts.draggable, {
                 containment: this.opts.isNested ? this.container.parent() : null,
                 start: onStartMoving,
                 stop: onEndMoving,
                 drag: dragOrResize
             }))
-            .resizable(_.extend(this.opts.resizable, {
+            .resizable(_.extend({}, this.opts.resizable, {
                 start: onStartMoving,
                 stop: onEndMoving,
                 resize: dragOrResize
