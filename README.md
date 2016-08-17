@@ -82,8 +82,8 @@ Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) inst
 * Using CDN:
 
 ```html
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.5/gridstack.min.css" />
-<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.5/gridstack.min.js'></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.6/gridstack.min.css" />
+<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.6/gridstack.min.js'></script>
 ```
 
 * Using bower:
@@ -170,6 +170,8 @@ $(function () {
     $('.grid-stack').gridstack(options);
 });
 ```
+
+If you're still experiencing issues on touch devices please check [#444](https://github.com/troolee/gridstack.js/issues/444)
 
 ## Use with knockout.js
 
