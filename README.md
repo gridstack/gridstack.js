@@ -171,6 +171,8 @@ $(function () {
 });
 ```
 
+If you're still experiencing issues on touch devices please check #444.
+
 ## Use with knockout.js
 
 ```javascript
