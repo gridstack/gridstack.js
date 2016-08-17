@@ -477,10 +477,10 @@ Changes
 
 #### v0.2.6 (2016-08-17)
 
-- update `destroy([detachGrid])` call ([#422](https://github.com/troolee/gridstack.js/issues/422)).
-- don't mutate options when calling `draggable` and `resizable`. ([#505](https://github.com/troolee/gridstack.js/issues/505)).
 - update requirements to the latest versions of jQuery (v3.1.0+) and jquery-ui (v1.12.0+).
 - fix jQuery `size()` ([#486](https://github.com/troolee/gridstack.js/issues/486)).
+- update `destroy([detachGrid])` call ([#422](https://github.com/troolee/gridstack.js/issues/422)).
+- don't mutate options when calling `draggable` and `resizable`. ([#505](https://github.com/troolee/gridstack.js/issues/505)).
 - update _notify to allow detach ([#411](https://github.com/troolee/gridstack.js/issues/411)).
 - fix code that checks for jquery-ui ([#481](https://github.com/troolee/gridstack.js/issues/481)).
 - fix `cellWidth` calculation on empty grid
