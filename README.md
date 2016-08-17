@@ -479,6 +479,10 @@ Changes
 
 #### v0.2.7-dev (Development Version)
 
+- add oneColumnModeClass option to grid.
+- remove 768px CSS styles, moved to grid-stack-one-column-mode class.
+- add max-width override on grid-stck-one-column-mode ([#462](https://github.com/troolee/gridstack.js/issues/462)).
+
 #### v0.2.6 (2016-08-17)
 
 - update requirements to the latest versions of jQuery (v3.1.0+) and jquery-ui (v1.12.0+).
