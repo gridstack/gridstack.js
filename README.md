@@ -478,6 +478,7 @@ Changes
 #### v0.2.7-dev (Development version)
 
 - update `destroy([detachGrid])` call ([#422](https://github.com/troolee/gridstack.js/issues/422)).
+- don't mutate options when calling `draggable` and `resizable`. ([#505](https://github.com/troolee/gridstack.js/issues/505)).
 
 #### v0.2.6 (2016-08-17)
 
