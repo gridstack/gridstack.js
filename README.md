@@ -171,7 +171,7 @@ $(function () {
 });
 ```
 
-If you're still experiencing issues on touch devices please check #444.
+If you're still experiencing issues on touch devices please check [#444](https://github.com/troolee/gridstack.js/issues/444)
 
 ## Use with knockout.js
 
