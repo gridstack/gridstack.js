@@ -45,7 +45,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Using AniJS](#using-anijs)
 - [The Team](#the-team)
 - [Changes](#changes)
-      - [v0.2.6 (Development version)](#v027-dev-development-version)
+      - [v0.2.7-dev (Development Version)](#v027-dev-development-version)
       - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
       - [v0.2.5 (2016-03-02)](#v025-2016-03-02)
       - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
@@ -474,6 +474,8 @@ for help.
 
 Changes
 =======
+
+#### v0.2.7-dev (Development Version)
 
 #### v0.2.6 (2016-08-17)
 
