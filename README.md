@@ -45,7 +45,8 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Using AniJS](#using-anijs)
 - [The Team](#the-team)
 - [Changes](#changes)
-      - [v0.2.6-dev (Development version)](#v026-dev-development-version)
+      - [v0.2.7-dev (Development version)](#v027-dev-development-version)
+      - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
       - [v0.2.5 (2016-03-02)](#v025-2016-03-02)
       - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
       - [v0.2.3 (2015-06-23)](#v023-2015-06-23)
@@ -474,7 +475,11 @@ for help.
 Changes
 =======
 
-#### v0.2.6-dev (Development version)
+#### v0.2.7-dev (Development version)
+
+- update `destroy([detachGrid])` call ([#422](https://github.com/troolee/gridstack.js/issues/422)).
+
+#### v0.2.6 (2016-08-17)
 
 - update requirements to the latest versions of jQuery (v3.1.0+) and jquery-ui (v1.12.0+).
 - fix jQuery `size()` ([#486](https://github.com/troolee/gridstack.js/issues/486)).
