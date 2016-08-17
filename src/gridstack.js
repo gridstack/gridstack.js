@@ -975,6 +975,9 @@
     };
 
     GridStack.prototype._prepareElementsByNode = function(el, node) {
+        if (typeof $.ui === 'undefined') {
+            return;
+        }
         var self = this;
 
         var cellWidth;
@@ -1040,7 +1043,7 @@
             var o = $(this);
             self.grid.cleanNodes();
             self.grid.beginUpdate(node);
-            cellWidth = Math.ceil(o.outerWidth() / o.attr('data-gs-width'));
+            cellWidth = self.cellWidth();
             var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
             cellHeight = self.container.height() / parseInt(self.container.attr('data-gs-current-height'));
             self.placeholder
@@ -1160,9 +1163,7 @@
         }, triggerAddEvent);
         el.data('_gridstack_node', node);
 
-        if (!this.opts.staticGrid) {
-            this._prepareElementsByNode(el, node);
-        }
+        this._prepareElementsByNode(el, node);
     };
 
     GridStack.prototype.setAnimation = function(enable) {
@@ -1258,7 +1259,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (self.opts.staticGrid || typeof node == 'undefined' || node === null) {
+            if (typeof node == 'undefined' || node === null || typeof $.ui === 'undefined') {
                 return;
             }
 
@@ -1278,7 +1279,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (self.opts.staticGrid || typeof node == 'undefined' || node === null) {
+            if (typeof node == 'undefined' || node === null || typeof $.ui === 'undefined') {
                 return;
             }
 
@@ -1493,8 +1494,7 @@
     };
 
     GridStack.prototype.cellWidth = function() {
-        var o = this.container.children('.' + this.opts.itemClass).first();
-        return Math.ceil(o.outerWidth() / parseInt(o.attr('data-gs-width'), 10));
+        return Math.round(this.container.outerWidth() / this.opts.width);
     };
 
     GridStack.prototype.getCellFromPixel = function(position, useOffset) {
