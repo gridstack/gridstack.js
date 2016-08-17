@@ -1,5 +1,5 @@
 /**
- * gridstack.js 0.2.6
+ * gridstack.js 0.2.7-dev
  * http://troolee.github.io/gridstack.js/
  * (c) 2014-2016 Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
@@ -1244,6 +1244,7 @@
         this.disable();
         if (typeof detachGrid != 'undefined' && !detachGrid) {
             this.removeAll(false);
+            this.container.removeData('gridstack');
         } else {
             this.container.remove();
         }
