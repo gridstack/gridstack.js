@@ -220,14 +220,27 @@ describe('gridstack', function() {
         afterEach(function() {
             document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
         });
-        it('should return 96.', function() {
+        it('should return 1/12th of container width.', function() {
             var options = {
                 cellHeight: 80,
-                verticalMargin: 10
+                verticalMargin: 10,
+                width: 12
             };
             $('.grid-stack').gridstack(options);
             var grid = $('.grid-stack').data('gridstack');
-            expect(grid.cellWidth()).toBe(96);
+            var res = Math.round($('.grid-stack').outerWidth() / 12);
+            expect(grid.cellWidth()).toBe(res);
+        });
+        it('should return 1/10th of container width.', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                width: 10
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            var res = Math.round($('.grid-stack').outerWidth() / 10);
+            expect(grid.cellWidth()).toBe(res);
         });
     });
 
