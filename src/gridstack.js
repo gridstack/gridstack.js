@@ -351,6 +351,9 @@
     };
 
     GridStackEngine.prototype.canMoveNode = function(node, x, y, width, height) {
+        if (!this.isNodeChangedPosition(node, x, y, width, height)) {
+            return false;
+        }
         var hasLocked = Boolean(_.find(this.nodes, function(n) { return n.locked; }));
 
         if (!this.height && !hasLocked) {
@@ -406,7 +409,27 @@
         return clone.getGridHeight() <= this.height;
     };
 
+    GridStackEngine.prototype.isNodeChangedPosition = function(node, x, y, width, height) {
+        if (typeof x != 'number') { x = node.x; }
+        if (typeof y != 'number') { y = node.y; }
+        if (typeof width != 'number') { width = node.width; }
+        if (typeof height != 'number') { height = node.height; }
+
+        if (typeof node.maxWidth != 'undefined') { width = Math.min(width, node.maxWidth); }
+        if (typeof node.maxHeight != 'undefined') { height = Math.min(height, node.maxHeight); }
+        if (typeof node.minWidth != 'undefined') { width = Math.max(width, node.minWidth); }
+        if (typeof node.minHeight != 'undefined') { height = Math.max(height, node.minHeight); }
+
+        if (node.x == x && node.y == y && node.width == width && node.height == height) {
+            return false;
+        }
+        return true;
+    };
+
     GridStackEngine.prototype.moveNode = function(node, x, y, width, height, noPack) {
+        if (!this.isNodeChangedPosition(node, x, y, width, height)) {
+            return node;
+        }
         if (typeof x != 'number') { x = node.x; }
         if (typeof y != 'number') { y = node.y; }
         if (typeof width != 'number') { width = node.width; }
