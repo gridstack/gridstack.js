@@ -130,7 +130,7 @@
     */
     function GridStackDragDropPlugin(grid) {
         this.grid = grid;
-    };
+    }
 
     GridStackDragDropPlugin.prototype.resizable = function(el, opts) {
         return this;
@@ -146,7 +146,7 @@
     */
     function JQueryUIGridStackDragDropPlugin(grid) {
         GridStackDragDropPlugin.call(this, grid);
-    };
+    }
 
     JQueryUIGridStackDragDropPlugin.prototype = Object.create(GridStackDragDropPlugin.prototype);
     JQueryUIGridStackDragDropPlugin.prototype.constructor = JQueryUIGridStackDragDropPlugin;
