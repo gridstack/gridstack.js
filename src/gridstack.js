@@ -124,6 +124,60 @@
     Utils.insert_css_rule = obsolete(Utils.insertCSSRule, 'insert_css_rule', 'insertCSSRule');
     // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
 
+    /**
+    * @class GridStackDragDropPlugin
+    * Base class for drag'n'drop plugin.
+    */
+    function GridStackDragDropPlugin(grid) {
+        this.grid = grid;
+    };
+
+    GridStackDragDropPlugin.prototype.resizable = function(el, opts) {
+        return this;
+    };
+
+    GridStackDragDropPlugin.prototype.draggable = function(el, opts) {
+        return this;
+    };
+
+    /**
+    * @class JQueryUIGridStackDragDropPlugin
+    * jQuery UI implementation of drag'n'drop gridstack plugin.
+    */
+    function JQueryUIGridStackDragDropPlugin(grid) {
+        GridStackDragDropPlugin.call(this, grid);
+    };
+
+    JQueryUIGridStackDragDropPlugin.prototype = Object.create(GridStackDragDropPlugin.prototype);
+    JQueryUIGridStackDragDropPlugin.prototype.constructor = JQueryUIGridStackDragDropPlugin;
+
+    JQueryUIGridStackDragDropPlugin.prototype.resizable = function(el, opts) {
+        if (opts === 'disable' || opts === 'enable') {
+            el.resizable(opts);
+        } else {
+            el.resizable(_.extend({}, this.grid.opts.resizable, {
+                start: opts.start || function() {},
+                stop: opts.stop || function() {},
+                resize: opts.resize || function() {}
+            }));
+        }
+        return this;
+    };
+
+    JQueryUIGridStackDragDropPlugin.prototype.draggable = function(el, opts) {
+        if (opts === 'disable' || opts === 'enable') {
+            el.draggable(opts);
+        } else {
+            el.draggable(_.extend({}, this.grid.opts.draggable, {
+                containment: this.grid.opts.isNested ? this.grid.container.parent() : null,
+                start: opts.start || function() {},
+                stop: opts.stop || function() {},
+                drag: opts.drag || function() {}
+            }));
+        }
+        return this;
+    };
+
     var idSeq = 0;
 
     var GridStackEngine = function(width, onchange, floatMode, height, items) {
@@ -548,8 +602,11 @@
             removeTimeout: 2000,
             verticalMarginUnit: 'px',
             cellHeightUnit: 'px',
-            oneColumnModeClass: opts.oneColumnModeClass || 'grid-stack-one-column-mode'
+            oneColumnModeClass: opts.oneColumnModeClass || 'grid-stack-one-column-mode',
+            ddPlugin: JQueryUIGridStackDragDropPlugin
         });
+
+        this.dd = new opts.ddPlugin(this);
 
         if (this.opts.rtl === 'auto') {
             this.opts.rtl = this.container.css('direction') === 'rtl';
@@ -647,10 +704,10 @@
                         return;
                     }
                     if (node.noMove || self.opts.disableDrag) {
-                        node.el.draggable('disable');
+                        self.dd.draggable(node.el, 'disable');
                     }
                     if (node.noResize || self.opts.disableResize) {
-                        node.el.resizable('disable');
+                        self.dd.resizable(node.el, 'disable');
                     }
 
                     node.el.trigger('resize');
@@ -669,10 +726,10 @@
 
                 _.each(self.grid.nodes, function(node) {
                     if (!node.noMove && !self.opts.disableDrag) {
-                        node.el.draggable('enable');
+                        self.dd.draggable(node.el, 'enable');
                     }
                     if (!node.noResize && !self.opts.disableResize) {
-                        node.el.resizable('enable');
+                        self.dd.resizable(node.el, 'enable');
                     }
 
                     node.el.trigger('resize');
@@ -1116,25 +1173,24 @@
             }
         };
 
-        el
-            .draggable(_.extend({}, this.opts.draggable, {
-                containment: this.opts.isNested ? this.container.parent() : null,
+        this.dd
+            .draggable(el, {
                 start: onStartMoving,
                 stop: onEndMoving,
                 drag: dragOrResize
-            }))
-            .resizable(_.extend({}, this.opts.resizable, {
+            })
+            .resizable(el, {
                 start: onStartMoving,
                 stop: onEndMoving,
                 resize: dragOrResize
-            }));
+            });
 
         if (node.noMove || this._isOneColumnMode() || this.opts.disableDrag) {
-            el.draggable('disable');
+            this.dd.draggable(el, 'disable');
         }
 
         if (node.noResize || this._isOneColumnMode() || this.opts.disableResize) {
-            el.resizable('disable');
+            this.dd.resizable(el, 'disable');
         }
 
         el.attr('data-gs-locked', node.locked ? 'yes' : null);
@@ -1288,10 +1344,10 @@
 
             node.noMove = !(val || false);
             if (node.noMove || self._isOneColumnMode()) {
-                el.draggable('disable');
+                self.dd.draggable(el, 'disable');
                 el.removeClass('ui-draggable-handle');
             } else {
-                el.draggable('enable');
+                self.dd.draggable(el, 'enable');
                 el.addClass('ui-draggable-handle');
             }
         });
