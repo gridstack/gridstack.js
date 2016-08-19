@@ -158,69 +158,6 @@
         return this;
     };
 
-    /**
-    * @class JQueryUIGridStackDragDropPlugin
-    * jQuery UI implementation of drag'n'drop gridstack plugin.
-    */
-    function JQueryUIGridStackDragDropPlugin(grid) {
-        GridStackDragDropPlugin.call(this, grid);
-    }
-
-    GridStackDragDropPlugin.registerPlugin(JQueryUIGridStackDragDropPlugin);
-
-    JQueryUIGridStackDragDropPlugin.prototype = Object.create(GridStackDragDropPlugin.prototype);
-    JQueryUIGridStackDragDropPlugin.prototype.constructor = JQueryUIGridStackDragDropPlugin;
-
-    JQueryUIGridStackDragDropPlugin.prototype.resizable = function(el, opts) {
-        el = $(el);
-        if (opts === 'disable' || opts === 'enable') {
-            el.resizable(opts);
-        } else {
-            el.resizable(_.extend({}, this.grid.opts.resizable, {
-                start: opts.start || function() {},
-                stop: opts.stop || function() {},
-                resize: opts.resize || function() {}
-            }));
-        }
-        return this;
-    };
-
-    JQueryUIGridStackDragDropPlugin.prototype.draggable = function(el, opts) {
-        el = $(el);
-        if (opts === 'disable' || opts === 'enable') {
-            el.draggable(opts);
-        } else {
-            el.draggable(_.extend({}, this.grid.opts.draggable, {
-                containment: this.grid.opts.isNested ? this.grid.container.parent() : null,
-                start: opts.start || function() {},
-                stop: opts.stop || function() {},
-                drag: opts.drag || function() {}
-            }));
-        }
-        return this;
-    };
-
-    JQueryUIGridStackDragDropPlugin.prototype.droppable = function(el, opts) {
-        el = $(el);
-        if (opts === 'disable' || opts === 'enable') {
-            el.droppable(opts);
-        } else {
-            el.droppable({
-                accept: opts.accept
-            });
-        }
-        return this;
-    };
-
-    JQueryUIGridStackDragDropPlugin.prototype.isDroppable = function(el, opts) {
-        el = $(el);
-        return Boolean(el.data('droppable'));
-    };
-
-    JQueryUIGridStackDragDropPlugin.prototype.on = function(el, eventName, callback) {
-        $(el).on(eventName, callback);
-        return this;
-    };
 
     var idSeq = 0;
 
@@ -676,7 +613,7 @@
         if (this.opts.ddPlugin === false) {
             this.opts.ddPlugin = GridStackDragDropPlugin;
         } else if (this.opts.ddPlugin === null) {
-            this.opts.ddPlugin = _.first(GridStackDragDropPlugin.registeredPlugins);
+            this.opts.ddPlugin = _.first(GridStackDragDropPlugin.registeredPlugins) || GridStackDragDropPlugin;
         }
 
         this.dd = new this.opts.ddPlugin(this);
