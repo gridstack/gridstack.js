@@ -132,6 +132,12 @@
         this.grid = grid;
     }
 
+    GridStackDragDropPlugin.registeredPlugins = [];
+
+    GridStackDragDropPlugin.registerPlugin = function(pluginClass) {
+        GridStackDragDropPlugin.registeredPlugins.push(pluginClass);
+    };
+
     GridStackDragDropPlugin.prototype.resizable = function(el, opts) {
         return this;
     };
@@ -159,6 +165,8 @@
     function JQueryUIGridStackDragDropPlugin(grid) {
         GridStackDragDropPlugin.call(this, grid);
     }
+
+    GridStackDragDropPlugin.registerPlugin(JQueryUIGridStackDragDropPlugin);
 
     JQueryUIGridStackDragDropPlugin.prototype = Object.create(GridStackDragDropPlugin.prototype);
     JQueryUIGridStackDragDropPlugin.prototype.constructor = JQueryUIGridStackDragDropPlugin;
@@ -662,10 +670,16 @@
             verticalMarginUnit: 'px',
             cellHeightUnit: 'px',
             oneColumnModeClass: opts.oneColumnModeClass || 'grid-stack-one-column-mode',
-            ddPlugin: JQueryUIGridStackDragDropPlugin
+            ddPlugin: null
         });
 
-        this.dd = new opts.ddPlugin(this);
+        if (this.opts.ddPlugin === false) {
+            this.opts.ddPlugin = GridStackDragDropPlugin;
+        } else if (this.opts.ddPlugin === null) {
+            this.opts.ddPlugin = _.first(GridStackDragDropPlugin.registeredPlugins);
+        }
+
+        this.dd = new this.opts.ddPlugin(this);
 
         if (this.opts.rtl === 'auto') {
             this.opts.rtl = this.container.css('direction') === 'rtl';
@@ -1763,6 +1777,7 @@
 
     scope.GridStackUI.Utils = Utils;
     scope.GridStackUI.Engine = GridStackEngine;
+    scope.GridStackUI.GridStackDragDropPlugin = GridStackDragDropPlugin;
 
     $.fn.gridstack = function(opts) {
         return this.each(function() {
