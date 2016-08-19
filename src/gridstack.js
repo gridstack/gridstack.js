@@ -1189,8 +1189,8 @@
             node._beforeDragX = node.x;
             node._beforeDragY = node.y;
 
-            el.resizable('option', 'minWidth', cellWidth * (node.minWidth || 1));
-            el.resizable('option', 'minHeight', strictCellHeight * (node.minHeight || 1));
+            self.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
+            self.dd.resizable(el, 'option', 'minHeight', strictCellHeight * (node.minHeight || 1));
 
             if (event.type == 'resizestart') {
                 o.find('.grid-stack-item').trigger('resizestart');
@@ -1398,9 +1398,9 @@
 
             node.noResize = !(val || false);
             if (node.noResize || self._isOneColumnMode()) {
-                el.resizable('disable');
+                self.dd.resizable(el, 'disable');
             } else {
-                el.resizable('enable');
+                self.dd.resizable(el, 'enable');
             }
         });
         return this;
