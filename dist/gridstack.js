@@ -140,6 +140,18 @@
         return this;
     };
 
+    GridStackDragDropPlugin.prototype.droppable = function(el, opts) {
+        return this;
+    };
+
+    GridStackDragDropPlugin.prototype.isDroppable = function(el) {
+        return false;
+    };
+
+    GridStackDragDropPlugin.prototype.on = function(el, eventName, callback) {
+        return this;
+    };
+
     /**
     * @class JQueryUIGridStackDragDropPlugin
     * jQuery UI implementation of drag'n'drop gridstack plugin.
@@ -152,6 +164,7 @@
     JQueryUIGridStackDragDropPlugin.prototype.constructor = JQueryUIGridStackDragDropPlugin;
 
     JQueryUIGridStackDragDropPlugin.prototype.resizable = function(el, opts) {
+        el = $(el);
         if (opts === 'disable' || opts === 'enable') {
             el.resizable(opts);
         } else {
@@ -165,6 +178,7 @@
     };
 
     JQueryUIGridStackDragDropPlugin.prototype.draggable = function(el, opts) {
+        el = $(el);
         if (opts === 'disable' || opts === 'enable') {
             el.draggable(opts);
         } else {
@@ -175,6 +189,28 @@
                 drag: opts.drag || function() {}
             }));
         }
+        return this;
+    };
+
+    JQueryUIGridStackDragDropPlugin.prototype.droppable = function(el, opts) {
+        el = $(el);
+        if (opts === 'disable' || opts === 'enable') {
+            el.droppable(opts);
+        } else {
+            el.droppable({
+                accept: opts.accept
+            });
+        }
+        return this;
+    };
+
+    JQueryUIGridStackDragDropPlugin.prototype.isDroppable = function(el, opts) {
+        el = $(el);
+        return Boolean(el.data('droppable'));
+    };
+
+    JQueryUIGridStackDragDropPlugin.prototype.on = function(el, eventName, callback) {
+        $(el).on(eventName, callback);
         return this;
     };
 
@@ -765,13 +801,13 @@
 
         if (!self.opts.staticGrid && typeof self.opts.removable === 'string') {
             var trashZone = $(self.opts.removable);
-            if (!trashZone.data('droppable')) {
-                trashZone.droppable({
+            if (!this.dd.isDroppable(trashZone)) {
+                this.dd.droppable(trashZone, {
                     accept: '.' + self.opts.itemClass
                 });
             }
-            trashZone
-                .on('dropover', function(event, ui) {
+            this.dd
+                .on(trashZone, 'dropover', function(event, ui) {
                     var el = $(ui.draggable);
                     var node = el.data('_gridstack_node');
                     if (node._grid !== self) {
@@ -779,7 +815,7 @@
                     }
                     self._setupRemovingTimeout(el);
                 })
-                .on('dropout', function(event, ui) {
+                .on(trashZone, 'dropout', function(event, ui) {
                     var el = $(ui.draggable);
                     var node = el.data('_gridstack_node');
                     if (node._grid !== self) {
@@ -829,16 +865,18 @@
                 }
             };
 
-            $(self.container).droppable({
-                accept: function(el) {
-                    el = $(el);
-                    var node = el.data('_gridstack_node');
-                    if (node && node._grid === self) {
-                        return false;
+            this.dd
+                .droppable(self.container, {
+                    accept: function(el) {
+                        el = $(el);
+                        var node = el.data('_gridstack_node');
+                        if (node && node._grid === self) {
+                            return false;
+                        }
+                        return el.is(self.opts.acceptWidgets === true ? '.grid-stack-item' : self.opts.acceptWidgets);
                     }
-                    return el.is(self.opts.acceptWidgets === true ? '.grid-stack-item' : self.opts.acceptWidgets);
-                },
-                over: function(event, ui) {
+                })
+                .on(self.container, 'dropover', function(event, ui) {
                     var offset = self.container.offset();
                     var el = $(ui.draggable);
                     var cellWidth = self.cellWidth();
@@ -855,8 +893,8 @@
                     el.data('_gridstack_node_orig', origNode);
 
                     el.on('drag', onDrag);
-                },
-                out: function(event, ui) {
+                })
+                .on(self.container, 'dropout', function(event, ui) {
                     var el = $(ui.draggable);
                     el.unbind('drag', onDrag);
                     var node = el.data('_gridstack_node');
@@ -865,8 +903,8 @@
                     self.placeholder.detach();
                     self._updateContainerHeight();
                     el.data('_gridstack_node', el.data('_gridstack_node_orig'));
-                },
-                drop: function(event, ui) {
+                })
+                .on(self.container, 'drop', function(event, ui) {
                     self.placeholder.detach();
 
                     var node = $(ui.draggable).data('_gridstack_node');
@@ -893,8 +931,7 @@
                     self._triggerChangeEvent();
 
                     self.grid.endUpdate();
-                }
-            });
+                });
         }
     };
 
