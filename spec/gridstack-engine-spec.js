@@ -14,7 +14,7 @@ describe('gridstack engine', function() {
 
         beforeAll(function() {
             engine = new GridStackUI.Engine(12);
-        })
+        });
 
         it('should be setup properly', function() {
             expect(engine.width).toEqual(12);
@@ -29,7 +29,7 @@ describe('gridstack engine', function() {
 
         beforeAll(function() {
             engine = new GridStackUI.Engine(12);
-        })
+        });
 
         it('should prepare a node', function() {
             expect(engine._prepareNode({}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
@@ -57,7 +57,7 @@ describe('gridstack engine', function() {
             engine.nodes = [
                 engine._prepareNode({x: 3, y: 2, width: 3, height: 2})
             ];
-        })
+        });
 
         it('should be true', function() {
             expect(engine.isAreaEmpty(0, 0, 3, 2)).toEqual(true);
@@ -108,14 +108,14 @@ describe('gridstack engine', function() {
         });
     });
 
-    describe('test batchUpdate/commit', function () {
+    describe('test batchUpdate/commit', function() {
         var engine;
 
-        beforeAll(function () {
-            engine = new GridStackUI.Engine(12)
+        beforeAll(function() {
+            engine = new GridStackUI.Engine(12);
         });
 
-        it('should work on not float grids', function () {
+        it('should work on not float grids', function() {
             expect(engine.float).toEqual(false);
             engine.batchUpdate();
             expect(engine._updateCounter).toBeGreaterThan(0);
@@ -126,14 +126,14 @@ describe('gridstack engine', function() {
         });
     });
 
-    describe('test batchUpdate/commit', function () {
+    describe('test batchUpdate/commit', function() {
         var engine;
 
-        beforeAll(function () {
-            engine = new GridStackUI.Engine(12, null, true)
+        beforeAll(function() {
+            engine = new GridStackUI.Engine(12, null, true);
         });
 
-        it('should work on float grids', function () {
+        it('should work on float grids', function() {
             expect(engine.float).toEqual(true);
             engine.batchUpdate();
             expect(engine._updateCounter).toBeGreaterThan(0);
@@ -150,8 +150,8 @@ describe('gridstack engine', function() {
 
         beforeEach(function() {
             spy = {
-                callback: function () {}
-            }
+                callback: function() {}
+            };
             spyOn(spy, 'callback');
 
             engine = new GridStackUI.Engine(12, spy.callback, true);
@@ -204,19 +204,19 @@ describe('gridstack engine', function() {
         });
     });
 
-    describe('test _packNodes', function () {
-        describe('using not float mode', function () {
+    describe('test _packNodes', function() {
+        describe('using not float mode', function() {
             var engine;
 
-            var findNode = function (engine, id) {
-                return _.find(engine.nodes, function(i) { return i._id === id });
-            }
+            var findNode = function(engine, id) {
+                return _.find(engine.nodes, function(i) { return i._id === id; });
+            };
 
-            beforeEach(function () {
+            beforeEach(function() {
                 engine = new GridStackUI.Engine(12, null, false);
             });
 
-            it('shouldn\'t pack one node with y coord eq 0', function () {
+            it('shouldn\'t pack one node with y coord eq 0', function() {
                 engine.nodes = [
                     {x: 0, y: 0, width: 1, height: 1, _id: 1},
                 ];
@@ -227,7 +227,7 @@ describe('gridstack engine', function() {
                 expect(findNode(engine, 1)._dirty).toBeFalsy();
             });
 
-            it('should pack one node correctly', function () {
+            it('should pack one node correctly', function() {
                 engine.nodes = [
                     {x: 0, y: 1, width: 1, height: 1, _id: 1},
                 ];
@@ -237,7 +237,7 @@ describe('gridstack engine', function() {
                 expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1, _dirty: true}));
             });
 
-            it('should pack nodes correctly', function () {
+            it('should pack nodes correctly', function() {
                 engine.nodes = [
                     {x: 0, y: 1, width: 1, height: 1, _id: 1},
                     {x: 0, y: 5, width: 1, height: 1, _id: 2},
@@ -249,7 +249,7 @@ describe('gridstack engine', function() {
                 expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 1, width: 1, height: 1, _dirty: true}));
             });
 
-            it('should pack nodes correctly', function () {
+            it('should pack nodes correctly', function() {
                 engine.nodes = [
                     {x: 0, y: 5, width: 1, height: 1, _id: 1},
                     {x: 0, y: 1, width: 1, height: 1, _id: 2},
@@ -261,7 +261,7 @@ describe('gridstack engine', function() {
                 expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 1, width: 1, height: 1, _dirty: true}));
             });
 
-            it('should respect locked nodes', function () {
+            it('should respect locked nodes', function() {
                 engine.nodes = [
                     {x: 0, y: 1, width: 1, height: 1, _id: 1, locked: true},
                     {x: 0, y: 5, width: 1, height: 1, _id: 2},
@@ -273,6 +273,39 @@ describe('gridstack engine', function() {
                 expect(findNode(engine, 1)._dirty).toBeFalsy();
                 expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 2, width: 1, height: 1, _dirty: true}));
             });
+        });
+    });
+
+    describe('test isNodeChangedPosition', function() {
+        var engine;
+
+        beforeAll(function() {
+            engine = new GridStackUI.Engine(12);
+        });
+
+        it('should return true for changed x', function() {
+            var widget = { x: 1, y: 2, width: 3, height: 4 };
+            expect(engine.isNodeChangedPosition(widget, 2, 2)).toEqual(true);
+        });
+
+        it('should return true for changed y', function() {
+            var widget = { x: 1, y: 2, width: 3, height: 4 };
+            expect(engine.isNodeChangedPosition(widget, 1, 1)).toEqual(true);
+        });
+
+        it('should return true for changed width', function() {
+            var widget = { x: 1, y: 2, width: 3, height: 4 };
+            expect(engine.isNodeChangedPosition(widget, 2, 2, 4, 4)).toEqual(true);
+        });
+
+        it('should return true for changed height', function() {
+            var widget = { x: 1, y: 2, width: 3, height: 4 };
+            expect(engine.isNodeChangedPosition(widget, 1, 2, 3, 3)).toEqual(true);
+        });
+
+        it('should return false for unchanged position', function() {
+            var widget = { x: 1, y: 2, width: 3, height: 4 };
+            expect(engine.isNodeChangedPosition(widget, 1, 2, 3, 4)).toEqual(false);
         });
     });
 });
