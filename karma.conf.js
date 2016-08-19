@@ -19,6 +19,7 @@ module.exports = function(config) {
           'bower_components/jquery-ui/jquery-ui.min.js',
           'bower_components/lodash/dist/lodash.min.js',
           'src/gridstack.js',
+          'src/gridstack.jQueryUI.js',
           'spec/*-spec.js'
         ],
 
@@ -31,7 +32,8 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'src/gridstack.js': ['coverage']
+            'src/gridstack.js': ['coverage'],
+            'src/gridstack.jQueryUI.js': ['coverage'],
         },
 
 
