@@ -25,6 +25,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Requirements](#requirements)
   - [Install](#install)
   - [Basic usage](#basic-usage)
+  - [Migrating to v0.2.7](#migrating-to-v027)
   - [Migrating to v0.2.5](#migrating-to-v025)
   - [API Documentation](#api-documentation)
   - [Questions and Answers](#questions-and-answers)
@@ -128,6 +129,25 @@ $(function () {
 });
 </script>
 ```
+
+## Migrating to v0.2.7
+
+As of v0.2.7, gridstack introduces a new plugin system. The drag'n'drop functionality has been modified to take advantage of this system. Because of this, and to avoid dependency on core code from jQuery UI, the plugin was functionality was moved to a separate file.
+
+To ensure gridstack continues to work, either include the additional `gridstack.jQueryUI.js` file into your HTML or use `gridstack.all.js`:
+
+```html
+<script src="gridstack.js"></script>
+<script src="gridstack.jQueryUI.js"></script>
+```
+
+or
+
+```html
+<script src="gridstack.all.js"></script>
+```
+
+We're working on implementing support for other drag'n'drop libraries through the new plugin system.
 
 ## Migrating to v0.2.5
 
