@@ -26,7 +26,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
       - [Using gridstack.js with jQuery UI](#using-gridstackjs-with-jquery-ui)
   - [Install](#install)
   - [Basic usage](#basic-usage)
-  - [Migrating to v0.2.7](#migrating-to-v027)
+  - [Migrating to v0.3.0](#migrating-to-v030)
   - [Migrating to v0.2.5](#migrating-to-v025)
   - [API Documentation](#api-documentation)
   - [Questions and Answers](#questions-and-answers)
@@ -47,7 +47,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Using AniJS](#using-anijs)
 - [The Team](#the-team)
 - [Changes](#changes)
-      - [v0.2.7-dev (Development Version)](#v027-dev-development-version)
+      - [v0.3.0-dev (Development Version)](#v030-dev-development-version)
       - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
       - [v0.2.5 (2016-03-02)](#v025-2016-03-02)
       - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
@@ -134,7 +134,7 @@ $(function () {
 </script>
 ```
 
-## Migrating to v0.2.7
+## Migrating to v0.3.0
 
 As of v0.2.7, gridstack introduces a new plugin system. The drag'n'drop functionality has been modified to take advantage of this system. Because of this, and to avoid dependency on core code from jQuery UI, the plugin was functionality was moved to a separate file.
 
@@ -501,7 +501,7 @@ for help.
 Changes
 =======
 
-#### v0.2.7-dev (Development Version)
+#### v0.3.0-dev (Development Version)
 
 - add oneColumnModeClass option to grid.
 - remove 768px CSS styles, moved to grid-stack-one-column-mode class.
