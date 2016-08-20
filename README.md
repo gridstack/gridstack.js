@@ -23,8 +23,10 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
 - [Demo](#demo)
 - [Usage](#usage)
   - [Requirements](#requirements)
+      - [Using gridstack.js with jQuery UI](#using-gridstackjs-with-jquery-ui)
   - [Install](#install)
   - [Basic usage](#basic-usage)
+  - [Migrating to v0.3.0](#migrating-to-v030)
   - [Migrating to v0.2.5](#migrating-to-v025)
   - [API Documentation](#api-documentation)
   - [Questions and Answers](#questions-and-answers)
@@ -45,7 +47,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Using AniJS](#using-anijs)
 - [The Team](#the-team)
 - [Changes](#changes)
-      - [v0.2.7-dev (Development Version)](#v027-dev-development-version)
+      - [v0.3.0-dev (Development Version)](#v030-dev-development-version)
       - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
       - [v0.2.5 (2016-03-02)](#v025-2016-03-02)
       - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
@@ -72,12 +74,21 @@ Usage
 
 * [lodash.js](https://lodash.com) (>= 3.5.0, full build)
 * [jQuery](http://jquery.com) (>= 3.1.0)
-* [jQuery UI](http://jqueryui.com) (>= 1.12.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
-* (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
 
 Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
 
+#### Using gridstack.js with jQuery UI
+
+* [jQuery UI](http://jqueryui.com) (>= 1.12.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
+* (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
+
 ## Install
+
+```html
+<link rel="stylesheet" href="gridstack.css" />
+<script src="gridstack.js"></script>
+<script src="gridstack.jQueryUI.js"></script>
+```
 
 * Using CDN:
 
@@ -128,6 +139,25 @@ $(function () {
 });
 </script>
 ```
+
+## Migrating to v0.3.0
+
+As of v0.3.0, gridstack introduces a new plugin system. The drag'n'drop functionality has been modified to take advantage of this system. Because of this, and to avoid dependency on core code from jQuery UI, the plugin was functionality was moved to a separate file.
+
+To ensure gridstack continues to work, either include the additional `gridstack.jQueryUI.js` file into your HTML or use `gridstack.all.js`:
+
+```html
+<script src="gridstack.js"></script>
+<script src="gridstack.jQueryUI.js"></script>
+```
+
+or
+
+```html
+<script src="gridstack.all.js"></script>
+```
+
+We're working on implementing support for other drag'n'drop libraries through the new plugin system.
 
 ## Migrating to v0.2.5
 
@@ -477,12 +507,13 @@ for help.
 Changes
 =======
 
-#### v0.2.7-dev (Development Version)
+#### v0.3.0-dev (Development Version)
 
 - add oneColumnModeClass option to grid.
 - remove 768px CSS styles, moved to grid-stack-one-column-mode class.
 - add max-width override on grid-stck-one-column-mode ([#462](https://github.com/troolee/gridstack.js/issues/462)).
 - add internal function`isNodeChangedPosition`, minor optimization to move/drag.
+- drag'n'drop plugin system. Move jQuery UI dependencies to separate plugin file.
 
 #### v0.2.6 (2016-08-17)
 
