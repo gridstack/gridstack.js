@@ -68,6 +68,7 @@ gridstack.js API
  - a string (ex: '10em', '100px', '10rem')
  - 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
  - `'auto'` - height will be calculated from cell width.
+- `ddPlugin` - class that implement drag'n'drop functionallity for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`)
