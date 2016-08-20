@@ -84,6 +84,11 @@ Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) inst
 
 ## Install
 
+```html
+<script src="gridstack.js"></script>
+<script src="gridstack.jQueryUI.js"></script>
+```
+
 * Using CDN:
 
 ```html
