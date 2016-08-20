@@ -503,6 +503,7 @@ Changes
 - remove 768px CSS styles, moved to grid-stack-one-column-mode class.
 - add max-width override on grid-stck-one-column-mode ([#462](https://github.com/troolee/gridstack.js/issues/462)).
 - add internal function`isNodeChangedPosition`, minor optimization to move/drag.
+- drag'n'drop plugin system. Move jQuery UI dependencies to separate plugin file.
 
 #### v0.2.6 (2016-08-17)
 
