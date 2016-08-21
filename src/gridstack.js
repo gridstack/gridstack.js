@@ -482,6 +482,11 @@
         node.width = width;
         node.height = height;
 
+        node.lastTriedX = x;
+        node.lastTriedY = y;
+        node.lastTriedWidth = width;
+        node.lastTriedHeight = height;
+
         node = this._prepareNode(node, resizing);
 
         this._fixCollisions(node);
@@ -1095,10 +1100,18 @@
                     return;
                 }
             }
-
-            if (!self.grid.canMoveNode(node, x, y, width, height)) {
+            // width and height are undefined if not resizing
+            var lastTriedWidth = typeof width !== 'undefined' ? width : node.lastTriedWidth;
+            var lastTriedHeight = typeof height !== 'undefined' ? height : node.lastTriedHeight;
+            if (!self.grid.canMoveNode(node, x, y, width, height) ||
+                (node.lastTriedX === x && node.lastTriedY === y &&
+                node.lastTriedWidth === lastTriedWidth && node.lastTriedHeight === lastTriedHeight)) {
                 return;
             }
+            node.lastTriedX = x;
+            node.lastTriedY = y;
+            node.lastTriedWidth = width;
+            node.lastTriedHeight = height;
             self.grid.moveNode(node, x, y, width, height);
             self._updateContainerHeight();
         };
