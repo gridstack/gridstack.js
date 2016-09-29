@@ -61,7 +61,7 @@
                 style.appendChild(document.createTextNode(''));
             }
             document.getElementsByTagName('head')[0].appendChild(style);
-            return style.sheet;
+            return style.sheet || style.styleSheet;
         },
 
         removeStylesheet: function(id) {
@@ -71,7 +71,7 @@
         insertCSSRule: function(sheet, selector, rules, index) {
             if (typeof sheet.insertRule === 'function') {
                 sheet.insertRule(selector + '{' + rules + '}', index);
-            } else if (typeof sheet.addRule === 'function') {
+            } else if (sheet.addRule) {
                 sheet.addRule(selector, rules, index);
             }
         },
