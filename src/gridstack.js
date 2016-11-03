@@ -1288,8 +1288,9 @@
         return this.grid.canBePlacedWithRespectToHeight(node);
     };
 
-    GridStack.prototype.removeWidget = function(el, detachNode) {
+    GridStack.prototype.removeWidget = function(el, detachNode, triggerEvents) {
         detachNode = typeof detachNode === 'undefined' ? true : detachNode;
+        triggerEvents = typeof detachNode === 'undefined' ? true : triggerEvents;
         el = $(el);
         var node = el.data('_gridstack_node');
 
@@ -1304,16 +1305,21 @@
         if (detachNode) {
             el.remove();
         }
-        this._triggerChangeEvent(true);
-        this._triggerRemoveEvent();
+        if (triggerEvents) {
+            this._triggerChangeEvent(true);
+            this._triggerRemoveEvent();
+        }
     };
 
     GridStack.prototype.removeAll = function(detachNode) {
         _.each(this.grid.nodes, _.bind(function(node) {
-            this.removeWidget(node.el, detachNode);
+            this.removeWidget(node.el, detachNode, false);
         }, this));
         this.grid.nodes = [];
         this._updateContainerHeight();
+        
+        this._triggerChangeEvent(true);
+        this._triggerRemoveEvent();
     };
 
     GridStack.prototype.destroy = function(detachGrid) {
