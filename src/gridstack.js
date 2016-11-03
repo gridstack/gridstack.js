@@ -1317,7 +1317,7 @@
         }, this));
         this.grid.nodes = [];
         this._updateContainerHeight();
-        
+
         this._triggerChangeEvent(true);
         this._triggerRemoveEvent();
     };
