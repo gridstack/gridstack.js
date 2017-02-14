@@ -169,6 +169,7 @@
 
         this._addedNodes = [];
         this._removedNodes = [];
+        this._batchQueue = [];
     };
 
     GridStackEngine.prototype.batchUpdate = function() {
@@ -176,9 +177,19 @@
         this.float = true;
     };
 
-    GridStackEngine.prototype.commit = function() {
+    GridStackEngine.prototype.commit = function(grid) {
         if (this._updateCounter !== 0) {
             this._updateCounter = 0;
+            
+            _.each(this._batchQueue, function(el) {
+                grid.container.append(el);
+                grid._prepareElement(el, true);
+                grid._triggerAddEvent();
+                grid._updateContainerHeight();
+                grid._triggerChangeEvent(true);
+            });
+            this._batchQueue = [];
+
             this.float = this._float;
             this._packNodes();
             this._notify();
@@ -1264,11 +1275,18 @@
         if (typeof minHeight != 'undefined') { el.attr('data-gs-min-height', minHeight); }
         if (typeof maxHeight != 'undefined') { el.attr('data-gs-max-height', maxHeight); }
         if (typeof id != 'undefined') { el.attr('data-gs-id', id); }
-        this.container.append(el);
-        this._prepareElement(el, true);
-        this._triggerAddEvent();
-        this._updateContainerHeight();
-        this._triggerChangeEvent(true);
+
+
+        console.log(this.grid._updateCounter);
+        if (this.grid._updateCounter) {
+            this.grid._batchQueue.push(el);
+        } else {
+            this.container.append(el);
+            this._prepareElement(el, true);
+            this._triggerAddEvent();
+            this._updateContainerHeight();
+            this._triggerChangeEvent(true);
+        }
 
         return el;
     };
@@ -1592,7 +1610,7 @@
     };
 
     GridStack.prototype.commit = function() {
-        this.grid.commit();
+        this.grid.commit(this);
         this._updateContainerHeight();
     };
 
