@@ -180,7 +180,6 @@
     GridStackEngine.prototype.commit = function(grid) {
         if (this._updateCounter !== 0) {
             this._updateCounter = 0;
-            
             _.each(this._batchQueue, function(el) {
                 grid.container.append(el);
                 grid._prepareElement(el, true);
@@ -189,7 +188,6 @@
                 grid._triggerChangeEvent(true);
             });
             this._batchQueue = [];
-
             this.float = this._float;
             this._packNodes();
             this._notify();
@@ -1276,8 +1274,6 @@
         if (typeof maxHeight != 'undefined') { el.attr('data-gs-max-height', maxHeight); }
         if (typeof id != 'undefined') { el.attr('data-gs-id', id); }
 
-
-        console.log(this.grid._updateCounter);
         if (this.grid._updateCounter) {
             this.grid._batchQueue.push(el);
         } else {
