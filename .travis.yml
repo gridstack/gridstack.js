@@ -12,7 +12,7 @@ addons:
 before_install:
 - npm install -g protractor
 install:
-- npm install -g npm@2
+- npm install -g npm@^3
 - npm install -g grunt-cli
 - npm install -g bower
 - bower install
