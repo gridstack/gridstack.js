@@ -606,6 +606,7 @@
             removeTimeout: 2000,
             verticalMarginUnit: 'px',
             cellHeightUnit: 'px',
+            disableOneColumnMode: opts.disableOneColumnMode || false,
             oneColumnModeClass: opts.oneColumnModeClass || 'grid-stack-one-column-mode',
             ddPlugin: null
         });
@@ -699,7 +700,7 @@
                 self._updateHeightsOnResize();
             }
 
-            if (self._isOneColumnMode()) {
+            if (self._isOneColumnMode() && !self.opts.disableOneColumnMode) {
                 if (oneColumnMode) {
                     return;
                 }
@@ -1204,11 +1205,11 @@
                 resize: dragOrResize
             });
 
-        if (node.noMove || this._isOneColumnMode() || this.opts.disableDrag) {
+        if (node.noMove || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableDrag) {
             this.dd.draggable(el, 'disable');
         }
 
-        if (node.noResize || this._isOneColumnMode() || this.opts.disableResize) {
+        if (node.noResize || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableResize) {
             this.dd.resizable(el, 'disable');
         }
 
@@ -1342,7 +1343,7 @@
             }
 
             node.noResize = !(val || false);
-            if (node.noResize || self._isOneColumnMode()) {
+            if (node.noResize || (self._isOneColumnMode() && !self.opts.disableOneColumnMode )) {
                 self.dd.resizable(el, 'disable');
             } else {
                 self.dd.resizable(el, 'enable');
@@ -1362,7 +1363,7 @@
             }
 
             node.noMove = !(val || false);
-            if (node.noMove || self._isOneColumnMode()) {
+            if (node.noMove || (self._isOneColumnMode() && !self.opts.disableOneColumnMode)) {
                 self.dd.draggable(el, 'disable');
                 el.removeClass('ui-draggable-handle');
             } else {

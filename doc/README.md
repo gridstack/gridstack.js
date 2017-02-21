@@ -78,6 +78,7 @@ gridstack.js API
 - `float` - enable floating widgets (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/float.html)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
 - `minWidth` - minimal width. If window width is less, grid will be shown in one-column mode (default: `768`)
+- `disableOneColumnMode` - disables the onColumnMode when the window width is less than minWidth (default: 'false')
 - `oneColumnModeClass` - class set on grid when in one column mode (default: 'grid-stack-one-column-mode')
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
