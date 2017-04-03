@@ -1156,7 +1156,7 @@
             if (node._isAboutToRemove) {
                 forceNotify = true;
                 el.removeData('_gridstack_node');
-                el.remove();
+                el.trigger('remove').remove();
             } else {
                 self._clearRemovingTimeout(el);
                 if (!node._temporaryRemoved) {
