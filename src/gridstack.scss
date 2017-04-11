@@ -123,18 +123,18 @@ $animation_speed: .3s !default;
     &.grid-stack-animate .grid-stack-item.grid-stack-placeholder{
         @include vendor(transition, left .0s, top .0s, height .0s, width .0s);
     }
-}
+    
+	&.grid-stack-one-column-mode {
+		height: auto !important;
+		&> .grid-stack-item {
+	        position: relative !important;
+	        width: auto !important;
+	        left: 0 !important;
+	        top: auto !important;
+	        margin-bottom: $vertical_padding;
+	        max-width: none !important;
 
-@media (max-width: 768px) {
-    .grid-stack-item {
-        position: relative !important;
-        width: auto !important;
-        left: 0 !important;
-        top: auto !important;
-        margin-bottom: $vertical_padding;
-
-        .ui-resizable-handle { display: none; }
-    }
-
-    .grid-stack { height: auto !important; }
+	        &> .ui-resizable-handle { display: none; }
+		}
+	}
 }
