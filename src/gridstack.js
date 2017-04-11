@@ -1343,7 +1343,7 @@
             }
 
             node.noResize = !(val || false);
-            if (node.noResize || (self._isOneColumnMode() && !self.opts.disableOneColumnMode )) {
+            if (node.noResize || (self._isOneColumnMode() && !self.opts.disableOneColumnMode)) {
                 self.dd.resizable(el, 'disable');
             } else {
                 self.dd.resizable(el, 'enable');
