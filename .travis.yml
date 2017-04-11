@@ -15,6 +15,7 @@ install:
 - npm install -g npm@2
 - npm install -g grunt-cli
 - npm install -g bower
+- npm install selenium-webdriver
 - bower install
 - npm install
 - ./node_modules/protractor/bin/webdriver-manager update --standalone
