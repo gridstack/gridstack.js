@@ -938,9 +938,9 @@
 
         if (typeof maxHeight == 'undefined') {
             maxHeight = this._styles._max;
-            this._initStyles();
-            this._updateContainerHeight();
         }
+        this._initStyles();
+        this._updateContainerHeight();
         if (!this.opts.cellHeight) { // The rest will be handled by CSS
             return ;
         }
