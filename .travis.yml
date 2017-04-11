@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 5.7.0
+- 7.7.2
 env:
 - CXX=g++-4.8
 addons:
