@@ -26,7 +26,7 @@ before_script:
 script:
 - npm run build
 - npm test
-- grunt e2e-test
+# - grunt e2e-test
 notifications:
   slack:
     secure: iGLGsYyVIyKVpVVCskGh/zc6Pkqe0D7jpUtbywSbnq6l5seE6bvBVqm0F2FSCIN+AIC+qal2mPEWysDVsLACm5tTEeA8NfL8dmCrAKbiFbi+gHl4mnHHCHl7ii/7UkoIIXNc5UXbgMSXRS5l8UcsSDlN8VxC5zWstbJvjeYIvbA=
