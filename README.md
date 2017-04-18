@@ -8,7 +8,7 @@ gridstack.js
 [![Stories in Ready](https://badge.waffle.io/troolee/gridstack.js.png?label=ready&title=Ready)](http://waffle.io/troolee/gridstack.js)
 
 gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column grid. It allows you to build
-draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com), [angular.js](https://angularjs.org) and touch devices.
+draggable responsive bootstrap v3 friendly layouts. It also works great with [knockout.js](http://knockoutjs.com), [angular.js](https://angularjs.org), [ember.js](https://www.emberjs.com/) and touch devices.
 
 Inspired by [gridster.js](https://github.com/ducksboard/gridster.js). Built with love.
 
@@ -33,6 +33,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Touch devices support](#touch-devices-support)
   - [Use with knockout.js](#use-with-knockoutjs)
   - [Use with angular.js](#use-with-angularjs)
+  - [Use with ember.js](#use-with-emberjs)
   - [Rails integration](#rails-integration)
   - [Change grid width](#change-grid-width)
   - [Extra CSS](#extra-css)
@@ -285,6 +286,11 @@ Otherwise `addDisposeCallback` won't work.
 ## Use with angular.js
 
 Please check [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
+
+
+## Use with ember.js
+
+Please check [ember-gridstack](https://github.com/yahoo/ember-gridstack)
 
 
 ## Rails integration
