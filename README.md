@@ -509,6 +509,7 @@ Changes
 
 #### v0.3.0-dev (Development Version)
 
+- trigger custom event for resizestop (gsresizestop) ([#577](https://github.com/troolee/gridstack.js/issues/577)).
 - prevent dragging/resizing in oneColumnMode ([#593](https://github.com/troolee/gridstack.js/issues/593)).
 - add oneColumnModeClass option to grid.
 - remove 768px CSS styles, moved to grid-stack-one-column-mode class.
