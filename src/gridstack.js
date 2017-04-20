@@ -1187,6 +1187,9 @@
                 });
                 o.find('.grid-stack-item').trigger('resizestop');
             }
+            if (event.type == 'resizestop') {
+                self.container.trigger('gsresizestop', o);
+            }
         };
 
         this.dd
