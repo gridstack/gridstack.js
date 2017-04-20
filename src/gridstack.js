@@ -1042,9 +1042,6 @@
     };
 
     GridStack.prototype._prepareElementsByNode = function(el, node) {
-        if (typeof $.ui === 'undefined') {
-            return;
-        }
         var self = this;
 
         var cellWidth;
@@ -1337,7 +1334,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined' || node === null || typeof $.ui === 'undefined') {
+            if (typeof node == 'undefined' || node === null) {
                 return;
             }
 
@@ -1357,7 +1354,7 @@
         el.each(function(index, el) {
             el = $(el);
             var node = el.data('_gridstack_node');
-            if (typeof node == 'undefined' || node === null || typeof $.ui === 'undefined') {
+            if (typeof node == 'undefined' || node === null) {
                 return;
             }
 
