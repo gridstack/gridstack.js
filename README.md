@@ -509,6 +509,7 @@ Changes
 
 #### v0.3.0-dev (Development Version)
 
+- prevent dragging/resizing in oneColumnMode ([#593](https://github.com/troolee/gridstack.js/issues/593)).
 - add oneColumnModeClass option to grid.
 - remove 768px CSS styles, moved to grid-stack-one-column-mode class.
 - add max-width override on grid-stck-one-column-mode ([#462](https://github.com/troolee/gridstack.js/issues/462)).

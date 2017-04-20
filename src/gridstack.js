@@ -714,12 +714,8 @@
                     if (self.opts.staticGrid) {
                         return;
                     }
-                    if (node.noMove || self.opts.disableDrag) {
-                        self.dd.draggable(node.el, 'disable');
-                    }
-                    if (node.noResize || self.opts.disableResize) {
-                        self.dd.resizable(node.el, 'disable');
-                    }
+                    self.dd.draggable(node.el, 'disable');
+                    self.dd.resizable(node.el, 'disable');
 
                     node.el.trigger('resize');
                 });
