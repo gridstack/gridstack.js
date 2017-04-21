@@ -509,9 +509,14 @@ Changes
 
 #### v0.3.0-dev (Development Version)
 
-- trigger custom event for resizestop (gsresizestop) ([#577](https://github.com/troolee/gridstack.js/issues/577)).
-- prevent dragging/resizing in oneColumnMode ([#593](https://github.com/troolee/gridstack.js/issues/593)).
-- add oneColumnModeClass option to grid.
+- remove placeholder when dragging widget below grid (already worked when dragging left, above, and to the right of grid).
+- prevent extra checks for removing widget when dragging off grid.
+- trigger `added` when a widget is added via dropping from one grid to another.
+- trigger `removed` when a widget is removed via dropping from one grid to another.
+- trigger `removed` when a widget is removed via dropping on a removable zone ([#607](https://github.com/troolee/gridstack.js/issues/607) and [#550])(https://github.com/troolee/gridstack.js/issues/550)).
+- trigger custom event for `resizestop` called `gsresizestop` ([#577](https://github.com/troolee/gridstack.js/issues/577) and [#398](https://github.com/troolee/gridstack.js/issues/398)).
+- prevent dragging/resizing in `oneColumnMode` ([#593](https://github.com/troolee/gridstack.js/issues/593)).
+- add `oneColumnModeClass` option to grid.
 - remove 768px CSS styles, moved to grid-stack-one-column-mode class.
 - add max-width override on grid-stck-one-column-mode ([#462](https://github.com/troolee/gridstack.js/issues/462)).
 - add internal function`isNodeChangedPosition`, minor optimization to move/drag.

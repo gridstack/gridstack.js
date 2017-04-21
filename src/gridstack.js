@@ -859,6 +859,10 @@
                     node._grid = self;
                     var el = $(ui.draggable).clone(false);
                     el.data('_gridstack_node', node);
+                    var originalNode = $(ui.draggable).data('_gridstack_node_orig');
+                    if (typeof originalNode !== 'undefined') {
+                        originalNode._grid._triggerRemoveEvent();
+                    }
                     $(ui.draggable).remove();
                     node.el = el;
                     self.placeholder.hide();
@@ -876,6 +880,8 @@
                     self.container.append(el);
                     self._prepareElementsByNode(el, node);
                     self._updateContainerHeight();
+                    self.grid._addedNodes.push(node);
+                    self._triggerAddEvent();
                     self._triggerChangeEvent();
 
                     self.grid.endUpdate();
@@ -1059,20 +1065,22 @@
             }
 
             if (event.type == 'drag') {
-                if (x < 0 || x >= self.grid.width || y < 0) {
-                    if (self.opts.removable === true) {
-                        self._setupRemovingTimeout(el);
+                if (x < 0 || x >= self.grid.width || y < 0 || (!self.grid.float && y > self.grid.getGridHeight())) {
+                    if (!node._temporaryRemoved) {
+                        if (self.opts.removable === true) {
+                            self._setupRemovingTimeout(el);
+                        }
+
+                        x = node._beforeDragX;
+                        y = node._beforeDragY;
+
+                        self.placeholder.detach();
+                        self.placeholder.hide();
+                        self.grid.removeNode(node);
+                        self._updateContainerHeight();
+
+                        node._temporaryRemoved = true;
                     }
-
-                    x = node._beforeDragX;
-                    y = node._beforeDragY;
-
-                    self.placeholder.detach();
-                    self.placeholder.hide();
-                    self.grid.removeNode(node);
-                    self._updateContainerHeight();
-
-                    node._temporaryRemoved = true;
                 } else {
                     self._clearRemovingTimeout(el);
 
@@ -1149,6 +1157,8 @@
 
             if (node._isAboutToRemove) {
                 forceNotify = true;
+                var gridToNotify = el.data('_gridstack_node')._grid;
+                gridToNotify._triggerRemoveEvent();
                 el.removeData('_gridstack_node');
                 el.remove();
             } else {
@@ -1183,6 +1193,7 @@
                     $(el).data('gridstack').onResizeHandler();
                 });
                 o.find('.grid-stack-item').trigger('resizestop');
+                o.find('.grid-stack-item').trigger('gsresizestop');
             }
             if (event.type == 'resizestop') {
                 self.container.trigger('gsresizestop', o);
