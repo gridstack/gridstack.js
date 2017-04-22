@@ -17,7 +17,7 @@ gridstack.js API
   - [enable(event)](#enableevent)
   - [removed(event, items)](#removedevent-items)
   - [resizestart(event, ui)](#resizestartevent-ui)
-  - [resizestop(event, ui)](#resizestopevent-ui)
+  - [gsresizestop(event, ui)](#gsresizestopevent-ui)
 - [API](#api)
   - [addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
@@ -68,6 +68,7 @@ gridstack.js API
  - a string (ex: '10em', '100px', '10rem')
  - 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
  - `'auto'` - height will be calculated from cell width.
+- `ddPlugin` - class that implement drag'n'drop functionallity for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`)
@@ -76,7 +77,9 @@ gridstack.js API
 - `height` - maximum rows amount. Default is `0` which means no maximum rows
 - `float` - enable floating widgets (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/float.html)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
-- `minWidth` - minimal width. If window width is less, grid will be shown in one-column mode. You need also update your css file (`@media (max-width: 768px) {...}`) with corresponding value (default: `768`)
+- `minWidth` - minimal width. If window width is less, grid will be shown in one-column mode (default: `768`)
+- `disableOneColumnMode` - disables the onColumnMode when the window width is less than minWidth (default: 'false')
+- `oneColumnModeClass` - class set on grid when in one column mode (default: 'grid-stack-one-column-mode')
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
@@ -190,12 +193,11 @@ $('.grid-stack').on('resizestart', function(event, ui) {
 });
 ```
 
-### resizestop(event, ui)
+### gsresizestop(event, ui)
 
 ```javascript
-$('.grid-stack').on('resizestop', function(event, ui) {
-    var grid = this;
-    var element = event.target;
+$('.grid-stack').on('gsresizestop', function(event, elem) {
+    var newHeight = $(elem).attr('data-gs-height');
 });
 ```
 
