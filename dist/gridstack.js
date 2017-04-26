@@ -190,6 +190,7 @@
         return _.find(this.nodes, function(n) { return el.get(0) === n.el.get(0); });
     };
 
+    var collisions = [];
     GridStackEngine.prototype._fixCollisions = function(node) {
         var self = this;
         this._sortNodes(-1);
@@ -204,8 +205,17 @@
             if (typeof collisionNode == 'undefined') {
                 return;
             }
-            this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
-                collisionNode.width, collisionNode.height, true);
+            if (collisions.indexOf(collisionNode.el.attr('id')) == -1) {
+                var collisionX = parseInt(collisionNode.el.attr('data-gs-x'));
+                var collisionW = parseInt(collisionNode.el.attr('data-gs-width'));
+                var collisionH = parseInt(collisionNode.el.attr('data-gs-height'));
+                collisions.push(collisionNode.el.attr('id'));
+                this.moveNode(collisionNode, collisionX, node.y + node.height,
+                    collisionW, collisionH, true);
+            } else {
+                this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
+                    collisionNode.width, collisionNode.height, true);
+            };
         }
     };
 
@@ -1053,6 +1063,8 @@
         var cellWidth;
         var cellHeight;
 
+        var firstDrag = true;
+
         var dragOrResize = function(event, ui) {
             var x = Math.round(ui.position.left / cellWidth);
             var y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
@@ -1132,6 +1144,13 @@
                 .attr('data-gs-width', o.attr('data-gs-width'))
                 .attr('data-gs-height', o.attr('data-gs-height'))
                 .show();
+            if(firstDrag){
+                node.x = node.el.attr('data-gs-x');
+                node.y = node.el.attr('data-gs-y');
+                node.width = node.el.attr('data-gs-width');
+                node.height = node.el.attr('data-gs-height');
+                firstDrag = false;
+            };
             node.el = self.placeholder;
             node._beforeDragX = node.x;
             node._beforeDragY = node.y;
