@@ -26,6 +26,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
       - [Using gridstack.js with jQuery UI](#using-gridstackjs-with-jquery-ui)
   - [Install](#install)
   - [Basic usage](#basic-usage)
+  - [gridstack.js News](#gridstackjs-news)
   - [Migrating to v0.3.0](#migrating-to-v030)
   - [Migrating to v0.2.5](#migrating-to-v025)
   - [API Documentation](#api-documentation)
@@ -140,6 +141,12 @@ $(function () {
 </script>
 ```
 
+## gridstack.js News
+
+Version 1.0 is coming! Check out the blog post here for more information:
+[https://dylandreams.com/2017/04/26/gridstack-10-coming-soon/](https://dylandreams.com/2017/04/26/gridstack-10-coming-soon/)
+
+
 ## Migrating to v0.3.0
 
 As of v0.3.0, gridstack introduces a new plugin system. The drag'n'drop functionality has been modified to take advantage of this system. Because of this, and to avoid dependency on core code from jQuery UI, the plugin was functionality was moved to a separate file.
@@ -167,7 +174,7 @@ when they will be completely removed.
 
 ## API Documentation
 
-Please check out `doc/README.md` for more information about gridstack.js API.
+Documentation can be found [here](https://github.com/troolee/gridstack.js/tree/develop/doc).
 
 ## Questions and Answers
 

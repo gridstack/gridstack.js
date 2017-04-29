@@ -4,7 +4,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-doctoc');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-jscs');
     grunt.loadNpmTasks('grunt-contrib-watch');
@@ -58,27 +57,6 @@ module.exports = function(grunt) {
             }
         },
 
-        doctoc: {
-            options: {
-                removeAd: false
-            },
-            readme: {
-                options: {
-                    target: './README.md'
-                }
-            },
-            doc: {
-                options: {
-                    target: './doc/README.md'
-                }
-            },
-            faq: {
-                options: {
-                    target: './doc/FAQ.md'
-                }
-            },
-        },
-
         jshint: {
             all: ['src/*.js']
         },
@@ -99,13 +77,7 @@ module.exports = function(grunt) {
                 tasks: ['sass', 'cssmin'],
                 options: {
                 },
-            },
-            docs: {
-                files: ['README.md', 'doc/README.md', 'doc/FAQ.md'],
-                tasks: ['doctoc'],
-                options: {
-                },
-            },
+            }
         },
 
         protractor: {
@@ -134,6 +106,6 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['sass', 'cssmin', 'jshint', 'jscs', 'copy', 'uglify', 'doctoc']);
+    grunt.registerTask('default', ['sass', 'cssmin', 'jshint', 'jscs', 'copy', 'uglify']);
     grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };
