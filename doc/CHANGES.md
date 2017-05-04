@@ -7,6 +7,7 @@ Change log
 
 - [v0.3.0 (2017-04-21)](#v030-2017-04-21)
 - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
+- [v0.2.5 (2016-03-02)](#v025-2016-03-02)
 - [v0.2.4 (2016-02-15)](#v024-2016-02-15)
 - [v0.2.3 (2015-06-23)](#v023-2015-06-23)
 - [v0.2.2 (2014-12-23)](#v022-2014-12-23)
@@ -40,6 +41,28 @@ Change log
 - update _notify to allow detach ([#411](https://github.com/troolee/gridstack.js/issues/411)).
 - fix code that checks for jquery-ui ([#481](https://github.com/troolee/gridstack.js/issues/481)).
 - fix `cellWidth` calculation on empty grid
+
+## v0.2.5 (2016-03-02)
+
+- update names to respect js naming convention.
+- `cellHeight` and `verticalMargin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs).
+- add `maxWidth`/`maxHeight` methods.
+- add `enableMove`/`enableResize` methods.
+- fix window resize issue #331.
+- add options `disableDrag` and `disableResize`.
+- fix `batchUpdate`/`commit` (Thank to @radiolips)
+- remove dependency of FontAwesome
+- RTL support
+- `'auto'` value for `cellHeight` option
+- fix `setStatic` method
+- add `setAnimation` method to API
+- add `setGridWidth` method ([#227](https://github.com/troolee/gridstack.js/issues/227))
+- add `removable`/`removeTimeout` *(experimental)*
+- add `detachGrid` parameter to `destroy` method ([#216](https://github.com/troolee/gridstack.js/issues/216)) (thanks @jhpedemonte)
+- add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/troolee/gridstack.js/issues/237))
+- add `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `id` parameters to `addWidget` ([#188](https://github.com/troolee/gridstack.js/issues/188))
+- add `added` and `removed` events for when a widget is added or removed, respectively. ([#54](https://github.com/troolee/gridstack.js/issues/54))
+- add `acceptWidgets` parameter. Widgets can now be draggable between grids or from outside *(experimental)*
 
 ## v0.2.4 (2016-02-15)
 
