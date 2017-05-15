@@ -1248,6 +1248,7 @@
             noResize: Utils.toBool(el.attr('data-gs-no-resize')),
             noMove: Utils.toBool(el.attr('data-gs-no-move')),
             locked: Utils.toBool(el.attr('data-gs-locked')),
+            resizeHandles: el.attr('data-gs-resize-handles'),
             el: el,
             id: el.attr('data-gs-id'),
             _grid: self
