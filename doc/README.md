@@ -111,6 +111,7 @@ gridstack.js API
 - `data-gs-locked` - the widget will be locked. It means another widget wouldn't be able to move it during dragging or resizing.
 The widget can still be dragged or resized. You need to add `data-gs-no-resize` and `data-gs-no-move` attributes
 to completely lock the widget.
+- `data-gs-resize-handles` - sets resize handles for a specific widget.
 
 ## Events
 
