@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [v1.0.0 (development)](#v100-development)
 - [v0.3.0 (2017-04-21)](#v030-2017-04-21)
 - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
 - [v0.2.5 (2016-03-02)](#v025-2016-03-02)
@@ -16,6 +17,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## v1.0.0 (development)
+
+- enable sidebar items to be duplicated properly. Pass `helper: 'clone'` in `draggable` options. ([#661](https://github.com/troolee/gridstack.js/issues/661), ([#396](https://github.com/troolee/gridstack.js/issues/396), ([#499](https://github.com/troolee/gridstack.js/issues/499).
 
 ## v0.3.0 (2017-04-21)
 
