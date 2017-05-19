@@ -1094,10 +1094,13 @@
                         self.grid.addNode(node);
                         self.placeholder
                             .attr('data-gs-x', x)
-                            .attr('data-gs-y', y)
-                            .attr('data-gs-width', width)
-                            .attr('data-gs-height', height)
-                            .show();
+                            .attr('data-gs-y', y);
+                        if(typeof width !== 'undefined' && typeof height !== 'undefined') {
+                            self.placeholder
+                                .attr('data-gs-width', width)
+                                .attr('data-gs-height', height);
+                        }
+                        self.placeholder.show();
                         self.container.append(self.placeholder);
                         node.el = self.placeholder;
                         node._temporaryRemoved = false;
