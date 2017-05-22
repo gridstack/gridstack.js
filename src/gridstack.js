@@ -1166,7 +1166,7 @@
                 var gridToNotify = el.data('_gridstack_node')._grid;
                 gridToNotify._triggerRemoveEvent();
                 el.removeData('_gridstack_node');
-                el.remove();
+                el.trigger('remove').remove();
             } else {
                 self._clearRemovingTimeout(el);
                 if (!node._temporaryRemoved) {
