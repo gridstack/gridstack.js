@@ -64,10 +64,10 @@ gridstack.js API
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight` - one cell height (default: `60`). Can be:
- - an integer (px)
- - a string (ex: '10em', '100px', '10rem')
- - 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
- - `'auto'` - height will be calculated from cell width.
+  * an integer (px)
+  * a string (ex: '10em', '100px', '10rem')
+  * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
+  * `'auto'` - height will be calculated from cell width.
 - `ddPlugin` - class that implement drag'n'drop functionallity for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableResize` - disallows resizing of widgets (default: `false`).
@@ -88,8 +88,8 @@ gridstack.js API
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](http://troolee.github.io/gridstack.js/demo/rtl.html)
 - `staticGrid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `verticalMargin` - vertical gap size (default: `20`). Can be:
- - an integer (px)
- - a string (ex: '2em', '20px', '2rem')
+  * an integer (px)
+  * a string (ex: '2em', '20px', '2rem')
 - `width` - amount of columns (default: `12`)
 
 ## Grid attributes
