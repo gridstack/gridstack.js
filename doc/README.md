@@ -104,12 +104,12 @@ gridstack.js API
 - `data-gs-x`, `data-gs-y` - element position
 - `data-gs-width`, `data-gs-height` - element size
 - `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
-- `data-gs-no-resize` - disable element resizing
-- `data-gs-no-move` - disable element moving
-- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first
+- `data-gs-no-resize="true"` - disable element resizing
+- `data-gs-no-move="true"` - disable element moving
+- `data-gs-auto-position="true"` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first
     available position
-- `data-gs-locked` - the widget will be locked. It means another widget wouldn't be able to move it during dragging or resizing.
-The widget can still be dragged or resized. You need to add `data-gs-no-resize` and `data-gs-no-move` attributes
+- `data-gs-locked="true"` - the widget will be locked. It means another widget wouldn't be able to move it during dragging or resizing.
+The widget can still be dragged or resized. You need to add `data-gs-no-resize="true"` and `data-gs-no-move="true` attributes
 to completely lock the widget.
 
 ## Events
