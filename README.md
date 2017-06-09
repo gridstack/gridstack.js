@@ -253,7 +253,7 @@ See example: [2 grids demo](http://troolee.github.io/gridstack.js/demo/two.html)
 ## Override resizable/draggable options
 
 You can override default `resizable`/`draggable` options. For instance to enable other then bottom right resizing handle
-you can init gridsack like:
+you can init gridstack like:
 
 ```javascript
 $('.grid-stack').gridstack({
