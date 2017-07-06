@@ -209,7 +209,7 @@ describe('gridstack engine', function() {
             var engine;
 
             var findNode = function(engine, id) {
-                return _.find(engine.nodes, function(i) { return i._id === id; });
+                return engine.nodes.find(function(i) { return i._id === id; });
             };
 
             beforeEach(function() {

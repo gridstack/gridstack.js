@@ -7,7 +7,7 @@
 */
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'lodash', 'gridstack', 'jquery-ui/data', 'jquery-ui/disable-selection', 'jquery-ui/focusable',
+        define(['jquery', 'gridstack', 'jquery-ui/data', 'jquery-ui/disable-selection', 'jquery-ui/focusable',
             'jquery-ui/form', 'jquery-ui/ie', 'jquery-ui/keycode', 'jquery-ui/labels', 'jquery-ui/jquery-1-7',
             'jquery-ui/plugin', 'jquery-ui/safe-active-element', 'jquery-ui/safe-blur', 'jquery-ui/scroll-parent',
             'jquery-ui/tabbable', 'jquery-ui/unique-id', 'jquery-ui/version', 'jquery-ui/widget',
@@ -15,13 +15,12 @@
             'jquery-ui/widgets/resizable'], factory);
     } else if (typeof exports !== 'undefined') {
         try { jQuery = require('jquery'); } catch (e) {}
-        try { _ = require('lodash'); } catch (e) {}
         try { GridStackUI = require('gridstack'); } catch (e) {}
-        factory(jQuery, _, GridStackUI);
+        factory(jQuery, GridStackUI);
     } else {
-        factory(jQuery, _, GridStackUI);
+        factory(jQuery, GridStackUI);
     }
-})(function($, _, GridStackUI) {
+})(function($, GridStackUI) {
 
     var scope = window;
 
@@ -49,7 +48,7 @@
         } else {
             var handles = el.data('gs-resize-handles') ? el.data('gs-resize-handles') :
                 this.grid.opts.resizable.handles;
-            el.resizable(_.extend({}, this.grid.opts.resizable, {
+            el.resizable($.extend({}, this.grid.opts.resizable, {
                 handles: handles
             }, {
                 start: opts.start || function() {},
@@ -65,7 +64,7 @@
         if (opts === 'disable' || opts === 'enable') {
             el.draggable(opts);
         } else {
-            el.draggable(_.extend({}, this.grid.opts.draggable, {
+            el.draggable($.extend({}, this.grid.opts.draggable, {
                 containment: this.grid.opts.isNested ? this.grid.container.parent() : null,
                 start: opts.start || function() {},
                 stop: opts.stop || function() {},

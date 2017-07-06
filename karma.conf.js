@@ -17,7 +17,7 @@ module.exports = function(config) {
         files: [
           'bower_components/jquery/dist/jquery.min.js',
           'bower_components/jquery-ui/jquery-ui.min.js',
-          'bower_components/lodash/dist/lodash.min.js',
+          'node_modules/core-js/client/shim.min.js',
           'src/gridstack.js',
           'src/gridstack.jQueryUI.js',
           'spec/*-spec.js'
@@ -78,4 +78,4 @@ module.exports = function(config) {
         // how many browser should be started simultaneous
         concurrency: Infinity
     });
-}
+};
