@@ -156,10 +156,11 @@
 
     var idSeq = 0;
 
-    var GridStackEngine = function(width, onchange, floatMode, height, items) {
+    var GridStackEngine = function(width, onchange, floatMode, height, staticHeight, items) {
         this.width = width;
         this.float = floatMode || false;
         this.height = height || 0;
+        this.staticHeight = staticHeight || false;
 
         this.nodes = items || [];
         this.onchange = onchange || function() {};
@@ -396,6 +397,7 @@
             null,
             this.float,
             0,
+            this.staticHeight,
             _.map(this.nodes, function(n) {
                 if (n == node) {
                     clonedNode = $.extend({}, n);
@@ -434,6 +436,7 @@
             null,
             this.float,
             0,
+            this.staticHeight,
             _.map(this.nodes, function(n) { return $.extend({}, n); }));
         clone.addNode(node);
         return clone.getGridHeight() <= this.height;
@@ -498,6 +501,9 @@
     };
 
     GridStackEngine.prototype.getGridHeight = function() {
+        if (this.staticHeight && this.height) {
+            return this.height;
+        }
         return _.reduce(this.nodes, function(memo, n) { return Math.max(memo, n.y + n.height); }, 0);
     };
 
@@ -665,7 +671,7 @@
                 }
             });
             self._updateStyles(maxHeight + 10);
-        }, this.opts.float, this.opts.height);
+        }, this.opts.float, this.opts.height, this.opts.staticHeight);
 
         if (this.opts.auto) {
             var elements = [];
