@@ -90,12 +90,12 @@ gridstack.js API
 - `verticalMargin` - vertical gap size (default: `20`). Can be:
  - an integer (px)
  - a string (ex: '2em', '20px', '2rem')
-- `width` - amount of columns (default: `12`)
+- `width` - amount of columns (default: `12`). Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/troolee/gridstack.js#change-grid-width).
 
 ## Grid attributes
 
 - `data-gs-animate` - turns animation on
-- `data-gs-width` - amount of columns
+- `data-gs-width` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/troolee/gridstack.js#change-grid-width).
 - `data-gs-height` - maximum rows amount. Default is `0` which means no maximum rows.
 - `data-gs-current-height` - current rows amount. Set by the library only. Can be used by the CSS rules.
 
