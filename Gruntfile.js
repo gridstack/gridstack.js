@@ -106,6 +106,7 @@ module.exports = function(grunt) {
         }
     });
 
+    grunt.registerTask('lint', ['jshint', 'jscs']);
     grunt.registerTask('default', ['sass', 'cssmin', 'jshint', 'jscs', 'copy', 'uglify']);
     grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };
