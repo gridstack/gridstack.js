@@ -19,7 +19,9 @@
     "jquery"
   ],
   "author": "Pavel Reznikov <pashka.reznikov@gmail.com>",
-  "contributors": ["Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"],
+  "contributors": [
+    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/troolee/gridstack.js/issues"
