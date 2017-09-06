@@ -1218,11 +1218,13 @@
                 resize: dragOrResize
             });
 
-        if (node.noMove || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableDrag || this.opts.staticGrid) {
+        if (node.noMove || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableDrag ||
+            this.opts.staticGrid) {
             this.dd.draggable(el, 'disable');
         }
 
-        if (node.noResize || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableResize || this.opts.staticGrid) {
+        if (node.noResize || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableResize ||
+            this.opts.staticGrid) {
             this.dd.resizable(el, 'disable');
         }
 
