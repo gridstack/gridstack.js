@@ -40,6 +40,11 @@
 
     JQueryUIGridStackDragDropPlugin.prototype.resizable = function(el, opts) {
         el = $(el);
+
+        if (el.find(".ui-resizable-handle").length > 1)
+            el.find(".ui-resizable-handle").slice(1).remove();
+        
+
         if (opts === 'disable' || opts === 'enable') {
             el.resizable(opts);
         } else if (opts === 'option') {

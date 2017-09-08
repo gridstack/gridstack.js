@@ -828,6 +828,8 @@
                         if (node && node._grid === self) {
                             return false;
                         }
+                        
+
                         return el.is(self.opts.acceptWidgets === true ? '.grid-stack-item' : self.opts.acceptWidgets);
                     }
                 })
@@ -888,6 +890,9 @@
                         .removeData('draggable')
                         .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
                         .unbind('drag', onDrag);
+                    
+                    el.find(".ui-resizable-handle").remove();
+
                     self.container.append(el);
                     self._prepareElementsByNode(el, node);
                     self._updateContainerHeight();
