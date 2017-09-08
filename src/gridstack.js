@@ -106,6 +106,13 @@
                 height = parseFloat(match[1]);
             }
             return {height: height, unit: heightUnit};
+        },
+
+        removePositioningStyles: function(el) {
+          var style = el[0].style;
+          if (style.position) style.removeProperty('position');
+          if (style.left) style.removeProperty('left');
+          if (style.top) style.removeProperty('top');
         }
     };
 
@@ -869,13 +876,14 @@
                     $(ui.helper).remove();
                     node.el = el;
                     self.placeholder.hide();
+                    Utils.removePositioningStyles(el);
+
                     el
                         .attr('data-gs-x', node.x)
                         .attr('data-gs-y', node.y)
                         .attr('data-gs-width', node.width)
                         .attr('data-gs-height', node.height)
                         .addClass(self.opts.itemClass)
-                        .removeAttr('style')
                         .enableSelection()
                         .removeData('draggable')
                         .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
@@ -1170,19 +1178,19 @@
             } else {
                 self._clearRemovingTimeout(el);
                 if (!node._temporaryRemoved) {
+                    Utils.removePositioningStyles(o);
                     o
                         .attr('data-gs-x', node.x)
                         .attr('data-gs-y', node.y)
                         .attr('data-gs-width', node.width)
-                        .attr('data-gs-height', node.height)
-                        .removeAttr('style');
+                        .attr('data-gs-height', node.height);
                 } else {
+                    Utils.removePositioningStyles(o);
                     o
                         .attr('data-gs-x', node._beforeDragX)
                         .attr('data-gs-y', node._beforeDragY)
                         .attr('data-gs-width', node.width)
-                        .attr('data-gs-height', node.height)
-                        .removeAttr('style');
+                        .attr('data-gs-height', node.height);
                     node.x = node._beforeDragX;
                     node.y = node._beforeDragY;
                     self.grid.addNode(node);
