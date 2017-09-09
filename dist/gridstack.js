@@ -106,6 +106,25 @@
                 height = parseFloat(match[1]);
             }
             return {height: height, unit: heightUnit};
+        },
+
+        removePositioningStyles: function(el) {
+            var style = el[0].style;
+            if (style.position) {
+                style.removeProperty('position');
+            }
+            if (style.left) {
+                style.removeProperty('left');
+            }
+            if (style.top) {
+                style.removeProperty('top');
+            }
+            if (style.width) {
+                style.removeProperty('width');
+            }
+            if (style.height) {
+                style.removeProperty('height');
+            }
         }
     };
 
@@ -869,13 +888,14 @@
                     $(ui.helper).remove();
                     node.el = el;
                     self.placeholder.hide();
+                    Utils.removePositioningStyles(el);
+
                     el
                         .attr('data-gs-x', node.x)
                         .attr('data-gs-y', node.y)
                         .attr('data-gs-width', node.width)
                         .attr('data-gs-height', node.height)
                         .addClass(self.opts.itemClass)
-                        .removeAttr('style')
                         .enableSelection()
                         .removeData('draggable')
                         .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
@@ -947,12 +967,12 @@
         if (typeof maxHeight == 'undefined') {
             maxHeight = this._styles._max;
         }
+        if (this._styles._max !== 0 && maxHeight <= this._styles._max) { // Keep this._styles._max increasing
+            return ;
+        }
         this._initStyles();
         this._updateContainerHeight();
         if (!this.opts.cellHeight) { // The rest will be handled by CSS
-            return ;
-        }
-        if (this._styles._max !== 0 && maxHeight <= this._styles._max) {
             return ;
         }
 
@@ -1008,6 +1028,10 @@
             return;
         }
         var height = this.grid.getGridHeight();
+        var minHeight = parseInt(this.container.css('min-height')) / this.cellHeight();
+        if (height < minHeight) {
+            height = minHeight;
+        }
         this.container.attr('data-gs-current-height', height);
         if (!this.opts.cellHeight) {
             return ;
@@ -1170,19 +1194,19 @@
             } else {
                 self._clearRemovingTimeout(el);
                 if (!node._temporaryRemoved) {
+                    Utils.removePositioningStyles(o);
                     o
                         .attr('data-gs-x', node.x)
                         .attr('data-gs-y', node.y)
                         .attr('data-gs-width', node.width)
-                        .attr('data-gs-height', node.height)
-                        .removeAttr('style');
+                        .attr('data-gs-height', node.height);
                 } else {
+                    Utils.removePositioningStyles(o);
                     o
                         .attr('data-gs-x', node._beforeDragX)
                         .attr('data-gs-y', node._beforeDragY)
                         .attr('data-gs-width', node.width)
-                        .attr('data-gs-height', node.height)
-                        .removeAttr('style');
+                        .attr('data-gs-height', node.height);
                     node.x = node._beforeDragX;
                     node.y = node._beforeDragY;
                     self.grid.addNode(node);
