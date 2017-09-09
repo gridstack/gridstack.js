@@ -109,10 +109,22 @@
         },
 
         removePositioningStyles: function(el) {
-          var style = el[0].style;
-          if (style.position) style.removeProperty('position');
-          if (style.left) style.removeProperty('left');
-          if (style.top) style.removeProperty('top');
+            var style = el[0].style;
+            if (style.position) {
+                style.removeProperty('position');
+            }
+            if (style.left) {
+                style.removeProperty('left');
+            }
+            if (style.top) {
+                style.removeProperty('top');
+            }
+            if (style.width) {
+                style.removeProperty('width');
+            }
+            if (style.height) {
+                style.removeProperty('height');
+            }
         }
     };
 
@@ -1016,6 +1028,10 @@
             return;
         }
         var height = this.grid.getGridHeight();
+        var minHeight = parseInt(this.container.css('min-height')) / this.cellHeight();
+        if (height < minHeight) {
+            height = minHeight;
+        }
         this.container.attr('data-gs-current-height', height);
         if (!this.opts.cellHeight) {
             return ;

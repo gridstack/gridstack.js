@@ -23,6 +23,9 @@ Change log
 - widgets can have their own resize handles. Use `data-gs-resize-handles` element attribute to use. For example, `data-gs-resize-handles="e,w"` will make the particular widget only resize west and east. ([#494](https://github.com/troolee/gridstack.js/issues/494)).
 - enable sidebar items to be duplicated properly. Pass `helper: 'clone'` in `draggable` options. ([#661](https://github.com/troolee/gridstack.js/issues/661), ([#396](https://github.com/troolee/gridstack.js/issues/396), ([#499](https://github.com/troolee/gridstack.js/issues/499)).
 - fix `staticGrid` grid option ([#743](https://github.com/troolee/gridstack.js/issues/743))
+- preserve inline styles when moving/cloning items (thanks silverwind)
+- fix bug causing heights not to get set ([#744](https://github.com/troolee/gridstack.js/issues/744))
+- allow grid to have min-height, fixes ([#628](https://github.com/troolee/gridstack.js/issues/628))
 
 ## v0.3.0 (2017-04-21)
 
