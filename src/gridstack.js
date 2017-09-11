@@ -109,10 +109,22 @@
         },
 
         removePositioningStyles: function(el) {
-          var style = el[0].style;
-          if (style.position) style.removeProperty('position');
-          if (style.left) style.removeProperty('left');
-          if (style.top) style.removeProperty('top');
+            var style = el[0].style;
+            if (style.position) {
+                style.removeProperty('position');
+            }
+            if (style.left) {
+                style.removeProperty('left');
+            }
+            if (style.top) {
+                style.removeProperty('top');
+            }
+            if (style.width) {
+                style.removeProperty('width');
+            }
+            if (style.height) {
+                style.removeProperty('height');
+            }
         }
     };
 
@@ -240,6 +252,7 @@
                 var newY = n.y;
                 while (newY >= n._origY) {
                     var collisionNode = _.chain(this.nodes)
+                        .take(i)
                         .find(_.bind(Utils._didCollide, {n: n, newY: newY}))
                         .value();
 
@@ -610,6 +623,9 @@
             disableResize: opts.disableResize || false,
             rtl: 'auto',
             removable: false,
+            removableOptions: _.defaults(opts.removableOptions || {}, {
+                accept: '.' + opts.itemClass
+            }),
             removeTimeout: 2000,
             verticalMarginUnit: 'px',
             cellHeightUnit: 'px',
@@ -757,9 +773,7 @@
         if (!self.opts.staticGrid && typeof self.opts.removable === 'string') {
             var trashZone = $(self.opts.removable);
             if (!this.dd.isDroppable(trashZone)) {
-                this.dd.droppable(trashZone, {
-                    accept: '.' + self.opts.itemClass
-                });
+                this.dd.droppable(trashZone, self.opts.removableOptions);
             }
             this.dd
                 .on(trashZone, 'dropover', function(event, ui) {
@@ -768,6 +782,7 @@
                     if (node._grid !== self) {
                         return;
                     }
+                    el.data('inTrashZone', true);
                     self._setupRemovingTimeout(el);
                 })
                 .on(trashZone, 'dropout', function(event, ui) {
@@ -776,6 +791,7 @@
                     if (node._grid !== self) {
                         return;
                     }
+                    el.data('inTrashZone', false);
                     self._clearRemovingTimeout(el);
                 });
         }
@@ -786,13 +802,14 @@
             var onDrag = function(event, ui) {
                 var el = draggingElement;
                 var node = el.data('_gridstack_node');
-                var pos = self.getCellFromPixel(ui.offset, true);
+                var pos = self.getCellFromPixel({left: event.pageX, top: event.pageY}, true);
                 var x = Math.max(0, pos.x);
                 var y = Math.max(0, pos.y);
                 if (!node._added) {
                     node._added = true;
 
                     node.el = el;
+                    node.autoPosition = true;
                     node.x = x;
                     node.y = y;
                     self.grid.cleanNodes();
@@ -811,13 +828,12 @@
                     node._beforeDragY = node.y;
 
                     self._updateContainerHeight();
-                } else {
-                    if (!self.grid.canMoveNode(node, x, y)) {
-                        return;
-                    }
-                    self.grid.moveNode(node, x, y);
-                    self._updateContainerHeight();
                 }
+                if (!self.grid.canMoveNode(node, x, y)) {
+                    return;
+                }
+                self.grid.moveNode(node, x, y);
+                self._updateContainerHeight();
             };
 
             this.dd
@@ -877,6 +893,7 @@
                     node.el = el;
                     self.placeholder.hide();
                     Utils.removePositioningStyles(el);
+                    el.find('div.ui-resizable-handle').remove();
 
                     el
                         .attr('data-gs-x', node.x)
@@ -1016,6 +1033,10 @@
             return;
         }
         var height = this.grid.getGridHeight();
+        var minHeight = parseInt(this.container.css('min-height')) / this.cellHeight();
+        if (height < minHeight) {
+            height = minHeight;
+        }
         this.container.attr('data-gs-current-height', height);
         if (!this.opts.cellHeight) {
             return ;
@@ -1079,7 +1100,7 @@
             }
 
             if (event.type == 'drag') {
-                if (x < 0 || x >= self.grid.width || y < 0 || (!self.grid.float && y > self.grid.getGridHeight())) {
+                if (el.data('inTrashZone') || x < 0 || x >= self.grid.width || y < 0 || (!self.grid.float && y > self.grid.getGridHeight())) {
                     if (!node._temporaryRemoved) {
                         if (self.opts.removable === true) {
                             self._setupRemovingTimeout(el);
