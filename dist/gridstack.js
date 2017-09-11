@@ -252,6 +252,7 @@
                 var newY = n.y;
                 while (newY >= n._origY) {
                     var collisionNode = _.chain(this.nodes)
+                        .take(i)
                         .find(_.bind(Utils._didCollide, {n: n, newY: newY}))
                         .value();
 
@@ -798,13 +799,14 @@
             var onDrag = function(event, ui) {
                 var el = draggingElement;
                 var node = el.data('_gridstack_node');
-                var pos = self.getCellFromPixel(ui.offset, true);
+                var pos = self.getCellFromPixel({left: event.pageX, top: event.pageY}, true);
                 var x = Math.max(0, pos.x);
                 var y = Math.max(0, pos.y);
                 if (!node._added) {
                     node._added = true;
 
                     node.el = el;
+                    node.autoPosition = true;
                     node.x = x;
                     node.y = y;
                     self.grid.cleanNodes();
@@ -823,13 +825,12 @@
                     node._beforeDragY = node.y;
 
                     self._updateContainerHeight();
-                } else {
-                    if (!self.grid.canMoveNode(node, x, y)) {
-                        return;
-                    }
-                    self.grid.moveNode(node, x, y);
-                    self._updateContainerHeight();
                 }
+                if (!self.grid.canMoveNode(node, x, y)) {
+                    return;
+                }
+                self.grid.moveNode(node, x, y);
+                self._updateContainerHeight();
             };
 
             this.dd
