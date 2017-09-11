@@ -623,6 +623,9 @@
             disableResize: opts.disableResize || false,
             rtl: 'auto',
             removable: false,
+            removableOptions: _.defaults(opts.removableOptions || {}, {
+                accept: '.' + opts.itemClass
+            }),
             removeTimeout: 2000,
             verticalMarginUnit: 'px',
             cellHeightUnit: 'px',
@@ -770,9 +773,7 @@
         if (!self.opts.staticGrid && typeof self.opts.removable === 'string') {
             var trashZone = $(self.opts.removable);
             if (!this.dd.isDroppable(trashZone)) {
-                this.dd.droppable(trashZone, {
-                    accept: '.' + self.opts.itemClass
-                });
+                this.dd.droppable(trashZone, self.opts.removableOptions);
             }
             this.dd
                 .on(trashZone, 'dropover', function(event, ui) {
@@ -781,6 +782,7 @@
                     if (node._grid !== self) {
                         return;
                     }
+                    el.data('inTrashZone', true);
                     self._setupRemovingTimeout(el);
                 })
                 .on(trashZone, 'dropout', function(event, ui) {
@@ -789,6 +791,7 @@
                     if (node._grid !== self) {
                         return;
                     }
+                    el.data('inTrashZone', false);
                     self._clearRemovingTimeout(el);
                 });
         }
@@ -1097,7 +1100,8 @@
             }
 
             if (event.type == 'drag') {
-                if (x < 0 || x >= self.grid.width || y < 0 || (!self.grid.float && y > self.grid.getGridHeight())) {
+                if (el.data('inTrashZone') || x < 0 || x >= self.grid.width || y < 0 ||
+                    (!self.grid.float && y > self.grid.getGridHeight())) {
                     if (!node._temporaryRemoved) {
                         if (self.opts.removable === true) {
                             self._setupRemovingTimeout(el);
