@@ -889,6 +889,7 @@
                     node.el = el;
                     self.placeholder.hide();
                     Utils.removePositioningStyles(el);
+                    el.find('div.ui-resizable-handle').remove();
 
                     el
                         .attr('data-gs-x', node.x)
