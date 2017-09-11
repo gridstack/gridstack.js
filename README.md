@@ -49,7 +49,7 @@ Version 1.0 is coming! Check out the blog post here for more information:
 Demo and examples
 ====
 
-Please visit http://troolee.github.io/gridstack.js/ for a demo or check out [these examples](http://troolee.github.io/gridstack.js/demo/).
+Please visit http://gridstack.github.io/gridstack.js/ for a demo or check out [these examples](http://gridstack.github.io/gridstack.js/demo/).
 
 
 Usage
@@ -147,7 +147,7 @@ We're working on implementing support for other drag'n'drop libraries through th
 
 ## API Documentation
 
-Documentation can be found [here](https://github.com/troolee/gridstack.js/tree/develop/doc).
+Documentation can be found [here](https://github.com/gridstack/gridstack.js/tree/develop/doc).
 
 
 ## Touch devices support
@@ -175,7 +175,7 @@ $(function () {
 });
 ```
 
-If you're still experiencing issues on touch devices please check [#444](https://github.com/troolee/gridstack.js/issues/444)
+If you're still experiencing issues on touch devices please check [#444](https://github.com/gridstack/gridstack.js/issues/444)
 
 
 ## gridstack.js for specific frameworks
@@ -216,7 +216,7 @@ For 4-column grid it should be:
 
 and so on.
 
-Here is a SASS code snipped which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/troolee/gridstack.js/issues/81)):
+Here is a SASS code snipped which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81)):
 
 ```sass
 .grid-stack-item {
@@ -249,7 +249,7 @@ You can use other than 12 grid width:
 $('.grid-stack').gridstack({width: N});
 ```
 
-See example: [2 grids demo](http://troolee.github.io/gridstack.js/demo/two.html)
+See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html)
 
 ## Override resizable/draggable options
 
@@ -271,7 +271,7 @@ Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their beh
 Support of IE8 is quite limited and is not a goal at this time. As far as IE8 doesn't support DOM Level 2 I cannot manipulate with
 CSS stylesheet dynamically. As a workaround you can do the following:
 
-- Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/troolee/6edfea5857f4cd73e6f1)).
+- Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/gridstack/6edfea5857f4cd73e6f1)).
 - Include this CSS:
 
 ```html
@@ -309,7 +309,7 @@ for i in range(N):
 ```
 
 There are at least two more issues with gridstack in IE8 with jQueryUI resizable (it seems it doesn't work) and
-droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/troolee/gridstack.js/issues/76
+droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/gridstack/gridstack.js/issues/76
 
 ## Use with require.js
 
@@ -320,10 +320,10 @@ working properly.
 Changes
 =====
 
-View our change log [here](https://github.com/troolee/gridstack.js/tree/develop/doc/CHANGES.md).
+View our change log [here](https://github.com/gridstack/gridstack.js/tree/develop/doc/CHANGES.md).
 
 
 The Team
 ========
 
-gridstack.js is currently maintained by [Pavel Reznikov](https://github.com/troolee) and [Dylan Weiss](https://github.com/radiolips). We appreciate [all contributors](https://github.com/troolee/gridstack.js/graphs/contributors) for help.
+gridstack.js is currently maintained by [Pavel Reznikov](https://github.com/troolee) and [Dylan Weiss](https://github.com/radiolips). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
