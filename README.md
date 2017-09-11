@@ -49,7 +49,7 @@ Version 1.0 is coming! Check out the blog post here for more information:
 Demo and examples
 ====
 
-Please visit http://gridstack.github.io/gridstack.js/ for a demo or check out [these examples](http://gridstack.github.io/gridstack.js/demo/).
+Please visit http://gridstackjs.com for a demo or check out [these examples](http://gridstackjs.com/demo/).
 
 
 Usage
