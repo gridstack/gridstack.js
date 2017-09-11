@@ -252,6 +252,7 @@
                 var newY = n.y;
                 while (newY >= n._origY) {
                     var collisionNode = _.chain(this.nodes)
+                        .take(i)
                         .find(_.bind(Utils._didCollide, {n: n, newY: newY}))
                         .value();
 
