@@ -1100,7 +1100,8 @@
             }
 
             if (event.type == 'drag') {
-                if (el.data('inTrashZone') || x < 0 || x >= self.grid.width || y < 0 || (!self.grid.float && y > self.grid.getGridHeight())) {
+                if (el.data('inTrashZone') || x < 0 || x >= self.grid.width || y < 0 ||
+                    (!self.grid.float && y > self.grid.getGridHeight())) {
                     if (!node._temporaryRemoved) {
                         if (self.opts.removable === true) {
                             self._setupRemovingTimeout(el);
