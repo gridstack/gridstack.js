@@ -1033,9 +1033,13 @@
             return;
         }
         var height = this.grid.getGridHeight();
-        var minHeight = parseInt(this.container.css('min-height')) / this.cellHeight();
-        if (height < minHeight) {
-            height = minHeight;
+        // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
+        var cssMinHeight = parseInt(this.container.css('min-height'));
+        if (cssMinHeight > 0) {
+            var minHeight = (cssMinHeight + this.opts.verticalMargin) / (this.cellHeight() + this.opts.verticalMargin);
+            if (height < minHeight) {
+                height = minHeight;
+            }
         }
         this.container.attr('data-gs-current-height', height);
         if (!this.opts.cellHeight) {

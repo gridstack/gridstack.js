@@ -5,11 +5,12 @@
   "main": "dist/gridstack.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/troolee/gridstack.js.git"
+    "url": "git+https://github.com/gridstack/gridstack.js.git"
   },
   "scripts": {
     "build": "grunt ; doctoc ./README.md ; doctoc ./doc/README.md ; doctoc ./doc/CHANGES.md",
-    "test": "grunt lint && karma start karma.conf.js"
+    "test": "grunt lint && karma start karma.conf.js",
+    "lint": "grunt lint"
   },
   "keywords": [
     "gridstack",
@@ -24,9 +25,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/troolee/gridstack.js/issues"
+    "url": "https://github.com/gridstack/gridstack.js/issues"
   },
-  "homepage": "http://troolee.github.io/gridstack.js/",
+  "homepage": "http://gridstack.github.io/gridstack.js/",
   "dependencies": {
     "jquery": "^3.1.0",
     "jquery-ui": "^1.12.0",
