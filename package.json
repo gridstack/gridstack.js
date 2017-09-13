@@ -8,8 +8,10 @@
     "url": "git+https://github.com/troolee/gridstack.js.git"
   },
   "scripts": {
-    "build": "grunt ; doctoc ./README.md ; doctoc ./doc/README.md ; doctoc ./doc/CHANGES.md",
-    "test": "grunt lint && karma start karma.conf.js"
+    "build": "mkdir dist && grunt && doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
+    "test": "grunt lint && karma start karma.conf.js",
+    "lint": "grunt lint",
+    "reset": "rm -rf node_modules dist"
   },
   "keywords": [
     "gridstack",
