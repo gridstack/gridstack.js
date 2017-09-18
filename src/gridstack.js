@@ -1610,7 +1610,7 @@
         }
         var heightData = Utils.parseHeight(val);
 
-        if (this.opts.cellHeightUnit === heightData.heightUnit && this.opts.height === heightData.height) {
+        if (this.opts.cellHeightUnit === heightData.unit && this.opts.cellHeight === heightData.height) {
             return ;
         }
         this.opts.cellHeightUnit = heightData.unit;
