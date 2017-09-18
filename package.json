@@ -11,7 +11,7 @@
     "build": "grunt && doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
     "test": "grunt lint && karma start karma.conf.js",
     "lint": "grunt lint",
-    "reset": "rm -rf node_modules dist"
+    "reset": "rm -rf dist node_modules"
   },
   "keywords": [
     "gridstack",
@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "connect": "^3.4.1",
+    "components-jqueryui": "1.12.1",
     "coveralls": "^2.11.8",
     "doctoc": "^1.3.0",
     "grunt": "^1.0.1",
