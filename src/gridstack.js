@@ -283,7 +283,7 @@
                     if (!canBeMoved) {
                         break;
                     }
-                    n._dirty = n.y != newY;
+                    n._dirty = n._origY != newY;
                     n.y = newY;
                 }
             }, this));
