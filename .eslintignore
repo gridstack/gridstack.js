@@ -1,0 +1,3 @@
+dist/*.js
+demo/*
+spec/*
