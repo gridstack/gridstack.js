@@ -1671,23 +1671,31 @@
     GridStack.prototype._updateNodeWidths = function(oldWidth, newWidth) {
         this.grid._sortNodes();
         this.grid.batchUpdate();
-        var node = {};
-        for (var i = 0; i < this.grid.nodes.length; i++) {
-            node = this.grid.nodes[i];
-            this.update(node.el, Math.round(node.x * newWidth / oldWidth), undefined,
-                Math.round(node.width * newWidth / oldWidth), undefined);
+        
+        var node = {},
+            nodes = _.cloneDeep(this.grid.nodes);
+        
+        for (var i = 0; i < nodes.length; i++) {
+            node = nodes[i];
+            this.update(node.el, 
+                Math.round(node.x * newWidth / oldWidth), undefined,
+                math.max(node.minWidth, Math.round(node.width * newWidth / oldWidth)), undefined
+           );
         }
         this.grid.commit();
     };
 
     GridStack.prototype.setGridWidth = function(gridWidth,doNotPropagate) {
-        this.container.removeClass('grid-stack-' + this.opts.width);
-        if (doNotPropagate !== true) {
-            this._updateNodeWidths(this.opts.width, gridWidth);
-        }
+        var oldWidth = this.grid.width;
+        
+        this.container.removeClass('grid-stack-' + oldWidth);
+        this.container.addClass('grid-stack-' + gridWidth);
         this.opts.width = gridWidth;
         this.grid.width = gridWidth;
-        this.container.addClass('grid-stack-' + gridWidth);
+        
+        if (doNotPropagate !== true) {
+            this._updateNodeWidths(oldWidth, gridWidth);
+        }
     };
 
     // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
