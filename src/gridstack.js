@@ -1623,7 +1623,7 @@
     };
 
     GridStack.prototype.cellWidth = function() {
-        return Math.round(this.container.outerWidth() / this.opts.width);
+        return this.container.outerWidth() / this.opts.width;
     };
 
     GridStack.prototype.getCellFromPixel = function(position, useOffset) {
