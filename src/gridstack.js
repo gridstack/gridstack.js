@@ -1672,10 +1672,41 @@
         this.grid._sortNodes();
         this.grid.batchUpdate();
         var node = {};
-        for (var i = 0; i < this.grid.nodes.length; i++) {
-            node = this.grid.nodes[i];
-            this.update(node.el, Math.round(node.x * newWidth / oldWidth), undefined,
-                Math.round(node.width * newWidth / oldWidth), undefined);
+
+        // We need an array of the elements to update so that we make sure that
+        // each item in the grid gets processed. We need to get a fixed list of
+        // array items, because the this.update() can shift items in the this.grid.nodes
+        // array which can lead to elements not being processed.
+        var nodes = _.map(this.grid.nodes, 'el')
+        	, columnPos, columnWidth;
+
+        for (var i = 0; i < nodes.length; i++) {
+        		// get the current live node data, in case a previous update has changed anything
+            node = this.grid.getNodeDataByDOMEl(nodes[i]);
+            /*
+             * Calculate the new column position for the item, but make sure it fits inside the
+             * grid range. If the calculated position is outside the range, then it will move
+             * it to the last column (newWidth-1).
+             */
+            columnPos = Math.min(Math.round(node.x * newWidth / oldWidth), newWidth-1);
+            // calculate the new width of the item
+            columnWidth = Math.round(node.width * newWidth / oldWidth);
+
+            // if the item is too wide, we need to adjust our calculations
+            if( columnPos + columnWidth > newWidth ){
+            	/*
+            	 * To keep the original calculated width, we could just move the item to the left to
+            	 * fit within the width of the grid, but this would cause other items to shift:
+            	 *
+            	 * columnPos = newWidth - columnWidth;
+            	 *
+            	 * Instead of shifting other items around, we will just make sure the item's
+            	 * width is resized to fit inside the width of the grid.
+            	 */
+            	columnWidth = (columnPos + columnWidth) - newWidth;
+            }
+
+            this.update(node.el, columnPos, undefined, columnWidth, undefined);
         }
         this.grid.commit();
     };
