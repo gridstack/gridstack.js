@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AniJS demo</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../dist/gridstack.css"/>
+    <link rel="stylesheet" href="https://anijs.github.io/lib/anicollection/anicollection.css" />
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+    <script src="../dist/gridstack.js"></script>
+    <script src="../dist/gridstack.jQueryUI.js"></script>
+
+    <style type="text/css">
+        .grid-stack {
+            background: lightgoldenrodyellow;
+        }
+
+        .grid-stack-item-content {
+            color: #2c3e50;
+            text-align: center;
+            background-color: #18bc9c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1>AniJS demo</h1>
+
+        <div>
+            <a class="btn btn-default" id="add-widget" href="#">Add Widget</a>
+        </div>
+
+        <div>
+            <h4>Widget added</h4>
+        </div>
+
+        <br/>
+
+        <div class="grid-stack">
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/AniJS/0.9.3/anijs.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('.grid-stack').gridstack();
+            var self = this;
+            this.grid = $('.grid-stack').data('gridstack');
+            $('.grid-stack').on('added', function(event, items) {
+                // add anijs data to gridstack item
+                for (var i = 0; i < items.length; i++) {
+                    $(items[i].el[0]).attr('data-anijs', 'if: added, do: swing animated, after: $removeAnimations, on: $gridstack');
+                }
+                AniJS.run();
+                self.gridstackNotifier = AniJS.getNotifier('gridstack');
+                // fire added event!
+                self.gridstackNotifier.dispatchEvent('added');
+            });
+            $('#add-widget').click(function() {
+                addNewWidget();
+            });
+
+            function addNewWidget() {
+                var grid = $('.grid-stack').data('gridstack');
+                grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), 0, 0, Math.floor(1 + 3 * Math.random()), Math.floor(1 + 3 * Math.random()), true);
+            }
+
+            var animationHelper = AniJS.getHelper();
+
+            //Defining removeAnimations to remove existing animations
+            animationHelper.removeAnimations = function(e, animationContext){
+                $('.grid-stack-item').attr('data-anijs', '');
+            };
+        });
+    </script>
+</body>
+</html>

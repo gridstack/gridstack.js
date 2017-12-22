@@ -1,0 +1,32 @@
+language: node_js
+node_js:
+- 7.7.2
+env:
+- CXX=g++-4.8
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+before_install:
+- npm install -g protractor@3.3.0
+install:
+- npm install -g npm@2
+- npm install -g grunt-cli
+- npm install -g bower
+- npm install selenium-webdriver
+- bower install
+- npm install
+- ./node_modules/protractor/bin/webdriver-manager update --standalone
+before_script:
+- export CHROME_BIN=chromium-browser
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+script:
+- npm run build
+- npm test
+# - grunt e2e-test
+notifications:
+  slack:
+    secure: iGLGsYyVIyKVpVVCskGh/zc6Pkqe0D7jpUtbywSbnq6l5seE6bvBVqm0F2FSCIN+AIC+qal2mPEWysDVsLACm5tTEeA8NfL8dmCrAKbiFbi+gHl4mnHHCHl7ii/7UkoIIXNc5UXbgMSXRS5l8UcsSDlN8VxC5zWstbJvjeYIvbA=

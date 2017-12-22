@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Responsive grid demo</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../dist/gridstack.css"/>
+    <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+    <script src="../dist/gridstack.js"></script>
+    <script src="../dist/gridstack.jQueryUI.js"></script>
+
+    <style type="text/css">
+        .grid-stack {
+            background: lightgoldenrodyellow;
+        }
+
+        .grid-stack-item-content {
+            color: #2c3e50;
+            text-align: center;
+            background-color: #18bc9c;
+        }
+    </style>
+</head>
+<body>
+    <div class="device-xs visible-xs"></div>
+    <div class="device-sm visible-sm"></div>
+    <div class="device-md visible-md"></div>
+    <div class="device-lg visible-lg"></div>
+    <div class="device-xl visible-xl"></div>
+    <div class="container-fluid">
+        <h1>Responsive grid demo</h1>
+
+        <div>
+            <span>Number of Columns:</span> <span id="grid-size"></span>
+        </div>
+
+        <br/>
+
+        <div class="grid-stack">
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(function () {
+            // thanks to http://stackoverflow.com/a/22885503
+            var waitForFinalEvent=function(){var b={};return function(c,d,a){a||(a="I am a banana!");b[a]&&clearTimeout(b[a]);b[a]=setTimeout(c,d)}}();
+            var fullDateString = new Date();
+            function isBreakpoint(alias) {
+                return $('.device-' + alias).is(':visible');
+            }
+
+
+            var options = {
+                float: false
+            };
+            $('.grid-stack').gridstack(options);
+            function resizeGrid() {
+                var grid = $('.grid-stack').data('gridstack');
+                if (isBreakpoint('xs')) {
+                    $('#grid-size').text('One column mode');
+                } else if (isBreakpoint('sm')) {
+                    grid.setGridWidth(3);
+                    $('#grid-size').text(3);
+                } else if (isBreakpoint('md')) {
+                    grid.setGridWidth(6);
+                    $('#grid-size').text(6);
+                } else if (isBreakpoint('lg')) {
+                    grid.setGridWidth(12);
+                    $('#grid-size').text(12);
+                }
+            };
+            $(window).resize(function () {
+                waitForFinalEvent(function() {
+                    resizeGrid();
+                }, 300, fullDateString.getTime());
+            });
+
+            new function () {
+                this.serializedData = [
+                    {x: 0, y: 0, width: 4, height: 2},
+                    {x: 3, y: 1, width: 4, height: 2},
+                    {x: 4, y: 1, width: 4, height: 1},
+                    {x: 2, y: 3, width: 8, height: 1},
+                    {x: 0, y: 4, width: 4, height: 1},
+                    {x: 0, y: 3, width: 4, height: 1},
+                    {x: 2, y: 4, width: 4, height: 1},
+                    {x: 2, y: 5, width: 4, height: 1},
+                    {x: 0, y: 6, width: 12, height: 1}
+                ];
+
+                this.grid = $('.grid-stack').data('gridstack');
+
+                this.loadGrid = function () {
+                    this.grid.removeAll();
+                    var items = GridStackUI.Utils.sort(this.serializedData);
+                    _.each(items, function (node, i) {
+                        this.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'),
+                            node.x, node.y, node.width, node.height);
+                    }, this);
+                    return false;
+                }.bind(this);
+
+                this.loadGrid();
+                resizeGrid();
+            };
+        });
+    </script>
+</body>
+</html>
