@@ -58,7 +58,7 @@ gridstack.js API
 ## Options
 
 - `acceptWidgets` - if `true` of jquery selector the grid will accept widgets dragged from other grids or from
- outside (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/two.html)
+ outside (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `alwaysShowResizeHandle` - if `true` the resizing handles are shown even if the user is not hovering over the widget
     (default: `false`)
 - `animate` - turns animation on (default: `false`)
