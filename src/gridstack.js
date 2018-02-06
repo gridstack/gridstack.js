@@ -675,7 +675,7 @@
             var maxHeight = 0;
             _.each(this.nodes, function(n) {
                 maxHeight = Math.max(maxHeight, n.y + n.height);
-            }
+            });
             _.each(nodes, function(n) {
                 if (detachNode && n._id === null) {
                     if (n.el) {
