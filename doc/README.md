@@ -75,7 +75,7 @@ gridstack.js API
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
 - `height` - maximum rows amount. Default is `0` which means no maximum rows
-- `float` - enable floating widgets (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/float.html)
+- `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
 - `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `disableOneColumnMode` - disables the onColumnMode when the window width is less than minWidth (default: 'false')
@@ -83,9 +83,9 @@ gridstack.js API
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
-- `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a jQuery selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/two.html)
+- `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a jQuery selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
-- `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](http://troolee.github.io/gridstack.js/demo/rtl.html)
+- `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](http://gridstackjs.com/demo/rtl.html)
 - `staticGrid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `verticalMargin` - vertical gap size (default: `20`). Can be:
   * an integer (px)
