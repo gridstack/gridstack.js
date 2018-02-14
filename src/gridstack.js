@@ -425,7 +425,7 @@
             }));
 
         if (typeof clonedNode === 'undefined') {
-            return true;
+            return false;
         }
 
         clone.moveNode(clonedNode, x, y, width, height);
