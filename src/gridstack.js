@@ -1221,6 +1221,7 @@
                         .attr('data-gs-height', node.height);
                     node.x = node._beforeDragX;
                     node.y = node._beforeDragY;
+                    node._temporaryRemoved = false;
                     self.grid.addNode(node);
                 }
             }
