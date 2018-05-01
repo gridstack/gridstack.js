@@ -50,7 +50,7 @@ $animation_speed: .3s !default;
             right: $horizontal_padding / 2;
             bottom: 0;
             width: auto;
-            z-index: 0 !important;
+            z-index: 0;
             overflow-x: hidden;
             overflow-y: auto;
         }
