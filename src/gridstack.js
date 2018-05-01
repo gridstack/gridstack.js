@@ -673,6 +673,9 @@
         this.grid = new GridStackEngine(this.opts.width, function(nodes, detachNode) {
             detachNode = typeof detachNode === 'undefined' ? true : detachNode;
             var maxHeight = 0;
+            _.each(this.nodes, function(n) {
+                maxHeight = Math.max(maxHeight, n.y + n.height);
+            });
             _.each(nodes, function(n) {
                 if (detachNode && n._id === null) {
                     if (n.el) {
@@ -684,7 +687,6 @@
                         .attr('data-gs-y', n.y)
                         .attr('data-gs-width', n.width)
                         .attr('data-gs-height', n.height);
-                    maxHeight = Math.max(maxHeight, n.y + n.height);
                 }
             });
             self._updateStyles(maxHeight + 10);
@@ -1219,6 +1221,7 @@
                         .attr('data-gs-height', node.height);
                     node.x = node._beforeDragX;
                     node.y = node._beforeDragY;
+                    node._temporaryRemoved = false;
                     self.grid.addNode(node);
                 }
             }
@@ -1272,8 +1275,8 @@
 
         el.addClass(this.opts.itemClass);
         var node = self.grid.addNode({
-            x: el.attr('data-gs-x'),
-            y: el.attr('data-gs-y'),
+            x: parseInt(el.attr('data-gs-x'), 10),
+            y: parseInt(el.attr('data-gs-y'), 10),
             width: el.attr('data-gs-width'),
             height: el.attr('data-gs-height'),
             maxWidth: el.attr('data-gs-max-width'),
@@ -1610,7 +1613,7 @@
         }
         var heightData = Utils.parseHeight(val);
 
-        if (this.opts.cellHeightUnit === heightData.heightUnit && this.opts.height === heightData.height) {
+        if (this.opts.cellHeightUnit === heightData.unit && this.opts.cellHeight === heightData.height) {
             return ;
         }
         this.opts.cellHeightUnit = heightData.unit;
