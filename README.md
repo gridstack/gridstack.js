@@ -1,10 +1,10 @@
 gridstack.js
 ============
 
-[![Build Status](https://travis-ci.org/troolee/gridstack.js.svg?branch=master)](https://travis-ci.org/troolee/gridstack.js)
-[![Coverage Status](https://coveralls.io/repos/github/troolee/gridstack.js/badge.svg?branch=master)](https://coveralls.io/github/troolee/gridstack.js?branch=master)
-[![Dependency Status](https://david-dm.org/troolee/gridstack.js.svg)](https://david-dm.org/troolee/gridstack.js)
-[![devDependency Status](https://david-dm.org/troolee/gridstack.js/dev-status.svg)](https://david-dm.org/troolee/gridstack.js#info=devDependencies)
+[![Build Status](https://travis-ci.org/gridstack/gridstack.js.svg?branch=develop)](https://travis-ci.org/gridstack/gridstack.js)
+[![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
+[![Dependency Status](https://david-dm.org/gridstack/gridstack.js.svg)](https://david-dm.org/gridstack/gridstack.js)
+[![devDependency Status](https://david-dm.org/gridstack/gridstack.js/dev-status.svg)](https://david-dm.org/gridstack/gridstack.js#info=devDependencies)
 
 gridstack.js is a mobile-friendly Javascript library for dashboard layout and creation. Making a drag-and-drop, multi-column dashboard has never been easier. gridstack.js allows you to build draggable, responsive bootstrap v3-friendly layouts. It also works great with [knockout.js](http://knockoutjs.com), [angular.js](https://angularjs.org), [ember](https://www.emberjs.com/).
 
@@ -49,7 +49,7 @@ Version 1.0 is coming! Check out the blog post here for more information:
 Demo and examples
 ====
 
-Please visit http://troolee.github.io/gridstack.js/ for a demo or check out [these examples](http://troolee.github.io/gridstack.js/demo/).
+Please visit http://gridstackjs.com for a demo or check out [these examples](http://gridstackjs.com/demo/).
 
 
 Usage
@@ -78,8 +78,9 @@ Usage
 * Using CDN:
 
 ```html
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.6/gridstack.min.css" />
-<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.2.6/gridstack.min.js'></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.3.0/gridstack.min.css" />
+<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.3.0/gridstack.min.js'></script>
+<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.3.0/gridstack.jQueryUI.min.js'></script>
 ```
 
 * Using bower:
@@ -144,7 +145,7 @@ We're working on implementing support for other drag'n'drop libraries through th
 
 ## API Documentation
 
-Documentation can be found [here](https://github.com/troolee/gridstack.js/tree/develop/doc).
+Documentation can be found [here](https://github.com/gridstack/gridstack.js/tree/develop/doc).
 
 
 ## Touch devices support
@@ -172,7 +173,7 @@ $(function () {
 });
 ```
 
-If you're still experiencing issues on touch devices please check [#444](https://github.com/troolee/gridstack.js/issues/444)
+If you're still experiencing issues on touch devices please check [#444](https://github.com/gridstack/gridstack.js/issues/444)
 
 
 ## gridstack.js for specific frameworks
@@ -213,18 +214,18 @@ For 4-column grid it should be:
 
 and so on.
 
-Here is a SASS code snipped which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/troolee/gridstack.js/issues/81)):
+Here is a SASS code snippet which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)):
 
 ```sass
-.grid-stack-item {
+.grid-stack > .grid-stack-item {
 
     $gridstack-columns: 12;
 
     @for $i from 1 through $gridstack-columns {
         &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
         &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-        &.grid-stack-item[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-        &.grid-stack-item[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+        &[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
+        &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
     }
 }
 ```
@@ -246,12 +247,12 @@ You can use other than 12 grid width:
 $('.grid-stack').gridstack({width: N});
 ```
 
-See example: [2 grids demo](http://troolee.github.io/gridstack.js/demo/two.html)
+See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html)
 
 ## Override resizable/draggable options
 
 You can override default `resizable`/`draggable` options. For instance to enable other then bottom right resizing handle
-you can init gridsack like:
+you can init gridstack like:
 
 ```javascript
 $('.grid-stack').gridstack({
@@ -268,7 +269,7 @@ Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their beh
 Support of IE8 is quite limited and is not a goal at this time. As far as IE8 doesn't support DOM Level 2 I cannot manipulate with
 CSS stylesheet dynamically. As a workaround you can do the following:
 
-- Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/troolee/6edfea5857f4cd73e6f1)).
+- Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/gridstack/6edfea5857f4cd73e6f1)).
 - Include this CSS:
 
 ```html
@@ -306,7 +307,7 @@ for i in range(N):
 ```
 
 There are at least two more issues with gridstack in IE8 with jQueryUI resizable (it seems it doesn't work) and
-droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/troolee/gridstack.js/issues/76
+droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/gridstack/gridstack.js/issues/76
 
 ## Use with require.js
 
@@ -317,10 +318,10 @@ working properly.
 Changes
 =====
 
-View our change log [here](https://github.com/troolee/gridstack.js/tree/develop/doc/CHANGES.md).
+View our change log [here](https://github.com/gridstack/gridstack.js/tree/develop/doc/CHANGES.md).
 
 
 The Team
 ========
 
-gridstack.js is currently maintained by [Pavel Reznikov](https://github.com/troolee) and [Dylan Weiss](https://github.com/radiolips). We appreciate [all contributors](https://github.com/troolee/gridstack.js/graphs/contributors) for help.
+gridstack.js is currently maintained by [Pavel Reznikov](https://github.com/troolee) and [Dylan Weiss](https://github.com/radiolips). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.

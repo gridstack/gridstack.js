@@ -5,16 +5,16 @@ describe('gridstack', function() {
     var w;
     var gridstackHTML =
         '<div class="grid-stack">' +
+        '  <div class="grid-stack-item"' +
+        '  data-gs-x="0" data-gs-y="0"' +
+        '  data-gs-width="4" data-gs-height="2">' +
+        '    <div class="grid-stack-item-content"></div>' +
+        '  </div>' +
         '   <div class="grid-stack-item"' +
-        '   data-gs-x="0" data-gs-y="0"' +
-        '   data-gs-width="4" data-gs-height="2">' +
-        '       <div class="grid-stack-item-content"></div>' +
+        '   data-gs-x="4" data-gs-y="0"' +
+        '   data-gs-width="4" data-gs-height="4">' +
+        '     <div class="grid-stack-item-content"></div>' +
         '   </div>' +
-        '    <div class="grid-stack-item"' +
-        '    data-gs-x="4" data-gs-y="0"' +
-        '    data-gs-width="4" data-gs-height="4">' +
-        '            <div class="grid-stack-item-content"></div>' +
-        '    </div>' +
         '</div>';
 
     beforeEach(function() {
@@ -241,6 +241,38 @@ describe('gridstack', function() {
             var grid = $('.grid-stack').data('gridstack');
             var res = Math.round($('.grid-stack').outerWidth() / 10);
             expect(grid.cellWidth()).toBe(res);
+        });
+    });
+
+    describe('grid.cellHeight', function() {
+        beforeEach(function() {
+            document.body.insertAdjacentHTML(
+                'afterbegin', gridstackHTML);
+        });
+        afterEach(function() {
+            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+        });
+        it('should have no changes', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                width: 12
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            grid.cellHeight( grid.cellHeight() );
+            expect(grid.cellHeight()).toBe(80);
+        });
+        it('should change cellHeight to 120', function() {
+            var options = {
+                cellHeight: 80,
+                verticalMargin: 10,
+                width: 10
+            };
+            $('.grid-stack').gridstack(options);
+            var grid = $('.grid-stack').data('gridstack');
+            grid.cellHeight( 120 );
+            expect(grid.cellHeight()).toBe(120);
         });
     });
 
@@ -838,9 +870,9 @@ describe('gridstack', function() {
             $('.grid-stack').gridstack(options);
             var grid = $('.grid-stack').data('gridstack');
             var widgetHTML =
-                '   <div class="grid-stack-item">' +
-                '       <div class="grid-stack-item-content"></div>' +
-                '   </div>';
+                '  <div class="grid-stack-item">' +
+                '      <div class="grid-stack-item-content"></div>' +
+                '  </div>';
             var widget = grid.addWidget(widgetHTML, 6, 7, 2, 3, false, 1, 4, 2, 5, 'coolWidget');
             var $widget = $(widget);
             expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
@@ -872,9 +904,9 @@ describe('gridstack', function() {
             $('.grid-stack').gridstack(options);
             var grid = $('.grid-stack').data('gridstack');
             var widgetHTML =
-                '   <div class="grid-stack-item">' +
-                '       <div class="grid-stack-item-content"></div>' +
-                '   </div>';
+                '  <div class="grid-stack-item">' +
+                '      <div class="grid-stack-item-content"></div>' +
+                '  </div>';
             var widget = grid.addWidget(widgetHTML, 9, 7, 2, 3, true);
             var $widget = $(widget);
             expect(parseInt($widget.attr('data-gs-x'), 10)).not.toBe(6);

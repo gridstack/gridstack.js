@@ -58,16 +58,16 @@ gridstack.js API
 ## Options
 
 - `acceptWidgets` - if `true` of jquery selector the grid will accept widgets dragged from other grids or from
- outside (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/two.html)
+ outside (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `alwaysShowResizeHandle` - if `true` the resizing handles are shown even if the user is not hovering over the widget
     (default: `false`)
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight` - one cell height (default: `60`). Can be:
- - an integer (px)
- - a string (ex: '10em', '100px', '10rem')
- - 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
- - `'auto'` - height will be calculated from cell width.
+  * an integer (px)
+  * a string (ex: '10em', '100px', '10rem')
+  * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
+  * `'auto'` - height will be calculated from cell width.
 - `ddPlugin` - class that implement drag'n'drop functionallity for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableResize` - disallows resizing of widgets (default: `false`).
@@ -75,22 +75,22 @@ gridstack.js API
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
 - `height` - maximum rows amount. Default is `0` which means no maximum rows
-- `float` - enable floating widgets (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/float.html)
+- `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
-- `minWidth` - minimal width. If window width is less, grid will be shown in one-column mode (default: `768`)
+- `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `disableOneColumnMode` - disables the onColumnMode when the window width is less than minWidth (default: 'false')
 - `oneColumnModeClass` - class set on grid when in one column mode (default: 'grid-stack-one-column-mode')
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
-- `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a jQuery selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://troolee.github.io/gridstack.js/demo/two.html)
+- `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a jQuery selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
-- `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](http://troolee.github.io/gridstack.js/demo/rtl.html)
+- `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](http://gridstackjs.com/demo/rtl.html)
 - `staticGrid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `verticalMargin` - vertical gap size (default: `20`). Can be:
- - an integer (px)
- - a string (ex: '2em', '20px', '2rem')
-- `width` - amount of columns (default: `12`). Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/troolee/gridstack.js#change-grid-width).
+  * an integer (px)
+  * a string (ex: '2em', '20px', '2rem')
+- `width` - amount of columns (default: `12`)
 
 ## Grid attributes
 
@@ -103,6 +103,7 @@ gridstack.js API
 
 - `data-gs-x`, `data-gs-y` - element position
 - `data-gs-width`, `data-gs-height` - element size
+- `data-gs-id`- good for quick identification (for example in change event)
 - `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
 - `data-gs-no-resize` - disable element resizing
 - `data-gs-no-move` - disable element moving

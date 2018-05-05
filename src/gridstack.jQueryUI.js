@@ -76,13 +76,7 @@
 
     JQueryUIGridStackDragDropPlugin.prototype.droppable = function(el, opts) {
         el = $(el);
-        if (opts === 'disable' || opts === 'enable') {
-            el.droppable(opts);
-        } else {
-            el.droppable({
-                accept: opts.accept
-            });
-        }
+        el.droppable(opts);
         return this;
     };
 
