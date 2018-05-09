@@ -125,6 +125,52 @@
             if (style.height) {
                 style.removeProperty('height');
             }
+        },
+        getScrollParent: function(el) {
+            var returnEl;
+            if (el == null) {
+                returnEl = null;
+            } else if (el.scrollHeight > el.clientHeight) {
+                returnEl = el;
+            } else {
+                returnEl = Utils.getScrollParent(el.parentNode);
+            }
+            return returnEl;
+        },
+        updateScrollPosition: function(el, ui, distance) {
+            // is widget in view?
+            var rect = el.getBoundingClientRect();
+            var innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
+            if (rect.top < 0 ||
+                rect.bottom > innerHeightOrClientHeight
+            ) {
+                // set scrollTop of first parent that scrolls
+                // if parent is larger than el, set as low as possible
+                // to get entire widget on screen
+                var offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
+                var offsetDiffUp = rect.top;
+                var scrollEl = Utils.getScrollParent(el);
+                var prevScroll = scrollEl.scrollTop;
+                if (scrollEl != null) {
+                    if (rect.top < 0 && distance < 0) {
+                        // moving up
+                        if (el.offsetHeight > innerHeightOrClientHeight) {
+                            scrollEl.scrollTop += distance;
+                        } else {
+                            scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
+                        }
+                    } else if (distance > 0) {
+                        // moving down
+                        if (el.offsetHeight > innerHeightOrClientHeight) {
+                            scrollEl.scrollTop += distance;
+                        } else {
+                            scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
+                        }
+                    }
+                    // move widget y by amount scrolled
+                    ui.position.top += scrollEl.scrollTop - prevScroll;
+                }
+            }
         }
     };
 
@@ -1106,6 +1152,9 @@
             }
 
             if (event.type == 'drag') {
+                var distance = ui.position.top - node._prevYPix;
+                node._prevYPix = ui.position.top;
+                Utils.updateScrollPosition(el[0], ui, distance);
                 if (el.data('inTrashZone') || x < 0 || x >= self.grid.width || y < 0 ||
                     (!self.grid.float && y > self.grid.getGridHeight())) {
                     if (!node._temporaryRemoved) {
@@ -1177,6 +1226,7 @@
             node.el = self.placeholder;
             node._beforeDragX = node.x;
             node._beforeDragY = node.y;
+            node._prevYPix = ui.position.top;
 
             self.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
             self.dd.resizable(el, 'option', 'minHeight', strictCellHeight * (node.minHeight || 1));
