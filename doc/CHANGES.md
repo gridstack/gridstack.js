@@ -29,6 +29,7 @@ Change log
 - widget x and y are now ints (thanks [@DonnchaC](https://github.com/donnchac))
 - allow all droppable options (thanks [@vigor-vlad](https://github.com/vigor-vlad))
 - properly track mouse position in `getCellFromPixel` (thanks [@aletorrado](https://github.com/aletorrado))
+- remove instance of `!important` (thanks [@krilllind](https://github.com/krilllind))
 - scroll when moving widget up or down out of viewport ([#827](https://github.com/troolee/gridstack.js/issues/827))
 
 ## v0.3.0 (2017-04-21)

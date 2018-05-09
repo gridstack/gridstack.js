@@ -216,18 +216,18 @@ For 4-column grid it should be:
 
 and so on.
 
-Here is a SASS code snipped which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81)):
+Here is a SASS code snippet which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)):
 
 ```sass
-.grid-stack-item {
+.grid-stack > .grid-stack-item {
 
     $gridstack-columns: 12;
 
     @for $i from 1 through $gridstack-columns {
         &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
         &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-        &.grid-stack-item[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-        &.grid-stack-item[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+        &[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
+        &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
     }
 }
 ```
