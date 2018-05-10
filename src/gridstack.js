@@ -43,7 +43,7 @@
         sort: function(nodes, dir, width) {
             width = width || _.chain(nodes).map(function(node) { return node.x + node.width; }).max().value();
             dir = dir != -1 ? 1 : -1;
-            return _.sortBy(nodes, function(n) { return dir * (n.x + n.y * width); });
+            return _.sortBy(nodes, [function(n) { return dir * (n.x + n.y * width); }]);
         },
 
         createStylesheet: function(id) {
