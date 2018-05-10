@@ -3,7 +3,8 @@
   "version": "1.0.0-dev",
   "homepage": "https://github.com/troolee/gridstack.js",
   "authors": [
-    "Pavel Reznikov <pashka.reznikov@gmail.com>"
+    "Pavel Reznikov <pashka.reznikov@gmail.com>",
+    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"
   ],
   "description": "gridstack.js is a jQuery plugin for widget layout",
   "main": [
