@@ -1,0 +1,15 @@
+node_modules
+bower_components
+coverage
+*.log
+spec
+freelancer
+.jscsrc
+.gitignore
+README.md
+PULL_REQUEST_TEMPLATE.md
+ISSUE_TEMPLATE.md
+protractor.conf.js
+.travis.yml
+Gruntfile.js
+karma.conf.js
