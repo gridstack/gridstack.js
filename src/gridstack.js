@@ -1,5 +1,5 @@
 /**
- * gridstack.js 0.4.0
+ * gridstack.js 1.0.0-dev
  * http://troolee.github.io/gridstack.js/
  * (c) 2014-2018 Pavel Reznikov, Dylan Weiss
  * gridstack.js may be freely distributed under the MIT license.
@@ -1171,6 +1171,8 @@
                         self._updateContainerHeight();
 
                         node._temporaryRemoved = true;
+                    } else {
+                        return;
                     }
                 } else {
                     self._clearRemovingTimeout(el);

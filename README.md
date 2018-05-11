@@ -57,7 +57,7 @@ Usage
 
 ## Requirements
 
-* [lodash.js](https://lodash.com) (>= 3.5.0, full build)
+* [lodash.js](https://lodash.com) (>= 4.17.10, full build)
 * [jQuery](http://jquery.com) (>= 3.1.0)
 
 Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
