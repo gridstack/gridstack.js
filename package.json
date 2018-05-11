@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "1.0.0-dev",
+  "version": "0.4.0-dev",
   "description": "gridstack.js is a jQuery plugin for widget layout",
   "main": "dist/gridstack.js",
   "repository": {
@@ -11,7 +11,8 @@
     "build": "grunt && doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
     "test": "grunt lint && karma start karma.conf.js",
     "lint": "grunt lint",
-    "reset": "rm -rf dist node_modules"
+    "reset": "rm -rf dist node_modules",
+    "prepublishOnly": "npm build"
   },
   "keywords": [
     "gridstack",
