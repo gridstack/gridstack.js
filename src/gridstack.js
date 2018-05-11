@@ -1,7 +1,7 @@
 /**
- * gridstack.js 1.0.0-dev
+ * gridstack.js 0.4.0-dev
  * http://troolee.github.io/gridstack.js/
- * (c) 2014-2017 Pavel Reznikov, Dylan Weiss
+ * (c) 2014-2018 Pavel Reznikov, Dylan Weiss
  * gridstack.js may be freely distributed under the MIT license.
  * @preserve
 */
