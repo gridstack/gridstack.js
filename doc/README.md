@@ -14,6 +14,7 @@ gridstack.js API
   - [disable(event)](#disableevent)
   - [dragstart(event, ui)](#dragstartevent-ui)
   - [dragstop(event, ui)](#dragstopevent-ui)
+  - [dropped(event, previousWidget, newWidget)](#droppedevent-previouswidget-newwidget)
   - [enable(event)](#enableevent)
   - [removed(event, items)](#removedevent-items)
   - [resizestart(event, ui)](#resizestartevent-ui)
@@ -164,6 +165,15 @@ $('.grid-stack').on('dragstart', function(event, ui) {
 $('.grid-stack').on('dragstop', function(event, ui) {
     var grid = this;
     var element = event.target;
+});
+```
+
+### dropped(event, previousWidget, newWidget)
+
+```javascript
+$('.grid-stack').on('dropped', function(event, previousWidget, newWidget) {
+    console.log('Removed widget that was dragged out of grid:', previousWidget);
+    console.log('Added widget in dropped grid:', newWidget);
 });
 ```
 
