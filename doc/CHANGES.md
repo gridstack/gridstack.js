@@ -21,6 +21,7 @@ Change log
 
 ## v0.1.0 (development)
 
+- emit `dropped` event when a widget is dropped from one grid into another ([#823](https://github.com/troolee/gridstack.js/issues/823)).
 - don't throw error if no bounding scroll element is found ([#891](https://github.com/troolee/gridstack.js/issues/891)).
 - don't push locked widgets even if they are at the top of the grid ([#882](https://github.com/troolee/gridstack.js/issues/882)).
 
