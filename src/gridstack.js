@@ -964,6 +964,7 @@
                     $(ui.draggable).unbind('drag', onDrag);
                     $(ui.draggable).removeData('_gridstack_node');
                     $(ui.draggable).removeData('_gridstack_node_orig');
+                    self.container.trigger('dropped', [originalNode, node]);
                 });
         }
     };
