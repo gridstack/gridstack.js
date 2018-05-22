@@ -1,5 +1,5 @@
 /**
- * gridstack.js 0.4.0
+ * gridstack.js 1.0.0-dev
  * http://troolee.github.io/gridstack.js/
  * (c) 2014-2018 Pavel Reznikov, Dylan Weiss
  * gridstack.js may be freely distributed under the MIT license.
@@ -150,8 +150,8 @@
                 var offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
                 var offsetDiffUp = rect.top;
                 var scrollEl = Utils.getScrollParent(el);
-                var prevScroll = scrollEl.scrollTop;
                 if (scrollEl != null) {
+                    var prevScroll = scrollEl.scrollTop;
                     if (rect.top < 0 && distance < 0) {
                         // moving up
                         if (el.offsetHeight > innerHeightOrClientHeight) {
@@ -1171,6 +1171,8 @@
                         self._updateContainerHeight();
 
                         node._temporaryRemoved = true;
+                    } else {
+                        return;
                     }
                 } else {
                     self._clearRemovingTimeout(el);

@@ -150,8 +150,8 @@
                 var offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
                 var offsetDiffUp = rect.top;
                 var scrollEl = Utils.getScrollParent(el);
-                var prevScroll = scrollEl.scrollTop;
                 if (scrollEl != null) {
+                    var prevScroll = scrollEl.scrollTop;
                     if (rect.top < 0 && distance < 0) {
                         // moving up
                         if (el.offsetHeight > innerHeightOrClientHeight) {
