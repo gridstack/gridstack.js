@@ -9,7 +9,7 @@ addons:
 #- npm install -g protractor@3.3.0
 cache:
   directories:
-    - $HOME/.npm
+    - node_modules
 install:
 #- npm install -g npm@6.0.1
 - npm install -g grunt-cli
