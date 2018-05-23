@@ -4,17 +4,19 @@ describe('gridstack', function() {
     var e;
     var w;
     var gridstackHTML =
-        '<div class="grid-stack">' +
-        '  <div class="grid-stack-item"' +
-        '  data-gs-x="0" data-gs-y="0"' +
-        '  data-gs-width="4" data-gs-height="2">' +
-        '    <div class="grid-stack-item-content"></div>' +
+        '<div style="width: 992px; height: 800px" id="gs-cont">' +
+        '  <div class="grid-stack">' +
+        '    <div class="grid-stack-item"' +
+        '    data-gs-x="0" data-gs-y="0"' +
+        '    data-gs-width="4" data-gs-height="2">' +
+        '      <div class="grid-stack-item-content"></div>' +
+        '    </div>' +
+        '     <div class="grid-stack-item"' +
+        '     data-gs-x="4" data-gs-y="0"' +
+        '     data-gs-width="4" data-gs-height="4">' +
+        '       <div class="grid-stack-item-content"></div>' +
+        '     </div>' +
         '  </div>' +
-        '   <div class="grid-stack-item"' +
-        '   data-gs-x="4" data-gs-y="0"' +
-        '   data-gs-width="4" data-gs-height="4">' +
-        '     <div class="grid-stack-item-content"></div>' +
-        '   </div>' +
         '</div>';
 
     beforeEach(function() {
@@ -106,7 +108,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should add class grid-stack-animate to the container.', function() {
             var options = {
@@ -138,7 +140,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should add class grid-stack-static to the container.', function() {
             var options = {
@@ -172,43 +174,44 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
-        it('should return {x: 2, y: 1}.', function() {
+        it('should return {x: 2, y: 5}.', function() {
             var options = {
                 cellHeight: 80,
                 verticalMargin: 10
             };
             $('.grid-stack').gridstack(options);
+            var container = $('.grid-stack');
             var grid = $('.grid-stack').data('gridstack');
-            var pixel = {top: 100, left: 72};
+            var pixel = {top: 500, left: 200};
             var cell = grid.getCellFromPixel(pixel);
             expect(cell.x).toBe(2);
-            expect(cell.y).toBe(1);
+            expect(cell.y).toBe(5);
         });
-        it('should return {x: 2, y: 1}.', function() {
+        it('should return {x: 2, y: 5}.', function() {
             var options = {
                 cellHeight: 80,
                 verticalMargin: 10
             };
             $('.grid-stack').gridstack(options);
             var grid = $('.grid-stack').data('gridstack');
-            var pixel = {top: 100, left: 72};
+            var pixel = {top: 500, left: 200};
             var cell = grid.getCellFromPixel(pixel, false);
             expect(cell.x).toBe(2);
-            expect(cell.y).toBe(1);
+            expect(cell.y).toBe(5);
         });
-        it('should return {x: 2, y: 1}.', function() {
+        it('should return {x: 2, y: 5}.', function() {
             var options = {
                 cellHeight: 80,
                 verticalMargin: 10
             };
             $('.grid-stack').gridstack(options);
             var grid = $('.grid-stack').data('gridstack');
-            var pixel = {top: 100, left: 72};
+            var pixel = {top: 500, left: 200};
             var cell = grid.getCellFromPixel(pixel, true);
             expect(cell.x).toBe(2);
-            expect(cell.y).toBe(1);
+            expect(cell.y).toBe(5);
         });
     });
 
@@ -218,7 +221,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should return 1/12th of container width.', function() {
             var options = {
@@ -250,7 +253,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should have no changes', function() {
             var options = {
@@ -282,7 +285,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should set data-gs-min-width to 2.', function() {
             var options = {
@@ -307,7 +310,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should set data-gs-min-width to 2.', function() {
             var options = {
@@ -332,7 +335,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should set data-gs-min-height to 2.', function() {
             var options = {
@@ -357,7 +360,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should set data-gs-min-height to 2.', function() {
             var options = {
@@ -382,7 +385,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should set return false.', function() {
             var options = {
@@ -412,7 +415,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should log a warning if set_static is called.', function() {
             console.warn = jasmine.createSpy('log');
@@ -683,7 +686,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should log a warning if handle_class is set.', function() {
             console.warn = jasmine.createSpy('log');
@@ -811,7 +814,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should allow same x, y coordinates for widgets.', function() {
             var options = {
@@ -859,7 +862,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should allow same x, y coordinates for widgets.', function() {
             var options = {
@@ -894,7 +897,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should change x, y coordinates for widgets.', function() {
             var options = {
@@ -954,7 +957,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should resize widget', function() {
             var options = {
@@ -976,7 +979,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should move widget', function() {
             var options = {
@@ -999,7 +1002,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should do nothing and return node', function() {
             var options = {
@@ -1039,7 +1042,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should move and resize widget', function() {
             var options = {
@@ -1064,7 +1067,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should return verticalMargin', function() {
             var options = {
@@ -1127,7 +1130,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should add grid-stack-rtl class', function() {
             var options = {
@@ -1154,7 +1157,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should enable move', function() {
             var options = {
@@ -1196,7 +1199,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should enable resize', function() {
             var options = {
@@ -1238,7 +1241,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should enable movable and resizable', function() {
             var options = {
@@ -1269,7 +1272,7 @@ describe('gridstack', function() {
                 'afterbegin', gridstackHTML);
         });
         afterEach(function() {
-            document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+            document.body.removeChild(document.getElementById('gs-cont'));
         });
         it('should lock widgets', function() {
             var options = {
