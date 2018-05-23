@@ -54,11 +54,11 @@
     "grunt-sass": "^2.1.0",
     "jasmine-core": "^3.1.0",
     "karma": "^2.0.2",
+    "karma-chrome-launcher": "^2.2.0",
     "karma-coverage": "^1.1.2",
     "karma-coveralls": "^1.2.1",
     "karma-jasmine": "^1.1.2",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "phantomjs-prebuilt": "^2.1.16",
+    "puppeteer": "^1.4.0",
     "serve-static": "^1.13.2"
   }
 }

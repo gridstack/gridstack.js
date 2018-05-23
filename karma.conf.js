@@ -33,7 +33,7 @@ module.exports = function(config) {
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
             'src/gridstack.js': ['coverage'],
-            'src/gridstack.jQueryUI.js': ['coverage'],
+            'src/gridstack.jQueryUI.js': ['coverage']
         },
 
 
@@ -67,8 +67,13 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['PhantomJS'],
-
+        browsers: ['ChromeHeadlessCustom'],
+        customLaunchers: {
+            ChromeHeadlessCustom: {
+                base: 'ChromeHeadless',
+                flags: ['--window-size=800,600']
+            }
+        },
 
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
