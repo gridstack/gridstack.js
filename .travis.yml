@@ -1,27 +1,24 @@
 language: node_js
 node_js:
 - 8.11.1
-env:
-- CXX=g++-4.8
+dist: trusty
 sudo: required
 addons:
   chrome: stable
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
-before_install:
+#before_install:
 #- npm install -g protractor@3.3.0
+cache:
+  directories:
+    - $HOME/.npm
 install:
-- npm install -g npm@6.0.1
+#- npm install -g npm@6.0.1
 - npm install -g grunt-cli
 - npm install -g bower
 #- npm install selenium-webdriver
 - npm install
 - bower install
 #- ./node_modules/protractor/bin/webdriver-manager update --standalone
-before_script:
+#before_script:
 #- export CHROME_BIN=chromium-browser
 #- export DISPLAY=:99.0
 #- sh -e /etc/init.d/xvfb start
