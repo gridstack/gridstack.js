@@ -4,6 +4,7 @@ node_js:
 env:
 - CXX=g++-4.8
 addons:
+  chrome: stable
   apt:
     sources:
     - ubuntu-toolchain-r-test
