@@ -1214,7 +1214,7 @@
 =======
 
             if (event.type == 'resize')  {
-                $(event.target).trigger('gsresize',node);
+                $(event.target).trigger('gsresize', node);
             }
 >>>>>>> 8a587b6... event.target instead of this reference
         };
