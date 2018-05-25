@@ -1210,6 +1210,13 @@
             node.lastTriedHeight = height;
             self.grid.moveNode(node, x, y, width, height);
             self._updateContainerHeight();
+<<<<<<< HEAD
+=======
+
+            if (event.type == 'resize')  {
+                $(event.target).trigger('gsresize', node);
+            }
+>>>>>>> 8a587b6... event.target instead of this reference
         };
 
         var onStartMoving = function(event, ui) {
