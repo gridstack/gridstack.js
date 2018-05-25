@@ -1118,7 +1118,7 @@
             self._updateContainerHeight();
 
             if (event.type == 'resize')  {
-                $(this).trigger('gsresize',node);
+                $(event.target).trigger('gsresize',node);
             }
         };
 
