@@ -728,11 +728,13 @@
                         n.el.remove();
                     }
                 } else {
-                    n.el
-                        .attr('data-gs-x', n.x)
-                        .attr('data-gs-y', n.y)
-                        .attr('data-gs-width', n.width)
-                        .attr('data-gs-height', n.height);
+                    if (n.el) {
+                        n.el
+                            .attr('data-gs-x', n.x)
+                            .attr('data-gs-y', n.y)
+                            .attr('data-gs-width', n.width)
+                            .attr('data-gs-height', n.height);
+                    }
                 }
             });
             self._updateStyles(maxHeight + 10);
@@ -1282,6 +1284,7 @@
             self._triggerChangeEvent(forceNotify);
 
             self.grid.endUpdate();
+            self.grid.cleanNodes();
 
             var nestedGrids = o.find('.grid-stack');
             if (nestedGrids.length && event.type == 'resizestop') {
