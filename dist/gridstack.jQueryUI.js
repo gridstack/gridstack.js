@@ -7,24 +7,21 @@
 */
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'lodash', 'gridstack', 'jquery-ui/data', 'jquery-ui/disable-selection', 'jquery-ui/focusable',
-            'jquery-ui/form', 'jquery-ui/ie', 'jquery-ui/keycode', 'jquery-ui/labels', 'jquery-ui/jquery-1-7',
-            'jquery-ui/plugin', 'jquery-ui/safe-active-element', 'jquery-ui/safe-blur', 'jquery-ui/scroll-parent',
-            'jquery-ui/tabbable', 'jquery-ui/unique-id', 'jquery-ui/version', 'jquery-ui/widget',
-            'jquery-ui/widgets/mouse', 'jquery-ui/widgets/draggable', 'jquery-ui/widgets/droppable',
-            'jquery-ui/widgets/resizable'], factory);
+        define(['jquery', 'lodash', 'gridstack', 'exports', 'jquery-ui/data', 'jquery-ui/disable-selection',
+            'jquery-ui/focusable', 'jquery-ui/form', 'jquery-ui/ie', 'jquery-ui/keycode', 'jquery-ui/labels',
+            'jquery-ui/jquery-1-7', 'jquery-ui/plugin', 'jquery-ui/safe-active-element', 'jquery-ui/safe-blur',
+            'jquery-ui/scroll-parent', 'jquery-ui/tabbable', 'jquery-ui/unique-id', 'jquery-ui/version',
+            'jquery-ui/widget', 'jquery-ui/widgets/mouse', 'jquery-ui/widgets/draggable',
+            'jquery-ui/widgets/droppable', 'jquery-ui/widgets/resizable'], factory);
     } else if (typeof exports !== 'undefined') {
         try { jQuery = require('jquery'); } catch (e) {}
         try { _ = require('lodash'); } catch (e) {}
         try { GridStackUI = require('gridstack'); } catch (e) {}
-        factory(jQuery, _, GridStackUI);
+        factory(jQuery, _, GridStackUI, exports);
     } else {
-        factory(jQuery, _, GridStackUI);
+        factory(jQuery, _, GridStackUI, window);
     }
-})(function($, _, GridStackUI) {
-
-    var scope = window;
-
+})(function($, _, GridStackUI, scope) {
     /**
     * @class JQueryUIGridStackDragDropPlugin
     * jQuery UI implementation of drag'n'drop gridstack plugin.
@@ -90,6 +87,8 @@
         $(el).on(eventName, callback);
         return this;
     };
+
+    scope.JQueryUIGridStackDragDropPlugin = JQueryUIGridStackDragDropPlugin;
 
     return JQueryUIGridStackDragDropPlugin;
 });
