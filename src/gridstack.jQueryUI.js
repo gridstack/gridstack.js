@@ -16,8 +16,8 @@
     } else if (typeof exports !== 'undefined') {
         try { jQuery = require('jquery'); } catch (e) {}
         try { _ = require('lodash'); } catch (e) {}
-        try { GridStackUI = require('gridstack'); } catch (e) {}
-        factory(jQuery, _, GridStackUI, exports);
+        try { gridstack = require('gridstack'); } catch (e) {}
+        factory(jQuery, _, gridstack.GridStackUI, exports);
     } else {
         factory(jQuery, _, GridStackUI, window);
     }
