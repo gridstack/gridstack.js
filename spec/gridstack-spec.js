@@ -73,31 +73,58 @@ describe('gridstack', function() {
     });
 
     describe('sorting of nodes', function() {
-
-        it('should sort ascending with width.', function() {
+        it('should sort by row ascending with width.', function() {
             w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
             e.prototype._sortNodes.call(w, 1);
             expect(w.nodes).toEqual([{x: 0, y: 1}, {x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}]);
         });
 
-        it('should sort descending with width.', function() {
+        it('should sort by row descending with width.', function() {
             w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
             e.prototype._sortNodes.call(w, -1);
             expect(w.nodes).toEqual([{x: 9, y: 0}, {x: 4, y: 4}, {x: 7, y: 0}, {x: 0, y: 1}]);
         });
 
-        it('should sort ascending without width.', function() {
+        it('should sort by row ascending without width.', function() {
             w.width = false;
             w.nodes = [{x: 7, y: 0, width: 1}, {x: 4, y: 4, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}];
             e.prototype._sortNodes.call(w, 1);
             expect(w.nodes).toEqual([{x: 7, y: 0, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}, {x: 4, y: 4, width: 1}]);
         });
 
-        it('should sort descending without width.', function() {
+        it('should sort by row descending without width.', function() {
             w.width = false;
             w.nodes = [{x: 7, y: 0, width: 1}, {x: 4, y: 4, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}];
             e.prototype._sortNodes.call(w, -1);
             expect(w.nodes).toEqual([{x: 4, y: 4, width: 1}, {x: 0, y: 1, width: 1}, {x: 9, y: 0, width: 1}, {x: 7, y: 0, width: 1}]);
+        });
+
+        it('should sort by column ascending with height.', function() {
+            w.height = 1;
+            w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
+            e.prototype._sortNodes.call(w, 1, -1);
+            expect(w.nodes).toEqual([{x: 0, y: 1}, {x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}]);
+        }); 
+
+        it('should sort by column descending with height.', function() {
+            w.height = 1;
+            w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
+            e.prototype._sortNodes.call(w, -1, -1);
+            expect(w.nodes).toEqual([{x: 9, y: 0}, {x: 4, y: 4}, {x: 7, y: 0}, {x: 0, y: 1}]);
+        });
+
+        it('should sort by column ascending without height.', function() {
+            w.height = false;
+            w.nodes = [{x: 7, y: 0, height: 1}, {x: 4, y: 4, height: 1}, {x: 9, y: 0, height: 1}, {x: 0, y: 1, height: 1}];
+            e.prototype._sortNodes.call(w, 1, -1);
+            expect(w.nodes).toEqual([{x: 0, y: 1, height: 1}, {x: 4, y: 4, height: 1}, {x: 7, y: 0, height: 1}, {x: 9, y: 0, height: 1}]);
+        });
+
+        it('should sort by column descending without height.', function() {
+            w.height = false;
+            w.nodes = [{x: 7, y: 0, height: 1}, {x: 4, y: 4, height: 1}, {x: 9, y: 0, height: 1}, {x: 0, y: 1, height: 1}];
+            e.prototype._sortNodes.call(w, -1, -1);
+            expect(w.nodes).toEqual([{x: 9, y: 0, height: 1}, {x: 7, y: 0, height: 1}, {x: 4, y: 4, height: 1}, {x: 0, y: 1, height: 1}]);
         });
 
     });

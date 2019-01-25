@@ -40,10 +40,14 @@
             return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
         },
 
-        sort: function(nodes, dir, width) {
+        sort: function(nodes, dir, dim, height, width) { 
+            height = height || _.chain(nodes).map(function(node) { return node.y + node.height; }).max().value();
             width = width || _.chain(nodes).map(function(node) { return node.x + node.width; }).max().value();
             dir = dir != -1 ? 1 : -1;
-            return _.sortBy(nodes, [function(n) { return dir * (n.x + n.y * width); }]);
+            var x = dim != -1 ? 'x' : 'y';
+            var y = dim != -1 ? 'y' : 'x';
+            dim = dim != -1 ? width : height;
+            return _.sortBy(nodes, [function(n) { return dir * (n[x] + n[y] * dim); }]);
         },
 
         createStylesheet: function(id) {
@@ -282,8 +286,8 @@
         return collisionNode === null || typeof collisionNode === 'undefined';
     };
 
-    GridStackEngine.prototype._sortNodes = function(dir) {
-        this.nodes = Utils.sort(this.nodes, dir, this.width);
+    GridStackEngine.prototype._sortNodes = function(dir, dim) {
+        this.nodes = Utils.sort(this.nodes, dir, dim, this.height, this.width);
     };
 
     GridStackEngine.prototype._packNodes = function() {
@@ -677,8 +681,14 @@
             cellHeightUnit: 'px',
             disableOneColumnMode: opts.disableOneColumnMode || false,
             oneColumnModeClass: opts.oneColumnModeClass || 'grid-stack-one-column-mode',
+            oneColumnModeSort: opts.oneColumnModeSort || 'row',
             ddPlugin: null
         });
+
+        this.opts.oneColumnModeSort = this.opts.oneColumnModeSort.toLowerCase();
+        if (!String('row | row-reverse | column | column-reverse | none').includes(this.opts.oneColumnModeSort)) {
+            this.opts.oneColumnModeSort = 'row';
+        }
 
         if (this.opts.ddPlugin === false) {
             this.opts.ddPlugin = GridStackDragDropPlugin;
@@ -777,19 +787,25 @@
                 }
                 self.container.addClass(self.opts.oneColumnModeClass);
                 oneColumnMode = true;
+                var oneColumnModeSort = self.opts.oneColumnModeSort;
+                if (oneColumnModeSort !== 'none') {
+                    var dim = oneColumnModeSort.includes('column') ? -1 : 1;
+                    var dir = dim > 0 && self.opts.rtl ? -1 : 1;
+                    dir = oneColumnModeSort.includes('reverse') ? dir * -1 : dir;
 
-                self.grid._sortNodes();
-                _.each(self.grid.nodes, function(node) {
-                    self.container.append(node.el);
+                    self.grid._sortNodes(dir, dim);
+                    _.each(self.grid.nodes, function(node) {
+                        self.container.append(node.el);
 
-                    if (self.opts.staticGrid) {
-                        return;
-                    }
-                    self.dd.draggable(node.el, 'disable');
-                    self.dd.resizable(node.el, 'disable');
+                        if (self.opts.staticGrid) {
+                            return;
+                        }
+                        self.dd.draggable(node.el, 'disable');
+                        self.dd.resizable(node.el, 'disable');
 
-                    node.el.trigger('resize');
-                });
+                        node.el.trigger('resize');
+                    });
+                }
             } else {
                 if (!oneColumnMode) {
                     return;
@@ -1210,6 +1226,10 @@
             node.lastTriedHeight = height;
             self.grid.moveNode(node, x, y, width, height);
             self._updateContainerHeight();
+
+            if (event.type == 'resize')  {
+                $(event.target).trigger('gsresize', node);
+            }
         };
 
         var onStartMoving = function(event, ui) {
