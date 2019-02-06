@@ -60,8 +60,6 @@ Usage
 * [lodash.js](https://lodash.com) (>= 4.17.10, full build)
 * [jQuery](http://jquery.com) (>= 3.1.0)
 
-Note: You can still use [underscore.js](http://underscorejs.org) (>= 1.7.0) instead of lodash.js
-
 #### Using gridstack.js with jQuery UI
 
 * [jQuery UI](http://jqueryui.com) (>= 1.12.0). Minimum required components: Core, Widget, Mouse, Draggable, Resizable
