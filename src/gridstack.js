@@ -7,18 +7,15 @@
 */
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'lodash'], factory);
+        define(['jquery', 'lodash', 'exports'], factory);
     } else if (typeof exports !== 'undefined') {
         try { jQuery = require('jquery'); } catch (e) {}
         try { _ = require('lodash'); } catch (e) {}
-        factory(jQuery, _);
+        factory(jQuery, _, exports);
     } else {
-        factory(jQuery, _);
+        factory(jQuery, _, window);
     }
-})(function($, _) {
-
-    var scope = window;
-
+})(function($, _, scope) {
     var obsolete = function(f, oldName, newName) {
         var wrapper = function() {
             console.warn('gridstack.js: Function `' + oldName + '` is deprecated as of v0.2.5 and has been replaced ' +
