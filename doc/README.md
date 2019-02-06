@@ -243,7 +243,7 @@ grid.addWidget(el, 0, 0, 3, 2, true);
 
 ### batchUpdate()
 
-Initailizes batch updates. You will see no changes until `commit` method is called.
+Initializes batch updates. You will see no changes until `commit` method is called.
 
 ### cellHeight()
 
