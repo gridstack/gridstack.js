@@ -18,7 +18,7 @@ gridstack.js API
   - [enable(event)](#enableevent)
   - [removed(event, items)](#removedevent-items)
   - [resizestart(event, ui)](#resizestartevent-ui)
-  - [gsresizestop(event, ui)](#gsresizestopevent-ui)
+  - [resizestop(event, ui)](#resizestopevent-ui)
 - [API](#api)
   - [addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
@@ -205,10 +205,10 @@ $('.grid-stack').on('resizestart', function(event, ui) {
 });
 ```
 
-### gsresizestop(event, ui)
+### resizestop(event, ui)
 
 ```javascript
-$('.grid-stack').on('gsresizestop', function(event, elem) {
+$('.grid-stack').on('resizestop', function(event, elem) {
     var newHeight = $(elem).attr('data-gs-height');
 });
 ```
