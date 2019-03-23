@@ -57,8 +57,8 @@ Usage
 
 ## Requirements
 
-* [lodash.js](https://lodash.com) (>= 4.17.10, full build)
 * [jQuery](http://jquery.com) (>= 3.1.0)
+* `Array.prototype.find` for IE and older browsers ([core.js](https://github.com/zloirock/core-js#ecmascript-6-array) allows to include specific polyfills)
 
 #### Using gridstack.js with jQuery UI
 
@@ -154,7 +154,7 @@ Please use [jQuery UI Touch Punch](https://github.com/furf/jquery-ui-touch-punch
 working on touch-based devices.
 
 ```html
-<script src="lodash.min.js"></script>
+<script src="core-js/client/shim.min.js"></script>
 <script src="jquery.min.js"></script>
 <script src="jquery-ui.min.js"></script>
 <script src="jquery.ui.touch-punch.min.js"></script>

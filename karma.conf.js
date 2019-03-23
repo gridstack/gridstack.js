@@ -15,9 +15,9 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-          'node_modules/jquery/dist/jquery.min.js',
-          'node_modules/components-jqueryui/jquery-ui.min.js',
-          'node_modules/lodash/lodash.min.js',
+          'bower_components/jquery/dist/jquery.min.js',
+          'bower_components/jquery-ui/jquery-ui.min.js',
+          'node_modules/core-js/client/shim.min.js',
           'src/gridstack.js',
           'src/gridstack.jQueryUI.js',
           'spec/*-spec.js'

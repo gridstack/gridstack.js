@@ -16,7 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.0/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/shim.min.js"></script>
     <script src="../dist/gridstack.js"></script>
     <script src="../dist/gridstack.jQueryUI.js"></script>
 
@@ -76,15 +76,15 @@
                 this.loadGrid = function () {
                     this.grid.removeAll();
                     var items = GridStackUI.Utils.sort(this.serializedData);
-                    _.each(items, function (node) {
-                        this.grid.addWidget($('<div><div class="grid-stack-item-content" /></div>'),
-                        node.x, node.y, node.width, node.height);
-                    }.bind(this));
+                    items.forEach(function (node) {
+                        this.grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'),
+                            node.x, node.y, node.width, node.height);
+                    }, this);
                     return false;
                 }.bind(this);
 
                 this.saveGrid = function () {
-                    this.serializedData = _.map($('.grid-stack > .grid-stack-item:visible'), function (el) {
+                    this.serializedData = $('.grid-stack > .grid-stack-item:visible').map(function (i, el) {
                         el = $(el);
                         var node = el.data('_gridstack_node');
                         return {
@@ -93,7 +93,7 @@
                             width: node.width,
                             height: node.height
                         };
-                    });
+                    }).toArray();
                     $('#saved-data').val(JSON.stringify(this.serializedData, null, '    '));
                     return false;
                 }.bind(this);
