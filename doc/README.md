@@ -96,7 +96,7 @@ gridstack.js API
 ## Grid attributes
 
 - `data-gs-animate` - turns animation on
-- `data-gs-width` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/troolee/gridstack.js#change-grid-width).
+- `data-gs-width` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-width).
 - `data-gs-height` - maximum rows amount. Default is `0` which means no maximum rows.
 - `data-gs-current-height` - current rows amount. Set by the library only. Can be used by the CSS rules.
 
