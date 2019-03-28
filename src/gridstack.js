@@ -9,10 +9,13 @@
     if (typeof define === 'function' && define.amd) {
         define(['jquery', 'exports'], factory);
     } else if (typeof exports !== 'undefined') {
-        try { jQuery = require('jquery'); } catch (e) {}
-        factory(jQuery, exports);
+        var jQueryModule;
+
+        try { jQueryModule = require('jquery'); } catch (e) {}
+
+        factory(jQueryModule || window.jQuery, exports);
     } else {
-        factory(jQuery, window);
+        factory(window.jQuery, window);
     }
 })(function($, scope) {
     var obsolete = function(f, oldName, newName) {
