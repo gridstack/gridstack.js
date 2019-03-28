@@ -3,5 +3,5 @@ Please explain the changes you made here. Include an example of what your change
 
 ### Checklist
 - [ ] Created tests which fail without the change (if possible)
-- [ ] All tests passing (`npm test`)
+- [ ] All tests passing (`yarn test`)
 - [ ] Extended the README / documentation, if necessary

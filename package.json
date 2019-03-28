@@ -12,7 +12,7 @@
     "test": "grunt lint && karma start karma.conf.js",
     "lint": "grunt lint",
     "reset": "rm -rf dist node_modules",
-    "prepublishOnly": "npm build"
+    "prepublishOnly": "yarn build"
   },
   "keywords": [
     "gridstack",
