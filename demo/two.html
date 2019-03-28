@@ -17,7 +17,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.0/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/shim.min.js"></script>
     <script src="../dist/gridstack.js"></script>
     <script src="../dist/gridstack.jQueryUI.js"></script>
 
@@ -113,9 +113,9 @@
                 acceptWidgets: '.grid-stack-item'
             };
             $('#grid1').gridstack(options);
-            $('#grid2').gridstack(_.defaults({
+            $('#grid2').gridstack($.extend({}, options, {
                 float: true
-            }, options));
+            }));
 
             var items = [
                 {x: 0, y: 0, width: 2, height: 2},
@@ -128,8 +128,8 @@
             $('.grid-stack').each(function () {
                 var grid = $(this).data('gridstack');
 
-                _.each(items, function (node) {
-                    grid.addWidget($('<div><div class="grid-stack-item-content" /><div/>'),
+                items.forEach(function (node) {
+                    grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'),
                         node.x, node.y, node.width, node.height);
                 });
             });
