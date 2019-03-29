@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "1.0.0-dev",
+  "version": "0.5.0",
   "description": "gridstack.js is a jQuery plugin for widget layout",
   "main": "dist/gridstack.js",
   "repository": {
