@@ -206,6 +206,8 @@ $('.grid-stack').on('resizestart', function(event, ui) {
 ```
 
 ### gsresizestop(event, ui)
+**Note**: this is a custom event name that is guaranteed to be called
+**after** the jqueryui resizestop event where we update `data-gs-width` and `data-gs-height`.
 
 ```javascript
 $('.grid-stack').on('gsresizestop', function(event, elem) {
