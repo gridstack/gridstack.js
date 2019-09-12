@@ -96,7 +96,7 @@ gridstack.js API
 ## Grid attributes
 
 - `data-gs-animate` - turns animation on
-- `data-gs-width` - amount of columns
+- `data-gs-width` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-width).
 - `data-gs-height` - maximum rows amount. Default is `0` which means no maximum rows.
 - `data-gs-current-height` - current rows amount. Set by the library only. Can be used by the CSS rules.
 
@@ -206,6 +206,8 @@ $('.grid-stack').on('resizestart', function(event, ui) {
 ```
 
 ### gsresizestop(event, ui)
+**Note**: this is a custom event name that is guaranteed to be called
+**after** the jqueryui resizestop event where we update `data-gs-width` and `data-gs-height`.
 
 ```javascript
 $('.grid-stack').on('gsresizestop', function(event, elem) {
@@ -243,7 +245,7 @@ grid.addWidget(el, 0, 0, 3, 2, true);
 
 ### batchUpdate()
 
-Initailizes batch updates. You will see no changes until `commit` method is called.
+Initializes batch updates. You will see no changes until `commit` method is called.
 
 ### cellHeight()
 

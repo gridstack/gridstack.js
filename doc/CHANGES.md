@@ -5,8 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.1.0 (development)](#v010-development)
-- [v0.4.0](#v040)
+- [v1.0.0 (development)](#v100-development)
+- [v0.4.0 (2018-05-11)](#v040-2018-05-11)
 - [v0.3.0 (2017-04-21)](#v030-2017-04-21)
 - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
 - [v0.2.5 (2016-03-02)](#v025-2016-03-02)
@@ -19,25 +19,26 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.1.0 (development)
+## v1.0.0 (development)
 
-- emit `dropped` event when a widget is dropped from one grid into another ([#823](https://github.com/troolee/gridstack.js/issues/823)).
-- don't throw error if no bounding scroll element is found ([#891](https://github.com/troolee/gridstack.js/issues/891)).
-- don't push locked widgets even if they are at the top of the grid ([#882](https://github.com/troolee/gridstack.js/issues/882)).
+- emit `dropped` event when a widget is dropped from one grid into another ([#823](https://github.com/gridstack/gridstack.js/issues/823)).
+- don't throw error if no bounding scroll element is found ([#891](https://github.com/gridstack/gridstack.js/issues/891)).
+- don't push locked widgets even if they are at the top of the grid ([#882](https://github.com/gridstack/gridstack.js/issues/882)).
+- removed lodash dependencies ([#693](https://github.com/gridstack/gridstack.js/issues/693)).
 
-## v0.4.0
+## v0.4.0 (2018-05-11)
 
-- widgets can have their own resize handles. Use `data-gs-resize-handles` element attribute to use. For example, `data-gs-resize-handles="e,w"` will make the particular widget only resize west and east. ([#494](https://github.com/troolee/gridstack.js/issues/494)).
-- enable sidebar items to be duplicated properly. Pass `helper: 'clone'` in `draggable` options. ([#661](https://github.com/troolee/gridstack.js/issues/661), ([#396](https://github.com/troolee/gridstack.js/issues/396), ([#499](https://github.com/troolee/gridstack.js/issues/499)).
-- fix `staticGrid` grid option ([#743](https://github.com/troolee/gridstack.js/issues/743))
+- widgets can have their own resize handles. Use `data-gs-resize-handles` element attribute to use. For example, `data-gs-resize-handles="e,w"` will make the particular widget only resize west and east. ([#494](https://github.com/gridstack/gridstack.js/issues/494)).
+- enable sidebar items to be duplicated properly. Pass `helper: 'clone'` in `draggable` options. ([#661](https://github.com/gridstack/gridstack.js/issues/661), ([#396](https://github.com/gridstack/gridstack.js/issues/396), ([#499](https://github.com/gridstack/gridstack.js/issues/499)).
+- fix `staticGrid` grid option ([#743](https://github.com/gridstack/gridstack.js/issues/743))
 - preserve inline styles when moving/cloning items (thanks [@silverwind](https://github.com/silverwind))
-- fix bug causing heights not to get set ([#744](https://github.com/troolee/gridstack.js/issues/744))
-- allow grid to have min-height, fixes ([#628](https://github.com/troolee/gridstack.js/issues/628)) (thanks [@adumesny](https://github.com/adumesny))
+- fix bug causing heights not to get set ([#744](https://github.com/gridstack/gridstack.js/issues/744))
+- allow grid to have min-height, fixes ([#628](https://github.com/gridstack/gridstack.js/issues/628)) (thanks [@adumesny](https://github.com/adumesny))
 - widget x and y are now ints (thanks [@DonnchaC](https://github.com/donnchac))
 - allow all droppable options (thanks [@vigor-vlad](https://github.com/vigor-vlad))
 - properly track mouse position in `getCellFromPixel` (thanks [@aletorrado](https://github.com/aletorrado))
 - remove instance of `!important` (thanks [@krilllind](https://github.com/krilllind))
-- scroll when moving widget up or down out of viewport ([#827](https://github.com/troolee/gridstack.js/issues/827))
+- scroll when moving widget up or down out of viewport ([#827](https://github.com/gridstack/gridstack.js/issues/827))
 
 ## v0.3.0 (2017-04-21)
 
@@ -45,23 +46,23 @@ Change log
 - prevent extra checks for removing widget when dragging off grid.
 - trigger `added` when a widget is added via dropping from one grid to another.
 - trigger `removed` when a widget is removed via dropping from one grid to another.
-- trigger `removed` when a widget is removed via dropping on a removable zone ([#607](https://github.com/troolee/gridstack.js/issues/607) and [#550])(https://github.com/troolee/gridstack.js/issues/550)).
-- trigger custom event for `resizestop` called `gsresizestop` ([#577](https://github.com/troolee/gridstack.js/issues/577) and [#398](https://github.com/troolee/gridstack.js/issues/398)).
-- prevent dragging/resizing in `oneColumnMode` ([#593](https://github.com/troolee/gridstack.js/issues/593)).
+- trigger `removed` when a widget is removed via dropping on a removable zone ([#607](https://github.com/gridstack/gridstack.js/issues/607) and [#550])(https://github.com/gridstack/gridstack.js/issues/550)).
+- trigger custom event for `resizestop` called `gsresizestop` ([#577](https://github.com/gridstack/gridstack.js/issues/577) and [#398](https://github.com/gridstack/gridstack.js/issues/398)).
+- prevent dragging/resizing in `oneColumnMode` ([#593](https://github.com/gridstack/gridstack.js/issues/593)).
 - add `oneColumnModeClass` option to grid.
 - remove 768px CSS styles, moved to grid-stack-one-column-mode class.
-- add max-width override on grid-stck-one-column-mode ([#462](https://github.com/troolee/gridstack.js/issues/462)).
+- add max-width override on grid-stck-one-column-mode ([#462](https://github.com/gridstack/gridstack.js/issues/462)).
 - add internal function`isNodeChangedPosition`, minor optimization to move/drag.
 - drag'n'drop plugin system. Move jQuery UI dependencies to separate plugin file.
 
 ## v0.2.6 (2016-08-17)
 
 - update requirements to the latest versions of jQuery (v3.1.0+) and jquery-ui (v1.12.0+).
-- fix jQuery `size()` ([#486](https://github.com/troolee/gridstack.js/issues/486)).
-- update `destroy([detachGrid])` call ([#422](https://github.com/troolee/gridstack.js/issues/422)).
-- don't mutate options when calling `draggable` and `resizable`. ([#505](https://github.com/troolee/gridstack.js/issues/505)).
-- update _notify to allow detach ([#411](https://github.com/troolee/gridstack.js/issues/411)).
-- fix code that checks for jquery-ui ([#481](https://github.com/troolee/gridstack.js/issues/481)).
+- fix jQuery `size()` ([#486](https://github.com/gridstack/gridstack.js/issues/486)).
+- update `destroy([detachGrid])` call ([#422](https://github.com/gridstack/gridstack.js/issues/422)).
+- don't mutate options when calling `draggable` and `resizable`. ([#505](https://github.com/gridstack/gridstack.js/issues/505)).
+- update _notify to allow detach ([#411](https://github.com/gridstack/gridstack.js/issues/411)).
+- fix code that checks for jquery-ui ([#481](https://github.com/gridstack/gridstack.js/issues/481)).
 - fix `cellWidth` calculation on empty grid
 
 ## v0.2.5 (2016-03-02)
@@ -78,12 +79,12 @@ Change log
 - `'auto'` value for `cellHeight` option
 - fix `setStatic` method
 - add `setAnimation` method to API
-- add `setGridWidth` method ([#227](https://github.com/troolee/gridstack.js/issues/227))
+- add `setGridWidth` method ([#227](https://github.com/gridstack/gridstack.js/issues/227))
 - add `removable`/`removeTimeout` *(experimental)*
-- add `detachGrid` parameter to `destroy` method ([#216](https://github.com/troolee/gridstack.js/issues/216)) (thanks @jhpedemonte)
-- add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/troolee/gridstack.js/issues/237))
-- add `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `id` parameters to `addWidget` ([#188](https://github.com/troolee/gridstack.js/issues/188))
-- add `added` and `removed` events for when a widget is added or removed, respectively. ([#54](https://github.com/troolee/gridstack.js/issues/54))
+- add `detachGrid` parameter to `destroy` method ([#216](https://github.com/gridstack/gridstack.js/issues/216)) (thanks @jhpedemonte)
+- add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/gridstack/gridstack.js/issues/237))
+- add `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `id` parameters to `addWidget` ([#188](https://github.com/gridstack/gridstack.js/issues/188))
+- add `added` and `removed` events for when a widget is added or removed, respectively. ([#54](https://github.com/gridstack/gridstack.js/issues/54))
 - add `acceptWidgets` parameter. Widgets can now be draggable between grids or from outside *(experimental)*
 
 ## v0.2.4 (2016-02-15)

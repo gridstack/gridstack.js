@@ -16,7 +16,7 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/shim.min.js"></script>
     <script src="../../../dist/gridstack.js"></script>
     <script src="../../../dist/gridstack.jQueryUI.js"></script>
 
@@ -60,8 +60,8 @@
                 this.grid.removeAll();
                 items = GridStackUI.Utils.sort(items);
                 var id = 0;
-                _.each(items, function(node) {
-                    var w = $('<div><div class="grid-stack-item-content" /><div/>');
+                items.forEach(function(node) {
+                    var w = $('<div><div class="grid-stack-item-content"></div></div>');
                     w.attr('id', 'item-' + (++id));
                     this.grid.addWidget(w,
                         node.x, node.y, node.width, node.height);
