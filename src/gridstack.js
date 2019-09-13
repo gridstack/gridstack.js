@@ -40,8 +40,7 @@
             return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
         },
 
-        sort: function(nodes, dir, dim, height, width) { 
-
+        sort: function(nodes, dir, dim, height, width) {
             if (!height) {
                 var heights = nodes.map(function(node) { return node.y + node.height; });
                 height = Math.max.apply(Math, heights);
@@ -51,12 +50,28 @@
                 var widths = nodes.map(function(node) { return node.x + node.width; });
                 width = Math.max.apply(Math, widths);
             }
-
-            dir = dir != -1 ? 1 : -1;
-            var x = dim != -1 ? 'x' : 'y';
-            var y = dim != -1 ? 'y' : 'x';
-            dim = dim != -1 ? width : height;
-            return Utils.sortBy(nodes, [function(n) { return dir * (n[x] + n[y] * dim); }]);
+            var size = {
+                height: height,
+                width: width
+            };
+            var dir1;
+            var dir2;
+            if (Array.isArray(dir)) {
+                dir1 = dir[0] != -1 ? 1 : -1;
+                dir2 = dir[1] != -1 ? 1 : -1;
+            } else {
+                dir1 = dir != -1 ? 1 : -1;
+                dir2 = dir1;
+            }
+            var axis1 = dim != -1 ? 'x' : 'y';
+            var axis2 = dim != -1 ? 'y' : 'x';
+            var dim1 = dim != -1 ? 'width' : 'height';
+            var dim2 = dim != -1 ? 'height' : 'width';
+            return Utils.sortBy(nodes, function(n) {
+                var index1 = dir1 != -1 ? n[axis1] : (n[axis1] + (n[dim1] || 0));
+                var index2 = dir2 != -1 ? n[axis2] : (n[axis2] + (n[dim2] || 0));
+                return (dir1 * index1) + (index2 * size[dim1] * dir2);
+            });
         },
 
         createStylesheet: function(id) {
@@ -850,20 +865,27 @@
                 oneColumnMode = true;
                 var oneColumnModeSort = self.opts.oneColumnModeSort;
                 if (oneColumnModeSort !== 'none') {
+                    // dim as column == -1 or as row == 1
                     var dim = oneColumnModeSort.includes('column') ? -1 : 1;
+                    // if the dim is row then we need to respect right to left setting
                     var dir = dim > 0 && self.opts.rtl ? -1 : 1;
+
                     dir = oneColumnModeSort.includes('reverse') ? dir * -1 : dir;
+
+                    if (dim < 0) {
+                        dir = [dir, self.opts.rtl ? -1 : 1];
+                    } else {
+                        dir = [dir, 1];
+                    }
 
                     self.grid._sortNodes(dir, dim);
                     self.grid.nodes.forEach(function(node) {
                         self.container.append(node.el);
-    
                         if (self.opts.staticGrid) {
                             return;
                         }
                         self.dd.draggable(node.el, 'disable');
                         self.dd.resizable(node.el, 'disable');
-    
                         node.el.trigger('resize');
                     });
                 }

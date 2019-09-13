@@ -72,60 +72,206 @@ describe('gridstack', function() {
 
     });
 
-    describe('sorting of nodes', function() {
-        it('should sort by row ascending with width.', function() {
+    describe('sorting of nodes', function() {      
+
+        it('should sort ascending with width.', function() {
             w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
             e.prototype._sortNodes.call(w, 1);
             expect(w.nodes).toEqual([{x: 0, y: 1}, {x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}]);
         });
 
-        it('should sort by row descending with width.', function() {
+        it('should sort descending with width.', function() {
             w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
             e.prototype._sortNodes.call(w, -1);
             expect(w.nodes).toEqual([{x: 9, y: 0}, {x: 4, y: 4}, {x: 7, y: 0}, {x: 0, y: 1}]);
         });
 
-        it('should sort by row ascending without width.', function() {
+        it('should sort ascending without width.', function() {
             w.width = false;
             w.nodes = [{x: 7, y: 0, width: 1}, {x: 4, y: 4, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}];
             e.prototype._sortNodes.call(w, 1);
             expect(w.nodes).toEqual([{x: 7, y: 0, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}, {x: 4, y: 4, width: 1}]);
         });
 
-        it('should sort by row descending without width.', function() {
+        it('should sort descending without width.', function() {
             w.width = false;
             w.nodes = [{x: 7, y: 0, width: 1}, {x: 4, y: 4, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}];
             e.prototype._sortNodes.call(w, -1);
             expect(w.nodes).toEqual([{x: 4, y: 4, width: 1}, {x: 0, y: 1, width: 1}, {x: 9, y: 0, width: 1}, {x: 7, y: 0, width: 1}]);
         });
 
-        it('should sort by column ascending with height.', function() {
-            w.height = 1;
-            w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
-            e.prototype._sortNodes.call(w, 1, -1);
-            expect(w.nodes).toEqual([{x: 0, y: 1}, {x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}]);
-        }); 
 
-        it('should sort by column descending with height.', function() {
-            w.height = 1;
-            w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
-            e.prototype._sortNodes.call(w, -1, -1);
-            expect(w.nodes).toEqual([{x: 9, y: 0}, {x: 4, y: 4}, {x: 7, y: 0}, {x: 0, y: 1}]);
-        });
-
-        it('should sort by column ascending without height.', function() {
+        let quadrantNodes = [
+            {x: 1, y: 0, height: 1, width: 1, index: 2}, 
+            {x: 1, y: 1, height: 1, width: 1, index: 4}, 
+            {x: 0, y: 0, height: 1, width: 1, index: 1}, 
+            {x: 0, y: 1, height: 1, width: 1, index: 3}
+        ]; 
+        let quadrantNodesMap = {
+            2: {x: 1, y: 0, height: 1, width: 1, index: 2}, 
+            4: {x: 1, y: 1, height: 1, width: 1, index: 4}, 
+            1: {x: 0, y: 0, height: 1, width: 1, index: 1}, 
+            3: {x: 0, y: 1, height: 1, width: 1, index: 3}
+        };       
+        let complexNodes = [
+            {x: 0, y: 0, width: 2, height: 2, index: 1},
+            {x: 2, y: 0, width: 2, height: 2, index: 2},
+            {x: 0, y: 2, width: 4, height: 2, index: 6},
+            {x: 4, y: 0, width: 4, height: 2, index: 3},
+            {x: 4, y: 2, width: 4, height: 2, index: 7},
+            {x: 0, y: 4, width: 3, height: 2, index: 9},
+            {x: 3, y: 4, width: 7, height: 2, index: 10},
+            {x: 8, y: 0, width: 2, height: 4, index: 4},
+            {x: 10, y: 0, width: 2, height: 2, index: 5},
+            {x: 10, y: 2, width: 2, height: 2, index: 8},
+            {x: 10, y: 4, width: 2, height: 2, index: 11}
+        ];      
+        let complexNodesMap = {
+            1: {x: 0, y: 0, width: 2, height: 2, index: 1},
+            2: {x: 2, y: 0, width: 2, height: 2, index: 2},
+            6: {x: 0, y: 2, width: 4, height: 2, index: 6},
+            3: {x: 4, y: 0, width: 4, height: 2, index: 3},
+            7: {x: 4, y: 2, width: 4, height: 2, index: 7},
+            9: {x: 0, y: 4, width: 3, height: 2, index: 9},
+            10: {x: 3, y: 4, width: 7, height: 2, index: 10},
+            4: {x: 8, y: 0, width: 2, height: 4, index: 4},
+            5: {x: 10, y: 0, width: 2, height: 2, index: 5},
+            8: {x: 10, y: 2, width: 2, height: 2, index: 8},
+            11: {x: 10, y: 4, width: 2, height: 2, index: 11}
+        };
+        // This is the default sort
+        it('should sort quadrants by row ttb then by column ltr', function() {
+            w.width = false;
             w.height = false;
-            w.nodes = [{x: 7, y: 0, height: 1}, {x: 4, y: 4, height: 1}, {x: 9, y: 0, height: 1}, {x: 0, y: 1, height: 1}];
-            e.prototype._sortNodes.call(w, 1, -1);
-            expect(w.nodes).toEqual([{x: 0, y: 1, height: 1}, {x: 4, y: 4, height: 1}, {x: 7, y: 0, height: 1}, {x: 9, y: 0, height: 1}]);
+            w.nodes = quadrantNodes.slice(0);
+            e.prototype._sortNodes.call(w, [1, 1], 1);
+            expect(w.nodes).toEqual([quadrantNodesMap[1], quadrantNodesMap[2], quadrantNodesMap[3], quadrantNodesMap[4]]);
         });
 
-        it('should sort by column descending without height.', function() {
+        it('should sort quadrants by row ttb then by column rtl', function() {
+            w.width = false;
             w.height = false;
-            w.nodes = [{x: 7, y: 0, height: 1}, {x: 4, y: 4, height: 1}, {x: 9, y: 0, height: 1}, {x: 0, y: 1, height: 1}];
-            e.prototype._sortNodes.call(w, -1, -1);
-            expect(w.nodes).toEqual([{x: 9, y: 0, height: 1}, {x: 7, y: 0, height: 1}, {x: 4, y: 4, height: 1}, {x: 0, y: 1, height: 1}]);
+            w.nodes = quadrantNodes.slice(0);
+            e.prototype._sortNodes.call(w, [-1, 1], 1);
+            expect(w.nodes).toEqual([quadrantNodesMap[2], quadrantNodesMap[1], quadrantNodesMap[4], quadrantNodesMap[3]]);
         });
+
+        it('should sort quadrants by column ltr then by row ttb', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = quadrantNodes.slice(0);
+            e.prototype._sortNodes.call(w, [1, 1], -1);
+            expect(w.nodes).toEqual([quadrantNodesMap[1], quadrantNodesMap[3], quadrantNodesMap[2], quadrantNodesMap[4]]);
+        });
+
+        it('should sort quadrants by column ltr then by row btt', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = quadrantNodes.slice(0);
+            e.prototype._sortNodes.call(w, [-1, 1], -1);
+            expect(w.nodes).toEqual([quadrantNodesMap[3], quadrantNodesMap[1], quadrantNodesMap[4], quadrantNodesMap[2]]);
+        });
+        
+        it('should sort quadrants by row btt then by column ltr', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = quadrantNodes.slice(0);
+            e.prototype._sortNodes.call(w, [1, -1], 1);
+            expect(w.nodes).toEqual([quadrantNodesMap[3], quadrantNodesMap[4], quadrantNodesMap[1], quadrantNodesMap[2]]);
+        });
+
+        it('should sort quadrants by row btt then by column rtl', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = quadrantNodes.slice(0);
+            e.prototype._sortNodes.call(w, [-1, -1], 1);
+            expect(w.nodes).toEqual([quadrantNodesMap[4], quadrantNodesMap[3], quadrantNodesMap[2], quadrantNodesMap[1]]);
+        });
+
+        it('should sort quadrants by column rtl then by row ttb', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = quadrantNodes.slice(0);
+            e.prototype._sortNodes.call(w, [1, -1], -1);
+            expect(w.nodes).toEqual([quadrantNodesMap[2], quadrantNodesMap[4], quadrantNodesMap[1], quadrantNodesMap[3]]);
+        });
+
+        it('should sort quadrants by column rtl then by row btt', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = quadrantNodes.slice(0);
+            e.prototype._sortNodes.call(w, [-1, -1], -1);
+            expect(w.nodes).toEqual([quadrantNodesMap[4], quadrantNodesMap[2], quadrantNodesMap[3], quadrantNodesMap[1]]);
+        });
+
+
+
+
+        
+        
+        it('should sort complex cells by row ttb then by column ltr', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = complexNodes.slice(0);
+            e.prototype._sortNodes.call(w, [1, 1], 1);
+            expect(w.nodes).toEqual([complexNodesMap[1], complexNodesMap[2], complexNodesMap[3], complexNodesMap[4], complexNodesMap[5], complexNodesMap[6], complexNodesMap[7], complexNodesMap[8], complexNodesMap[9], complexNodesMap[10], complexNodesMap[11]]);
+        });
+
+        it('should sort complex cells by row ttb then by column rtl', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = complexNodes.slice(0);
+            e.prototype._sortNodes.call(w, [-1, 1], 1);
+            expect(w.nodes).toEqual([complexNodesMap[5], complexNodesMap[4], complexNodesMap[3], complexNodesMap[2], complexNodesMap[1], complexNodesMap[8], complexNodesMap[7], complexNodesMap[6], complexNodesMap[11], complexNodesMap[10], complexNodesMap[9]]);
+        });
+
+        it('should sort complex cells by column ltr then by row ttb', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = complexNodes.slice(0);
+            e.prototype._sortNodes.call(w, [1, 1], -1);
+            expect(w.nodes).toEqual([complexNodesMap[1], complexNodesMap[6], complexNodesMap[9], complexNodesMap[2], complexNodesMap[10], complexNodesMap[3], complexNodesMap[7], complexNodesMap[4], complexNodesMap[5], complexNodesMap[8], complexNodesMap[11]]);
+        });
+
+        it('should sort complex cells by column ltr then by row btt', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = complexNodes.slice(0);
+            e.prototype._sortNodes.call(w, [-1, 1], -1);
+            expect(w.nodes).toEqual([complexNodesMap[9], complexNodesMap[6], complexNodesMap[1], complexNodesMap[2], complexNodesMap[10], complexNodesMap[7], complexNodesMap[3], complexNodesMap[4], complexNodesMap[11], complexNodesMap[8], complexNodesMap[5]]);
+        });
+        
+        it('should sort complex cells by row btt then by column ltr', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = complexNodes.slice(0);
+            e.prototype._sortNodes.call(w, [1, -1], 1);
+            expect(w.nodes).toEqual([complexNodesMap[9], complexNodesMap[10], complexNodesMap[11], complexNodesMap[6], complexNodesMap[7], complexNodesMap[4], complexNodesMap[8], complexNodesMap[1], complexNodesMap[2], complexNodesMap[3], complexNodesMap[5]]);
+        });
+
+        it('should sort complex cells by row btt then by column rtl', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = complexNodes.slice(0);
+            e.prototype._sortNodes.call(w, [-1, -1], 1);
+            expect(w.nodes).toEqual([complexNodesMap[11], complexNodesMap[10], complexNodesMap[9], complexNodesMap[8], complexNodesMap[4], complexNodesMap[7], complexNodesMap[6], complexNodesMap[5], complexNodesMap[3], complexNodesMap[2], complexNodesMap[1]]);
+        });
+
+        it('should sort complex cells by column rtl then by row ttb', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = complexNodes.slice(0);
+            e.prototype._sortNodes.call(w, [1, -1], -1);
+            expect(w.nodes).toEqual([complexNodesMap[5], complexNodesMap[8], complexNodesMap[11], complexNodesMap[4], complexNodesMap[10], complexNodesMap[3], complexNodesMap[7], complexNodesMap[2], complexNodesMap[6], complexNodesMap[9], complexNodesMap[1]]);
+        });
+
+        it('should sort complex cells by column rtl then by row btt', function() {
+            w.width = false;
+            w.height = false;
+            w.nodes = complexNodes.slice(0);
+            e.prototype._sortNodes.call(w, [-1, -1], -1);
+            expect(w.nodes).toEqual([complexNodesMap[11], complexNodesMap[8], complexNodesMap[5], complexNodesMap[10], complexNodesMap[4], complexNodesMap[7], complexNodesMap[3], complexNodesMap[6], complexNodesMap[2], complexNodesMap[9], complexNodesMap[1]]);
+        });  
 
     });
 
