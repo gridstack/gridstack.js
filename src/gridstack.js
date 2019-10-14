@@ -1388,8 +1388,8 @@
 
         el.addClass(this.opts.itemClass);
         var node = self.grid.addNode({
-            x: parseInt(el.attr('data-gs-x'), 10),
-            y: parseInt(el.attr('data-gs-y'), 10),
+            x: parseInt(el.attr('data-gs-x'), 10) || 0,
+            y: parseInt(el.attr('data-gs-y'), 10) || 0,
             width: el.attr('data-gs-width'),
             height: el.attr('data-gs-height'),
             maxWidth: el.attr('data-gs-max-width'),
