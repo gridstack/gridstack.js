@@ -16,7 +16,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [gridstack.js News](#gridstackjs-news)
+<!--- [gridstack.js News](#gridstackjs-news) -->
 - [Demo and examples](#demo-and-examples)
 - [Usage](#usage)
   - [Requirements](#requirements)
@@ -36,7 +36,7 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
 - [Changes](#changes)
 - [The Team](#the-team)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- END doctoc generated TOC please keep comment here to allow auto update 
 
 
 gridstack.js News
@@ -44,7 +44,7 @@ gridstack.js News
 
 Version 1.0 is coming! Check out the blog post here for more information:
 [https://dylandreams.com/2017/04/26/gridstack-10-coming-soon/](https://dylandreams.com/2017/04/26/gridstack-10-coming-soon/) and [subscribe to the blog](https://dylandreams.com) for more gridstack news and tutorials.
-
+-->
 
 Demo and examples
 ====
@@ -78,9 +78,9 @@ Usage
 * Using CDN:
 
 ```html
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.4.0/gridstack.min.css" />
-<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.4.0/gridstack.min.js'></script>
-<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.4.0/gridstack.jQueryUI.min.js'></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.5.0/gridstack.min.css" />
+<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.5.0/gridstack.min.js'></script>
+<script type="text/javascript" src='//cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.5.0/gridstack.jQueryUI.min.js'></script>
 ```
 
 * Using bower:
@@ -97,7 +97,7 @@ $ bower install gridstack
 $ npm install gridstack
 ```
 
-You can download files from `dist` directory as well.
+You can download source and build and use `dist` directory as well for latest non published code.
 
 ## Basic usage
 
@@ -309,11 +309,13 @@ for i in range(N):
 There are at least two more issues with gridstack in IE8 with jQueryUI resizable (it seems it doesn't work) and
 droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/gridstack/gridstack.js/issues/76
 
+<!-- fixed in 0.5.0 with #643 ?
 ## Use with require.js
 
 If you're using require.js and a single file jQueryUI please check out this
 [Stackoverflow question](http://stackoverflow.com/questions/35582945/redundant-dependencies-with-requirejs) to get it
 working properly.
+-->
 
 Changes
 =====

@@ -6,6 +6,7 @@ Change log
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [v1.0.0 (development)](#v100-development)
+- [v0.5.0 (2019-03-29)](#v050-2019-03-29)
 - [v0.4.0 (2018-05-11)](#v040-2018-05-11)
 - [v0.3.0 (2017-04-21)](#v030-2017-04-21)
 - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
@@ -21,10 +22,19 @@ Change log
 
 ## v1.0.0 (development)
 
+TBD
+
+## v0.5.0 (2019-03-29)
+
 - emit `dropped` event when a widget is dropped from one grid into another ([#823](https://github.com/gridstack/gridstack.js/issues/823)).
 - don't throw error if no bounding scroll element is found ([#891](https://github.com/gridstack/gridstack.js/issues/891)).
 - don't push locked widgets even if they are at the top of the grid ([#882](https://github.com/gridstack/gridstack.js/issues/882)).
+- RequireJS and CommonJS now export on the `exports` module fix ([#643](https://github.com/gridstack/gridstack.js/issues/643)).
+- automatically scroll page when widget is moving beyond viewport ([#827](https://github.com/gridstack/gridstack.js/issues/827)).
 - removed lodash dependencies ([#693](https://github.com/gridstack/gridstack.js/issues/693)).
+- don't overwrite globals jQuery when in a modular environment ([#974](https://github.com/gridstack/gridstack.js/pull/974)).
+- removed z-index from `.grid-stack-item-content` causing child modal dialog clipping ([#984](https://github.com/gridstack/gridstack.js/pull/984)).
+- convert project to use yarn ([#983](https://github.com/gridstack/gridstack.js/pull/983)).
 
 ## v0.4.0 (2018-05-11)
 
