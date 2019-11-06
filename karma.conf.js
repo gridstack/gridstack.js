@@ -17,7 +17,7 @@ module.exports = function(config) {
         files: [
           'node_modules/jquery/dist/jquery.min.js',
           'node_modules/components-jqueryui/jquery-ui.min.js',
-          'node_modules/lodash/lodash.min.js',
+          'node_modules/core-js/client/shim.min.js',
           'src/gridstack.js',
           'src/gridstack.jQueryUI.js',
           'spec/*-spec.js'

@@ -1,5 +1,5 @@
 /**
- * gridstack.js 1.0.0-dev
+ * gridstack.js 0.5.0
  * http://troolee.github.io/gridstack.js/
  * (c) 2014-2017 Pavel Reznikov, Dylan Weiss
  * gridstack.js may be freely distributed under the MIT license.
@@ -7,24 +7,20 @@
 */
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['jquery', 'lodash', 'gridstack', 'jquery-ui/data', 'jquery-ui/disable-selection', 'jquery-ui/focusable',
-            'jquery-ui/form', 'jquery-ui/ie', 'jquery-ui/keycode', 'jquery-ui/labels', 'jquery-ui/jquery-1-7',
-            'jquery-ui/plugin', 'jquery-ui/safe-active-element', 'jquery-ui/safe-blur', 'jquery-ui/scroll-parent',
-            'jquery-ui/tabbable', 'jquery-ui/unique-id', 'jquery-ui/version', 'jquery-ui/widget',
-            'jquery-ui/widgets/mouse', 'jquery-ui/widgets/draggable', 'jquery-ui/widgets/droppable',
-            'jquery-ui/widgets/resizable'], factory);
+        define(['jquery', 'gridstack', 'exports', 'jquery-ui/data', 'jquery-ui/disable-selection',
+            'jquery-ui/focusable', 'jquery-ui/form', 'jquery-ui/ie', 'jquery-ui/keycode', 'jquery-ui/labels',
+            'jquery-ui/jquery-1-7', 'jquery-ui/plugin', 'jquery-ui/safe-active-element', 'jquery-ui/safe-blur',
+            'jquery-ui/scroll-parent', 'jquery-ui/tabbable', 'jquery-ui/unique-id', 'jquery-ui/version',
+            'jquery-ui/widget', 'jquery-ui/widgets/mouse', 'jquery-ui/widgets/draggable',
+            'jquery-ui/widgets/droppable', 'jquery-ui/widgets/resizable'], factory);
     } else if (typeof exports !== 'undefined') {
         try { jQuery = require('jquery'); } catch (e) {}
-        try { _ = require('lodash'); } catch (e) {}
-        try { GridStackUI = require('gridstack'); } catch (e) {}
-        factory(jQuery, _, GridStackUI);
+        try { gridstack = require('gridstack'); } catch (e) {}
+        factory(jQuery, gridstack.GridStackUI, exports);
     } else {
-        factory(jQuery, _, GridStackUI);
+        factory(jQuery, GridStackUI, window);
     }
-})(function($, _, GridStackUI) {
-
-    var scope = window;
-
+})(function($, GridStackUI, scope) {
     /**
     * @class JQueryUIGridStackDragDropPlugin
     * jQuery UI implementation of drag'n'drop gridstack plugin.
@@ -49,7 +45,7 @@
         } else {
             var handles = el.data('gs-resize-handles') ? el.data('gs-resize-handles') :
                 this.grid.opts.resizable.handles;
-            el.resizable(_.extend({}, this.grid.opts.resizable, {
+            el.resizable($.extend({}, this.grid.opts.resizable, {
                 handles: handles
             }, {
                 start: opts.start || function() {},
@@ -65,7 +61,7 @@
         if (opts === 'disable' || opts === 'enable') {
             el.draggable(opts);
         } else {
-            el.draggable(_.extend({}, this.grid.opts.draggable, {
+            el.draggable($.extend({}, this.grid.opts.draggable, {
                 containment: this.grid.opts.isNested ? this.grid.container.parent() : null,
                 start: opts.start || function() {},
                 stop: opts.stop || function() {},
@@ -90,6 +86,8 @@
         $(el).on(eventName, callback);
         return this;
     };
+
+    scope.JQueryUIGridStackDragDropPlugin = JQueryUIGridStackDragDropPlugin;
 
     return JQueryUIGridStackDragDropPlugin;
 });
