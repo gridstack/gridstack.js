@@ -16,7 +16,6 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-<!--- [gridstack.js News](#gridstackjs-news) -->
 - [Demo and examples](#demo-and-examples)
 - [Usage](#usage)
   - [Requirements](#requirements)
@@ -32,19 +31,11 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
     - [Different grid widths](#different-grid-widths)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [IE8 support](#ie8-support)
-  - [Use with require.js](#use-with-requirejs)
 - [Changes](#changes)
 - [The Team](#the-team)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update 
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-
-gridstack.js News
-=====
-
-Version 1.0 is coming! Check out the blog post here for more information:
-[https://dylandreams.com/2017/04/26/gridstack-10-coming-soon/](https://dylandreams.com/2017/04/26/gridstack-10-coming-soon/) and [subscribe to the blog](https://dylandreams.com) for more gridstack news and tutorials.
--->
 
 Demo and examples
 ====
