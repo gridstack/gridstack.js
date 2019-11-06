@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.5.0 (2019-03-29)](#v050-2019-03-29)
+- [v0.5.0 (2019-11-06)](#v050-2019-11-06)
 - [v0.4.0 (2018-05-11)](#v040-2018-05-11)
 - [v0.3.0 (2017-04-21)](#v030-2017-04-21)
 - [v0.2.6 (2016-08-17)](#v026-2016-08-17)
@@ -19,7 +19,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.5.0 (2019-03-29)
+## v0.5.0 (2019-11-06)
 
 - emit `dropped` event when a widget is dropped from one grid into another ([#823](https://github.com/gridstack/gridstack.js/issues/823)).
 - don't throw error if no bounding scroll element is found ([#891](https://github.com/gridstack/gridstack.js/issues/891)).
