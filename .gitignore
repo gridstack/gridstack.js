@@ -1,5 +1,7 @@
-dist
-node_modules
+*.log
+*.tgz
+.npmrc
 bower_components
 coverage
-*.log
+dist
+node_modules
