@@ -317,4 +317,4 @@ View our change log [here](https://github.com/gridstack/gridstack.js/tree/develo
 The Team
 ========
 
-gridstack.js is currently maintained by [Pavel Reznikov](https://github.com/troolee) and [Dylan Weiss](https://github.com/radiolips). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
+gridstack.js is currently maintained by [Pavel Reznikov](https://github.com/troolee),  [Dylan Weiss](https://github.com/radiolips) and [Alain Dumesny](https://github.com/adumesny). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
