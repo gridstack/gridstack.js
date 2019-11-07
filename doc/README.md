@@ -23,7 +23,7 @@ gridstack.js API
   - [addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
   - [cellHeight()](#cellheight)
-  - [cellHeight(val)](#cellheightval)
+  - [cellHeight(val, noUpdate)](#cellheightval-noupdate)
   - [cellWidth()](#cellwidth)
   - [commit()](#commit)
   - [destroy([detachGrid])](#destroydetachgrid)
@@ -49,6 +49,7 @@ gridstack.js API
   - [setGridWidth(gridWidth, doNotPropagate)](#setgridwidthgridwidth-donotpropagate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
+  - [verticalMargin()](#verticalmargin)
   - [verticalMargin(value, noUpdate)](#verticalmarginvalue-noupdate)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
 - [Utils](#utils)
@@ -251,9 +252,9 @@ Initializes batch updates. You will see no changes until `commit` method is call
 
 Gets current cell height.
 
-### cellHeight(val)
+### cellHeight(val, noUpdate)
 
-Update current cell height. This method rebuilds an internal CSS stylesheet. Note: You can expect performance issues if
+Update current cell height. This method rebuilds an internal CSS stylesheet (unless optional noUpdate=true). Note: You can expect performance issues if
 call this method too often.
 
 ```javascript
@@ -454,6 +455,10 @@ Parameters:
 - `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
 
 Updates widget position/size.
+
+### verticalMargin()
+
+returns current vertical margin value.
 
 ### verticalMargin(value, noUpdate)
 

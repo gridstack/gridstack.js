@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [v0.5.1 (2019-11-07)](#v051-2019-11-07)
 - [v0.5.0 (2019-11-06)](#v050-2019-11-06)
 - [v0.4.0 (2018-05-11)](#v040-2018-05-11)
 - [v0.3.0 (2017-04-21)](#v030-2017-04-21)
@@ -18,6 +19,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## v0.5.1 (2019-11-07)
+
+- reduced npm package size from 672k to 324k (drop demo, src and extra files)
 
 ## v0.5.0 (2019-11-06)
 
