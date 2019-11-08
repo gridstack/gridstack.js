@@ -20,7 +20,8 @@ module.exports = function(config) {
           'node_modules/core-js/client/shim.min.js',
           'src/gridstack.js',
           'src/gridstack.jQueryUI.js',
-          'spec/*-spec.js'
+          'spec/*-spec.js',
+          // 'spec/e2e/*-spec.js' issues with ReferenceError: `browser` & `element` is not defined
         ],
 
 
