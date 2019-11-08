@@ -141,7 +141,7 @@
 
             sources.forEach(function(source) {
                 for (var prop in source) {
-                    if (source.hasOwnProperty(prop) && !target.hasOwnProperty(prop)) {
+                    if (source.hasOwnProperty(prop) && (!target.hasOwnProperty(prop) || target[prop] === undefined)) {
                         target[prop] = source[prop];
                     }
                 }
@@ -393,7 +393,12 @@
     };
 
     GridStackEngine.prototype._prepareNode = function(node, resizing) {
-        node = Utils.defaults(node || {}, {width: 1, height: 1, x: 0, y: 0});
+        node = node || {};
+        // if we're missing position, have grid position us automatically (before we set them to 0,0)
+        if (node.x === undefined || node.y === undefined) {
+            node.autoPosition = true;
+        }
+        node = Utils.defaults(node, {width: 1, height: 1, x: 0, y: 0});
 
         node.x = parseInt('' + node.x);
         node.y = parseInt('' + node.y);
@@ -802,11 +807,13 @@
                 el = $(el);
                 elements.push({
                     el: el,
-                    i: parseInt(el.attr('data-gs-x')) + parseInt(el.attr('data-gs-y')) * _this.opts.width
+                    // if x,y are missing (autoPosition) add them to end of list - keep their respective DOM order
+                    i: (parseInt(el.attr('data-gs-x')) || 100) +
+                       (parseInt(el.attr('data-gs-y')) || 100) * _this.opts.width
                 });
             });
-            Utils.sortBy(elements, function(x) { return x.i; }).forEach(function(i) {
-                this._prepareElement(i.el);
+            Utils.sortBy(elements, function(x) { return x.i; }).forEach(function(item) {
+                this._prepareElement(item.el);
             }, this);
         }
 
@@ -1388,8 +1395,8 @@
 
         el.addClass(this.opts.itemClass);
         var node = self.grid.addNode({
-            x: parseInt(el.attr('data-gs-x'), 10),
-            y: parseInt(el.attr('data-gs-y'), 10),
+            x: el.attr('data-gs-x'),
+            y: el.attr('data-gs-y'),
             width: el.attr('data-gs-width'),
             height: el.attr('data-gs-height'),
             maxWidth: el.attr('data-gs-max-width'),

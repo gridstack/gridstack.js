@@ -7,7 +7,7 @@ describe('gridstack.js with height', function() {
         browser.get('http://localhost:8080/spec/e2e/html/gridstack-with-height.html');
     });
 
-    it('shouldn\'t throw exeption when dragging widget outside the grid', function() {
+    it('shouldn\'t throw exception when dragging widget outside the grid', function() {
         var widget = element(by.id('item-1'));
         var gridContainer = element(by.id('grid'));
 
@@ -20,5 +20,20 @@ describe('gridstack.js with height', function() {
         browser.manage().logs().get('browser').then(function(browserLog) {
             expect(browserLog.length).toEqual(0);
         });
+    });
+});
+
+describe('grid elements with no x,y positions', function() {
+    beforeAll(function() {
+        browser.ignoreSynchronization = true;
+    });
+
+    beforeEach(function() {
+        browser.get('http://localhost:8080/spec/e2e/html/1017-items-no-x-y-for-autoPosition.html');
+    });
+
+    it('should match positions in order 5,1,2,4,3', function() {
+        // TBD
+        // expect(null).not.toBeNull();
     });
 });

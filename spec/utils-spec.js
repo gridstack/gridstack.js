@@ -106,4 +106,17 @@ describe('gridstack utils', function() {
             expect(function() { utils.parseHeight('-12.5 df'); }).toThrowError('Invalid height');
         });
     });
+
+    describe('test defaults', function() {
+        it('should assign missing field or undefined', function() {
+            var src = {};
+            expect(src).toEqual({});
+            expect(utils.defaults(src, {x: 1, y: 2})).toEqual({x: 1, y: 2});
+            expect(utils.defaults(src, {x: 10})).toEqual({x: 1, y: 2});
+            src.width = undefined;
+            expect(src).toEqual({x: 1, y: 2, width: undefined});
+            expect(utils.defaults(src, {x: 10, width: 3})).toEqual({x: 1, y: 2, width: 3});
+            expect(utils.defaults(src, {height: undefined})).toEqual({x: 1, y: 2, width: 3, height: undefined});
+        });
+    });
 });
