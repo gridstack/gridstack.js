@@ -69,9 +69,9 @@ Usage
 * Using CDN:
 
 ```html
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.5.0/gridstack.min.css" />
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.5.0/gridstack.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.5.0/gridstack.jQueryUI.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.1/dist/gridstack.min.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.1/dist/gridstack.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.1/dist/gridstack.jQueryUI.min.js"></script>
 ```
 
 * Using bower:

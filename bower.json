@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "0.5.1",
+  "version": "0.5.1-dev",
   "homepage": "https://github.com/gridstack/gridstack.js",
   "authors": [
     "Pavel Reznikov <pashka.reznikov@gmail.com>",
