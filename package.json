@@ -61,5 +61,9 @@
     "karma-jasmine": "^2.0.1",
     "puppeteer": "^1.13.0",
     "serve-static": "^1.13.2"
+  },
+  "resolutions": {
+    "lodash": "^4.17.13",
+    "js-yaml": "^3.13.1"
   }
 }
