@@ -24,6 +24,7 @@ Change log
 ## v0.5.1-dev (work in progress)
 
 - undefined x,y position messes up grid ([#1017](https://github.com/gridstack/gridstack.js/issues/1017)).
+- changed code to 2 spaces
 
 ## v0.5.1 (2019-11-07)
 
