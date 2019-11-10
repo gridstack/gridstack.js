@@ -94,21 +94,21 @@ You can download source and build and use `dist` directory as well for latest no
 
 ```html
 <div class="grid-stack">
-    <div class="grid-stack-item"
-        data-gs-x="0" data-gs-y="0"
-        data-gs-width="4" data-gs-height="2">
-            <div class="grid-stack-item-content"></div>
-    </div>
-    <div class="grid-stack-item"
-        data-gs-x="4" data-gs-y="0"
-        data-gs-width="4" data-gs-height="4">
-            <div class="grid-stack-item-content"></div>
-    </div>
+  <div class="grid-stack-item"
+    data-gs-x="0" data-gs-y="0"
+    data-gs-width="4" data-gs-height="2">
+      <div class="grid-stack-item-content"></div>
+  </div>
+  <div class="grid-stack-item"
+    data-gs-x="4" data-gs-y="0"
+    data-gs-width="4" data-gs-height="4">
+      <div class="grid-stack-item-content"></div>
+  </div>
 </div>
 
 <script type="text/javascript">
 $(function () {
-    $('.grid-stack').gridstack();
+  $('.grid-stack').gridstack();
 });
 </script>
 ```
@@ -157,10 +157,10 @@ Also `alwaysShowResizeHandle` option may be useful:
 
 ```javascript
 $(function () {
-    var options = {
-        alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-    };
-    $('.grid-stack').gridstack(options);
+  var options = {
+    alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  };
+  $('.grid-stack').gridstack(options);
 });
 ```
 
@@ -210,14 +210,14 @@ Here is a SASS code snippet which can make life easier (Thanks to @ascendantofra
 ```sass
 .grid-stack > .grid-stack-item {
 
-    $gridstack-columns: 12;
+  $gridstack-columns: 12;
 
-    @for $i from 1 through $gridstack-columns {
-        &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
-        &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-        &[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-        &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
-    }
+  @for $i from 1 through $gridstack-columns {
+    &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
+    &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
+    &[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
+    &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+  }
 }
 ```
 
@@ -247,9 +247,9 @@ you can init gridstack like:
 
 ```javascript
 $('.grid-stack').gridstack({
-    resizable: {
-        handles: 'e, se, s, sw, w'
-    }
+  resizable: {
+    handles: 'e, se, s, sw, w'
+  }
 });
 ```
 
@@ -317,4 +317,4 @@ View our change log [here](https://github.com/gridstack/gridstack.js/tree/develo
 The Team
 ========
 
-gridstack.js is currently maintained by [Pavel Reznikov](https://github.com/troolee),  [Dylan Weiss](https://github.com/radiolips) and [Alain Dumesny](https://github.com/adumesny). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
+gridstack.js is currently maintained by [Dylan Weiss](https://github.com/radiolips) and [Alain Dumesny](https://github.com/adumesny), originally created by [Pavel Reznikov](https://github.com/troolee). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
