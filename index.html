@@ -1,229 +1,527 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<meta
+			name="description"
+			content="gridstack.js Build interactive dashboards in minutes."
+		/>
 
-<head>
+		<meta
+			name="keywords"
+			content="gridstack, jquery, grid, layout, drag-n-drop, widgets, js, javascript, gridstack.js, dashboard"
+		/>
+		<title>gridstack.js | Build interactive dashboards in minutes.</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<!-- Bootstrap core CSS -->
+		<link
+			href="https://bootswatch.com/4/yeti/bootstrap.min.css"
+			rel="stylesheet"
+		/>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="gridstack.js is a jQuery plugin for widget layout">
-    <meta name="keywords" content="gridstack, jquery, grid, layout, drag-n-drop, widgets, js, javascript">
-    <meta name="author" content="Pavel Reznikov">
+		<link
+			href="https://cdn.jsdelivr.net/npm/gridstack@0.5.1/dist/gridstack.css"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css"
+		/>
+		<style type="text/css">
+			.grid-stack-item {
+				border: 0;
+			}
 
-    <title>gridstack.js</title>
+			#demo h1,
+			#getStarted h1 {
+				font-size: 3rem;
+			}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+			.card {
+				background: none;
+			}
 
-    <!-- Custom CSS -->
-    <link href="freelancer/css/freelancer.css" rel="stylesheet">
+			section {
+				padding: 0 15px 0 15px;
+			}
 
-    <!-- Custom Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css"/>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel='stylesheet' type='text/css'>
+			.grid-stack-item-removing {
+				opacity: 0.8;
+				filter: blur(5px);
+			}
+			@media all and (max-width: 575px) {
+				#hero {
+					margin-top: 32px;
+				}
+			}
+		</style>
+	</head>
 
-    <link href='https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/styles/github.min.css' rel='stylesheet' type='text/css'>
+	<body>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+			<a class="navbar-brand" href="#">
+				<ion-icon name="grid" style="vertical-align: middle"></ion-icon
+				>gridstack.js
+			</a>
+			<button
+				class="navbar-toggler"
+				type="button"
+				data-toggle="collapse"
+				data-target="#navbarColor01"
+				aria-controls="navbarColor01"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
+			>
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+			<div class="collapse navbar-collapse" id="navbarColor01">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item nav-item-highlight">
+						<a class="nav-link" href="#demo">Demo</a>
+					</li>
+					<li class="nav-item nav-item-highlight">
+						<a class="nav-link" href="#getStarted">Getting Started</a>
+					</li>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							href="https://github.com/gridstack/gridstack.js/tree/develop/doc"
+							target="_blank"
+							>Docs</a
+						>
+					</li>
+					<li class="nav-item dropdown">
+						<a
+							class="nav-link dropdown-toggle"
+							href="#"
+							id="moreExamples"
+							data-toggle="dropdown"
+							aria-haspopup="true"
+							aria-expanded="false"
+							>Examples</a
+						>
+						<div class="dropdown-menu" aria-labelledby="moreExamples">
+							<a class="dropdown-item" target="_blank" href="serialization.html"
+								>Save and restore layout</a
+							>
+							<a class="dropdown-item" href="demo/nested.html" target="_blank"
+								>Nested grids</a
+							>
+							<a class="dropdown-item" href="demo/anijs.html" target="_blank"
+								>Drag widgets between two grids</a
+							>
+							<a class="dropdown-item" target="_blank" href="#"
+								>Animate widgets</a
+							>
+						</div>
+					</li>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							target="_blank"
+							href="https://github.com/gridstack/gridstack.js/blob/develop/doc/CHANGES.md"
+							>Changes</a
+						>
+					</li>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							target="_blank"
+							href="https://join.slack.com/t/gridstackjs/shared_invite/enQtODE1NzkxMTUzNTIzLTA1NTEzZGE2NzliMGY5M2IwN2UzNWUzYmY2YTA0OTFlMTlmMDA3MTg3MGViZTRhZjM0N2QyODMyMjc1NzY4ZWQ"
+							>Slack <ion-icon name="logo-slack"></ion-icon
+						></a>
+					</li>
+					<li class="nav-item">
+						<a
+							class="nav-link"
+							target="_blank"
+							href="https://github.com/gridstack/gridstack.js"
+							>GitHub</a
+						>
+					</li>
+				</ul>
+				<form class="form-inline my-2 my-lg-0" id="search">
+					<input
+						class="form-control mr-sm-2"
+						type="text"
+						placeholder="Search Issues"
+						id="searchTerm"
+					/>
+					<button class="btn btn-secondary my-2 my-sm-0" type="submit">
+						Search
+					</button>
+				</form>
+			</div>
+		</nav>
 
-    <link href="dist/gridstack.css" rel="stylesheet">
-    <link href="gridstack-demo.css" rel="stylesheet">
-</head>
+		<div class="container-fluid">
+			<div class="row bg-dark" id="hero">
+				<div class="col-lg-12">
+					<div class="jumbotron bg-dark text-white" style="margin-bottom: 0;">
+						<h1 class="display-3 text-center">gridstack.js</h1>
+						<p class="lead text-center">
+							Build interactive dashboards in minutes.
+						</p>
+						<hr class="my-4" />
+						<p>
+							gridstack.js is a JS library designed to help developers create
+							beautiful draggable, resizable, responsive bootstrap-friendly
+							layouts with just a few lines of code. gridstack.js can even be
+							used to create more advanced grids: allow users to persist
+							changes, create a sidebar of widgets to drag into your grid, and
+							much, much more.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<main role="main" class="container-fluid" style="padding: 0">
+			<section id="demo" class="bg-primary">
+				<div class="row">
+					<div class="col-lg-12 text-white">
+						<ion-icon
+							class="float-right"
+							name="grid"
+							style="font-size: 350%; margin-top: 10px"
+						></ion-icon>
+						<h1
+							class="text-center"
+							style="margin-top: 2rem; margin-bottom: 1.5rem;"
+						>
+							Demo
+						</h1>
+						<hr />
+					</div>
+				</div>
 
-<body id="page-top" class="index">
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header page-scroll">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="http://gridstackjs.com/"><span class="fa fa-th"></span> gridstack.js</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#demo">Demo</a>
-                    </li>
-                    <li class="page-scroll">
-                        <a href="#usage">Usage</a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/gridstack/gridstack.js/issues">Issues</a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/gridstack/gridstack.js">Fork me on GitHub</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-    </nav>
-
-
-    <header>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="intro-text">
-                        <span class="name">gridstack.js</span>
-                        <hr class="star-light">
-                        <p>gridstack.js is a jQuery plugin for widget layout. This is drag-and-drop multi-column
-                        grid. It allows you to build draggable responsive bootstrap v3 friendly layouts.
-                        It also works great with <a href="http://knockoutjs.com">knockout.js</a> and touch devices.</p>
-
-                        <p>Inspired by <a href="https://github.com/ducksboard/gridster.js">gridster.js</a>. Built with love.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <section id="demo" class="darklue">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Demo</h2>
-                    <hr class="star-light">
-                </div>
-            </div>
-
-            <div class="grid-stack" data-gs-width="12" data-gs-animate="yes">
-                <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2"><div class="grid-stack-item-content">1</div></div>
-                <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4"><div class="grid-stack-item-content">2</div></div>
-                <div class="grid-stack-item" data-gs-x="8" data-gs-y="0" data-gs-width="2" data-gs-height="2" data-gs-min-width="2" data-gs-no-resize="yes"><div class="grid-stack-item-content"> <span class="fa fa-hand-o-up"></span> Drag me! </div></div>
-                <div class="grid-stack-item" data-gs-x="10" data-gs-y="0" data-gs-width="2" data-gs-height="2"><div class="grid-stack-item-content">4</div></div>
-                <div class="grid-stack-item" data-gs-x="0" data-gs-y="2" data-gs-width="2" data-gs-height="2"><div class="grid-stack-item-content">5</div></div>
-                <div class="grid-stack-item" data-gs-x="2" data-gs-y="2" data-gs-width="2" data-gs-height="4"><div class="grid-stack-item-content">6</div></div>
-                <div class="grid-stack-item" data-gs-x="8" data-gs-y="2" data-gs-width="4" data-gs-height="2"><div class="grid-stack-item-content">7</div></div>
-                <div class="grid-stack-item" data-gs-x="0" data-gs-y="4" data-gs-width="2" data-gs-height="2"><div class="grid-stack-item-content">8</div></div>
-                <div class="grid-stack-item" data-gs-x="4" data-gs-y="4" data-gs-width="4" data-gs-height="2"><div class="grid-stack-item-content">9</div></div>
-                <div class="grid-stack-item" data-gs-x="8" data-gs-y="4" data-gs-width="2" data-gs-height="2"><div class="grid-stack-item-content">10</div></div>
-                <div class="grid-stack-item" data-gs-x="10" data-gs-y="4" data-gs-width="2" data-gs-height="2"><div class="grid-stack-item-content">11</div></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Portfolio Grid Section -->
-    <section id="usage">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2>Usage</h2>
-                    <hr class="star-primary">
-                </div>
-            </div>
-
-            <h3>Basic Usage</h3>
-
-            <pre><code class="html">
+				<div class="row">
+					<div
+						class="col-md-2 d-none d-md-block"
+						style="border-right: 1px dashed white;"
+					>
+						<div
+							id="trash"
+							style="padding: 15px;"
+							class="text-center bg-danger text-white"
+						>
+							<div>
+								<ion-icon name="trash" style="font-size: 400%"></ion-icon>
+							</div>
+							<div>
+								<span>Drop here to remove widget!</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-10" style="padding-bottom: 25px;">
+						<div style="padding: 15px; border: 1px solid white">
+							<div class="grid-stack" data-gs-width="12" data-gs-animate="yes">
+								<div
+									class="grid-stack-item card"
+									data-gs-x="0"
+									data-gs-y="0"
+									data-gs-width="4"
+									data-gs-height="2"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">1</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="4"
+									data-gs-y="0"
+									data-gs-width="4"
+									data-gs-height="4"
+									data-gs-no-move="yes"
+									data-gs-no-resize="yes"
+									data-gs-locked="yes"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">
+											I can't be moved or dragged!
+										</p>
+										<p class="card-text text-center">
+											<ion-icon
+												name="ios-lock"
+												style="font-size:300%"
+											></ion-icon>
+										</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="8"
+									data-gs-y="0"
+									data-gs-width="2"
+									data-gs-height="2"
+									data-gs-min-width="2"
+									data-gs-no-resize="yes"
+								>
+									<div
+										class="grid-stack-item-content card-body bg-white"
+										style="overflow: hidden"
+									>
+										<p class="card-text text-center" style="margin-bottom: 0">
+											Drag me!
+										</p>
+										<p class="card-text text-center" style="margin-bottom: 0">
+											<ion-icon name="hand" style="font-size: 300%"></ion-icon>
+										</p>
+										<p class="card-text text-center" style="margin-bottom: 0">
+											...but don't resize me!
+										</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="10"
+									data-gs-y="0"
+									data-gs-width="2"
+									data-gs-height="2"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">4</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="0"
+									data-gs-y="2"
+									data-gs-width="2"
+									data-gs-height="2"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">5</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="2"
+									data-gs-y="2"
+									data-gs-width="2"
+									data-gs-height="4"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">6</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="8"
+									data-gs-y="2"
+									data-gs-width="4"
+									data-gs-height="2"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">7</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="0"
+									data-gs-y="4"
+									data-gs-width="2"
+									data-gs-height="2"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">8</p>
+										<p class="card-text text-center"></p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="4"
+									data-gs-y="4"
+									data-gs-width="4"
+									data-gs-height="2"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">9</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="8"
+									data-gs-y="4"
+									data-gs-width="2"
+									data-gs-height="2"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">10</p>
+									</div>
+								</div>
+								<div
+									class="grid-stack-item card"
+									data-gs-x="10"
+									data-gs-y="4"
+									data-gs-width="2"
+									data-gs-height="2"
+								>
+									<div class="grid-stack-item-content card-body bg-white">
+										<p class="card-text text-center">11</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<section id="getStarted" class="bg-info">
+				<div class="row">
+					<div class="col-lg-12 text-white">
+						<ion-icon
+							name="code"
+							class="float-right"
+							style="font-size: 350%"
+						></ion-icon>
+						<h1
+							class="text-center"
+							style="margin-top: 2rem; margin-bottom: 1.5rem;"
+						>
+							Getting Started
+						</h1>
+						<p>
+							Create your first interactive grid by including the JS and CSS
+							dependencies, then add the HTML and JS below...
+						</p>
+						<hr />
+						<h3>HTML</h3>
+						<pre>
+<code class="html">
 &lt;div class=&quot;grid-stack&quot;&gt;
-    &lt;div class=&quot;grid-stack-item&quot;
-        data-gs-x=&quot;0&quot; data-gs-y=&quot;0&quot;
-        data-gs-width=&quot;4&quot; data-gs-height=&quot;2&quot;&gt;
-            &lt;div class=&quot;grid-stack-item-content&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;grid-stack-item&quot;
-        data-gs-x=&quot;4&quot; data-gs-y=&quot;0&quot;
-        data-gs-width=&quot;4&quot; data-gs-height=&quot;4&quot;&gt;
-            &lt;div class=&quot;grid-stack-item-content&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
+  &lt;div class=&quot;grid-stack-item&quot; data-gs-x=&quot;0&quot; data-gs-y=&quot;0&quot; data-gs-width=&quot;4&quot; data-gs-height=&quot;2&quot;&gt;
+    &lt;div class=&quot;grid-stack-item-content&quot;&gt;my first widget&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;grid-stack-item&quot; data-gs-x=&quot;4&quot; data-gs-y=&quot;0&quot; data-gs-width=&quot;4&quot; data-gs-height=&quot;4&quot;&gt;
+    &lt;div class=&quot;grid-stack-item-content&quot;&gt;another widget!&lt;/div&gt;
+  &lt;/div&gt;
 &lt;/div&gt;
-
+</code>
+</pre>
+						<h3>JS</h3>
+						<pre>
+<code class="javascript">
 &lt;script type=&quot;text/javascript&quot;&gt;
-$(function () {
-    var options = {
-        cellHeight: 80,
-        verticalMargin: 10
-    };
-    $('.grid-stack').gridstack(options);
-});
+  $('.grid-stack').gridstack();
 &lt;/script&gt;
-            </code></pre>
+</code>
+</pre>
 
-            <p>For more samples and documentation please visit <a href="https://github.com/gridstack/gridstack.js">https://github.com/gridstack/gridstack.js</a>.</p>
+						<p>
+							...and that's it! Drag, drop, and resize to your heart's content.
+							Looking for more complex examples? Check out the links in the nav
+							bar or our docs in GitHub.
+						</p>
+					</div>
+				</div>
+			</section>
+		</main>
+		<footer>
+			<section id="getStarted" class="bg-dark">
+				<div class="row">
+					<div class="col-lg-12 text-white">
+						<p style="margin-top: 0.5rem;">
+							<small>
+								© 2019; gridstack.js is open source software maintained by
+								<a
+									href="https://github.com/gridstack/gridstack.js#the-team"
+									target="_blank"
+									>the gridstack.js team</a
+								>
+								but wouldn't be possible without the help of developers
+								everywhere
+							</small>
+						</p>
+					</div>
+				</div>
+			</section>
+		</footer>
+		<!-- /.container -->
 
-        </div>
-    </section>
+		<script
+			src="https://code.jquery.com/jquery-3.4.1.min.js"
+			integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			crossorigin="anonymous"
+		></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.1/dist/gridstack.all.js"></script>
+		<script
+			src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+			crossorigin="anonymous"
+		></script>
+		<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
 
-    <!-- Footer -->
-    <footer class="text-center">
-        <div class="footer-below">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        Copyright &copy; Pavel Reznikov 2014
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+		<script type="text/javascript">
+			$(function() {
+				$('.grid-stack').gridstack({
+					alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+						navigator.userAgent
+					),
+					resizable: {
+						handles: 'e, se, s, sw, w'
+					},
+					removable: '#trash',
+					removeTimeout: 100
+				});
+				$('#search').on('submit', function(event) {
+					event.preventDefault();
+					var searchTerm = $('#searchTerm').val();
+					window.open(
+						'https://github.com/gridstack/gridstack.js/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+' +
+							searchTerm,
+						'_blank'
+					);
+				});
+				$('.nav-item').on('click', function(event) {
+					$('.nav-item').removeClass('active');
+					var target = $(event.currentTarget);
+					if (target.hasClass('nav-item-highlight')) {
+						target.addClass('active');
+					}
+				});
+				hljs.initHighlightingOnLoad();
+			});
+		</script>
+		<script
+			type="module"
+			src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"
+		></script>
+		<script
+			nomodule=""
+			src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"
+		></script>
+		<!-- Google Analytics -->
+		<script>
+			(function(i, s, o, g, r, a, m) {
+				i['GoogleAnalyticsObject'] = r;
+				(i[r] =
+					i[r] ||
+					function() {
+						(i[r].q = i[r].q || []).push(arguments);
+					}),
+					(i[r].l = 1 * new Date());
+				(a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+				a.async = 1;
+				a.src = g;
+				m.parentNode.insertBefore(a, m);
+			})(
+				window,
+				document,
+				'script',
+				'https://www.google-analytics.com/analytics.js',
+				'ga'
+			);
 
-    <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes) -->
-    <div class="scroll-top page-scroll visible-xs visble-sm">
-        <a class="btn btn-primary" href="#page-top">
-            <i class="fa fa-chevron-up"></i>
-        </a>
-    </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js"></script>
-
-    <!-- Plugin JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-    <script src="freelancer/js/classie.js"></script>
-    <script src="freelancer/js/cbpAnimatedHeader.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.3/highlight.min.js"></script>
-
-    <!-- Custom Theme JavaScript -->
-    <script src="freelancer/js/freelancer.js"></script>
-
-    <script src="dist/gridstack.js"></script>
-    <script src="dist/gridstack.jQueryUI.js"></script>
-    <script type="text/javascript">
-        hljs.initHighlightingOnLoad();
-        $(function () {
-            $('.grid-stack').gridstack({
-                width: 12,
-                alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-                resizable: {
-                    handles: 'e, se, s, sw, w'
-                }
-            });
-        });
-    </script>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-1891156-8', 'auto');
-  ga('send', 'pageview');
-
-</script>
-</body>
-
+			ga('create', 'UA-1891156-8', 'auto');
+			ga('send', 'pageview');
+		</script>
+		<!-- End Google Analytics -->
+	</body>
 </html>
