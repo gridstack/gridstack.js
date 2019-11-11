@@ -58,6 +58,10 @@
 					margin-top: 32px;
 				}
 			}
+			.logo {
+				display: inline;
+				margin-right: 15px;
+			}
 		</style>
 	</head>
 
@@ -196,33 +200,16 @@
 							class="text-center"
 							style="margin-top: 2rem; margin-bottom: 1.5rem;"
 						>
-							Demo
+							Basic Demo
 						</h1>
 						<hr />
 					</div>
 				</div>
 
 				<div class="row">
-					<div
-						class="col-md-2 d-none d-md-block"
-						style="border-right: 1px dashed white;"
-					>
-						<div
-							id="trash"
-							style="padding: 15px;"
-							class="text-center bg-danger text-white"
-						>
-							<div>
-								<ion-icon name="trash" style="font-size: 400%"></ion-icon>
-							</div>
-							<div>
-								<span>Drop here to remove widget!</span>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-12 col-md-10" style="padding-bottom: 25px;">
+					<div class="col-sm-12" style="padding-bottom: 25px;">
 						<div style="padding: 15px; border: 1px solid white">
-							<div class="grid-stack" data-gs-width="12" data-gs-animate="yes">
+							<div class="grid-stack" id="simple-grid" data-gs-width="12" data-gs-animate="yes">
 								<div
 									class="grid-stack-item card"
 									data-gs-x="0"
@@ -240,19 +227,10 @@
 									data-gs-y="0"
 									data-gs-width="4"
 									data-gs-height="4"
-									data-gs-no-move="yes"
-									data-gs-no-resize="yes"
-									data-gs-locked="yes"
 								>
 									<div class="grid-stack-item-content card-body bg-white">
 										<p class="card-text text-center">
-											I can't be moved or dragged!
-										</p>
-										<p class="card-text text-center">
-											<ion-icon
-												name="ios-lock"
-												style="font-size:300%"
-											></ion-icon>
+											2
 										</p>
 									</div>
 								</div>
@@ -263,20 +241,13 @@
 									data-gs-width="2"
 									data-gs-height="2"
 									data-gs-min-width="2"
-									data-gs-no-resize="yes"
 								>
 									<div
 										class="grid-stack-item-content card-body bg-white"
 										style="overflow: hidden"
 									>
 										<p class="card-text text-center" style="margin-bottom: 0">
-											Drag me!
-										</p>
-										<p class="card-text text-center" style="margin-bottom: 0">
-											<ion-icon name="hand" style="font-size: 300%"></ion-icon>
-										</p>
-										<p class="card-text text-center" style="margin-bottom: 0">
-											...but don't resize me!
+											3
 										</p>
 									</div>
 								</div>
@@ -390,12 +361,17 @@
 						</h1>
 						<p>
 							Create your first interactive grid by including the JS and CSS
-							dependencies, then add the HTML and JS below...
+							dependencies, then add the HTML and JS, as seen below...
 						</p>
 						<hr />
 						<h3>HTML</h3>
 						<pre>
 <code class="html">
+&lt;script src=&quot;https://code.jquery.com/jquery-3.4.1.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/gridstack@0.5.1/dist/gridstack.all.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/gridstack@0.5.1/dist/gridstack.min.css&quot; /&gt;
+
 &lt;div class=&quot;grid-stack&quot;&gt;
   &lt;div class=&quot;grid-stack-item&quot; data-gs-x=&quot;0&quot; data-gs-y=&quot;0&quot; data-gs-width=&quot;4&quot; data-gs-height=&quot;2&quot;&gt;
     &lt;div class=&quot;grid-stack-item-content&quot;&gt;my first widget&lt;/div&gt;
@@ -419,6 +395,266 @@
 							...and that's it! Drag, drop, and resize to your heart's content.
 							Looking for more complex examples? Check out the links in the nav
 							bar or our docs in GitHub.
+						</p>
+					</div>
+				</div>
+			</section>
+
+			<section id="advancedDemo" class="bg-primary">
+        <div class="row">
+          <div class="col-lg-12 text-white">
+            <ion-icon
+              class="float-right"
+              name="grid"
+              style="font-size: 350%; margin-top: 10px"
+            ></ion-icon>
+            <h1
+              class="text-center"
+              style="margin-top: 2rem; margin-bottom: 1.5rem;"
+            >
+              Advanced Demo
+            </h1>
+            <hr />
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-md-2 d-none d-md-block"
+            style="border-right: 1px dashed white;"
+          >
+            <div
+              id="trash"
+              style="padding: 15px; margin-bottom: 15px;"
+              class="text-center bg-danger text-white"
+            >
+              <div>
+                <ion-icon name="trash" style="font-size: 400%"></ion-icon>
+              </div>
+              <div>
+                <span>Drop here to remove widget!</span>
+              </div>
+            </div>
+            <div
+              class="text-center card text-white newWidget grid-stack-item"
+            >
+              <div class="card-body bg-success grid-stack-item-content">
+                <div>
+                  <ion-icon
+                    name="add-circle"
+                    style="font-size: 400%"
+                  ></ion-icon>
+                </div>
+                <div>
+                  <span>Drag me into the dashboard!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 col-md-10" style="padding-bottom: 25px;">
+            <div style="padding: 15px; border: 1px solid white">
+              <div class="grid-stack" id="advanced-grid" data-gs-width="12" data-gs-animate="yes">
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="0"
+                  data-gs-y="0"
+                  data-gs-width="4"
+                  data-gs-height="2"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">1</p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="4"
+                  data-gs-y="0"
+                  data-gs-width="4"
+                  data-gs-height="4"
+                  data-gs-no-move="yes"
+                  data-gs-no-resize="yes"
+                  data-gs-locked="yes"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">
+                      I can't be moved or dragged!
+                    </p>
+                    <p class="card-text text-center">
+                      <ion-icon
+                        name="ios-lock"
+                        style="font-size:300%"
+                      ></ion-icon>
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="8"
+                  data-gs-y="0"
+                  data-gs-width="2"
+                  data-gs-height="2"
+                  data-gs-min-width="2"
+                  data-gs-no-resize="yes"
+                >
+                  <div
+                    class="grid-stack-item-content card-body bg-white"
+                    style="overflow: hidden"
+                  >
+                    <p class="card-text text-center" style="margin-bottom: 0">
+                      Drag me!
+                    </p>
+                    <p class="card-text text-center" style="margin-bottom: 0">
+                      <ion-icon name="hand" style="font-size: 300%"></ion-icon>
+                    </p>
+                    <p class="card-text text-center" style="margin-bottom: 0">
+                      ...but don't resize me!
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="10"
+                  data-gs-y="0"
+                  data-gs-width="2"
+                  data-gs-height="2"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">4</p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="0"
+                  data-gs-y="2"
+                  data-gs-width="2"
+                  data-gs-height="2"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">5</p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="2"
+                  data-gs-y="2"
+                  data-gs-width="2"
+                  data-gs-height="4"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">6</p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="8"
+                  data-gs-y="2"
+                  data-gs-width="4"
+                  data-gs-height="2"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">7</p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="0"
+                  data-gs-y="4"
+                  data-gs-width="2"
+                  data-gs-height="2"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">8</p>
+                    <p class="card-text text-center"></p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="4"
+                  data-gs-y="4"
+                  data-gs-width="4"
+                  data-gs-height="2"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">9</p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="8"
+                  data-gs-y="4"
+                  data-gs-width="2"
+                  data-gs-height="2"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">10</p>
+                  </div>
+                </div>
+                <div
+                  class="grid-stack-item card"
+                  data-gs-x="10"
+                  data-gs-y="4"
+                  data-gs-width="2"
+                  data-gs-height="2"
+                >
+                  <div class="grid-stack-item-content card-body bg-white">
+                    <p class="card-text text-center">11</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+			<section id="usedBy" class="bg-warning">
+				<div class="row" style="margin-bottom: 15px;">
+					<div class="col-lg-12">
+						<ion-icon
+							name="desktop"
+							class="float-right"
+							style="font-size: 350%"
+						></ion-icon>
+						<h1
+							class="text-center"
+							style="margin-top: 2rem; margin-bottom: 1.5rem;"
+						>
+							Used by
+						</h1>
+						<hr />
+						<div>
+							<div class="logo">
+								<a href="https://duckerfrontier.com" target="_blank">
+									<img
+										style="max-width: 250px;"
+										class="img-responsive"
+										src="logos/df-logo-transparent-bg.png"
+									/>
+								</a>
+							</div>
+							<div class="logo">
+								<a href="https://vmware.com" target="_blank">
+									<img
+										style="max-width: 250px;"
+										class="img-responsive"
+										src="logos/VMW_09Q3_LOGO_Corp_K.png"
+								/></a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<p>
+							...and many, many others.
+						</p>
+						<p>
+							Does your company use gridstack.js? We'd love to add your logo!
+							Come join our
+							<a
+								target="_blank"
+								href="https://join.slack.com/t/gridstackjs/shared_invite/enQtODE1NzkxMTUzNTIzLTA1NTEzZGE2NzliMGY5M2IwN2UzNWUzYmY2YTA0OTFlMTlmMDA3MTg3MGViZTRhZjM0N2QyODMyMjc1NzY4ZWQ"
+							>
+								<ion-icon name="logo-slack"></ion-icon>Slack community</a
+							>
+							and let us know.
 						</p>
 					</div>
 				</div>
@@ -463,7 +699,15 @@
 
 		<script type="text/javascript">
 			$(function() {
-				$('.grid-stack').gridstack({
+				$('#simple-grid').gridstack({
+					alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+						navigator.userAgent
+					),
+					resizable: {
+						handles: 'e, se, s, sw, w'
+					}
+				});
+				$('#advanced-grid').gridstack({
 					alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 						navigator.userAgent
 					),
@@ -471,7 +715,14 @@
 						handles: 'e, se, s, sw, w'
 					},
 					removable: '#trash',
-					removeTimeout: 100
+					removeTimeout: 100,
+					acceptWidgets: '.newWidget'
+				});
+				$('.newWidget').draggable({
+					revert: 'invalid',
+					scroll: false,
+					appendTo: 'body',
+					helper: 'clone'
 				});
 				$('#search').on('submit', function(event) {
 					event.preventDefault();
