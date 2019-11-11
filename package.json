@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "0.5.0",
+  "version": "0.5.1-dev",
   "description": "gridstack.js is a jQuery plugin for widget layout",
   "main": "dist/gridstack.js",
   "repository": {
@@ -23,7 +23,8 @@
   ],
   "author": "Pavel Reznikov <pashka.reznikov@gmail.com>",
   "contributors": [
-    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"
+    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)",
+    "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)"
   ],
   "license": "MIT",
   "bugs": {
@@ -60,5 +61,9 @@
     "karma-jasmine": "^2.0.1",
     "puppeteer": "^1.13.0",
     "serve-static": "^1.13.2"
+  },
+  "resolutions": {
+    "lodash": "^4.17.13",
+    "js-yaml": "^3.13.1"
   }
 }

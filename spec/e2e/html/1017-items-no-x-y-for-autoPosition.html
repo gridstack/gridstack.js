@@ -1,0 +1,76 @@
+<!-- 
+  grid items have no x,y position, just size. Used to come up with wrong size and overlap. https://github.com/gridstack/gridstack.js/issues/1017
+  Now, will have element 5 (autoPosition but small x,y), 1,2,4, then 3 (too big to fit)
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../dist/gridstack.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.9/shim.min.js"></script>
+  <script src="../../../src/gridstack.js"></script>
+  <script src="../../../src/gridstack.jQueryUI.js"></script>
+
+  <style type="text/css">
+    .grid-stack {
+      margin-top: 10px;
+      background: lightgoldenrodyellow;
+    }
+
+    .grid-stack-item-content {
+      color: #2c3e50;
+      text-align: center;
+      background-color: #18bc9c;
+    }
+
+    .upper .grid-stack-item-content {
+      background: blue;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grid-stack">
+    <div class="grid-stack-item upper" data-gs-width="2" data-gs-height="2" data-gs-id="1">
+      <div class="grid-stack-item-content">item 1</div>
+    </div>
+    <div class="grid-stack-item" data-gs-width="3" data-gs-height="2" data-gs-id="2">
+      <div class="grid-stack-item-content">item 2</div>
+    </div>
+    <div class="grid-stack-item" data-gs-width="9" data-gs-height="1" data-gs-id="3">
+      <div class="grid-stack-item-content">item 3 too big to fit, so next row</div>
+    </div>
+    <div class="grid-stack-item" data-gs-width="3" data-gs-height="1" data-gs-id="4">
+      <div class="grid-stack-item-content">item 4</div>
+    </div>
+    <div class="grid-stack-item" data-gs-x="1" data-gs-y="1" data-gs-width="1" data-gs-height="1" data-gs-id="5" data-gs-auto-position="false">
+      <div class="grid-stack-item-content">item 5 first</div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(function () {
+      var options = {
+        cellHeight: 80,
+        verticalMargin: 10,
+        float: true
+      };
+      $('.grid-stack').gridstack(options);
+    });
+  </script>
+</body>
+
+</html>

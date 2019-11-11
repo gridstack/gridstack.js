@@ -23,7 +23,7 @@ gridstack.js API
   - [addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
   - [cellHeight()](#cellheight)
-  - [cellHeight(val)](#cellheightval)
+  - [cellHeight(val, noUpdate)](#cellheightval-noupdate)
   - [cellWidth()](#cellwidth)
   - [commit()](#commit)
   - [destroy([detachGrid])](#destroydetachgrid)
@@ -49,6 +49,7 @@ gridstack.js API
   - [setGridWidth(gridWidth, doNotPropagate)](#setgridwidthgridwidth-donotpropagate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
+  - [verticalMargin()](#verticalmargin)
   - [verticalMargin(value, noUpdate)](#verticalmarginvalue-noupdate)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
 - [Utils](#utils)
@@ -61,7 +62,7 @@ gridstack.js API
 - `acceptWidgets` - if `true` of jquery selector the grid will accept widgets dragged from other grids or from
  outside (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `alwaysShowResizeHandle` - if `true` the resizing handles are shown even if the user is not hovering over the widget
-    (default: `false`)
+  (default: `false`)
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight` - one cell height (default: `60`). Can be:
@@ -102,14 +103,13 @@ gridstack.js API
 
 ## Item attributes
 
-- `data-gs-x`, `data-gs-y` - element position
+- `data-gs-x`, `data-gs-y` - element position. Note: if one is missing this will `autoPosition` the item
 - `data-gs-width`, `data-gs-height` - element size
 - `data-gs-id`- good for quick identification (for example in change event)
 - `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
 - `data-gs-no-resize` - disable element resizing
 - `data-gs-no-move` - disable element moving
-- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first
-    available position
+- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first available position. Having either one missing will also do that.
 - `data-gs-locked` - the widget will be locked. It means another widget wouldn't be able to move it during dragging or resizing.
 The widget can still be dragged or resized. You need to add `data-gs-no-resize` and `data-gs-no-move` attributes
 to completely lock the widget.
@@ -121,10 +121,10 @@ to completely lock the widget.
 
 ```javascript
 $('.grid-stack').on('added', function(event, items) {
-    for (var i = 0; i < items.length; i++) {
-      console.log('item added');
-      console.log(items[i]);
-    }
+  for (var i = 0; i < items.length; i++) {
+    console.log('item added');
+    console.log(items[i]);
+  }
 });
 ```
 
@@ -134,11 +134,11 @@ Occurs when adding/removing widgets or existing widgets change their position/si
 
 ```javascript
 var serializeWidgetMap = function(items) {
-    console.log(items);
+  console.log(items);
 };
 
 $('.grid-stack').on('change', function(event, items) {
-    serializeWidgetMap(items);
+  serializeWidgetMap(items);
 });
 ```
 
@@ -146,7 +146,7 @@ $('.grid-stack').on('change', function(event, items) {
 
 ```javascript
 $('.grid-stack').on('disable', function(event) {
-    var grid = event.target;
+  var grid = event.target;
 });
 ```
 
@@ -154,8 +154,8 @@ $('.grid-stack').on('disable', function(event) {
 
 ```javascript
 $('.grid-stack').on('dragstart', function(event, ui) {
-    var grid = this;
-    var element = event.target;
+  var grid = this;
+  var element = event.target;
 });
 ```
 
@@ -163,8 +163,8 @@ $('.grid-stack').on('dragstart', function(event, ui) {
 
 ```javascript
 $('.grid-stack').on('dragstop', function(event, ui) {
-    var grid = this;
-    var element = event.target;
+  var grid = this;
+  var element = event.target;
 });
 ```
 
@@ -172,8 +172,8 @@ $('.grid-stack').on('dragstop', function(event, ui) {
 
 ```javascript
 $('.grid-stack').on('dropped', function(event, previousWidget, newWidget) {
-    console.log('Removed widget that was dragged out of grid:', previousWidget);
-    console.log('Added widget in dropped grid:', newWidget);
+  console.log('Removed widget that was dragged out of grid:', previousWidget);
+  console.log('Added widget in dropped grid:', newWidget);
 });
 ```
 
@@ -181,7 +181,7 @@ $('.grid-stack').on('dropped', function(event, previousWidget, newWidget) {
 
 ```javascript
 $('.grid-stack').on('enable', function(event) {
-    var grid = event.target;
+  var grid = event.target;
 });
 ```
 
@@ -189,10 +189,10 @@ $('.grid-stack').on('enable', function(event) {
 
 ```javascript
 $('.grid-stack').on('removed', function(event, items) {
-    for (var i = 0; i < items.length; i++) {
-      console.log('item removed');
-      console.log(items[i]);
-    }
+  for (var i = 0; i < items.length; i++) {
+    console.log('item removed');
+    console.log(items[i]);
+  }
 });
 ```
 
@@ -200,8 +200,8 @@ $('.grid-stack').on('removed', function(event, items) {
 
 ```javascript
 $('.grid-stack').on('resizestart', function(event, ui) {
-    var grid = this;
-    var element = event.target;
+  var grid = this;
+  var element = event.target;
 });
 ```
 
@@ -211,7 +211,7 @@ $('.grid-stack').on('resizestart', function(event, ui) {
 
 ```javascript
 $('.grid-stack').on('gsresizestop', function(event, elem) {
-    var newHeight = $(elem).attr('data-gs-height');
+  var newHeight = $(elem).attr('data-gs-height');
 });
 ```
 
@@ -251,9 +251,9 @@ Initializes batch updates. You will see no changes until `commit` method is call
 
 Gets current cell height.
 
-### cellHeight(val)
+### cellHeight(val, noUpdate)
 
-Update current cell height. This method rebuilds an internal CSS stylesheet. Note: You can expect performance issues if
+Update current cell height. This method rebuilds an internal CSS stylesheet (unless optional noUpdate=true). Note: You can expect performance issues if
 call this method too often.
 
 ```javascript
@@ -455,6 +455,10 @@ Parameters:
 
 Updates widget position/size.
 
+### verticalMargin()
+
+returns current vertical margin value.
+
 ### verticalMargin(value, noUpdate)
 
 Parameters:
@@ -469,10 +473,10 @@ have `height` constraint.
 
 ```javascript
 if (grid.willItFit(newNode.x, newNode.y, newNode.width, newNode.height, true)) {
-    grid.addWidget(newNode.el, newNode.x, newNode.y, newNode.width, newNode.height, true);
+  grid.addWidget(newNode.el, newNode.x, newNode.y, newNode.width, newNode.height, true);
 }
 else {
-    alert('Not enough free space to place the widget');
+  alert('Not enough free space to place the widget');
 }
 ```
 
