@@ -107,8 +107,7 @@
           this.grid.removeAll();
           var items = GridStackUI.Utils.sort(this.serializedData);
           items.forEach(function (node, i) {
-            this.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'),
-              node.x, node.y, node.width, node.height);
+            this.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'), node);
           }.bind(this));
           return false;
         }.bind(this);

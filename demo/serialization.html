@@ -77,8 +77,7 @@
                     this.grid.removeAll();
                     var items = GridStackUI.Utils.sort(this.serializedData);
                     items.forEach(function (node) {
-                        this.grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'),
-                            node.x, node.y, node.width, node.height);
+                        this.grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), node);
                     }, this);
                     return false;
                 }.bind(this);
