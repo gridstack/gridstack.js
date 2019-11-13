@@ -9,7 +9,7 @@
 // TypeScript Version: 2.3
 
 interface JQuery {
-    gridstack(options: IGridstackOptions): JQuery;
+    gridstack(options: GridstackOptions): JQuery;
     data(key: 'gridstack'): GridStack;
 }
 
@@ -27,7 +27,21 @@ interface GridStack {
     *
     * Widget will be always placed even if result height is more than actual grid height.
     * You need to use willItFit method before calling addWidget for additional check.
-    * See also makeWidget.
+    * See also `makeWidget()`.
+    *
+    * @example
+    * $('.grid-stack').gridstack();
+    * var grid = $('.grid-stack').data('gridstack');
+    * grid.addWidget(el, {width: 3, autoPosition: true});
+    *
+    * @param {GridStackElement} el widget to add
+    * @param {GridstackWidget} options widget position/size options (optional)
+    */
+    addWidget(el: GridStackElement, options?: GridstackWidget): JQuery;
+
+    /**
+    * Creates new widget and returns it. 
+    * Legacy: Spelled out version of the widgets options, recommend use new version instead.
     *
     * @example
     * $('.grid-stack').gridstack();
@@ -60,7 +74,7 @@ interface GridStack {
     cellHeight(): number;
 
     /**
-    * Update current cell height - see `IGridstackOptions.cellHeight` for format.
+    * Update current cell height - see `GridstackOptions.cellHeight` for format.
     * This method rebuilds an internal CSS style sheet.
     * Note: You can expect performance issues if call this method too often.
     *
@@ -277,7 +291,7 @@ interface GridStack {
     verticalMargin(): number;
 
     /**
-    * Updates the vertical margin - see `IGridstackOptions.verticalMargin` for format options.
+    * Updates the vertical margin - see `GridstackOptions.verticalMargin` for format options.
     *
     * @param {number | string} value new vertical margin value
     * @param {boolean} noUpdate (optional) if true, styles will not be updated
@@ -313,11 +327,37 @@ interface MousePosition {
 }
 
 /**
- *   Defines the position of a cell inside the grid
+ * Defines the position of a cell inside the grid
  */
 interface CellPosition {
     x: number;
     y: number;
+}
+
+/**
+ * Gridstack Widget creation options
+ */
+interface GridstackWidget {
+    /** x position (default?: 0) */
+    x?: number;
+    /** y position (default?: 0) */
+    y?: number;
+    /** width (default?: 1) */
+    width?: number;
+    /** height (default?: 1) */
+    height?: number;
+    /** autoPosition if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) */
+    autoPosition?: boolean;
+    /** minimum width allowed during resize/creation (default?: undefined = un-constrained) */
+    minWidth?: number;
+    /** maximum width allowed during resize/creation (default?: undefined = un-constrained) */
+    maxWidth?: number;
+    /** minimum height allowed during resize/creation (default?: undefined = un-constrained) */
+    minHeight?: number;
+    /** maximum height allowed during resize/creation (default?: undefined = un-constrained) */
+    maxHeight?: number;
+    /** id value for `data-gs-id` stored on the widget (default?: undefined)*/
+    id?: number | string;
 }
 
 declare namespace GridStackUI {
@@ -336,7 +376,7 @@ declare namespace GridStackUI {
  * Gridstack Options
  * Defines the options for a Gridstack
  */
-interface IGridstackOptions {
+interface GridstackOptions {
     /**
     * if true of jquery selector the grid will accept widgets dragged from other grids or from
     * outside (default: false) See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
@@ -479,3 +519,4 @@ interface IGridstackOptions {
     */
     width?: number;
 }
+

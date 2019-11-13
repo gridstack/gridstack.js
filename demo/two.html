@@ -129,8 +129,7 @@
                 var grid = $(this).data('gridstack');
 
                 items.forEach(function (node) {
-                    grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'),
-                        node.x, node.y, node.width, node.height);
+                    grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), node);
                 });
             });
 

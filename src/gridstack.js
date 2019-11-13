@@ -394,7 +394,7 @@
 
   GridStackEngine.prototype._prepareNode = function(node, resizing) {
     node = node || {};
-    // if we're missing position, have grid position us automatically (before we set them to 0,0)
+    // if we're missing position, have the grid position us automatically (before we set them to 0,0)
     if (node.x === undefined || node.y === undefined) {
       node.autoPosition = true;
     }
@@ -1435,8 +1435,13 @@
     }
   };
 
-  GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition, minWidth, maxWidth,
-    minHeight, maxHeight, id) {
+  GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id) {
+
+    // instead of passing all the params, the user might pass an object with all fields instead, if so extract them and call us back
+    if (typeof x === 'object') {
+      return this.addWidget(el, x.x, x.y, x.width, x.height, x.autoPosition, x.minWidth, x.maxWidth, x.minHeight, x.maxHeight, x.id);
+    }
+
     el = $(el);
     if (typeof x != 'undefined') { el.attr('data-gs-x', x); }
     if (typeof y != 'undefined') { el.attr('data-gs-y', y); }

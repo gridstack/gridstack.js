@@ -864,18 +864,10 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should allow same x, y coordinates for widgets.', function() {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10,
-        float: true
-      };
-      $('.grid-stack').gridstack(options);
+    it('should keep all widget options the same (autoPosition off', function() {
+      $('.grid-stack').gridstack({float: true});
       var grid = $('.grid-stack').data('gridstack');
-      var widgetHTML =
-        '  <div class="grid-stack-item">' +
-        '    <div class="grid-stack-item-content"></div>' +
-        '  </div>';
+      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
       var widget = grid.addWidget(widgetHTML, 6, 7, 2, 3, false, 1, 4, 2, 5, 'coolWidget');
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
@@ -900,22 +892,42 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should change x, y coordinates for widgets.', function() {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10
-      };
-      $('.grid-stack').gridstack(options);
+      $('.grid-stack').gridstack({float: true});
       var grid = $('.grid-stack').data('gridstack');
-      var widgetHTML =
-        '  <div class="grid-stack-item">' +
-        '    <div class="grid-stack-item-content"></div>' +
-        '  </div>';
+      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
       var widget = grid.addWidget(widgetHTML, 9, 7, 2, 3, true);
       var $widget = $(widget);
-      expect(parseInt($widget.attr('data-gs-x'), 10)).not.toBe(6);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).not.toBe(9);
       expect(parseInt($widget.attr('data-gs-y'), 10)).not.toBe(7);
     });
   });
+
+  describe('grid method addWidget with widget options', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML(
+        'afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should keep all widget options the same (autoPosition off', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
+      var widget = grid.addWidget(widgetHTML, {x: 8, height: 2, id: 'optionWidget'});
+      var $widget = $(widget);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
+      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-min-width')).toBe(undefined);
+      expect($widget.attr('data-gs-max-width')).toBe(undefined);
+      expect($widget.attr('data-gs-min-height')).toBe(undefined);
+      expect($widget.attr('data-gs-max-height')).toBe(undefined);
+      expect($widget.attr('data-gs-id')).toBe('optionWidget');
+    });
+  });
+
 
   describe('grid.destroy', function() {
     beforeEach(function() {

@@ -20,7 +20,8 @@ gridstack.js API
   - [resizestart(event, ui)](#resizestartevent-ui)
   - [gsresizestop(event, ui)](#gsresizestopevent-ui)
 - [API](#api)
-  - [addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
+  - [addWidget(el, [options])](#addwidgetel-options)
+  - [addWidget(el, [x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
   - [cellHeight()](#cellheight)
   - [cellHeight(val, noUpdate)](#cellheightval-noupdate)
@@ -217,7 +218,11 @@ $('.grid-stack').on('gsresizestop', function(event, elem) {
 
 ## API
 
-### addWidget(el[, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])
+### addWidget(el, [options])
+
+Creates new widget and returns it. Options is an object containing the fields x,y,width,height,etc... described below.
+
+### addWidget(el, [x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])
 
 Creates new widget and returns it.
 
@@ -238,7 +243,6 @@ before calling `addWidget` for additional check.
 
 ```javascript
 $('.grid-stack').gridstack();
-
 var grid = $('.grid-stack').data('gridstack');
 grid.addWidget(el, 0, 0, 3, 2, true);
 ```
