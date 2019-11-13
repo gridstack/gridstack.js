@@ -24,8 +24,9 @@ Change log
 ## v0.5.1-dev (work in progress)
 
 - undefined x,y position messes up grid ([#1017](https://github.com/gridstack/gridstack.js/issues/1017)).
-- changed code to 2 spaces
-- TypeScript definition file now included - no need to include @types/gridstack, easier to update
+- changed code to 2 spaces.
+- fix minHeight during `onStartMoving()` ([#999](https://github.com/gridstack/gridstack.js/issues/999)).
+- TypeScript definition file now included - no need to include @types/gridstack, easier to update.
 
 ## v0.5.1 (2019-11-07)
 

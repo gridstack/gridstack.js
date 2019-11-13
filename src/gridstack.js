@@ -759,8 +759,9 @@
 
     this.opts.isNested = isNested;
 
-    isAutoCellHeight = this.opts.cellHeight === 'auto';
+    isAutoCellHeight = (this.opts.cellHeight === 'auto');
     if (isAutoCellHeight) {
+      // make the cell square initially
       self.cellHeight(self.cellWidth(), true);
     } else {
       this.cellHeight(this.opts.cellHeight, true);
@@ -964,9 +965,11 @@
           var cellWidth = self.cellWidth();
           var cellHeight = self.cellHeight();
           var origNode = el.data('_gridstack_node');
+          var verticalMargin = self.opts.verticalMargin;
 
-          var width = origNode ? origNode.width : (Math.ceil(el.outerWidth() / cellWidth));
-          var height = origNode ? origNode.height : (Math.ceil(el.outerHeight() / cellHeight));
+          // height: Each row is cellHeight + verticalMargin, until last one which has no margin below
+          var width = origNode ? origNode.width : Math.ceil(el.outerWidth() / cellWidth);
+          var height = origNode ? origNode.height : Math.round((el.outerHeight() + verticalMargin) / (cellHeight + verticalMargin));
 
           draggingElement = el;
 
@@ -1148,7 +1151,8 @@
     // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
     var cssMinHeight = parseInt(this.container.css('min-height'));
     if (cssMinHeight > 0) {
-      var minHeight = (cssMinHeight + this.opts.verticalMargin) / (this.cellHeight() + this.opts.verticalMargin);
+      var verticalMargin = this.opts.verticalMargin;
+      var minHeight =  Math.round((cssMinHeight + verticalMargin) / (this.cellHeight() + verticalMargin));
       if (height < minHeight) {
         height = minHeight;
       }
@@ -1285,7 +1289,10 @@
       self.grid.cleanNodes();
       self.grid.beginUpdate(node);
       cellWidth = self.cellWidth();
-      var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
+      var strictCellHeight = self.cellHeight();
+      // TODO: cellHeight cannot be set to cellHeight() (i.e. remove strictCellHeight) right here otherwise
+      // when sizing up we jump almost right away to next size instead of half way there. Not sure
+      // why as we don't use ceil() is many places but round().
       cellHeight = self.container.height() / parseInt(self.container.attr('data-gs-current-height'));
       self.placeholder
         .attr('data-gs-x', o.attr('data-gs-x'))
@@ -1297,9 +1304,12 @@
       node._beforeDragX = node.x;
       node._beforeDragY = node.y;
       node._prevYPix = ui.position.top;
+      var minHeight = (node.minHeight || 1);
+      var verticalMargin = self.opts.verticalMargin;
 
+      // mineHeight - Each row is cellHeight + verticalMargin, until last one which has no margin below
       self.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
-      self.dd.resizable(el, 'option', 'minHeight', strictCellHeight * (node.minHeight || 1));
+      self.dd.resizable(el, 'option', 'minHeight', (strictCellHeight * minHeight) + (minHeight - 1) * verticalMargin);
 
       if (event.type == 'resizestart') {
         o.find('.grid-stack-item').trigger('resizestart');
@@ -1723,16 +1733,22 @@
     }
   };
 
+  /** set/get the current cell height value */
   GridStack.prototype.cellHeight = function(val, noUpdate) {
+    // getter - returns the opts stored height else compute it...
     if (typeof val == 'undefined') {
-      if (this.opts.cellHeight) {
+      if (this.opts.cellHeight && this.opts.cellHeight !== 'auto') {
         return this.opts.cellHeight;
       }
+      // compute the height taking margin into account (each row has margin other than last one)
       var o = this.container.children('.' + this.opts.itemClass).first();
-      return Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
+      var height = o.attr('data-gs-height');
+      var verticalMargin = this.opts.verticalMargin;
+      return Math.round((o.outerHeight() - (height - 1) * verticalMargin) / height);
     }
-    var heightData = Utils.parseHeight(val);
 
+    // setter - updates the cellHeight value if they changed
+    var heightData = Utils.parseHeight(val);
     if (this.opts.cellHeightUnit === heightData.unit && this.opts.cellHeight === heightData.height) {
       return ;
     }
@@ -1742,7 +1758,6 @@
     if (!noUpdate) {
       this._updateStyles();
     }
-
   };
 
   GridStack.prototype.cellWidth = function() {
