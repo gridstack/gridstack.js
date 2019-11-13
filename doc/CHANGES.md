@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.5.1-dev (work in progress)](#v051-dev-work-in-progress)
+- [v0.5.2 (2019-11-13)](#v052-2019-11-13)
 - [v0.5.1 (2019-11-07)](#v051-2019-11-07)
 - [v0.5.0 (2019-11-06)](#v050-2019-11-06)
 - [v0.4.0 (2018-05-11)](#v040-2018-05-11)
@@ -21,7 +21,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.5.1-dev (work in progress)
+## v0.5.2 (2019-11-13)
 
 - undefined x,y position messes up grid ([#1017](https://github.com/gridstack/gridstack.js/issues/1017)).
 - changed code to 2 spaces.
