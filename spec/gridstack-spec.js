@@ -3,19 +3,20 @@ describe('gridstack', function() {
 
   var e;
   var w;
+  // grid has 4x2 and 4x4 top-left aligned - used all most test cases
   var gridstackHTML =
     '<div style="width: 992px; height: 800px" id="gs-cont">' +
     '  <div class="grid-stack">' +
-    '  <div class="grid-stack-item"' +
-    '  data-gs-x="0" data-gs-y="0"' +
-    '  data-gs-width="4" data-gs-height="2">' +
-    '    <div class="grid-stack-item-content"></div>' +
-    '  </div>' +
-    '   <div class="grid-stack-item"' +
-    '   data-gs-x="4" data-gs-y="0"' +
-    '   data-gs-width="4" data-gs-height="4">' +
-    '     <div class="grid-stack-item-content"></div>' +
-    '   </div>' +
+    '    <div class="grid-stack-item"' +
+    '      data-gs-x="0" data-gs-y="0"' +
+    '      data-gs-width="4" data-gs-height="2">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
+    '    <div class="grid-stack-item"' +
+    '      data-gs-x="4" data-gs-y="0"' +
+    '      data-gs-width="4" data-gs-height="4">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
     '  </div>' +
     '</div>';
 
@@ -104,8 +105,7 @@ describe('gridstack', function() {
 
   describe('grid.setAnimation', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -136,8 +136,7 @@ describe('gridstack', function() {
 
   describe('grid._setStaticClass', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -170,8 +169,7 @@ describe('gridstack', function() {
 
   describe('grid.getCellFromPixel', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -217,8 +215,7 @@ describe('gridstack', function() {
 
   describe('grid.cellWidth', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -249,8 +246,7 @@ describe('gridstack', function() {
 
   describe('grid.cellHeight', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -281,8 +277,7 @@ describe('gridstack', function() {
 
   describe('grid.minWidth', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -306,8 +301,7 @@ describe('gridstack', function() {
 
   describe('grid.maxWidth', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -331,8 +325,7 @@ describe('gridstack', function() {
 
   describe('grid.minHeight', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -356,8 +349,7 @@ describe('gridstack', function() {
 
   describe('grid.maxHeight', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -381,8 +373,7 @@ describe('gridstack', function() {
 
   describe('grid.isAreaEmpty', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -411,8 +402,7 @@ describe('gridstack', function() {
 
   describe('grid method obsolete warnings', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -682,8 +672,7 @@ describe('gridstack', function() {
 
   describe('grid opts obsolete warnings', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -810,8 +799,7 @@ describe('gridstack', function() {
 
   describe('grid method _packNodes with float', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -858,8 +846,7 @@ describe('gridstack', function() {
 
   describe('grid method addWidget with all parameters', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -885,8 +872,7 @@ describe('gridstack', function() {
 
   describe('grid method addWidget with autoPosition true', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -904,13 +890,12 @@ describe('gridstack', function() {
 
   describe('grid method addWidget with widget options', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should keep all widget options the same (autoPosition off', function() {
+    it('should keep all widget options the same (autoPosition off)', function() {
       $('.grid-stack').gridstack();
       var grid = $('.grid-stack').data('gridstack');
       var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
@@ -928,11 +913,27 @@ describe('gridstack', function() {
     });
   });
 
+  describe('addWidget with null options, ', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should clear x position', function() {
+      $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').data('gridstack');
+      var widgetHTML = '<div class="grid-stack-item" data-gs-x="9"><div class="grid-stack-item-content"></div></div>';
+      var widget = grid.addWidget(widgetHTML, null, null, undefined);
+      var $widget = $(widget);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
+    });
+  });
 
   describe('grid.destroy', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       //document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
@@ -965,8 +966,7 @@ describe('gridstack', function() {
 
   describe('grid.resize', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -987,8 +987,7 @@ describe('gridstack', function() {
 
   describe('grid.move', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -1010,8 +1009,7 @@ describe('gridstack', function() {
 
   describe('grid.moveNode', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -1050,8 +1048,7 @@ describe('gridstack', function() {
 
   describe('grid.update', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -1075,8 +1072,7 @@ describe('gridstack', function() {
 
   describe('grid.verticalMargin', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -1138,8 +1134,7 @@ describe('gridstack', function() {
 
   describe('grid.opts.rtl', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -1165,8 +1160,7 @@ describe('gridstack', function() {
 
   describe('grid.enableMove', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -1207,8 +1201,7 @@ describe('gridstack', function() {
 
   describe('grid.enableResize', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -1249,8 +1242,7 @@ describe('gridstack', function() {
 
   describe('grid.enable', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
@@ -1280,8 +1272,7 @@ describe('gridstack', function() {
 
   describe('grid.enable', function() {
     beforeEach(function() {
-      document.body.insertAdjacentHTML(
-        'afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));

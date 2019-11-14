@@ -25,6 +25,7 @@ Change log
 ## v0.5.2-dev (upcoming changes)
 
 - switch to eslint ([#763](https://github.com/gridstack/gridstack.js/issues/763)).
+- null values to addWidget() exception fix ([#1042](https://github.com/gridstack/gridstack.js/issues/1042)).
 
 ## v0.5.2 (2019-11-13)
 
