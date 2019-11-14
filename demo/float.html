@@ -35,15 +35,9 @@
 <body>
   <div class="container-fluid">
     <h1>Float grid demo</h1>
-
-    <div>
-      <a class="btn btn-default" id="add-new-widget" href="#">Add Widget</a>
-    </div>
-
-    <br/>
-
-    <div class="grid-stack">
-    </div>
+    <button id="add-widget" href="#">Add Widget</button>
+    <br><br>
+    <div class="grid-stack"></div>
   </div>
 
 
@@ -79,7 +73,7 @@
           return false;
         }.bind(this);
 
-        $('#add-new-widget').click(this.addNewWidget);
+        $('#add-widget').click(this.addNewWidget);
       };
     });
   </script>
