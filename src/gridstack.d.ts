@@ -1,12 +1,12 @@
-// Type definitions for Gridstack 0.5
-// Project: http://gridstack.github.io/gridstack.js/
+// Type definitions for Gridstack 0.5.2
+// Project: https://gridstackjs.com/
 // Definitions by: Pascal Senn <https://github.com/PascalSenn>
 //                 Ricky Blankenaufulland <https://github.com/ZoolWay>
 //                 Sl1MBoy <https://github.com/Sl1MBoy>
 //                 John Archer <https://github.com/JohnArcher>
 //                 Alain Dumesny <https://github.com/adumesny>
-// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// TypeScript Version: 2.3
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped initially, but now part of gridstack.js
+// TypeScript Version: 2.8
 
 interface JQuery {
     gridstack(options: GridstackOptions): JQuery;
@@ -336,27 +336,27 @@ interface CellPosition {
 
 /**
  * Gridstack Widget creation options
+ * @param {number} x widget position x (default?: 0)
+ * @param {number} y widget position y (default?: 0)
+ * @param {number} width  widget dimension width (default?: 1)
+ * @param {number} height widget dimension height (default?: 1)
+ * @param {boolean} autoPosition if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false)
+ * @param {number} minWidth minimum width allowed during resize/creation (default?: undefined = un-constrained)
+ * @param {number} maxWidth maximum width allowed during resize/creation (default?: undefined = un-constrained)
+ * @param {number} minHeight minimum height allowed during resize/creation (default?: undefined = un-constrained)
+ * @param {number} maxHeight maximum height allowed during resize/creation (default?: undefined = un-constrained)
+ * @param {number | string} id value for `data-gs-id` stored on the widget (default?: undefined)
  */
 interface GridstackWidget {
-    /** x position (default?: 0) */
     x?: number;
-    /** y position (default?: 0) */
     y?: number;
-    /** width (default?: 1) */
     width?: number;
-    /** height (default?: 1) */
     height?: number;
-    /** autoPosition if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) */
     autoPosition?: boolean;
-    /** minimum width allowed during resize/creation (default?: undefined = un-constrained) */
     minWidth?: number;
-    /** maximum width allowed during resize/creation (default?: undefined = un-constrained) */
     maxWidth?: number;
-    /** minimum height allowed during resize/creation (default?: undefined = un-constrained) */
     minHeight?: number;
-    /** maximum height allowed during resize/creation (default?: undefined = un-constrained) */
     maxHeight?: number;
-    /** id value for `data-gs-id` stored on the widget (default?: undefined)*/
     id?: number | string;
 }
 
