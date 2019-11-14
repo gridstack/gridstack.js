@@ -232,7 +232,7 @@
     }
   };
 
-  // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+  /*eslint-disable camelcase */
   Utils.is_intercepted = obsolete(Utils.isIntercepted, 'is_intercepted', 'isIntercepted');
 
   Utils.create_stylesheet = obsolete(Utils.createStylesheet, 'create_stylesheet', 'createStylesheet');
@@ -240,7 +240,7 @@
   Utils.remove_stylesheet = obsolete(Utils.removeStylesheet, 'remove_stylesheet', 'removeStylesheet');
 
   Utils.insert_css_rule = obsolete(Utils.insertCSSRule, 'insert_css_rule', 'insertCSSRule');
-  // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+  /*eslint-enable camelcase */
 
   /**
   * @class GridStackDragDropPlugin
@@ -653,7 +653,7 @@
 
     this.container = $(el);
 
-    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+    /*eslint-disable camelcase */
     if (typeof opts.handle_class !== 'undefined') {
       opts.handleClass = opts.handle_class;
       obsoleteOpts('handle_class', 'handleClass');
@@ -694,7 +694,7 @@
       opts.alwaysShowResizeHandle = opts.always_show_resize_handle;
       obsoleteOpts('always_show_resize_handle', 'alwaysShowResizeHandle');
     }
-    // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+    /*eslint-enable camelcase */
 
     opts.itemClass = opts.itemClass || 'grid-stack-item';
     var isNested = this.container.closest('.' + opts.itemClass).length > 0;
@@ -805,14 +805,14 @@
       var _this = this;
       this.container.children('.' + this.opts.itemClass + ':not(.' + this.opts.placeholderClass + ')')
         .each(function(index, el) {
-        el = $(el);
-        elements.push({
-          el: el,
-          // if x,y are missing (autoPosition) add them to end of list - keep their respective DOM order
-          i: (parseInt(el.attr('data-gs-x')) || 100) +
-             (parseInt(el.attr('data-gs-y')) || 100) * _this.opts.width
+          el = $(el);
+          elements.push({
+            el: el,
+            // if x,y are missing (autoPosition) add them to end of list - keep their respective DOM order
+            i: (parseInt(el.attr('data-gs-x')) || 100) +
+              (parseInt(el.attr('data-gs-y')) || 100) * _this.opts.width
+          });
         });
-      });
       Utils.sortBy(elements, function(x) { return x.i; }).forEach(function(item) {
         this._prepareElement(item.el);
       }, this);
@@ -1833,7 +1833,7 @@
     this.container.addClass('grid-stack-' + gridWidth);
   };
 
-  // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+  /*eslint-disable camelcase */
   GridStackEngine.prototype.batch_update = obsolete(GridStackEngine.prototype.batchUpdate);
   GridStackEngine.prototype._fix_collisions = obsolete(GridStackEngine.prototype._fixCollisions,
     '_fix_collisions', '_fixCollisions');
@@ -1865,7 +1865,7 @@
     'end_update', 'endUpdate');
   GridStackEngine.prototype.can_be_placed_with_respect_to_height =
     obsolete(GridStackEngine.prototype.canBePlacedWithRespectToHeight,
-    'can_be_placed_with_respect_to_height', 'canBePlacedWithRespectToHeight');
+      'can_be_placed_with_respect_to_height', 'canBePlacedWithRespectToHeight');
   GridStack.prototype._trigger_change_event = obsolete(GridStack.prototype._triggerChangeEvent,
     '_trigger_change_event', '_triggerChangeEvent');
   GridStack.prototype._init_styles = obsolete(GridStack.prototype._initStyles,
@@ -1910,7 +1910,7 @@
     'set_static', 'setStatic');
   GridStack.prototype._set_static_class = obsolete(GridStack.prototype._setStaticClass,
     '_set_static_class', '_setStaticClass');
-  // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+  /*eslint-enable camelcase */
 
   scope.GridStackUI = GridStack;
 
