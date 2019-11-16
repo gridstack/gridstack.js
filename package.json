@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "0.5.1-dev",
+  "version": "0.5.2-dev",
   "description": "gridstack.js is a jQuery plugin for widget layout",
   "main": "dist/gridstack.js",
   "repository": {
@@ -46,10 +46,9 @@
     "grunt-contrib-connect": "^2.0.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^3.0.0",
-    "grunt-contrib-jshint": "^2.1.0",
     "grunt-contrib-uglify": "^4.0.1",
     "grunt-contrib-watch": "^1.1.0",
-    "grunt-jscs": "^3.0.1",
+    "grunt-eslint": "^20.1.0",
     "grunt-protractor-runner": "^5.0.0",
     "grunt-protractor-webdriver": "^0.2.5",
     "grunt-sass": "2.1.0",

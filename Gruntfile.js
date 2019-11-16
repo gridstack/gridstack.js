@@ -1,11 +1,10 @@
-// jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+/*eslint-disable camelcase */
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-jscs');
+  grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-protractor-runner');
   grunt.loadNpmTasks('grunt-contrib-connect');
@@ -37,6 +36,7 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'dist/gridstack.js': ['src/gridstack.js'],
+          'dist/gridstack.d.ts': ['src/gridstack.d.ts'],
           'dist/gridstack.jQueryUI.js': ['src/gridstack.jQueryUI.js'],
         }
       }
@@ -57,12 +57,8 @@ module.exports = function(grunt) {
       }
     },
 
-    jshint: {
-      all: ['src/*.js']
-    },
-
-    jscs: {
-      all: ['*.js', 'src/*.js', ],
+    eslint: {
+      target: ['*.js', 'src/*.js']
     },
 
     watch: {
@@ -106,7 +102,8 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('lint', ['jshint', 'jscs']);
-  grunt.registerTask('default', ['sass', 'cssmin', 'jshint', 'jscs', 'copy', 'uglify']);
+  grunt.registerTask('lint', ['eslint']);
+  grunt.registerTask('default', ['sass', 'cssmin', 'eslint', 'copy', 'uglify']);
   grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };
+/*eslint-enable camelcase */

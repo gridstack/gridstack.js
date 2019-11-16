@@ -63,8 +63,7 @@
         items.forEach(function(node) {
           var w = $('<div><div class="grid-stack-item-content"></div></div>');
           w.attr('id', 'item-' + (++id));
-          this.grid.addWidget(w,
-            node.x, node.y, node.width, node.height);
+          this.grid.addWidget(w, node);
         }, this);
       };
     });

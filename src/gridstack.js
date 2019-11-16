@@ -1,5 +1,5 @@
 /**
- * gridstack.js 0.5.1-dev
+ * gridstack.js 0.5.2-dev
  * https://gridstackjs.com/
  * (c) 2014-2019 Dylan Weiss, Alain Dumesny, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
@@ -232,7 +232,7 @@
     }
   };
 
-  // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+  /*eslint-disable camelcase */
   Utils.is_intercepted = obsolete(Utils.isIntercepted, 'is_intercepted', 'isIntercepted');
 
   Utils.create_stylesheet = obsolete(Utils.createStylesheet, 'create_stylesheet', 'createStylesheet');
@@ -240,7 +240,7 @@
   Utils.remove_stylesheet = obsolete(Utils.removeStylesheet, 'remove_stylesheet', 'removeStylesheet');
 
   Utils.insert_css_rule = obsolete(Utils.insertCSSRule, 'insert_css_rule', 'insertCSSRule');
-  // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+  /*eslint-enable camelcase */
 
   /**
   * @class GridStackDragDropPlugin
@@ -394,7 +394,7 @@
 
   GridStackEngine.prototype._prepareNode = function(node, resizing) {
     node = node || {};
-    // if we're missing position, have grid position us automatically (before we set them to 0,0)
+    // if we're missing position, have the grid position us automatically (before we set them to 0,0)
     if (node.x === undefined || node.y === undefined) {
       node.autoPosition = true;
     }
@@ -653,7 +653,7 @@
 
     this.container = $(el);
 
-    // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+    /*eslint-disable camelcase */
     if (typeof opts.handle_class !== 'undefined') {
       opts.handleClass = opts.handle_class;
       obsoleteOpts('handle_class', 'handleClass');
@@ -694,7 +694,7 @@
       opts.alwaysShowResizeHandle = opts.always_show_resize_handle;
       obsoleteOpts('always_show_resize_handle', 'alwaysShowResizeHandle');
     }
-    // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+    /*eslint-enable camelcase */
 
     opts.itemClass = opts.itemClass || 'grid-stack-item';
     var isNested = this.container.closest('.' + opts.itemClass).length > 0;
@@ -759,8 +759,9 @@
 
     this.opts.isNested = isNested;
 
-    isAutoCellHeight = this.opts.cellHeight === 'auto';
+    isAutoCellHeight = (this.opts.cellHeight === 'auto');
     if (isAutoCellHeight) {
+      // make the cell square initially
       self.cellHeight(self.cellWidth(), true);
     } else {
       this.cellHeight(this.opts.cellHeight, true);
@@ -804,14 +805,14 @@
       var _this = this;
       this.container.children('.' + this.opts.itemClass + ':not(.' + this.opts.placeholderClass + ')')
         .each(function(index, el) {
-        el = $(el);
-        elements.push({
-          el: el,
-          // if x,y are missing (autoPosition) add them to end of list - keep their respective DOM order
-          i: (parseInt(el.attr('data-gs-x')) || 100) +
-             (parseInt(el.attr('data-gs-y')) || 100) * _this.opts.width
+          el = $(el);
+          elements.push({
+            el: el,
+            // if x,y are missing (autoPosition) add them to end of list - keep their respective DOM order
+            i: (parseInt(el.attr('data-gs-x')) || 100) +
+              (parseInt(el.attr('data-gs-y')) || 100) * _this.opts.width
+          });
         });
-      });
       Utils.sortBy(elements, function(x) { return x.i; }).forEach(function(item) {
         this._prepareElement(item.el);
       }, this);
@@ -964,9 +965,11 @@
           var cellWidth = self.cellWidth();
           var cellHeight = self.cellHeight();
           var origNode = el.data('_gridstack_node');
+          var verticalMargin = self.opts.verticalMargin;
 
-          var width = origNode ? origNode.width : (Math.ceil(el.outerWidth() / cellWidth));
-          var height = origNode ? origNode.height : (Math.ceil(el.outerHeight() / cellHeight));
+          // height: Each row is cellHeight + verticalMargin, until last one which has no margin below
+          var width = origNode ? origNode.width : Math.ceil(el.outerWidth() / cellWidth);
+          var height = origNode ? origNode.height : Math.round((el.outerHeight() + verticalMargin) / (cellHeight + verticalMargin));
 
           draggingElement = el;
 
@@ -1148,7 +1151,8 @@
     // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
     var cssMinHeight = parseInt(this.container.css('min-height'));
     if (cssMinHeight > 0) {
-      var minHeight = (cssMinHeight + this.opts.verticalMargin) / (this.cellHeight() + this.opts.verticalMargin);
+      var verticalMargin = this.opts.verticalMargin;
+      var minHeight =  Math.round((cssMinHeight + verticalMargin) / (this.cellHeight() + verticalMargin));
       if (height < minHeight) {
         height = minHeight;
       }
@@ -1285,7 +1289,10 @@
       self.grid.cleanNodes();
       self.grid.beginUpdate(node);
       cellWidth = self.cellWidth();
-      var strictCellHeight = Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
+      var strictCellHeight = self.cellHeight();
+      // TODO: cellHeight cannot be set to cellHeight() (i.e. remove strictCellHeight) right here otherwise
+      // when sizing up we jump almost right away to next size instead of half way there. Not sure
+      // why as we don't use ceil() is many places but round().
       cellHeight = self.container.height() / parseInt(self.container.attr('data-gs-current-height'));
       self.placeholder
         .attr('data-gs-x', o.attr('data-gs-x'))
@@ -1297,9 +1304,12 @@
       node._beforeDragX = node.x;
       node._beforeDragY = node.y;
       node._prevYPix = ui.position.top;
+      var minHeight = (node.minHeight || 1);
+      var verticalMargin = self.opts.verticalMargin;
 
+      // mineHeight - Each row is cellHeight + verticalMargin, until last one which has no margin below
       self.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
-      self.dd.resizable(el, 'option', 'minHeight', strictCellHeight * (node.minHeight || 1));
+      self.dd.resizable(el, 'option', 'minHeight', (strictCellHeight * minHeight) + (minHeight - 1) * verticalMargin);
 
       if (event.type == 'resizestart') {
         o.find('.grid-stack-item').trigger('resizestart');
@@ -1425,9 +1435,15 @@
     }
   };
 
-  GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition, minWidth, maxWidth,
-    minHeight, maxHeight, id) {
+  GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id) {
+
+    // instead of passing all the params, the user might pass an object with all fields instead, if so extract them and call us back
+    if (x !== null && typeof x === 'object') {
+      return this.addWidget(el, x.x, x.y, x.width, x.height, x.autoPosition, x.minWidth, x.maxWidth, x.minHeight, x.maxHeight, x.id);
+    }
+
     el = $(el);
+    // Note: passing null removes the attr in jquery
     if (typeof x != 'undefined') { el.attr('data-gs-x', x); }
     if (typeof y != 'undefined') { el.attr('data-gs-y', y); }
     if (typeof width != 'undefined') { el.attr('data-gs-width', width); }
@@ -1723,16 +1739,22 @@
     }
   };
 
+  /** set/get the current cell height value */
   GridStack.prototype.cellHeight = function(val, noUpdate) {
+    // getter - returns the opts stored height else compute it...
     if (typeof val == 'undefined') {
-      if (this.opts.cellHeight) {
+      if (this.opts.cellHeight && this.opts.cellHeight !== 'auto') {
         return this.opts.cellHeight;
       }
+      // compute the height taking margin into account (each row has margin other than last one)
       var o = this.container.children('.' + this.opts.itemClass).first();
-      return Math.ceil(o.outerHeight() / o.attr('data-gs-height'));
+      var height = o.attr('data-gs-height');
+      var verticalMargin = this.opts.verticalMargin;
+      return Math.round((o.outerHeight() - (height - 1) * verticalMargin) / height);
     }
-    var heightData = Utils.parseHeight(val);
 
+    // setter - updates the cellHeight value if they changed
+    var heightData = Utils.parseHeight(val);
     if (this.opts.cellHeightUnit === heightData.unit && this.opts.cellHeight === heightData.height) {
       return ;
     }
@@ -1742,7 +1764,6 @@
     if (!noUpdate) {
       this._updateStyles();
     }
-
   };
 
   GridStack.prototype.cellWidth = function() {
@@ -1813,7 +1834,7 @@
     this.container.addClass('grid-stack-' + gridWidth);
   };
 
-  // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+  /*eslint-disable camelcase */
   GridStackEngine.prototype.batch_update = obsolete(GridStackEngine.prototype.batchUpdate);
   GridStackEngine.prototype._fix_collisions = obsolete(GridStackEngine.prototype._fixCollisions,
     '_fix_collisions', '_fixCollisions');
@@ -1845,7 +1866,7 @@
     'end_update', 'endUpdate');
   GridStackEngine.prototype.can_be_placed_with_respect_to_height =
     obsolete(GridStackEngine.prototype.canBePlacedWithRespectToHeight,
-    'can_be_placed_with_respect_to_height', 'canBePlacedWithRespectToHeight');
+      'can_be_placed_with_respect_to_height', 'canBePlacedWithRespectToHeight');
   GridStack.prototype._trigger_change_event = obsolete(GridStack.prototype._triggerChangeEvent,
     '_trigger_change_event', '_triggerChangeEvent');
   GridStack.prototype._init_styles = obsolete(GridStack.prototype._initStyles,
@@ -1890,7 +1911,7 @@
     'set_static', 'setStatic');
   GridStack.prototype._set_static_class = obsolete(GridStack.prototype._setStaticClass,
     '_set_static_class', '_setStaticClass');
-  // jscs:enable requireCamelCaseOrUpperCaseIdentifiers
+  /*eslint-enable camelcase */
 
   scope.GridStackUI = GridStack;
 
