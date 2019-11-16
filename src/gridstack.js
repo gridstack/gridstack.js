@@ -974,18 +974,24 @@
           draggingElement = el;
 
           var node = self.grid._prepareNode({width: width, height: height, _added: false, _temporary: true});
+          node.isOutOfGrid = true;
           el.data('_gridstack_node', node);
           el.data('_gridstack_node_orig', origNode);
 
           el.on('drag', onDrag);
         })
         .on(self.container, 'dropout', function(event, ui) {
+          // jquery-ui bug. Must verify widget is being dropped out
+          // check node variable that gets set when widget is out of grid
           var el = $(ui.draggable);
           if (!el.data('_gridstack_node')) {
             return;
           }
-          el.unbind('drag', onDrag);
           var node = el.data('_gridstack_node');
+          if (!node.isOutOfGrid) {
+            return;
+          }
+          el.unbind('drag', onDrag);
           node.el = null;
           self.grid.removeNode(node);
           self.placeholder.detach();
@@ -996,6 +1002,7 @@
           self.placeholder.detach();
 
           var node = $(ui.draggable).data('_gridstack_node');
+          node.isOutOfGrid = false;
           node._grid = self;
           var el = $(ui.draggable).clone(false);
           el.data('_gridstack_node', node);
