@@ -24,6 +24,7 @@ Change log
 
 ## v0.5.2-dev (upcoming changes)
 
+- fix widgets not animating when animate: true is used. on every move, styles were recreated-fix should slightly improve gridstack.js speed ([#937](https://github.com/gridstack/gridstack.js/issues/937)).
 - fix moving widgets when having multiple grids. jquery-ui workaround ([#1043](https://github.com/gridstack/gridstack.js/issues/1043)).
 - switch to eslint ([#763](https://github.com/gridstack/gridstack.js/issues/763)).
 - null values to addWidget() exception fix ([#1042](https://github.com/gridstack/gridstack.js/issues/1042)).
