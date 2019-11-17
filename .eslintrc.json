@@ -1,0 +1,20 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "max-len": ["error", 180],
+    "camelcase": "error",
+    "no-trailing-spaces": "error"
+  }
+} 
