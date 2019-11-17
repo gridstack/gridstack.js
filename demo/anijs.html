@@ -11,16 +11,16 @@
   <title>AniJS demo</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="../dist/gridstack.css"/>
   <link rel="stylesheet" href="https://anijs.github.io/lib/anicollection/anicollection.css" />
+  <link rel="stylesheet" href="../dist/gridstack.css"/>
 
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.9/shim.min.js"></script>
-  <script src="../dist/gridstack.js"></script>
-  <script src="../dist/gridstack.jQueryUI.js"></script>
+  <script src="../src/gridstack.js"></script>
+  <script src="../src/gridstack.jQueryUI.js"></script>
 
   <style type="text/css">
     .grid-stack {
@@ -37,7 +37,9 @@
 <body>
   <div class="container-fluid">
     <h1>AniJS demo</h1>
-    <button id="add-widget" href="#">Add Widget</button>
+    <div>
+      <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
+    </div>
     <h4>Widget added</h4>
     <br>
     <div class="grid-stack"></div>
