@@ -18,6 +18,8 @@
     factory(window.jQuery, window);
   }
 })(function($, scope) {
+
+  // checks for obsolete method names
   var obsolete = function(f, oldName, newName) {
     var wrapper = function() {
       console.warn('gridstack.js: Function `' + oldName + '` is deprecated as of v0.2.5 and has been replaced ' +
@@ -29,10 +31,21 @@
     return wrapper;
   };
 
-  var obsoleteOpts = function(opts, oldName, newName) {
+   // checks for obsolete grid options 9can be used for any fields, but msg is about options)
+   var obsoleteOpts = function(opts, oldName, newName) {
     if (opts[oldName] !== undefined) {
       opts[newName] = opts[oldName];
       console.warn('gridstack.js: Option `' + oldName + '` is deprecated as of v0.2.5 and has been replaced with `' +
+        newName + '`. It will be **completely** removed in v1.0.');
+    }
+  };
+
+  // checks for obsolete Jquery element attributes
+  var obsoleteAttr = function(el, oldName, newName) {
+    var oldAttr = el.attr(oldName);
+    if (oldAttr !== undefined) {
+      el.attr(newName, oldAttr);
+      console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object as of v0.5.2 and has been replaced with `' +
         newName + '`. It will be **completely** removed in v1.0.');
     }
   };
@@ -675,6 +688,10 @@
     obsoleteOpts(opts, 'always_show_resize_handle', 'alwaysShowResizeHandle');
     obsoleteOpts(opts, 'width', 'columns');
     obsoleteOpts(opts, 'height', 'maxRows');
+
+    // container attributes
+    obsoleteAttr(this.container, 'data-gs-width', 'data-gs-columns');
+    obsoleteAttr(this.container, 'data-gs-height', 'data-gs-max-rows');
     /*eslint-enable camelcase */
 
     opts.itemClass = opts.itemClass || 'grid-stack-item';
