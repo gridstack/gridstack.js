@@ -26,9 +26,8 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [API Documentation](#api-documentation)
   - [Touch devices support](#touch-devices-support)
   - [gridstack.js for specific frameworks](#gridstackjs-for-specific-frameworks)
-  - [Change grid width](#change-grid-width)
-  - [Extra CSS](#extra-css)
-    - [Different grid widths](#different-grid-widths)
+  - [Change grid columns](#change-grid-columns)
+  - [Custom columns CSS](#custom-columns-css)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [IE8 support](#ie8-support)
 - [Changes](#changes)
@@ -174,10 +173,31 @@ If you're still experiencing issues on touch devices please check [#444](https:/
 - ember: [gridstack-ember](https://github.com/yahoo/ember-gridstack)
 
 
-## Change grid width
+## Change grid columns
 
-To change grid width (columns count), in addition to setting the `width` grid option CSS rules
-for `.grid-stack-item[data-gs-width="X"]` and  `.grid-stack-item[data-gs-x="X"]` have to be changed accordingly.
+GridStack makes it very easy if you need [1-12] columns out of the box (default is 12), but you always need **2 things** if you need to customize this:
+
+1) Change the `columns` grid option when creating a grid to your number N
+```js
+$('.grid-stack').gridstack( {columns: N} );
+```
+
+2) and change your HTML accordingly if **N < 12** (else custom CSS section next). Without this, things will not render/work correctly.
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.2/dist/gridstack-extra.css"/>
+
+<div class="grid-stack grid-stack-N">...</div>
+```
+
+Note `grid-stack-N` class was added.
+
+`gridstack-extra.css` (and `gridstack-extra.min.css`) defines CSS for grids with custom [1-12] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
+
+See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html) with 6 columns
+
+## Custom columns CSS
+
+If you need > 12 columns or want to generate the CSS manually (else see above) you will need to generate CSS rules for `.grid-stack-item[data-gs-width="X"]` and `.grid-stack-item[data-gs-x="X"]`.
 
 For instance for 3-column grid you need to rewrite CSS to be:
 
@@ -205,7 +225,7 @@ For 4-column grid it should be:
 
 and so on.
 
-Here is a SASS code snippet which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)) and use a site like [sassmeister.com](https://www.sassmeister.com/) to generate CSS if you need to:
+Better yet, here is a SASS code snippet which can make life much easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)) and you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
 
 ```sass
 .grid-stack > .grid-stack-item {
@@ -222,25 +242,6 @@ Here is a SASS code snippet which can make life easier (Thanks to @ascendantofra
   }
 }
 ```
-
-Or you can include `gridstack-extra.css` which include [1-12] column sizes. See below for more details.
-
-## Extra CSS
-
-There are few extra CSS batteries in `gridstack-extra.css` (`gridstack-extra.min.css`) that defines CSS for grids with [1-12] columns. Anything more and you'll need to generate the above SASS/CSS yourself.
-
-### Different grid widths
-
-You can use other than 12 grid width:
-
-```html
-<div class="grid-stack grid-stack-N">...</div>
-```
-```javascript
-$('.grid-stack').gridstack({width: N});
-```
-
-See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html)
 
 ## Override resizable/draggable options
 

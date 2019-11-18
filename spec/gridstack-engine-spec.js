@@ -17,9 +17,9 @@ describe('gridstack engine', function() {
     });
 
     it('should be setup properly', function() {
-      expect(engine.width).toEqual(12);
+      expect(engine.columns).toEqual(12);
       expect(engine.float).toEqual(false);
-      expect(engine.height).toEqual(0);
+      expect(engine.maxRows).toEqual(0);
       expect(engine.nodes).toEqual([]);
     });
   });
