@@ -28,6 +28,7 @@ Change log
 - fix moving widgets when having multiple grids. jquery-ui workaround ([#1043](https://github.com/gridstack/gridstack.js/issues/1043)).
 - switch to eslint ([#763](https://github.com/gridstack/gridstack.js/issues/763)).
 - null values to addWidget() exception fix ([#1042](https://github.com/gridstack/gridstack.js/issues/1042)).
+- various fixes for custom # of columns (readme, safer code) ([#1053](https://github.com/gridstack/gridstack.js/issues/1053)).
 
 ## v0.5.2 (2019-11-13)
 
