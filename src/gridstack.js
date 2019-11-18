@@ -393,18 +393,28 @@
   GridStackEngine.prototype._prepareNode = function(node, resizing) {
     node = node || {};
     // if we're missing position, have the grid position us automatically (before we set them to 0,0)
-    if (node.x === undefined || node.y === undefined) {
+    if (node.x === undefined || node.y === undefined || node.x === null || node.y === null) {
       node.autoPosition = true;
     }
-    node = Utils.defaults(node, {width: 1, height: 1, x: 0, y: 0});
 
-    node.x = parseInt('' + node.x);
-    node.y = parseInt('' + node.y);
-    node.width = parseInt('' + node.width);
-    node.height = parseInt('' + node.height);
+    // assign defaults for missing required fields
+    var defaults = {width: 1, height: 1, x: 0, y: 0};
+    node = Utils.defaults(node, defaults);
+
+    // convert any strings over
+    node.x = parseInt(node.x);
+    node.y = parseInt(node.y);
+    node.width = parseInt(node.width);
+    node.height = parseInt(node.height);
     node.autoPosition = node.autoPosition || false;
     node.noResize = node.noResize || false;
     node.noMove = node.noMove || false;
+
+    // check for NaN (in case messed up strings were passed. can't do parseInt() || defaults.x above as 0 is valid #)
+    if (Number.isNaN(node.x))      { node.x = defaults.x; node.autoPosition = true; }
+    if (Number.isNaN(node.y))      { node.y = defaults.y; node.autoPosition = true; }
+    if (Number.isNaN(node.width))  { node.width = defaults.width; }
+    if (Number.isNaN(node.height)) { node.height = defaults.height; }
 
     if (node.width > this.width) {
       node.width = this.width;
@@ -1747,6 +1757,7 @@
   };
 
   GridStack.prototype.cellWidth = function() {
+    // TODO: take margin into account ($horizontal_padding in .scss) to make cellHeight='auto' square ? (see 810-many-columns.html)
     return Math.round(this.container.outerWidth() / this.opts.width);
   };
 

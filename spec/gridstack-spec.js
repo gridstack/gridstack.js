@@ -913,6 +913,26 @@ describe('gridstack', function() {
     });
   });
 
+  describe('addWidget() with bad string value widget options', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should use default', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
+      var widget = grid.addWidget(widgetHTML, {x: 'foo', height: null, width: 'bar', height: ''});
+      var $widget = $(widget);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(1);
+    });
+  });
+
   describe('addWidget with null options, ', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);

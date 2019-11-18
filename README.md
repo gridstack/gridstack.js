@@ -176,7 +176,7 @@ If you're still experiencing issues on touch devices please check [#444](https:/
 
 ## Change grid width
 
-To change grid width (columns count), to addition to `width` option, CSS rules
+To change grid width (columns count), in addition to setting the `width` grid option CSS rules
 for `.grid-stack-item[data-gs-width="X"]` and  `.grid-stack-item[data-gs-x="X"]` have to be changed accordingly.
 
 For instance for 3-column grid you need to rewrite CSS to be:
@@ -205,12 +205,14 @@ For 4-column grid it should be:
 
 and so on.
 
-Here is a SASS code snippet which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)):
+Here is a SASS code snippet which can make life easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)) and use a site like [sassmeister.com](https://www.sassmeister.com/) to generate CSS if you need to:
 
 ```sass
 .grid-stack > .grid-stack-item {
 
   $gridstack-columns: 12;
+
+  min-width: (100% / $gridstack-columns);
 
   @for $i from 1 through $gridstack-columns {
     &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
@@ -221,11 +223,11 @@ Here is a SASS code snippet which can make life easier (Thanks to @ascendantofra
 }
 ```
 
-Or you can include `gridstack-extra.css`. See below for more details.
+Or you can include `gridstack-extra.css` which include [1-12] column sizes. See below for more details.
 
 ## Extra CSS
 
-There are few extra CSS batteries in `gridstack-extra.css` (`gridstack-extra.min.css`).
+There are few extra CSS batteries in `gridstack-extra.css` (`gridstack-extra.min.css`) that defines CSS for grids with [1-12] columns. Anything more and you'll need to generate the above SASS/CSS yourself.
 
 ### Different grid widths
 

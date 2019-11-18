@@ -104,10 +104,10 @@ gridstack.js API
 
 ## Item attributes
 
-- `data-gs-x`, `data-gs-y` - element position. Note: if one is missing this will `autoPosition` the item
-- `data-gs-width`, `data-gs-height` - element size
-- `data-gs-id`- good for quick identification (for example in change event)
-- `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
+- `data-gs-x`, `data-gs-y` - (number) element position in row/column. Note: if one is missing this will `autoPosition` the item
+- `data-gs-width`, `data-gs-height` - (number) element size in row/column
+- `data-gs-id`- (number | string) good for quick identification (for example in change event)
+- `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints in row/column
 - `data-gs-no-resize` - disable element resizing
 - `data-gs-no-move` - disable element moving
 - `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first available position. Having either one missing will also do that.
