@@ -29,9 +29,12 @@
     return wrapper;
   };
 
-  var obsoleteOpts = function(oldName, newName) {
-    console.warn('gridstack.js: Option `' + oldName + '` is deprecated as of v0.2.5 and has been replaced with `' +
-      newName + '`. It will be **completely** removed in v1.0.');
+  var obsoleteOpts = function(opts, oldName, newName) {
+    if (opts[oldName] !== undefined) {
+      opts[newName] = opts[oldName];
+      console.warn('gridstack.js: Option `' + oldName + '` is deprecated as of v0.2.5 and has been replaced with `' +
+        newName + '`. It will be **completely** removed in v1.0.');
+    }
   };
 
   var Utils = {
@@ -660,54 +663,18 @@
     this.container = $(el);
 
     /*eslint-disable camelcase */
-    if (opts.handle_class !== undefined) {
-      opts.handleClass = opts.handle_class;
-      obsoleteOpts('handle_class', 'handleClass');
-    }
-    if (opts.item_class !== undefined) {
-      opts.itemClass = opts.item_class;
-      obsoleteOpts('item_class', 'itemClass');
-    }
-    if (opts.placeholder_class !== undefined) {
-      opts.placeholderClass = opts.placeholder_class;
-      obsoleteOpts('placeholder_class', 'placeholderClass');
-    }
-    if (opts.placeholder_text !== undefined) {
-      opts.placeholderText = opts.placeholder_text;
-      obsoleteOpts('placeholder_text', 'placeholderText');
-    }
-    if (opts.cell_height !== undefined) {
-      opts.cellHeight = opts.cell_height;
-      obsoleteOpts('cell_height', 'cellHeight');
-    }
-    if (opts.vertical_margin !== undefined) {
-      opts.verticalMargin = opts.vertical_margin;
-      obsoleteOpts('vertical_margin', 'verticalMargin');
-    }
-    if (opts.min_width !== undefined) {
-      opts.minWidth = opts.min_width;
-      obsoleteOpts('min_width', 'minWidth');
-    }
-    if (opts.static_grid !== undefined) {
-      opts.staticGrid = opts.static_grid;
-      obsoleteOpts('static_grid', 'staticGrid');
-    }
-    if (opts.is_nested !== undefined) {
-      opts.isNested = opts.is_nested;
-      obsoleteOpts('is_nested', 'isNested');
-    }
-    if (opts.always_show_resize_handle !== undefined) {
-      opts.alwaysShowResizeHandle = opts.always_show_resize_handle;
-      obsoleteOpts('always_show_resize_handle', 'alwaysShowResizeHandle');
-    }
-    if (opts.width !== undefined) {
-      opts.columns = opts.width;
-      obsoleteOpts('width', 'columns');
-    }
-    if (opts.height !== undefined) {
-      opts.maxRows = opts.height;
-      obsoleteOpts('height', 'maxRows');
-    }
+    obsoleteOpts(opts, 'handle_class', 'handleClass');
+    obsoleteOpts(opts, 'item_class', 'itemClass');
+    obsoleteOpts(opts, 'placeholder_class', 'placeholderClass');
+    obsoleteOpts(opts, 'placeholder_text', 'placeholderText');
+    obsoleteOpts(opts, 'cell_height', 'cellHeight');
+    obsoleteOpts(opts, 'vertical_margin', 'verticalMargin');
+    obsoleteOpts(opts, 'min_width', 'minWidth');
+    obsoleteOpts(opts, 'static_grid', 'staticGrid');
+    obsoleteOpts(opts, 'is_nested', 'isNested');
+    obsoleteOpts(opts, 'always_show_resize_handle', 'alwaysShowResizeHandle');
+    obsoleteOpts(opts, 'width', 'columns');
+    obsoleteOpts(opts, 'height', 'maxRows');
     /*eslint-enable camelcase */
 
     opts.itemClass = opts.itemClass || 'grid-stack-item';
