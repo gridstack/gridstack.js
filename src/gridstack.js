@@ -31,8 +31,8 @@
     return wrapper;
   };
 
-   // checks for obsolete grid options 9can be used for any fields, but msg is about options)
-   var obsoleteOpts = function(opts, oldName, newName) {
+  // checks for obsolete grid options 9can be used for any fields, but msg is about options)
+  var obsoleteOpts = function(opts, oldName, newName) {
     if (opts[oldName] !== undefined) {
       opts[newName] = opts[oldName];
       console.warn('gridstack.js: Option `' + oldName + '` is deprecated as of v0.2.5 and has been replaced with `' +
