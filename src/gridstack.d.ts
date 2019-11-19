@@ -437,14 +437,14 @@ interface GridstackOptions {
     handleClass?: string;
 
     /**
-    * number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns
+  * number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns
     */
-    columns?: number;
+    column?: number;
 
     /**
     * maximum rows amount. Default? is 0 which means no maximum rows
     */
-    maxRows?: number;
+    maxRow?: number;
 
     /**
     * enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html)

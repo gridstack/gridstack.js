@@ -31,9 +31,9 @@ describe('gridstack', function() {
 
     it('should set default params correctly.', function() {
       e.call(w);
-      expect(w.columns).toBeUndefined();
+      expect(w.column).toBeUndefined();
       expect(w.float).toBe(false);
-      expect(w.maxRows).toEqual(0);
+      expect(w.maxRow).toEqual(0);
       expect(w.nodes).toEqual([]);
       expect(typeof w.onchange).toBe('function');
       expect(w._updateCounter).toEqual(0);
@@ -45,9 +45,9 @@ describe('gridstack', function() {
       var arr = [1,2,3];
 
       e.call(w, 1, fkt, true, 2, arr);
-      expect(w.columns).toEqual(1);
+      expect(w.column).toEqual(1);
       expect(w.float).toBe(true);
-      expect(w.maxRows).toEqual(2);
+      expect(w.maxRow).toEqual(2);
       expect(w.nodes).toEqual(arr);
       expect(w.onchange).toEqual(fkt);
       expect(w._updateCounter).toEqual(0);
@@ -84,14 +84,14 @@ describe('gridstack', function() {
     });
 
     it('should sort ascending without columns.', function() {
-      w.columns = undefined;
+      w.column = undefined;
       w.nodes = [{x: 7, y: 0, width: 1}, {x: 4, y: 4, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}];
       e.prototype._sortNodes.call(w, 1);
       expect(w.nodes).toEqual([{x: 7, y: 0, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}, {x: 4, y: 4, width: 1}]);
     });
 
     it('should sort descending without columns.', function() {
-      w.columns = undefined;
+      w.column = undefined;
       w.nodes = [{x: 7, y: 0, width: 1}, {x: 4, y: 4, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}];
       e.prototype._sortNodes.call(w, -1);
       expect(w.nodes).toEqual([{x: 4, y: 4, width: 1}, {x: 0, y: 1, width: 1}, {x: 9, y: 0, width: 1}, {x: 7, y: 0, width: 1}]);
@@ -220,7 +220,7 @@ describe('gridstack', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
-        columns: 12
+        column: 12
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
@@ -231,7 +231,7 @@ describe('gridstack', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
-        columns: 10
+        column: 10
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
@@ -251,7 +251,7 @@ describe('gridstack', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
-        columns: 12
+        column: 12
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
@@ -262,7 +262,7 @@ describe('gridstack', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
-        columns: 10
+        column: 10
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
