@@ -77,8 +77,8 @@ gridstack.js API
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`)
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
-- `columns` - amount of columns (default: `12`)
-- `maxRows` - maximum rows amount. Default is `0` which means no maximum rows
+- `column` - amount of columns (default: `12`)
+- `maxRow` - maximum rows amount. Default is `0` which means no maximum rows
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
 - `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
@@ -98,8 +98,8 @@ gridstack.js API
 ## Grid attributes
 
 - `data-gs-animate` - turns animation on
-- `data-gs-columns` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-columns).
-- `data-gs-maxRows` - maximum rows amount. Default is `0` which means no maximum rows.
+- `data-gs-column` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-columns).
+- `data-gs-max-row` - maximum rows amount. Default is `0` which means no maximum rows.
 - `data-gs-current-height` - current rows amount. Set by the library only. Can be used by the CSS rules.
 
 ## Item attributes

@@ -177,9 +177,9 @@ If you're still experiencing issues on touch devices please check [#444](https:/
 
 GridStack makes it very easy if you need [1-12] columns out of the box (default is 12), but you always need **2 things** if you need to customize this:
 
-1) Change the `columns` grid option when creating a grid to your number N
+1) Change the `column` grid option when creating a grid to your number N
 ```js
-$('.grid-stack').gridstack( {columns: N} );
+$('.grid-stack').gridstack( {column: N} );
 ```
 
 2) and change your HTML accordingly if **N < 12** (else custom CSS section next). Without this, things will not render/work correctly.
