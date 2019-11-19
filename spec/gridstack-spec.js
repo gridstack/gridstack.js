@@ -7,14 +7,10 @@ describe('gridstack', function() {
   var gridstackHTML =
     '<div style="width: 992px; height: 800px" id="gs-cont">' +
     '  <div class="grid-stack">' +
-    '    <div class="grid-stack-item"' +
-    '      data-gs-x="0" data-gs-y="0"' +
-    '      data-gs-width="4" data-gs-height="2">' +
+    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2">' +
     '      <div class="grid-stack-item-content"></div>' +
     '    </div>' +
-    '    <div class="grid-stack-item"' +
-    '      data-gs-x="4" data-gs-y="0"' +
-    '      data-gs-width="4" data-gs-height="4">' +
+    '    <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">' +
     '      <div class="grid-stack-item-content"></div>' +
     '    </div>' +
     '  </div>' +
@@ -35,9 +31,9 @@ describe('gridstack', function() {
 
     it('should set default params correctly.', function() {
       e.call(w);
-      expect(w.width).toBeUndefined();
+      expect(w.columns).toBeUndefined();
       expect(w.float).toBe(false);
-      expect(w.height).toEqual(0);
+      expect(w.maxRows).toEqual(0);
       expect(w.nodes).toEqual([]);
       expect(typeof w.onchange).toBe('function');
       expect(w._updateCounter).toEqual(0);
@@ -49,9 +45,9 @@ describe('gridstack', function() {
       var arr = [1,2,3];
 
       e.call(w, 1, fkt, true, 2, arr);
-      expect(w.width).toEqual(1);
+      expect(w.columns).toEqual(1);
       expect(w.float).toBe(true);
-      expect(w.height).toEqual(2);
+      expect(w.maxRows).toEqual(2);
       expect(w.nodes).toEqual(arr);
       expect(w.onchange).toEqual(fkt);
       expect(w._updateCounter).toEqual(0);
@@ -75,27 +71,27 @@ describe('gridstack', function() {
 
   describe('sorting of nodes', function() {
 
-    it('should sort ascending with width.', function() {
+    it('should sort ascending with columns.', function() {
       w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
       e.prototype._sortNodes.call(w, 1);
       expect(w.nodes).toEqual([{x: 0, y: 1}, {x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}]);
     });
 
-    it('should sort descending with width.', function() {
+    it('should sort descending with columns.', function() {
       w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
       e.prototype._sortNodes.call(w, -1);
       expect(w.nodes).toEqual([{x: 9, y: 0}, {x: 4, y: 4}, {x: 7, y: 0}, {x: 0, y: 1}]);
     });
 
-    it('should sort ascending without width.', function() {
-      w.width = false;
+    it('should sort ascending without columns.', function() {
+      w.columns = undefined;
       w.nodes = [{x: 7, y: 0, width: 1}, {x: 4, y: 4, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}];
       e.prototype._sortNodes.call(w, 1);
       expect(w.nodes).toEqual([{x: 7, y: 0, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}, {x: 4, y: 4, width: 1}]);
     });
 
-    it('should sort descending without width.', function() {
-      w.width = false;
+    it('should sort descending without columns.', function() {
+      w.columns = undefined;
       w.nodes = [{x: 7, y: 0, width: 1}, {x: 4, y: 4, width: 1}, {x: 9, y: 0, width: 1}, {x: 0, y: 1, width: 1}];
       e.prototype._sortNodes.call(w, -1);
       expect(w.nodes).toEqual([{x: 4, y: 4, width: 1}, {x: 0, y: 1, width: 1}, {x: 9, y: 0, width: 1}, {x: 7, y: 0, width: 1}]);
@@ -224,7 +220,7 @@ describe('gridstack', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
-        width: 12
+        columns: 12
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
@@ -235,7 +231,7 @@ describe('gridstack', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
-        width: 10
+        columns: 10
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
@@ -255,7 +251,7 @@ describe('gridstack', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
-        width: 12
+        columns: 12
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
@@ -266,7 +262,7 @@ describe('gridstack', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
-        width: 10
+        columns: 10
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
@@ -910,6 +906,26 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-min-height')).toBe(undefined);
       expect($widget.attr('data-gs-max-height')).toBe(undefined);
       expect($widget.attr('data-gs-id')).toBe('optionWidget');
+    });
+  });
+
+  describe('addWidget() with bad string value widget options', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should use default', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
+      var widget = grid.addWidget(widgetHTML, {x: 'foo', height: null, width: 'bar', height: ''});
+      var $widget = $(widget);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(1);
     });
   });
 

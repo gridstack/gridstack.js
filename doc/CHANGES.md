@@ -24,6 +24,7 @@ Change log
 
 ## v0.5.2-dev (upcoming changes)
 
+- grid options `width` is now `columns`, and `height` is now `maxRows` which match what they are. Old names are still supported for now (with console warnings). Also various fixes for custom # of columns and re-wrote entire doc section ([#1053](https://github.com/gridstack/gridstack.js/issues/1053)).
 - fix widgets not animating when animate: true is used. on every move, styles were recreated-fix should slightly improve gridstack.js speed ([#937](https://github.com/gridstack/gridstack.js/issues/937)).
 - fix moving widgets when having multiple grids. jquery-ui workaround ([#1043](https://github.com/gridstack/gridstack.js/issues/1043)).
 - switch to eslint ([#763](https://github.com/gridstack/gridstack.js/issues/763)).

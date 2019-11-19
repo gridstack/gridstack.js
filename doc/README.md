@@ -77,7 +77,8 @@ gridstack.js API
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`)
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
-- `height` - maximum rows amount. Default is `0` which means no maximum rows
+- `columns` - amount of columns (default: `12`)
+- `maxRows` - maximum rows amount. Default is `0` which means no maximum rows
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
 - `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
@@ -93,21 +94,20 @@ gridstack.js API
 - `verticalMargin` - vertical gap size (default: `20`). Can be:
   * an integer (px)
   * a string (ex: '2em', '20px', '2rem')
-- `width` - amount of columns (default: `12`)
 
 ## Grid attributes
 
 - `data-gs-animate` - turns animation on
-- `data-gs-width` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-width).
-- `data-gs-height` - maximum rows amount. Default is `0` which means no maximum rows.
+- `data-gs-columns` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-columns).
+- `data-gs-maxRows` - maximum rows amount. Default is `0` which means no maximum rows.
 - `data-gs-current-height` - current rows amount. Set by the library only. Can be used by the CSS rules.
 
 ## Item attributes
 
-- `data-gs-x`, `data-gs-y` - element position. Note: if one is missing this will `autoPosition` the item
-- `data-gs-width`, `data-gs-height` - element size
-- `data-gs-id`- good for quick identification (for example in change event)
-- `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints
+- `data-gs-x`, `data-gs-y` - (number) element position in row/column. Note: if one is missing this will `autoPosition` the item
+- `data-gs-width`, `data-gs-height` - (number) element size in row/column
+- `data-gs-id`- (number | string) good for quick identification (for example in change event)
+- `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints in row/column
 - `data-gs-no-resize` - disable element resizing
 - `data-gs-no-move` - disable element moving
 - `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first available position. Having either one missing will also do that.
