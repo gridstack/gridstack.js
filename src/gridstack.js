@@ -250,11 +250,8 @@
 
   /*eslint-disable camelcase */
   Utils.is_intercepted = obsolete(Utils.isIntercepted, 'is_intercepted', 'isIntercepted');
-
   Utils.create_stylesheet = obsolete(Utils.createStylesheet, 'create_stylesheet', 'createStylesheet');
-
   Utils.remove_stylesheet = obsolete(Utils.removeStylesheet, 'remove_stylesheet', 'removeStylesheet');
-
   Utils.insert_css_rule = obsolete(Utils.insertCSSRule, 'insert_css_rule', 'insertCSSRule');
   /*eslint-enable camelcase */
 
@@ -697,7 +694,7 @@
     opts.itemClass = opts.itemClass || 'grid-stack-item';
     var isNested = this.container.closest('.' + opts.itemClass).length > 0;
 
-    this.opts = Utils.defaults(opts || {}, {
+    this.opts = Utils.defaults(opts, {
       column: parseInt(this.container.attr('data-gs-column')) || 12,
       maxRow: parseInt(this.container.attr('data-gs-max-row')) || 0,
       itemClass: 'grid-stack-item',
@@ -1229,7 +1226,7 @@
         var distance = ui.position.top - node._prevYPix;
         node._prevYPix = ui.position.top;
         Utils.updateScrollPosition(el[0], ui, distance);
-        if (el.data('inTrashZone') || x < 0 || x >= self.grid.width || y < 0 ||
+        if (el.data('inTrashZone') || x < 0 || x >= self.grid.column || y < 0 ||
           (!self.grid.float && y > self.grid.getGridHeight())) {
           if (!node._temporaryRemoved) {
             if (self.opts.removable === true) {
@@ -1807,15 +1804,21 @@
     this.grid.commit();
   };
 
-  GridStack.prototype.setGridWidth = function(gridWidth,doNotPropagate) {
+  GridStack.prototype.setColumn = function(column, doNotPropagate) {
+    if (this.opts.column === column) { return; }
     this.container.removeClass('grid-stack-' + this.opts.column);
     if (doNotPropagate !== true) {
-      this._updateNodeWidths(this.opts.column, gridWidth);
+      this._updateNodeWidths(this.opts.column, column);
     }
-    this.opts.column = gridWidth;
-    this.grid.width = gridWidth;
-    this.container.addClass('grid-stack-' + gridWidth);
+    this.opts.column = this.grid.column = column;
+    this.container.addClass('grid-stack-' + column);
   };
+  // legacy call from <= 0.5.2 - use new method instead.
+  GridStack.prototype.setGridWidth = function(column, doNotPropagate) {
+    console.warn('gridstack.js: setGridWidth() is deprecated as of v0.5.3 and has been replaced ' +
+      'with setColumn(). It will be **completely** removed in v1.0.');
+    this.setColumn(column, doNotPropagate);
+  }
 
   /*eslint-disable camelcase */
   GridStackEngine.prototype.batch_update = obsolete(GridStackEngine.prototype.batchUpdate);

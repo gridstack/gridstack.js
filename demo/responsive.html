@@ -72,13 +72,13 @@
         if (isBreakpoint('xs')) {
           $('#grid-size').text('One column mode');
         } else if (isBreakpoint('sm')) {
-          grid.setGridWidth(3);
+          grid.setColumn(3);
           $('#grid-size').text(3);
         } else if (isBreakpoint('md')) {
-          grid.setGridWidth(6);
+          grid.setColumn(6);
           $('#grid-size').text(6);
         } else if (isBreakpoint('lg')) {
-          grid.setGridWidth(12);
+          grid.setColumn(12);
           $('#grid-size').text(12);
         }
       };

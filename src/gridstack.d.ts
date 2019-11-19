@@ -264,10 +264,10 @@ interface GridStack {
   /**
    * (Experimental) Modify number of columns in the grid. Will attempt to update existing widgets
    * to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css`.
-   * @param gridWidth - Integer between 1 and 12.
+   * @param column - Integer between 1 and 12.
    * @param doNotPropagate if true existing widgets will not be updated.
    */
-  setGridWidth(gridWidth: number, doNotPropagate: boolean): void;
+  setColumn(column: number, doNotPropagate: boolean): void;
 
   /**
    * Toggle the grid static state. Also toggle the grid-stack-static class.

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Column grid demo</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../dist/gridstack.css"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="../src/gridstack.js"></script>
+  <script src="../src/gridstack.jQueryUI.js"></script>
+
+  <style type="text/css">
+    .grid-stack {
+      background: lightgoldenrodyellow;
+    }
+
+    .grid-stack-item-content {
+      color: #2c3e50;
+      text-align: center;
+      background-color: #18bc9c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>setColumn() grid demo</h1>
+    <div>
+      <a class="btn btn-primary" id="1column" href="#">1 Column</a>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+
+
+  <script type="text/javascript">
+    $(function () {
+      $('.grid-stack').gridstack();
+      var self = this;
+      this.grid = $('.grid-stack').data('gridstack');
+
+      var items = [
+        {x: 0, y: 0, width: 4, height: 2},
+        {x: 4, y: 0, width: 4, height: 1},
+      ];
+      items.forEach(function (node, i) {
+        self.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'), node);
+      });
+
+      $('#1column').click(function() {
+        oneColumn();
+      });
+
+      function oneColumn() {
+        self.grid.setColumn(1);
+      }
+    });
+  </script>
+</body>
+</html>
