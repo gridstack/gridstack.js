@@ -24,19 +24,19 @@ Change log
 
 ## v0.5.2-dev (upcoming changes)
 
-- grid options `width` is now `column`, and `height` is now `maxRow` which match what they are. Old names are still supported for now (with console warnings). Also various fixes for custom # of column and re-wrote entire doc section ([#1053](https://github.com/gridstack/gridstack.js/issues/1053)).
+- grid options `width` is now `column`, `height` now `maxRow`, and `setGridWidth()` now `setColumn()` to match what they are. Old names are still supported (console warnings). Various fixes for custom # of column and re-wrote entire doc section ([#1053](https://github.com/gridstack/gridstack.js/issues/1053)).
 - fix widgets not animating when animate: true is used. on every move, styles were recreated-fix should slightly improve gridstack.js speed ([#937](https://github.com/gridstack/gridstack.js/issues/937)).
 - fix moving widgets when having multiple grids. jquery-ui workaround ([#1043](https://github.com/gridstack/gridstack.js/issues/1043)).
 - switch to eslint ([#763](https://github.com/gridstack/gridstack.js/issues/763)).
-- null values to addWidget() exception fix ([#1042](https://github.com/gridstack/gridstack.js/issues/1042)).
+- fix null values `addWidget()` options ([#1042](https://github.com/gridstack/gridstack.js/issues/1042)).
 
 ## v0.5.2 (2019-11-13)
 
-- undefined x,y position messes up grid ([#1017](https://github.com/gridstack/gridstack.js/issues/1017)).
+- undefined `x,y` position messes up grid ([#1017](https://github.com/gridstack/gridstack.js/issues/1017)).
 - changed code to 2 spaces.
 - fix minHeight during `onStartMoving()` ([#999](https://github.com/gridstack/gridstack.js/issues/999)).
 - TypeScript definition file now included - no need to include @types/gridstack, easier to update ([#1036](https://github.com/gridstack/gridstack.js/pull/1036)).
-- new addWidget(el, options) to pass object so you don't have to spell 10 params. ([#907](https://github.com/gridstack/gridstack.js/issues/907)).
+- new `addWidget(el, options)` to pass object so you don't have to spell 10 params. ([#907](https://github.com/gridstack/gridstack.js/issues/907)).
 
 ## v0.5.1 (2019-11-07)
 
@@ -57,11 +57,11 @@ Change log
 ## v0.4.0 (2018-05-11)
 
 - widgets can have their own resize handles. Use `data-gs-resize-handles` element attribute to use. For example, `data-gs-resize-handles="e,w"` will make the particular widget only resize west and east. ([#494](https://github.com/gridstack/gridstack.js/issues/494)).
-- enable sidebar items to be duplicated properly. Pass `helper: 'clone'` in `draggable` options. ([#661](https://github.com/gridstack/gridstack.js/issues/661), ([#396](https://github.com/gridstack/gridstack.js/issues/396), ([#499](https://github.com/gridstack/gridstack.js/issues/499)).
+- enable sidebar items to be duplicated properly. Pass `helper: 'clone'` in `draggable` options. ([#661](https://github.com/gridstack/gridstack.js/issues/661), [#396](https://github.com/gridstack/gridstack.js/issues/396), [#499](https://github.com/gridstack/gridstack.js/issues/499)).
 - fix `staticGrid` grid option ([#743](https://github.com/gridstack/gridstack.js/issues/743))
 - preserve inline styles when moving/cloning items (thanks [@silverwind](https://github.com/silverwind))
 - fix bug causing heights not to get set ([#744](https://github.com/gridstack/gridstack.js/issues/744))
-- allow grid to have min-height, fixes ([#628](https://github.com/gridstack/gridstack.js/issues/628)) (thanks [@adumesny](https://github.com/adumesny))
+- allow grid to have min-height, fixes ([#628](https://github.com/gridstack/gridstack.js/issues/628)) thanks [@adumesny](https://github.com/adumesny)
 - widget x and y are now ints (thanks [@DonnchaC](https://github.com/donnchac))
 - allow all droppable options (thanks [@vigor-vlad](https://github.com/vigor-vlad))
 - properly track mouse position in `getCellFromPixel` (thanks [@aletorrado](https://github.com/aletorrado))
@@ -74,7 +74,7 @@ Change log
 - prevent extra checks for removing widget when dragging off grid.
 - trigger `added` when a widget is added via dropping from one grid to another.
 - trigger `removed` when a widget is removed via dropping from one grid to another.
-- trigger `removed` when a widget is removed via dropping on a removable zone ([#607](https://github.com/gridstack/gridstack.js/issues/607) and [#550])(https://github.com/gridstack/gridstack.js/issues/550)).
+- trigger `removed` when a widget is removed via dropping on a removable zone ([#607](https://github.com/gridstack/gridstack.js/issues/607) and [#550](https://github.com/gridstack/gridstack.js/issues/550)).
 - trigger custom event for `resizestop` called `gsresizestop` ([#577](https://github.com/gridstack/gridstack.js/issues/577) and [#398](https://github.com/gridstack/gridstack.js/issues/398)).
 - prevent dragging/resizing in `oneColumnMode` ([#593](https://github.com/gridstack/gridstack.js/issues/593)).
 - add `oneColumnModeClass` option to grid.
@@ -99,7 +99,7 @@ Change log
 - `cellHeight` and `verticalMargin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs).
 - add `maxWidth`/`maxHeight` methods.
 - add `enableMove`/`enableResize` methods.
-- fix window resize issue #331.
+- fix window resize issue [#331](https://github.com/gridstack/gridstack.js/issues/331)).
 - add options `disableDrag` and `disableResize`.
 - fix `batchUpdate`/`commit` (Thank to @radiolips)
 - remove dependency of FontAwesome
@@ -147,16 +147,16 @@ Change log
 
 - fix grid initialization
 - add `cell_height`/`cell_width` API methods
-- fix boolean attributes (issue #31)
+- fix boolean attributes ([#31](https://github.com/gridstack/gridstack.js/issues/31))
 
 ## v0.2.1 (2014-12-09)
 
-- add widgets locking (issue #19)
+- add widgets locking ([#19](https://github.com/gridstack/gridstack.js/issues/19))
 - add `will_it_fit` API method
-- fix auto-positioning (issue #20)
+- fix auto-positioning ([#20](https://github.com/gridstack/gridstack.js/issues/20))
 - add animation (thanks to @ishields)
-- fix `y` coordinate calculation when dragging (issue #18)
-- fix `remove_widget` (issue #16)
+- fix `y` coordinate calculation when dragging ([#18](https://github.com/gridstack/gridstack.js/issues/18))
+- fix `remove_widget` ([#16](https://github.com/gridstack/gridstack.js/issues/16))
 - minor fixes
 
 

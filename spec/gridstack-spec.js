@@ -3,7 +3,7 @@ describe('gridstack', function() {
 
   var e;
   var w;
-  // grid has 4x2 and 4x4 top-left aligned - used all most test cases
+  // grid has 4x2 and 4x4 top-left aligned - used on most test cases
   var gridstackHTML =
     '<div style="width: 992px; height: 800px" id="gs-cont">' +
     '  <div class="grid-stack">' +
@@ -268,6 +268,62 @@ describe('gridstack', function() {
       var grid = $('.grid-stack').data('gridstack');
       grid.cellHeight( 120 );
       expect(grid.cellHeight()).toBe(120);
+    });
+  });
+
+  describe('grid.column', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should have no changes', function() {
+      var options = {
+        column: 12
+      };
+      $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').data('gridstack');
+      expect(grid.opts.column).toBe(12);
+      grid.setColumn(12);
+      expect(grid.opts.column).toBe(12);
+      grid.setGridWidth(12); // old API
+      expect(grid.opts.column).toBe(12);
+    });
+    it('should change column number, no relayout', function() {
+      var options = {
+        column: 12
+      };
+      $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').data('gridstack');
+      var items = $('.grid-stack-item');
+      
+      grid.setColumn(10, false);
+      expect(grid.opts.column).toBe(10);
+      for (var j = 0; j < items.length; j++) {
+        expect(parseInt($(items[j]).attr('data-gs-y'), 10)).toBe(0);
+      }
+      
+      grid.setColumn(9, true);
+      expect(grid.opts.column).toBe(9);
+      for (var j = 0; j < items.length; j++) {
+        expect(parseInt($(items[j]).attr('data-gs-y'), 10)).toBe(0);
+      }
+    });
+    it('should change column number and relayout items', function() {
+      var options = {
+        column: 12
+      };
+      $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').data('gridstack');
+      var items = $('.grid-stack-item');
+      
+      grid.setColumn(1);
+      expect(grid.opts.column).toBe(1);
+      for (var j = 0; j < items.length; j++) {
+        expect(parseInt($(items[j]).attr('data-gs-x'), 10)).toBe(0);
+        // TODO: check Y position but I don't currently agree with order. [Alain]
+      }
     });
   });
 
