@@ -104,8 +104,8 @@ You can also download source and build and use `dist` directory as well for late
   <div class="grid-stack-item">
     <div class="grid-stack-item-content">Item 1</div>
   </div>
-  <div class="grid-stack-item" data-gs-height="4">
-    <div class="grid-stack-item-content">Item 2</div>
+  <div class="grid-stack-item" data-gs-width="2">
+    <div class="grid-stack-item-content">Item 2 wider</div>
   </div>
 </div>
 
