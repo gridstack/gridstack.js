@@ -29,7 +29,6 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
   - [Change grid columns](#change-grid-columns)
   - [Custom columns CSS](#custom-columns-css)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
-  - [IE8 support](#ie8-support)
 - [Changes](#changes)
 - [The Team](#the-team)
 
@@ -48,7 +47,9 @@ Usage
 ## Requirements
 
 * [jQuery](http://jquery.com) (>= 3.1.0)
-* `Array.prototype.find` for IE and older browsers ([core.js](https://github.com/zloirock/core-js#ecmascript-6-array) allows to include specific polyfills)
+* `Array.prototype.find`, and `Number.isNaN()` for IE and older browsers. We supply a separate `gridstack.poly.js` for that 
+(part of `gridstack.all.js`) or you can look at other pollyfills 
+([core.js](https://github.com/zloirock/core-js#ecmascript-6-array) and [mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)).
 
 #### Using gridstack.js with jQuery UI
 
@@ -57,26 +58,27 @@ Usage
 
 ## Install
 
-* In the browser:
+* Using CDN (minimized):
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.min.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.all.js"></script>
+```
+
+* Using CDN (debug):
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.jQueryUI.js"></script>
+```
+
+* or local:
 
 ```html
 <link rel="stylesheet" href="gridstack.css" />
 <script src="gridstack.js"></script>
 <script src="gridstack.jQueryUI.js"></script>
-```
-
-* Using CDN:
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.min.css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.jQueryUI.min.js"></script>
-```
-
-* Using bower:
-
-```bash
-$ bower install gridstack
 ```
 
 * Using npm:
@@ -87,21 +89,23 @@ $ bower install gridstack
 $ npm install gridstack
 ```
 
-You can download source and build and use `dist` directory as well for latest non published code.
+* Using bower:
+
+```bash
+$ bower install gridstack
+```
+
+You can also download source and build and use `dist` directory as well for latest non published code.
 
 ## Basic usage
 
 ```html
 <div class="grid-stack">
-  <div class="grid-stack-item"
-    data-gs-x="0" data-gs-y="0"
-    data-gs-width="4" data-gs-height="2">
-      <div class="grid-stack-item-content"></div>
+  <div class="grid-stack-item">
+    <div class="grid-stack-item-content">Item 1</div>
   </div>
-  <div class="grid-stack-item"
-    data-gs-x="4" data-gs-y="0"
-    data-gs-width="4" data-gs-height="4">
-      <div class="grid-stack-item-content"></div>
+  <div class="grid-stack-item" data-gs-height="4">
+    <div class="grid-stack-item-content">Item 2</div>
   </div>
 </div>
 
@@ -257,59 +261,6 @@ $('.grid-stack').gridstack({
 ```
 
 Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their behaviour may be unexpected.
-
-## IE8 support
-
-Support of IE8 is quite limited and is not a goal at this time. As far as IE8 doesn't support DOM Level 2 I cannot manipulate with
-CSS stylesheet dynamically. As a workaround you can do the following:
-
-- Create `gridstack-ie8.css` for your configuration (sample for grid with cell height of 60px can be found [here](https://gist.github.com/gridstack/6edfea5857f4cd73e6f1)).
-- Include this CSS:
-
-```html
-<!--[if lt IE 9]>
-<link rel="stylesheet" href="gridstack-ie8.css"/>
-<![endif]-->
-```
-
-- You can use this python script to generate such kind of CSS:
-
-```python
-#!/usr/bin/env python
-
-height = 60
-margin = 20
-N = 100
-
-print '.grid-stack > .grid-stack-item { min-height: %(height)spx }' % {'height': height}
-
-for i in range(N):
-	h = height * (i + 1) + margin * i
-	print '.grid-stack > .grid-stack-item[data-gs-height="%(index)s"] { height: %(height)spx }' % {'index': i + 1, 'height': h}
-
-for i in range(N):
-	h = height * (i + 1) + margin * i
-	print '.grid-stack > .grid-stack-item[data-gs-min-height="%(index)s"] { min-height: %(height)spx }' % {'index': i + 1, 'height': h}
-
-for i in range(N):
-	h = height * (i + 1) + margin * i
-	print '.grid-stack > .grid-stack-item[data-gs-max-height="%(index)s"] { max-height: %(height)spx }' % {'index': i + 1, 'height': h}
-
-for i in range(N):
-	h = height * i + margin * i
-	print '.grid-stack > .grid-stack-item[data-gs-y="%(index)s"] { top: %(height)spx }' % {'index': i , 'height': h}
-```
-
-There are at least two more issues with gridstack in IE8 with jQueryUI resizable (it seems it doesn't work) and
-droppable. If you have any suggestions about support of IE8 you are welcome here: https://github.com/gridstack/gridstack.js/issues/76
-
-<!-- fixed in 0.5.0 with #643 ?
-## Use with require.js
-
-If you're using require.js and a single file jQueryUI please check out this
-[Stackoverflow question](http://stackoverflow.com/questions/35582945/redundant-dependencies-with-requirejs) to get it
-working properly.
--->
 
 Changes
 =====

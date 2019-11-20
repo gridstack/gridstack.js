@@ -25,7 +25,7 @@ Change log
 
 ## v0.5.3-dev (upcoming changes)
 
-TBD
+- add `gridstack.poly.js` for IE and older browsers, removed core-js from samples, and all IE8 mentions
 
 ## v0.5.3 (2019-11-20)
 
