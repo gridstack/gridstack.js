@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.5.2-dev (upcoming changes)](#v052-dev-upcoming-changes)
+- [v0.5.3 (2019-11-20)](#v053-2019-11-20)
 - [v0.5.2 (2019-11-13)](#v052-2019-11-13)
 - [v0.5.1 (2019-11-07)](#v051-2019-11-07)
 - [v0.5.0 (2019-11-06)](#v050-2019-11-06)
@@ -22,7 +22,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.5.2-dev (upcoming changes)
+## v0.5.3 (2019-11-20)
 
 - grid options `width` is now `column`, `height` now `maxRow`, and `setGridWidth()` now `setColumn()` to match what they are. Old names are still supported (console warnings). Various fixes for custom # of column and re-wrote entire doc section ([#1053](https://github.com/gridstack/gridstack.js/issues/1053)).
 - fix widgets not animating when animate: true is used. on every move, styles were recreated-fix should slightly improve gridstack.js speed ([#937](https://github.com/gridstack/gridstack.js/issues/937)).

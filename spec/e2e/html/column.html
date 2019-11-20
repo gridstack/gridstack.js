@@ -11,13 +11,14 @@
   <title>Column grid demo</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../dist/gridstack.css"/>
+  <link rel="stylesheet" href="../../../dist/gridstack.css"/>
+  <link rel="stylesheet" href="../../../dist/gridstack-extra.css"/>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <script src="../src/gridstack.js"></script>
-  <script src="../src/gridstack.jQueryUI.js"></script>
+  <script src="../../../src/gridstack.js"></script>
+  <script src="../../../src/gridstack.jQueryUI.js"></script>
 
   <style type="text/css">
     .grid-stack {
@@ -34,9 +35,10 @@
 <body>
   <div class="container-fluid">
     <h1>setColumn() grid demo</h1>
-    <div>
-      <a class="btn btn-primary" id="1column" href="#">1 Column</a>
-    </div>
+    <a class="btn btn-primary" id="1column" href="#">1 Column</a>
+    <a class="btn btn-primary" id="2column" href="#">2 Column</a>
+    <a class="btn btn-primary" id="6column" href="#">6 Column</a>
+    <a class="btn btn-primary" id="12column" href="#">12 Column</a>
     <br><br>
     <div class="grid-stack"></div>
   </div>
@@ -49,20 +51,18 @@
       this.grid = $('.grid-stack').data('gridstack');
 
       var items = [
-        {x: 0, y: 0, width: 4, height: 2},
-        {x: 4, y: 0, width: 4, height: 1},
+        {x: 0, y: 0, width: 2, height: 2},
+        {x: 2, y: 0, width: 2, height: 1},
+        {x: 5, y: 0, width: 1, height: 1},
       ];
       items.forEach(function (node, i) {
         self.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'), node);
       });
 
-      $('#1column').click(function() {
-        oneColumn();
-      });
-
-      function oneColumn() {
-        self.grid.setColumn(1);
-      }
+      $('#1column').click(function() { self.grid.setColumn(1); });
+      $('#2column').click(function() { self.grid.setColumn(2); });
+      $('#6column').click(function() { self.grid.setColumn(6); });
+      $('#12column').click(function() { self.grid.setColumn(12); });
     });
   </script>
 </body>
