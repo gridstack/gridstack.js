@@ -68,9 +68,9 @@ Usage
 * Using CDN:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.2/dist/gridstack.min.css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.2/dist/gridstack.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.2/dist/gridstack.jQueryUI.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.min.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack.jQueryUI.min.js"></script>
 ```
 
 * Using bower:
@@ -184,7 +184,7 @@ $('.grid-stack').gridstack( {column: N} );
 
 2) and change your HTML accordingly if **N < 12** (else custom CSS section next). Without this, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.2/dist/gridstack-extra.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.3/dist/gridstack-extra.css"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
