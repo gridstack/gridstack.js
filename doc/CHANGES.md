@@ -25,7 +25,8 @@ Change log
 
 ## v0.5.3-dev (upcoming changes)
 
-- add `gridstack.poly.js` for IE and older browsers, removed core-js from samples, and all IE8 mentions
+- add `gridstack.poly.js` for IE and older browsers, removed `core-js` lib from samples (<1k vs 85k), and all IE8 mentions ([#1061](https://github.com/gridstack/gridstack.js/pull/1061)).
+- add `jquery-ui.js` (and min.js) as minimal subset we need (55k vs 248k), which is now part of `gridstack.all.js` - so just 1 include needed now.
 
 ## v0.5.3 (2019-11-20)
 
