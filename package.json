@@ -18,8 +18,7 @@
     "gridstack",
     "grid",
     "gridster",
-    "layout",
-    "jquery"
+    "layout"
   ],
   "author": "Pavel Reznikov <pashka.reznikov@gmail.com>",
   "contributors": [
@@ -32,10 +31,9 @@
   },
   "homepage": "http://gridstack.github.io/gridstack.js/",
   "dependencies": {
-    "jquery": "^3.1.0"
+    "jquery": "^1.8 || 2 || 3"
   },
   "devDependencies": {
-    "components-jqueryui": "1.12.1",
     "connect": "^3.6.6",
     "core-js": "^3.0.0",
     "coveralls": "^3.0.3",
