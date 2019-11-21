@@ -19,7 +19,6 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com
 - [Demo and examples](#demo-and-examples)
 - [Usage](#usage)
   - [Requirements](#requirements)
-      - [Using gridstack.js with jQuery UI](#using-gridstackjs-with-jquery-ui)
   - [Install](#install)
   - [Basic usage](#basic-usage)
   - [Migrating to v0.3.0](#migrating-to-v030)
@@ -46,13 +45,13 @@ Usage
 
 ## Requirements
 
-* [jQuery](http://jquery.com) (>= 3.1.0)
+* [jQuery](http://jquery.com) (>= 1.8)
 * `Array.prototype.find`, and `Number.isNaN()` for IE and older browsers.
   * Note: as of v0.5.4 We supply a separate `gridstack.poly.js` for that 
 (part of `gridstack.all.js`) or you can look at other pollyfills 
 ([core.js](https://github.com/zloirock/core-js#ecmascript-6-array) and [mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)).
 
-#### Using gridstack.js with jQuery UI
+Using gridstack.js with jQuery UI
 
 * [jQuery UI](http://jqueryui.com) (>= 1.12.0). Minimum required components: Draggable, Droppable, Resizable (Widget, Mouse, core).
   * Note: as of v0.5.4 we include this subset as `jquery-ui.js` (and min.js) which is part of `gridstack.all.js`. If you wish to bring your own lib, include the individual gridstack parts instead of all.js
@@ -188,14 +187,14 @@ GridStack makes it very easy if you need [1-12] columns out of the box (default 
 $('.grid-stack').gridstack( {column: N} );
 ```
 
-2) and change your HTML accordingly if **N < 12** (else custom CSS section next). Without this, things will not render/work correctly.
+2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack-extra.css"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
 
-Note `grid-stack-N` class was added.
+Note `grid-stack-N` class was added, and extra CSS.
 
 `gridstack-extra.css` (and `gridstack-extra.min.css`) defines CSS for grids with custom [1-12] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
 
