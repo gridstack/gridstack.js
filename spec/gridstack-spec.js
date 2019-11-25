@@ -1376,4 +1376,41 @@ describe('gridstack', function() {
       }
     });
   });
+
+  describe('custom grid placement #1054', function() {
+    var HTML = 
+    '<div style="width: 992px; height: 800px" id="gs-cont">' +
+    '  <div class="grid-stack">' +
+    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="12" data-gs-height="9">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
+    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="9" data-gs-width="12" data-gs-height="5">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
+    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="14" data-gs-width="7" data-gs-height="6">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
+    '    <div class="grid-stack-item" data-gs-x="7" data-gs-y="14" data-gs-width="5" data-gs-height="6">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
+    '  </div>' +
+    '</div>';
+    var pos = [{x:0, y:0, w:12, h:9}, {x:0, y:9, w:12, h:5}, {x:0, y:14, w:7, h:6}, {x:7, y:14, w:5, h:6}];
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', HTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should have correct position', function() {
+      var items = $('.grid-stack-item');
+      for (var i = 0; i < items.length; i++) {
+        var item = $(items[i]);
+        expect(parseInt(item.attr('data-gs-x'))).toBe(pos[i].x);
+        expect(parseInt(item.attr('data-gs-y'))).toBe(pos[i].y);
+        expect(parseInt(item.attr('data-gs-width'))).toBe(pos[i].w);
+        expect(parseInt(item.attr('data-gs-height'))).toBe(pos[i].h);
+      }
+    });
+  });
 });
