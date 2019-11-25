@@ -801,11 +801,12 @@
       this.container.children('.' + this.opts.itemClass + ':not(.' + this.opts.placeholderClass + ')')
         .each(function(index, el) {
           el = $(el);
+          var x = parseInt(el.attr('data-gs-x'));
+          var y = parseInt(el.attr('data-gs-y'));
           elements.push({
             el: el,
-            // if x,y are missing (autoPosition) add them to end of list - keep their respective DOM order
-            i: (parseInt(el.attr('data-gs-x')) || 100) +
-              (parseInt(el.attr('data-gs-y')) || 100) * _this.opts.column
+            // if x,y are missing (autoPosition) add them to end of list - but keep their respective DOM order
+            i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * _this.opts.column
           });
         });
       Utils.sortBy(elements, function(x) { return x.i; }).forEach(function(item) {
