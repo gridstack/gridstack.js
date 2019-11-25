@@ -28,7 +28,8 @@ Change log
 - add `gridstack.poly.js` for IE and older browsers, removed `core-js` lib from samples (<1k vs 85k), and all IE8 mentions ([#1061](https://github.com/gridstack/gridstack.js/pull/1061)).
 - add `jquery-ui.js` (and min.js) as minimal subset we need (55k vs 248k), which is now part of `gridstack.all.js`. Include individual parts if you need your own lib instead of all.js
 ([#1064](https://github.com/gridstack/gridstack.js/pull/1064)).
-- changed jquery dep to lowest we can use (>=1.8) ([#629](https://github.com/gridstack/gridstack.js/issues/629)).
+- changed jquery dependency to lowest we can use (>=1.8) ([#629](https://github.com/gridstack/gridstack.js/issues/629)).
+- fix for griditems with x=0 placement wrong order (introduced for #1017) ([#1054](https://github.com/gridstack/gridstack.js/issues/1054)).
 
 ## v0.5.3 (2019-11-20)
 
