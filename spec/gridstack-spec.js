@@ -247,27 +247,27 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should have no changes', function() {
+    it('should start at 80 then become 120', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
         column: 12
       };
       $('.grid-stack').gridstack(options);
-      var grid = $('.grid-stack').data('gridstack');
+      var container = $('.grid-stack');
+      var grid = container.data('gridstack');
+      var rows = container.attr('data-gs-current-height');
+
+      expect(grid.cellHeight()).toBe(80);
+      expect(parseInt(container.css('height'))).toBe(rows * 80 + (rows-1) * 10);
+
       grid.cellHeight( grid.cellHeight() );
       expect(grid.cellHeight()).toBe(80);
-    });
-    it('should change cellHeight to 120', function() {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10,
-        column: 10
-      };
-      $('.grid-stack').gridstack(options);
-      var grid = $('.grid-stack').data('gridstack');
+      expect(parseInt(container.css('height'))).toBe(rows * 80 + (rows-1) * 10);
+
       grid.cellHeight( 120 );
       expect(grid.cellHeight()).toBe(120);
+      expect(parseInt(container.css('height'))).toBe(rows * 120 + (rows-1) * 10);
     });
   });
 
