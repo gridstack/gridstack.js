@@ -71,6 +71,7 @@ Using gridstack.js with jQuery UI
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack.css" />
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/jquery-ui.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack.jQueryUI.js"></script>
 ```
 
@@ -79,6 +80,7 @@ Using gridstack.js with jQuery UI
 ```html
 <link rel="stylesheet" href="gridstack.css" />
 <script src="gridstack.js"></script>
+<script src="jquery-ui.js"></script>
 <script src="gridstack.jQueryUI.js"></script>
 ```
 
