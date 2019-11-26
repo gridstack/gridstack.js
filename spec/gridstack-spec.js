@@ -248,9 +248,11 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should start at 80 then become 120', function() {
+      var cellHeight = 80;
+      var verticalMargin = 10;
       var options = {
-        cellHeight: 80,
-        verticalMargin: 10,
+        cellHeight: cellHeight,
+        verticalMargin: verticalMargin,
         column: 12
       };
       $('.grid-stack').gridstack(options);
@@ -258,16 +260,22 @@ describe('gridstack', function() {
       var grid = container.data('gridstack');
       var rows = container.attr('data-gs-current-height');
 
-      expect(grid.cellHeight()).toBe(80);
-      expect(parseInt(container.css('height'))).toBe(rows * 80 + (rows-1) * 10);
+      expect(grid.cellHeight()).toBe(cellHeight);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
 
-      grid.cellHeight( grid.cellHeight() );
-      expect(grid.cellHeight()).toBe(80);
-      expect(parseInt(container.css('height'))).toBe(rows * 80 + (rows-1) * 10);
+      grid.cellHeight( grid.cellHeight() ); // should be no-op
+      expect(grid.cellHeight()).toBe(cellHeight);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
 
-      grid.cellHeight( 120 );
-      expect(grid.cellHeight()).toBe(120);
-      expect(parseInt(container.css('height'))).toBe(rows * 120 + (rows-1) * 10);
+      cellHeight = 120; // should change and CSS actual height
+      grid.cellHeight( cellHeight );
+      expect(grid.cellHeight()).toBe(cellHeight);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
+
+      cellHeight = 20; // should change and CSS actual height
+      grid.cellHeight( cellHeight );
+      expect(grid.cellHeight()).toBe(cellHeight);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
     });
   });
 
