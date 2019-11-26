@@ -7,7 +7,7 @@
   <title>Two grids demo</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../dist/gridstack.css"/>
+  <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -16,18 +16,8 @@
   <script src="../src/gridstack.jQueryUI.js"></script>
 
   <style type="text/css">
-    #grid1 {
-      background: lightgoldenrodyellow;
-    }
-
     #grid2 {
       background: lightcyan;
-    }
-
-    .grid-stack-item-content {
-      color: #2c3e50;
-      text-align: center;
-      background-color: #18bc9c;
     }
 
     #grid2 .grid-stack-item-content {
@@ -131,7 +121,7 @@
         revert: 'invalid',
         handle: '.grid-stack-item-content',
         scroll: false,
-        appendTo: 'body'
+        appendTo: 'body',
       });
     });
   </script>

@@ -31,6 +31,7 @@ Change log
 - add `jquery-ui.js` (and min.js) as minimal subset we need (55k vs 248k), which is now part of `gridstack.all.js`. Include individual parts if you need your own lib instead of all.js
 ([#1064](https://github.com/gridstack/gridstack.js/pull/1064)).
 - changed jquery dependency to lowest we can use (>=1.8) ([#629](https://github.com/gridstack/gridstack.js/issues/629)).
+- add advance demo from web site
 
 ## v0.5.3 (2019-11-20)
 
