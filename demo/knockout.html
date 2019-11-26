@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="demo.css"/>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-debug.js"></script>
   <script src="../src/jquery-ui.min.js"></script>
   <script src="../src/gridstack.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
@@ -54,8 +54,8 @@
       template:
         [
           '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-          '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
-          '     <div class="grid-stack-item-content"><button data-bind="click: $root.deleteWidget">Delete me</button></div>',
+          '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position, \'data-gs-id\': $data.id}">',
+            '     <div class="grid-stack-item-content"><button data-bind="click: $root.deleteWidget">Delete me</button></div>',
           '   </div>',
           '</div> '
         ].join('')
@@ -85,10 +85,10 @@
       };
 
       var widgets = [
-        {x: 0, y: 0, width: 2, height: 2},
-        {x: 2, y: 0, width: 4, height: 2},
-        {x: 6, y: 0, width: 2, height: 4},
-        {x: 1, y: 2, width: 4, height: 2}
+        {x: 0, y: 0, width: 2, height: 2, id: '0'},
+        {x: 2, y: 0, width: 4, height: 2, id: '1'},
+        {x: 6, y: 0, width: 2, height: 4, id: '2'},
+        {x: 1, y: 2, width: 4, height: 2, id: '3'}
       ];
 
       var controller = new Controller(widgets);
