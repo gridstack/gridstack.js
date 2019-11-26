@@ -1091,12 +1091,12 @@
       maxHeight = this._styles._max;
     }
 
-    if (this._styles._max !== 0 && maxHeight <= this._styles._max) { // Keep this._styles._max increasing
-      return ;
-    }
     this._initStyles();
     this._updateContainerHeight();
     if (!this.opts.cellHeight) { // The rest will be handled by CSS
+      return ;
+    }
+    if (this._styles._max !== 0 && maxHeight <= this._styles._max) { // Keep this._styles._max increasing
       return ;
     }
 

@@ -247,27 +247,35 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should have no changes', function() {
+    it('should start at 80 then become 120', function() {
+      var cellHeight = 80;
+      var verticalMargin = 10;
       var options = {
-        cellHeight: 80,
-        verticalMargin: 10,
+        cellHeight: cellHeight,
+        verticalMargin: verticalMargin,
         column: 12
       };
       $('.grid-stack').gridstack(options);
-      var grid = $('.grid-stack').data('gridstack');
-      grid.cellHeight( grid.cellHeight() );
-      expect(grid.cellHeight()).toBe(80);
-    });
-    it('should change cellHeight to 120', function() {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10,
-        column: 10
-      };
-      $('.grid-stack').gridstack(options);
-      var grid = $('.grid-stack').data('gridstack');
-      grid.cellHeight( 120 );
-      expect(grid.cellHeight()).toBe(120);
+      var container = $('.grid-stack');
+      var grid = container.data('gridstack');
+      var rows = container.attr('data-gs-current-height');
+
+      expect(grid.cellHeight()).toBe(cellHeight);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
+
+      grid.cellHeight( grid.cellHeight() ); // should be no-op
+      expect(grid.cellHeight()).toBe(cellHeight);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
+
+      cellHeight = 120; // should change and CSS actual height
+      grid.cellHeight( cellHeight );
+      expect(grid.cellHeight()).toBe(cellHeight);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
+
+      cellHeight = 20; // should change and CSS actual height
+      grid.cellHeight( cellHeight );
+      expect(grid.cellHeight()).toBe(cellHeight);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
     });
   });
 
