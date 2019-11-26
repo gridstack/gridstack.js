@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.5.3-dev (upcoming changes)](#v053-dev-upcoming-changes)
+- [v0.5.4 (2019-11-26)](#v054-2019-11-26)
 - [v0.5.3 (2019-11-20)](#v053-2019-11-20)
 - [v0.5.2 (2019-11-13)](#v052-2019-11-13)
 - [v0.5.1 (2019-11-07)](#v051-2019-11-07)
@@ -23,10 +23,10 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.5.3-dev (upcoming changes)
+## v0.5.4 (2019-11-26)
 
-- fix for griditems with x=0 placement wrong order (introduced for #1017) ([#1054](https://github.com/gridstack/gridstack.js/issues/1054)).
-- fix `cellHeight(val)` not working due to style change caused by #937 fix ([#1068](https://github.com/gridstack/gridstack.js/issues/1068)).
+- fix for griditems with x=0 placement wrong order (introduced by [#1017](https://github.com/gridstack/gridstack.js/issues/10510174)) ([#1054](https://github.com/gridstack/gridstack.js/issues/1054)).
+- fix `cellHeight(val)` not working due to style change (introduced by [#937](https://github.com/gridstack/gridstack.js/issues/937)) ([#1068](https://github.com/gridstack/gridstack.js/issues/1068)).
 - add `gridstack.poly.js` for IE and older browsers, removed `core-js` lib from samples (<1k vs 85k), and all IE8 mentions ([#1061](https://github.com/gridstack/gridstack.js/pull/1061)).
 - add `jquery-ui.js` (and min.js) as minimal subset we need (55k vs 248k), which is now part of `gridstack.all.js`. Include individual parts if you need your own lib instead of all.js
 ([#1064](https://github.com/gridstack/gridstack.js/pull/1064)).
