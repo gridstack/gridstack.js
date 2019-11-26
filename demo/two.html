@@ -1,39 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--[if lt IE 9]>
-  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Two grids demo</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../dist/gridstack.css"/>
+  <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.6.9/shim.min.js"></script>
+  <script src="../src/jquery-ui.min.js"></script>
   <script src="../src/gridstack.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
 
   <style type="text/css">
-    #grid1 {
-      background: lightgoldenrodyellow;
-    }
-
     #grid2 {
       background: lightcyan;
-    }
-
-    .grid-stack-item-content {
-      color: #2c3e50;
-      text-align: center;
-      background-color: #18bc9c;
     }
 
     #grid2 .grid-stack-item-content {
@@ -106,7 +90,7 @@
   <script type="text/javascript">
     $(function () {
       var options = {
-        width: 6,
+        column: 6,
         float: false,
         removable: '.trash',
         removeTimeout: 100,
@@ -121,7 +105,7 @@
         {x: 0, y: 0, width: 2, height: 2},
         {x: 3, y: 1, width: 1, height: 2},
         {x: 4, y: 1, width: 1, height: 1},
-        {x: 2, y: 3, width: 3, height: 1},
+        {x: 2, y: 3, width: 3, height: 1, minWidth: 2, id: 'special', text: 'has minWidth=2'},
         {x: 2, y: 5, width: 1, height: 1}
       ];
 
@@ -129,7 +113,8 @@
         var grid = $(this).data('gridstack');
 
         items.forEach(function (node) {
-          grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), node);
+          grid.addWidget($('<div><div class="grid-stack-item-content">' 
+            + (node.text? node.text : '') + '</div></div>'), node);
         });
       });
 
@@ -137,7 +122,7 @@
         revert: 'invalid',
         handle: '.grid-stack-item-content',
         scroll: false,
-        appendTo: 'body'
+        appendTo: 'body',
       });
     });
   </script>

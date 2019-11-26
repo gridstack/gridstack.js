@@ -1,5 +1,5 @@
 /**
- * gridstack.js 0.5.2-dev
+ * gridstack.js 0.5.4
  * https://gridstackjs.com/
  * (c) 2014-2019 Dylan Weiss, Alain Dumesny, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
