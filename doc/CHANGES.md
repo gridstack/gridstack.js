@@ -26,7 +26,8 @@ Change log
 
 ## v0.5.4-dev (upcoming changes)
 
-- min files include rev number/license
+- min files include rev number/license [#1075](https://github.com/gridstack/gridstack.js/pull/1075)
+- npm package fix to exclude more temporary content
 
 ## v0.5.4 (2019-11-26)
 
@@ -36,7 +37,7 @@ Change log
 - add `jquery-ui.js` (and min.js) as minimal subset we need (55k vs 248k), which is now part of `gridstack.all.js`. Include individual parts if you need your own lib instead of all.js
 ([#1064](https://github.com/gridstack/gridstack.js/pull/1064)).
 - changed jquery dependency to lowest we can use (>=1.8) ([#629](https://github.com/gridstack/gridstack.js/issues/629)).
-- add advance demo from web site ([#1073](https://github.com/gridstack/gridstack.js/issues/1073)).
+- add advance demo from web site ([#1073](https://github.com/gridstack/gridstack.js/pull/1073)).
 
 ## v0.5.3 (2019-11-20)
 
