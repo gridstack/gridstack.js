@@ -1,7 +1,7 @@
 /*! jQuery UI - v1.12.1 - 2019-11-20
 * http://jqueryui.com
 * Includes: widget.js, data.js, disable-selection.js, scroll-parent.js, widgets/draggable.js, widgets/droppable.js, widgets/resizable.js, widgets/mouse.js
-* Copyright jQuery Foundation and other contributors; Licensed MIT */
+* Copyright jQuery Foundation and other contributors; Licensed MIT @preserve*/
 
 (function( factory ) {
   if ( typeof define === "function" && define.amd ) {

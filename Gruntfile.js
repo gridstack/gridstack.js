@@ -12,9 +12,6 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     sass: {
-      options: {
-        outputStyle: 'expanded'
-      },
       dist: {
         files: {
           'dist/gridstack.css': 'src/gridstack.scss',
@@ -25,6 +22,9 @@ module.exports = function(grunt) {
 
     cssmin: {
       dist: {
+        options: {
+          keepSpecialComments: '*'
+        },
         files: {
           'dist/gridstack.min.css': ['dist/gridstack.css'],
           'dist/gridstack-extra.min.css': ['dist/gridstack-extra.css']
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
           'dist/gridstack.js': ['src/gridstack.js'],
           'dist/gridstack.d.ts': ['src/gridstack.d.ts'],
           'dist/gridstack.jQueryUI.js': ['src/gridstack.jQueryUI.js'],
-          'dist/gridstack.poly.js': ['src/gridstack.poly.js'],
+          'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/jquery-ui.js': ['src/jquery-ui.js'],
           'dist/jquery-ui.min.js': ['src/jquery-ui.min.js'],
         }
@@ -49,14 +49,16 @@ module.exports = function(grunt) {
       options: {
         sourceMap: true,
         sourceMapName: 'dist/gridstack.min.map',
-        preserveComments: 'some'
+        output: {
+          comments: 'some'
+        }
       },
       dist: {
         files: {
           'dist/gridstack.min.js': ['src/gridstack.js'],
           'dist/gridstack.jQueryUI.min.js': ['src/gridstack.jQueryUI.js'],
-          'dist/gridstack.poly.min.js': ['src/gridstack.poly.js'],
-          'dist/gridstack.all.js': ['src/gridstack.poly.js', 'src/gridstack.js', 'src/jquery-ui.js', 'src/gridstack.jQueryUI.js']
+          'dist/gridstack-poly.min.js': ['src/gridstack-poly.js'],
+          'dist/gridstack.all.js': ['src/gridstack-poly.js', 'src/gridstack.js', 'src/jquery-ui.js', 'src/gridstack.jQueryUI.js']
         }
       }
     },

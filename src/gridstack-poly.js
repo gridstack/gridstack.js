@@ -1,12 +1,9 @@
+/** gridstack.js 0.5.4-dev - IE and older browsers Polyfills for this library @preserve*/
 /**
- * gridstack.js 0.5.4
  * https://gridstackjs.com/
- * (c) 2019 Dylan Weiss, Alain Dumesny, Pavel Reznikov
+ * (c) 2019 Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
- * @preserve
- */
-
-// IE and older browsers Polyfills for this library
+*/
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
 Number.isNaN = Number.isNaN || function isNaN(input) {
