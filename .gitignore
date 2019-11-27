@@ -1,5 +1,6 @@
 *.log
 *.tgz
+*.zip
 .npmrc
 bower_components
 coverage

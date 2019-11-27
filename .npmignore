@@ -11,6 +11,7 @@ yarn.lock
 .jscsrc
 .npmignore
 .travis.yml
+.eslint*
 Gruntfile.js
 ISSUE_TEMPLATE.md
 PULL_REQUEST_TEMPLATE.md
@@ -22,6 +23,7 @@ protractor.conf.js
 ## From .gitignore:
 *.log
 *.tgz
+*.zip
 bower_components
 coverage/
 node_modules/
