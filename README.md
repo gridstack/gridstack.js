@@ -47,7 +47,7 @@ Usage
 
 * [jQuery](http://jquery.com) (>= 1.8)
 * `Array.prototype.find`, and `Number.isNaN()` for IE and older browsers.
-  * Note: as of v0.5.4 We supply a separate `gridstack.poly.js` for that 
+  * Note: as of v0.5.4 We supply a separate `gridstack-poly.js` for that 
 (part of `gridstack.all.js`) or you can look at other pollyfills 
 ([core.js](https://github.com/zloirock/core-js#ecmascript-6-array) and [mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)).
 
@@ -62,17 +62,17 @@ Using gridstack.js with jQuery UI
 * Using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack.min.css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.4/dist/gridstack.min.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.4/dist/gridstack.all.js"></script>
 ```
 
 * Using CDN (debug):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack.css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/jquery-ui.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack.jQueryUI.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.4/dist/gridstack.css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.4/dist/gridstack.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.4/dist/jquery-ui.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.4/dist/gridstack.jQueryUI.js"></script>
 ```
 
 * or local:
@@ -191,7 +191,7 @@ $('.grid-stack').gridstack( {column: N} );
 
 2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@latest/dist/gridstack-extra.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.4/dist/gridstack-extra.css"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
