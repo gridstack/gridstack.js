@@ -27,7 +27,8 @@ Change log
 ## v0.5.4-dev (upcoming changes)
 
 - min files include rev number/license [#1075](https://github.com/gridstack/gridstack.js/pull/1075)
-- npm package fix to exclude more temporary content
+- npm package fix to exclude more temporary content [#1078](https://github.com/gridstack/gridstack.js/pull/1078)
+- removed `jquery-ui/*` requirements from AMD packing in `gridstack.jQueryUI.js` as it was causing App compile missing errors now that we include a subset of jquery-ui
 
 ## v0.5.4 (2019-11-26)
 
