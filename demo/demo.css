@@ -1,5 +1,7 @@
+/* required file for gridstack to work */
 @import "../dist/gridstack.css";
 
+/* Optional styles for demos */
 .btn-primary {
   color: #fff;
   background-color: #007bff;

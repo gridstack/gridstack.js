@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.5.4-dev (upcoming changes)](#v054-dev-upcoming-changes)
+- [v0.5.5 (2019-11-27)](#v055-2019-11-27)
 - [v0.5.4 (2019-11-26)](#v054-2019-11-26)
 - [v0.5.3 (2019-11-20)](#v053-2019-11-20)
 - [v0.5.2 (2019-11-13)](#v052-2019-11-13)
@@ -24,10 +24,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.5.4-dev (upcoming changes)
+## v0.5.5 (2019-11-27)
 
 - min files include rev number/license [#1075](https://github.com/gridstack/gridstack.js/pull/1075)
-- npm package fix to exclude more temporary content
+- npm package fix to exclude more temporary content [#1078](https://github.com/gridstack/gridstack.js/pull/1078)
+- removed `jquery-ui/*` requirements from AMD packing in `gridstack.jQueryUI.js` as it was causing App compile missing errors now that we include a subset of jquery-ui
 
 ## v0.5.4 (2019-11-26)
 
