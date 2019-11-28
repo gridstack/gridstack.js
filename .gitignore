@@ -3,3 +3,4 @@ bower_components
 coverage
 dist
 *.tgz
+*.zip
