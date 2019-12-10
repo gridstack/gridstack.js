@@ -15,6 +15,8 @@ describe('gridstack', function() {
     '    </div>' +
     '  </div>' +
     '</div>';
+  // generic widget with no param
+  var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"> hello </div></div>';
 
   beforeEach(function() {
     w = window;
@@ -31,13 +33,12 @@ describe('gridstack', function() {
 
     it('should set default params correctly.', function() {
       e.call(w);
-      expect(w.column).toBeUndefined();
+      expect(w.column).toEqual(12);
       expect(w.float).toBe(false);
       expect(w.maxRow).toEqual(0);
       expect(w.nodes).toEqual([]);
       expect(typeof w.onchange).toBe('function');
-      expect(w._updateCounter).toEqual(0);
-      expect(w._float).toEqual(w.float);
+      expect(w._batchMode).toBeFalse();
     });
 
     it('should set params correctly.', function() {
@@ -50,23 +51,19 @@ describe('gridstack', function() {
       expect(w.maxRow).toEqual(2);
       expect(w.nodes).toEqual(arr);
       expect(w.onchange).toEqual(fkt);
-      expect(w._updateCounter).toEqual(0);
-      expect(w._float).toEqual(w.float);
+      expect(w._batchMode).toBeFalse();
     });
-
-
   });
 
   describe('batch update', function() {
 
-    it('should set float and counter when calling batchUpdate.', function() {
+    it('should set float and batchMode when calling batchUpdate.', function() {
       e.prototype.batchUpdate.call(w);
       expect(w.float).toBe(true);
-      expect(w._updateCounter).toEqual(1);
+      expect(w._batchMode).toBeTrue();
     });
 
     //test commit function
-
   });
 
   describe('sorting of nodes', function() {
@@ -914,11 +911,39 @@ describe('gridstack', function() {
     it('should keep all widget options the same (autoPosition off', function() {
       $('.grid-stack').gridstack({float: true});
       var grid = $('.grid-stack').data('gridstack');
-      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
       var widget = grid.addWidget(widgetHTML, 6, 7, 2, 3, false, 1, 4, 2, 5, 'coolWidget');
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(7);
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(2);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(3);
+      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect(parseInt($widget.attr('data-gs-min-width'), 10)).toBe(1);
+      expect(parseInt($widget.attr('data-gs-max-width'), 10)).toBe(4);
+      expect(parseInt($widget.attr('data-gs-min-height'), 10)).toBe(2);
+      expect(parseInt($widget.attr('data-gs-max-height'), 10)).toBe(5);
+      expect($widget.attr('data-gs-id')).toBe('coolWidget');
+
+      // should move widget to top with float=false
+      expect(grid.float()).toBe(true);
+      grid.float(false);
+      expect(grid.float()).toBe(false);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(4); // <--- from 7 to 4 below second original widget
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(2);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(3);
+      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect(parseInt($widget.attr('data-gs-min-width'), 10)).toBe(1);
+      expect(parseInt($widget.attr('data-gs-max-width'), 10)).toBe(4);
+      expect(parseInt($widget.attr('data-gs-min-height'), 10)).toBe(2);
+      expect(parseInt($widget.attr('data-gs-max-height'), 10)).toBe(5);
+      expect($widget.attr('data-gs-id')).toBe('coolWidget');
+
+      // should not move again (no-op)
+      grid.float(true);
+      expect(grid.float()).toBe(true);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(4);
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(2);
       expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(3);
       expect($widget.attr('data-gs-auto-position')).toBe(undefined);
@@ -940,7 +965,6 @@ describe('gridstack', function() {
     it('should change x, y coordinates for widgets.', function() {
       $('.grid-stack').gridstack({float: true});
       var grid = $('.grid-stack').data('gridstack');
-      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
       var widget = grid.addWidget(widgetHTML, 9, 7, 2, 3, true);
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).not.toBe(9);
@@ -958,7 +982,6 @@ describe('gridstack', function() {
     it('should keep all widget options the same (autoPosition off)', function() {
       $('.grid-stack').gridstack();
       var grid = $('.grid-stack').data('gridstack');
-      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
       var widget = grid.addWidget(widgetHTML, {x: 8, height: 2, id: 'optionWidget'});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
@@ -983,7 +1006,6 @@ describe('gridstack', function() {
     it('should use default', function() {
       $('.grid-stack').gridstack();
       var grid = $('.grid-stack').data('gridstack');
-      var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"></div></div>';
       var widget = grid.addWidget(widgetHTML, {x: 'foo', height: null, width: 'bar', height: ''});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
@@ -1008,6 +1030,28 @@ describe('gridstack', function() {
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
+    });
+  });
+
+  describe('method float()', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should match true/false only', function() {
+      $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').data('gridstack');
+      expect(grid.float()).toBe(true);
+      grid.float(0);
+      expect(grid.float()).toBe(false);
+      grid.float(null);
+      expect(grid.float()).toBe(false);
+      grid.float(undefined);
+      expect(grid.float()).toBe(false);
+      grid.float(false);
+      expect(grid.float()).toBe(false);
     });
   });
 

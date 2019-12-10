@@ -83,7 +83,7 @@ describe('gridstack engine', function() {
     });
 
     beforeEach(function() {
-      engine._updateCounter = 0;
+      engine._batchMode = false;
     });
 
     it('should return all dirty nodes', function() {
@@ -94,8 +94,8 @@ describe('gridstack engine', function() {
       expect(nodes[1].idx).toEqual(2);
     });
 
-    it('should\'n clean nodes if _updateCounter > 0', function() {
-      engine._updateCounter = 1;
+    it('should\'n clean nodes if _batchMode true', function() {
+      engine._batchMode = true;
       engine.cleanNodes();
 
       expect(engine.getDirtyNodes().length).toBeGreaterThan(0);
@@ -118,11 +118,21 @@ describe('gridstack engine', function() {
     it('should work on not float grids', function() {
       expect(engine.float).toEqual(false);
       engine.batchUpdate();
-      expect(engine._updateCounter).toBeGreaterThan(0);
+      expect(engine._batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
       engine.commit();
-      expect(engine._updateCounter).toEqual(0);
+      expect(engine._batchMode).toBeFalse();
       expect(engine.float).toEqual(false);
+    });
+
+    it('should work on float grids', function() {
+      engine.float = true;
+      engine.batchUpdate();
+      expect(engine._batchMode).toBeTrue();
+      expect(engine.float).toEqual(true);
+      engine.commit();
+      expect(engine._batchMode).toBeFalse();
+      expect(engine.float).toEqual(true);
     });
   });
 
@@ -136,10 +146,10 @@ describe('gridstack engine', function() {
     it('should work on float grids', function() {
       expect(engine.float).toEqual(true);
       engine.batchUpdate();
-      expect(engine._updateCounter).toBeGreaterThan(0);
+      expect(engine._batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
       engine.commit();
-      expect(engine._updateCounter).toEqual(0);
+      expect(engine._batchMode).toBeFalse();
       expect(engine.float).toEqual(true);
     });
   });
@@ -163,8 +173,8 @@ describe('gridstack engine', function() {
       ];
     });
 
-    it('should\'n be called if _updateCounter > 0', function() {
-      engine._updateCounter = 1;
+    it('should\'n be called if _batchMode true', function() {
+      engine._batchMode = true;
       engine._notify();
 
       expect(spy.callback).not.toHaveBeenCalled();
