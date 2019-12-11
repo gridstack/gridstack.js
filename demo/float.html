@@ -19,6 +19,7 @@
     <h1>Float grid demo</h1>
     <div>
       <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
+      <a class="btn btn-primary" id="float" href="#">float: true</a>
     </div>
     <br><br>
     <div class="grid-stack"></div>
@@ -34,19 +35,16 @@
 
       new function () {
         this.items = [
-          {x: 0, y: 0, width: 2, height: 2},
+          {x: 0, y: 6, width: 2, height: 2},
           {x: 3, y: 1, width: 1, height: 2},
-          {x: 4, y: 1, width: 1, height: 1},
+          {x: 4, y: 2, width: 1, height: 1},
           {x: 2, y: 3, width: 3, height: 1},
-//          {x: 1, y: 4, width: 1, height: 1},
-//          {x: 1, y: 3, width: 1, height: 1},
-//          {x: 2, y: 4, width: 1, height: 1},
           {x: 2, y: 5, width: 1, height: 1}
         ];
 
         this.grid = $('.grid-stack').data('gridstack');
 
-        this.addNewWidget = function () {
+        this.addNewWidget = function() {
           var node = this.items.pop() || {
                 x: 12 * Math.random(),
                 y: 5 * Math.random(),
@@ -57,7 +55,13 @@
           return false;
         }.bind(this);
 
+        this.toggleFloat = function() {
+          this.grid.float(! this.grid.float());
+          $('#float').html('float: ' + this.grid.float());
+        }.bind(this);;
+
         $('#add-widget').click(this.addNewWidget);
+        $('#float').click(this.toggleFloat);
       };
     });
   </script>

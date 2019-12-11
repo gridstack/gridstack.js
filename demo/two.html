@@ -76,15 +76,17 @@
 
     <div class="row">
       <div class="col-md-6">
+        <a class="btn btn-primary" id="float1" href="#">float: false</a>
         <div class="grid-stack grid-stack-6" id="grid1">
         </div>
       </div>
       <div class="col-md-6">
+        <a class="btn btn-primary" id="float2" href="#">float: true</a>
         <div class="grid-stack grid-stack-6" id="grid2">
-        </div>
-      </div>
+          </div>
     </div>
   </div>
+</div>
 
 
   <script type="text/javascript">
@@ -124,6 +126,14 @@
         scroll: false,
         appendTo: 'body',
       });
+
+      $('#float1').click(function() { toggleFloat('#float1', '#grid1'); });
+      $('#float2').click(function() { toggleFloat('#float2', '#grid2'); });
+      function toggleFloat(button, grid) {
+        var grid = $(grid).data('gridstack');
+        grid.float(! grid.float());
+        $(button).html('float: ' + grid.float());
+      }
     });
   </script>
 </body>

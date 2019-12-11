@@ -143,6 +143,19 @@ interface GridStack {
   enableResize(doEnable: boolean, includeNewWidgets: boolean): void;
 
   /**
+   * enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
+   * @param mode 
+   */
+  float(mode: boolean): void;
+  
+  /**
+   * get the current float mode
+   */
+  float(): boolean;
+
+
+
+  /**
    * Get the position of the cell under a pixel on screen.
    * @param position the position of the pixel to resolve in
    * absolute coordinates, as an object with top and left properties
@@ -263,8 +276,9 @@ interface GridStack {
 
   /**
    * (Experimental) Modify number of columns in the grid. Will attempt to update existing widgets
-   * to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css`.
-   * @param column - Integer between 1 and 12.
+   * to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [1-11],
+   * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
+   * @param column - Integer > 0 (default 12).
    * @param doNotPropagate if true existing widgets will not be updated (optional) 
    */
   setColumn(column: number, doNotPropagate ? : boolean): void;

@@ -32,6 +32,7 @@ gridstack.js API
   - [enable()](#enable)
   - [enableMove(doEnable, includeNewWidgets)](#enablemovedoenable-includenewwidgets)
   - [enableResize(doEnable, includeNewWidgets)](#enableresizedoenable-includenewwidgets)
+  - [float(val?)](#floatval)
   - [getCellFromPixel(position[, useOffset])](#getcellfrompixelposition-useoffset)
   - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
   - [locked(el, val)](#lockedel-val)
@@ -313,6 +314,12 @@ Enables/disables widget resizing. `includeNewWidgets` will force new widgets to 
 ```javascript
 grid.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
 ```
+
+### float(val?)
+
+set/get floating widgets (default: `false`)
+
+- `val` - boolean to set true/false, else get the current value
 
 ### getCellFromPixel(position[, useOffset])
 

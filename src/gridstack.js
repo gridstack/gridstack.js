@@ -292,33 +292,33 @@
 
   var idSeq = 0;
 
-  var GridStackEngine = function(column, onchange, floatMode, maxRow, items) {
-    this.column = column;
-    this.float = floatMode || false;
+  var GridStackEngine = function(column, onchange, float, maxRow, items) {
+    this.column = column || 12;
+    this.float = float || false;
     this.maxRow = maxRow || 0;
 
     this.nodes = items || [];
     this.onchange = onchange || function() {};
 
-    this._updateCounter = 0;
-    this._float = this.float;
-
     this._addedNodes = [];
     this._removedNodes = [];
+    this._batchMode = false;
   };
 
   GridStackEngine.prototype.batchUpdate = function() {
-    this._updateCounter = 1;
+    if (this._batchMode) return;
+    this._batchMode = true;
+    this._prevFloat = this.float;
     this.float = true;
   };
 
   GridStackEngine.prototype.commit = function() {
-    if (this._updateCounter !== 0) {
-      this._updateCounter = 0;
-      this.float = this._float;
-      this._packNodes();
-      this._notify();
-    }
+    if (!this._batchMode) return;
+    this._batchMode = false;
+    this.float = this._prevFloat;
+    delete this._prevFloat;
+    this._packNodes();
+    this._notify();
   };
 
   // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
@@ -462,7 +462,7 @@
     var args = Array.prototype.slice.call(arguments, 0);
     args[0] = args[0] === undefined ? [] : [args[0]];
     args[1] = args[1] === undefined ? true : args[1];
-    if (this._updateCounter) {
+    if (this._batchMode) {
       return;
     }
     var deletedNodes = args[0].concat(this.getDirtyNodes());
@@ -470,7 +470,7 @@
   };
 
   GridStackEngine.prototype.cleanNodes = function() {
-    if (this._updateCounter) {
+    if (this._batchMode) {
       return;
     }
     this.nodes.forEach(function(n) { n._dirty = false; });
@@ -603,9 +603,6 @@
   };
 
   GridStackEngine.prototype.moveNode = function(node, x, y, width, height, noPack) {
-    if (!this.isNodeChangedPosition(node, x, y, width, height)) {
-      return node;
-    }
     if (typeof x !== 'number') { x = node.x; }
     if (typeof y !== 'number') { y = node.y; }
     if (typeof width !== 'number') { width = node.width; }
@@ -1148,7 +1145,7 @@
   };
 
   GridStack.prototype._updateContainerHeight = function() {
-    if (this.grid._updateCounter) {
+    if (this.grid._batchMode) {
       return;
     }
     var height = this.grid.getGridHeight();
@@ -1820,6 +1817,20 @@
       'with setColumn(). It will be **completely** removed in v1.0.');
     this.setColumn(column, doNotPropagate);
   }
+
+  GridStack.prototype.float = function(val) {
+    // getter - returns the opts stored mode
+    if (val === undefined) {
+      return this.opts.float || false;
+    }
+    // setter - updates the mode and relayout if gravity is back on
+    if (this.opts.float === val) { return; }
+    this.opts.float = this.grid.float = val || false;
+    if (!val) {
+      this.grid._packNodes();
+      this.grid._notify();
+    }
+  };
 
   /*eslint-disable camelcase */
   GridStackEngine.prototype.batch_update = obsolete(GridStackEngine.prototype.batchUpdate);

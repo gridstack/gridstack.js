@@ -27,7 +27,7 @@ Change log
 
 ## v0.5.5-dev (upcoming changes)
 
-TBD
+- add `float(val)` to set/get the grid float mode
 
 ## v0.5.5 (2019-11-27)
 
