@@ -1,0 +1,32 @@
+# Source & demo
+src/
+demo/
+spec/
+
+# dependencies
+yarn.lock
+
+# Configuration
+.gitignore
+.jscsrc
+.npmignore
+.travis.yml
+.eslint*
+Gruntfile.js
+ISSUE_TEMPLATE.md
+PULL_REQUEST_TEMPLATE.md
+bower.json
+freelancer
+karma.conf.js
+protractor.conf.js
+
+## From .gitignore:
+*.log
+*.tgz
+*.zip
+bower_components
+coverage/
+node_modules/
+
+# files that might have secrets in them
+.npmrc

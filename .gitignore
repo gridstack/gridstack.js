@@ -1,4 +1,8 @@
-node_modules
+*.log
+*.tgz
+*.zip
+.npmrc
 bower_components
 coverage
-*.log
+dist
+node_modules
