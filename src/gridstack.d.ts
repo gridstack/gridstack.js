@@ -415,9 +415,9 @@ interface GridstackOptions {
   /**
    * one cell height (default?: 60). Can be:
    *  an integer (px)
-   *  a string (ex: '10em', '100px', '10rem')
+   *  a string (ex: '100px', '10em', '10rem', '10%')
    *  0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
-   *  'auto' - height will be calculated from cell width.
+   *  'auto' - height will be calculated to match cell width (initial square grid).
    */
   cellHeight ? : number | string;
 

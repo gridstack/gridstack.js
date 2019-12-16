@@ -89,6 +89,7 @@ describe('gridstack utils', function() {
       expect(utils.parseHeight('12.3rem')).toEqual(jasmine.objectContaining({height: 12.3, unit: 'rem'}));
       expect(utils.parseHeight('12.3vh')).toEqual(jasmine.objectContaining({height: 12.3, unit: 'vh'}));
       expect(utils.parseHeight('12.3vw')).toEqual(jasmine.objectContaining({height: 12.3, unit: 'vw'}));
+      expect(utils.parseHeight('12.3%')).toEqual(jasmine.objectContaining({height: 12.3, unit: '%'}));
       expect(utils.parseHeight('12.5')).toEqual(jasmine.objectContaining({height: 12.5, unit: 'px'}));
       expect(function() { utils.parseHeight('12.5 df'); }).toThrowError('Invalid height');
 
@@ -102,6 +103,7 @@ describe('gridstack utils', function() {
       expect(utils.parseHeight('-12.3rem')).toEqual(jasmine.objectContaining({height: -12.3, unit: 'rem'}));
       expect(utils.parseHeight('-12.3vh')).toEqual(jasmine.objectContaining({height: -12.3, unit: 'vh'}));
       expect(utils.parseHeight('-12.3vw')).toEqual(jasmine.objectContaining({height: -12.3, unit: 'vw'}));
+      expect(utils.parseHeight('-12.3%')).toEqual(jasmine.objectContaining({height: -12.3, unit: '%'}));
       expect(utils.parseHeight('-12.5')).toEqual(jasmine.objectContaining({height: -12.5, unit: 'px'}));
       expect(function() { utils.parseHeight('-12.5 df'); }).toThrowError('Invalid height');
     });
