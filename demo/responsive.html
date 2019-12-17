@@ -85,9 +85,9 @@
         this.grid = $('.grid-stack').data('gridstack');
 
         this.loadGrid = function () {
-          this.grid.batchUpdate();
           this.grid.removeAll();
           var items = GridStackUI.Utils.sort(this.serializedData);
+          this.grid.batchUpdate();
           items.forEach(function (node, i) {
             this.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'), node);
           }.bind(this));

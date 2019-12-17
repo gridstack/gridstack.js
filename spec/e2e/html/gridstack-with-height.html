@@ -35,10 +35,10 @@
         ];
 
         this.grid = $('.grid-stack').data('gridstack');
-        this.grid.batchUpdate();
         this.grid.removeAll();
         items = GridStackUI.Utils.sort(items);
         var id = 0;
+        this.grid.batchUpdate();
         items.forEach(function(node) {
           var w = $('<div><div class="grid-stack-item-content"></div></div>');
           w.attr('id', 'item-' + (++id));
