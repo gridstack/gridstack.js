@@ -27,9 +27,19 @@
 
   <script type="text/javascript">
     $(function () {
-      var options = {
-      };
-      $('.grid-stack').gridstack(options);
+      var $grid = $('.grid-stack');
+      
+      $grid.on('added', function(e, items) { log(' added ', items) });
+      $grid.on('removed', function(e, items) { log(' removed ', items) });
+      $grid.on('change', function(e, items) { log(' change ', items) });
+      function log(type, items) {
+        if (!items) { return; }
+        var str = '';
+        for (let i=0; i<items.length && items[i]; i++) { str += ' (x,y)=' + items[i].x + ',' + items[i].y; }
+        console.log(type + items.length + ' items.' + str );
+      }
+
+      $grid.gridstack();
 
       new function () {
         this.serializedData = [
@@ -46,11 +56,13 @@
         this.grid = $('.grid-stack').data('gridstack');
 
         this.loadGrid = function () {
+          this.grid.batchUpdate();
           this.grid.removeAll();
           var items = GridStackUI.Utils.sort(this.serializedData);
           items.forEach(function (node) {
             this.grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), node);
           }, this);
+          this.grid.commit();
           return false;
         }.bind(this);
 

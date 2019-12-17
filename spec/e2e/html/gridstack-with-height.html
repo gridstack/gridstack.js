@@ -35,6 +35,7 @@
         ];
 
         this.grid = $('.grid-stack').data('gridstack');
+        this.grid.batchUpdate();
         this.grid.removeAll();
         items = GridStackUI.Utils.sort(items);
         var id = 0;
@@ -43,6 +44,7 @@
           w.attr('id', 'item-' + (++id));
           this.grid.addWidget(w, node);
         }, this);
+        this.grid.commit();
       };
     });
   </script>

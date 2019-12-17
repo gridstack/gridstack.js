@@ -877,7 +877,7 @@
         .on(trashZone, 'dropover', function(event, ui) {
           var el = $(ui.draggable);
           var node = el.data('_gridstack_node');
-          if (node._grid !== self) {
+          if (!node || node._grid !== self) {
             return;
           }
           el.data('inTrashZone', true);
@@ -886,7 +886,7 @@
         .on(trashZone, 'dropout', function(event, ui) {
           var el = $(ui.draggable);
           var node = el.data('_gridstack_node');
-          if (node._grid !== self) {
+          if (!node || node._grid !== self) {
             return;
           }
           el.data('inTrashZone', false);
@@ -1028,20 +1028,12 @@
     }
   };
 
-  GridStack.prototype._triggerChangeEvent = function(forceTrigger) {
+  GridStack.prototype._triggerChangeEvent = function(/*forceTrigger*/) {
     if (this.grid._batchMode) { return; }
     // TODO: compare original X,Y,W,H (or entire node?) instead as _dirty can be a temporary state
     var elements = this.grid.getDirtyNodes();
-    var hasChanges = false;
-
-    var eventParams = []; // eventParams[0] has to be the list of items...
     if (elements && elements.length) {
-      eventParams[0] = elements;
-      hasChanges = true;
-    }
-
-    if (hasChanges || forceTrigger === true) {
-      this.container.trigger('change', eventParams);
+      this.container.trigger('change', [elements]);
       this.grid.cleanNodes(); // clear dirty flags now that we called
     }
   };
@@ -1049,7 +1041,7 @@
   GridStack.prototype._triggerAddEvent = function() {
     if (this.grid._batchMode) { return; }
     if (this.grid._addedNodes && this.grid._addedNodes.length > 0) {
-      this.container.trigger('added', [this.grid._addedNodes.map(Utils.clone)]);
+      this.container.trigger('added', [this.grid._addedNodes]);
       this.grid._addedNodes = [];
     }
   };
@@ -1057,7 +1049,7 @@
   GridStack.prototype._triggerRemoveEvent = function() {
     if (this.grid._batchMode) { return; }
     if (this.grid._removedNodes && this.grid._removedNodes.length > 0) {
-      this.container.trigger('removed', [this.grid._removedNodes.map(Utils.clone)]);
+      this.container.trigger('removed', [this.grid._removedNodes]);
       this.grid._removedNodes = [];
     }
   };
@@ -1319,13 +1311,13 @@
         return;
       }
 
-      var forceNotify = false;
+      // var forceNotify = false; what is the point of calling 'change' event with no data, when the 'removed' event is already called ?
       self.placeholder.detach();
       node.el = o;
       self.placeholder.hide();
 
       if (node._isAboutToRemove) {
-        forceNotify = true;
+        // forceNotify = true;
         var gridToNotify = el.data('_gridstack_node')._grid;
         gridToNotify._triggerRemoveEvent();
         el.removeData('_gridstack_node');
@@ -1353,7 +1345,7 @@
         }
       }
       self._updateContainerHeight();
-      self._triggerChangeEvent(forceNotify);
+      self._triggerChangeEvent(/*forceNotify*/);
 
       self.grid.endUpdate();
 
@@ -1770,8 +1762,8 @@
   GridStack.prototype.commit = function() {
     this.grid.commit();
     this._updateContainerHeight();
-    this._triggerAddEvent();
     this._triggerRemoveEvent();
+    this._triggerAddEvent();
     this._triggerChangeEvent();
   };
 

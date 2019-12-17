@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="col-sm-12 col-md-10">
-      <div class="grid-stack" id="advanced-grid" data-gs-width="12" data-gs-animate="yes">
+      <div class="grid-stack" id="advanced-grid" data-gs-animate="yes">
         <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2">
           <div class="grid-stack-item-content">1</div>
         </div>
@@ -105,7 +105,19 @@
 
   <script type="text/javascript">
     $(function () {
-      $('#advanced-grid').gridstack({
+      var $grid = $('#advanced-grid');
+      
+      $grid.on('added', function(e, items) { log(' added ', items) });
+      $grid.on('removed', function(e, items) { log(' removed ', items) });
+      $grid.on('change', function(e, items) { log(' change ', items) });
+      function log(type, items) {
+        if (!items) { return; }
+        var str = '';
+        for (let i=0; i<items.length && items[i]; i++) { str += ' (x,y)=' + items[i].x + ',' + items[i].y; }
+        console.log(type + items.length + ' items.' + str );
+      }
+
+      $grid.gridstack({
         alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           navigator.userAgent
         ),
@@ -116,6 +128,7 @@
         removeTimeout: 100,
         acceptWidgets: '.newWidget'
       });
+
       $('.newWidget').draggable({
         revert: 'invalid',
         scroll: false,

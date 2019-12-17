@@ -37,9 +37,11 @@
         {x: 2, y: 0, width: 2, height: 1},
         {x: 5, y: 0, width: 1, height: 1},
       ];
+      self.grid.batchUpdate();
       items.forEach(function (node, i) {
         self.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'), node);
       });
+      self.grid.batchUpdate();
 
       $('#1column').click(function() { self.grid.setColumn(1); });
       $('#2column').click(function() { self.grid.setColumn(2); });
