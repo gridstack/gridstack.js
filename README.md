@@ -63,16 +63,16 @@ Using gridstack.js with jQuery UI
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.min.css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.all.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.all.js"></script>
 ```
 
 * Using CDN (debug):
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.css" />
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/jquery-ui.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.jQueryUI.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.jQueryUI.js"></script>
 ```
 
 * or local:

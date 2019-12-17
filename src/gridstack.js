@@ -309,7 +309,7 @@
     if (this._batchMode) return;
     this._batchMode = true;
     this._prevFloat = this.float;
-    this.float = true;
+    this.float = true; // let things go anywhere for now... commit() will restore and possibly reposition
   };
 
   GridStackEngine.prototype.commit = function() {
@@ -379,9 +379,7 @@
       }, this);
     } else {
       this.nodes.forEach(function(n, i) {
-        if (n.locked) {
-          return;
-        }
+        if (n.locked) { return; }
         while (n.y > 0) {
           var newY = n.y - 1;
           var canBeMoved = i === 0;
@@ -393,10 +391,11 @@
             canBeMoved = collisionNode === undefined;
           }
 
-          if (!canBeMoved) {
-            break;
-          }
-          n._dirty = n.y !== newY;
+          if (!canBeMoved) { break; }
+          // Note: must be dirty (from last position) for GridStack::OnChange CB to update positions
+          // and move items back. The user 'change' CB should detect changes from the original
+          // starting position instead.
+          n._dirty = (n.y !== newY);
           n.y = newY;
         }
       }, this);
@@ -459,21 +458,17 @@
   };
 
   GridStackEngine.prototype._notify = function() {
+    if (this._batchMode) { return; }
     var args = Array.prototype.slice.call(arguments, 0);
     args[0] = args[0] === undefined ? [] : [args[0]];
     args[1] = args[1] === undefined ? true : args[1];
-    if (this._batchMode) {
-      return;
-    }
-    var deletedNodes = args[0].concat(this.getDirtyNodes());
-    this.onchange(deletedNodes, args[1]);
+    var dirtyNodes = args[0].concat(this.getDirtyNodes());
+    this.onchange(dirtyNodes, args[1]);
   };
 
   GridStackEngine.prototype.cleanNodes = function() {
-    if (this._batchMode) {
-      return;
-    }
-    this.nodes.forEach(function(n) { n._dirty = false; });
+    if (this._batchMode) { return; }
+    this.nodes.forEach(function(n) { delete n._dirty; });
   };
 
   GridStackEngine.prototype.getDirtyNodes = function() {
@@ -489,7 +484,7 @@
     if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
 
     node._id = ++idSeq;
-    node._dirty = true;
+    // node._dirty = true; will be addEvent instead
 
     if (node.autoPosition) {
       this._sortNodes();
@@ -501,6 +496,7 @@
           continue;
         }
         if (!this.nodes.find(Utils._isAddNodeIntercepted, {x: x, y: y, node: node})) {
+          node._dirty = (node.x !== x || node.y !== y);
           node.x = x;
           node.y = y;
           break;
@@ -510,7 +506,7 @@
 
     this.nodes.push(node);
     if (triggerAddEvent) {
-      this._addedNodes.push(Utils.clone(node));
+      this._addedNodes.push(node);
     }
 
     this._fixCollisions(node);
@@ -645,19 +641,16 @@
   };
 
   GridStackEngine.prototype.beginUpdate = function(node) {
-    this.nodes.forEach(function(n) {
-      n._origY = n.y;
-    });
+    if (node._updating) return;
     node._updating = true;
+    this.nodes.forEach(function(n) { n._origY = n.y; });
   };
 
   GridStackEngine.prototype.endUpdate = function() {
-    this.nodes.forEach(function(n) {
-      n._origY = n.y;
-    });
     var n = this.nodes.find(function(n) { return n._updating; });
     if (n) {
       n._updating = false;
+      this.nodes.forEach(function(n) { delete n._origY; });
     }
   };
 
@@ -884,7 +877,7 @@
         .on(trashZone, 'dropover', function(event, ui) {
           var el = $(ui.draggable);
           var node = el.data('_gridstack_node');
-          if (node._grid !== self) {
+          if (!node || node._grid !== self) {
             return;
           }
           el.data('inTrashZone', true);
@@ -893,7 +886,7 @@
         .on(trashZone, 'dropout', function(event, ui) {
           var el = $(ui.draggable);
           var node = el.data('_gridstack_node');
-          if (node._grid !== self) {
+          if (!node || node._grid !== self) {
             return;
           }
           el.data('inTrashZone', false);
@@ -1035,31 +1028,28 @@
     }
   };
 
-  GridStack.prototype._triggerChangeEvent = function(forceTrigger) {
+  GridStack.prototype._triggerChangeEvent = function(/*forceTrigger*/) {
+    if (this.grid._batchMode) { return; }
+    // TODO: compare original X,Y,W,H (or entire node?) instead as _dirty can be a temporary state
     var elements = this.grid.getDirtyNodes();
-    var hasChanges = false;
-
-    var eventParams = [];
     if (elements && elements.length) {
-      eventParams.push(elements);
-      hasChanges = true;
-    }
-
-    if (hasChanges || forceTrigger === true) {
-      this.container.trigger('change', eventParams);
+      this.container.trigger('change', [elements]);
+      this.grid.cleanNodes(); // clear dirty flags now that we called
     }
   };
 
   GridStack.prototype._triggerAddEvent = function() {
+    if (this.grid._batchMode) { return; }
     if (this.grid._addedNodes && this.grid._addedNodes.length > 0) {
-      this.container.trigger('added', [this.grid._addedNodes.map(Utils.clone)]);
+      this.container.trigger('added', [this.grid._addedNodes]);
       this.grid._addedNodes = [];
     }
   };
 
   GridStack.prototype._triggerRemoveEvent = function() {
+    if (this.grid._batchMode) { return; }
     if (this.grid._removedNodes && this.grid._removedNodes.length > 0) {
-      this.container.trigger('removed', [this.grid._removedNodes.map(Utils.clone)]);
+      this.container.trigger('removed', [this.grid._removedNodes]);
       this.grid._removedNodes = [];
     }
   };
@@ -1145,9 +1135,7 @@
   };
 
   GridStack.prototype._updateContainerHeight = function() {
-    if (this.grid._batchMode) {
-      return;
-    }
+    if (this.grid._batchMode) { return; }
     var height = this.grid.getGridHeight();
     // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
     var cssMinHeight = parseInt(this.container.css('min-height'));
@@ -1323,13 +1311,13 @@
         return;
       }
 
-      var forceNotify = false;
+      // var forceNotify = false; what is the point of calling 'change' event with no data, when the 'removed' event is already called ?
       self.placeholder.detach();
       node.el = o;
       self.placeholder.hide();
 
       if (node._isAboutToRemove) {
-        forceNotify = true;
+        // forceNotify = true;
         var gridToNotify = el.data('_gridstack_node')._grid;
         gridToNotify._triggerRemoveEvent();
         el.removeData('_gridstack_node');
@@ -1357,7 +1345,7 @@
         }
       }
       self._updateContainerHeight();
-      self._triggerChangeEvent(forceNotify);
+      self._triggerChangeEvent(/*forceNotify*/);
 
       self.grid.endUpdate();
 
@@ -1436,30 +1424,37 @@
     }
   };
 
-  GridStack.prototype.addWidget = function(el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id) {
+  GridStack.prototype.addWidget = function(el, node, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id) {
 
-    // instead of passing all the params, the user might pass an object with all fields instead, if so extract them and call us back
-    if (x !== null && typeof x === 'object') {
-      return this.addWidget(el, x.x, x.y, x.width, x.height, x.autoPosition, x.minWidth, x.maxWidth, x.minHeight, x.maxHeight, x.id);
+    // new way of calling with an object - make sure all items have been properly initialized
+    if (node === undefined || typeof node === 'object') {
+      // Tempting to initialize the passed in node with default and valid values, but this break knockout demos
+      // as the actual value are filled in when _prepareElement() calls el.attr('data-gs-xyz) before adding the node.
+      // node = this.grid._prepareNode(node);
+      node = node || {};
+    } else {
+      // old legacy way of calling with items spelled out - call us back with single object instead (so we can properly initialized values)
+      return this.addWidget(el, {x: node, y: y, width: width, height: height, autoPosition: autoPosition,
+        minWidth: minWidth, maxWidth: maxWidth, minHeight: minHeight, maxHeight: maxHeight, id: id});
     }
 
     el = $(el);
     // Note: passing null removes the attr in jquery
-    if (x !== undefined) { el.attr('data-gs-x', x); }
-    if (y !== undefined) { el.attr('data-gs-y', y); }
-    if (width !== undefined) { el.attr('data-gs-width', width); }
-    if (height !== undefined) { el.attr('data-gs-height', height); }
-    if (autoPosition !== undefined) { el.attr('data-gs-auto-position', autoPosition ? 'yes' : null); }
-    if (minWidth !== undefined) { el.attr('data-gs-min-width', minWidth); }
-    if (maxWidth !== undefined) { el.attr('data-gs-max-width', maxWidth); }
-    if (minHeight !== undefined) { el.attr('data-gs-min-height', minHeight); }
-    if (maxHeight !== undefined) { el.attr('data-gs-max-height', maxHeight); }
-    if (id !== undefined) { el.attr('data-gs-id', id); }
+    if (node.x !== undefined) { el.attr('data-gs-x', node.x); }
+    if (node.y !== undefined) { el.attr('data-gs-y', node.y); }
+    if (node.width !== undefined) { el.attr('data-gs-width', node.width); }
+    if (node.height !== undefined) { el.attr('data-gs-height', node.height); }
+    if (node.autoPosition !== undefined) { el.attr('data-gs-auto-position', node.autoPosition ? true : null); }
+    if (node.minWidth !== undefined) { el.attr('data-gs-min-width', node.minWidth); }
+    if (node.maxWidth !== undefined) { el.attr('data-gs-max-width', node.maxWidth); }
+    if (node.minHeight !== undefined) { el.attr('data-gs-min-height', node.minHeight); }
+    if (node.maxHeight !== undefined) { el.attr('data-gs-max-height', node.maxHeight); }
+    if (node.id !== undefined) { el.attr('data-gs-id', node.id); }
     this.container.append(el);
     this._prepareElement(el, true);
-    this._triggerAddEvent();
     this._updateContainerHeight();
-    this._triggerChangeEvent(true);
+    this._triggerAddEvent();
+    // this._triggerChangeEvent(true); already have AddEvent
 
     return el;
   };
@@ -1467,9 +1462,9 @@
   GridStack.prototype.makeWidget = function(el) {
     el = $(el);
     this._prepareElement(el, true);
-    this._triggerAddEvent();
     this._updateContainerHeight();
-    this._triggerChangeEvent(true);
+    this._triggerAddEvent();
+    // this._triggerChangeEvent(true); already have AddEvent
 
     return el;
   };
@@ -1495,8 +1490,8 @@
     if (detachNode) {
       el.remove();
     }
-    this._triggerChangeEvent(true);
     this._triggerRemoveEvent();
+    // this._triggerChangeEvent(true); already have removeEvent
   };
 
   GridStack.prototype.removeAll = function(detachNode) {
@@ -1767,6 +1762,9 @@
   GridStack.prototype.commit = function() {
     this.grid.commit();
     this._updateContainerHeight();
+    this._triggerRemoveEvent();
+    this._triggerAddEvent();
+    this._triggerChangeEvent();
   };
 
   GridStack.prototype.isAreaEmpty = function(x, y, width, height) {
@@ -1792,14 +1790,14 @@
 
   GridStack.prototype._updateNodeWidths = function(oldWidth, newWidth) {
     this.grid._sortNodes();
-    this.grid.batchUpdate();
+    this.batchUpdate();
     var node = {};
     for (var i = 0; i < this.grid.nodes.length; i++) {
       node = this.grid.nodes[i];
       this.update(node.el, Math.round(node.x * newWidth / oldWidth), undefined,
         Math.round(node.width * newWidth / oldWidth), undefined);
     }
-    this.grid.commit();
+    this.commit();
   };
 
   GridStack.prototype.setColumn = function(column, doNotPropagate) {

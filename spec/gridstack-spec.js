@@ -979,12 +979,13 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should keep all widget options the same (autoPosition off)', function() {
+    it('should autoPosition (missing X,Y)', function() {
       $('.grid-stack').gridstack();
       var grid = $('.grid-stack').data('gridstack');
-      var widget = grid.addWidget(widgetHTML, {x: 8, height: 2, id: 'optionWidget'});
+      var widget = grid.addWidget(widgetHTML, {height: 2, id: 'optionWidget'});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
       expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
       expect($widget.attr('data-gs-auto-position')).toBe(undefined);
@@ -994,6 +995,55 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-max-height')).toBe(undefined);
       expect($widget.attr('data-gs-id')).toBe('optionWidget');
     });
+    it('should autoPosition (missing X)', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      var widget = grid.addWidget(widgetHTML, {y: 9, height: 2, id: 'optionWidget'});
+      var $widget = $(widget);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
+      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-min-width')).toBe(undefined);
+      expect($widget.attr('data-gs-max-width')).toBe(undefined);
+      expect($widget.attr('data-gs-min-height')).toBe(undefined);
+      expect($widget.attr('data-gs-max-height')).toBe(undefined);
+      expect($widget.attr('data-gs-id')).toBe('optionWidget');
+    });
+    it('should autoPosition (missing Y)', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      var widget = grid.addWidget(widgetHTML, {x: 9, height: 2, id: 'optionWidget'});
+      var $widget = $(widget);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
+      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-min-width')).toBe(undefined);
+      expect($widget.attr('data-gs-max-width')).toBe(undefined);
+      expect($widget.attr('data-gs-min-height')).toBe(undefined);
+      expect($widget.attr('data-gs-max-height')).toBe(undefined);
+      expect($widget.attr('data-gs-id')).toBe('optionWidget');
+    });
+    it('should not autoPosition (correct X, missing Y)', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      var widget = grid.addWidget(widgetHTML, {x: 8, height: 2, id: 'optionWidget'});
+      var $widget = $(widget);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect($widget.attr('data-gs-y')).toBe(undefined);
+      expect($widget.attr('data-gs-width')).toBe(undefined);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
+      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-min-width')).toBe(undefined);
+      expect($widget.attr('data-gs-max-width')).toBe(undefined);
+      expect($widget.attr('data-gs-min-height')).toBe(undefined);
+      expect($widget.attr('data-gs-max-height')).toBe(undefined);
+      expect($widget.attr('data-gs-id')).toBe('optionWidget');
+    });
+
   });
 
   describe('addWidget() with bad string value widget options', function() {

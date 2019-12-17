@@ -250,7 +250,7 @@ grid.addWidget(el, 0, 0, 3, 2, true);
 
 ### batchUpdate()
 
-Initializes batch updates. You will see no changes until `commit` method is called.
+starts batch updates. You will see no changes until `commit()` method is called.
 
 ### cellHeight()
 
@@ -271,7 +271,7 @@ Gets current cell width.
 
 ### commit()
 
-Finishes batch updates. Updates DOM nodes. You must call it after `batchUpdate`.
+Ends batch updates. Updates DOM nodes. You must call it after `batchUpdate()`.
 
 ### destroy([detachGrid])
 
@@ -355,7 +355,7 @@ Parameters:
 ```javascript
 $('.grid-stack').gridstack();
 
-$('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="1"></div>')
+$('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="true"></div>')
 var grid = $('.grid-stack').data('gridstack');
 grid.makeWidget('gsi-1');
 ```
