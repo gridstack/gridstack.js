@@ -16,7 +16,7 @@ describe('gridstack', function() {
     '  </div>' +
     '</div>';
   // generic widget with no param
-  var widgetHTML = '<div class="grid-stack-item"><div class="grid-stack-item-content"> hello </div></div>';
+  var widgetHTML = '<div class="grid-stack-item" id="item3"><div class="grid-stack-item-content"> hello </div></div>';
 
   beforeEach(function() {
     w = window;
@@ -484,6 +484,38 @@ describe('gridstack', function() {
       grid.removeAll(false);
       expect(grid.grid.nodes).toEqual([]);
       expect(document.getElementById('item1')).not.toBe(null);
+    });
+  });
+
+  describe('grid.removeWidget', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should remove first item (default), then second (true), then third (false)', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      expect(grid.grid.nodes.length).toEqual(2);
+
+      var el1 = document.getElementById('item1');
+      expect(el1).not.toBe(null);
+      grid.removeWidget(el1);
+      expect(grid.grid.nodes.length).toEqual(1);
+      expect(document.getElementById('item1')).toBe(null);
+      expect(document.getElementById('item2')).not.toBe(null);
+
+      var el2 = document.getElementById('item2');
+      grid.removeWidget(el2, true);
+      expect(grid.grid.nodes.length).toEqual(0);
+      expect(document.getElementById('item2')).toBe(null);
+
+      var el3 = grid.addWidget(widgetHTML);
+      expect(el3).not.toBe(null);
+      grid.removeWidget(el3, false);
+      expect(grid.grid.nodes.length).toEqual(0);
+      expect(document.getElementById('item3')).not.toBe(null);
     });
   });
 
