@@ -81,10 +81,9 @@
         <a class="btn btn-primary" id="float2" href="#">float: true</a>
         <div class="grid-stack grid-stack-6" id="grid2">
           </div>
+      </div>
     </div>
   </div>
-</div>
-
 
   <script type="text/javascript">
     $(function () {
@@ -109,12 +108,24 @@
       ];
 
       $('.grid-stack').each(function () {
-        var grid = $(this).data('gridstack');
+        var $grid = $(this);
+        var id = $grid.attr('id');
+        $grid.on('added', function(e, items) { log(id, ' added ', items) });
+        $grid.on('removed', function(e, items) { log(id, ' removed ', items) });
+        $grid.on('change', function(e, items) { log(id, ' change ', items) });
+        function log(id, type, items) {
+          var str = '';
+          for (let i=0; i<items.length; i++ ) { str += ' (x,y)=' + items[i].x + ',' + items[i].y /*+ ' ' + items[i].width + 'x' + items[i].height*/ }
+          console.log(id + type + items.length + ' items.' + str );
+        }
 
+        var grid = $grid.data('gridstack');
+        grid.batchUpdate();
         items.forEach(function (node) {
           grid.addWidget($('<div><div class="grid-stack-item-content">' 
             + (node.text? node.text : '') + '</div></div>'), node);
         });
+        grid.commit();
       });
 
       $('.sidebar .grid-stack-item').draggable({

@@ -191,7 +191,7 @@ interface GridStack {
    * @example
    * $('.grid-stack').gridstack();
    * $('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2"
-   *                     data-gs-auto-position="1"></div>')
+   *                     data-gs-auto-position="true"></div>')
    * var grid = $('.grid-stack').data('gridstack');
    * grid.makeWidget('gsi-1');
    */
