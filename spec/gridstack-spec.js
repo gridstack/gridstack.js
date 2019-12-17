@@ -7,10 +7,10 @@ describe('gridstack', function() {
   var gridstackHTML =
     '<div style="width: 992px; height: 800px" id="gs-cont">' +
     '  <div class="grid-stack">' +
-    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2">' +
+    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2" id="item1">' +
     '      <div class="grid-stack-item-content"></div>' +
     '    </div>' +
-    '    <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">' +
+    '    <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4" id="item2">' +
     '      <div class="grid-stack-item-content"></div>' +
     '    </div>' +
     '  </div>' +
@@ -454,6 +454,36 @@ describe('gridstack', function() {
       var grid = $('.grid-stack').data('gridstack');
       var shouldBeTrue = grid.isAreaEmpty(5, 5, 1, 1);
       expect(shouldBeTrue).toBe(true);
+    });
+  });
+
+  describe('grid.removeAll', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should remove all children by default', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      grid.removeAll();
+      expect(grid.grid.nodes).toEqual([]);
+      expect(document.getElementById('item1')).toBe(null);
+    });
+    it('should remove all children', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      grid.removeAll(true);
+      expect(grid.grid.nodes).toEqual([]);
+      expect(document.getElementById('item1')).toBe(null);
+    });
+    it('should remove gridstack part, leave DOM behind', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      grid.removeAll(false);
+      expect(grid.grid.nodes).toEqual([]);
+      expect(document.getElementById('item1')).not.toBe(null);
     });
   });
 

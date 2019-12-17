@@ -460,8 +460,8 @@
   GridStackEngine.prototype._notify = function() {
     if (this._batchMode) { return; }
     var args = Array.prototype.slice.call(arguments, 0);
-    args[0] = args[0] === undefined ? [] : [args[0]];
-    args[1] = args[1] === undefined ? true : args[1];
+    args[0] = (args[0] === undefined ? [] : (Array.isArray(args[0]) ? args[0] : [args[0]]) );
+    args[1] = (args[1] === undefined ? true : args[1]);
     var dirtyNodes = args[0].concat(this.getDirtyNodes());
     this.onchange(dirtyNodes, args[1]);
   };
@@ -516,12 +516,21 @@
   };
 
   GridStackEngine.prototype.removeNode = function(node, detachNode) {
-    detachNode = detachNode === undefined ? true : detachNode;
-    this._removedNodes.push(Utils.clone(node));
+    detachNode = (detachNode === undefined ? true : detachNode);
+    this._removedNodes.push(node);
     node._id = null;
     this.nodes = Utils.without(this.nodes, node);
     this._packNodes();
     this._notify(node, detachNode);
+  };
+
+  GridStackEngine.prototype.removeAll = function(detachNode) {
+    if (this.nodes.length === 0) { return; }
+    detachNode = (detachNode === undefined ? true : detachNode);
+    this.nodes.forEach(function(n) { n._id = null; }); // hint that node is being removed
+    this._removedNodes = this.nodes;
+    this.nodes = [];
+    this._notify(this._removedNodes, detachNode);
   };
 
   GridStackEngine.prototype.canMoveNode = function(node, x, y, width, height) {
@@ -764,7 +773,7 @@
     this._initStyles();
 
     this.grid = new GridStackEngine(this.opts.column, function(nodes, detachNode) {
-      detachNode = detachNode === undefined ? true : detachNode;
+      detachNode = (detachNode === undefined ? true : detachNode);
       var maxHeight = 0;
       this.nodes.forEach(function(n) {
         maxHeight = Math.max(maxHeight, n.y + n.height);
@@ -1475,31 +1484,27 @@
   };
 
   GridStack.prototype.removeWidget = function(el, detachNode) {
-    detachNode = detachNode === undefined ? true : detachNode;
+    detachNode = (detachNode === undefined ? true : detachNode);
     el = $(el);
     var node = el.data('_gridstack_node');
-
     // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
     if (!node) {
       node = this.grid.getNodeDataByDOMEl(el);
     }
 
-    this.grid.removeNode(node, detachNode);
     el.removeData('_gridstack_node');
-    this._updateContainerHeight();
-    if (detachNode) {
-      el.remove();
-    }
+    this.grid.removeNode(node, detachNode);
     this._triggerRemoveEvent();
     // this._triggerChangeEvent(true); already have removeEvent
   };
 
   GridStack.prototype.removeAll = function(detachNode) {
+    // remove our data structure before list gets emptied (in case detachNode is false)
     this.grid.nodes.forEach(function(node) {
-      this.removeWidget(node.el, detachNode);
-    }, this);
-    this.grid.nodes = [];
-    this._updateContainerHeight();
+      node.el.removeData('_gridstack_node');
+    });
+    this.grid.removeAll(detachNode);
+    this._triggerRemoveEvent();
   };
 
   GridStack.prototype.destroy = function(detachGrid) {
@@ -1761,7 +1766,6 @@
 
   GridStack.prototype.commit = function() {
     this.grid.commit();
-    this._updateContainerHeight();
     this._triggerRemoveEvent();
     this._triggerAddEvent();
     this._triggerChangeEvent();

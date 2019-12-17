@@ -32,6 +32,7 @@ Change log
 - fixed callbacks to get either `added, removed, change` or combination if adding a node require also to change its (x,y) for example.
 Also you can now call `batchUpdate()` before calling a bunch of `addWidget()` and get a single event callback (more efficient).
 [#1096](https://github.com/gridstack/gridstack.js/pull/1096)
+- `removeAll()` is now much faster (no relayout) and calls `removed` event just once with a list
 
 ## v0.5.5 (2019-11-27)
 
