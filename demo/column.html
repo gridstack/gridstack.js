@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Column grid demo</title>
+
+  <link rel="stylesheet" href="../demo/demo.css"/>
+  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="../dist/jquery-ui.min.js"></script>
+  <script src="../src/gridstack.js"></script>
+  <script src="../src/gridstack.jQueryUI.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>setColumn() grid demo</h1>
+    <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
+    <a class="btn btn-primary" id="1column" href="#">1 Column</a>
+    <a class="btn btn-primary" id="2column" href="#">2 Column</a>
+    <a class="btn btn-primary" id="3column" href="#">3 Column</a>
+    <a class="btn btn-primary" id="4column" href="#">4 Column</a>
+    <a class="btn btn-primary" id="6column" href="#">6 Column</a>
+    <a class="btn btn-primary" id="8column" href="#">8 Column</a>
+    <a class="btn btn-primary" id="10column" href="#">10 Column</a>
+    <a class="btn btn-primary" id="12column" href="#">12 Column</a>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+
+  <script type="text/javascript">
+    $(function () {
+      var $grid = $('.grid-stack');
+      $grid.gridstack({float: true});
+      grid = $grid.data('gridstack');
+
+      $grid.on('added', (e, items) => log(' added ', items));
+      $grid.on('removed', (e, items) => log(' removed ', items));
+      $grid.on('change', (e, items) => log(' change ', items));
+      function log(type, items) {
+        if (!items) { return; }
+        var str = '';
+        for (let i=0; i<items.length && items[i]; i++) { str += ' (x,y)=' + items[i].x + ',' + items[i].y; }
+        console.log(type + items.length + ' items.' + str );
+      }
+
+      var items = [
+        {x: 0, y: 4, width: 12, height: 1},
+        {x: 5, y: 3, width: 2, height: 1},
+        {x: 1, y: 3, width: 4, height: 1},
+        {x: 0, y: 0, width: 1, height: 1},
+        {}, // autoPosition testing
+        {x: 5, y: 0, width: 1, height: 1},
+        {x: 2, y: 0, width: 2, height: 1},
+        {x: 0, y: 0, width: 2, height: 2}
+      ];
+      var count = 0;
+      grid.batchUpdate();
+      for (count=0; count<3; count++) {
+        grid.addWidget($('<div><div class="grid-stack-item-content">' + count + '</div></div>'), items.pop());
+      };
+      grid.commit();
+
+      $('#add-widget').click(() => {
+        var node = items.pop() || {
+          x: Math.round(12 * Math.random()),
+          y: Math.round(5 * Math.random()),
+          width: Math.round(1 + 3 * Math.random()),
+          height: Math.round(1 + 3 * Math.random())
+        };
+        grid.addWidget($('<div><div class="grid-stack-item-content">' + count++ + '</div></div>'), node);
+      });
+
+      $('#1column').click(() => { grid.setColumn(1); });
+      $('#2column').click(() => { grid.setColumn(2); });
+      $('#3column').click(() => { grid.setColumn(3); });
+      $('#4column').click(() => { grid.setColumn(4); });
+      $('#6column').click(() => { grid.setColumn(6); });
+      $('#6column').click(() => { grid.setColumn(6); });
+      $('#8column').click(() => { grid.setColumn(8); });
+      $('#10column').click(() => { grid.setColumn(10); });
+      $('#12column').click(() => { grid.setColumn(12); });
+    });
+  </script>
+</body>
+</html>

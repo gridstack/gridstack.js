@@ -32,7 +32,10 @@ Change log
 - fixed callbacks to get either `added, removed, change` or combination if adding a node require also to change its (x,y) for example.
 Also you can now call `batchUpdate()` before calling a bunch of `addWidget()` and get a single event callback (more efficient).
 [#1096](https://github.com/gridstack/gridstack.js/pull/1096)
-- `removeAll()` is now much faster (no relayout) and calls `removed` event just once with a list
+- `removeAll()` is now much faster (no relayout) and calls `removed` event just once with a list [#1097](https://github.com/gridstack/gridstack.js/pull/1097)
+- `setColumn()` complete re-write and is no longer "Experimental". We now do a reasonable job at sizing/position the widgets (especially 1 column) and
+also now cache each column layout so you can go back to say 12 column and not loose original layout. [#1098](https://github.com/gridstack/gridstack.js/pull/1098)
+- fix bug where `addWidget(el)` (default values) would not render item at correct CSS location, and overlap item at (0,0) [#1098](https://github.com/gridstack/gridstack.js/pull/1098)
 
 ## v0.5.5 (2019-11-27)
 

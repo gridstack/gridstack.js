@@ -295,7 +295,7 @@ describe('gridstack', function() {
       grid.setGridWidth(12); // old API
       expect(grid.opts.column).toBe(12);
     });
-    it('should change column number, no relayout', function() {
+    it('should SMALL change column number, no relayout', function() {
       var options = {
         column: 12
       };
@@ -314,21 +314,77 @@ describe('gridstack', function() {
       for (var j = 0; j < items.length; j++) {
         expect(parseInt($(items[j]).attr('data-gs-y'), 10)).toBe(0);
       }
+      
+      grid.setColumn(12);
+      expect(grid.opts.column).toBe(12);
+      for (var j = 0; j < items.length; j++) {
+        expect(parseInt($(items[j]).attr('data-gs-y'), 10)).toBe(0);
+      }
     });
     it('should change column number and relayout items', function() {
       var options = {
-        column: 12
+        column: 12,
+        float: true
       };
       $('.grid-stack').gridstack(options);
       var grid = $('.grid-stack').data('gridstack');
-      var items = $('.grid-stack-item');
+      var node1 = $('#item1').data('_gridstack_node');
+      var node2 = $('#item2').data('_gridstack_node');
+      // items start at 4x2 and 4x4
+      expect(node1.x).toBe(0);
+      expect(node1.y).toBe(0);
+      expect(node1.width).toBe(4);
+      expect(node1.height).toBe(2);
+
+      expect(node2.x).toBe(4);
+      expect(node2.y).toBe(0);
+      expect(node2.width).toBe(4);
+      expect(node2.height).toBe(4);
       
+      // one column will have item1, item2
       grid.setColumn(1);
+      node1 = $('#item1').data('_gridstack_node');
+      node2 = $('#item2').data('_gridstack_node');
       expect(grid.opts.column).toBe(1);
-      for (var j = 0; j < items.length; j++) {
-        expect(parseInt($(items[j]).attr('data-gs-x'), 10)).toBe(0);
-        // TODO: check Y position but I don't currently agree with order. [Alain]
-      }
+      expect(node1.x).toBe(0);
+      expect(node1.y).toBe(0);
+      expect(node1.width).toBe(1);
+      expect(node1.height).toBe(2);
+
+      expect(node2.x).toBe(0);
+      expect(node2.y).toBe(2);
+      expect(node2.width).toBe(1);
+      expect(node2.height).toBe(4);
+
+      // add default 1x1 item to the end (1 column)
+      var el3 = grid.addWidget(widgetHTML);
+      expect(el3).not.toBe(null);
+      var node3 = $(el3).data('_gridstack_node');
+      expect(node3.x).toBe(0);
+      expect(node3.y).toBe(6);
+      expect(node3.width).toBe(1);
+      expect(node3.height).toBe(1);
+
+      // back to 12 column and initial layout (other than new item3)
+      grid.setColumn(12);
+      expect(grid.opts.column).toBe(12);
+      node1 = $('#item1').data('_gridstack_node');
+      node2 = $('#item2').data('_gridstack_node');
+      node3 = $('#item3').data('_gridstack_node');
+      expect(node1.x).toBe(0);
+      expect(node1.y).toBe(0);
+      expect(node1.width).toBe(4);
+      expect(node1.height).toBe(2);
+
+      expect(node2.x).toBe(4);
+      expect(node2.y).toBe(0);
+      expect(node2.width).toBe(4);
+      expect(node2.height).toBe(4);
+
+      expect(node3.x).toBe(0);
+      expect(node3.y).toBe(6);
+      expect(node3.width).toBe(12); // take entire row still
+      expect(node3.height).toBe(1);
     });
   });
 
@@ -1089,14 +1145,14 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-max-height')).toBe(undefined);
       expect($widget.attr('data-gs-id')).toBe('optionWidget');
     });
-    it('should not autoPosition (correct X, missing Y)', function() {
+    it('should autoPosition (correct X, missing Y)', function() {
       $('.grid-stack').gridstack();
       var grid = $('.grid-stack').data('gridstack');
       var widget = grid.addWidget(widgetHTML, {x: 8, height: 2, id: 'optionWidget'});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
-      expect($widget.attr('data-gs-y')).toBe(undefined);
-      expect($widget.attr('data-gs-width')).toBe(undefined);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
       expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
       expect($widget.attr('data-gs-auto-position')).toBe(undefined);
       expect($widget.attr('data-gs-min-width')).toBe(undefined);
@@ -1104,6 +1160,21 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-min-height')).toBe(undefined);
       expect($widget.attr('data-gs-max-height')).toBe(undefined);
       expect($widget.attr('data-gs-id')).toBe('optionWidget');
+    });
+    it('should autoPosition (empty options)', function() {
+      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').data('gridstack');
+      var widget = grid.addWidget(widgetHTML, {});
+      var $widget = $(widget);
+      expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
+      expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
+      expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
+      expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(1);
+      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-min-width')).toBe(undefined);
+      expect($widget.attr('data-gs-max-width')).toBe(undefined);
+      expect($widget.attr('data-gs-min-height')).toBe(undefined);
+      expect($widget.attr('data-gs-max-height')).toBe(undefined);
     });
 
   });
