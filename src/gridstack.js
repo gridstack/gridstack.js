@@ -22,7 +22,7 @@
   // checks for obsolete method names
   var obsolete = function(f, oldName, newName) {
     var wrapper = function() {
-      console.warn('gridstack.js: Function `' + oldName + '` is deprecated as of v0.2.5 and has been replaced ' +
+      console.warn('gridstack.js: Function `' + oldName + '` is deprecated as of v0.5.2 and has been replaced ' +
       'with `' + newName + '`. It will be **completely** removed in v1.0.');
       return f.apply(this, arguments);
     };
@@ -35,7 +35,7 @@
   var obsoleteOpts = function(opts, oldName, newName) {
     if (opts[oldName] !== undefined) {
       opts[newName] = opts[oldName];
-      console.warn('gridstack.js: Option `' + oldName + '` is deprecated as of v0.2.5 and has been replaced with `' +
+      console.warn('gridstack.js: Option `' + oldName + '` is deprecated as of v0.5.2 and has been replaced with `' +
         newName + '`. It will be **completely** removed in v1.0.');
     }
   };
@@ -247,13 +247,6 @@
       }
     }
   };
-
-  /*eslint-disable camelcase */
-  Utils.is_intercepted = obsolete(Utils.isIntercepted, 'is_intercepted', 'isIntercepted');
-  Utils.create_stylesheet = obsolete(Utils.createStylesheet, 'create_stylesheet', 'createStylesheet');
-  Utils.remove_stylesheet = obsolete(Utils.removeStylesheet, 'remove_stylesheet', 'removeStylesheet');
-  Utils.insert_css_rule = obsolete(Utils.insertCSSRule, 'insert_css_rule', 'insertCSSRule');
-  /*eslint-enable camelcase */
 
   /**
   * @class GridStackDragDropPlugin
@@ -672,24 +665,12 @@
 
     this.container = $(el);
 
-    /*eslint-disable camelcase */
-    obsoleteOpts(opts, 'handle_class', 'handleClass');
-    obsoleteOpts(opts, 'item_class', 'itemClass');
-    obsoleteOpts(opts, 'placeholder_class', 'placeholderClass');
-    obsoleteOpts(opts, 'placeholder_text', 'placeholderText');
-    obsoleteOpts(opts, 'cell_height', 'cellHeight');
-    obsoleteOpts(opts, 'vertical_margin', 'verticalMargin');
-    obsoleteOpts(opts, 'min_width', 'minWidth');
-    obsoleteOpts(opts, 'static_grid', 'staticGrid');
-    obsoleteOpts(opts, 'is_nested', 'isNested');
-    obsoleteOpts(opts, 'always_show_resize_handle', 'alwaysShowResizeHandle');
     obsoleteOpts(opts, 'width', 'column');
     obsoleteOpts(opts, 'height', 'maxRow');
 
     // container attributes
     obsoleteAttr(this.container, 'data-gs-width', 'data-gs-column');
     obsoleteAttr(this.container, 'data-gs-height', 'data-gs-max-row');
-    /*eslint-enable camelcase */
 
     opts.itemClass = opts.itemClass || 'grid-stack-item';
     var isNested = this.container.closest('.' + opts.itemClass).length > 0;
@@ -1869,13 +1850,6 @@
     this.commit();
   };
 
-  // legacy call from <= 0.5.2 - use new method instead.
-  GridStack.prototype.setGridWidth = function(column, doNotPropagate) {
-    console.warn('gridstack.js: setGridWidth() is deprecated as of v0.5.3 and has been replaced ' +
-      'with setColumn(). It will be **completely** removed in v1.0.');
-    this.setColumn(column, doNotPropagate);
-  }
-
   GridStack.prototype.float = function(val) {
     // getter - returns the opts stored mode
     if (val === undefined) {
@@ -1890,84 +1864,9 @@
     }
   };
 
-  /*eslint-disable camelcase */
-  GridStackEngine.prototype.batch_update = obsolete(GridStackEngine.prototype.batchUpdate);
-  GridStackEngine.prototype._fix_collisions = obsolete(GridStackEngine.prototype._fixCollisions,
-    '_fix_collisions', '_fixCollisions');
-  GridStackEngine.prototype.is_area_empty = obsolete(GridStackEngine.prototype.isAreaEmpty,
-    'is_area_empty', 'isAreaEmpty');
-  GridStackEngine.prototype._sort_nodes = obsolete(GridStackEngine.prototype._sortNodes,
-    '_sort_nodes', '_sortNodes');
-  GridStackEngine.prototype._pack_nodes = obsolete(GridStackEngine.prototype._packNodes,
-    '_pack_nodes', '_packNodes');
-  GridStackEngine.prototype._prepare_node = obsolete(GridStackEngine.prototype._prepareNode,
-    '_prepare_node', '_prepareNode');
-  GridStackEngine.prototype.clean_nodes = obsolete(GridStackEngine.prototype.cleanNodes,
-    'clean_nodes', 'cleanNodes');
-  GridStackEngine.prototype.get_dirty_nodes = obsolete(GridStackEngine.prototype.getDirtyNodes,
-    'get_dirty_nodes', 'getDirtyNodes');
-  GridStackEngine.prototype.add_node = obsolete(GridStackEngine.prototype.addNode,
-    'add_node', 'addNode, ');
-  GridStackEngine.prototype.remove_node = obsolete(GridStackEngine.prototype.removeNode,
-    'remove_node', 'removeNode');
-  GridStackEngine.prototype.can_move_node = obsolete(GridStackEngine.prototype.canMoveNode,
-    'can_move_node', 'canMoveNode');
-  GridStackEngine.prototype.move_node = obsolete(GridStackEngine.prototype.moveNode,
-    'move_node', 'moveNode');
-  GridStackEngine.prototype.get_grid_height = obsolete(GridStackEngine.prototype.getGridHeight,
-    'get_grid_height', 'getGridHeight');
-  GridStackEngine.prototype.begin_update = obsolete(GridStackEngine.prototype.beginUpdate,
-    'begin_update', 'beginUpdate');
-  GridStackEngine.prototype.end_update = obsolete(GridStackEngine.prototype.endUpdate,
-    'end_update', 'endUpdate');
-  GridStackEngine.prototype.can_be_placed_with_respect_to_height =
-    obsolete(GridStackEngine.prototype.canBePlacedWithRespectToHeight,
-      'can_be_placed_with_respect_to_height', 'canBePlacedWithRespectToHeight');
-  GridStack.prototype._trigger_change_event = obsolete(GridStack.prototype._triggerChangeEvent,
-    '_trigger_change_event', '_triggerChangeEvent');
-  GridStack.prototype._init_styles = obsolete(GridStack.prototype._initStyles,
-    '_init_styles', '_initStyles');
-  GridStack.prototype._update_styles = obsolete(GridStack.prototype._updateStyles,
-    '_update_styles', '_updateStyles');
-  GridStack.prototype._update_container_height = obsolete(GridStack.prototype._updateContainerHeight,
-    '_update_container_height', '_updateContainerHeight');
-  GridStack.prototype._is_one_column_mode = obsolete(GridStack.prototype._isOneColumnMode,
-    '_is_one_column_mode','_isOneColumnMode');
-  GridStack.prototype._prepare_element = obsolete(GridStack.prototype._prepareElement,
-    '_prepare_element', '_prepareElement');
-  GridStack.prototype.set_animation = obsolete(GridStack.prototype.setAnimation,
-    'set_animation', 'setAnimation');
-  GridStack.prototype.add_widget = obsolete(GridStack.prototype.addWidget,
-    'add_widget', 'addWidget');
-  GridStack.prototype.make_widget = obsolete(GridStack.prototype.makeWidget,
-    'make_widget', 'makeWidget');
-  GridStack.prototype.will_it_fit = obsolete(GridStack.prototype.willItFit,
-    'will_it_fit', 'willItFit');
-  GridStack.prototype.remove_widget = obsolete(GridStack.prototype.removeWidget,
-    'remove_widget', 'removeWidget');
-  GridStack.prototype.remove_all = obsolete(GridStack.prototype.removeAll,
-    'remove_all', 'removeAll');
-  GridStack.prototype.min_height = obsolete(GridStack.prototype.minHeight,
-    'min_height', 'minHeight');
-  GridStack.prototype.min_width = obsolete(GridStack.prototype.minWidth,
-    'min_width', 'minWidth');
-  GridStack.prototype._update_element = obsolete(GridStack.prototype._updateElement,
-    '_update_element', '_updateElement');
-  GridStack.prototype.cell_height = obsolete(GridStack.prototype.cellHeight,
-    'cell_height', 'cellHeight');
-  GridStack.prototype.cell_width = obsolete(GridStack.prototype.cellWidth,
-    'cell_width', 'cellWidth');
-  GridStack.prototype.get_cell_from_pixel = obsolete(GridStack.prototype.getCellFromPixel,
-    'get_cell_from_pixel', 'getCellFromPixel');
-  GridStack.prototype.batch_update = obsolete(GridStack.prototype.batchUpdate,
-    'batch_update', 'batchUpdate');
-  GridStack.prototype.is_area_empty = obsolete(GridStack.prototype.isAreaEmpty,
-    'is_area_empty', 'isAreaEmpty');
-  GridStack.prototype.set_static = obsolete(GridStack.prototype.setStatic,
-    'set_static', 'setStatic');
-  GridStack.prototype._set_static_class = obsolete(GridStack.prototype._setStaticClass,
-    '_set_static_class', '_setStaticClass');
-  /*eslint-enable camelcase */
+  // legacy method renames
+  GridStack.prototype.setGridWidth = obsolete(GridStack.prototype.setColumn,
+    'setGridWidth', 'setColumn'); // 0.5.3
 
   scope.GridStackUI = GridStack;
 
