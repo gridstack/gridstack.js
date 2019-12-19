@@ -275,8 +275,9 @@ interface GridStack {
   setAnimation(doAnimate: boolean): void;
 
   /**
-   * (Experimental) Modify number of columns in the grid. Will attempt to update existing widgets
-   * to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [1-11],
+   * Modify number of columns in the grid. Will update existing widgets to conform to new number of columns,
+   * as well as cache the original layout so you can revert back to previous positions without loss.
+   * Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [1-11],
    * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
    * @param column - Integer > 0 (default 12).
    * @param doNotPropagate if true existing widgets will not be updated (optional) 

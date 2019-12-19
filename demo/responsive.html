@@ -43,11 +43,7 @@
         return $('.device-' + alias).is(':visible');
       }
 
-
-      var options = {
-        float: false
-      };
-      $('.grid-stack').gridstack(options);
+      $('.grid-stack').gridstack();
       function resizeGrid() {
         var grid = $('.grid-stack').data('gridstack');
         if (isBreakpoint('xs')) {
