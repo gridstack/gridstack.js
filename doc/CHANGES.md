@@ -138,7 +138,7 @@ also now cache each column layout so you can go back to say 12 column and not lo
 - `'auto'` value for `cellHeight` option
 - fix `setStatic` method
 - add `setAnimation` method to API
-- add `setGridWidth` method ([#227](https://github.com/gridstack/gridstack.js/issues/227))
+- add `setColumn` method ([#227](https://github.com/gridstack/gridstack.js/issues/227))
 - add `removable`/`removeTimeout` *(experimental)*
 - add `detachGrid` parameter to `destroy` method ([#216](https://github.com/gridstack/gridstack.js/issues/216)) (thanks @jhpedemonte)
 - add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/gridstack/gridstack.js/issues/237))
@@ -149,45 +149,45 @@ also now cache each column layout so you can go back to say 12 column and not lo
 ## v0.2.4 (2016-02-15)
 
 - fix closure compiler/linter warnings
-- add `static_grid` option.
-- add `min_width`/`min_height` methods (Thanks to @cvillemure)
+- add `staticGrid` option.
+- add `minWidth`/`minHeight` methods (Thanks to @cvillemure)
 - add `destroy` method (Thanks to @zspitzer)
-- add `placeholder_text` option (Thanks to @slauyama)
-- add `handle_class` option.
-- add `make_widget` method.
+- add `placeholderText` option (Thanks to @slauyama)
+- add `handleClass` option.
+- add `makeWidget` method.
 - lodash v 4.x support (Thanks to @andrewr88)
 
 ## v0.2.3 (2015-06-23)
 
 - gridstack-extra.css
 - add support of lodash.js
-- add `is_area_empty` method
+- add `isAreaEmpty` method
 - nested grids
-- add `batch_update`/`commit` methods
+- add `batchUpdate`/`commit` methods
 - add `update` method
 - allow to override `resizable`/`draggable` options
 - add `disable`/`enable` methods
-- add `get_cell_from_pixel` (thanks to @juchi)
+- add `getCellFromPixel` (thanks to @juchi)
 - AMD support
 - fix nodes sorting
 - improved touch devices support
-- add `always_show_resize_handle` option
+- add `alwaysShowResizeHandle` option
 - minor fixes and improvements
 
 ## v0.2.2 (2014-12-23)
 
 - fix grid initialization
-- add `cell_height`/`cell_width` API methods
+- add `cellHeight`/`cellWidth` API methods
 - fix boolean attributes ([#31](https://github.com/gridstack/gridstack.js/issues/31))
 
 ## v0.2.1 (2014-12-09)
 
 - add widgets locking ([#19](https://github.com/gridstack/gridstack.js/issues/19))
-- add `will_it_fit` API method
+- add `willItFit` API method
 - fix auto-positioning ([#20](https://github.com/gridstack/gridstack.js/issues/20))
 - add animation (thanks to @ishields)
 - fix `y` coordinate calculation when dragging ([#18](https://github.com/gridstack/gridstack.js/issues/18))
-- fix `remove_widget` ([#16](https://github.com/gridstack/gridstack.js/issues/16))
+- fix `removeWidget` ([#16](https://github.com/gridstack/gridstack.js/issues/16))
 - minor fixes
 
 
@@ -196,7 +196,7 @@ also now cache each column layout so you can go back to say 12 column and not lo
 - add `height` option
 - auto-generate css rules (widgets `height` and `top`)
 - add `GridStackUI.Utils.sort` utility function
-- add `remove_all` API method
+- add `removeAll` API method
 - add `resize` and `move` API methods
 - add `resizable` and `movable` API methods
 - add `data-gs-no-move` attribute
