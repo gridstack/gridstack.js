@@ -1450,7 +1450,7 @@
     node.resizeHandles = el.attr('data-gs-resize-handles');
     node.id = el.attr('data-gs-id');
     return node;
-  }
+  };
 
   GridStack.prototype.setAnimation = function(enable) {
     if (enable) {
@@ -1519,7 +1519,7 @@
     if (detachNode !== false) {
       delete this.grid._layouts;
       // remove our data structure before list gets emptied and DOM elements stay behind
-      this.grid.nodes.forEach(node => { node.el.removeData('_gridstack_node'); });
+      this.grid.nodes.forEach(function(node) { node.el.removeData('_gridstack_node') });
     }
     this.grid.removeAll(detachNode);
     this._triggerRemoveEvent();
@@ -1833,15 +1833,15 @@
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
     var copy = [nodes.length];
-    nodes.forEach((n, i) => copy[i] = Utils.clone(n)); // clone to preserve _id that gets reset during removal, and changing x,y,w,h live objects
+    nodes.forEach(function(n, i) {copy[i] = Utils.clone(n)}); // clone to preserve _id that gets reset during removal, and changing x,y,w,h live objects
     this.grid._layouts = this.grid._layouts || {};
     this.grid._layouts[oldColumn] = copy;
 
     // see if we have cached prev values and if so re-use those nodes that are still current...
     var newNodes = [];
     var cacheNodes = this.grid._layouts[column] || [];
-    cacheNodes.forEach(cacheNode => {
-      var j = nodes.findIndex(n => n && n._id === cacheNode._id);
+    cacheNodes.forEach(function(cacheNode) {
+      var j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
       if (j !== -1) {
         newNodes.push(cacheNode); // still current, use cache info
         nodes[j] = null;
@@ -1849,7 +1849,7 @@
     });
     // ...and add any extra non-cached ones
     var ratio = column / oldColumn;
-    nodes.forEach(node => {
+    nodes.forEach(function(node) {
       if (!node) return;
       newNodes.push($.extend({}, node, {x: Math.round(node.x * ratio), width: Math.round(node.width * ratio) || 1}));
     });
@@ -1859,11 +1859,11 @@
     // (batch mode will set float=true so we can position anywhere and do gravity relayout after)
     this.batchUpdate();
     this.grid.removeAll(false); // 'false' = leave DOm elements behind
-    newNodes.forEach(node => {
+    newNodes.forEach(function(node) {
       var newNode = this.addWidget(node.el, node).data('_gridstack_node');
       newNode._id = node._id; // keep same ID so we can re-use caches
       newNode._dirty = true;
-    });
+    }, this);
     this.grid._removedNodes = []; // prevent add/remove from being called (kept DOM) only change event
     this.grid._addedNodes = [];
     this.commit();
