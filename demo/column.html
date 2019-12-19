@@ -11,6 +11,7 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="../dist/jquery-ui.min.js"></script>
+  <script src="../src/gridstack-poly.js"></script>
   <script src="../src/gridstack.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
 </head>
@@ -36,9 +37,9 @@
       $grid.gridstack({float: true});
       grid = $grid.data('gridstack');
 
-      $grid.on('added', (e, items) => log(' added ', items));
-      $grid.on('removed', (e, items) => log(' removed ', items));
-      $grid.on('change', (e, items) => log(' change ', items));
+      $grid.on('added', function(e, items) {log(' added ', items)});
+      $grid.on('removed', function(e, items) {log(' removed ', items)});
+      $grid.on('change', function(e, items) {log(' change ', items)});
       function log(type, items) {
         if (!items) { return; }
         var str = '';
@@ -63,7 +64,7 @@
       };
       grid.commit();
 
-      $('#add-widget').click(() => {
+      $('#add-widget').click(function() {
         var node = items.pop() || {
           x: Math.round(12 * Math.random()),
           y: Math.round(5 * Math.random()),
@@ -73,15 +74,15 @@
         grid.addWidget($('<div><div class="grid-stack-item-content">' + count++ + '</div></div>'), node);
       });
 
-      $('#1column').click(() => { grid.setColumn(1); });
-      $('#2column').click(() => { grid.setColumn(2); });
-      $('#3column').click(() => { grid.setColumn(3); });
-      $('#4column').click(() => { grid.setColumn(4); });
-      $('#6column').click(() => { grid.setColumn(6); });
-      $('#6column').click(() => { grid.setColumn(6); });
-      $('#8column').click(() => { grid.setColumn(8); });
-      $('#10column').click(() => { grid.setColumn(10); });
-      $('#12column').click(() => { grid.setColumn(12); });
+      $('#1column').click(function() { grid.setColumn(1); });
+      $('#2column').click(function() { grid.setColumn(2); });
+      $('#3column').click(function() { grid.setColumn(3); });
+      $('#4column').click(function() { grid.setColumn(4); });
+      $('#6column').click(function() { grid.setColumn(6); });
+      $('#6column').click(function() { grid.setColumn(6); });
+      $('#8column').click(function() { grid.setColumn(8); });
+      $('#10column').click(function() { grid.setColumn(10); });
+      $('#12column').click(function() { grid.setColumn(12); });
     });
   </script>
 </body>
