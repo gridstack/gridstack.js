@@ -469,6 +469,8 @@
   };
 
   GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
+    var prev = {x: node.x, y: node.y, width: node.width, height: node.height};
+
     node = this._prepareNode(node);
 
     if (node.maxWidth !== undefined) { node.width = Math.min(node.width, node.maxWidth); }
@@ -476,7 +478,7 @@
     if (node.minWidth !== undefined) { node.width = Math.max(node.width, node.minWidth); }
     if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
 
-    node._id = ++idSeq;
+    node._id = node._id || ++idSeq;
     // node._dirty = true; will be addEvent instead, unless it changes below...
 
     if (node.autoPosition) {
@@ -489,10 +491,10 @@
           continue;
         }
         if (!this.nodes.find(Utils._isAddNodeIntercepted, {x: x, y: y, node: node})) {
+          node._dirty = (node.x !== x || node.y !== y);
           node.x = x;
           node.y = y;
           delete node.autoPosition; // found our slot
-          node._dirty = (node.x !== x || node.y !== y);
           break;
         }
       }
@@ -501,6 +503,10 @@
     this.nodes.push(node);
     if (triggerAddEvent) {
       this._addedNodes.push(node);
+    }
+    // use single equal as they come as string/undefined but end as number....
+    if (!node._dirty && (prev.x != node.x || prev.y != node.y || prev.width != node.width || prev.height != node.height)) {
+      node._dirty = true;
     }
 
     this._fixCollisions(node);
@@ -1697,6 +1703,24 @@
     });
   };
 
+  /**
+   * relayout grid items to reclaim any empty space
+   */
+  GridStack.prototype.compact = function() {
+    if (this.grid.nodes.length === 0) { return; }
+    this.batchUpdate();
+    this.grid._sortNodes();
+    var nodes = this.grid.nodes;
+    this.grid.nodes = []; // pretend we have no nodes to conflict layout to start with...
+    nodes.forEach(function(n) {
+      if (!n.noMove && !n.locked) {
+        n.autoPosition = true;
+      }
+      this.grid.addNode(n, false); // 'false' for add event trigger
+    }, this);
+    this.commit();
+  };
+
   GridStack.prototype.verticalMargin = function(val, noUpdate) {
     if (val === undefined) {
       return this.opts.verticalMargin;
@@ -1809,44 +1833,67 @@
     //
     // now update the nodes positions, using the original ones with new ratio
     //
+
     if (doNotPropagate === true || this.grid.nodes.length === 0) { return; }
     var nodes = Utils.sort(this.grid.nodes, -1, oldColumn); // current column reverse sorting so we can insert last to front (limit collision)
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
     var copy = [nodes.length];
-    nodes.forEach(function(n, i) {copy[i] = Utils.clone(n)}); // clone to preserve _id that gets reset during removal, and changing x,y,w,h live objects
-    this.grid._layouts = this.grid._layouts || {};
+    nodes.forEach(function(n, i) {copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id}}); // only thing we use change is x,y,w and need id to find it back
+    this.grid._layouts = this.grid._layouts || []; // use array to find larger quick
     this.grid._layouts[oldColumn] = copy;
 
-    // see if we have cached prev values and if so re-use those nodes that are still current...
-    var newNodes = [];
+    // see if we have cached previous layout. if NOT and we are going up in size (up-sampling) start with the largest layout we have (down-sampling) instead
+    var lastIndex = this.grid._layouts.length - 1;
     var cacheNodes = this.grid._layouts[column] || [];
+    if (cacheNodes.length === 0 && column > oldColumn && lastIndex > column) {
+      cacheNodes = this.grid._layouts[lastIndex] || [];
+      if (cacheNodes.length) {
+        // pretend we came from that larger column by assigning those values at starting point)
+        oldColumn = lastIndex;
+        cacheNodes.forEach(function(cacheNode) {
+          var j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
+          if (j !== -1) {
+            // still current, use cache info positions
+            nodes[j].x = cacheNode.x;
+            nodes[j].y = cacheNode.y;
+            nodes[j].width = cacheNode.width;
+          }
+        });
+        cacheNodes = []; // we still don't have new column cached data... will generate from larger one.
+      }
+    }
+
+    // if we found cache re-use those nodes that are still current
+    var newNodes = [];
     cacheNodes.forEach(function(cacheNode) {
       var j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
       if (j !== -1) {
-        newNodes.push(cacheNode); // still current, use cache info
-        nodes[j] = null;
+        // still current, use cache info positions
+        nodes[j].x = cacheNode.x;
+        nodes[j].y = cacheNode.y;
+        nodes[j].width = cacheNode.width;
+        newNodes.push(nodes[j]);
+        nodes[j] = null; // erase it so we know what's left
       }
     });
     // ...and add any extra non-cached ones
     var ratio = column / oldColumn;
     nodes.forEach(function(node) {
       if (!node) return;
-      newNodes.push($.extend({}, node, {x: Math.round(node.x * ratio), width: Math.round(node.width * ratio) || 1}));
+      node.x = Math.round(node.x * ratio);
+      node.width = Math.round(node.width * ratio) || 1;
+      newNodes.push(node);
     });
     newNodes = Utils.sort(newNodes, -1, column);
 
-    // now temporary remove the existing gs info and add them from last to make sure we insert them where needed
-    // (batch mode will set float=true so we can position anywhere and do gravity relayout after)
+    // finally relayout them in reverse order (to get correct placement)
     this.batchUpdate();
-    this.grid.removeAll(false); // 'false' = leave DOm elements behind
+    this.grid.nodes = []; // pretend we have no nodes to start with (we use same structures) to simplify layout
     newNodes.forEach(function(node) {
-      var newNode = this.addWidget(node.el, node).data('_gridstack_node');
-      newNode._id = node._id; // keep same ID so we can re-use caches
-      newNode._dirty = true;
+      this.grid.addNode(node, false); // 'false' for add event trigger
+      node._dirty = true; // force attr update
     }, this);
-    this.grid._removedNodes = []; // prevent add/remove from being called (kept DOM) only change event
-    this.grid._addedNodes = [];
     this.commit();
   };
 

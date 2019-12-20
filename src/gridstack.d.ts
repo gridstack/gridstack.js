@@ -97,6 +97,11 @@ interface GridStack {
   commit(): void;
 
   /**
+   * relayout grid items to reclaim any empty space
+   */
+  compact(): void;
+
+  /**
    * Destroys a grid instance.
    * @param detachGrid if false nodes and grid will not be removed from the DOM (Optional. Default true).
    */

@@ -276,7 +276,7 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.column', function() {
+  describe('grid.setColumn', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
@@ -341,7 +341,7 @@ describe('gridstack', function() {
       expect(node2.width).toBe(4);
       expect(node2.height).toBe(4);
       
-      // one column will have item1, item2
+      // 1 column will have item1, item2
       grid.setColumn(1);
       node1 = $('#item1').data('_gridstack_node');
       node2 = $('#item2').data('_gridstack_node');
@@ -365,6 +365,27 @@ describe('gridstack', function() {
       expect(node3.width).toBe(1);
       expect(node3.height).toBe(1);
 
+      // 2 column will have item1, item2, item3 in 1 column still
+      grid.setColumn(2);
+      node1 = $('#item1').data('_gridstack_node');
+      node2 = $('#item2').data('_gridstack_node');
+      node3 = $('#item3').data('_gridstack_node');
+      expect(grid.opts.column).toBe(2);
+      expect(node1.x).toBe(0);
+      expect(node1.y).toBe(0);
+      expect(node1.width).toBe(1);
+      expect(node1.height).toBe(2);
+
+      expect(node2.x).toBe(1);
+      expect(node2.y).toBe(0);
+      expect(node2.width).toBe(1);
+      expect(node2.height).toBe(4);
+
+      expect(node3.x).toBe(0);
+      expect(node3.y).toBe(6);
+      expect(node3.width).toBe(1); // ??? could stay at 1 or take entire width still ?
+      expect(node3.height).toBe(1);      
+
       // back to 12 column and initial layout (other than new item3)
       grid.setColumn(12);
       expect(grid.opts.column).toBe(12);
@@ -383,7 +404,7 @@ describe('gridstack', function() {
 
       expect(node3.x).toBe(0);
       expect(node3.y).toBe(6);
-      expect(node3.width).toBe(12); // take entire row still
+      expect(node3.width).toBe(6); // ??? could 6 or taken entire width if it did above
       expect(node3.height).toBe(1);
     });
   });
@@ -1250,5 +1271,39 @@ describe('gridstack', function() {
         expect(parseInt(item.attr('data-gs-height'))).toBe(pos[i].h);
       }
     });
+  });
+
+  describe('grid.compact', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should move all 3 items to top-left with no space', function() {
+      $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').data('gridstack');
+
+      var el3 = grid.addWidget(widgetHTML, {x: 3, y: 5});
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(3);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(5);
+
+      grid.compact();
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(8);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(0);
+    });
+    it('not move locked item', function() {
+      $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').data('gridstack');
+
+      var el3 = grid.addWidget(widgetHTML, {x: 3, y: 5, locked: true, noMove: true});
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(3);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(5);
+
+      grid.compact();
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(3);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(5);
+    });
+
   });
 });

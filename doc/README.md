@@ -23,6 +23,7 @@ gridstack.js API
   - [addWidget(el, [options])](#addwidgetel-options)
   - [addWidget(el, [x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
+  - [compact()](#compact)
   - [cellHeight()](#cellheight)
   - [cellHeight(val, noUpdate)](#cellheightval-noupdate)
   - [cellWidth()](#cellwidth)
@@ -251,6 +252,10 @@ grid.addWidget(el, 0, 0, 3, 2, true);
 ### batchUpdate()
 
 starts batch updates. You will see no changes until `commit()` method is called.
+
+### compact()
+
+relayout grid items to reclaim any empty space.
 
 ### cellHeight()
 
