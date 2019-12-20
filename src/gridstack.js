@@ -469,6 +469,8 @@
   };
 
   GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
+    var prev = {x: node.x, y: node.y, width: node.width, height: node.height};
+
     node = this._prepareNode(node);
 
     if (node.maxWidth !== undefined) { node.width = Math.min(node.width, node.maxWidth); }
@@ -501,6 +503,10 @@
     this.nodes.push(node);
     if (triggerAddEvent) {
       this._addedNodes.push(node);
+    }
+    // use single equal as they come as string/undefined but end as number....
+    if (!node._dirty && (prev.x != node.x || prev.y != node.y || prev.width != node.width || prev.height != node.height)) {
+      node._dirty = true;
     }
 
     this._fixCollisions(node);
@@ -1832,7 +1838,7 @@
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
     var copy = [nodes.length];
-    nodes.forEach(function(n, i) {copy[i] = Utils.clone(n)}); // clone to preserve _id that gets reset during removal, and changing x,y,w,h live objects
+    nodes.forEach(function(n, i) {copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id}}); // clone to preserve changing x,y,w,h live objects
     this.grid._layouts = this.grid._layouts || {};
     this.grid._layouts[oldColumn] = copy;
 
@@ -1842,7 +1848,11 @@
     cacheNodes.forEach(function(cacheNode) {
       var j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
       if (j !== -1) {
-        newNodes.push(cacheNode); // still current, use cache info
+        // still current, use cache info positions
+        nodes[j].x = cacheNode.x;
+        nodes[j].y = cacheNode.y;
+        nodes[j].width = cacheNode.width;
+        newNodes.push(nodes[j]);
         nodes[j] = null;
       }
     });
@@ -1850,21 +1860,19 @@
     var ratio = column / oldColumn;
     nodes.forEach(function(node) {
       if (!node) return;
-      newNodes.push($.extend({}, node, {x: Math.round(node.x * ratio), width: Math.round(node.width * ratio) || 1}));
+      node.x = Math.round(node.x * ratio);
+      node.width = Math.round(node.width * ratio) || 1;
+      newNodes.push(node);
     });
     newNodes = Utils.sort(newNodes, -1, column);
 
-    // now temporary remove the existing gs info and add them from last to make sure we insert them where needed
-    // (batch mode will set float=true so we can position anywhere and do gravity relayout after)
+    // finally relayout them in reverse order (to get correct placement)
     this.batchUpdate();
-    this.grid.removeAll(false); // 'false' = leave DOm elements behind
+    this.grid.nodes = []; // pretend we have no nodes to start with (we use same structures) to simplify layout
     newNodes.forEach(function(node) {
-      var newNode = this.addWidget(node.el, node).data('_gridstack_node');
-      newNode._id = node._id; // keep same ID so we can re-use caches
-      newNode._dirty = true;
+      this.grid.addNode(node, false); // 'false' for add event trigger
+      node._dirty = true; // force attr update
     }, this);
-    this.grid._removedNodes = []; // prevent add/remove from being called (kept DOM) only change event
-    this.grid._addedNodes = [];
     this.commit();
   };
 
