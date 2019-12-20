@@ -1833,18 +1833,39 @@
     //
     // now update the nodes positions, using the original ones with new ratio
     //
+
     if (doNotPropagate === true || this.grid.nodes.length === 0) { return; }
     var nodes = Utils.sort(this.grid.nodes, -1, oldColumn); // current column reverse sorting so we can insert last to front (limit collision)
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
     var copy = [nodes.length];
-    nodes.forEach(function(n, i) {copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id}}); // clone to preserve changing x,y,w,h live objects
-    this.grid._layouts = this.grid._layouts || {};
+    nodes.forEach(function(n, i) {copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id}}); // only thing we use change is x,y,w and need id to find it back
+    this.grid._layouts = this.grid._layouts || []; // use array to find larger quick
     this.grid._layouts[oldColumn] = copy;
 
-    // see if we have cached prev values and if so re-use those nodes that are still current...
-    var newNodes = [];
+    // see if we have cached previous layout. if NOT and we are going up in size (up-sampling) start with the largest layout we have (down-sampling) instead
+    var lastIndex = this.grid._layouts.length - 1;
     var cacheNodes = this.grid._layouts[column] || [];
+    if (cacheNodes.length === 0 && column > oldColumn && lastIndex > column) {
+      cacheNodes = this.grid._layouts[lastIndex] || [];
+      if (cacheNodes.length) {
+        // pretend we came from that larger column by assigning those values at starting point)
+        oldColumn = lastIndex;
+        cacheNodes.forEach(function(cacheNode) {
+          var j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
+          if (j !== -1) {
+            // still current, use cache info positions
+            nodes[j].x = cacheNode.x;
+            nodes[j].y = cacheNode.y;
+            nodes[j].width = cacheNode.width;
+          }
+        });
+        cacheNodes = []; // we still don't have new column cached data... will generate from larger one.
+      }
+    }
+
+    // if we found cache re-use those nodes that are still current
+    var newNodes = [];
     cacheNodes.forEach(function(cacheNode) {
       var j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
       if (j !== -1) {
@@ -1853,7 +1874,7 @@
         nodes[j].y = cacheNode.y;
         nodes[j].width = cacheNode.width;
         newNodes.push(nodes[j]);
-        nodes[j] = null;
+        nodes[j] = null; // erase it so we know what's left
       }
     });
     // ...and add any extra non-cached ones
