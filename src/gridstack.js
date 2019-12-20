@@ -479,7 +479,6 @@
     if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
 
     node._id = node._id || ++idSeq;
-    // node._dirty = true; will be addEvent instead, unless it changes below...
 
     if (node.autoPosition) {
       this._sortNodes();
@@ -491,7 +490,6 @@
           continue;
         }
         if (!this.nodes.find(Utils._isAddNodeIntercepted, {x: x, y: y, node: node})) {
-          node._dirty = (node.x !== x || node.y !== y);
           node.x = x;
           node.y = y;
           delete node.autoPosition; // found our slot
@@ -525,6 +523,7 @@
   };
 
   GridStackEngine.prototype.removeAll = function(detachNode) {
+    delete this._layouts;
     if (this.nodes.length === 0) { return; }
     detachNode = (detachNode === undefined ? true : detachNode);
     this.nodes.forEach(function(n) { n._id = null; }); // hint that node is being removed
@@ -1030,6 +1029,7 @@
     // TODO: compare original X,Y,W,H (or entire node?) instead as _dirty can be a temporary state
     var elements = this.grid.getDirtyNodes();
     if (elements && elements.length) {
+      this.grid._layoutsNodesChange(elements);
       this.container.trigger('change', [elements]);
       this.grid.cleanNodes(); // clear dirty flags now that we called
     }
@@ -1038,6 +1038,7 @@
   GridStack.prototype._triggerAddEvent = function() {
     if (this.grid._batchMode) { return; }
     if (this.grid._addedNodes && this.grid._addedNodes.length > 0) {
+      this.grid._layoutsNodesChange(this.grid._addedNodes);
       this.container.trigger('added', [this.grid._addedNodes]);
       this.grid._addedNodes = [];
     }
@@ -1504,7 +1505,6 @@
 
   GridStack.prototype.removeAll = function(detachNode) {
     if (detachNode !== false) {
-      delete this.grid._layouts;
       // remove our data structure before list gets emptied and DOM elements stay behind
       this.grid.nodes.forEach(function(node) { node.el.removeData('_gridstack_node') });
     }
@@ -1815,41 +1815,51 @@
     }
   };
 
+  /** called whenever a node is added or moved - updates the cached layouts */
+  GridStackEngine.prototype._layoutsNodesChange = function(nodes) {
+    if (!this._layouts || this._ignoreLayoutsNodeChange) return;
+    // remove smaller layouts - we will re-generate those on the fly... larger ones need to update
+    this._layouts.forEach(function(layout, i) {
+      if (!layout || i === this.column) return;
+      if (i < this.column) {
+        this._layouts[i] = undefined;
+      }
+      else {
+        // TODO: save the original x,y,w (h isn't cached) and see what actually changed to propagate correctly ?
+        nodes.forEach(function(node) {
+          var n = layout.find(function(l) { return l._id === node._id });
+          if (!n) return;
+          var ratio = i / this.column;
+          n.y = node.y;
+          n.x = Math.round(node.x * ratio);
+          // width ???
+        }, this);
+      }
+    }, this);
+  }
+
   /**
-   * Modify number of columns in the grid. Will attempt to update existing widgets
-   * to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [1-11],
-   * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
-   * @param column - Integer > 0 (default 12).
-   * @param doNotPropagate if true existing widgets will not be updated (optional)
+   * Called to scale the widget width & position up/down based on the column change.
+   * Note we store previous layouts (especially original ones) to make it possible to go
+   * from say 12 -> 1 -> 12 and get back to where we were.
    */
-  GridStack.prototype.setColumn = function(column, doNotPropagate) {
-    if (this.opts.column === column) { return; }
-    var oldColumn = this.opts.column;
-
-    this.container.removeClass('grid-stack-' + oldColumn);
-    this.container.addClass('grid-stack-' + column);
-    this.opts.column = this.grid.column = column;
-
-    //
-    // now update the nodes positions, using the original ones with new ratio
-    //
-
-    if (doNotPropagate === true || this.grid.nodes.length === 0) { return; }
-    var nodes = Utils.sort(this.grid.nodes, -1, oldColumn); // current column reverse sorting so we can insert last to front (limit collision)
+  GridStackEngine.prototype._updateNodeWidths = function(oldColumn, column) {
+    if (this.nodes.length === 0 || oldColumn === column) { return; }
+    var nodes = Utils.sort(this.nodes, -1, oldColumn); // current column reverse sorting so we can insert last to front (limit collision)
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
     var copy = [nodes.length];
-    nodes.forEach(function(n, i) {copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id}}); // only thing we use change is x,y,w and need id to find it back
-    this.grid._layouts = this.grid._layouts || []; // use array to find larger quick
-    this.grid._layouts[oldColumn] = copy;
+    nodes.forEach(function(n, i) {copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id}}); // only thing we change is x,y,w and id to find it back
+    this._layouts = this._layouts || []; // use array to find larger quick
+    this._layouts[oldColumn] = copy;
 
-    // see if we have cached previous layout. if NOT and we are going up in size (up-sampling) start with the largest layout we have (down-sampling) instead
-    var lastIndex = this.grid._layouts.length - 1;
-    var cacheNodes = this.grid._layouts[column] || [];
-    if (cacheNodes.length === 0 && column > oldColumn && lastIndex > column) {
-      cacheNodes = this.grid._layouts[lastIndex] || [];
+    // see if we have cached previous layout. if NOT and we are going up in size start with the largest layout as down-scaling is more accurate
+    var lastIndex = this._layouts.length - 1;
+    var cacheNodes = this._layouts[column] || [];
+    if (cacheNodes.length === 0 && column > oldColumn && column < lastIndex) {
+      cacheNodes = this._layouts[lastIndex] || [];
       if (cacheNodes.length) {
-        // pretend we came from that larger column by assigning those values at starting point)
+        // pretend we came from that larger column by assigning those values as starting point
         oldColumn = lastIndex;
         cacheNodes.forEach(function(cacheNode) {
           var j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
@@ -1882,19 +1892,46 @@
     nodes.forEach(function(node) {
       if (!node) return;
       node.x = Math.round(node.x * ratio);
-      node.width = Math.round(node.width * ratio) || 1;
+      node.width = (oldColumn === 1 ? 1 : (Math.round(node.width * ratio) || 1));
       newNodes.push(node);
     });
     newNodes = Utils.sort(newNodes, -1, column);
 
     // finally relayout them in reverse order (to get correct placement)
+    this._ignoreLayoutsNodeChange = true;
     this.batchUpdate();
-    this.grid.nodes = []; // pretend we have no nodes to start with (we use same structures) to simplify layout
+    this.nodes = []; // pretend we have no nodes to start with (we use same structures) to simplify layout
     newNodes.forEach(function(node) {
-      this.grid.addNode(node, false); // 'false' for add event trigger
+      this.addNode(node, false); // 'false' for add event trigger
       node._dirty = true; // force attr update
     }, this);
     this.commit();
+    delete this._ignoreLayoutsNodeChange;
+  }
+
+  /**
+   * Modify number of columns in the grid. Will attempt to update existing widgets
+   * to conform to new number of columns. Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [1-11],
+   * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
+   * @param column - Integer > 0 (default 12).
+   * @param doNotPropagate if true existing widgets will not be updated (optional)
+   */
+  GridStack.prototype.setColumn = function(column, doNotPropagate) {
+    if (this.opts.column === column) { return; }
+    var oldColumn = this.opts.column;
+
+    this.container.removeClass('grid-stack-' + oldColumn);
+    this.container.addClass('grid-stack-' + column);
+    this.opts.column = this.grid.column = column;
+
+    // update the items now
+    if (doNotPropagate === true) { return; }
+    this.grid._updateNodeWidths(oldColumn, column);
+
+    // and trigger our event last...
+    this.grid._ignoreLayoutsNodeChange = true;
+    this._triggerChangeEvent();
+    delete this.grid._ignoreLayoutsNodeChange;
   };
 
   GridStack.prototype.float = function(val) {
