@@ -1251,4 +1251,38 @@ describe('gridstack', function() {
       }
     });
   });
+
+  describe('grid.compact', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should move all 3 items to top-left with no space', function() {
+      $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').data('gridstack');
+
+      var el3 = grid.addWidget(widgetHTML, {x: 3, y: 5});
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(3);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(5);
+
+      grid.compact();
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(8);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(0);
+    });
+    it('not move locked item', function() {
+      $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').data('gridstack');
+
+      var el3 = grid.addWidget(widgetHTML, {x: 3, y: 5, locked: true, noMove: true});
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(3);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(5);
+
+      grid.compact();
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(3);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(5);
+    });
+
+  });
 });

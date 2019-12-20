@@ -476,7 +476,7 @@
     if (node.minWidth !== undefined) { node.width = Math.max(node.width, node.minWidth); }
     if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
 
-    node._id = ++idSeq;
+    node._id = node._id || ++idSeq;
     // node._dirty = true; will be addEvent instead, unless it changes below...
 
     if (node.autoPosition) {
@@ -489,10 +489,10 @@
           continue;
         }
         if (!this.nodes.find(Utils._isAddNodeIntercepted, {x: x, y: y, node: node})) {
+          node._dirty = (node.x !== x || node.y !== y);
           node.x = x;
           node.y = y;
           delete node.autoPosition; // found our slot
-          node._dirty = (node.x !== x || node.y !== y);
           break;
         }
       }
@@ -1695,6 +1695,24 @@
 
       this.grid.moveNode(node, x, y, width, height);
     });
+  };
+
+  /**
+   * relayout grid items to reclaim any empty space
+   */
+  GridStack.prototype.compact = function() {
+    if (this.grid.nodes.length === 0) { return; }
+    this.batchUpdate();
+    this.grid._sortNodes();
+    var nodes = this.grid.nodes;
+    this.grid.nodes = []; // pretend we have no nodes to conflict layout to start with...
+    nodes.forEach(function(n) {
+      if (!n.noMove && !n.locked) {
+        n.autoPosition = true;
+      }
+      this.grid.addNode(n, false); // 'false' for add event trigger
+    }, this);
+    this.commit();
   };
 
   GridStack.prototype.verticalMargin = function(val, noUpdate) {
