@@ -6,7 +6,7 @@ Describe your issue here.
 * which browser and its version
 
 ## Steps to reproduce
-Tell us how to reproduce this issue. Please provide a working demo, you can use [this template](https://jsfiddle.net/dweiss/dqyvh6vr/) as a base.
+Tell us how to reproduce this issue. Please provide a working demo, you can use [this template](https://jsfiddle.net/adumesny/jqhkry7g) as a base.
 
 ## Expected behaviour
 Tell us what should happen
