@@ -73,12 +73,13 @@ gridstack.js API
   * a string (ex: '100px', '10em', '10rem', '10%')
   * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
   * `'auto'` - height will be calculated to match cell width (initial square grid).
-- `column` - amount of columns (default: `12`)
+- `column` - number of columns (default: `12`) which can change on the fly with `setColumn()` as well. See [example](http://gridstackjs.com/demo/column.html)
 - `ddPlugin` - class that implement drag'n'drop functionallity for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - disables the onColumnMode when the window width is less than minWidth (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
-- `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`)
+- `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body', containment: null}`)
+- `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
