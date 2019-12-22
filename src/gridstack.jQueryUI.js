@@ -56,8 +56,8 @@
       el.draggable(opts);
     } else {
       el.draggable($.extend({}, this.grid.opts.draggable, {
-        containment: (this.grid.opts.isNested && !this.grid.opts.dragOut) ? 
-          this.grid.container.parent() : 
+        containment: (this.grid.opts.isNested && !this.grid.opts.dragOut) ?
+          this.grid.container.parent() :
           (this.grid.opts.draggable.containment || null),
         start: opts.start || function() {},
         stop: opts.stop || function() {},
