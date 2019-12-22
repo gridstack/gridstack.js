@@ -444,9 +444,14 @@ interface GridstackOptions {
   disableResize ? : boolean;
 
   /**
-   * allows to override jQuery UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body' })
+   * allows to override jQuery UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null })
    */
   draggable ? : {};
+
+  /**
+   * let user drag nested grid items out of a parent or not (default false)
+   */
+  dragOut ? : boolean;
 
   /**
    * draggable handle selector (default?: '.grid-stack-item-content')

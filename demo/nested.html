@@ -26,6 +26,9 @@
 <body>
   <div class="container-fluid">
     <h1>Nested grids demo</h1>
+    <a class="btn btn-primary" id="add-widget1" href="#">Add Widget Grid1</a>
+    <a class="btn btn-primary" id="add-widget2" href="#">Add Widget Grid2</a>
+    <br><br>
 
     <div class="grid-stack top">
       <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="1" data-gs-height="1">
@@ -62,9 +65,23 @@
         dragOut: true // let us drag them out!
       };
       $('.grid-stack.top').gridstack();
-      $('.grid-stack.nested1').gridstack(nestOptions);
+      var grid1 = $('.grid-stack.nested1').gridstack(nestOptions).data('gridstack');
       nestOptions.dragOut = false;
-      $('.grid-stack.nested2').gridstack(nestOptions);
+      var grid2 = $('.grid-stack.nested2').gridstack(nestOptions).data('gridstack');
+
+      var count = 9;
+      addNewWidget = function(grid) {
+        var node = {
+          x: Math.round(12 * Math.random()),
+          y: Math.round(5 * Math.random()),
+          width: Math.round(1 + 3 * Math.random()),
+          height: Math.round(1 + 3 * Math.random())
+        };
+        grid.addWidget($('<div class="grid-stack-item sub"><div class="grid-stack-item-content">' + count++ + '</div></div>'), node);
+        return false;
+      };
+      $('#add-widget1').click(function () { addNewWidget(grid1)});
+      $('#add-widget2').click(function () { addNewWidget(grid2)});
     });
   </script>
 </body>
