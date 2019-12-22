@@ -27,36 +27,44 @@
   <div class="container-fluid">
     <h1>Nested grids demo</h1>
 
-    <div class="grid-stack">
-      <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="3">
-        <div class="grid-stack-item-content">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eaque eius eligendi eos fuga magnam numquam perferendis provident quos rem. Asperiores assumenda dolor error eveniet impedit nihil numquam provident repellat ullam.
-        </div>
+    <div class="grid-stack top">
+      <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="1" data-gs-height="1">
+        <div class="grid-stack-item-content">regular item</div>
       </div>
-      <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">
+      <div class="grid-stack-item" data-gs-x="1" data-gs-y="0" data-gs-width="4" data-gs-height="4">
         <div class="grid-stack-item-content">
-
-            <div class="grid-stack">
-              <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">1</div></div>
-              <div class="grid-stack-item" data-gs-x="3" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">2</div></div>
-              <div class="grid-stack-item" data-gs-x="6" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">3</div></div>
-              <div class="grid-stack-item" data-gs-x="9" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">4</div></div>
-
-              <div class="grid-stack-item" data-gs-x="0" data-gs-y="1" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">5</div></div>
-              <div class="grid-stack-item" data-gs-x="3" data-gs-y="1" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">6</div></div>
-            </div>
-
+          nested 1 - can drag items out
+          <div class="grid-stack nested1">
+            <div class="grid-stack-item sub" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">1</div></div>
+            <div class="grid-stack-item sub" data-gs-x="3" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">2</div></div>
+            <div class="grid-stack-item sub" data-gs-x="6" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">3</div></div>
+            <div class="grid-stack-item sub" data-gs-x="9" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">4</div></div>
+            <div class="grid-stack-item sub" data-gs-x="0" data-gs-y="1" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">5</div></div>
+            <div class="grid-stack-item sub" data-gs-x="3" data-gs-y="1" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">6</div></div>
+          </div>
+        </div>
+    </div>
+    <div class="grid-stack-item" data-gs-x="5" data-gs-y="0" data-gs-width="3" data-gs-height="4">
+      <div class="grid-stack-item-content">
+        nested 2 - constrained to parent (default)
+        <div class="grid-stack nested2">
+          <div class="grid-stack-item sub" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">7</div></div>
+          <div class="grid-stack-item sub" data-gs-x="0" data-gs-y="3" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">8</div></div>
         </div>
       </div>
     </div>
   </div>
 
-
   <script type="text/javascript">
     $(function () {
-      var options = {
+      var nestOptions = {
+        acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted, otherwise grid-items causes all sort of issues
+        dragOut: true // let us drag them out!
       };
-      $('.grid-stack').gridstack(options);
+      $('.grid-stack.top').gridstack();
+      $('.grid-stack.nested1').gridstack(nestOptions);
+      nestOptions.dragOut = false;
+      $('.grid-stack.nested2').gridstack(nestOptions);
     });
   </script>
 </body>
