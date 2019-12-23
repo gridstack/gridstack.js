@@ -62,8 +62,10 @@
         width = Math.max.apply(Math, widths);
       }
 
-      dir = dir !== -1 ? 1 : -1;
-      return Utils.sortBy(nodes, function(n) { return dir * (n.x + n.y * width); });
+      if (dir === -1)
+        return Utils.sortBy(nodes, function(n) { return -(n.x + n.y * width); });
+      else
+        return Utils.sortBy(nodes, function(n) { return (n.x + n.y * width); });
     },
 
     createStylesheet: function(id) {
@@ -942,16 +944,25 @@
           }
         })
         .on(self.container, 'dropover', function(event, ui) {
-          var offset = self.container.offset();
           var el = $(ui.draggable);
+          var width, height;
+
+          // see if we already have a node with widget/height and check for attributes
+          var origNode = el.data('_gridstack_node');
+          if (!origNode || !origNode.width || !origNode.height) {
+            var w = parseInt(el.attr('data-gs-width'));
+            if (w > 0) { origNode = origNode || {}; origNode.width = w; }
+            var h = parseInt(el.attr('data-gs-height'));
+            if (h > 0) { origNode = origNode || {}; origNode.height = h; }
+          }
+
+          // if not calculate the grid size based on element outer size
+          // height: Each row is cellHeight + verticalMargin, until last one which has no margin below
           var cellWidth = self.cellWidth();
           var cellHeight = self.cellHeight();
-          var origNode = el.data('_gridstack_node');
           var verticalMargin = self.opts.verticalMargin;
-
-          // height: Each row is cellHeight + verticalMargin, until last one which has no margin below
-          var width = origNode ? origNode.width : Math.ceil(el.outerWidth() / cellWidth);
-          var height = origNode ? origNode.height : Math.round((el.outerHeight() + verticalMargin) / (cellHeight + verticalMargin));
+          width = origNode && origNode.width ? origNode.width : Math.ceil(el.outerWidth() / cellWidth);
+          height = origNode && origNode.height ? origNode.height : Math.round((el.outerHeight() + verticalMargin) / (cellHeight + verticalMargin));
 
           draggingElement = el;
 
