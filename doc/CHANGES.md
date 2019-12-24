@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.5.5-dev (upcoming changes)](#v055-dev-upcoming-changes)
+- [v0.6.0-dev (upcoming changes)](#v060-dev-upcoming-changes)
+- [v0.6.0 (2019-12-24)](#v060-2019-12-24)
 - [v0.5.5 (2019-11-27)](#v055-2019-11-27)
 - [v0.5.4 (2019-11-26)](#v054-2019-11-26)
 - [v0.5.3 (2019-11-20)](#v053-2019-11-20)
@@ -25,7 +26,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.5.5-dev (upcoming changes)
+## v0.6.0-dev (upcoming changes)
+
+- TBD
+
+## v0.6.0 (2019-12-24)
 
 - add `float(val)` to set/get the grid float mode, which will relayout [#1088](https://github.com/gridstack/gridstack.js/pull/1088)
 - add `compact()` to reclaim any empty space and relayout grid items [#1101](https://github.com/gridstack/gridstack.js/pull/1101)
