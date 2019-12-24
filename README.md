@@ -62,19 +62,19 @@ Using gridstack.js with jQuery UI
 * Using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.min.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.all.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.all.js"></script>
 ```
 
 * Using CDN (debug):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/jquery-ui.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack.jQueryUI.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack.jQueryUI.js"></script>
 ```
 
 * or local:
@@ -194,7 +194,7 @@ $('.grid-stack').gridstack( {column: N} );
 
 2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.5.5/dist/gridstack-extra.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.0/dist/gridstack-extra.css"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
