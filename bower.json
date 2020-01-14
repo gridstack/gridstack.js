@@ -7,7 +7,7 @@
     "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)",
     "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)"
   ],
-  "description": "gridstack.js is a jQuery plugin for widget layout",
+  "description": "gridstack.js is a jQuery plugin for widget layout, with many wrappers (React, @angular, knockout...)",
   "main": [
     "dist/gridstack.js",
     "dist/gridstack.css"
@@ -24,7 +24,13 @@
     "grid",
     "gridster",
     "layout",
-    "jquery"
+    "responsive",
+    "dashboard",
+    "resize",
+    "drag&drop",
+    "widgets",
+    "angular",
+    "react"
   ],
   "license": "MIT",
   "ignore": [
