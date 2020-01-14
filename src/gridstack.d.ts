@@ -398,10 +398,12 @@ declare namespace GridStackUI {
  */
 interface GridstackOptions {
   /**
-   * if true of jquery selector the grid will accept widgets dragged from other grids or from
-   * outside (default: false) See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
+   * accept widgets dragged from other grids or from outside (default: `false`). Can be:
+   * `true` (uses `'.grid-stack-item'` class filter) or `false`,
+   * string for explicit class name,
+   * function returning a boolean. See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
    */
-  acceptWidgets ? : boolean | string | ((i: number, element: Element) => boolean | string);
+  acceptWidgets ? : boolean | string | ((i: number, element: Element) => boolean);
 
   /**
    * if true the resizing handles are shown even if the user is not hovering over the widget (default?: false)

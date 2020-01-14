@@ -103,7 +103,7 @@
         float: false,
         removable: '.trash',
         removeTimeout: 100,
-        acceptWidgets: '.grid-stack-item'
+        acceptWidgets: function(i, el) { return true; } // function example, else can be simple: true | false | '.someClass' value
       };
       $('#grid1').gridstack(options);
       $('#grid2').gridstack($.extend({}, options, {
