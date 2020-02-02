@@ -18,16 +18,19 @@
 <body>
   <div class="container-fluid">
     <h1>setColumn() grid demo</h1>
-    <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
-    <a class="btn btn-primary" id="1column" href="#">1 Column</a>
-    <a class="btn btn-primary" id="2column" href="#">2 Column</a>
-    <a class="btn btn-primary" id="3column" href="#">3 Column</a>
-    <a class="btn btn-primary" id="4column" href="#">4 Column</a>
-    <a class="btn btn-primary" id="6column" href="#">6 Column</a>
-    <a class="btn btn-primary" id="8column" href="#">8 Column</a>
-    <a class="btn btn-primary" id="10column" href="#">10 Column</a>
-    <a class="btn btn-primary" id="12column" href="#">12 Column</a>
-    <br><br>
+    <div><span>Number of Columns:</span> <span id="column-text">12</span></div>
+    <div>
+      <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
+      <a class="btn btn-primary" id="1column" href="#">1 Column</a>
+      <a class="btn btn-primary" id="2column" href="#">2 Column</a>
+      <a class="btn btn-primary" id="3column" href="#">3 Column</a>
+      <a class="btn btn-primary" id="4column" href="#">4 Column</a>
+      <a class="btn btn-primary" id="6column" href="#">6 Column</a>
+      <a class="btn btn-primary" id="8column" href="#">8 Column</a>
+      <a class="btn btn-primary" id="10column" href="#">10 Column</a>
+      <a class="btn btn-primary" id="12column" href="#">12 Column</a>
+    </div>
+    <br>
     <div class="grid-stack"></div>
   </div>
 
@@ -36,6 +39,7 @@
       var $grid = $('.grid-stack');
       $grid.gridstack({float: true});
       grid = $grid.data('gridstack');
+      var $text = $('#column-text');
 
       $grid.on('added', function(e, items) {log(' added ', items)});
       $grid.on('removed', function(e, items) {log(' removed ', items)});
@@ -74,15 +78,14 @@
         grid.addWidget($('<div><div class="grid-stack-item-content">' + count++ + (n.text ? n.text : '') + '</div></div>'), n);
       });
 
-      $('#1column').click(function() { grid.setColumn(1); });
-      $('#2column').click(function() { grid.setColumn(2); });
-      $('#3column').click(function() { grid.setColumn(3); });
-      $('#4column').click(function() { grid.setColumn(4); });
-      $('#6column').click(function() { grid.setColumn(6); });
-      $('#6column').click(function() { grid.setColumn(6); });
-      $('#8column').click(function() { grid.setColumn(8); });
-      $('#10column').click(function() { grid.setColumn(10); });
-      $('#12column').click(function() { grid.setColumn(12); });
+      $('#1column').click(function() { grid.setColumn(1); $text.text(1);});
+      $('#2column').click(function() { grid.setColumn(2); $text.text(2);});
+      $('#3column').click(function() { grid.setColumn(3); $text.text(3);});
+      $('#4column').click(function() { grid.setColumn(4); $text.text(4);});
+      $('#6column').click(function() { grid.setColumn(6); $text.text(6);});
+      $('#8column').click(function() { grid.setColumn(8); $text.text(8);});
+      $('#10column').click(function() { grid.setColumn(10); $text.text(10);});
+      $('#12column').click(function() { grid.setColumn(12); $text.text(12);});
     });
   </script>
 </body>
