@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.6.0-dev (upcoming changes)](#v060-dev-upcoming-changes)
+- [v0.6.1-dev (upcoming changes)](#v061-dev-upcoming-changes)
+- [v0.6.1 (2020-02-02)](#v061-2020-02-02)
 - [v0.6.0 (2019-12-24)](#v060-2019-12-24)
 - [v0.5.5 (2019-11-27)](#v055-2019-11-27)
 - [v0.5.4 (2019-11-26)](#v054-2019-11-26)
@@ -26,10 +27,14 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.6.0-dev (upcoming changes)
+## v0.6.1-dev (upcoming changes)
+
+- TBD
+
+## v0.6.1 (2020-02-02)
 
 - one column mode (<768px by default) now simply calls `setColumn(1)` and remembers prev columns (so we can restore). This gives
-us full resize/re-order of items capabilities rathern than a locked CSS only layout (see prev rev changes). [#1120](https://github.com/gridstack/gridstack.js/pull/1120)
+us full resize/re-order of items capabilities rather than a locked CSS only layout (see prev rev changes). [#1120](https://github.com/gridstack/gridstack.js/pull/1120)
 - fixed responsive.html demo [#1121](https://github.com/gridstack/gridstack.js/pull/1121)
 
 ## v0.6.0 (2019-12-24)
