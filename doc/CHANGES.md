@@ -28,7 +28,8 @@ Change log
 
 ## v0.6.0-dev (upcoming changes)
 
-- TBD
+- one column mode (<768px by default) now simply calls `setColumn(1)` and remembers prev columns (so we can restore). This gives
+us full resize/re-order of items capabilities rathern than a locked CSS only layout (see prev rev changes).
 
 ## v0.6.0 (2019-12-24)
 
