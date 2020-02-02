@@ -29,7 +29,8 @@ Change log
 ## v0.6.0-dev (upcoming changes)
 
 - one column mode (<768px by default) now simply calls `setColumn(1)` and remembers prev columns (so we can restore). This gives
-us full resize/re-order of items capabilities rathern than a locked CSS only layout (see prev rev changes).
+us full resize/re-order of items capabilities rathern than a locked CSS only layout (see prev rev changes). [#1120](https://github.com/gridstack/gridstack.js/pull/1120)
+- fixed responsive.html demo [#1121](https://github.com/gridstack/gridstack.js/pull/1121)
 
 ## v0.6.0 (2019-12-24)
 
