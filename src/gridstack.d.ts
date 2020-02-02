@@ -484,7 +484,7 @@ interface GridstackOptions {
   itemClass ? : string;
 
   /**
-   * minimal width. If window width is less, grid will be shown in one - column mode (default?: 768)
+   * minimal width. If window width is less, grid will be shown in one column mode (default?: 768)
    */
   minWidth ? : number;
 

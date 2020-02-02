@@ -666,7 +666,7 @@
 
   var GridStack = function(el, opts) {
     var self = this;
-    var oneColumnMode, isAutoCellHeight;
+    var _prevColumn, isAutoCellHeight;
 
     opts = opts || {};
 
@@ -814,52 +814,27 @@
       self.cellHeight(self.cellWidth(), false);
     }, 100);
 
+    /**
+     * called when we are being resized - check if the one Column Mode needs to be turned on/off
+     * and remember the prev columns we used.
+     */
     this.onResizeHandler = function() {
       if (isAutoCellHeight) {
         self._updateHeightsOnResize();
       }
 
-      if (self._isOneColumnMode() && !self.opts.disableOneColumnMode) {
-        if (oneColumnMode) {
-          return;
-        }
-        self.container.addClass(self.opts.oneColumnModeClass);
-        oneColumnMode = true;
+      var oneColumnWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <= self.opts.minWidth;
 
-        self.grid._sortNodes();
-        self.grid.nodes.forEach(function(node) {
-          self.container.append(node.el);
+      if (oneColumnWidth && !self.opts.disableOneColumnMode) {
+        if (self._prevColumn || self.opts.staticGrid) {  return; }
 
-          if (self.opts.staticGrid) {
-            return;
-          }
-          self.dd.draggable(node.el, 'disable');
-          self.dd.resizable(node.el, 'disable');
-
-          node.el.trigger('resize');
-        });
+        self.container.addClass(self.opts.oneColumnModeClass); // TODO: legacy do people still depend on style being there ?
+        self.setColumn(1);
       } else {
-        if (!oneColumnMode) {
-          return;
-        }
+        if (!self._prevColumn || self.opts.staticGrid) { return; }
 
         self.container.removeClass(self.opts.oneColumnModeClass);
-        oneColumnMode = false;
-
-        if (self.opts.staticGrid) {
-          return;
-        }
-
-        self.grid.nodes.forEach(function(node) {
-          if (!node.noMove && !self.opts.disableDrag) {
-            self.dd.draggable(node.el, 'enable');
-          }
-          if (!node.noResize && !self.opts.disableResize) {
-            self.dd.resizable(node.el, 'enable');
-          }
-
-          node.el.trigger('resize');
-        });
+        self.setColumn(self._prevColumn);
       }
     };
 
@@ -1170,11 +1145,6 @@
     }
   };
 
-  GridStack.prototype._isOneColumnMode = function() {
-    return (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <=
-      this.opts.minWidth;
-  };
-
   GridStack.prototype._setupRemovingTimeout = function(el) {
     var self = this;
     var node = $(el).data('_gridstack_node');
@@ -1383,13 +1353,11 @@
         resize: dragOrResize
       });
 
-    if (node.noMove || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableDrag ||
-      this.opts.staticGrid) {
+    if (node.noMove || this.opts.disableDrag || this.opts.staticGrid) {
       this.dd.draggable(el, 'disable');
     }
 
-    if (node.noResize || (this._isOneColumnMode() && !self.opts.disableOneColumnMode) || this.opts.disableResize ||
-      this.opts.staticGrid) {
+    if (node.noResize || this.opts.disableResize || this.opts.staticGrid) {
       this.dd.resizable(el, 'disable');
     }
 
@@ -1546,7 +1514,7 @@
       var node = el.data('_gridstack_node');
       if (!node) { return; }
       node.noResize = !(val || false);
-      if (node.noResize || (self._isOneColumnMode() && !self.opts.disableOneColumnMode)) {
+      if (node.noResize) {
         self.dd.resizable(el, 'disable');
       } else {
         self.dd.resizable(el, 'enable');
@@ -1563,7 +1531,7 @@
       var node = el.data('_gridstack_node');
       if (!node) { return; }
       node.noMove = !(val || false);
-      if (node.noMove || (self._isOneColumnMode() && !self.opts.disableOneColumnMode)) {
+      if (node.noMove) {
         self.dd.draggable(el, 'disable');
         el.removeClass('ui-draggable-handle');
       } else {
@@ -1930,6 +1898,14 @@
   GridStack.prototype.setColumn = function(column, doNotPropagate) {
     if (this.opts.column === column) { return; }
     var oldColumn = this.opts.column;
+
+    // if we go into 1 column mode (which happens if we're sized less than minWidth unless disableOneColumnMode is on)
+    // then remember the original columns so we can restore.
+    if (column === 1) {
+      this._prevColumn = oldColumn;
+    } else {
+      delete this._prevColumn;
+    }
 
     this.container.removeClass('grid-stack-' + oldColumn);
     this.container.addClass('grid-stack-' + column);
