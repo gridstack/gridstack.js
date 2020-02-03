@@ -63,22 +63,21 @@
       ];
       var count = 0;
       grid.batchUpdate();
-      for (count=0; count<4;) {
-        var n = items[count];
-        grid.addWidget($('<div><div class="grid-stack-item-content">' + count++ + (n.text ? n.text : '') + '</div></div>'), n);
-      };
+      addWidget(); addWidget(); addWidget(); addWidget();
       grid.commit();
 
-      $('#add-widget').click(function() {
+      function addWidget() {
         var n = items[count] || {
           x: Math.round(12 * Math.random()),
           y: Math.round(5 * Math.random()),
           width: Math.round(1 + 3 * Math.random()),
           height: Math.round(1 + 3 * Math.random())
         };
-        grid.addWidget($('<div><div class="grid-stack-item-content">' + count++ + (n.text ? n.text : '') + '</div></div>'), n);
-      });
+        grid.addWidget($('<div><div class="grid-stack-item-content"><button onclick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>'
+          + count++ + (n.text ? n.text : '') + '</div></div>'), n);
+      };
 
+      $('#add-widget').click(function() { addWidget() });
       $('#1column').click(function() { delete grid.opts.oneColumnModeDomSort; grid.setColumn(1); $text.text(1);});
       $('#1columnDOM').click(function() { grid.opts.oneColumnModeDomSort = true; grid.setColumn(1); $text.text('1 DOM');});
       $('#2column').click(function() { grid.setColumn(2); $text.text(2);});

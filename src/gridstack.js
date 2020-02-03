@@ -1801,20 +1801,21 @@
   GridStackEngine.prototype._layoutsNodesChange = function(nodes) {
     if (!this._layouts || this._ignoreLayoutsNodeChange) return;
     // remove smaller layouts - we will re-generate those on the fly... larger ones need to update
-    this._layouts.forEach(function(layout, i) {
-      if (!layout || i === this.column) return;
-      if (i < this.column) {
-        this._layouts[i] = undefined;
+    this._layouts.forEach(function(layout, column) {
+      if (!layout || column === this.column) return;
+      if (column < this.column) {
+        this._layouts[column] = undefined;
       }
-      else {
+      // move in 1 column don't propagate (hard to do right thing). height are re-used and add/remove carry over
+      else if (this.column !== 1) {
         // TODO: save the original x,y,w (h isn't cached) and see what actually changed to propagate correctly ?
         nodes.forEach(function(node) {
           var n = layout.find(function(l) { return l._id === node._id });
           if (!n) return;
-          var ratio = i / this.column;
+          var ratio = column / this.column;
           n.y = node.y;
           n.x = Math.round(node.x * ratio);
-          // width ???
+          n.width = Math.round(node.width * ratio);
         }, this);
       }
     }, this);
