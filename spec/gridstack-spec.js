@@ -383,11 +383,12 @@ describe('gridstack', function() {
       expect(parseInt(el2.attr('data-gs-height'))).toBe(4);
 
       expect(parseInt(el3.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.attr('data-gs-y'))).toBe(6);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(6); // ??? kept one column row 6 which is not ideal maybe.
       expect(parseInt(el3.attr('data-gs-width'))).toBe(1); // ??? could take entire width if it did above
       expect(parseInt(el3.attr('data-gs-height'))).toBe(1);
 
       // back to 1 column, move item2 to beginning to [3][1][2] vertically
+      // NOTE: MOVE will have NO EFFECT on other layouts (see #1127)
       grid.setColumn(1);
       expect(grid.opts.column).toBe(1);
       grid.move(el3, 0, 0);
@@ -406,44 +407,43 @@ describe('gridstack', function() {
       expect(parseInt(el2.attr('data-gs-width'))).toBe(1);
       expect(parseInt(el2.attr('data-gs-height'))).toBe(4);
 
-      // back to 12 column, el3 to be beginning still, but [1][2] to be in 1 columns still but wide 4x2 and 4x still
+      // back to 12 column, SAME as before 1 column change (move in 1 column don't effect others)
       grid.setColumn(12);
       expect(grid.opts.column).toBe(12);
-      
-      expect(parseInt(el3.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.attr('data-gs-y'))).toBe(0);
-      expect(parseInt(el3.attr('data-gs-width'))).toBe(1);
-      expect(parseInt(el3.attr('data-gs-height'))).toBe(1);
-
       expect(parseInt(el1.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.attr('data-gs-y'))).toBe(1);
+      expect(parseInt(el1.attr('data-gs-y'))).toBe(0);
       expect(parseInt(el1.attr('data-gs-width'))).toBe(4);
       expect(parseInt(el1.attr('data-gs-height'))).toBe(2);
 
-      expect(parseInt(el2.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el2.attr('data-gs-y'))).toBe(3);
+      expect(parseInt(el2.attr('data-gs-x'))).toBe(4);
+      expect(parseInt(el2.attr('data-gs-y'))).toBe(0);
       expect(parseInt(el2.attr('data-gs-width'))).toBe(4);
       expect(parseInt(el2.attr('data-gs-height'))).toBe(4);
 
-      // 2 column will have item1, item2, item3 in 1 column still but half the width
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(6);
+      expect(parseInt(el3.attr('data-gs-width'))).toBe(1); // ??? could take entire width if it did above
+      expect(parseInt(el3.attr('data-gs-height'))).toBe(1);
+
+      // 2 column will generate from scaled down 12
       grid.setColumn(1); // test convert from small, should use 12 layout still
       grid.setColumn(2);
       expect(grid.opts.column).toBe(2);
 
-      expect(parseInt(el3.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.attr('data-gs-y'))).toBe(0);
-      expect(parseInt(el3.attr('data-gs-width'))).toBe(1); // 1 as we scaled from 12 columns
-      expect(parseInt(el3.attr('data-gs-height'))).toBe(1);
-
       expect(parseInt(el1.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.attr('data-gs-y'))).toBe(1);
+      expect(parseInt(el1.attr('data-gs-y'))).toBe(0);
       expect(parseInt(el1.attr('data-gs-width'))).toBe(1);
       expect(parseInt(el1.attr('data-gs-height'))).toBe(2);
 
-      expect(parseInt(el2.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el2.attr('data-gs-y'))).toBe(3);
+      expect(parseInt(el2.attr('data-gs-x'))).toBe(1);
+      expect(parseInt(el2.attr('data-gs-y'))).toBe(0);
       expect(parseInt(el2.attr('data-gs-width'))).toBe(1);
       expect(parseInt(el2.attr('data-gs-height'))).toBe(4);
+
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(6);
+      expect(parseInt(el3.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el3.attr('data-gs-height'))).toBe(1);
     });
   });
 
