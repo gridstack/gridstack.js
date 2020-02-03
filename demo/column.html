@@ -22,6 +22,7 @@
     <div>
       <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
       <a class="btn btn-primary" id="1column" href="#">1 Column</a>
+      <a class="btn btn-primary" id="1columnDOM" href="#">1 Column DOM</a>
       <a class="btn btn-primary" id="2column" href="#">2 Column</a>
       <a class="btn btn-primary" id="3column" href="#">3 Column</a>
       <a class="btn btn-primary" id="4column" href="#">4 Column</a>
@@ -54,15 +55,15 @@
       var items = [
         {x: 0, y: 0, width: 2, height: 2},
         {x: 2, y: 0, width: 2, height: 1},
-        {x: 5, y: 0, width: 1, height: 1},
+        {x: 5, y: 1, width: 1, height: 1},
+        {x: 5, y: 0, width: 2, height: 1},
         {text: ' auto'}, // autoPosition testing
-        {x: 1, y: 3, width: 4, height: 1},
         {x: 5, y: 3, width: 2, height: 1},
         {x: 0, y: 4, width: 12, height: 1}
       ];
       var count = 0;
       grid.batchUpdate();
-      for (count=0; count<3;) {
+      for (count=0; count<4;) {
         var n = items[count];
         grid.addWidget($('<div><div class="grid-stack-item-content">' + count++ + (n.text ? n.text : '') + '</div></div>'), n);
       };
@@ -78,7 +79,8 @@
         grid.addWidget($('<div><div class="grid-stack-item-content">' + count++ + (n.text ? n.text : '') + '</div></div>'), n);
       });
 
-      $('#1column').click(function() { grid.setColumn(1); $text.text(1);});
+      $('#1column').click(function() { delete grid.opts.oneColumnModeDomSort; grid.setColumn(1); $text.text(1);});
+      $('#1columnDOM').click(function() { grid.opts.oneColumnModeDomSort = true; grid.setColumn(1); $text.text('1 DOM');});
       $('#2column').click(function() { grid.setColumn(2); $text.text(2);});
       $('#3column').click(function() { grid.setColumn(3); $text.text(3);});
       $('#4column').click(function() { grid.setColumn(4); $text.text(4);});

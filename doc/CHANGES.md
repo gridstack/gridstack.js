@@ -29,6 +29,7 @@ Change log
 
 ## v0.6.1-dev (upcoming changes)
 
+- add `oneColumnModeDomSort` true|false to let you specify a custom layout (use dom order instead of x,y) for oneColumnMode `setColumn(1)` [#713](https://github.com/gridstack/gridstack.js/issues/713)
 - fix oneColumnMode to only restore if we auto went to it as window sizes up [#1125](https://github.com/gridstack/gridstack.js/pull/1125)
 
 ## v0.6.1 (2020-02-02)

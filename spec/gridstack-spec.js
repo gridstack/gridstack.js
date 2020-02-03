@@ -15,6 +15,12 @@ describe('gridstack', function() {
     '    </div>' +
     '  </div>' +
     '</div>';
+  // empty grid
+  var gridstackEmptyHTML =
+    '<div style="width: 992px; height: 800px" id="gs-cont">' +
+    '  <div class="grid-stack">' +
+    '  </div>' +
+    '</div>';
   // generic widget with no param
   var widgetHTML = '<div class="grid-stack-item" id="item3"><div class="grid-stack-item-content"> hello </div></div>';
 
@@ -438,6 +444,104 @@ describe('gridstack', function() {
       expect(parseInt(el2.attr('data-gs-y'))).toBe(3);
       expect(parseInt(el2.attr('data-gs-width'))).toBe(1);
       expect(parseInt(el2.attr('data-gs-height'))).toBe(4);
+    });
+  });
+
+  describe('oneColumnModeDomSort', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should support default going to 1 column', function() {
+      var options = {
+        column: 12,
+        float: true
+      };
+      $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').data('gridstack');
+      var el1 = grid.addWidget(widgetHTML, {width:1, height:1});
+      var el2 = grid.addWidget(widgetHTML, {x:2, y:0, width:2, height:1});
+      var el3 = grid.addWidget(widgetHTML, {x:1, y:0, width:1, height:2});
+
+      // items are item1[1x1], item3[1x1], item2[2x1]
+      expect(parseInt(el1.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el1.attr('data-gs-y'))).toBe(0);
+      expect(parseInt(el1.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el1.attr('data-gs-height'))).toBe(1);
+
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(1);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(0);
+      expect(parseInt(el3.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el3.attr('data-gs-height'))).toBe(2);
+
+      expect(parseInt(el2.attr('data-gs-x'))).toBe(2);
+      expect(parseInt(el2.attr('data-gs-y'))).toBe(0);
+      expect(parseInt(el2.attr('data-gs-width'))).toBe(2);
+      expect(parseInt(el2.attr('data-gs-height'))).toBe(1);
+
+      // items are item1[1x1], item3[1x2], item2[1x1] in 1 column
+      grid.setColumn(1);
+      expect(parseInt(el1.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el1.attr('data-gs-y'))).toBe(0);
+      expect(parseInt(el1.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el1.attr('data-gs-height'))).toBe(1);
+
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(1);
+      expect(parseInt(el3.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el3.attr('data-gs-height'))).toBe(2);
+
+      expect(parseInt(el2.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el2.attr('data-gs-y'))).toBe(3);
+      expect(parseInt(el2.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el2.attr('data-gs-height'))).toBe(1);
+    });
+    it('should support oneColumnModeDomSort ON going to 1 column', function() {
+      var options = {
+        column: 12,
+        oneColumnModeDomSort: true,
+        float: true
+      };
+      $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').data('gridstack');
+      var el1 = grid.addWidget(widgetHTML, {width:1, height:1});
+      var el2 = grid.addWidget(widgetHTML, {x:2, y:0, width:2, height:1});
+      var el3 = grid.addWidget(widgetHTML, {x:1, y:0, width:1, height:2});
+
+      // items are item1[1x1], item3[1x1], item2[2x1]
+      expect(parseInt(el1.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el1.attr('data-gs-y'))).toBe(0);
+      expect(parseInt(el1.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el1.attr('data-gs-height'))).toBe(1);
+
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(1);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(0);
+      expect(parseInt(el3.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el3.attr('data-gs-height'))).toBe(2);
+
+      expect(parseInt(el2.attr('data-gs-x'))).toBe(2);
+      expect(parseInt(el2.attr('data-gs-y'))).toBe(0);
+      expect(parseInt(el2.attr('data-gs-width'))).toBe(2);
+      expect(parseInt(el2.attr('data-gs-height'))).toBe(1);
+
+      // items are item1[1x1], item2[1x1], item3[1x2] in 1 column dom ordered
+      grid.setColumn(1);
+      expect(parseInt(el1.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el1.attr('data-gs-y'))).toBe(0);
+      expect(parseInt(el1.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el1.attr('data-gs-height'))).toBe(1);
+
+      expect(parseInt(el2.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el2.attr('data-gs-y'))).toBe(1);
+      expect(parseInt(el2.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el2.attr('data-gs-height'))).toBe(1);
+
+      expect(parseInt(el3.attr('data-gs-x'))).toBe(0);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(2);
+      expect(parseInt(el3.attr('data-gs-width'))).toBe(1);
+      expect(parseInt(el3.attr('data-gs-height'))).toBe(2);
     });
   });
 
