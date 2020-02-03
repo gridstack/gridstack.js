@@ -666,7 +666,7 @@
 
   var GridStack = function(el, opts) {
     var self = this;
-    var oneColumnAutoMode, _prevColumn, isAutoCellHeight;
+    var oneColumnMode, _prevColumn, isAutoCellHeight;
 
     opts = opts || {};
 
@@ -826,16 +826,16 @@
       if (self.opts.staticGrid) { return; }
 
       if (!self.opts.disableOneColumnMode && (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <= self.opts.minWidth) {
-        if (self.oneColumnAutoMode) {  return; }
+        if (self.oneColumnMode) {  return; }
 
         self.container.addClass(self.opts.oneColumnModeClass); // TODO: legacy do people still depend on style being there ?
-        self.oneColumnAutoMode = true;
+        self.oneColumnMode = true;
         self.setColumn(1);
       } else {
-        if (!self.oneColumnAutoMode) { return; }
+        if (!self.oneColumnMode) { return; }
 
         self.container.removeClass(self.opts.oneColumnModeClass);
-        self.oneColumnAutoMode = false;
+        self.oneColumnMode = false;
         self.setColumn(self._prevColumn);
       }
     };

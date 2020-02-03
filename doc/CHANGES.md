@@ -29,11 +29,11 @@ Change log
 
 ## v0.6.1-dev (upcoming changes)
 
-- TBD
+- fix oneColumnMode to only restore if we auto went to it as window sizes up [#1125](https://github.com/gridstack/gridstack.js/pull/1125)
 
 ## v0.6.1 (2020-02-02)
 
-- one column mode (<768px by default) now simply calls `setColumn(1)` and remembers prev columns (so we can restore). This gives
+- fix [#37](https://github.com/gridstack/gridstack.js/issues/37) oneColumnMode (<768px by default) now simply calls `setColumn(1)` and remembers prev columns (so we can restore). This gives
 us full resize/re-order of items capabilities rather than a locked CSS only layout (see prev rev changes). [#1120](https://github.com/gridstack/gridstack.js/pull/1120)
 - fixed responsive.html demo [#1121](https://github.com/gridstack/gridstack.js/pull/1121)
 
