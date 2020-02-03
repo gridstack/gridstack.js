@@ -56,16 +56,16 @@
       return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
     },
 
-    sort: function(nodes, dir, width) {
-      if (!width) {
+    sort: function(nodes, dir, column) {
+      if (!column) {
         var widths = nodes.map(function(node) { return node.x + node.width; });
-        width = Math.max.apply(Math, widths);
+        column = Math.max.apply(Math, widths);
       }
 
       if (dir === -1)
-        return Utils.sortBy(nodes, function(n) { return -(n.x + n.y * width); });
+        return Utils.sortBy(nodes, function(n) { return -(n.x + n.y * column); });
       else
-        return Utils.sortBy(nodes, function(n) { return (n.x + n.y * width); });
+        return Utils.sortBy(nodes, function(n) { return (n.x + n.y * column); });
     },
 
     createStylesheet: function(id) {
@@ -721,6 +721,7 @@
       cellHeightUnit: 'px',
       disableOneColumnMode: opts.disableOneColumnMode || false,
       oneColumnModeClass: opts.oneColumnModeClass || 'grid-stack-one-column-mode',
+      oneColumnModeDomSort: opts.oneColumnModeDomSort,
       ddPlugin: null
     });
 
@@ -1823,20 +1824,37 @@
    * Called to scale the widget width & position up/down based on the column change.
    * Note we store previous layouts (especially original ones) to make it possible to go
    * from say 12 -> 1 -> 12 and get back to where we were.
+   *
+   * oldColumn: previous number of columns
+   * column:    new column number
+   * nodes?:    different sorted list (ex: DOM order) instead of current list
    */
-  GridStackEngine.prototype._updateNodeWidths = function(oldColumn, column) {
-    if (this.nodes.length === 0 || oldColumn === column) { return; }
-    var nodes = Utils.sort(this.nodes, -1, oldColumn); // current column reverse sorting so we can insert last to front (limit collision)
+  GridStackEngine.prototype._updateNodeWidths = function(oldColumn, column, nodes) {
+    if (!this.nodes.length || oldColumn === column) { return; }
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
-    var copy = [nodes.length];
-    nodes.forEach(function(n, i) {copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id}}); // only thing we change is x,y,w and id to find it back
+    var copy = [this.nodes.length];
+    this.nodes.forEach(function(n, i) {copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id}}); // only thing we change is x,y,w and id to find it back
     this._layouts = this._layouts || []; // use array to find larger quick
     this._layouts[oldColumn] = copy;
 
-    // see if we have cached previous layout. if NOT and we are going up in size start with the largest layout as down-scaling is more accurate
-    var lastIndex = this._layouts.length - 1;
+    // if we're going to 1 column and using DOM order rather than default sorting, then generate that layout
+    if (column === 1 && nodes && nodes.length) {
+      var top = 0;
+      nodes.forEach(function(n) {
+        n.x = 0;
+        n.width = 1;
+        n.y = Math.max(n.y, top);
+        top = n.y + n.height;
+      });
+    } else {
+      nodes = Utils.sort(this.nodes, -1, oldColumn); // current column reverse sorting so we can insert last to front (limit collision)
+    }
+
+    // see if we have cached previous layout.
     var cacheNodes = this._layouts[column] || [];
+    // if not AND we are going up in size start with the largest layout as down-scaling is more accurate
+    var lastIndex = this._layouts.length - 1;
     if (cacheNodes.length === 0 && column > oldColumn && column < lastIndex) {
       cacheNodes = this._layouts[lastIndex] || [];
       if (cacheNodes.length) {
@@ -1872,13 +1890,13 @@
     var ratio = column / oldColumn;
     nodes.forEach(function(node) {
       if (!node) return;
-      node.x = Math.round(node.x * ratio);
-      node.width = (oldColumn === 1 ? 1 : (Math.round(node.width * ratio) || 1));
+      node.x = (column === 1 ? 0 : Math.round(node.x * ratio));
+      node.width = ((column === 1 || oldColumn === 1) ? 1 : (Math.round(node.width * ratio) || 1));
       newNodes.push(node);
     });
-    newNodes = Utils.sort(newNodes, -1, column);
 
     // finally relayout them in reverse order (to get correct placement)
+    newNodes = Utils.sort(newNodes, -1, column);
     this._ignoreLayoutsNodeChange = true;
     this.batchUpdate();
     this.nodes = []; // pretend we have no nodes to start with (we use same structures) to simplify layout
@@ -1913,9 +1931,19 @@
     this.container.addClass('grid-stack-' + column);
     this.opts.column = this.grid.column = column;
 
-    // update the items now
     if (doNotPropagate === true) { return; }
-    this.grid._updateNodeWidths(oldColumn, column);
+
+    // update the items now - see if the dom order nodes should be passed instead (else default to current list)
+    var domNodes;
+    if (this.opts.oneColumnModeDomSort && column === 1) {
+      domNodes = [];
+      this.container.children('.' + this.opts.itemClass).each(function(index, el) {
+        var node = $(el).data('_gridstack_node');
+        if (node) { domNodes.push(node); }
+      });
+      if (!domNodes.length) { domNodes = undefined; }
+    }
+    this.grid._updateNodeWidths(oldColumn, column, domNodes);
 
     // and trigger our event last...
     this.grid._ignoreLayoutsNodeChange = true;

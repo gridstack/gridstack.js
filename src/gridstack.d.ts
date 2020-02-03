@@ -497,6 +497,12 @@ interface GridstackOptions {
   oneColumnModeClass ? : string;
 
   /**
+   * set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column 
+   * layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: false)
+   */
+  oneColumnModeDomSort?: boolean;
+
+  /**
    * class for placeholder (default?: 'grid-stack-placeholder')
    */
   placeholderClass ? : string;
