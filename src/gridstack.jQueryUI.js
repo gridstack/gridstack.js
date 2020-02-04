@@ -1,7 +1,7 @@
 /** gridstack.js 0.6.2-dev - JQuery UI Drag&Drop plugin @preserve */
 /**
  * https://gridstackjs.com/
- * (c) 2014-2019 Dylan Weiss, Alain Dumesny, Pavel Reznikov
+ * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
 */
 (function(factory) {
