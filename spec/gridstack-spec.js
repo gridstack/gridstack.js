@@ -383,7 +383,7 @@ describe('gridstack', function() {
       expect(parseInt(el2.attr('data-gs-height'))).toBe(4);
 
       expect(parseInt(el3.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.attr('data-gs-y'))).toBe(6);
+      expect(parseInt(el3.attr('data-gs-y'))).toBe(6); // ??? keep same row, but might more intuitive higher
       expect(parseInt(el3.attr('data-gs-width'))).toBe(1); // ??? could take entire width if it did above
       expect(parseInt(el3.attr('data-gs-height'))).toBe(1);
 
@@ -397,6 +397,7 @@ describe('gridstack', function() {
       expect(parseInt(el3.attr('data-gs-width'))).toBe(1);
       expect(parseInt(el3.attr('data-gs-height'))).toBe(1);
 
+      expect(parseInt(el1.attr('data-gs-x'))).toBe(0);
       expect(parseInt(el1.attr('data-gs-y'))).toBe(1);
       expect(parseInt(el1.attr('data-gs-width'))).toBe(1);
       expect(parseInt(el1.attr('data-gs-height'))).toBe(2);
@@ -420,8 +421,8 @@ describe('gridstack', function() {
       expect(parseInt(el1.attr('data-gs-width'))).toBe(4);
       expect(parseInt(el1.attr('data-gs-height'))).toBe(2);
 
-      expect(parseInt(el2.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el2.attr('data-gs-y'))).toBe(3);
+      expect(parseInt(el2.attr('data-gs-x'))).toBe(4);
+      expect(parseInt(el2.attr('data-gs-y'))).toBe(1);
       expect(parseInt(el2.attr('data-gs-width'))).toBe(4);
       expect(parseInt(el2.attr('data-gs-height'))).toBe(4);
 
@@ -440,8 +441,8 @@ describe('gridstack', function() {
       expect(parseInt(el1.attr('data-gs-width'))).toBe(1);
       expect(parseInt(el1.attr('data-gs-height'))).toBe(2);
 
-      expect(parseInt(el2.attr('data-gs-x'))).toBe(0);
-      expect(parseInt(el2.attr('data-gs-y'))).toBe(3);
+      expect(parseInt(el2.attr('data-gs-x'))).toBe(1);
+      expect(parseInt(el2.attr('data-gs-y'))).toBe(1);
       expect(parseInt(el2.attr('data-gs-width'))).toBe(1);
       expect(parseInt(el2.attr('data-gs-height'))).toBe(4);
     });

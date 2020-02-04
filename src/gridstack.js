@@ -355,12 +355,12 @@
 
     if (this.float) {
       this.nodes.forEach(function(n, i) {
-        if (n._updating || n._origY === undefined || n.y === n._origY) {
+        if (n._updating || n._packY === undefined || n.y === n._packY) {
           return;
         }
 
         var newY = n.y;
-        while (newY >= n._origY) {
+        while (newY >= n._packY) {
           var collisionNode = this.nodes
             .slice(0, i)
             .find(Utils._didCollide, {n: n, newY: newY});
@@ -653,14 +653,14 @@
   GridStackEngine.prototype.beginUpdate = function(node) {
     if (node._updating) return;
     node._updating = true;
-    this.nodes.forEach(function(n) { n._origY = n.y; });
+    this.nodes.forEach(function(n) { n._packY = n.y; });
   };
 
   GridStackEngine.prototype.endUpdate = function() {
     var n = this.nodes.find(function(n) { return n._updating; });
     if (n) {
       n._updating = false;
-      this.nodes.forEach(function(n) { delete n._origY; });
+      this.nodes.forEach(function(n) { delete n._packY; });
     }
   };
 
@@ -1801,23 +1801,37 @@
   GridStackEngine.prototype._layoutsNodesChange = function(nodes) {
     if (!this._layouts || this._ignoreLayoutsNodeChange) return;
     // remove smaller layouts - we will re-generate those on the fly... larger ones need to update
-    this._layouts.forEach(function(layout, i) {
-      if (!layout || i === this.column) return;
-      if (i < this.column) {
-        this._layouts[i] = undefined;
+    this._layouts.forEach(function(layout, column) {
+      if (!layout || column === this.column) return;
+      if (column < this.column) {
+        this._layouts[column] = undefined;
       }
       else {
-        // TODO: save the original x,y,w (h isn't cached) and see what actually changed to propagate correctly ?
+        // we save the original x,y,w (h isn't cached) to see what actually changed to propagate better.
+        // Note: we don't need to check against out of bound scaling/moving as that will be done when using those cache values.
         nodes.forEach(function(node) {
           var n = layout.find(function(l) { return l._id === node._id });
-          if (!n) return;
-          var ratio = i / this.column;
-          n.y = node.y;
-          n.x = Math.round(node.x * ratio);
-          // width ???
+          if (!n) return; // no cache for new nodes. Will use those values.
+          var ratio = column / this.column;
+          // Y changed, push down same amount
+          // TODO: detect doing item 'swaps' will help instead of move (especially in 1 column mode)
+          if (node.y !== node._origY) {
+            n.y += (node.y - node._origY);
+          }
+          // X changed, scale from new position
+          if (node.x !== node._origX) {
+            n.x = Math.round(node.x * ratio);
+          }
+          // width changed, scale from new width
+          if (node.width !== node._origW) {
+            n.width = Math.round(node.width * ratio);
+          }
+          // ...height always carries over from cache
         }, this);
       }
     }, this);
+
+    this._saveInitial(); // reset current value now that we diffed.
   }
 
   /**
@@ -1906,6 +1920,19 @@
     }, this);
     this.commit();
     delete this._ignoreLayoutsNodeChange;
+
+    // save this initial layout so we can see what changed and apply changes to other layouts better (diff)
+    this._saveInitial();
+  }
+
+  /** called to save initial position/size */
+  GridStackEngine.prototype._saveInitial = function() {
+    this.nodes.forEach(function(n) {
+      n._origX = n.x;
+      n._origY = n.y;
+      n._origW = n.width;
+      n._origH = n.height;
+    });
   }
 
   /**
