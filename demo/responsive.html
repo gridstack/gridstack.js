@@ -1,16 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Responsive grid demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.1/dist/gridstack-extra.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@0.6.2/dist/gridstack-extra.min.css"/>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.1/dist/gridstack.all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.2/dist/gridstack.all.js"></script>
 </head>
 <body>
   <div>
@@ -29,7 +26,7 @@
         disableOneColumnMode: true, // will manually do 1 column
         float: true }).data('gridstack');
       var $text = $('#column-text');
-
+      
       function resizeGrid() {
         var width = document.body.clientWidth;
         if (width < 700) {
@@ -50,9 +47,9 @@
         resizeGrid();
       });
       $(document).ready(function() {
-          resizeGrid();
+        resizeGrid();
       });
-
+      
       var items = [
         {x: 0, y: 0, width: 2, height: 2},
         {x: 2, y: 0, width: 2, height: 1},
@@ -60,7 +57,7 @@
         {x: 1, y: 3, width: 4, height: 1},
         {x: 5, y: 2, width: 2, height: 1},
         {x: 0, y: 4, width: 12, height: 1}
-        ];
+      ];
       grid.batchUpdate();
       items.forEach(function (node, index) {
         grid.addWidget($('<div><div class="grid-stack-item-content">' + index + '</div></div>'), node);
