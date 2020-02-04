@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.6.1-dev (upcoming changes)](#v061-dev-upcoming-changes)
+- [v0.6.2-dev (upcoming changes)](#v062-dev-upcoming-changes)
+- [v0.6.2 (2020-02-03)](#v062-2020-02-03)
 - [v0.6.1 (2020-02-02)](#v061-2020-02-02)
 - [v0.6.0 (2019-12-24)](#v060-2019-12-24)
 - [v0.5.5 (2019-11-27)](#v055-2019-11-27)
@@ -27,7 +28,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.6.1-dev (upcoming changes)
+## v0.6.2-dev (upcoming changes)
+
+- TBD
+
+## v0.6.2 (2020-02-03)
 
 - add `oneColumnModeDomSort` true|false to let you specify a custom layout (use dom order instead of x,y) for oneColumnMode `setColumn(1)` [#713](https://github.com/gridstack/gridstack.js/issues/713)
 - fix oneColumnMode to only restore if we auto went to it as window sizes up [#1125](https://github.com/gridstack/gridstack.js/pull/1125)
