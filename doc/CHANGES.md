@@ -31,7 +31,8 @@ Change log
 
 - add `oneColumnModeDomSort` true|false to let you specify a custom layout (use dom order instead of x,y) for oneColumnMode `setColumn(1)` [#713](https://github.com/gridstack/gridstack.js/issues/713)
 - fix oneColumnMode to only restore if we auto went to it as window sizes up [#1125](https://github.com/gridstack/gridstack.js/pull/1125)
-- re-order in 1 column no longer affect other layouts (hard to predict). only resize/add/remove carry over [#1127](https://github.com/gridstack/gridstack.js/pull/1127)
+- editing in 1 column (or few columns) does a better job updating higher layout (track before and after and move items accordingly). 
+Tracking item swap would be even better still. [#1127](https://github.com/gridstack/gridstack.js/pull/1127)
 
 ## v0.6.1 (2020-02-02)
 
