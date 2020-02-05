@@ -31,6 +31,7 @@ Change log
 ## v0.6.2-dev (upcoming changes)
 
 - fix [#1132](https://github.com/gridstack/gridstack.js/issues/1132) oneColumnMode missing CSS to do layout
+- del `oneColumnModeClass` / `.grid-stack-one-column-mode` and associated code. If you depended on this, use class `.grid-stack-1` instead since it is 1 column layout anyway [1134](https://github.com/gridstack/gridstack.js/pull/1134)
 
 ## v0.6.2 (2020-02-03)
 
@@ -43,7 +44,7 @@ Tracking item swap would be even better still. [#1127](https://github.com/gridst
 
 - fix [#37](https://github.com/gridstack/gridstack.js/issues/37) oneColumnMode (<768px by default) now simply calls `setColumn(1)` and remembers prev columns (so we can restore). This gives
 us full resize/re-order of items capabilities rather than a locked CSS only layout (see prev rev changes). [#1120](https://github.com/gridstack/gridstack.js/pull/1120)
-- fixed responsive.html demo [#1121](https://github.com/gridstack/gridstack.js/pull/1121)
+- fix [responsive.html](https://gridstackjs.com/demo/responsive.html) demo [#1121](https://github.com/gridstack/gridstack.js/pull/1121)
 
 ## v0.6.0 (2019-12-24)
 
@@ -92,11 +93,11 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 
 ## v0.5.2 (2019-11-13)
 
-- undefined `x,y` position messes up grid ([#1017](https://github.com/gridstack/gridstack.js/issues/1017)).
+- fix undefined `x,y` position messes up grid ([#1017](https://github.com/gridstack/gridstack.js/issues/1017)).
 - changed code to 2 spaces.
 - fix minHeight during `onStartMoving()` ([#999](https://github.com/gridstack/gridstack.js/issues/999)).
-- TypeScript definition file now included - no need to include @types/gridstack, easier to update ([#1036](https://github.com/gridstack/gridstack.js/pull/1036)).
-- new `addWidget(el, options)` to pass object so you don't have to spell 10 params. ([#907](https://github.com/gridstack/gridstack.js/issues/907)).
+- add `gridstack.d.ts` TypeScript definition file now included - no need to include `@types/gridstack`, easier to update ([#1036](https://github.com/gridstack/gridstack.js/pull/1036)).
+- add `addWidget(el, options)` to pass object so you don't have to spell 10 params. ([#907](https://github.com/gridstack/gridstack.js/issues/907)).
 
 ## v0.5.1 (2019-11-07)
 

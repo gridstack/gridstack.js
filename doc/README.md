@@ -88,7 +88,6 @@ gridstack.js API
 - `itemClass` - widget class (default: `'grid-stack-item'`)
 - `maxRow` - maximum rows amount. Default is `0` which means no maximum rows
 - `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
-- `oneColumnModeClass` - class set on grid when in one column mode (default: 'grid-stack-one-column-mode')
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
