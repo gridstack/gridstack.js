@@ -201,15 +201,13 @@ $('.grid-stack').gridstack( {column: N} );
 <div class="grid-stack grid-stack-N">...</div>
 ```
 
-Note `grid-stack-N` class was added, and extra CSS.
-
-`gridstack-extra.css` (and `gridstack-extra.min.css`) defines CSS for grids with custom [1-12] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
+Note: we added `grid-stack-N` class and `gridstack-extra.css` which defines CSS for grids with custom [1-12] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
 
 See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html) with 6 columns
 
 ## Custom columns CSS
 
-If you need > 12 columns or want to generate the CSS manually (else see above) you will need to generate CSS rules for `.grid-stack-item[data-gs-width="X"]` and `.grid-stack-item[data-gs-x="X"]`.
+If you need > 12 columns or want to generate the CSS manually you will need to generate CSS rules for `.grid-stack-item[data-gs-width="X"]` and `.grid-stack-item[data-gs-x="X"]`.
 
 For instance for 3-column grid you need to rewrite CSS to be:
 
@@ -254,6 +252,9 @@ Better yet, here is a SASS code snippet which can make life much easier (Thanks 
   }
 }
 ```
+
+you can also look at the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/blob/develop/src/gridstack-extra.scss) and modify to add more columns
+and also have the `.grid-stack-N` prefix to support letting the user change columns dynamically.
 
 ## Override resizable/draggable options
 
