@@ -1,5 +1,5 @@
 /*!
- * required gridstack 0.6.2-dev CSS for default 12 column size
+ * required gridstack 0.6.2-dev CSS for default 12 and 1 columnMode size. Use gridstack-extra.css for others
  * https://gridstackjs.com/
  * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
@@ -95,7 +95,6 @@ $animation_speed: .3s !default;
       @include vendor(transform, rotate(-45deg));
     }
 
-
     > .ui-resizable-nw { cursor: nw-resize; width: 20px; height: 20px; left: 10px; top: 0; }
     > .ui-resizable-n  { cursor: n-resize;  height: 10px; top: 0; left: 25px; right: 25px; }
     > .ui-resizable-ne { cursor: ne-resize; width: 20px; height: 20px; right: 10px; top: 0; }
@@ -117,6 +116,14 @@ $animation_speed: .3s !default;
       &[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
       &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
     }
+  }
+
+  &.grid-stack-1>.grid-stack-item {
+    min-width: 100%;
+    &[data-gs-width='1'] { width: 100%; }
+    &[data-gs-x='1'] { left: 100%; }
+    &[data-gs-min-width='1'] { min-width: 100%; }
+    &[data-gs-max-width='1'] { max-width: 100%; }
   }
 
   &.grid-stack-animate,

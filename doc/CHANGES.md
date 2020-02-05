@@ -30,7 +30,7 @@ Change log
 
 ## v0.6.2-dev (upcoming changes)
 
-- TBD
+- fix [#1132](https://github.com/gridstack/gridstack.js/issues/1132) oneColumnMode missing CSS to do layout
 
 ## v0.6.2 (2020-02-03)
 
