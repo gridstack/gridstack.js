@@ -6,11 +6,13 @@ gridstack.js
 [![Dependency Status](https://david-dm.org/gridstack/gridstack.js.svg)](https://david-dm.org/gridstack/gridstack.js)
 [![devDependency Status](https://david-dm.org/gridstack/gridstack.js/dev-status.svg)](https://david-dm.org/gridstack/gridstack.js#info=devDependencies)
 
-Mobile-friendly Javascript library for dashboard layout and creation. Making a drag-and-drop, multi-column dashboard has never been easier. Allows you to build draggable, responsive bootstrap v3-friendly layouts. It also has multiple bindings and works great with [react](https://reactjs.org/), [angular](https://angular.io/), [knockout.js](http://knockoutjs.com), [ember](https://www.emberjs.com/) and others.
+Mobile-friendly Javascript library for dashboard layout and creation. Making a drag-and-drop, multi-column dashboard has never been easier. Allows you to build draggable, responsive bootstrap v3-friendly layouts. It also has multiple bindings and works great with [React](https://reactjs.org/), [Angular](https://angular.io/), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others, and comes with a Typescript definition out of the box.
 
-Inspired by no-longer maintained gridster.js. Built with love.
+Inspired by no-longer maintained gridster.js, built with love.
 
-Join gridstack.js on Slack: https://gridstackjs.troolee.com, and see demos section below
+Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/).
+
+Join us on Slack: https://gridstackjs.troolee.com
 
 [![Slack Status](https://gridstackjs.troolee.com/badge.svg)](https://gridstackjs.troolee.com)
 
@@ -20,16 +22,17 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com, and see demos secti
 
 - [Demo and examples](#demo-and-examples)
 - [Usage](#usage)
-  - [Requirements](#requirements)
   - [Install](#install)
+  - [Include](#include)
   - [Basic usage](#basic-usage)
-  - [Migrating to v0.3.0](#migrating-to-v030)
+  - [Requirements](#requirements)
   - [API Documentation](#api-documentation)
   - [Touch devices support](#touch-devices-support)
   - [gridstack.js for specific frameworks](#gridstackjs-for-specific-frameworks)
   - [Change grid columns](#change-grid-columns)
   - [Custom columns CSS](#custom-columns-css)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
+  - [Migrating to v0.3.0](#migrating-to-v030)
 - [Changes](#changes)
 - [The Team](#the-team)
 
@@ -39,27 +42,32 @@ Join gridstack.js on Slack: https://gridstackjs.troolee.com, and see demos secti
 Demo and examples
 ====
 
-Please visit http://gridstackjs.com for a demo or check out [these examples](http://gridstackjs.com/demo/).
+Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/).
 
 
 Usage
 =====
 
-## Requirements
-
-* [jQuery](http://jquery.com) (>= 1.8)
-* `Array.prototype.find`, and `Number.isNaN()` for IE and older browsers.
-  * Note: as of v0.5.4 We supply a separate `gridstack-poly.js` for that 
-(part of `gridstack.all.js`) or you can look at other pollyfills 
-([core.js](https://github.com/zloirock/core-js#ecmascript-6-array) and [mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)).
-
-Using gridstack.js with jQuery UI
-
-* [jQuery UI](http://jqueryui.com) (>= 1.12.0). Minimum required components: Draggable, Droppable, Resizable (Widget, Mouse, core).
-  * Note: as of v0.5.4 we include this subset as `jquery-ui.js` (and min.js) which is part of `gridstack.all.js`. If you wish to bring your own lib, include the individual gridstack parts instead of all.js
-* (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
-
 ## Install
+
+* Using yarn / npm:
+
+[![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
+
+```bash
+$ yarn install gridstack
+```
+
+## Include
+
+* local:
+
+
+```html
+<link rel="stylesheet" href="gridstack.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="gridstack.all.js"></script>
+```
 
 * Using CDN (minimized):
 
@@ -78,32 +86,6 @@ Using gridstack.js with jQuery UI
 <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.3/dist/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gridstack@0.6.3/dist/gridstack.jQueryUI.js"></script>
 ```
-
-* or local:
-
-```html
-<link rel="stylesheet" href="gridstack.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="gridstack.js"></script>
-<script src="jquery-ui.js"></script>
-<script src="gridstack.jQueryUI.js"></script>
-```
-
-* Using npm:
-
-[![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
-
-```bash
-$ npm install gridstack
-```
-
-* Using bower:
-
-```bash
-$ bower install gridstack
-```
-
-You can also download source and build and use `dist` directory as well for latest non published code.
 
 ## Basic usage
 
@@ -124,26 +106,21 @@ $(function () {
 </script>
 ```
 
+see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example too.
 
-## Migrating to v0.3.0
+## Requirements
 
-As of v0.3.0, gridstack introduces a new plugin system. The drag'n'drop functionality has been modified to take advantage of this system. Because of this, and to avoid dependency on core code from jQuery UI, the plugin functionality was moved to a separate file.
+* [jQuery](http://jquery.com) (>= 1.8)
+* `Array.prototype.find`, and `Number.isNaN()` for IE and older browsers.
+  * Note: as of v0.5.4 We supply a separate `gridstack-poly.js` for that 
+(part of `gridstack.all.js`) or you can look at other pollyfills 
+([core.js](https://github.com/zloirock/core-js#ecmascript-6-array) and [mozilla.org](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find)).
 
-To ensure gridstack continues to work, either include the additional `gridstack.jQueryUI.js` file into your HTML or use `gridstack.all.js`:
+Using gridstack.js with jQuery UI
 
-```html
-<script src="gridstack.js"></script>
-<script src="gridstack.jQueryUI.js"></script>
-```
-
-or
-
-```html
-<script src="gridstack.all.js"></script>
-```
-
-We're working on implementing support for other drag'n'drop libraries through the new plugin system.
-
+* [jQuery UI](http://jqueryui.com) (>= 1.12.0). Minimum required components: Draggable, Droppable, Resizable (Widget, Mouse, core).
+  * Note: as of v0.5.4 we include this subset as `jquery-ui.js` (and min.js) which is part of `gridstack.all.js`. If you wish to bring your own lib, include the individual gridstack parts instead of all.js
+* (Optional) [jquery-ui-touch-punch](https://github.com/furf/jquery-ui-touch-punch) for touch-based devices support
 
 ## API Documentation
 
@@ -180,10 +157,13 @@ If you're still experiencing issues on touch devices please check [#444](https:/
 
 ## gridstack.js for specific frameworks
 
-- AngularJS: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
-- Rails: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
-- ember: [gridstack-ember](https://github.com/yahoo/ember-gridstack)
+search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
 
+- ember: [gridstack-ember](https://github.com/yahoo/ember-gridstack)
+- AngularJS: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
+- Angular8: [lb-gridstack](https://github.com/pfms84/lb-gridstack)
+- Rails: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
+- React: [react-gridstack](https://github.com/pitrho/react-gridstack)
 
 ## Change grid columns
 
@@ -270,6 +250,23 @@ $('.grid-stack').gridstack({
 ```
 
 Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their behaviour may be unexpected.
+
+## Migrating to v0.3.0
+
+As of v0.3.0, gridstack introduces a new plugin system. The drag'n'drop functionality has been modified to take advantage of this system. Because of this, and to avoid dependency on core code from jQuery UI, the plugin functionality was moved to a separate file.
+
+To ensure gridstack continues to work, either include the additional `gridstack.jQueryUI.js` file into your HTML or use `gridstack.all.js`:
+
+```html
+<script src="gridstack.js"></script>
+<script src="gridstack.jQueryUI.js"></script>
+```
+or
+```html
+<script src="gridstack.all.js"></script>
+```
+
+We're working on implementing support for other drag'n'drop libraries through the new plugin system.
 
 Changes
 =====

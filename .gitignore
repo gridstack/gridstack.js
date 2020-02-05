@@ -2,7 +2,6 @@
 *.tgz
 *.zip
 .npmrc
-bower_components
 coverage
 dist
 node_modules

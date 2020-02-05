@@ -13,10 +13,8 @@ cache:
 install:
 #- yarn global add npm@6.0.1
 - yarn global add grunt-cli
-- yarn global add bower
 #- yarn add selenium-webdriver
 - yarn
-- bower install
 #- ./node_modules/protractor/bin/webdriver-manager update --standalone
 #before_script:
 #- export CHROME_BIN=chromium-browser

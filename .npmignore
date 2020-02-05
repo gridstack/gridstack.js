@@ -15,7 +15,6 @@ yarn.lock
 Gruntfile.js
 ISSUE_TEMPLATE.md
 PULL_REQUEST_TEMPLATE.md
-bower.json
 freelancer
 karma.conf.js
 protractor.conf.js
@@ -24,7 +23,6 @@ protractor.conf.js
 *.log
 *.tgz
 *.zip
-bower_components
 coverage/
 node_modules/
 
