@@ -20,10 +20,10 @@
 })(function($, scope) {
 
   // checks for obsolete method names
-  var obsolete = function(f, oldName, newName) {
+  var obsolete = function(f, oldName, newName, rev) {
     var wrapper = function() {
-      console.warn('gridstack.js: Function `' + oldName + '` is deprecated as of v0.5.2 and has been replaced ' +
-      'with `' + newName + '`. It will be **completely** removed in v1.0.');
+      console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
+      'with `' + newName + '`. It will be **completely** removed in v1.0');
       return f.apply(this, arguments);
     };
     wrapper.prototype = f.prototype;
@@ -31,22 +31,29 @@
     return wrapper;
   };
 
-  // checks for obsolete grid options 9can be used for any fields, but msg is about options)
-  var obsoleteOpts = function(opts, oldName, newName) {
+  // checks for obsolete grid options (can be used for any fields, but msg is about options)
+  var obsoleteOpts = function(opts, oldName, newName, rev) {
     if (opts[oldName] !== undefined) {
       opts[newName] = opts[oldName];
-      console.warn('gridstack.js: Option `' + oldName + '` is deprecated as of v0.5.2 and has been replaced with `' +
-        newName + '`. It will be **completely** removed in v1.0.');
+      console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + ' and has been replaced with `' +
+        newName + '`. It will be **completely** removed in v1.0');
+    }
+  };
+
+  // checks for obsolete grid options which are gone
+  var obsoleteOptsDel = function(opts, oldName, rev, info) {
+    if (opts[oldName] !== undefined) {
+      console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
     }
   };
 
   // checks for obsolete Jquery element attributes
-  var obsoleteAttr = function(el, oldName, newName) {
+  var obsoleteAttr = function(el, oldName, newName, rev) {
     var oldAttr = el.attr(oldName);
     if (oldAttr !== undefined) {
       el.attr(newName, oldAttr);
-      console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object as of v0.5.2 and has been replaced with `' +
-        newName + '`. It will be **completely** removed in v1.0.');
+      console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
+        newName + '`. It will be **completely** removed in v1.0');
     }
   };
 
@@ -672,12 +679,13 @@
 
     this.container = $(el);
 
-    obsoleteOpts(opts, 'width', 'column');
-    obsoleteOpts(opts, 'height', 'maxRow');
+    obsoleteOpts(opts, 'width', 'column', 'v0.5.3');
+    obsoleteOpts(opts, 'height', 'maxRow', 'v0.5.3');
+    obsoleteOptsDel(opts, 'oneColumnModeClass', 'v0.6.3', '. Use class `.grid-stack-1` instead');
 
     // container attributes
-    obsoleteAttr(this.container, 'data-gs-width', 'data-gs-column');
-    obsoleteAttr(this.container, 'data-gs-height', 'data-gs-max-row');
+    obsoleteAttr(this.container, 'data-gs-width', 'data-gs-column', 'v0.5.3');
+    obsoleteAttr(this.container, 'data-gs-height', 'data-gs-max-row', 'v0.5.3');
 
     opts.itemClass = opts.itemClass || 'grid-stack-item';
     var isNested = this.container.closest('.' + opts.itemClass).length > 0;
@@ -720,7 +728,6 @@
       verticalMarginUnit: 'px',
       cellHeightUnit: 'px',
       disableOneColumnMode: opts.disableOneColumnMode || false,
-      oneColumnModeClass: opts.oneColumnModeClass || 'grid-stack-one-column-mode',
       oneColumnModeDomSort: opts.oneColumnModeDomSort,
       ddPlugin: null
     });
@@ -828,14 +835,10 @@
 
       if (!self.opts.disableOneColumnMode && (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <= self.opts.minWidth) {
         if (self.oneColumnMode) {  return; }
-
-        self.container.addClass(self.opts.oneColumnModeClass); // TODO: legacy do people still depend on style being there ?
         self.oneColumnMode = true;
         self.setColumn(1);
       } else {
         if (!self.oneColumnMode) { return; }
-
-        self.container.removeClass(self.opts.oneColumnModeClass);
         self.oneColumnMode = false;
         self.setColumn(self._prevColumn);
       }
@@ -1994,7 +1997,7 @@
 
   // legacy method renames
   GridStack.prototype.setGridWidth = obsolete(GridStack.prototype.setColumn,
-    'setGridWidth', 'setColumn'); // 0.5.3
+    'setGridWidth', 'setColumn', 'v0.5.3');
 
   scope.GridStackUI = GridStack;
 
