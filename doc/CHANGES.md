@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.6.2-dev (upcoming changes)](#v062-dev-upcoming-changes)
+- [v0.6.3-dev (Upcoming changes)](#v063-dev-upcoming-changes)
+- [v0.6.3 (2020-02-05)](#v063-2020-02-05)
 - [v0.6.2 (2020-02-03)](#v062-2020-02-03)
 - [v0.6.1 (2020-02-02)](#v061-2020-02-02)
 - [v0.6.0 (2019-12-24)](#v060-2019-12-24)
@@ -28,7 +29,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.6.2-dev (upcoming changes)
+## v0.6.3-dev (upcoming changes)
+
+- TBD
+
+## v0.6.3 (2020-02-05)
 
 - fix [#1132](https://github.com/gridstack/gridstack.js/issues/1132) oneColumnMode missing CSS to do layout
 - del `oneColumnModeClass` / `.grid-stack-one-column-mode` and associated code. If you depended on this, use class `.grid-stack-1` instead since it is 1 column layout anyway [1134](https://github.com/gridstack/gridstack.js/pull/1134)
@@ -52,16 +57,16 @@ us full resize/re-order of items capabilities rather than a locked CSS only layo
 - add `compact()` to reclaim any empty space and relayout grid items [#1101](https://github.com/gridstack/gridstack.js/pull/1101)
 - add `options.dragOut` to let user drag nested grid items out of a parent or not (default false)
 and jQuery UI `draggable.containment` can now be specified in options. You can now drag&drop between 2 nested grids [#1105](https://github.com/gridstack/gridstack.js/pull/1105)
-- Allow percentage as a valid unit for height [#1093](https://github.com/gridstack/gridstack.js/pull/1093). thank you 
+- add `%` as a valid unit for height [#1093](https://github.com/gridstack/gridstack.js/pull/1093). thank you 
 [@trevisanweb](https://github.com/trevisanweb) [@aureality](https://github.com/aureality)
 [@ZoolWay](https://github.com/ZoolWay)
-- fixed callbacks to get either `added, removed, change` or combination if adding a node require also to change its (x,y) for example.
+- fix callbacks to get either `added, removed, change` or combination if adding a node require also to change its (x,y) for example.
 Also you can now call `batchUpdate()` before calling a bunch of `addWidget()` and get a single event callback (more efficient).
 [#1096](https://github.com/gridstack/gridstack.js/pull/1096)
 - `removeAll()` is now much faster (no relayout) and calls `removed` event just once with a list [#1097](https://github.com/gridstack/gridstack.js/pull/1097)
 - `setColumn()` complete re-write and is no longer "Experimental". We now do a reasonable job at sizing/position the widgets (especially 1 column) and
 also now cache each column layout so you can go back to say 12 column and not loose original layout. [#1098](https://github.com/gridstack/gridstack.js/pull/1098)
-- fix bug where `addWidget(el)` (no data) would not render item at correct location, and overlap item at (0,0) [#1098](https://github.com/gridstack/gridstack.js/pull/1098)
+- fix `addWidget(el)` (no data) would not render item at correct location, and overlap item at (0,0) [#1098](https://github.com/gridstack/gridstack.js/pull/1098)
 - you can now pre-define size of dragable elements from a sidebar using standard `data-gs-width` and `data-gs-height` - fix 
 [#413](https://github.com/gridstack/gridstack.js/issues/413), [#914](https://github.com/gridstack/gridstack.js/issues/914), [#918](https://github.com/gridstack/gridstack.js/issues/918), 
 [#922](https://github.com/gridstack/gridstack.js/issues/922), [#933](https://github.com/gridstack/gridstack.js/issues/933) 
