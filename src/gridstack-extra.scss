@@ -1,21 +1,28 @@
-$gridstack-columns: 12 !default;
+/*!
+ * gridstack 0.6.3-dev extra CSS for [2-11] columns (non default)
+ * https://gridstackjs.com/
+ * (c) 2014-2020  Alain Dumesny, Dylan Weiss, Pavel Reznikov
+ * gridstack.js may be freely distributed under the MIT license.
+*/
 
-@mixin grid-stack-items($gridstack-columns) {
-    .grid-stack.grid-stack-#{$gridstack-columns} {
+$gridstack-columns: 11 !default;
 
-        > .grid-stack-item {
-            min-width: 100% / $gridstack-columns;
+@mixin grid-stack-items($columns) {
+  .grid-stack.grid-stack-#{$columns} {
 
-            @for $i from 1 through $gridstack-columns {
-                &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
-                &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-                &[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-                &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
-            }
-        }
+    > .grid-stack-item {
+      min-width: 100% / $columns;
+
+      @for $i from 1 through $columns {
+        &[data-gs-width='#{$i}'] { width: (100% / $columns) * $i; }
+        &[data-gs-x='#{$i}'] { left: (100% / $columns) * $i; }
+        &[data-gs-min-width='#{$i}'] { min-width: (100% / $columns) * $i; }
+        &[data-gs-max-width='#{$i}'] { max-width: (100% / $columns) * $i; }
+      }
     }
+  }
 }
 
-@for $j from 1 through $gridstack-columns {
-    @include grid-stack-items($j)
+@for $j from 2 through $gridstack-columns {
+  @include grid-stack-items($j)
 }

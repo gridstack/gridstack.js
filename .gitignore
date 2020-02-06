@@ -1,4 +1,7 @@
-node_modules
-bower_components
-coverage
 *.log
+*.tgz
+*.zip
+.npmrc
+coverage
+dist
+node_modules
