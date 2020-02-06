@@ -157,8 +157,8 @@
 
       $('#compact1').click(function() { compact('#grid1') });
       $('#compact2').click(function() { compact('#grid2') });
-      function compact(grid) {
-        var grid = $(grid).data('gridstack');
+      function compact(id) {
+        var grid = $(id).data('gridstack');
         grid.compact();
       }
 

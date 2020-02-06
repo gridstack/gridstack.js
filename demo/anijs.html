@@ -10,12 +10,9 @@
   <link rel="stylesheet" href="demo.css"/>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <!--
   <script src="../dist/jquery-ui.min.js"></script>
   <script src="../src/gridstack.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
-  -->
-  <script src="../dist/gridstack.all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -31,9 +28,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/AniJS/0.9.3/anijs.js"></script>
   <script type="text/javascript">
     $(function () {
-      $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack();
       var self = this;
-      this.grid = $('.grid-stack').data('gridstack');
       $('.grid-stack').on('added', function(event, items) {
         // add anijs data to gridstack item
         for (var i = 0; i < items.length; i++) {
@@ -44,14 +40,10 @@
         // fire added event!
         self.gridstackNotifier.dispatchEvent('added');
       });
-      $('#add-widget').click(function() {
-        addNewWidget();
-      });
 
-      function addNewWidget() {
-        var grid = $('.grid-stack').data('gridstack');
+      $('#add-widget').click(function() {
         grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), 0, 0, Math.floor(1 + 3 * Math.random()), Math.floor(1 + 3 * Math.random()), true);
-      }
+      });
 
       var animationHelper = AniJS.getHelper();
 
