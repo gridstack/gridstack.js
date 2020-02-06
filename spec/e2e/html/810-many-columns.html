@@ -34,22 +34,17 @@
         cellHeight: 'auto',
         float: false
       };
-      $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options);
 
-      new function () {
-        this.grid = $('.grid-stack').data('gridstack');
-
-        this.addNewWidget = function(i) {
-          this.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'), {id: i});
-          return false;
-        }.bind(this);
-
-        for (; count < COLUMNS; count++) {
-          this.addNewWidget(count); 
-        }
-
-        $('#add-widget').click(this.addNewWidget(count++));
+      addNewWidget = function(i) {
+        grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'), {id: i});
       };
+
+      for (; count < COLUMNS; count++) {
+        addNewWidget(count); 
+      }
+
+      $('#add-widget').click(function() { addNewWidget(count++) });
     });
   </script>
 </body>

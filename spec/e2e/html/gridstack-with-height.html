@@ -23,29 +23,21 @@
 
   <script type="text/javascript">
     $(function() {
-      var options = {
-        height: 5
-      };
-      $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack({maxRow: 5});
 
-      new function() {
-        var items = [
-          {x: 0, y: 0, width: 2, height: 2},
-          {x: 2, y: 5, width: 1, height: 1}
-        ];
+      var items = [
+        {x: 0, y: 0, width: 2, height: 2},
+        {x: 2, y: 5, width: 1, height: 1}
+      ];
+      var id = 0;
 
-        this.grid = $('.grid-stack').data('gridstack');
-        this.grid.removeAll();
-        items = GridStackUI.Utils.sort(items);
-        var id = 0;
-        this.grid.batchUpdate();
-        items.forEach(function(node) {
-          var w = $('<div><div class="grid-stack-item-content"></div></div>');
-          w.attr('id', 'item-' + (++id));
-          this.grid.addWidget(w, node);
-        }, this);
-        this.grid.commit();
-      };
+      grid.batchUpdate();
+      items.forEach(function(node) {
+        var w = $('<div><div class="grid-stack-item-content"></div></div>');
+        w.attr('id', 'item-' + (++id));
+        grid.addWidget(w, node);
+      });
+      grid.commit();
     });
   </script>
 </body>
