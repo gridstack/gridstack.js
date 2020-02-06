@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.6.3-dev (upcoming changes)](#v063-dev-upcoming-changes)
+- [v0.7.0 (upcoming changes)](#v070-upcoming-changes)
 - [v0.6.3 (2020-02-05)](#v063-2020-02-05)
 - [v0.6.2 (2020-02-03)](#v062-2020-02-03)
 - [v0.6.1 (2020-02-02)](#v061-2020-02-02)
@@ -29,7 +29,17 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.6.3-dev (upcoming changes)
+## v0.7.0 (upcoming changes)
+
+- **breaking**: `gridstack()` init method will no longer return a JQuery object (part of removing JQ from our API), but rather `GridStack | GridStack[]` (if multiple are present) making it much more convenient. Instead of:
+```javascript
+$('.grid-stack').gridstack(opt);
+var grid = $('.grid-stack').data('gridstack');
+```
+you can now just:
+```javascript
+var grid = $('.grid-stack').gridstack(opt);
+```
 
 - del `bower` since dead for a while now (https://snyk.io/blog/bower-is-dead/)
 
