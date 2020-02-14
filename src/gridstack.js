@@ -877,6 +877,7 @@
       var draggingElement = null;
 
       var onDrag = function(event, ui) {
+        if (typeof(self.opts.acceptWidgets) === 'string' && !draggingElement.is(self.opts.acceptWidgets)) return;
         var el = draggingElement;
         var node = el.data('_gridstack_node');
         var pos = self.getCellFromPixel({left: event.pageX, top: event.pageY}, true);
@@ -925,6 +926,7 @@
           }
         })
         .on(self.container, 'dropover', function(event, ui) {
+          if (typeof(self.opts.acceptWidgets) === 'string' && !$(ui.draggable).is(self.opts.acceptWidgets)) return;
           var el = $(ui.draggable);
           var width, height;
 
@@ -955,6 +957,7 @@
           el.on('drag', onDrag);
         })
         .on(self.container, 'dropout', function(event, ui) {
+          if (typeof(self.opts.acceptWidgets) === 'string' && !$(ui.draggable).is(self.opts.acceptWidgets)) return;
           // jquery-ui bug. Must verify widget is being dropped out
           // check node variable that gets set when widget is out of grid
           var el = $(ui.draggable);
@@ -973,6 +976,7 @@
           el.data('_gridstack_node', el.data('_gridstack_node_orig'));
         })
         .on(self.container, 'drop', function(event, ui) {
+          if (typeof(self.opts.acceptWidgets) === 'string' && !$(ui.draggable).is(self.opts.acceptWidgets)) return;
           self.placeholder.detach();
 
           var node = $(ui.draggable).data('_gridstack_node');
@@ -2005,14 +2009,21 @@
   scope.GridStackUI.Engine = GridStackEngine;
   scope.GridStackUI.GridStackDragDropPlugin = GridStackDragDropPlugin;
 
+  /**
+   * initializing the element will return the grid or grids if multiple were present
+   */
   $.fn.gridstack = function(opts) {
-    return this.each(function() {
+    var grids = [];
+    this.each(function() {
       var o = $(this);
-      if (!o.data('gridstack')) {
-        o
-          .data('gridstack', new GridStack(this, opts));
+      var grid = o.data('gridstack');
+      if (!grid) {
+        grid = new GridStack(this, opts);
+        o.data('gridstack', grid);
       }
+      grids.push(grid);
     });
+    return grids.length > 1 ? grids : grids[0];
   };
 
   return scope.GridStackUI;
