@@ -26,7 +26,7 @@
     $(function () {
       var grid = $('.grid-stack').gridstack({
         disableOneColumnMode: true, // will manually do 1 column
-        float: true });
+        float: true }).data('gridstack');
       var $text = $('#column-text');
       
       function resizeGrid() {

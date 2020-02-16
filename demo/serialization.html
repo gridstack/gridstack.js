@@ -28,8 +28,7 @@
   <script type="text/javascript">
     $(function () {
       var $grid = $('.grid-stack');
-      var grid = $grid.gridstack();
-    
+      
       $grid.on('added', function(e, items) { log(' added ', items) });
       $grid.on('removed', function(e, items) { log(' removed ', items) });
       $grid.on('change', function(e, items) { log(' change ', items) });
@@ -40,50 +39,59 @@
         console.log(type + items.length + ' items.' + str );
       }
 
-      var serializedData = [
-        {x: 0, y: 0, width: 2, height: 2},
-        {x: 3, y: 1, width: 1, height: 2},
-        {x: 4, y: 1, width: 1, height: 1},
-        {x: 2, y: 3, width: 3, height: 1},
-        {x: 1, y: 4, width: 1, height: 1},
-        {x: 1, y: 3, width: 1, height: 1},
-        {x: 2, y: 4, width: 1, height: 1},
-        {x: 2, y: 5, width: 1, height: 1}
-      ];
+      $grid.gridstack();
 
-      loadGrid = function () {
-        grid.removeAll();
-        var items = GridStackUI.Utils.sort(serializedData);
-        grid.batchUpdate();
-        items.forEach(function (node) {
-          grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), node);
-        });
-        grid.commit();
+      new function () {
+        this.serializedData = [
+          {x: 0, y: 0, width: 2, height: 2},
+          {x: 3, y: 1, width: 1, height: 2},
+          {x: 4, y: 1, width: 1, height: 1},
+          {x: 2, y: 3, width: 3, height: 1},
+          {x: 1, y: 4, width: 1, height: 1},
+          {x: 1, y: 3, width: 1, height: 1},
+          {x: 2, y: 4, width: 1, height: 1},
+          {x: 2, y: 5, width: 1, height: 1}
+        ];
+
+        this.grid = $('.grid-stack').data('gridstack');
+
+        this.loadGrid = function () {
+          this.grid.removeAll();
+          var items = GridStackUI.Utils.sort(this.serializedData);
+          this.grid.batchUpdate();
+          items.forEach(function (node) {
+            this.grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), node);
+          }, this);
+          this.grid.commit();
+          return false;
+        }.bind(this);
+
+        this.saveGrid = function () {
+          this.serializedData = $('.grid-stack > .grid-stack-item:visible').map(function (i, el) {
+            el = $(el);
+            var node = el.data('_gridstack_node');
+            return {
+              x: node.x,
+              y: node.y,
+              width: node.width,
+              height: node.height
+            };
+          }).toArray();
+          $('#saved-data').val(JSON.stringify(this.serializedData, null, '  '));
+          return false;
+        }.bind(this);
+
+        this.clearGrid = function () {
+          this.grid.removeAll();
+          return false;
+        }.bind(this);
+
+        $('#save-grid').click(this.saveGrid);
+        $('#load-grid').click(this.loadGrid);
+        $('#clear-grid').click(this.clearGrid);
+
+        this.loadGrid();
       };
-
-      saveGrid = function () {
-        serializedData = $('.grid-stack > .grid-stack-item:visible').map(function (i, el) {
-          el = $(el);
-          var node = el.data('_gridstack_node');
-          return {
-            x: node.x,
-            y: node.y,
-            width: node.width,
-            height: node.height
-          };
-        }).toArray();
-        $('#saved-data').val(JSON.stringify(serializedData, null, '  '));
-      };
-
-      clearGrid = function () {
-        grid.removeAll();
-      }
-
-      $('#save-grid').click(saveGrid);
-      $('#load-grid').click(loadGrid);
-      $('#clear-grid').click(clearGrid);
-
-      loadGrid();
     });
   </script>
 </body>
