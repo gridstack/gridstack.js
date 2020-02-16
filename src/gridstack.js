@@ -473,13 +473,26 @@
     this.nodes.forEach(function(n) { delete n._dirty; });
   };
 
-  GridStackEngine.prototype.getDirtyNodes = function() {
+  GridStackEngine.prototype.getDirtyNodes = function(verify) {
+    // compare original X,Y,W,H (or entire node?) instead as _dirty can be a temporary state
+    if (verify) {
+      var dirtNodes = [];
+      this.nodes.forEach(function (n) {
+        if (n._dirty) {
+          if (n.y === n._origY && n.x === n._origX && n.width === n._origW && n.height === n._origH) {
+            delete n._dirty;
+          } else {
+            dirtNodes.push(n);
+          }
+        }
+      });
+      return dirtNodes;
+    }
+
     return this.nodes.filter(function(n) { return n._dirty; });
   };
 
   GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
-    var prev = {x: node.x, y: node.y, width: node.width, height: node.height};
-
     node = this._prepareNode(node);
 
     if (node.maxWidth !== undefined) { node.width = Math.min(node.width, node.maxWidth); }
@@ -510,10 +523,6 @@
     this.nodes.push(node);
     if (triggerAddEvent) {
       this._addedNodes.push(node);
-    }
-    // use single equal as they come as string/undefined but end as number....
-    if (!node._dirty && (prev.x != node.x || prev.y != node.y || prev.width != node.width || prev.height != node.height)) {
-      node._dirty = true;
     }
 
     this._fixCollisions(node);
@@ -671,6 +680,11 @@
     }
   };
 
+  /**
+   * Construct a grid from the given element and options
+   * @param {GridStackElement} el
+   * @param {GridstackOptions} opts
+   */
   var GridStack = function(el, opts) {
     var self = this;
     var oneColumnMode, _prevColumn, isAutoCellHeight;
@@ -809,6 +823,7 @@
         this._prepareElement(item.el);
       }, this);
     }
+    this.grid._saveInitial(); // initial start of items
 
     this.setAnimation(this.opts.animate);
 
@@ -1018,19 +1033,20 @@
 
   GridStack.prototype._triggerChangeEvent = function(/*forceTrigger*/) {
     if (this.grid._batchMode) { return; }
-    // TODO: compare original X,Y,W,H (or entire node?) instead as _dirty can be a temporary state
-    var elements = this.grid.getDirtyNodes();
+    var elements = this.grid.getDirtyNodes(true); // verify they really changed
     if (elements && elements.length) {
       this.grid._layoutsNodesChange(elements);
       this.container.trigger('change', [elements]);
-      this.grid.cleanNodes(); // clear dirty flags now that we called
     }
+    this.grid._saveInitial(); // we called, now reset initial values & dirty flags
   };
 
   GridStack.prototype._triggerAddEvent = function() {
     if (this.grid._batchMode) { return; }
     if (this.grid._addedNodes && this.grid._addedNodes.length > 0) {
       this.grid._layoutsNodesChange(this.grid._addedNodes);
+      // prevent added nodes from also triggering 'change' event (which is called next)
+      this.grid._addedNodes.forEach(function (n) { delete n._dirty; });
       this.container.trigger('added', [this.grid._addedNodes]);
       this.grid._addedNodes = [];
     }
@@ -1450,12 +1466,7 @@
     el = $(el);
     this._writeAttr(el, node);
     this.container.append(el);
-    this._prepareElement(el, true);
-    this._updateContainerHeight();
-    this._triggerAddEvent();
-    this._triggerChangeEvent(true); // trigger any other changes
-
-    return el;
+    return this.makeWidget(el);
   };
 
   GridStack.prototype.makeWidget = function(el) {
@@ -1697,11 +1708,12 @@
     this.grid._sortNodes();
     var nodes = this.grid.nodes;
     this.grid.nodes = []; // pretend we have no nodes to conflict layout to start with...
-    nodes.forEach(function(n) {
-      if (!n.noMove && !n.locked) {
-        n.autoPosition = true;
+    nodes.forEach(function(node) {
+      if (!node.noMove && !node.locked) {
+        node.autoPosition = true;
       }
-      this.grid.addNode(n, false); // 'false' for add event trigger
+      this.grid.addNode(node, false); // 'false' for add event trigger...
+      node._dirty = true; // force attr update
     }, this);
     this.commit();
   };
@@ -1833,8 +1845,6 @@
         }, this);
       }
     }, this);
-
-    this._saveInitial(); // reset current value now that we diffed.
   }
 
   /**
@@ -1923,9 +1933,6 @@
     }, this);
     this.commit();
     delete this._ignoreLayoutsNodeChange;
-
-    // save this initial layout so we can see what changed and apply changes to other layouts better (diff)
-    this._saveInitial();
   }
 
   /** called to save initial position/size */
@@ -1935,6 +1942,7 @@
       n._origY = n.y;
       n._origW = n.width;
       n._origH = n.height;
+      delete n._dirty;
     });
   }
 
@@ -1992,6 +2000,7 @@
     if (!val) {
       this.grid._packNodes();
       this.grid._notify();
+      this._triggerChangeEvent();
     }
   };
 
