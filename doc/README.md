@@ -247,7 +247,8 @@ Widget will be always placed even if result height is more than actual grid heig
 before calling `addWidget` for additional check.
 
 ```javascript
-var grid = $('.grid-stack').gridstack();
+$('.grid-stack').gridstack();
+var grid = $('.grid-stack').data('gridstack');
 grid.addWidget(el, 0, 0, 3, 2, true);
 ```
 
@@ -360,9 +361,10 @@ Parameters:
 - `el` - element to convert to a widget
 
 ```javascript
-var grid = $('.grid-stack').gridstack();
+$('.grid-stack').gridstack();
 
 $('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="true"></div>')
+var grid = $('.grid-stack').data('gridstack');
 grid.makeWidget('gsi-1');
 ```
 

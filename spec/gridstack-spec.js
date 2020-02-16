@@ -114,7 +114,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       $('.grid-stack').removeClass('grid-stack-animate');
       grid.setAnimation(true);
       expect($('.grid-stack').hasClass('grid-stack-animate')).toBe(true);
@@ -124,7 +124,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       $('.grid-stack').addClass('grid-stack-animate');
       grid.setAnimation(false);
       expect($('.grid-stack').hasClass('grid-stack-animate')).toBe(false);
@@ -144,7 +144,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         staticGrid: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       $('.grid-stack').removeClass('grid-stack-static');
       grid._setStaticClass();
       expect($('.grid-stack').hasClass('grid-stack-static')).toBe(true);
@@ -155,7 +155,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         staticGrid: false
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       $('.grid-stack').addClass('grid-stack-static');
       grid._setStaticClass();
       expect($('.grid-stack').hasClass('grid-stack-static')).toBe(false);
@@ -174,7 +174,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var container = $('.grid-stack');
       var pixel = {top: 500, left: 200};
       var cell = grid.getCellFromPixel(pixel);
@@ -186,7 +186,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var pixel = {top: 500, left: 200};
       var cell = grid.getCellFromPixel(pixel, false);
       expect(cell.x).toBe(2);
@@ -197,7 +197,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var pixel = {top: 500, left: 200};
       var cell = grid.getCellFromPixel(pixel, true);
       expect(cell.x).toBe(2);
@@ -218,7 +218,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         column: 12
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var res = Math.round($('.grid-stack').outerWidth() / 12);
       expect(grid.cellWidth()).toBe(res);
     });
@@ -228,7 +228,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         column: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var res = Math.round($('.grid-stack').outerWidth() / 10);
       expect(grid.cellWidth()).toBe(res);
     });
@@ -249,8 +249,9 @@ describe('gridstack', function() {
         verticalMargin: verticalMargin,
         column: 12
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var container = $('.grid-stack');
+      var grid = container.data('gridstack');
       var rows = container.attr('data-gs-current-height');
 
       expect(grid.cellHeight()).toBe(cellHeight);
@@ -280,7 +281,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should have no changes', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       expect(grid.opts.column).toBe(12);
       grid.setColumn(12);
       expect(grid.opts.column).toBe(12);
@@ -289,7 +290,7 @@ describe('gridstack', function() {
       var options = {
         column: 12
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid.setColumn(10, false);
       expect(grid.opts.column).toBe(10);
@@ -312,7 +313,7 @@ describe('gridstack', function() {
         column: 12,
         float: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var el1 = $('#item1')
       var el2 = $('#item2')
 
@@ -436,7 +437,7 @@ describe('gridstack', function() {
         column: 12,
         float: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var el1 = grid.addWidget(widgetHTML, {width:1, height:1});
       var el2 = grid.addWidget(widgetHTML, {x:2, y:0, width:2, height:1});
       var el3 = grid.addWidget(widgetHTML, {x:1, y:0, width:1, height:2});
@@ -480,7 +481,7 @@ describe('gridstack', function() {
         oneColumnModeDomSort: true,
         float: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var el1 = grid.addWidget(widgetHTML, {width:1, height:1});
       var el2 = grid.addWidget(widgetHTML, {x:2, y:0, width:2, height:1});
       var el3 = grid.addWidget(widgetHTML, {x:1, y:0, width:1, height:2});
@@ -532,7 +533,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       for (var i = 0; i < items.length; i++) {
         grid.minWidth(items[i], 2);
@@ -555,7 +556,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       for (var i = 0; i < items.length; i++) {
         grid.maxWidth(items[i], 2);
@@ -578,7 +579,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       for (var i = 0; i < items.length; i++) {
         grid.minHeight(items[i], 2);
@@ -601,7 +602,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       for (var i = 0; i < items.length; i++) {
         grid.maxHeight(items[i], 2);
@@ -624,7 +625,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var shouldBeFalse = grid.isAreaEmpty(1, 1, 1, 1);
       expect(shouldBeFalse).toBe(false);
     });
@@ -633,7 +634,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var shouldBeTrue = grid.isAreaEmpty(5, 5, 1, 1);
       expect(shouldBeTrue).toBe(true);
     });
@@ -647,19 +648,19 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should remove all children by default', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       grid.removeAll();
       expect(grid.grid.nodes).toEqual([]);
       expect(document.getElementById('item1')).toBe(null);
     });
     it('should remove all children', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       grid.removeAll(true);
       expect(grid.grid.nodes).toEqual([]);
       expect(document.getElementById('item1')).toBe(null);
     });
     it('should remove gridstack part, leave DOM behind', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       grid.removeAll(false);
       expect(grid.grid.nodes).toEqual([]);
       expect(document.getElementById('item1')).not.toBe(null);
@@ -674,7 +675,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should remove first item (default), then second (true), then third (false)', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       expect(grid.grid.nodes.length).toEqual(2);
 
       var el1 = document.getElementById('item1');
@@ -710,7 +711,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         float: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       var $el;
       var $oldEl;
@@ -726,7 +727,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       var $el;
       var $oldEl;
@@ -750,7 +751,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should keep all widget options the same (autoPosition off', function() {
-      var grid = $('.grid-stack').gridstack({float: true});;
+      var grid = $('.grid-stack').gridstack({float: true}).data('gridstack');;
       var widget = grid.addWidget(widgetHTML, 6, 7, 2, 3, false, 1, 4, 2, 5, 'coolWidget');
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
@@ -803,7 +804,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should change x, y coordinates for widgets.', function() {
-      var grid = $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').gridstack({float: true}).data('gridstack');
       var widget = grid.addWidget(widgetHTML, 9, 7, 2, 3, true);
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).not.toBe(9);
@@ -819,7 +820,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should autoPosition (missing X,Y)', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       var widget = grid.addWidget(widgetHTML, {height: 2, id: 'optionWidget'});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
@@ -834,7 +835,7 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-id')).toBe('optionWidget');
     });
     it('should autoPosition (missing X)', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       var widget = grid.addWidget(widgetHTML, {y: 9, height: 2, id: 'optionWidget'});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
@@ -849,7 +850,7 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-id')).toBe('optionWidget');
     });
     it('should autoPosition (missing Y)', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       var widget = grid.addWidget(widgetHTML, {x: 9, height: 2, id: 'optionWidget'});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
@@ -864,7 +865,7 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-id')).toBe('optionWidget');
     });
     it('should autoPosition (correct X, missing Y)', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       var widget = grid.addWidget(widgetHTML, {x: 8, height: 2, id: 'optionWidget'});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
@@ -879,7 +880,7 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-id')).toBe('optionWidget');
     });
     it('should autoPosition (empty options)', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       var widget = grid.addWidget(widgetHTML, {});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
@@ -903,7 +904,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should use default', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       var widget = grid.addWidget(widgetHTML, {x: 'foo', y: null, width: 'bar', height: ''});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
@@ -921,7 +922,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should clear x position', function() {
-      var grid = $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').gridstack({float: true}).data('gridstack');
       var widgetHTML = '<div class="grid-stack-item" data-gs-x="9"><div class="grid-stack-item-content"></div></div>';
       var widget = grid.addWidget(widgetHTML, null, null, undefined);
       var $widget = $(widget);
@@ -938,7 +939,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should match true/false only', function() {
-      var grid = $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').gridstack({float: true}).data('gridstack');
       expect(grid.float()).toBe(true);
       grid.float(0);
       expect(grid.float()).toBe(false);
@@ -963,7 +964,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       grid.destroy();
       expect($('.grid-stack').length).toBe(0);
       expect(grid.grid).toBe(null);
@@ -973,7 +974,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       grid.destroy(false);
       expect($('.grid-stack').length).toBe(1);
       expect($('.grid-stack-item').length).toBe(2);
@@ -994,7 +995,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid.resize(items[0], 5, 5);
       expect(parseInt($(items[0]).attr('data-gs-width'), 10)).toBe(5);
@@ -1015,7 +1016,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         float: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid.move(items[0], 5, 5);
       expect(parseInt($(items[0]).attr('data-gs-x'), 10)).toBe(5);
@@ -1035,7 +1036,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid._updateElement(items[0], function(el, node) {
         var newNode = grid.grid.moveNode(node);
@@ -1047,7 +1048,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid.minWidth(items[0], 1);
       grid.maxWidth(items[0], 2);
@@ -1073,7 +1074,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         float: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid.update(items[0], 5, 5, 5 ,5);
       expect(parseInt($(items[0]).attr('data-gs-width'), 10)).toBe(5);
@@ -1095,7 +1096,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var vm = grid.verticalMargin();
       expect(vm).toBe(10);
     });
@@ -1104,7 +1105,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       grid.verticalMargin(11);
       expect(grid.verticalMargin()).toBe(11);
     });
@@ -1113,7 +1114,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10,
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       expect(grid.verticalMargin()).toBe(10);
       grid.verticalMargin(10);
       expect(grid.verticalMargin()).toBe(10);
@@ -1124,7 +1125,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       spyOn(grid, '_updateStyles');
       grid.verticalMargin(11, true);
       expect(grid._updateStyles).not.toHaveBeenCalled();
@@ -1144,7 +1145,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         rtl: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       expect($('.grid-stack').hasClass('grid-stack-rtl')).toBe(true);
     });
     it('should not add grid-stack-rtl class', function() {
@@ -1152,7 +1153,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       expect($('.grid-stack').hasClass('grid-stack-rtl')).toBe(false);
     });
   });
@@ -1171,7 +1172,7 @@ describe('gridstack', function() {
         minWidth: 1,
         disableDrag: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       expect(grid.opts.disableDrag).toBe(true);
       grid.enableMove(true, true);
@@ -1186,7 +1187,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         minWidth: 1
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid.enableMove(false);
       for (var i = 0; i < items.length; i++) {
@@ -1210,7 +1211,7 @@ describe('gridstack', function() {
         minWidth: 1,
         disableResize: true
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       expect(grid.opts.disableResize).toBe(true);
       grid.enableResize(true, true);
@@ -1225,7 +1226,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         minWidth: 1
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid.enableResize(false);
       for (var i = 0; i < items.length; i++) {
@@ -1248,7 +1249,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         minWidth: 1
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       grid.enableResize(false);
       grid.enableMove(false);
@@ -1276,7 +1277,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       for (var i = 0; i < items.length; i++) {
         grid.locked(items[i], true);
@@ -1288,7 +1289,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      var grid = $('.grid-stack').gridstack(options);
+      var grid = $('.grid-stack').gridstack(options).data('gridstack');
       var items = $('.grid-stack-item');
       for (var i = 0; i < items.length; i++) {
         grid.locked(items[i], false);
@@ -1342,7 +1343,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should move all 3 items to top-left with no space', function() {
-      var grid = $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').gridstack({float: true}).data('gridstack');
 
       var el3 = grid.addWidget(widgetHTML, {x: 3, y: 5});
       expect(parseInt(el3.attr('data-gs-x'))).toBe(3);
@@ -1353,7 +1354,7 @@ describe('gridstack', function() {
       expect(parseInt(el3.attr('data-gs-y'))).toBe(0);
     });
     it('not move locked item', function() {
-      var grid = $('.grid-stack').gridstack({float: true});
+      var grid = $('.grid-stack').gridstack({float: true}).data('gridstack');
 
       var el3 = grid.addWidget(widgetHTML, {x: 3, y: 5, locked: true, noMove: true});
       expect(parseInt(el3.attr('data-gs-x'))).toBe(3);
@@ -1378,19 +1379,19 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('warning if OLD setGridWidth is called', function() {
-      var grid = $('.grid-stack').gridstack();
+      var grid = $('.grid-stack').gridstack().data('gridstack');
       grid.setGridWidth(11); // old 0.5.2 API
       expect(grid.opts.column).toBe(11);
       expect(console.warn).toHaveBeenCalledWith('gridstack.js: Function `setGridWidth` is deprecated in v0.5.3 and has been replaced with `setColumn`. It will be **completely** removed in v1.0');
     });
     it('warning if OLD grid height is set', function() {
-      var grid = $('.grid-stack').gridstack({height: 10}); // old 0.5.2 Opt now maxRow
+      var grid = $('.grid-stack').gridstack({height: 10}).data('gridstack'); // old 0.5.2 Opt now maxRow
       expect(grid.opts.maxRow).toBe(10);
       expect(grid.grid.maxRow).toBe(10);
       expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `height` is deprecated in v0.5.3 and has been replaced with `maxRow`. It will be **completely** removed in v1.0');
     });
     it('warning if OLD oneColumnModeClass is set (no changes)', function() {
-      $('.grid-stack').gridstack({oneColumnModeClass: 'foo'}); // deleted 0.6.3 Opt
+      $('.grid-stack').gridstack({oneColumnModeClass: 'foo'}).data('gridstack'); // deleted 0.6.3 Opt
       expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `oneColumnModeClass` is deprecated in v0.6.3. Use class `.grid-stack-1` instead');
     });
   });
