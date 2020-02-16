@@ -1453,7 +1453,7 @@
     this._prepareElement(el, true);
     this._updateContainerHeight();
     this._triggerAddEvent();
-    // this._triggerChangeEvent(true); already have AddEvent
+    this._triggerChangeEvent(true); // trigger any other changes
 
     return el;
   };
@@ -1463,7 +1463,7 @@
     this._prepareElement(el, true);
     this._updateContainerHeight();
     this._triggerAddEvent();
-    // this._triggerChangeEvent(true); already have AddEvent
+    this._triggerChangeEvent(true); // trigger any other changes
 
     return el;
   };
@@ -1485,7 +1485,7 @@
     el.removeData('_gridstack_node');
     this.grid.removeNode(node, detachNode);
     this._triggerRemoveEvent();
-    // this._triggerChangeEvent(true); already have removeEvent
+    this._triggerChangeEvent(true); // trigger any other changes
   };
 
   GridStack.prototype.removeAll = function(detachNode) {

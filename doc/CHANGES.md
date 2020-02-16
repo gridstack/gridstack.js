@@ -31,6 +31,7 @@ Change log
 
 ## v0.6.3-dev (upcoming changes)
 
+- fix [#1142](https://github.com/gridstack/gridstack.js/issues/1142) RemoveWidget() doesn't also trigger change events when it should
 - del `bower` since dead for a while now (https://snyk.io/blog/bower-is-dead/)
 
 ## v0.6.3 (2020-02-05)
