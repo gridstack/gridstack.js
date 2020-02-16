@@ -65,9 +65,9 @@
         dragOut: true // let us drag them out!
       };
       $('.grid-stack.top').gridstack();
-      var grid1 = $('.grid-stack.nested1').gridstack(nestOptions);
+      var grid1 = $('.grid-stack.nested1').gridstack(nestOptions).data('gridstack');
       nestOptions.dragOut = false;
-      var grid2 = $('.grid-stack.nested2').gridstack(nestOptions);
+      var grid2 = $('.grid-stack.nested2').gridstack(nestOptions).data('gridstack');
 
       var count = 9;
       addNewWidget = function(grid) {

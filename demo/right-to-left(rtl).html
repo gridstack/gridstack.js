@@ -39,8 +39,10 @@
             this.widgets = controller.widgets;
 
             this.afterAddWidget = function (items) {
-              if (!grid) {
-                grid = $(componentInfo.element).find('.grid-stack').gridstack({auto: false});
+              if (grid == null) {
+                grid = $(componentInfo.element).find('.grid-stack').gridstack({
+                  auto: false
+                }).data('gridstack');
               }
 
               var item = items.find(function (i) { return i.nodeType == 1 });

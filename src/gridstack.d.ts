@@ -9,10 +9,7 @@
 // TypeScript Version: 2.8
 
 interface JQuery {
-  /** initializing the element will return the grid or grids if multiple were present */
-  gridstack(options: GridstackOptions): GridStack | GridStack[];
-
-  /** method to access the grid after the fact from the element */
+  gridstack(options: GridstackOptions): JQuery;
   data(key: 'gridstack'): GridStack;
 }
 
@@ -33,7 +30,8 @@ interface GridStack {
    * See also `makeWidget()`.
    *
    * @example
-   * var grid = $('.grid-stack').gridstack();
+   * $('.grid-stack').gridstack();
+   * var grid = $('.grid-stack').data('gridstack');
    * grid.addWidget(el, {width: 3, autoPosition: true});
    *
    * @param el widget to add
@@ -46,7 +44,8 @@ interface GridStack {
    * Legacy: Spelled out version of the widgets options, recommend use new version instead.
    *
    * @example
-   * var grid = $('.grid-stack').gridstack();
+   * $('.grid-stack').gridstack();
+   * var grid = $('.grid-stack').data('gridstack');
    * grid.addWidget(el, 0, 0, 3, 2, true);
    *
    * @param el widget to add
@@ -195,9 +194,10 @@ interface GridStack {
    * @param el widget to convert.
    *
    * @example
-   * var grid = $('.grid-stack').gridstack();
+   * $('.grid-stack').gridstack();
    * $('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2"
    *                     data-gs-auto-position="true"></div>')
+   * var grid = $('.grid-stack').data('gridstack');
    * grid.makeWidget('gsi-1');
    */
   makeWidget(el: GridStackElement): JQuery;

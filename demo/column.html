@@ -38,7 +38,8 @@
   <script type="text/javascript">
     $(function () {
       var $grid = $('.grid-stack');
-      var grid = $grid.gridstack({float: true});
+      $grid.gridstack({float: true});
+      grid = $grid.data('gridstack');
       var $text = $('#column-text');
 
       $grid.on('added', function(e, items) {log(' added ', items)});

@@ -2005,21 +2005,14 @@
   scope.GridStackUI.Engine = GridStackEngine;
   scope.GridStackUI.GridStackDragDropPlugin = GridStackDragDropPlugin;
 
-  /**
-   * initializing the element will return the grid or grids if multiple were present
-   */
   $.fn.gridstack = function(opts) {
-    var grids = [];
-    this.each(function() {
+    return this.each(function() {
       var o = $(this);
-      var grid = o.data('gridstack');
-      if (!grid) {
-        grid = new GridStack(this, opts);
-        o.data('gridstack', grid);
+      if (!o.data('gridstack')) {
+        o
+          .data('gridstack', new GridStack(this, opts));
       }
-      grids.push(grid);
     });
-    return grids.length > 1 ? grids : grids[0];
   };
 
   return scope.GridStackUI;
