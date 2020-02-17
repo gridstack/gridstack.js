@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>#1143 test</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+  <script src="../../../dist/jquery-ui.js"></script>
+  <script src="../../../src/gridstack.js"></script>
+  <script src="../../../src/gridstack.jQueryUI.js"></script>
+
+  <style type="text/css">
+    .grid-stack-item-removing {
+      opacity: 0.8;
+      filter: blur(5px);
+    }
+    #advanced-grid .grid-stack-item-content {
+      background-color: transparent;
+    }
+    #advanced-grid .nested1 .grid-stack-item-content {
+      background-color: #18bc9c;
+    }
+  </style>
+</head>
+<body>
+  <div class="row">
+    <div class="col-md-2 d-none d-md-block">
+      <div class="newWidget grid-stack-item">
+        <div class="card-body grid-stack-item-content">
+          <span>Drag me in into the dashboard!</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-10">
+      <div class="grid-stack" id="advanced-grid" data-gs-animate="yes">
+        <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="12" data-gs-height="3">
+          <div class="grid-stack-item-content">
+            This nested grid accepts new widget with class "newWidget"<br/>
+            The parent grid also accepts new widget but with a differenent class 'otherWidgetType'<br/>&nbsp;
+          <div class="grid-stack nested1">
+            <div class="grid-stack-item sub" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">1</div></div>
+            <div class="grid-stack-item sub" data-gs-x="3" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">2</div></div>
+            <div class="grid-stack-item sub" data-gs-x="6" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">3</div></div>
+            <div class="grid-stack-item sub" data-gs-x="9" data-gs-y="0" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">4</div></div>
+            <div class="grid-stack-item sub" data-gs-x="0" data-gs-y="1" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">5</div></div>
+            <div class="grid-stack-item sub" data-gs-x="3" data-gs-y="1" data-gs-width="3" data-gs-height="1"><div class="grid-stack-item-content">6</div></div>
+          </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(function () {
+      var $grid = $('#advanced-grid');
+      $grid.gridstack({ acceptWidgets: '.otherWidgetType' });
+      $('.grid-stack.nested1').gridstack({ acceptWidgets: '.newWidget' });
+      
+      $grid.on('added', function(e, items) { log(' added ', items) });
+      $grid.on('removed', function(e, items) { log(' removed ', items) });
+      $grid.on('change', function(e, items) { log(' change ', items) });
+      function log(type, items) {
+        var str = '';
+        for (let i=0; items && i<items.length && items[i]; i++) { str += ' (x,y)=' + items[i].x + ',' + items[i].y; }
+        console.log(type + items.length + ' items.' + str );
+      }
+
+      $('.newWidget').draggable({
+        revert: 'invalid',
+        scroll: false,
+        appendTo: 'body',
+        helper: 'clone'
+      });
+    });
+  </script>
+</body>
+</html>
