@@ -31,6 +31,7 @@ Change log
 
 ## v0.6.3-dev (upcoming changes)
 
+- fix [#540](https://github.com/gridstack/gridstack.js/issues/540) WebComponent support: CSS file now insert before grid instead of 'head'
 - fix [#1143](https://github.com/gridstack/gridstack.js/issues/1143) nested grids with different `acceptWidgets` class
 - fix [#1142](https://github.com/gridstack/gridstack.js/issues/1142) add/remove widget will also trigger change events when it should.
 - optimized `change` callback to save original x,y,w,h values and only call those that changed [1148](https://github.com/gridstack/gridstack.js/pull/1148)
