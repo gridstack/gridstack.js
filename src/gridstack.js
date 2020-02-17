@@ -968,6 +968,7 @@
           el.data('_gridstack_node_orig', origNode);
 
           el.on('drag', onDrag);
+          return false; // prevent parent from receiving msg (which may be grid as well)
         })
         .on(self.container, 'dropout', function(event, ui) {
           // jquery-ui bug. Must verify widget is being dropped out
@@ -986,6 +987,7 @@
           self.placeholder.detach();
           self._updateContainerHeight();
           el.data('_gridstack_node', el.data('_gridstack_node_orig'));
+          return false; // prevent parent from receiving msg (which may be grid as well)
         })
         .on(self.container, 'drop', function(event, ui) {
           self.placeholder.detach();
@@ -1027,6 +1029,7 @@
           $(ui.draggable).removeData('_gridstack_node');
           $(ui.draggable).removeData('_gridstack_node_orig');
           self.container.trigger('dropped', [originalNode, node]);
+          return false; // prevent parent from receiving msg (which may be grid as well)
         });
     }
   };
