@@ -27,6 +27,7 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Basic usage](#basic-usage)
   - [Requirements](#requirements)
   - [API Documentation](#api-documentation)
+  - [Extend Library](#extend-library)
   - [Touch devices support](#touch-devices-support)
   - [gridstack.js for specific frameworks](#gridstackjs-for-specific-frameworks)
   - [Change grid columns](#change-grid-columns)
@@ -126,6 +127,24 @@ Using gridstack.js with jQuery UI
 
 Documentation can be found [here](https://github.com/gridstack/gridstack.js/tree/develop/doc).
 
+
+## Extend Library
+
+You can easily extend or patch gridstack with code like this:
+
+```javascript
+$(function () {
+  // extend gridstack with our own custom method
+  window.GridStackUI.prototype.printCount = function() {
+    console.log('grid has ' + this.grid.nodes.length + ' items');
+  };
+
+  $('.grid-stack').gridstack();
+
+  // you can now call on any grid this...
+  $('.grid-stack').data('gridstack').printCount();
+ });
+```
 
 ## Touch devices support
 
