@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.6.3-dev (upcoming changes)](#v063-dev-upcoming-changes)
+- [v0.6.4-dev (upcoming changes)](#v064-dev-upcoming-changes)
+- [v0.6.4 (2020-02-17)](#v064-2020-02-17)
 - [v0.6.3 (2020-02-05)](#v063-2020-02-05)
 - [v0.6.2 (2020-02-03)](#v062-2020-02-03)
 - [v0.6.1 (2020-02-02)](#v061-2020-02-02)
@@ -29,7 +30,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.6.3-dev (upcoming changes)
+## v0.6.4-dev (upcoming changes)
+
+- TBD
+
+## v0.6.4 (2020-02-17)
 
 - fix [#540](https://github.com/gridstack/gridstack.js/issues/540) WebComponent support: CSS file now insert before grid instead of 'head'
 - fix [#1143](https://github.com/gridstack/gridstack.js/issues/1143) nested grids with different `acceptWidgets` class

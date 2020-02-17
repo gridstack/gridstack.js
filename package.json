@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "0.6.3-dev",
+  "version": "0.6.4-dev",
   "description": "gridstack.js for dashboard layout and creation, with many wrappers (React, Angular, Ember, knockout...)",
   "main": "dist/gridstack.js",
   "repository": {
