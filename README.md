@@ -143,7 +143,7 @@ $(function () {
 
   // you can now call on any grid this...
   $('.grid-stack').data('gridstack').printCount();
- });
+});
 ```
 
 ## Touch devices support
