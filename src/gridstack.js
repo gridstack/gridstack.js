@@ -75,22 +75,23 @@
         return Utils.sortBy(nodes, function(n) { return (n.x + n.y * column); });
     },
 
-    createStylesheet: function(id) {
-      var style = document.createElement('style');
-      style.setAttribute('type', 'text/css');
-      style.setAttribute('data-gs-style-id', id);
-      if (style.styleSheet) {
-        style.styleSheet.cssText = '';
-      } else {
-        style.appendChild(document.createTextNode(''));
-      }
-      document.getElementsByTagName('head')[0].appendChild(style);
-      return style.sheet;
-    },
+  createStylesheet: function(id, parent) {
+    var style = document.createElement('style');
+    style.setAttribute('type', 'text/css');
+    style.setAttribute('data-gs-style-id', id);
+    if (style.styleSheet) {
+      style.styleSheet.cssText = '';
+    } else {
+      style.appendChild(document.createTextNode(''));
+    }
+    if (!parent) { parent = document.getElementsByTagName('head')[0]; } // default to head
+    parent.insertBefore(style, parent.firstChild);
+    return style.sheet;
+  },
 
-    removeStylesheet: function(id) {
-      $('STYLE[data-gs-style-id=' + id + ']').remove();
-    },
+  removeStylesheet: function(id) {
+    $('STYLE[data-gs-style-id=' + id + ']').remove();
+  },
 
     insertCSSRule: function(sheet, selector, rules, index) {
       if (typeof sheet.insertRule === 'function') {
@@ -1068,7 +1069,8 @@
       Utils.removeStylesheet(this._stylesId);
     }
     this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
-    this._styles = Utils.createStylesheet(this._stylesId);
+    // insert style to parent (instead of 'head') to support WebComponent
+    this._styles = Utils.createStylesheet(this._stylesId, this.container.get(0).parentNode);
     if (this._styles !== null) {
       this._styles._max = 0;
     }
