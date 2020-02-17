@@ -90,9 +90,9 @@
       return style.sheet;
     },
 
-    removeStylesheet: function(id) {
-      $('STYLE[data-gs-style-id=' + id + ']').remove();
-    },
+  removeStylesheet: function(id) {
+    $('STYLE[data-gs-style-id=' + id + ']').remove();
+  },
 
     insertCSSRule: function(sheet, selector, rules, index) {
       if (typeof sheet.insertRule === 'function') {
