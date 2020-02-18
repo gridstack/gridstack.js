@@ -178,7 +178,7 @@ If you're still experiencing issues on touch devices please check [#444](https:/
 
 search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
 
-- ember: [gridstack-ember](https://github.com/yahoo/ember-gridstack)
+- ember: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
 - AngularJS: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
 - Angular8: [lb-gridstack](https://github.com/pfms84/lb-gridstack)
 - Rails: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
