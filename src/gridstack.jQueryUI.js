@@ -1,31 +1,32 @@
-/** gridstack.js 0.6.4-dev - JQuery UI Drag&Drop plugin @preserve */
+/** gridstack.js 1.0.0 - JQuery UI Drag&Drop plugin @preserve */
 /**
  * https://gridstackjs.com/
  * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
 */
 (function(factory) {
+  /* we compile this in so no need for required loading
   if (typeof define === 'function' && define.amd) {
     define(['jquery', 'gridstack', 'exports'], factory);
   } else if (typeof exports !== 'undefined') {
     try { jQuery = require('jquery'); } catch (e) {}
     try { gridstack = require('gridstack'); } catch (e) {}
-    factory(jQuery, gridstack.GridStackUI, exports);
-  } else {
-    factory(jQuery, GridStackUI, window);
+    factory(jQuery, gridstack.GridStack, exports);
+  } else */{
+    factory(jQuery, GridStack, window);
   }
-})(function($, GridStackUI, scope) {
+})(function($, GridStack, scope) {
   /**
   * @class JQueryUIGridStackDragDropPlugin
   * jQuery UI implementation of drag'n'drop gridstack plugin.
   */
   function JQueryUIGridStackDragDropPlugin(grid) {
-    GridStackUI.GridStackDragDropPlugin.call(this, grid);
+    GridStack.DragDropPlugin.call(this, grid);
   }
 
-  GridStackUI.GridStackDragDropPlugin.registerPlugin(JQueryUIGridStackDragDropPlugin);
+  GridStack.DragDropPlugin.registerPlugin(JQueryUIGridStackDragDropPlugin);
 
-  JQueryUIGridStackDragDropPlugin.prototype = Object.create(GridStackUI.GridStackDragDropPlugin.prototype);
+  JQueryUIGridStackDragDropPlugin.prototype = Object.create(GridStack.DragDropPlugin.prototype);
   JQueryUIGridStackDragDropPlugin.prototype.constructor = JQueryUIGridStackDragDropPlugin;
 
   JQueryUIGridStackDragDropPlugin.prototype.resizable = function(el, opts) {
@@ -57,7 +58,7 @@
     } else {
       el.draggable($.extend({}, this.grid.opts.draggable, {
         containment: (this.grid.opts.isNested && !this.grid.opts.dragOut) ?
-          this.grid.container.parent() :
+          this.grid.$el.parent() :
           (this.grid.opts.draggable.containment || null),
         start: opts.start || function() {},
         stop: opts.stop || function() {},

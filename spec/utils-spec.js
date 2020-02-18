@@ -4,7 +4,7 @@ describe('gridstack utils', function() {
   var utils;
 
   beforeEach(function() {
-    utils = window.GridStackUI.Utils;
+    utils = GridStack.Utils;
   });
 
   describe('setup of utils', function() {

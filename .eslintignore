@@ -1,4 +1,5 @@
 dist/*.js
 demo/*
 spec/*
+src/jquery.js
 src/jquery-ui.js

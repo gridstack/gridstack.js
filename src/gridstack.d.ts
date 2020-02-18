@@ -1,4 +1,4 @@
-// Type definitions for Gridstack 0.6.4-dev
+// Type definitions for Gridstack 1.0.0
 // Project: https://gridstackjs.com/
 // Definitions by: Pascal Senn <https://github.com/PascalSenn>
 //                 Ricky Blankenaufulland <https://github.com/ZoolWay>
@@ -8,9 +8,8 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped initially, but now part of gridstack.js
 // TypeScript Version: 2.8
 
-interface JQuery {
-  gridstack(options: GridstackOptions): JQuery;
-  data(key: 'gridstack'): GridStack;
+interface Window {
+  GridStack: GridStack;
 }
 
 /* Other items in https://github.com/gridstack/gridstack.js/blob/develop/doc/README.md
@@ -19,9 +18,46 @@ interface JQuery {
  * Events
  */
 
-type GridStackElement = string | HTMLElement | JQuery;
+type GridStackElement = string | HTMLElement;
+interface GridStackHTMLElement extends HTMLElement {
+  /** grid's parent DOM element points back to grid class */
+  gridstack: GridStack;
+}
+type GridStackEvent = 'added' | 'change' | 'disable' | 'dragstart' | 'dragstop' | 'dropped' |
+                      'enable' | 'removed' | 'resize' | 'resizestart' | 'gsresizestop';
 
 interface GridStack {
+  /**
+   * initializing the HTML element, or selector string, into a grid will return the grid. Calling it again will
+   * simply return the existing instance (ignore any passed options). There is also a version that support
+   * multiple grids initialization.
+   * @param options grid options (optional)
+   * @param el element to convert to a grid (default to '.grid-stack' class selector)
+   * 
+   * @example
+   * var grid = window.GridStack.init();
+   * // Note: the HTMLElement (of type GridStackHTMLElement) will itself store a `gridstack: GridStack` value that can be retrieve later
+   * var grid = document.querySelector('.grid-stack').gridstack;
+   */
+  init(options?: GridstackOptions, el?: GridStackElement): GridStack;
+
+  /**
+   * Will initialize a list of elements (given a selector) and return an array of grids.
+   * @param options grid options (optional)
+   * @param selector element to convert to grids (default to '.grid-stack' class selector)
+   * 
+   * @example
+   * var grids = window.GridStack.initAll();
+   * grids.forEach(...)
+   */
+  initAll(options?: GridstackOptions, selector?: string): GridStack[];
+
+  /** the HTML element tied to this grid after it's been initialized */
+  el: GridStackHTMLElement;
+
+  /** engine used to implement non DOM grid functionality */
+  engine: GridStackEngine;
+
   /**
    * Creates new widget and returns it.
    *
@@ -30,22 +66,20 @@ interface GridStack {
    * See also `makeWidget()`.
    *
    * @example
-   * $('.grid-stack').gridstack();
-   * var grid = $('.grid-stack').data('gridstack');
+   * var grid = GridStack.init();
    * grid.addWidget(el, {width: 3, autoPosition: true});
    *
    * @param el widget to add
    * @param options widget position/size options (optional)
    */
-  addWidget(el: GridStackElement, options ? : GridstackWidget): JQuery;
+  addWidget(el: GridStackElement, options ? : GridstackWidget): HTMLElement;
 
   /**
    * Creates new widget and returns it. 
    * Legacy: Spelled out version of the widgets options, recommend use new version instead.
    *
    * @example
-   * $('.grid-stack').gridstack();
-   * var grid = $('.grid-stack').data('gridstack');
+   * var grid = GridStack.init();
    * grid.addWidget(el, 0, 0, 3, 2, true);
    *
    * @param el widget to add
@@ -61,10 +95,10 @@ interface GridStack {
    * @param id value for `data-gs-id` (optional)
    */
   addWidget(el: GridStackElement, x ? : number, y ? : number, width ? : number, height ? : number, autoPosition ? : boolean,
-    minWidth ? : number, maxWidth ? : number, minHeight ? : number, maxHeight ? : number, id ? : number | string): JQuery;
+    minWidth ? : number, maxWidth ? : number, minHeight ? : number, maxHeight ? : number, id ? : number | string): HTMLElement;
 
   /**
-   * Initializes batch updates. You will see no changes until commit method is called.
+   * Initializes batch updates. You will see no changes until `commit()` method is called.
    */
   batchUpdate(): void;
 
@@ -102,6 +136,21 @@ interface GridStack {
   compact(): void;
 
   /**
+   * set the number of columns in the grid. Will update existing widgets to conform to new number of columns,
+   * as well as cache the original layout so you can revert back to previous positions without loss.
+   * Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [1-11],
+   * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
+   * @param column - Integer > 0 (default 12).
+   * @param doNotPropagate if true existing widgets will not be updated (optional) 
+   */
+  column(column: number, doNotPropagate ? : boolean): void;
+
+  /**
+   * get the number of columns in the grid (default 12)
+   */
+  column(): number;
+
+  /**
    * Destroys a grid instance.
    * @param detachGrid if false nodes and grid will not be removed from the DOM (Optional. Default true).
    */
@@ -125,9 +174,6 @@ interface GridStack {
 
   /**
    * Enables/disables widget moving.
-   * This is a shortcut for:
-   * @example
-   * grid.movable(this.container.children('.' + this.opts.itemClass), doEnable);
    *
    * @param doEnable
    * @param includeNewWidgets will force new widgets to be draggable as per
@@ -140,10 +186,6 @@ interface GridStack {
    * @param doEnable
    * @param includeNewWidgets will force new widgets to be draggable as per
    * doEnable`s value by changing the disableResize grid option.
-   *
-   * This is a shortcut for:
-   * @example
-   *  grid.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
    */
   enableResize(doEnable: boolean, includeNewWidgets: boolean): void;
 
@@ -158,8 +200,6 @@ interface GridStack {
    */
   float(): boolean;
 
-
-
   /**
    * Get the position of the cell under a pixel on screen.
    * @param position the position of the pixel to resolve in
@@ -170,6 +210,9 @@ interface GridStack {
    * Returns an object with properties `x` and `y` i.e. the column and row in the grid.
    */
   getCellFromPixel(position: MousePosition, useOffset ? : boolean): CellPosition;
+
+  /** returns the current number of rows */
+  getRow(): number;
 
   /**
    * Checks if specified area is empty.
@@ -188,19 +231,18 @@ interface GridStack {
   locked(el: GridStackElement, val: boolean): void;
 
   /**
-   * If you add elements to your gridstack container by hand, you have to tell gridstack afterwards to make them widgets.
+   * If you add elements to your grid by hand, you have to tell gridstack afterwards to make them widgets.
    * If you want gridstack to add the elements for you, use addWidget instead.
    * Makes the given element a widget and returns it.
    * @param el widget to convert.
    *
    * @example
-   * $('.grid-stack').gridstack();
-   * $('.grid-stack').append('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2"
+   * var grid = GridStack.init();
+   * grid.el.appendChild('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2"
    *                     data-gs-auto-position="true"></div>')
-   * var grid = $('.grid-stack').data('gridstack');
    * grid.makeWidget('gsi-1');
    */
-  makeWidget(el: GridStackElement): JQuery;
+  makeWidget(el: GridStackElement): HTMLElement;
 
   /**
    * Set the maxWidth for a widget.
@@ -246,6 +288,27 @@ interface GridStack {
   move(el: GridStackElement, x: number, y: number): void;
 
   /**
+   * unsubscribe from the 'on' event below
+   * @param name of the event (see possible values)
+   */
+  off(name: GridStackEvent): void;
+
+  /**
+   * Event handler that extracts our CustomEvent data out automatically for receiving custom
+   * notifications (see doc for supported events)
+   * @param name of the event (see possible values)
+   * @param callback function called with event and optional second/third param
+   * (see README documentation for each signature).
+   * 
+   * @example
+   * grid.on('added', function(e, items) { log('added ', items)} );
+   * 
+   * Note: in some cases it is the same as calling native handler and parsing the event.
+   * grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
+   */
+  on(name: GridStackEvent, callback: (event: CustomEvent, arg2?: GridStackNode[] | Object, arg3?: Object) => void): void;
+
+  /**
    * Removes widget from the grid.
    * @param el  widget to modify
    * @param detachNode if false DOM node won't be removed from the tree (Default? true).
@@ -278,16 +341,6 @@ interface GridStack {
    * @param doAnimate if true the grid will animate.
    */
   setAnimation(doAnimate: boolean): void;
-
-  /**
-   * Modify number of columns in the grid. Will update existing widgets to conform to new number of columns,
-   * as well as cache the original layout so you can revert back to previous positions without loss.
-   * Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [1-11],
-   * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
-   * @param column - Integer > 0 (default 12).
-   * @param doNotPropagate if true existing widgets will not be updated (optional) 
-   */
-  setColumn(column: number, doNotPropagate ? : boolean): void;
 
   /**
    * Toggle the grid static state. Also toggle the grid-stack-static class.
@@ -339,6 +392,20 @@ interface GridStack {
 }
 
 /**
+ * Defines the GridStack engine that does most no DOM grid manipulation.
+ * See GridStack methods and vars for descriptions.
+ * 
+ * NOTE: values should not be modified - call the GridStack API instead
+ */
+interface GridStackEngine {
+  column: number;
+  float: boolean;
+  maxRow: number;
+  nodes: GridStackNode[];
+  getRow(): number;
+}
+
+/**
  * Defines the coordinates of an object
  */
 interface MousePosition {
@@ -365,6 +432,10 @@ interface CellPosition {
  * @param maxWidth maximum width allowed during resize/creation (default?: undefined = un-constrained)
  * @param minHeight minimum height allowed during resize/creation (default?: undefined = un-constrained)
  * @param maxHeight maximum height allowed during resize/creation (default?: undefined = un-constrained)
+ * @param noResize prevent resizing (default?: undefined = un-constrained)
+ * @param noMove prevents moving (default?: undefined = un-constrained)
+ * @param locked prevents moving and resizing (default?: undefined = un-constrained)
+ * @param resizeHandles widgets can have their own resize handles. For example 'e,w' will make the particular widget only resize east and west.
  * @param id value for `data-gs-id` stored on the widget (default?: undefined)
  */
 interface GridstackWidget {
@@ -377,19 +448,29 @@ interface GridstackWidget {
   maxWidth ? : number;
   minHeight ? : number;
   maxHeight ? : number;
+  noResize ? : boolean;
+  noMove ? : boolean;
+  locked ? : boolean;
+  resizeHandles ?: string;
   id ? : number | string;
 }
 
-declare namespace GridStackUI {
-  interface Utils {
-    /**
-     * Sorts array of nodes
-     * @param nodes array to sort
-     * @param dir 1 for asc, -1 for desc (optional)
-     * @param width width of the grid. If undefined the width will be calculated automatically (optional).
-     **/
-    sort(nodes: HTMLElement[], dir ? : number, width ? : number): void;
-  }
+/**
+ * internal descriptions describing the items in the grid
+ */
+interface GridStackNode extends GridstackWidget {
+  el: HTMLElement;
+  _grid: GridStack;
+}
+
+interface Utils {
+  /**
+   * Sorts array of nodes
+   * @param nodes array to sort
+   * @param dir 1 for asc, -1 for desc (optional)
+   * @param width width of the grid. If undefined the width will be calculated automatically (optional).
+   **/
+  sort(nodes: GridStackNode[], dir ? : number, width ? : number): void;
 }
 
 /**
@@ -430,9 +511,14 @@ interface GridstackOptions {
   cellHeight ? : number | string;
 
   /**
-   * (internal?) unit for cellHeight (default? 'px')
+   * (internal) unit for cellHeight (default? 'px') which is set when a string cellHeight with a unit is passed (ex: '10rem')
    */
   cellHeightUnit ? : string;
+
+  /**
+   * number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns
+   */
+  column ? : number;
 
   /** class that implement drag'n'drop functionality for gridstack. If false grid will be static.
    * (default?: null - first available plugin will be used)
@@ -442,11 +528,14 @@ interface GridstackOptions {
   /** disallows dragging of widgets (default?: false) */
   disableDrag ? : boolean;
 
+  /** disables the onColumnMode when the window width is less than minWidth (default?: false) */
+  disableOneColumnMode ? : boolean;
+
   /** disallows resizing of widgets (default?: false). */
   disableResize ? : boolean;
 
   /**
-   * allows to override jQuery UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null })
+   * allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null })
    */
   draggable ? : {};
 
@@ -454,6 +543,11 @@ interface GridstackOptions {
    * let user drag nested grid items out of a parent or not (default false)
    */
   dragOut ? : boolean;
+
+  /**
+   * enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html)
+   */
+  float ? : boolean;
 
   /**
    * draggable handle selector (default?: '.grid-stack-item-content')
@@ -464,9 +558,9 @@ interface GridstackOptions {
   handleClass ? : string;
 
   /**
-   * number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns
+   * widget class (default?: 'grid-stack-item')
    */
-  column ? : number;
+  itemClass ? : string;
 
   /**
    * maximum rows amount. Default? is 0 which means no maximum rows
@@ -474,22 +568,9 @@ interface GridstackOptions {
   maxRow ? : number;
 
   /**
-   * enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html)
-   */
-  float ? : boolean;
-
-  /**
-   * widget class (default?: 'grid-stack-item')
-   */
-  itemClass ? : string;
-
-  /**
    * minimal width. If window width is less, grid will be shown in one column mode (default?: 768)
    */
   minWidth ? : number;
-
-  /** disables the onColumnMode when the window width is less than minWidth (default?: false) */
-  disableOneColumnMode ? : boolean;
 
   /**
    * set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column 
@@ -506,12 +587,12 @@ interface GridstackOptions {
   placeholderText ? : string;
 
   /**
-   * allows to override jQuery UI resizable options. (default?: { autoHide?: true, handles?: 'se' })
+   * allows to override UI resizable options. (default?: { autoHide?: true, handles?: 'se' })
    */
   resizable ? : {};
 
   /**
-   * if true widgets could be removed by dragging outside of the grid. It could also be a jQuery selector string,
+   * if true widgets could be removed by dragging outside of the grid. It could also be a selector string,
    * in this case widgets will be removed by dropping them there (default?: false)
    * See example (http://gridstack.github.io/gridstack.js/demo/two.html)
    */
@@ -529,9 +610,9 @@ interface GridstackOptions {
   rtl ? : boolean | 'auto';
 
   /**
-   * makes grid static (default?: false).If true widgets are not movable/resizable.
-   * You don't even need jQueryUI draggable/resizable. A CSS class
-   * 'grid-stack-static' is also added to the container.
+   * makes grid static (default?: false). If `true` widgets are not movable/resizable.
+   * You don't even need draggable/resizable. A CSS class
+   * 'grid-stack-static' is also added to the element.
    */
   staticGrid ? : boolean;
 
@@ -543,7 +624,7 @@ interface GridstackOptions {
   verticalMargin ? : number | string;
 
   /**
-   * (internal?) unit for verticalMargin (default? 'px')
+   * (internal) unit for verticalMargin (default? 'px') set when `verticalMargin` is set as string with unit (ex: 2rem')
    */
   verticalMarginUnit ? : string;
 }

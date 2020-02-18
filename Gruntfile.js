@@ -10,8 +10,14 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-protractor-webdriver');
 
+  const sass = require('node-sass');
+
   grunt.initConfig({
     sass: {
+      options: {
+        implementation: sass,
+			  sourceMap: true
+      },
       dist: {
         files: {
           'dist/gridstack.css': 'src/gridstack.scss',
@@ -37,8 +43,10 @@ module.exports = function(grunt) {
         files: {
           'dist/gridstack.js': ['src/gridstack.js'],
           'dist/gridstack.d.ts': ['src/gridstack.d.ts'],
+          'dist/gridstack.all.d.ts': ['src/gridstack.d.ts'],
           'dist/gridstack.jQueryUI.js': ['src/gridstack.jQueryUI.js'],
           'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
+          'dist/jquery.js': ['src/jquery.js'],
           'dist/jquery-ui.js': ['src/jquery-ui.js'],
         }
       }
@@ -57,8 +65,9 @@ module.exports = function(grunt) {
           'dist/gridstack.min.js': ['src/gridstack.js'],
           'dist/gridstack.jQueryUI.min.js': ['src/gridstack.jQueryUI.js'],
           'dist/gridstack-poly.min.js': ['src/gridstack-poly.js'],
+          'dist/jquery.min.js': ['src/jquery.js'],
           'dist/jquery-ui.min.js': ['src/jquery-ui.js'],
-          'dist/gridstack.all.js': ['src/gridstack-poly.js', 'src/gridstack.js', 'src/jquery-ui.js', 'src/gridstack.jQueryUI.js']
+          'dist/gridstack.all.js': ['src/gridstack-poly.js', 'src/jquery.js', 'src/gridstack.js', 'src/jquery-ui.js', 'src/gridstack.jQueryUI.js']
         }
       }
     },
