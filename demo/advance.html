@@ -12,9 +12,10 @@
 
   <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="../dist/jquery-ui.min.js"></script>
+
+  <script src="../src/jquery.js"></script>
   <script src="../src/gridstack.js"></script>
+  <script src="../src/jquery-ui.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
 
   <style type="text/css">
@@ -53,7 +54,7 @@
       </div>
     </div>
     <div class="col-sm-12 col-md-10">
-      <div class="grid-stack" id="advanced-grid" data-gs-animate="yes">
+      <div class="grid-stack" data-gs-animate="yes">
         <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2">
           <div class="grid-stack-item-content">1</div>
         </div>
@@ -104,37 +105,33 @@
   </div>
 
   <script type="text/javascript">
-    $(function () {
-      var $grid = $('#advanced-grid');
-      
-      $grid.on('added', function(e, items) { log(' added ', items) });
-      $grid.on('removed', function(e, items) { log(' removed ', items) });
-      $grid.on('change', function(e, items) { log(' change ', items) });
-      function log(type, items) {
-        if (!items) { return; }
-        var str = '';
-        for (let i=0; i<items.length && items[i]; i++) { str += ' (x,y)=' + items[i].x + ',' + items[i].y; }
-        console.log(type + items.length + ' items.' + str );
-      }
+    var grid = GridStack.init({
+      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      ),
+      resizable: {
+        handles: 'e, se, s, sw, w'
+      },
+      removable: '#trash',
+      removeTimeout: 100,
+      acceptWidgets: '.newWidget'
+    });
 
-      $grid.gridstack({
-        alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        ),
-        resizable: {
-          handles: 'e, se, s, sw, w'
-        },
-        removable: '#trash',
-        removeTimeout: 100,
-        acceptWidgets: '.newWidget'
-      });
+    grid.on('added', function(e, items) { log('added ', items) });
+    grid.on('removed', function(e, items) { log('removed ', items) });
+    grid.on('change', function(e, items) { log('change ', items) });
+    function log(type, items) {
+      var str = '';
+      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+      console.log(type + items.length + ' items.' + str );
+    }
 
-      $('.newWidget').draggable({
-        revert: 'invalid',
-        scroll: false,
-        appendTo: 'body',
-        helper: 'clone'
-      });
+    // TODO: switch jquery-ui out
+    $('.newWidget').draggable({
+      revert: 'invalid',
+      scroll: false,
+      appendTo: 'body',
+      helper: 'clone'
     });
   </script>
 </body>

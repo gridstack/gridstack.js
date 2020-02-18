@@ -15,10 +15,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'node_modules/jquery/dist/jquery.min.js',
-      'src/gridstack.js',
-      'dist/jquery-ui.min.js',
-      'src/gridstack.jQueryUI.js',
+      'dist/gridstack.all.js',
       'spec/*-spec.js',
       // 'spec/e2e/*-spec.js' issues with ReferenceError: `browser` & `element` is not defined
     ],

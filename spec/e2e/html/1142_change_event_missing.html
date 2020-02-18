@@ -4,11 +4,11 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>test demo</title>
+  <title>1142 demo</title>
 
   <link rel="stylesheet" href="../../../demo/demo.css"/>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="../../../dist/jquery.min.js"></script>
   <script src="../../../dist/jquery-ui.min.js"></script>
   <script src="../../../src/gridstack.js"></script>
   <script src="../../../src/gridstack.jQueryUI.js"></script>
@@ -22,27 +22,21 @@
   </div>
   
 <script type="text/javascript">
-  $(function () {
-    var $grid = $('.grid-stack').gridstack({float: false});
+  var grid = GridStack.init({float: false});
 
-  $grid.on('added', function(e, items) { log(' added ', items) });
-  $grid.on('removed', function(e, items) { log(' removed ', items) });
-  $grid.on('change', function(e, items) { log(' change ', items) });
-
+  grid.on('added', function(e, items) {log('added ', items)});
+  grid.on('removed', function(e, items) {log('removed ', items)});
+  grid.on('change', function(e, items) {log('change ', items)});
   function log(type, items) {
     var str = '';
-    for (let i = 0; items && i < items.length && items[i]; i++) {
-      str += ' (x,y)=' + items[i].x + ',' + items[i].y;
-    }
+    items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
     console.log(type + items.length + ' items.' + str);
   }
 
   $('.grid-stack .grid-stack-item').click(function(e) {
     var item = $(e.currentTarget).closest('.grid-stack-item');
-    var g = item.closest('.grid-stack').data('gridstack');
-    g.removeWidget(item);
+    grid.removeWidget(item);
   });
-});
 </script>
 </body>
 </html>
