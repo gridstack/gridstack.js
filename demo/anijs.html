@@ -9,57 +9,51 @@
   <link rel="stylesheet" href="https://anijs.github.io/lib/anicollection/anicollection.css" />
   <link rel="stylesheet" href="demo.css"/>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <!--
-  <script src="../dist/jquery-ui.min.js"></script>
+  <script src="../src/jquery.js"></script>
   <script src="../src/gridstack.js"></script>
+  <script src="../src/jquery-ui.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
-  -->
-  <script src="../dist/gridstack.all.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/AniJS/0.9.3/anijs.js"></script>
 </head>
 <body>
   <div class="container-fluid">
     <h1>AniJS demo</h1>
     <div>
-      <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
+      <a onClick="addWidget()" class="btn btn-primary" href="#">Add Widget</a>
     </div>
     <h4>Widget added</h4>
     <br>
     <div class="grid-stack"></div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/AniJS/0.9.3/anijs.js"></script>
   <script type="text/javascript">
-    $(function () {
-      $('.grid-stack').gridstack();
-      var self = this;
-      this.grid = $('.grid-stack').data('gridstack');
-      $('.grid-stack').on('added', function(event, items) {
-        // add anijs data to gridstack item
-        for (var i = 0; i < items.length; i++) {
-          $(items[i].el[0]).attr('data-anijs', 'if: added, do: swing animated, after: $removeAnimations, on: $gridstack');
-        }
-        AniJS.run();
-        self.gridstackNotifier = AniJS.getNotifier('gridstack');
-        // fire added event!
-        self.gridstackNotifier.dispatchEvent('added');
-      });
-      $('#add-widget').click(function() {
-        addNewWidget();
-      });
-
-      function addNewWidget() {
-        var grid = $('.grid-stack').data('gridstack');
-        grid.addWidget($('<div><div class="grid-stack-item-content"></div></div>'), 0, 0, Math.floor(1 + 3 * Math.random()), Math.floor(1 + 3 * Math.random()), true);
+    var grid = GridStack.init();
+    var self = this;
+    grid.on('added', function(e, items) {
+      // add anijs data to gridstack item
+      for (var i = 0; i < items.length; i++) {
+        items[i].el.setAttribute('data-anijs', 'if: added, do: swing animated, after: $removeAnimations, on: $gridstack');
       }
-
-      var animationHelper = AniJS.getHelper();
-
-      //Defining removeAnimations to remove existing animations
-      animationHelper.removeAnimations = function(e, animationContext){
-        $('.grid-stack-item').attr('data-anijs', '');
-      };
+      AniJS.run();
+      self.gridstackNotifier = AniJS.getNotifier('gridstack');
+      // fire added event!
+      self.gridstackNotifier.dispatchEvent('added');
     });
+
+    function addWidget() {
+      grid.addWidget('<div><div class="grid-stack-item-content"></div></div>', 0, 0, Math.floor(1 + 3 * Math.random()), Math.floor(1 + 3 * Math.random()), true);
+    };
+
+    var animationHelper = AniJS.getHelper();
+
+    //Defining removeAnimations to remove existing animations
+    animationHelper.removeAnimations = function(e, animationContext) {
+      document.querySelectorAll('.grid-stack-item').forEach( function(el) {
+        el.removeAttribute('data-anijs');
+      });
+    }
+
+    addWidget();
   </script>
 </body>
 </html>

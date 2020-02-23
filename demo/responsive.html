@@ -6,9 +6,9 @@
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="../dist/jquery-ui.min.js"></script>
+  <script src="../src/jquery.js"></script>
   <script src="../src/gridstack.js"></script>
+  <script src="../src/jquery-ui.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
 </head>
 <body>
@@ -23,49 +23,47 @@
   </div>
 
   <script type="text/javascript">
-    $(function () {
-      var grid = $('.grid-stack').gridstack({
-        disableOneColumnMode: true, // will manually do 1 column
-        float: true }).data('gridstack');
-      var $text = $('#column-text');
-      
-      function resizeGrid() {
-        var width = document.body.clientWidth;
-        if (width < 700) {
-          grid.setColumn(1);
-          $text.text(1);
-        } else if (width < 850) {
-          grid.setColumn(3);
-          $text.text(3);
-        } else if (width < 950) {
-          grid.setColumn(6);
-          $text.text(6);
-        } else {
-          grid.setColumn(12);
-          $text.text(12);
-        }
-      };
-      $(window).resize(function () {
-        resizeGrid();
-      });
-      $(document).ready(function() {
-        resizeGrid();
-      });
-      
-      var items = [
-        {x: 0, y: 0, width: 2, height: 2},
-        {x: 2, y: 0, width: 2, height: 1},
-        {x: 5, y: 0, width: 1, height: 1},
-        {x: 1, y: 3, width: 4, height: 1},
-        {x: 5, y: 2, width: 2, height: 1},
-        {x: 0, y: 4, width: 12, height: 1}
-      ];
-      grid.batchUpdate();
-      items.forEach(function (node, index) {
-        grid.addWidget($('<div><div class="grid-stack-item-content">' + index + '</div></div>'), node);
-      });
-      grid.commit();
+    var grid = GridStack.init({
+      disableOneColumnMode: true, // will manually do 1 column
+      float: true });
+    var text = document.querySelector('#column-text');
+    
+    function resizeGrid() {
+      var width = document.body.clientWidth;
+      if (width < 700) {
+        grid.column(1);
+        text.innerHTML = 1;
+      } else if (width < 850) {
+        grid.column(3);
+        text.innerHTML = 3;
+      } else if (width < 950) {
+        grid.column(6);
+        text.innerHTML = 6;
+      } else if (width < 1100) {
+        grid.column(8);
+        text.innerHTML = 8;
+      } else {
+        grid.column(12);
+        text.innerHTML = 12;
+      }
+    };
+    
+    var items = [
+      {x: 0, y: 0, width: 2, height: 2},
+      {x: 2, y: 0, width: 2, height: 1},
+      {x: 5, y: 0, width: 1, height: 1},
+      {x: 1, y: 3, width: 4, height: 1},
+      {x: 5, y: 2, width: 2, height: 1},
+      {x: 0, y: 4, width: 12, height: 1}
+    ];
+    grid.batchUpdate();
+    items.forEach(function(node, index) {
+      grid.addWidget('<div><div class="grid-stack-item-content">' + index + '</div></div>', node);
     });
+    grid.commit();
+    resizeGrid();
+
+    window.addEventListener('resize', function() {resizeGrid()});
   </script>
 </body>
 </html>

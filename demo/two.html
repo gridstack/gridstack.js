@@ -10,9 +10,9 @@
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="../dist/jquery-ui.min.js"></script>
+  <script src="../src/jquery.js"></script>
   <script src="../src/gridstack.js"></script>
+  <script src="../src/jquery-ui.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
 
   <style type="text/css">
@@ -82,87 +82,73 @@
 
     <div class="row">
       <div class="col-md-6">
-        <a class="btn btn-primary" id="float1" href="#">float: false</a>
-        <a class="btn btn-primary" id="compact1" href="#">Compact</a>
-        <div class="grid-stack grid-stack-6" id="grid1">
+        <a onClick="toggleFloat(this, 0)" class="btn btn-primary" href="#">float: false</a>
+        <a onClick="compact(0)" class="btn btn-primary" href="#">Compact</a>
+        <div class="grid-stack grid-stack-6">
         </div>
       </div>
       <div class="col-md-6">
-        <a class="btn btn-primary" id="float2" href="#">float: true</a>
-        <a class="btn btn-primary" id="compact2" href="#">Compact</a>
-        <div class="grid-stack grid-stack-6" id="grid2">
+        <a onClick="toggleFloat(this, 1)" class="btn btn-primary" href="#">float: true</a>
+        <a onClick="compact(1)" class="btn btn-primary" href="#">Compact</a>
+        <div class="grid-stack grid-stack-6">
           </div>
       </div>
     </div>
   </div>
 
   <script type="text/javascript">
-    $(function () {
-      var options = {
-        column: 6,
-        float: false,
-        removable: '.trash',
-        removeTimeout: 100,
-        acceptWidgets: function(i, el) { return true; } // function example, else can be simple: true | false | '.someClass' value
-      };
-      $('#grid1').gridstack(options);
-      $('#grid2').gridstack($.extend({}, options, {
-        float: true
-      }));
+    var options = {
+      column: 6,
+      float: false,
+      removable: '.trash',
+      removeTimeout: 100,
+      acceptWidgets: function(i, el) { return true; } // function example, else can be simple: true | false | '.someClass' value
+    };
+    var grids = GridStack.initAll(options);
+    grids[1].float(true);
 
-      var items = [
-        {x: 0, y: 0, width: 2, height: 2},
-        {x: 3, y: 1, width: 1, height: 2},
-        {x: 4, y: 1, width: 1, height: 1},
-        {x: 2, y: 3, width: 3, height: 1, minWidth: 2, id: 'special', text: 'has minWidth=2'},
-        {x: 2, y: 5, width: 1, height: 1}
-      ];
+    var items = [
+      {x: 0, y: 0, width: 2, height: 2},
+      {x: 3, y: 1, width: 1, height: 2},
+      {x: 4, y: 1, width: 1, height: 1},
+      {x: 2, y: 3, width: 3, height: 1, minWidth: 2, id: 'special', text: 'has minWidth=2'},
+      {x: 2, y: 5, width: 1, height: 1}
+    ];
 
-      $('.grid-stack').each(function () {
-        var $grid = $(this);
-        var id = $grid.attr('id');
-        $grid.on('added', function(e, items) { log(id, ' added ', items) });
-        $grid.on('removed', function(e, items) { log(id, ' removed ', items) });
-        $grid.on('change', function(e, items) { log(id, ' change ', items) });
-        function log(id, type, items) {
-          if (!items) { return; }
-          var str = '';
-          for (let i=0; i<items.length && items[i]; i++) { str += ' (x,y)=' + items[i].x + ',' + items[i].y; }
-          console.log(id + type + items.length + ' items.' + str );
-        }
-
-        var grid = $grid.data('gridstack');
-        grid.batchUpdate();
-        items.forEach(function (node) {
-          grid.addWidget($('<div><div class="grid-stack-item-content">' 
-            + (node.text? node.text : '') + '</div></div>'), node);
-        });
-        grid.commit();
-      });
-
-      $('.sidebar .grid-stack-item').draggable({
-        revert: 'invalid',
-        handle: '.grid-stack-item-content',
-        scroll: false,
-        appendTo: 'body',
-      });
-
-      $('#float1').click(function() { toggleFloat('#float1', '#grid1') });
-      $('#float2').click(function() { toggleFloat('#float2', '#grid2') });
-      function toggleFloat(button, grid) {
-        var grid = $(grid).data('gridstack');
-        grid.float(! grid.float());
-        $(button).html('float: ' + grid.float());
+    grids.forEach(function (grid, i) {
+      grid.on('added', function(e, items) { log(i, ' added ', items) });
+      grid.on('removed', function(e, items) { log(i, ' removed ', items) });
+      grid.on('change', function(e, items) { log(i, ' change ', items) });
+      function log(id, type, items) {
+        var str = '';
+        items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+        console.log('grid' + id + type + items.length + ' items.' + str );
       }
 
-      $('#compact1').click(function() { compact('#grid1') });
-      $('#compact2').click(function() { compact('#grid2') });
-      function compact(grid) {
-        var grid = $(grid).data('gridstack');
-        grid.compact();
-      }
-
+      grid.batchUpdate();
+      items.forEach(function (node) {
+        grid.addWidget('<div><div class="grid-stack-item-content">' 
+          + (node.text? node.text : '') + '</div></div>', node);
+      });
+      grid.commit();
     });
+
+    // TODO: switch jquery-ui out
+    $('.sidebar .grid-stack-item').draggable({
+      revert: 'invalid',
+      handle: '.grid-stack-item-content',
+      scroll: false,
+      appendTo: 'body',
+    });
+
+    function toggleFloat(button, i) {
+      grids[i].float(! grids[i].float());
+      button.innerHTML = 'float: ' + grids[i].float();
+    }
+
+    function compact(i) {
+      grids[i].compact();
+    }
   </script>
 </body>
 </html>
