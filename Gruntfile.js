@@ -25,10 +25,10 @@ module.exports = function(grunt) {
         }
       }
     },
-
     cssmin: {
       dist: {
         options: {
+          sourceMap: false,
           keepSpecialComments: '*'
         },
         files: {
@@ -37,23 +37,21 @@ module.exports = function(grunt) {
         }
       }
     },
-
     copy: {
       dist: {
         files: {
-          'dist/gridstack.js': ['src/gridstack.js'],
-          'dist/gridstack.d.ts': ['src/gridstack.d.ts'],
-          'dist/gridstack.all.d.ts': ['src/gridstack.d.ts'],
-          'dist/gridstack.jQueryUI.js': ['src/gridstack.jQueryUI.js'],
+/*
           'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/jquery.js': ['src/jquery.js'],
           'dist/jquery-ui.js': ['src/jquery-ui.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
           'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
+*/
         }
       }
     },
 
+    /*
     uglify: {
       options: {
         sourceMap: true,
@@ -64,15 +62,13 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/gridstack.min.js': ['src/gridstack.js'],
-          'dist/gridstack.jQueryUI.min.js': ['src/gridstack.jQueryUI.js'],
-          'dist/gridstack-poly.min.js': ['src/gridstack-poly.js'],
-          'dist/jquery.min.js': ['src/jquery.js'],
-          'dist/jquery-ui.min.js': ['src/jquery-ui.js'],
-          'dist/gridstack.all.js': ['src/gridstack-poly.js', 'src/jquery.js', 'src/gridstack.js', 'src/jquery-ui.js', 'src/gridstack.jQueryUI.js']
+          //'dist/gridstack-poly.min.js': 'src/gridstack-poly.js',
+          //'dist/jquery.min.js': 'src/jquery.js',
+          //'dist/jquery-ui.min.js': 'src/jquery-ui.js'
         }
       }
     },
+    */
 
     eslint: {
       target: ['*.js', 'src/*.js']
@@ -87,7 +83,7 @@ module.exports = function(grunt) {
       },
       styles: {
         files: ['src/*.scss'],
-        tasks: ['sass', 'cssmin'],
+        tasks: ['sass'/*, 'cssmin'*/],
         options: {
         },
       }
@@ -120,7 +116,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('lint', ['eslint']);
-  grunt.registerTask('default', ['sass', 'cssmin', 'eslint', 'copy', 'uglify']);
+  grunt.registerTask('default', ['sass', 'cssmin', /*'eslint',*/ 'copy', /*'uglify'*/]);
   grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };
 /*eslint-enable camelcase */

@@ -1,21 +1,23 @@
 {
   "name": "gridstack",
-  "version": "1.1.0-dev",
-  "description": "JavaScript / TypeScript for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Ember, knockout...)",
-  "main": "dist/gridstack",
+  "version": "2.0.0-rc",
+  "description": "TypeScript/Javascript lib for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Ember, knockout...)",
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gridstack/gridstack.js.git"
   },
   "scripts": {
-    "build": "grunt && doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
-    "test": "grunt lint && karma start karma.conf.js",
-    "lint": "grunt lint",
+    "build": "yarn --no-progress && rm -rf dist/* && webpack && grunt && doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
+    "web": "rm -rf dist/* && webpack",
+    "test": "yarn lint && karma start karma.conf.js",
+    "lint": "tslint -p ./tsconfig.json",
     "reset": "rm -rf dist node_modules",
     "prepublishOnly": "yarn build"
   },
   "keywords": [
-    "JavaScript",
+    "Typescript",
     "gridstack.js",
     "grid",
     "gridster",
@@ -27,7 +29,7 @@
     "widgets",
     "Angular",
     "React",
-    "Typescript"
+    "JavaScript"
   ],
   "author": "Pavel Reznikov <pashka.reznikov@gmail.com>",
   "contributors": [
@@ -41,6 +43,8 @@
   "homepage": "http://gridstack.github.io/gridstack.js/",
   "dependencies": {},
   "devDependencies": {
+    "@types/jquery": "^3.3.32",
+    "@types/jqueryui": "^1.12.10",
     "connect": "^3.7.0",
     "core-js": "^3.6.4",
     "coveralls": "^3.0.9",
@@ -64,7 +68,11 @@
     "karma-jasmine": "^3.1.1",
     "node-sass": "^4.13.1",
     "puppeteer": "^2.1.1",
-    "serve-static": "^1.14.1"
+    "serve-static": "^1.14.1",
+    "ts-loader": "^6.2.1",
+    "typescript": "3.4.5",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   },
   "resolutions": {
     "lodash": "^4.17.13",
