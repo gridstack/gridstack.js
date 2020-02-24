@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [1.0.0-dev (upcoming)](#100-dev-upcoming)
 - [v1.0.0 (2020-02-23)](#v100-2020-02-23)
 - [v0.6.4 (2020-02-17)](#v064-2020-02-17)
 - [v0.6.3 (2020-02-05)](#v063-2020-02-05)
@@ -29,6 +30,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 1.0.0-dev (upcoming)
+
+-- TBD
 
 ## v1.0.0 (2020-02-23)
 
