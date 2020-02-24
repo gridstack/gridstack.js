@@ -270,7 +270,7 @@ v1.0.0 removed Jquery from the API and external dependencies, which will require
 ```js
 // initialization returned Jquery element, requiring second call to get GridStack var
 $('.grid-stack').gridstack(opts?);
-var grid = $('.grid-stack').data('grid-stack');
+var grid = $('.grid-stack').data('gridstack');
 
 // returned Jquery element
 grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>'), {width: 2});
@@ -282,7 +282,7 @@ $('.grid-stack').on('added', function(e, items) {/* items contains info */});
 **NEW**
 ```js
 // element identifier defaults to '.grid-stack', returns the grid
-// for Typescript use window.GridStack.init()
+// Note: for Typescript use window.GridStack.init() until next native TS version
 var grid = GridStack.init(opts?, element?);
 
 // returns DOM element
