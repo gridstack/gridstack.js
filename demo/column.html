@@ -9,92 +9,86 @@
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="../dist/jquery-ui.min.js"></script>
-  <script src="../src/gridstack-poly.js"></script>
+  <script src="../src/jquery.js"></script>
   <script src="../src/gridstack.js"></script>
+  <script src="../src/jquery-ui.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
 </head>
 <body>
   <div class="container-fluid">
-    <h1>setColumn() grid demo</h1>
+    <h1>column() grid demo</h1>
     <div><span>Number of Columns:</span> <span id="column-text">12</span></div>
     <div>
-      <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
-      <a class="btn btn-primary" id="1column" href="#">1 Column</a>
-      <a class="btn btn-primary" id="1columnDOM" href="#">1 Column DOM</a>
-      <a class="btn btn-primary" id="2column" href="#">2 Column</a>
-      <a class="btn btn-primary" id="3column" href="#">3 Column</a>
-      <a class="btn btn-primary" id="4column" href="#">4 Column</a>
-      <a class="btn btn-primary" id="6column" href="#">6 Column</a>
-      <a class="btn btn-primary" id="8column" href="#">8 Column</a>
-      <a class="btn btn-primary" id="10column" href="#">10 Column</a>
-      <a class="btn btn-primary" id="12column" href="#">12 Column</a>
+      <a onClick="addWidget()" class="btn btn-primary" href="#">Add Widget</a>
+      <a onClick="setOneColumn(false)" class="btn btn-primary" href="#">1 Column</a>
+      <a onClick="setOneColumn(true)" class="btn btn-primary" href="#">1 Column DOM</a>
+      <a onClick="column(2)" class="btn btn-primary" href="#">2 Column</a>
+      <a onClick="column(3)" class="btn btn-primary" href="#">3 Column</a>
+      <a onClick="column(4)" class="btn btn-primary" href="#">4 Column</a>
+      <a onClick="column(6)" class="btn btn-primary" href="#">6 Column</a>
+      <a onClick="column(8)" class="btn btn-primary" href="#">8 Column</a>
+      <a onClick="column(10)" class="btn btn-primary" href="#">10 Column</a>
+      <a onClick="column(12)" class="btn btn-primary" href="#">12 Column</a>
     </div>
     <br>
     <div class="grid-stack"></div>
   </div>
 
   <script type="text/javascript">
-    $(function () {
-      var $grid = $('.grid-stack');
-      $grid.gridstack({float: true});
-      grid = $grid.data('gridstack');
-      var $text = $('#column-text');
+    var grid = GridStack.init({float: true});
+    var text = document.querySelector('#column-text');
 
-      $grid.on('added', function(e, items) {log(' added ', items)});
-      $grid.on('removed', function(e, items) {log(' removed ', items)});
-      $grid.on('change', function(e, items) {log(' change ', items)});
-      function log(type, items) {
-        if (!items) { return; }
-        var str = '';
-        for (let i=0; i<items.length && items[i]; i++) { str += ' (x,y)=' + items[i].x + ',' + items[i].y; }
-        console.log(type + items.length + ' items.' + str );
-      }
+    grid.on('added', function(e, items) {log('added ', items)});
+    grid.on('removed', function(e, items) {log('removed ', items)});
+    grid.on('change', function(e, items) {log('change ', items)});
+    function log(type, items) {
+      var str = '';
+      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+      console.log(type + items.length + ' items.' + str );
+    }
 
-      var items = [
-        /* match karma testing
-        {x: 0, y: 0, width: 4, height: 2},
-        {x: 4, y: 0, width: 4, height: 4},
-        {text: ' auto'},
-        */
-        {x: 0, y: 0, width: 2, height: 2},
-        {x: 2, y: 0, width: 2, height: 1},
-        {x: 5, y: 1, width: 1, height: 1},
-        {x: 5, y: 0, width: 2, height: 1},
-        // {x: 0, y: 0, width: 1, height: 1}, // conflict
-        {text: ' auto'}, // autoPosition testing
-        // {x: 4, y: 0, width: 1, height: 1}, // same auto-pos
-        {x: 5, y: 3, width: 2, height: 1},
-        {x: 0, y: 4, width: 12, height: 1}
-      ];
-      var count = 0;
-      grid.batchUpdate();
-      addWidget(); addWidget(); addWidget(); addWidget();
-      grid.commit();
+    var items = [
+      /* match karma testing
+      {x: 0, y: 0, width: 4, height: 2},
+      {x: 4, y: 0, width: 4, height: 4},
+      {text: ' auto'},
+      */
+      {x: 0, y: 0, width: 2, height: 2},
+      {x: 2, y: 0, width: 2, height: 1},
+      {x: 5, y: 1, width: 1, height: 1},
+      {x: 5, y: 0, width: 2, height: 1},
+      // {x: 0, y: 0, width: 1, height: 1}, // conflict
+      {text: ' auto'}, // autoPosition testing
+      // {x: 4, y: 0, width: 1, height: 1}, // same auto-pos
+      {x: 5, y: 3, width: 2, height: 1},
+      {x: 0, y: 4, width: 12, height: 1}
+    ];
+    var count = 0;
+    grid.batchUpdate();
+    addWidget(); addWidget(); addWidget(); addWidget();
+    grid.commit();
 
-      function addWidget() {
-        var n = items[count] || {
-          x: Math.round(12 * Math.random()),
-          y: Math.round(5 * Math.random()),
-          width: Math.round(1 + 3 * Math.random()),
-          height: Math.round(1 + 3 * Math.random())
-        };
-        grid.addWidget($('<div><div class="grid-stack-item-content"><button onclick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>'
-          + count++ + (n.text ? n.text : '') + '</div></div>'), n);
+    function addWidget() {
+      var n = items[count] || {
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        width: Math.round(1 + 3 * Math.random()),
+        height: Math.round(1 + 3 * Math.random())
       };
+      grid.addWidget('<div><div class="grid-stack-item-content"><button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>'
+        + count++ + (n.text ? n.text : '') + '</div></div>', n);
+    };
 
-      $('#add-widget').click(function() { addWidget() });
-      $('#1column').click(function() { delete grid.opts.oneColumnModeDomSort; grid.setColumn(1); $text.text(1);});
-      $('#1columnDOM').click(function() { grid.opts.oneColumnModeDomSort = true; grid.setColumn(1); $text.text('1 DOM');});
-      $('#2column').click(function() { grid.setColumn(2); $text.text(2);});
-      $('#3column').click(function() { grid.setColumn(3); $text.text(3);});
-      $('#4column').click(function() { grid.setColumn(4); $text.text(4);});
-      $('#6column').click(function() { grid.setColumn(6); $text.text(6);});
-      $('#8column').click(function() { grid.setColumn(8); $text.text(8);});
-      $('#10column').click(function() { grid.setColumn(10); $text.text(10);});
-      $('#12column').click(function() { grid.setColumn(12); $text.text(12);});
-    });
+    function column(n) {
+      grid.column(n);
+      text.innerHTML = n;
+    }
+    function setOneColumn(dom) {
+      grid.opts.oneColumnModeDomSort = dom;
+      grid.column(1);
+      text.innerHTML = dom ? '1 DOM' : '1';
+    }
+
   </script>
 </body>
 </html>

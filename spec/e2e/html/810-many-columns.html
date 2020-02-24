@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="../../../demo/demo.css"/>
   <link rel="stylesheet" href="810-many-columns.css"/>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="../../../dist/jquery.min.js"></script>
   <script src="../../../dist/jquery-ui.min.js"></script>
   <script src="../../../src/gridstack.js"></script>
   <script src="../../../src/gridstack.jQueryUI.js"></script>
@@ -18,7 +18,7 @@
   <div class="container-fluid">
     <h1>Many Columns demo</h1>
     <div>
-      <a class="btn btn-primary" id="add-widget" href="#">Add Widget</a>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
     </div>
     <br><br>
     <div class="grid-stack"></div>
@@ -26,31 +26,23 @@
 
 
   <script type="text/javascript">
-    $(function () {
-      const COLUMNS = 30; // # of columns, also need to update CSS
-      var count = 0;
-      var options = {
-        column: COLUMNS,
-        cellHeight: 'auto',
-        float: false
-      };
-      $('.grid-stack').gridstack(options);
+    const COLUMNS = 30; // # of columns, also need to update CSS
+    var count = 0;
+    var options = {
+      column: COLUMNS,
+      cellHeight: 'auto',
+      float: false
+    };
+    var grid = GridStack.init(options);
 
-      new function () {
-        this.grid = $('.grid-stack').data('gridstack');
+    addNewWidget = function() {
+      grid.addWidget('<div><div class="grid-stack-item-content">' + count + '</div></div>', {id: count});
+      count++
+    };
 
-        this.addNewWidget = function(i) {
-          this.grid.addWidget($('<div><div class="grid-stack-item-content">' + i + '</div></div>'), {id: i});
-          return false;
-        }.bind(this);
-
-        for (; count < COLUMNS; count++) {
-          this.addNewWidget(count); 
-        }
-
-        $('#add-widget').click(this.addNewWidget(count++));
-      };
-    });
+    for (; count <= COLUMNS;) {
+      this.addNewWidget(); 
+    }
   </script>
 </body>
 </html>

@@ -12,7 +12,7 @@
 
   <link rel="stylesheet" href="../../../demo/demo.css"/>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="../../../dist/jquery.min.js"></script>
   <script src="../../../dist/jquery-ui.min.js"></script>
   <script src="../../../src/gridstack.js"></script>
   <script src="../../../src/gridstack.jQueryUI.js"></script>
@@ -45,14 +45,12 @@
   </div>
 
   <script type="text/javascript">
-    $(function () {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10,
-        float: true
-      };
-      $('.grid-stack').gridstack(options);
-    });
+    var options = {
+      cellHeight: 80,
+      verticalMargin: 10,
+      float: true
+    };
+    GridStack.init(options);
   </script>
 </body>
 

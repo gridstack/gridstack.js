@@ -8,9 +8,9 @@
 
   <link rel="stylesheet" href="demo.css"/>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="../dist/jquery-ui.min.js"></script>
+  <script src="../src/jquery.js"></script>
   <script src="../src/gridstack.js"></script>
+  <script src="../src/jquery-ui.js"></script>
   <script src="../src/gridstack.jQueryUI.js"></script>
 
   <style type="text/css">
@@ -26,8 +26,8 @@
 <body>
   <div class="container-fluid">
     <h1>Nested grids demo</h1>
-    <a class="btn btn-primary" id="add-widget1" href="#">Add Widget Grid1</a>
-    <a class="btn btn-primary" id="add-widget2" href="#">Add Widget Grid2</a>
+    <a class="btn btn-primary" onClick="addNewWidget(grid1)" href="#">Add Widget Grid1</a>
+    <a class="btn btn-primary" onClick="addNewWidget(grid2)" href="#">Add Widget Grid2</a>
     <br><br>
 
     <div class="grid-stack top">
@@ -59,30 +59,26 @@
   </div>
 
   <script type="text/javascript">
-    $(function () {
-      var nestOptions = {
-        acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted, otherwise grid-items causes all sort of issues
-        dragOut: true // let us drag them out!
-      };
-      $('.grid-stack.top').gridstack();
-      var grid1 = $('.grid-stack.nested1').gridstack(nestOptions).data('gridstack');
-      nestOptions.dragOut = false;
-      var grid2 = $('.grid-stack.nested2').gridstack(nestOptions).data('gridstack');
+    var nestOptions = {
+      acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted, otherwise grid-items causes all sort of issues
+      dragOut: true // let us drag them out!
+    };
+    GridStack.init(null, '.grid-stack.top');
+    var grid1 = GridStack.init(nestOptions, '.grid-stack.nested1');
+    nestOptions.dragOut = false;
+    var grid2 = GridStack.init(nestOptions, '.grid-stack.nested2');
 
-      var count = 9;
-      addNewWidget = function(grid) {
-        var node = {
-          x: Math.round(12 * Math.random()),
-          y: Math.round(5 * Math.random()),
-          width: Math.round(1 + 3 * Math.random()),
-          height: Math.round(1 + 3 * Math.random())
-        };
-        grid.addWidget($('<div class="grid-stack-item sub"><div class="grid-stack-item-content">' + count++ + '</div></div>'), node);
-        return false;
+    var count = 9;
+    addNewWidget = function(grid) {
+      var node = {
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        width: Math.round(1 + 3 * Math.random()),
+        height: Math.round(1 + 3 * Math.random())
       };
-      $('#add-widget1').click(function () { addNewWidget(grid1)});
-      $('#add-widget2').click(function () { addNewWidget(grid2)});
-    });
+      grid.addWidget('<div class="grid-stack-item sub"><div class="grid-stack-item-content">' + count++ + '</div></div>', node);
+      return false;
+    };
   </script>
 </body>
 </html>

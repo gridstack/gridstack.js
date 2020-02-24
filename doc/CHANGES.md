@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [v0.6.4-dev (upcoming changes)](#v064-dev-upcoming-changes)
+- [v1.0.0 (2020-02-23)](#v100-2020-02-23)
 - [v0.6.4 (2020-02-17)](#v064-2020-02-17)
 - [v0.6.3 (2020-02-05)](#v063-2020-02-05)
 - [v0.6.2 (2020-02-03)](#v062-2020-02-03)
@@ -30,9 +30,13 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## v0.6.4-dev (upcoming changes)
+## v1.0.0 (2020-02-23)
 
-- TBD
+- **breaking**: [(1084)](https://github.com/gridstack/gridstack.js/issues/1084) jquery was removed from the API and dependencies (initialize differently, and methods take/return `GridStack` or `HTMLElement` instead of `JQuery`), so your code will need to change. 
+See [Migrating to v1.0.0](https://github.com/gridstack/gridstack.js/blob/develop/README.md#migrating-to-v100)
+- `setColumn(N)` is now `column(N)` (matches other set/get methods) and `getColumn()` to get current column number
+- add `grid.on(eventName, callback)` / `grid.off(eventName)` to hide native JQ events mix
+- add `grid.getRow()` to get the current grid row number
 
 ## v0.6.4 (2020-02-17)
 
@@ -49,14 +53,14 @@ Change log
 
 ## v0.6.2 (2020-02-03)
 
-- add `oneColumnModeDomSort` true|false to let you specify a custom layout (use dom order instead of x,y) for oneColumnMode `setColumn(1)` [#713](https://github.com/gridstack/gridstack.js/issues/713)
+- add `oneColumnModeDomSort` true|false to let you specify a custom layout (use dom order instead of x,y) for oneColumnMode `column(1)` [#713](https://github.com/gridstack/gridstack.js/issues/713)
 - fix oneColumnMode to only restore if we auto went to it as window sizes up [#1125](https://github.com/gridstack/gridstack.js/pull/1125)
 - editing in 1 column (or few columns) does a better job updating higher layout (track before and after and move items accordingly). 
 Tracking item swap would be even better still. [#1127](https://github.com/gridstack/gridstack.js/pull/1127)
 
 ## v0.6.1 (2020-02-02)
 
-- fix [#37](https://github.com/gridstack/gridstack.js/issues/37) oneColumnMode (<768px by default) now simply calls `setColumn(1)` and remembers prev columns (so we can restore). This gives
+- fix [#37](https://github.com/gridstack/gridstack.js/issues/37) oneColumnMode (<768px by default) now simply calls `column(1)` and remembers prev columns (so we can restore). This gives
 us full resize/re-order of items capabilities rather than a locked CSS only layout (see prev rev changes). [#1120](https://github.com/gridstack/gridstack.js/pull/1120)
 - fix [responsive.html](https://gridstackjs.com/demo/responsive.html) demo [#1121](https://github.com/gridstack/gridstack.js/pull/1121)
 
@@ -73,7 +77,7 @@ and jQuery UI `draggable.containment` can now be specified in options. You can n
 Also you can now call `batchUpdate()` before calling a bunch of `addWidget()` and get a single event callback (more efficient).
 [#1096](https://github.com/gridstack/gridstack.js/pull/1096)
 - `removeAll()` is now much faster (no relayout) and calls `removed` event just once with a list [#1097](https://github.com/gridstack/gridstack.js/pull/1097)
-- `setColumn()` complete re-write and is no longer "Experimental". We now do a reasonable job at sizing/position the widgets (especially 1 column) and
+- `column()` complete re-write and is no longer "Experimental". We now do a reasonable job at sizing/position the widgets (especially 1 column) and
 also now cache each column layout so you can go back to say 12 column and not loose original layout. [#1098](https://github.com/gridstack/gridstack.js/pull/1098)
 - fix `addWidget(el)` (no data) would not render item at correct location, and overlap item at (0,0) [#1098](https://github.com/gridstack/gridstack.js/pull/1098)
 - you can now pre-define size of dragable elements from a sidebar using standard `data-gs-width` and `data-gs-height` - fix 
@@ -99,7 +103,7 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 
 ## v0.5.3 (2019-11-20)
 
-- grid options `width` is now `column`, `height` now `maxRow`, and `setGridWidth()` now `setColumn()` to match what they are. Old names are still supported (console warnings). Various fixes for custom # of column and re-wrote entire doc section ([#1053](https://github.com/gridstack/gridstack.js/issues/1053)).
+- grid options `width` is now `column`, `height` now `maxRow`, and `setGridWidth()` now `column()` to match what they are. Old names are still supported (console warnings). Various fixes for custom # of column and re-wrote entire doc section ([#1053](https://github.com/gridstack/gridstack.js/issues/1053)).
 - fix widgets not animating when `animate: true` is used. on every move, styles were recreated-fix should slightly improve gridstack.js speed ([#937](https://github.com/gridstack/gridstack.js/issues/937)).
 - fix moving widgets when having multiple grids. jquery-ui workaround ([#1043](https://github.com/gridstack/gridstack.js/issues/1043)).
 - switch to eslint ([#763](https://github.com/gridstack/gridstack.js/issues/763)) thanks [@rwstoneback](https://github.com/rwstoneback).
@@ -182,7 +186,7 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 - `'auto'` value for `cellHeight` option
 - fix `setStatic` method
 - add `setAnimation` method to API
-- add `setColumn` method ([#227](https://github.com/gridstack/gridstack.js/issues/227))
+- add `column` method ([#227](https://github.com/gridstack/gridstack.js/issues/227))
 - add `removable`/`removeTimeout` *(experimental)*
 - add `detachGrid` parameter to `destroy` method ([#216](https://github.com/gridstack/gridstack.js/issues/216)) (thanks @jhpedemonte)
 - add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/gridstack/gridstack.js/issues/237))
@@ -239,7 +243,7 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 
 - add `height` option
 - auto-generate css rules (widgets `height` and `top`)
-- add `GridStackUI.Utils.sort` utility function
+- add `GridStack.Utils.sort` utility function
 - add `removeAll` API method
 - add `resize` and `move` API methods
 - add `resizable` and `movable` API methods
