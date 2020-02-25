@@ -302,7 +302,7 @@ Other  vars/global changes
 `grid.setColumn(N)` --> `grid.column(N)` and new `grid.column()` to get value, old API still supported though
 ```
 
-Recommend looking at the [many samples](../demo) for more code examples.
+Recommend looking at the [many samples](./demo) for more code examples.
 
 We're working on implementing support for other drag'n'drop libraries through the plugin system. Right now it is still jquery-ui based (but minimal build content)
 
