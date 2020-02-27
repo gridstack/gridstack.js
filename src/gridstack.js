@@ -296,10 +296,12 @@
 
   var idSeq = 0;
 
-  var GridStackEngine = function(column, onchange, float, maxRow, items) {
+  var GridStackEngine = function(row, column, onchange, float, minRow, maxRow, items) {
+    this.row = row || 0;
     this.column = column || 12;
     this.float = float || false;
-    this.maxRow = maxRow || 0;
+    this.minRow = minRow || 0;
+    this.maxRow = this.row ? this.row : maxRow || 0;
 
     this.nodes = items || [];
     this.onchange = onchange || function() {};
@@ -558,15 +560,17 @@
     }
     var hasLocked = Boolean(this.nodes.find(function(n) { return n.locked; }));
 
-    if (!this.maxRow && !hasLocked) {
+    if (!this.maxRow && !this.row && !hasLocked) {
       return true;
     }
 
     var clonedNode;
     var clone = new GridStackEngine(
+      0,
       this.column,
       null,
       this.float,
+      0,
       0,
       this.nodes.map(function(n) {
         if (n === node) {
@@ -587,7 +591,7 @@
         return n !== clonedNode && Boolean(n.locked) && Boolean(n._dirty);
       }));
     }
-    if (this.maxRow) {
+    if (this.maxRow || this.row) {
       res &= clone.getRow() <= this.maxRow;
     }
 
@@ -595,14 +599,15 @@
   };
 
   GridStackEngine.prototype.canBePlacedWithRespectToHeight = function(node) {
-    if (!this.maxRow) {
+    if (!this.maxRow && !this.row) {
       return true;
     }
-
     var clone = new GridStackEngine(
+      0,
       this.column,
       null,
       this.float,
+      0,
       0,
       this.nodes.map(function(n) { return $.extend({}, n); }));
     clone.addNode(node);
@@ -665,7 +670,7 @@
   };
 
   GridStackEngine.prototype.getRow = function() {
-    return this.nodes.reduce(function(memo, n) { return Math.max(memo, n.y + n.height); }, 0);
+    return this.row ? this.row : this.nodes.reduce(function(memo, n) { return Math.max(memo, n.y + n.height); }, 0);
   };
 
   GridStackEngine.prototype.beginUpdate = function(node) {
@@ -709,8 +714,10 @@
     var isNested = this.$el.closest('.' + opts.itemClass).length > 0;
 
     this.opts = Utils.defaults(opts, {
+      row: parseInt(this.$el.attr('data-gs-row')) || 0,
       column: parseInt(this.$el.attr('data-gs-column')) || 12,
-      maxRow: parseInt(this.$el.attr('data-gs-max-row')) || 0,
+      maxRow: parseInt(this.$el.attr('data-gs-row')) || 0 ? parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-max-row')) || 0,
+      minRow: parseInt(this.$el.attr('data-gs-min-row')) || 0,
       itemClass: 'grid-stack-item',
       placeholderClass: 'grid-stack-placeholder',
       placeholderText: '',
@@ -787,7 +794,7 @@
 
     this._initStyles();
 
-    this.engine = new GridStackEngine(this.opts.column, function(nodes, detachNode) {
+    this.engine = new GridStackEngine(this.opts.row, this.opts.column, function(nodes, detachNode) {
       detachNode = (detachNode === undefined ? true : detachNode);
       var maxHeight = 0;
       this.nodes.forEach(function(n) {
@@ -807,7 +814,7 @@
         }
       });
       self._updateStyles(maxHeight + 10);
-    }, this.opts.float, this.opts.maxRow);
+    }, this.opts.float, this.opts.minRow, this.opts.maxRow);
 
     if (this.opts.auto) {
       var elements = [];
@@ -1155,12 +1162,12 @@
 
   GridStack.prototype._updateContainerHeight = function() {
     if (this.engine._batchMode) { return; }
-    var row = this.engine.getRow();
+    var row = this.opts.minRow > this.engine.getRow() ? this.opts.minRow : this.engine.getRow();
     // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
     var cssMinHeight = parseInt(this.$el.css('min-height'));
     if (cssMinHeight > 0) {
       var verticalMargin = this.opts.verticalMargin;
-      var minRow =  Math.round((cssMinHeight + verticalMargin) / (this.cellHeight() + verticalMargin));
+      var minRow = Math.round((cssMinHeight + verticalMargin) / (this.cellHeight() + verticalMargin));
       if (row < minRow) {
         row = minRow;
       }
