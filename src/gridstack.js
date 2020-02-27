@@ -1296,7 +1296,7 @@
       // TODO: cellHeight = cellHeight() causes issue (i.e. remove strictCellHeight above) otherwise
       // when sizing up we jump almost right away to next size instead of half way there. Not sure
       // why as we don't use ceil() in many places but round() instead.
-      cellHeight = self.$el.height() / parseInt(self.$el.attr('data-gs-current-row'));
+      cellHeight = (self.$el.height() + grid.verticalMargin()) / parseInt(self.$el.attr('data-gs-current-row'));
       self.placeholder
         .attr('data-gs-x', o.attr('data-gs-x'))
         .attr('data-gs-y', o.attr('data-gs-y'))
