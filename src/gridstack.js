@@ -1209,18 +1209,13 @@
     var self = this;
 
     var cellWidth;
-    var cellHeight;
+    var cellFullHeight; // internal cellHeight + v-margin
 
     var dragOrResize = function(event, ui) {
       var x = Math.round(ui.position.left / cellWidth);
-      var y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
+      var y = Math.floor((ui.position.top + cellFullHeight / 2) / cellFullHeight);
       var width;
       var height;
-
-      if (event.type !== 'drag') {
-        width = Math.round(ui.size.width / cellWidth);
-        height = Math.round(ui.size.height / cellHeight);
-      }
 
       if (event.type === 'drag') {
         var distance = ui.position.top - node._prevYPix;
@@ -1262,9 +1257,9 @@
           }
         }
       } else if (event.type === 'resize')  {
-        if (x < 0) {
-          return;
-        }
+        if (x < 0) return;
+        width = Math.round(ui.size.width / cellWidth);
+        height = Math.round((ui.size.height + self.verticalMargin()) / cellFullHeight);
       }
       // width and height are undefined if not resizing
       var lastTriedWidth = width !== undefined ? width : node.lastTriedWidth;
@@ -1292,11 +1287,9 @@
       self.engine.cleanNodes();
       self.engine.beginUpdate(node);
       cellWidth = self.cellWidth();
-      var strictCellHeight = self.cellHeight();
-      // TODO: cellHeight = cellHeight() causes issue (i.e. remove strictCellHeight above) otherwise
-      // when sizing up we jump almost right away to next size instead of half way there. Not sure
-      // why as we don't use ceil() in many places but round() instead.
-      cellHeight = (self.$el.height() + grid.verticalMargin()) / parseInt(self.$el.attr('data-gs-current-row'));
+      var strictCellHeight = self.cellHeight(); // heigh without v-margin
+      // compute height with v-margin (Note: we add 1 margin as last row is missing it)
+      cellFullHeight = (self.$el.height() + self.verticalMargin()) / parseInt(self.$el.attr('data-gs-current-row'));
       self.placeholder
         .attr('data-gs-x', o.attr('data-gs-x'))
         .attr('data-gs-y', o.attr('data-gs-y'))

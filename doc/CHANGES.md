@@ -33,7 +33,7 @@ Change log
 
 ## 1.0.0-dev (upcoming)
 
--- TBD
+-- fix [(1166)](https://github.com/gridstack/gridstack.js/issues/1166) resize not taking margin height into account
 
 ## v1.0.0 (2020-02-23)
 
