@@ -116,14 +116,11 @@
     ];
 
     grids.forEach(function (grid, i) {
-      grid.on('added', function(e, items) { log(i, ' added ', items) });
-      grid.on('removed', function(e, items) { log(i, ' removed ', items) });
-      grid.on('change', function(e, items) { log(i, ' change ', items) });
-      function log(id, type, items) {
+      grid.on('added removed change', function(e, items) {
         var str = '';
         items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-        console.log('grid' + id + type + items.length + ' items.' + str );
-      }
+        console.log('grid' + i + ' ' + e.type + ' ' + items.length + ' items:' + str );
+      });
 
       grid.batchUpdate();
       items.forEach(function (node) {
