@@ -24,14 +24,11 @@
 <script type="text/javascript">
   var grid = GridStack.init({float: false});
 
-  grid.on('added', function(e, items) {log('added ', items)});
-  grid.on('removed', function(e, items) {log('removed ', items)});
-  grid.on('change', function(e, items) {log('change ', items)});
-  function log(type, items) {
+  grid.on('added removed change', function(e, items) {
     var str = '';
     items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-    console.log(type + items.length + ' items.' + str);
-  }
+    console.log(e.type + ' ' + items.length + ' items:' + str );
+  });
 
   $('.grid-stack .grid-stack-item').click(function(e) {
     var item = $(e.currentTarget).closest('.grid-stack-item');

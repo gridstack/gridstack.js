@@ -2025,6 +2025,13 @@
    * notifications (see doc for supported events)
    */
   GridStack.prototype.on = function(eventName, callback) {
+    // check for array of names being passed instead
+    if (eventName.indexOf(' ') !== -1) {
+      var names = eventName.split(' ');
+      names.forEach(function(name) { this.on(name, callback) }, this);
+      return;
+    }
+
     if (eventName === 'change' || eventName === 'added' || eventName === 'removed') {
       // native CustomEvent handlers - cash the generic handlers so we can remove
       this._gsEventHandler = this._gsEventHandler || {};
@@ -2038,6 +2045,13 @@
 
   /** unsubscribe from the 'on' event */
   GridStack.prototype.off = function(eventName) {
+    // check for array of names being passed instead
+    if (eventName.indexOf(' ') !== -1) {
+      var names = eventName.split(' ');
+      names.forEach(function(name) { this.off(name, callback) }, this);
+      return;
+    }
+
     if (eventName === 'change' || eventName === 'added' || eventName === 'removed') {
       // remove native CustomEvent handlers
       if (this._gsEventHandler && this._gsEventHandler[eventName]) {
