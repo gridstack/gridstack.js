@@ -296,12 +296,10 @@
 
   var idSeq = 0;
 
-  var GridStackEngine = function(row, column, onchange, float, minRow, maxRow, items) {
-    this.row = row || 0;
+  var GridStackEngine = function(column, onchange, float, maxRow, items) {
     this.column = column || 12;
     this.float = float || false;
-    this.minRow = minRow || 0;
-    this.maxRow = this.row ? this.row : maxRow || 0;
+    this.maxRow = maxRow || 0;
 
     this.nodes = items || [];
     this.onchange = onchange || function() {};
@@ -575,17 +573,15 @@
     }
     var hasLocked = Boolean(this.nodes.find(function(n) { return n.locked; }));
 
-    if (!this.maxRow && !this.row && !hasLocked) {
+    if (!this.maxRow && !hasLocked) {
       return true;
     }
 
     var clonedNode;
     var clone = new GridStackEngine(
-      0,
       this.column,
       null,
       this.float,
-      0,
       0,
       this.nodes.map(function(n) {
         if (n === node) {
@@ -606,7 +602,7 @@
         return n !== clonedNode && Boolean(n.locked) && Boolean(n._dirty);
       }));
     }
-    if (this.maxRow || this.row) {
+    if (this.maxRow) {
       res &= clone.getRow() <= this.maxRow;
     }
 
@@ -614,15 +610,14 @@
   };
 
   GridStackEngine.prototype.canBePlacedWithRespectToHeight = function(node) {
-    if (!this.maxRow && !this.row) {
+    if (!this.maxRow) {
       return true;
     }
+
     var clone = new GridStackEngine(
-      0,
       this.column,
       null,
       this.float,
-      0,
       0,
       this.nodes.map(function(n) { return $.extend({}, n); }));
     clone.addNode(node);
@@ -678,7 +673,7 @@
   };
 
   GridStackEngine.prototype.getRow = function() {
-    return this.row ? this.row : this.nodes.reduce(function(memo, n) { return Math.max(memo, n.y + n.height); }, 0);
+    return this.nodes.reduce(function(memo, n) { return Math.max(memo, n.y + n.height); }, 0);
   };
 
   GridStackEngine.prototype.beginUpdate = function(node) {
@@ -810,7 +805,7 @@
 
     this._initStyles();
 
-    this.engine = new GridStackEngine(this.opts.row, this.opts.column, function(nodes, detachNode) {
+    this.engine = new GridStackEngine(this.opts.column, function(nodes, detachNode) {
       detachNode = (detachNode === undefined ? true : detachNode);
       var maxHeight = 0;
       this.nodes.forEach(function(n) {
@@ -830,7 +825,7 @@
         }
       });
       self._updateStyles(maxHeight + 10);
-    }, this.opts.float, this.opts.minRow, this.opts.maxRow);
+    }, this.opts.float, this.opts.maxRow);
 
     if (this.opts.auto) {
       var elements = [];
@@ -1184,7 +1179,7 @@
     var cssMinHeight = parseInt(this.$el.css('min-height'));
     if (cssMinHeight > 0) {
       var verticalMargin = this.opts.verticalMargin;
-      var minRow = Math.round((cssMinHeight + verticalMargin) / (this.cellHeight() + verticalMargin));
+      var minRow =  Math.round((cssMinHeight + verticalMargin) / (this.cellHeight() + verticalMargin));
       if (row < minRow) {
         row = minRow;
       }
