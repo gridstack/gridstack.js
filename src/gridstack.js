@@ -693,6 +693,12 @@
 
     opts = opts || {};
 
+    // if row property exists, replace minRow and maxRow
+    if (opts.row) {
+      opts.minRow = opts.row;
+      opts.maxRow = opts.row;
+    }
+
     this.$el = $(el); // TODO: legacy code
     this.el = this.$el.get(0); // exposed HTML element to the user
 
@@ -711,8 +717,8 @@
     this.opts = Utils.defaults(opts, {
       row: parseInt(this.$el.attr('data-gs-row')) || 0,
       column: parseInt(this.$el.attr('data-gs-column')) || 12,
-      minRow: opts.row || parseInt(this.$el.attr('data-gs-row')) ? opts.row || parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-min-row')) || 0,
-      maxRow: opts.row || parseInt(this.$el.attr('data-gs-row')) ? opts.row || parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-max-row')) || 0,
+      minRow: parseInt(this.$el.attr('data-gs-row')) ? parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-min-row')) || 0,
+      maxRow: parseInt(this.$el.attr('data-gs-row')) ? parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-max-row')) || 0,
       itemClass: 'grid-stack-item',
       placeholderClass: 'grid-stack-placeholder',
       placeholderText: '',
