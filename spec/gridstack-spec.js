@@ -828,7 +828,7 @@ describe('gridstack', function() {
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
       expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
-      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-auto-position')).toBe('true');
       expect($widget.attr('data-gs-min-width')).toBe(undefined);
       expect($widget.attr('data-gs-max-width')).toBe(undefined);
       expect($widget.attr('data-gs-min-height')).toBe(undefined);
@@ -843,7 +843,7 @@ describe('gridstack', function() {
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
       expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
-      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-auto-position')).toBe('true');
       expect($widget.attr('data-gs-min-width')).toBe(undefined);
       expect($widget.attr('data-gs-max-width')).toBe(undefined);
       expect($widget.attr('data-gs-min-height')).toBe(undefined);
@@ -858,7 +858,7 @@ describe('gridstack', function() {
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
       expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
-      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-auto-position')).toBe('true');
       expect($widget.attr('data-gs-min-width')).toBe(undefined);
       expect($widget.attr('data-gs-max-width')).toBe(undefined);
       expect($widget.attr('data-gs-min-height')).toBe(undefined);
@@ -873,7 +873,7 @@ describe('gridstack', function() {
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
       expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(2);
-      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-auto-position')).toBe('true');
       expect($widget.attr('data-gs-min-width')).toBe(undefined);
       expect($widget.attr('data-gs-max-width')).toBe(undefined);
       expect($widget.attr('data-gs-min-height')).toBe(undefined);
@@ -888,7 +888,7 @@ describe('gridstack', function() {
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(1);
       expect(parseInt($widget.attr('data-gs-height'), 10)).toBe(1);
-      expect($widget.attr('data-gs-auto-position')).toBe(undefined);
+      expect($widget.attr('data-gs-auto-position')).toBe('true');
       expect($widget.attr('data-gs-min-width')).toBe(undefined);
       expect($widget.attr('data-gs-max-width')).toBe(undefined);
       expect($widget.attr('data-gs-min-height')).toBe(undefined);
@@ -1032,24 +1032,16 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should do nothing and return node', function() {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10
-      };
-      var grid = GridStack.init(options);
+    it('should do nothing and return NULL to mean nothing happened', function() {
+      var grid = GridStack.init();
       var items = $('.grid-stack-item');
       grid._updateElement(items[0], function(el, node) {
-        var newNode = grid.engine.moveNode(node);
-        expect(newNode).toBe(node);
+        var hasMoved = grid.engine.moveNode(node);
+        expect(hasMoved).toBe(null);
       });
     });
     it('should do nothing and return node', function() {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10
-      };
-      var grid = GridStack.init(options);
+      var grid = GridStack.init();
       var items = $('.grid-stack-item');
       grid.minWidth(items[0], 1);
       grid.maxWidth(items[0], 2);

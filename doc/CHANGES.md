@@ -33,7 +33,8 @@ Change log
 
 ## 1.0.0-dev (upcoming)
 
--- fix [(1166)](https://github.com/gridstack/gridstack.js/issues/1166) resize not taking margin height into account
+- fix [(1166)](https://github.com/gridstack/gridstack.js/issues/1166) resize not taking margin height into account
+- fix [(1155)](https://github.com/gridstack/gridstack.js/issues/1155) `maxRow` now limit initial item placement if out of bound, preventing broken drag behavior
 
 ## v1.0.0 (2020-02-23)
 
