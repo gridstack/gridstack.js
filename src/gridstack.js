@@ -342,8 +342,9 @@
     while (true) {
       var collisionNode = this.nodes.find(Utils._collisionNodeCheck, {node: node, nn: nn});
       if (!collisionNode) { return; }
-      this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
+      var moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
         collisionNode.width, collisionNode.height, true);
+      if (!moved) { return; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
     }
   };
 
@@ -432,18 +433,27 @@
     if (Number.isNaN(node.width))  { node.width = defaults.width; }
     if (Number.isNaN(node.height)) { node.height = defaults.height; }
 
+    if (node.maxWidth !== undefined) { node.width = Math.min(node.width, node.maxWidth); }
+    if (node.maxHeight !== undefined) { node.height = Math.min(node.height, node.maxHeight); }
+    if (node.minWidth !== undefined) { node.width = Math.max(node.width, node.minWidth); }
+    if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
+
     if (node.width > this.column) {
       node.width = this.column;
     } else if (node.width < 1) {
       node.width = 1;
     }
-
-    if (node.height < 1) {
+    if (this.maxRow && node.height > this.maxRow) {
+      node.height = this.maxRow;
+    } else if (node.height < 1) {
       node.height = 1;
     }
 
     if (node.x < 0) {
       node.x = 0;
+    }
+    if (node.y < 0) {
+      node.y = 0;
     }
 
     if (node.x + node.width > this.column) {
@@ -453,9 +463,12 @@
         node.x = this.column - node.width;
       }
     }
-
-    if (node.y < 0) {
-      node.y = 0;
+    if (this.maxRow && node.y + node.height > this.maxRow) {
+      if (resizing) {
+        node.height = this.maxRow - node.y;
+      } else {
+        node.y = this.maxRow - node.height;
+      }
     }
 
     return node;
@@ -496,11 +509,6 @@
 
   GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
     node = this._prepareNode(node);
-
-    if (node.maxWidth !== undefined) { node.width = Math.min(node.width, node.maxWidth); }
-    if (node.maxHeight !== undefined) { node.height = Math.min(node.height, node.maxHeight); }
-    if (node.minWidth !== undefined) { node.width = Math.max(node.width, node.minWidth); }
-    if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
 
     node._id = node._id || ++idSeq;
 
@@ -632,29 +640,21 @@
     if (typeof width !== 'number') { width = node.width; }
     if (typeof height !== 'number') { height = node.height; }
 
-    if (node.maxWidth !== undefined) { width = Math.min(width, node.maxWidth); }
-    if (node.maxHeight !== undefined) { height = Math.min(height, node.maxHeight); }
-    if (node.minWidth !== undefined) { width = Math.max(width, node.minWidth); }
-    if (node.minHeight !== undefined) { height = Math.max(height, node.minHeight); }
-
-    if (node.x === x && node.y === y && node.width === width && node.height === height) {
-      return node;
+    // constrain the passed in values and check if we're still changing our node
+    var resizing = (node.width !== width || node.height !== height);
+    var nn = { x: x, y: y, width: width, height: height,
+      maxWidth: node.maxWidth, maxHeight: NodeIterator.maxHeight, minWidth: node.minWidth, minHeight: node.minHeight};
+    nn = this._prepareNode(nn, resizing);
+    if (node.x === nn.x && node.y === nn.y && node.width === nn.width && node.height === nn.height) {
+      return null;
     }
 
-    var resizing = node.width !== width;
     node._dirty = true;
 
-    node.x = x;
-    node.y = y;
-    node.width = width;
-    node.height = height;
-
-    node.lastTriedX = x;
-    node.lastTriedY = y;
-    node.lastTriedWidth = width;
-    node.lastTriedHeight = height;
-
-    node = this._prepareNode(node, resizing);
+    node.x = node.lastTriedX = nn.x;
+    node.y = node.lastTriedY = nn.y;
+    node.width = node.lastTriedWidth = nn.width;
+    node.height = node.lastTriedHeight = nn.height;
 
     this._fixCollisions(node);
     if (!noPack) {
@@ -1462,7 +1462,6 @@
       // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
       // as the actual value are filled in when _prepareElement() calls el.attr('data-gs-xyz) before adding the node.
       // opt = this.engine._prepareNode(opt);
-      opt = opt || {};
     } else {
       // old legacy way of calling with items spelled out - call us back with single object instead (so we can properly initialized values)
       return this.addWidget(el, {x: opt, y: y, width: width, height: height, autoPosition: autoPosition,
@@ -1470,6 +1469,9 @@
     }
 
     el = $(el);
+    if (opt) { // see knockout above
+      this.engine._prepareNode(opt);
+    }
     this._writeAttr(el, opt);
     this.$el.append(el);
     return this.makeWidget(el);
