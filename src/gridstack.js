@@ -701,6 +701,12 @@
 
     opts = opts || {};
 
+    // if row property exists, replace minRow and maxRow
+    if (opts.row) {
+      opts.minRow = opts.row;
+      opts.maxRow = opts.row;
+    }
+
     this.$el = $(el); // TODO: legacy code
     this.el = this.$el.get(0); // exposed HTML element to the user
 
