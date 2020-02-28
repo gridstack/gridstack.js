@@ -123,8 +123,11 @@ to completely lock the widget.
 
 ## Events
 
-Those are the events set by the grid when items are added/removed or changed - they use standard JS calls with a CustomElement that stores the list
-of nodes that changed (id, x, y, width, height, etc...)
+Those are the events set by the grid when items are added/removed or changed - they use standard JS calls with a CustomElement `detail` that stores the list
+of nodes that changed (id, x, y, width, height, etc...).
+
+You can call it on a single event name, or space separated list:
+`grid.on('added removed change', ...)`
 
 ### added(event, items)
 
