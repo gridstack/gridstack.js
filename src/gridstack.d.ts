@@ -1,4 +1,4 @@
-// Type definitions for Gridstack 1.0.0-dev
+// Type definitions for Gridstack 1.1.0-dev
 // Project: https://gridstackjs.com/
 // Definitions by: Pascal Senn <https://github.com/PascalSenn>
 //                 Ricky Blankenaufulland <https://github.com/ZoolWay>
@@ -569,6 +569,12 @@ interface GridstackOptions {
    */
   maxRow ? : number;
 
+  /** 
+   * minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute
+   * on the grid div in pixels, which will round to the closest row.
+   */
+  minRow?: number;
+
   /**
    * minimal width. If window width is less, grid will be shown in one column mode (default?: 768)
    */
@@ -604,6 +610,12 @@ interface GridstackOptions {
    * time in milliseconds before widget is being removed while dragging outside of the grid. (default?: 2000)
    */
   removeTimeout ? : number;
+
+  /**
+   * fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`.
+   * (default `0` no constrain)
+   */
+  row?: number;
 
   /**
    * if true turns grid to RTL. Possible values are true, false, 'auto' (default?: 'auto')
