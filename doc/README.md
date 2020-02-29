@@ -75,7 +75,6 @@ gridstack.js API
   * a string (ex: '100px', '10em', '10rem', '10%')
   * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
   * `'auto'` - height will be calculated to match cell width (initial square grid).
-- `row` - number of rows. This is a shortcut of writting `minRow: sameValue, maxRow: sameValue`.
 - `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
 - `ddPlugin` - class that implement drag'n'drop functionallity for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
@@ -87,8 +86,8 @@ gridstack.js API
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
-- `minRow` - minimum rows amount. Default is `0`
-- `maxRow` - maximum rows amount. Default is `0` which means no maximum rows
+- `maxRow` - maximum rows amount. Default is `0` which means no max.
+- `minRow` - minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
 - `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
@@ -96,6 +95,7 @@ gridstack.js API
 - `resizable` - allows to override jQuery UI resizable options. (default: `{autoHide: true, handles: 'se'}`)
 - `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a jQuery selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
+- `row` - fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain)
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](http://gridstackjs.com/demo/rtl.html)
 - `staticGrid` - makes grid static (default `false`). If true widgets are not movable/resizable. You don't even need jQueryUI draggable/resizable.  A CSS class `grid-stack-static` is also added to the container.
 - `verticalMargin` - vertical gap size (default: `20`). Can be:
@@ -105,11 +105,11 @@ gridstack.js API
 ## Grid attributes
 
 - `data-gs-animate` - turns animation on
-- `data-gs-row` - number of rows. This is a shortcut of writting `data-gs-min-row="sameValue" data-gs-max-row="sameValue"` .
 - `data-gs-column` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-columns).
-- `data-gs-min-row` - minimum rows amount. Default is `0`.
-- `data-gs-max-row` - maximum rows amount. Default is `0` which means no maximum rows.
-- `data-gs-current-row` - current rows amount. Set by the library only. Can be used by the CSS rules.
+- `data-gs-current-row` - (internal) current rows amount. Set by the library only. Can be used by the CSS rules.
+- `data-gs-max-row` - maximum rows amount. Default is `0` which means no max.
+- `data-gs-min-row` - minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
+- `data-gs-row` - fix grid number of rows. This is a shortcut of writing `data-gs-min-row="N" data-gs-max-row="N"`. (default `0` no constrain)
 
 ## Item attributes
 
