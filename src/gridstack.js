@@ -701,12 +701,6 @@
 
     opts = opts || {};
 
-    // if row property exists, replace minRow and maxRow
-    if (opts.row) {
-      opts.minRow = opts.row;
-      opts.maxRow = opts.row;
-    }
-
     this.$el = $(el); // TODO: legacy code
     this.el = this.$el.get(0); // exposed HTML element to the user
 
@@ -731,7 +725,6 @@
 
     // elements attributes override any passed options (like CSS style) - merge the two together
     this.opts = Utils.defaults(opts, {
-      row: parseInt(this.$el.attr('data-gs-row')) || 0,
       column: parseInt(this.$el.attr('data-gs-column')) || 12,
       minRow: rowAttr ? rowAttr : parseInt(this.$el.attr('data-gs-min-row')) || 0,
       maxRow: rowAttr ? rowAttr : parseInt(this.$el.attr('data-gs-max-row')) || 0,
