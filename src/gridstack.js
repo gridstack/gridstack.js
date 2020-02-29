@@ -693,6 +693,12 @@
 
     opts = opts || {};
 
+    // if row property exists, replace minRow and maxRow
+    if (opts.row) {
+      opts.minRow = opts.row;
+      opts.maxRow = opts.row;
+    }
+
     this.$el = $(el); // TODO: legacy code
     this.el = this.$el.get(0); // exposed HTML element to the user
 
@@ -709,8 +715,10 @@
     var isNested = this.$el.closest('.' + opts.itemClass).length > 0;
 
     this.opts = Utils.defaults(opts, {
+      row: parseInt(this.$el.attr('data-gs-row')) || 0,
       column: parseInt(this.$el.attr('data-gs-column')) || 12,
-      maxRow: parseInt(this.$el.attr('data-gs-max-row')) || 0,
+      minRow: parseInt(this.$el.attr('data-gs-row')) ? parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-min-row')) || 0,
+      maxRow: parseInt(this.$el.attr('data-gs-row')) ? parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-max-row')) || 0,
       itemClass: 'grid-stack-item',
       placeholderClass: 'grid-stack-placeholder',
       placeholderText: '',
@@ -1156,6 +1164,9 @@
   GridStack.prototype._updateContainerHeight = function() {
     if (this.engine._batchMode) { return; }
     var row = this.engine.getRow();
+    if (row < this.opts.minRow) {
+      row = this.opts.minRow;
+    }
     // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
     var cssMinHeight = parseInt(this.$el.css('min-height'));
     if (cssMinHeight > 0) {

@@ -75,6 +75,7 @@ gridstack.js API
   * a string (ex: '100px', '10em', '10rem', '10%')
   * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
   * `'auto'` - height will be calculated to match cell width (initial square grid).
+- `row` - number of rows. This is a shortcut of writting `minRow: sameValue, maxRow: sameValue`.
 - `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
 - `ddPlugin` - class that implement drag'n'drop functionallity for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
@@ -86,6 +87,7 @@ gridstack.js API
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
+- `minRow` - minimum rows amount. Default is `0`
 - `maxRow` - maximum rows amount. Default is `0` which means no maximum rows
 - `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
@@ -103,7 +105,9 @@ gridstack.js API
 ## Grid attributes
 
 - `data-gs-animate` - turns animation on
+- `data-gs-row` - number of rows. This is a shortcut of writting `data-gs-min-row="sameValue" data-gs-max-row="sameValue"` .
 - `data-gs-column` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-columns).
+- `data-gs-min-row` - minimum rows amount. Default is `0`.
 - `data-gs-max-row` - maximum rows amount. Default is `0` which means no maximum rows.
 - `data-gs-current-row` - current rows amount. Set by the library only. Can be used by the CSS rules.
 
