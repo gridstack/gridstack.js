@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [1.0.0-dev (upcoming)](#100-dev-upcoming)
+- [1.1.0-dev (upcoming)](#110-dev-upcoming)
+- [1.1.0 (2020-02-29)](#110-2020-02-29)
 - [v1.0.0 (2020-02-23)](#v100-2020-02-23)
 - [v0.6.4 (2020-02-17)](#v064-2020-02-17)
 - [v0.6.3 (2020-02-05)](#v063-2020-02-05)
@@ -31,7 +32,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 1.0.0-dev (upcoming)
+## 1.1.0-dev (upcoming)
+
+- TBD
+
+## 1.1.0 (2020-02-29)
 
 - add `minRow` and `row` grid options (which set minRow=maxRow=N) [1172](https://github.com/gridstack/gridstack.js/issues/1172) - thanks [@RadoiAndrei](https://github.com/RadoiAndrei)
 - fix [1166](https://github.com/gridstack/gridstack.js/issues/1166) resize not taking margin height into account - thanks [@awjae](https://github.com/awjae)
