@@ -1,4 +1,4 @@
-// Type definitions for Gridstack 1.0.0
+// Type definitions for Gridstack 1.1.0-dev
 // Project: https://gridstackjs.com/
 // Definitions by: Pascal Senn <https://github.com/PascalSenn>
 //                 Ricky Blankenaufulland <https://github.com/ZoolWay>
@@ -24,7 +24,7 @@ interface GridStackHTMLElement extends HTMLElement {
   gridstack: GridStack;
 }
 type GridStackEvent = 'added' | 'change' | 'disable' | 'dragstart' | 'dragstop' | 'dropped' |
-                      'enable' | 'removed' | 'resize' | 'resizestart' | 'gsresizestop';
+                      'enable' | 'removed' | 'resize' | 'resizestart' | 'gsresizestop' | string;
 
 interface GridStack {
   /**
@@ -296,12 +296,14 @@ interface GridStack {
   /**
    * Event handler that extracts our CustomEvent data out automatically for receiving custom
    * notifications (see doc for supported events)
-   * @param name of the event (see possible values)
+   * @param name of the event (see possible values) or list of names space separated
    * @param callback function called with event and optional second/third param
    * (see README documentation for each signature).
    * 
    * @example
    * grid.on('added', function(e, items) { log('added ', items)} );
+   * or
+   * grid.on('added removed change', function(e, items) { log(e.type, items)} );
    * 
    * Note: in some cases it is the same as calling native handler and parsing the event.
    * grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
@@ -567,6 +569,12 @@ interface GridstackOptions {
    */
   maxRow ? : number;
 
+  /** 
+   * minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute
+   * on the grid div in pixels, which will round to the closest row.
+   */
+  minRow?: number;
+
   /**
    * minimal width. If window width is less, grid will be shown in one column mode (default?: 768)
    */
@@ -602,6 +610,12 @@ interface GridstackOptions {
    * time in milliseconds before widget is being removed while dragging outside of the grid. (default?: 2000)
    */
   removeTimeout ? : number;
+
+  /**
+   * fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`.
+   * (default `0` no constrain)
+   */
+  row?: number;
 
   /**
    * if true turns grid to RTL. Possible values are true, false, 'auto' (default?: 'auto')

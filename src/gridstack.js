@@ -1,5 +1,5 @@
 /**
- * gridstack.js 1.0.0
+ * gridstack.js 1.1.0-dev
  * https://gridstackjs.com/
  * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
@@ -342,8 +342,9 @@
     while (true) {
       var collisionNode = this.nodes.find(Utils._collisionNodeCheck, {node: node, nn: nn});
       if (!collisionNode) { return; }
-      this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
+      var moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
         collisionNode.width, collisionNode.height, true);
+      if (!moved) { return; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
     }
   };
 
@@ -432,18 +433,27 @@
     if (Number.isNaN(node.width))  { node.width = defaults.width; }
     if (Number.isNaN(node.height)) { node.height = defaults.height; }
 
+    if (node.maxWidth !== undefined) { node.width = Math.min(node.width, node.maxWidth); }
+    if (node.maxHeight !== undefined) { node.height = Math.min(node.height, node.maxHeight); }
+    if (node.minWidth !== undefined) { node.width = Math.max(node.width, node.minWidth); }
+    if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
+
     if (node.width > this.column) {
       node.width = this.column;
     } else if (node.width < 1) {
       node.width = 1;
     }
-
-    if (node.height < 1) {
+    if (this.maxRow && node.height > this.maxRow) {
+      node.height = this.maxRow;
+    } else if (node.height < 1) {
       node.height = 1;
     }
 
     if (node.x < 0) {
       node.x = 0;
+    }
+    if (node.y < 0) {
+      node.y = 0;
     }
 
     if (node.x + node.width > this.column) {
@@ -453,9 +463,12 @@
         node.x = this.column - node.width;
       }
     }
-
-    if (node.y < 0) {
-      node.y = 0;
+    if (this.maxRow && node.y + node.height > this.maxRow) {
+      if (resizing) {
+        node.height = this.maxRow - node.y;
+      } else {
+        node.y = this.maxRow - node.height;
+      }
     }
 
     return node;
@@ -496,11 +509,6 @@
 
   GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
     node = this._prepareNode(node);
-
-    if (node.maxWidth !== undefined) { node.width = Math.min(node.width, node.maxWidth); }
-    if (node.maxHeight !== undefined) { node.height = Math.min(node.height, node.maxHeight); }
-    if (node.minWidth !== undefined) { node.width = Math.max(node.width, node.minWidth); }
-    if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
 
     node._id = node._id || ++idSeq;
 
@@ -632,29 +640,21 @@
     if (typeof width !== 'number') { width = node.width; }
     if (typeof height !== 'number') { height = node.height; }
 
-    if (node.maxWidth !== undefined) { width = Math.min(width, node.maxWidth); }
-    if (node.maxHeight !== undefined) { height = Math.min(height, node.maxHeight); }
-    if (node.minWidth !== undefined) { width = Math.max(width, node.minWidth); }
-    if (node.minHeight !== undefined) { height = Math.max(height, node.minHeight); }
-
-    if (node.x === x && node.y === y && node.width === width && node.height === height) {
-      return node;
+    // constrain the passed in values and check if we're still changing our node
+    var resizing = (node.width !== width || node.height !== height);
+    var nn = { x: x, y: y, width: width, height: height,
+      maxWidth: node.maxWidth, maxHeight: NodeIterator.maxHeight, minWidth: node.minWidth, minHeight: node.minHeight};
+    nn = this._prepareNode(nn, resizing);
+    if (node.x === nn.x && node.y === nn.y && node.width === nn.width && node.height === nn.height) {
+      return null;
     }
 
-    var resizing = node.width !== width;
     node._dirty = true;
 
-    node.x = x;
-    node.y = y;
-    node.width = width;
-    node.height = height;
-
-    node.lastTriedX = x;
-    node.lastTriedY = y;
-    node.lastTriedWidth = width;
-    node.lastTriedHeight = height;
-
-    node = this._prepareNode(node, resizing);
+    node.x = node.lastTriedX = nn.x;
+    node.y = node.lastTriedY = nn.y;
+    node.width = node.lastTriedWidth = nn.width;
+    node.height = node.lastTriedHeight = nn.height;
 
     this._fixCollisions(node);
     if (!noPack) {
@@ -708,9 +708,18 @@
     opts.itemClass = opts.itemClass || 'grid-stack-item';
     var isNested = this.$el.closest('.' + opts.itemClass).length > 0;
 
+    // if row property exists, replace minRow and maxRow instead
+    if (opts.row) {
+      opts.minRow = opts.maxRow = opts.row;
+      delete opts.row;
+    }
+    var rowAttr = parseInt(this.$el.attr('data-gs-row'));
+
+    // elements attributes override any passed options (like CSS style) - merge the two together
     this.opts = Utils.defaults(opts, {
       column: parseInt(this.$el.attr('data-gs-column')) || 12,
-      maxRow: parseInt(this.$el.attr('data-gs-max-row')) || 0,
+      minRow: rowAttr ? rowAttr : parseInt(this.$el.attr('data-gs-min-row')) || 0,
+      maxRow: rowAttr ? rowAttr : parseInt(this.$el.attr('data-gs-max-row')) || 0,
       itemClass: 'grid-stack-item',
       placeholderClass: 'grid-stack-placeholder',
       placeholderText: '',
@@ -1156,6 +1165,9 @@
   GridStack.prototype._updateContainerHeight = function() {
     if (this.engine._batchMode) { return; }
     var row = this.engine.getRow();
+    if (row < this.opts.minRow) {
+      row = this.opts.minRow;
+    }
     // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
     var cssMinHeight = parseInt(this.$el.css('min-height'));
     if (cssMinHeight > 0) {
@@ -1209,18 +1221,13 @@
     var self = this;
 
     var cellWidth;
-    var cellHeight;
+    var cellFullHeight; // internal cellHeight + v-margin
 
     var dragOrResize = function(event, ui) {
       var x = Math.round(ui.position.left / cellWidth);
-      var y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
+      var y = Math.floor((ui.position.top + cellFullHeight / 2) / cellFullHeight);
       var width;
       var height;
-
-      if (event.type !== 'drag') {
-        width = Math.round(ui.size.width / cellWidth);
-        height = Math.round(ui.size.height / cellHeight);
-      }
 
       if (event.type === 'drag') {
         var distance = ui.position.top - node._prevYPix;
@@ -1262,9 +1269,9 @@
           }
         }
       } else if (event.type === 'resize')  {
-        if (x < 0) {
-          return;
-        }
+        if (x < 0) return;
+        width = Math.round(ui.size.width / cellWidth);
+        height = Math.round((ui.size.height + self.verticalMargin()) / cellFullHeight);
       }
       // width and height are undefined if not resizing
       var lastTriedWidth = width !== undefined ? width : node.lastTriedWidth;
@@ -1292,11 +1299,9 @@
       self.engine.cleanNodes();
       self.engine.beginUpdate(node);
       cellWidth = self.cellWidth();
-      var strictCellHeight = self.cellHeight();
-      // TODO: cellHeight = cellHeight() causes issue (i.e. remove strictCellHeight above) otherwise
-      // when sizing up we jump almost right away to next size instead of half way there. Not sure
-      // why as we don't use ceil() in many places but round() instead.
-      cellHeight = self.$el.height() / parseInt(self.$el.attr('data-gs-current-row'));
+      var strictCellHeight = self.cellHeight(); // heigh without v-margin
+      // compute height with v-margin (Note: we add 1 margin as last row is missing it)
+      cellFullHeight = (self.$el.height() + self.verticalMargin()) / parseInt(self.$el.attr('data-gs-current-row'));
       self.placeholder
         .attr('data-gs-x', o.attr('data-gs-x'))
         .attr('data-gs-y', o.attr('data-gs-y'))
@@ -1469,7 +1474,6 @@
       // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
       // as the actual value are filled in when _prepareElement() calls el.attr('data-gs-xyz) before adding the node.
       // opt = this.engine._prepareNode(opt);
-      opt = opt || {};
     } else {
       // old legacy way of calling with items spelled out - call us back with single object instead (so we can properly initialized values)
       return this.addWidget(el, {x: opt, y: y, width: width, height: height, autoPosition: autoPosition,
@@ -1477,6 +1481,9 @@
     }
 
     el = $(el);
+    if (opt) { // see knockout above
+      this.engine._prepareNode(opt);
+    }
     this._writeAttr(el, opt);
     this.$el.append(el);
     return this.makeWidget(el);
@@ -2030,6 +2037,13 @@
    * notifications (see doc for supported events)
    */
   GridStack.prototype.on = function(eventName, callback) {
+    // check for array of names being passed instead
+    if (eventName.indexOf(' ') !== -1) {
+      var names = eventName.split(' ');
+      names.forEach(function(name) { this.on(name, callback) }, this);
+      return;
+    }
+
     if (eventName === 'change' || eventName === 'added' || eventName === 'removed') {
       // native CustomEvent handlers - cash the generic handlers so we can remove
       this._gsEventHandler = this._gsEventHandler || {};
@@ -2043,6 +2057,13 @@
 
   /** unsubscribe from the 'on' event */
   GridStack.prototype.off = function(eventName) {
+    // check for array of names being passed instead
+    if (eventName.indexOf(' ') !== -1) {
+      var names = eventName.split(' ');
+      names.forEach(function(name) { this.off(name, callback) }, this);
+      return;
+    }
+
     if (eventName === 'change' || eventName === 'added' || eventName === 'removed') {
       // remove native CustomEvent handlers
       if (this._gsEventHandler && this._gsEventHandler[eventName]) {

@@ -77,8 +77,8 @@ npm install --save gridstack
 * Using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.0.0/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@1.0.0/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.0/dist/gridstack.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.0/dist/gridstack.all.js"></script>
 ```
 
 if you need to debug, look at the git demo/ examples for non min includes.
@@ -270,7 +270,7 @@ v1.0.0 removed Jquery from the API and external dependencies, which will require
 ```js
 // initialization returned Jquery element, requiring second call to get GridStack var
 $('.grid-stack').gridstack(opts?);
-var grid = $('.grid-stack').data('grid-stack');
+var grid = $('.grid-stack').data('gridstack');
 
 // returned Jquery element
 grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>'), {width: 2});
@@ -282,7 +282,7 @@ $('.grid-stack').on('added', function(e, items) {/* items contains info */});
 **NEW**
 ```js
 // element identifier defaults to '.grid-stack', returns the grid
-// for Typescript use window.GridStack.init()
+// Note: for Typescript use window.GridStack.init() until next native TS version
 var grid = GridStack.init(opts?, element?);
 
 // returns DOM element
@@ -302,7 +302,7 @@ Other  vars/global changes
 `grid.setColumn(N)` --> `grid.column(N)` and new `grid.column()` to get value, old API still supported though
 ```
 
-Recommend looking at the [many samples](../demo) for more code examples.
+Recommend looking at the [many samples](./demo) for more code examples.
 
 We're working on implementing support for other drag'n'drop libraries through the plugin system. Right now it is still jquery-ui based (but minimal build content)
 

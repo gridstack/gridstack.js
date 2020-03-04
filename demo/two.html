@@ -111,19 +111,16 @@
       {x: 0, y: 0, width: 2, height: 2},
       {x: 3, y: 1, width: 1, height: 2},
       {x: 4, y: 1, width: 1, height: 1},
-      {x: 2, y: 3, width: 3, height: 1, minWidth: 2, id: 'special', text: 'has minWidth=2'},
+      {x: 2, y: 3, width: 3, height: 1, maxWidth: 3, id: 'special', text: 'has maxWidth=3'},
       {x: 2, y: 5, width: 1, height: 1}
     ];
 
     grids.forEach(function (grid, i) {
-      grid.on('added', function(e, items) { log(i, ' added ', items) });
-      grid.on('removed', function(e, items) { log(i, ' removed ', items) });
-      grid.on('change', function(e, items) { log(i, ' change ', items) });
-      function log(id, type, items) {
+      grid.on('added removed change', function(e, items) {
         var str = '';
         items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-        console.log('grid' + id + type + items.length + ' items.' + str );
-      }
+        console.log('grid' + i + ' ' + e.type + ' ' + items.length + ' items:' + str );
+      });
 
       grid.batchUpdate();
       items.forEach(function (node) {
