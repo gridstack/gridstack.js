@@ -6,7 +6,11 @@
 */
 
 // https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
-if (typeof window.CustomEvent !== "function") {
+(function () {
+  if (typeof window.CustomEvent === "function") {
+    return false;
+  }
+
   function CustomEvent (event, params) {
     params = params || {bubbles: false, cancelable: false, detail: null};
     var evt = document.createEvent('CustomEvent');
@@ -15,7 +19,7 @@ if (typeof window.CustomEvent !== "function") {
   }
 
   window.CustomEvent = CustomEvent;
-}
+})();
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
 Number.isNaN = Number.isNaN || function isNaN(input) {
