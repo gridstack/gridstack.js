@@ -34,7 +34,7 @@ Change log
 
 ## 1.1.0-dev (upcoming)
 
-- TBD
+- fix [1187](https://github.com/gridstack/gridstack.js/issues/1187) IE support for `CustomEvent` polyfill - thanks [@phil-blais](https://github.com/phil-blais)
 
 ## 1.1.0 (2020-02-29)
 
