@@ -48,6 +48,8 @@ module.exports = function(grunt) {
           'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/jquery.js': ['src/jquery.js'],
           'dist/jquery-ui.js': ['src/jquery-ui.js'],
+          'dist/src/gridstack.scss': ['src/gridstack.scss'],
+          'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
         }
       }
     },

@@ -219,8 +219,17 @@ Better yet, here is a SASS code snippet which can make life much easier (Thanks 
 }
 ```
 
-you can also look at the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/blob/develop/src/gridstack-extra.scss) and modify to add more columns
+you can also use the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/blob/develop/src/gridstack-extra.scss) included in NPM package and modify to add more columns
 and also have the `.grid-stack-N` prefix to support letting the user change columns dynamically.
+
+Sample gulp command for 30 columns:
+```js
+gulp.src('node_modules/gridstack/dist/src/gridstack-extra.scss')
+        .pipe(replace('$gridstack-columns: 11 !default;','$gridstack-columns: 30;'))
+        .pipe(sass({outputStyle: 'compressed'}))
+        .pipe(rename({extname: '.min.css'}))
+        .pipe(gulp.dest('dist/css'))
+```
 
 ## Override resizable/draggable options
 
