@@ -6,8 +6,8 @@
 */
 
 // default to generate [2-11] columns as 1 (oneColumnMode) and 12 (default) are in the main css
-$gridstack-columns: 11 !default;
 $gridstack-columns-start: 2 !default;
+$gridstack-columns: 11 !default;
 
 @mixin grid-stack-items($columns) {
   .grid-stack.grid-stack-#{$columns} {
