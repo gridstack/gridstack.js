@@ -317,8 +317,8 @@ Parameters:
 Disables widgets moving/resizing. This is a shortcut for:
 
 ```js
-grid.movable('.grid-stack-item', false);
-grid.resizable('.grid-stack-item', false);
+grid.enableMove(false);
+grid.enableResize(false);
 ```
 
 ### enable()
@@ -326,24 +326,26 @@ grid.resizable('.grid-stack-item', false);
 Enables widgets moving/resizing. This is a shortcut for:
 
 ```js
-grid.movable('.grid-stack-item', true);
-grid.resizable('.grid-stack-item', true);
+grid.enableMove(true);
+grid.enableResize(true);
 ```
 
 ### enableMove(doEnable, includeNewWidgets)
 
-Enables/disables widget moving. `includeNewWidgets` will force new widgets to be draggable as per `doEnable`'s value by changing the `disableDrag` grid option. This is a shortcut for:
+Enables/disables widget moving. `includeNewWidgets` will force new widgets to be draggable as per `doEnable`'s value by changing the `disableDrag` grid option (default: true). This is a shortcut for:
 
 ```js
-grid.movable(this.container.children('.' + this.opts.itemClass), doEnable);
+grid.movable('.grid-stack-item', doEnable);
+grid.opts.disableDrag = !doEnable;
 ```
 
 ### enableResize(doEnable, includeNewWidgets)
 
-Enables/disables widget resizing. `includeNewWidgets` will force new widgets to be resizable as per `doEnable`'s value by changing the `disableResize` grid option.  This is a shortcut for:
+Enables/disables widget resizing. `includeNewWidgets` will force new widgets to be resizable as per `doEnable`'s value by changing the `disableResize` grid option  (default: true). This is a shortcut for:
 
 ```js
-grid.resizable(this.container.children('.' + this.opts.itemClass), doEnable);
+grid.resizable('.grid-stack-item', doEnable);
+grid.opts.disableResize = !doEnable;
 ```
 
 ### float(val?)
