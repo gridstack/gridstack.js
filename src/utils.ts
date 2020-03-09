@@ -38,7 +38,7 @@ export function obsoleteOptsDel(opts: GridstackOptions, oldName: string, rev: st
 /** checks for obsolete Jquery element attributes */
 export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string) {
   const oldAttr = el.getAttribute(oldName);
-  if (oldAttr !== undefined) {
+  if (oldAttr !== null) {
     el.setAttribute(newName, oldAttr);
     console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
       newName + '`. It will be **completely** removed in v1.0');
