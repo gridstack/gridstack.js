@@ -49,10 +49,10 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
 /**
  * Utility methods
  */
-export namespace Utils {
+export class Utils {
 
   /** returns true if a and b overlap */
-  export function isIntercepted(a: GridstackWidget, b: GridstackWidget): boolean {
+  static isIntercepted(a: GridstackWidget, b: GridstackWidget): boolean {
     return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
   }
 
@@ -62,19 +62,19 @@ export namespace Utils {
    * @param dir 1 for asc, -1 for desc (optional)
    * @param width width of the grid. If undefined the width will be calculated automatically (optional).
    **/
-  export function sort(nodes: GridStackNode[], dir?: number, column?: number): GridStackNode[] {
+  static sort(nodes: GridStackNode[], dir?: number, column?: number): GridStackNode[] {
     if (!column) {
       const widths = nodes.map(function (node) { return node.x + node.width; });
       column = Math.max.apply(Math, widths);
     }
 
     if (dir === -1)
-      return sortBy(nodes, (n) => -(n.x + n.y * column));
+      return this.sortBy(nodes, (n) => -(n.x + n.y * column));
     else
-      return sortBy(nodes, (n) => (n.x + n.y * column));
+      return this.sortBy(nodes, (n) => (n.x + n.y * column));
   }
 
-  export function createStylesheet(id: string, parent?: HTMLElement): CSSStyleSheet {
+  static createStylesheet(id: string, parent?: HTMLElement): CSSStyleSheet {
     const style: HTMLStyleElement = document.createElement('style');
     style.setAttribute('type', 'text/css');
     style.setAttribute('data-gs-style-id', id);
@@ -88,13 +88,13 @@ export namespace Utils {
     return style.sheet as CSSStyleSheet;
   }
 
-  export function removeStylesheet(id: string) {
+  static removeStylesheet(id: string) {
     const el = document.querySelector('STYLE[data-gs-style-id=' + id + ']');
     if (!el) return;
     el.parentNode.removeChild(el);
   }
 
-  export function insertCSSRule(sheet: CSSStyleSheet, selector: string, rules: string, index: number) {
+  static insertCSSRule(sheet: CSSStyleSheet, selector: string, rules: string, index: number) {
     if (typeof sheet.insertRule === 'function') {
       sheet.insertRule(selector + '{' + rules + '}', index);
     } else if (typeof sheet.addRule === 'function') {
@@ -102,7 +102,7 @@ export namespace Utils {
     }
   }
 
-  export function toBool(v: any): boolean {
+  static toBool(v: any): boolean {
     if (typeof v === 'boolean') {
       return v;
     }
@@ -113,7 +113,13 @@ export namespace Utils {
     return Boolean(v);
   }
 
-  export function parseHeight(val: numberOrString) {
+  static toNumber(value: null | string): number | null {
+    return value === null || value.length === 0
+      ? null
+      : Number(value);
+  }
+
+  static parseHeight(val: numberOrString) {
     let height: number;
     let heightUnit = 'px';
     if (typeof val === 'string') {
@@ -129,7 +135,7 @@ export namespace Utils {
     return { height: height, unit: heightUnit }
   }
 
-  export function without(array, item) {
+  static without(array, item) {
     const index = array.indexOf(item);
 
     if (index !== -1) {
@@ -140,7 +146,7 @@ export namespace Utils {
     return array;
   }
 
-  export function sortBy(array, getter) {
+  static sortBy(array, getter) {
     return array.slice(0).sort(function (left, right) {
       const valueLeft = getter(left);
       const valueRight = getter(right);
@@ -153,11 +159,11 @@ export namespace Utils {
     });
   }
 
-  export function defaults(target, arg1) {
+  static defaults(target, arg1) {
     const sources = Array.prototype.slice.call(arguments, 1);
 
     sources.forEach(function (source) {
-      for (var prop in source) {
+      for (let prop in source) {
         if (source.hasOwnProperty(prop) && (!target.hasOwnProperty(prop) || target[prop] === undefined)) {
           target[prop] = source[prop];
         }
@@ -167,11 +173,11 @@ export namespace Utils {
     return target;
   }
 
-  export function clone(target) {
+  static clone(target) {
     return {...target}; // was $.extend({}, target)
   }
 
-  export function throttle(callback, delay) {
+  static throttle(callback, delay) {
     let isWaiting = false;
 
     return function () {
@@ -183,8 +189,8 @@ export namespace Utils {
     }
   }
 
-  export function removePositioningStyles(el) {
-    const style = el[0].style;
+  static removePositioningStyles(el) {
+    const style = el.style;
     if (style.position) {
       style.removeProperty('position');
     }
@@ -202,19 +208,19 @@ export namespace Utils {
     }
   }
 
-  export function getScrollParent(el) {
+  static getScrollParent(el) {
     let returnEl;
     if (el === null) {
       returnEl = null;
     } else if (el.scrollHeight > el.clientHeight) {
       returnEl = el;
     } else {
-      returnEl = getScrollParent(el.parentNode);
+      returnEl = this.getScrollParent(el.parentNode);
     }
     return returnEl;
   }
 
-  export function updateScrollPosition(el, ui, distance) {
+  static updateScrollPosition(el, ui, distance) {
     // is widget in view?
     const rect = el.getBoundingClientRect();
     const innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
@@ -226,7 +232,7 @@ export namespace Utils {
       // to get entire widget on screen
       const offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
       const offsetDiffUp = rect.top;
-      const scrollEl = getScrollParent(el);
+      const scrollEl = this.getScrollParent(el);
       if (scrollEl !== null) {
         const prevScroll = scrollEl.scrollTop;
         if (rect.top < 0 && distance < 0) {
