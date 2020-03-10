@@ -6,6 +6,8 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
+import { GridStack } from './gridstack';
+
 export type numberOrString = number | string;
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 export interface GridItemHTMLElement extends HTMLElement {
@@ -24,7 +26,7 @@ export interface GridstackOptions {
    * string for explicit class name,
    * function returning a boolean. See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
    */
-  acceptWidgets?: boolean | string | ((i: number, element: Element) => boolean);
+  acceptWidgets?: boolean | string | ((element: Element) => boolean);
 
   /** if true the resizing handles are shown even if the user is not hovering over the widget (default?: false) */
   alwaysShowResizeHandle?: boolean;
@@ -195,6 +197,7 @@ export interface GridStackNode extends GridstackWidget {
   el?: GridItemHTMLElement;
   /** @internal need to do that for each and use --stripInternal */
   _id?: number;
+  _grid?: GridStack;
   _dirty?: boolean;
   _updating?: boolean;
   _added?: boolean;
@@ -209,4 +212,10 @@ export interface GridStackNode extends GridstackWidget {
   _lastTriedY?: number;
   _lastTriedWidth?: number;
   _lastTriedHeight?: number;
+  _isAboutToRemove?: boolean;
+  _removeTimeout?: number;
+  _beforeDragX?: number;
+  _beforeDragY?: number;
+  _prevYPix?: number;
+  _temporaryRemoved?: boolean;
 }
