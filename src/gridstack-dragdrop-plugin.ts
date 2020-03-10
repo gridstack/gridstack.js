@@ -22,7 +22,7 @@ export class GridStackDragDropPlugin {
   
   static registerPlugin(pluginClass) {
     GridStackDragDropPlugin.registeredPlugins.push(pluginClass);
-  };
+  }
 
   public constructor(grid: GridStack) {
     this.grid = grid;
@@ -30,21 +30,21 @@ export class GridStackDragDropPlugin {
 
   public resizable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     return this;
-  };
+  }
 
   public draggable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     return this;
-  };
+  }
 
   public droppable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     return this;
-  };
+  }
 
   public isDroppable(el: GridStackElement): boolean {
     return false;
-  };
+  }
 
   public on(el: GridStackElement, eventName: string, callback): GridStackDragDropPlugin {
     return this;
-  };
+  }
 }

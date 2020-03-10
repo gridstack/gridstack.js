@@ -102,7 +102,7 @@
       float: false,
       removable: '.trash',
       removeTimeout: 100,
-      acceptWidgets: function(i, el) { return true; } // function example, else can be simple: true | false | '.someClass' value
+      acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };
     var grids = GridStack.initAll(options);
     grids[1].float(true);

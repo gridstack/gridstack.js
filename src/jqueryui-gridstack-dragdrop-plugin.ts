@@ -10,7 +10,7 @@ import { GridStack } from './gridstack';
 import { GridStackDragDropPlugin, DDOpts, DDKey } from './gridstack-dragdrop-plugin';
 import { GridStackElement } from './types';
 
-// TODO: TEMPORARY until can remove jquery-ui drag&drop and this class!
+// TODO: TEMPORARY until can remove jquery-ui drag&drop and this class and use HTML5 instead !
 // see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
 import * as $ from './jquery.js';
 import './jquery-ui.js';
@@ -38,7 +38,7 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
       }});
     }
     return this;
-  };
+  }
 
   public draggable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     const $el = $(el);
@@ -54,23 +54,23 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
       }});
     }
     return this;
-  };
+  }
 
   public droppable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     const $el = $(el);
     $el.droppable(opts);
     return this;
-  };
+  }
 
   public isDroppable(el: GridStackElement): boolean {
     const $el = $(el);
     return Boolean($el.data('droppable'));
-  };
+  }
 
   public on(el: GridStackElement, eventName: string, callback): GridStackDragDropPlugin {
     $(el).on(eventName, callback);
     return this;
-  };
+  }
 }
 
 // finally register ourself

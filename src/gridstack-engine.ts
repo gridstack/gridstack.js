@@ -269,10 +269,10 @@ export class GridStackEngine {
   public addNode(node: GridStackNode, triggerAddEvent?: boolean) {
     node = this._prepareNode(node);
 
-    if (node.maxWidth !== undefined) { node.width = Math.min(node.width, node.maxWidth); }
-    if (node.maxHeight !== undefined) { node.height = Math.min(node.height, node.maxHeight); }
-    if (node.minWidth !== undefined) { node.width = Math.max(node.width, node.minWidth); }
-    if (node.minHeight !== undefined) { node.height = Math.max(node.height, node.minHeight); }
+    if (node.maxWidth) { node.width = Math.min(node.width, node.maxWidth); }
+    if (node.maxHeight) { node.height = Math.min(node.height, node.maxHeight); }
+    if (node.minWidth) { node.width = Math.max(node.width, node.minWidth); }
+    if (node.minHeight) { node.height = Math.max(node.height, node.minHeight); }
 
     node._id = node._id || GridStackEngine._idSeq++;
 
