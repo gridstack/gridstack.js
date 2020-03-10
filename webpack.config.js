@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: './src/index.ts',
+  mode: 'development',
   module: {
     rules: [
       {
@@ -17,7 +18,8 @@ module.exports = {
   output: {
     filename: 'gridstack.all.js',
     path: path.resolve(__dirname, 'dist'),
+    library: 'GridStack',
+    libraryExport: 'GridStack',
     libraryTarget: 'umd',
-    library: 'gridstack',
-  },
+  }
 };
