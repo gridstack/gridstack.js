@@ -5,8 +5,9 @@ gridstack.js API
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [Options](#options)
+- [Grid Options](#grid-options)
 - [Grid attributes](#grid-attributes)
+- [Item Options](#item-options)
 - [Item attributes](#item-attributes)
 - [Events](#events)
   - [added(event, items)](#addedevent-items)
@@ -60,23 +61,26 @@ gridstack.js API
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Options
+## Grid Options
 
 - `acceptWidgets` - accept widgets dragged from other grids or from outside (default: `false`). Can be:
    * `true` (uses `'.grid-stack-item'` class filter) or `false`
    * string for explicit class name
-   * function (i: number, element: Element) returning a boolean. See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
-- `alwaysShowResizeHandle` - if `true` the resizing handles are shown even if the user is not hovering over the widget
-  (default: `false`)
+   * `function (i: number, element: Element): boolean` See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
+- `alwaysShowResizeHandle` - possible values (default: `false` only show on hover)
+   * `true` the resizing handles are always shown even if the user is not hovering over the widget
+   * advance condition such as this mobile browser agent check:
+   `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
+   See [example](http://gridstack.github.io/gridstack.js/demo/advance.html)
 - `animate` - turns animation on (default: `false`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight` - one cell height (default: `60`). Can be:
   * an integer (px)
   * a string (ex: '100px', '10em', '10rem', '10%')
   * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
-  * `'auto'` - height will be calculated to match cell width (initial square grid).
+  * `'auto'` - height will be calculated cell square initially.
 - `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
-- `ddPlugin` - class that implement drag'n'drop functionallity for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
+- `ddPlugin` - class that implement drag'n'drop functionality for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - disables the onColumnMode when the window width is less than minWidth (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
@@ -87,7 +91,7 @@ gridstack.js API
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
 - `maxRow` - maximum rows amount. Default is `0` which means no max.
-- `minRow` - minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
+- `minRow` - minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
 - `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
@@ -104,26 +108,30 @@ gridstack.js API
 
 ## Grid attributes
 
-- `data-gs-animate` - turns animation on
-- `data-gs-column` - amount of columns. Setting non-default value must be supported by equivalent change in CSS, [see docs here](https://github.com/gridstack/gridstack.js#change-grid-columns).
+most of the above options are also available as HTML attributes using the `data-gs-` name prefix with standard dash lower case naming convention (ex: `data-gs-column`, `data-gs-min-row`, etc..).
+
+Extras:
 - `data-gs-current-row` - (internal) current rows amount. Set by the library only. Can be used by the CSS rules.
-- `data-gs-max-row` - maximum rows amount. Default is `0` which means no max.
-- `data-gs-min-row` - minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
-- `data-gs-row` - fix grid number of rows. This is a shortcut of writing `data-gs-min-row="N" data-gs-max-row="N"`. (default `0` no constrain)
+
+## Item Options
+
+options you can pass when calling `addWidget()`
+
+- `autoPosition` - tells to ignore `x` and `y` attributes and to place element to the first available position. Having either one missing will also do that.
+- `x`, `y` - (number) element position in row/column. Note: if one is missing this will `autoPosition` the item
+- `width`, `height` - (number) element size in row/column (default 1x1)
+- `maxWidth`, `minWidth`, `maxHeight`, `minHeight` - element constraints in row/column (default none)
+- `locked` - means another widget wouldn't be able to move it during dragging or resizing.
+The widget can still be dragged or resized by the user.
+You need to add `noResize` and `noMove` attributes to completely lock the widget.
+- `noResize` - disable element resizing
+- `noMove` - disable element moving
+- `resizeHandles` - sets resize handles for a specific widget.
+- `id`- (number | string) good for quick identification (for example in change event)
 
 ## Item attributes
 
-- `data-gs-x`, `data-gs-y` - (number) element position in row/column. Note: if one is missing this will `autoPosition` the item
-- `data-gs-width`, `data-gs-height` - (number) element size in row/column
-- `data-gs-id`- (number | string) good for quick identification (for example in change event)
-- `data-gs-max-width`, `data-gs-min-width`, `data-gs-max-height`, `data-gs-min-height` - element constraints in row/column
-- `data-gs-no-resize` - disable element resizing
-- `data-gs-no-move` - disable element moving
-- `data-gs-auto-position` - tells to ignore `data-gs-x` and `data-gs-y` attributes and to place element to the first available position. Having either one missing will also do that.
-- `data-gs-locked` - the widget will be locked. It means another widget wouldn't be able to move it during dragging or resizing.
-The widget can still be dragged or resized. You need to add `data-gs-no-resize` and `data-gs-no-move` attributes
-to completely lock the widget.
-- `data-gs-resize-handles` - sets resize handles for a specific widget.
+all item options are also available as HTML attributes using the `data-gs-` name prefix with standard dash lower case naming convention (ex: `data-gs-x`, `data-gs-min-width`, etc..).
 
 ## Events
 
@@ -263,7 +271,7 @@ starts batch updates. You will see no changes until `commit()` method is called.
 
 ### compact()
 
-relayout grid items to reclaim any empty space.
+re-layout grid items to reclaim any empty space.
 
 ### cellHeight()
 
