@@ -1505,34 +1505,38 @@
   };
 
   GridStack.prototype.removeWidget = function(el, detachNode) {
-    detachNode = (detachNode === undefined ? true : detachNode);
     el = $(el);
     var node = el.data('_gridstack_node');
     // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
     if (!node) {
       node = this.engine.getNodeDataByDOMEl(el.get(0));
     }
-
+    // remove our DOM data (circular link) and drag&drop permanently
     el.removeData('_gridstack_node');
+    this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+
     this.engine.removeNode(node, detachNode);
     this._triggerRemoveEvent();
     this._triggerChangeEvent(true); // trigger any other changes
   };
 
   GridStack.prototype.removeAll = function(detachNode) {
-    if (detachNode !== false) {
-      // remove our data structure before list gets emptied and DOM elements stay behind
-      this.engine.nodes.forEach(function(node) { $(node.el).removeData('_gridstack_node') });
-    }
+    // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
+    this.engine.nodes.forEach(function(node) {
+      var el = $(node.el);
+      el.removeData('_gridstack_node');
+      this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+    }, this);
+
     this.engine.removeAll(detachNode);
     this._triggerRemoveEvent();
   };
 
   GridStack.prototype.destroy = function(detachGrid) {
     $(window).off('resize', this.onResizeHandler);
-    this.disable();
-    if (detachGrid !== undefined && !detachGrid) {
+    if (detachGrid === false) {
       this.removeAll(false);
+      this.$el.removeClass(this.opts._class);
       delete this.$el.get(0).gridstack;
     } else {
       this.$el.remove();

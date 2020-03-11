@@ -31,7 +31,7 @@
 
   JQueryUIGridStackDragDropPlugin.prototype.resizable = function(el, opts) {
     el = $(el);
-    if (opts === 'disable' || opts === 'enable') {
+    if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
       el.resizable(opts);
     } else if (opts === 'option') {
       var key = arguments[2];
@@ -53,7 +53,7 @@
 
   JQueryUIGridStackDragDropPlugin.prototype.draggable = function(el, opts) {
     el = $(el);
-    if (opts === 'disable' || opts === 'enable') {
+    if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
       el.draggable(opts);
     } else {
       el.draggable($.extend({}, this.grid.opts.draggable, {
