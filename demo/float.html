@@ -24,9 +24,14 @@
     <div class="grid-stack"></div>
   </div>
 
-
   <script type="text/javascript">
     var grid = GridStack.init({float: true});
+
+    grid.on('added removed change', function(e, items) {
+      var str = '';
+      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+      console.log(e.type + ' ' + items.length + ' items:' + str );
+    });
 
     var items = [
       {x: 2, y: 1, width: 1, height: 1},
