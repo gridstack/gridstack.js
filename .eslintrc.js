@@ -16,7 +16,6 @@ module.exports = {
   rules: {
     'indent': ['error', 2],
     'max-len': ['error', 180],
-    'no-trailing-spaces': 'error',
-    'prefer-const': 0
+    'no-trailing-spaces': 'error'
   }
 };
