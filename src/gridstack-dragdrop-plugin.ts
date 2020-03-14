@@ -7,10 +7,10 @@
 */
 
 import { GridStack } from './gridstack';
-import { GridStackElement } from './types';
+import { GridItemHTMLElement } from './types';
 
 /** drag&drop options currently called from the main code, but others can be passed in grid options */
-export type DDOpts = 'enable' | 'disable' | 'option' | {} | any;
+export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | {} | any;
 export type DDKey = 'minWidth' | 'minHeight' | string;
 
 /**
@@ -28,23 +28,23 @@ export class GridStackDragDropPlugin {
     this.grid = grid;
   }
 
-  public resizable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+  public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     return this;
   }
 
-  public draggable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+  public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     return this;
   }
 
-  public droppable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+  public droppable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     return this;
   }
 
-  public isDroppable(el: GridStackElement): boolean {
+  public isDroppable(el: GridItemHTMLElement): boolean {
     return false;
   }
 
-  public on(el: GridStackElement, eventName: string, callback): GridStackDragDropPlugin {
+  public on(el: GridItemHTMLElement, eventName: string, callback): GridStackDragDropPlugin {
     return this;
   }
 }

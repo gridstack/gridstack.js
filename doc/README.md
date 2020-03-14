@@ -373,7 +373,7 @@ Checks if specified area is empty.
 
 Locks/unlocks widget.
 
-- `el` - widget to modify.
+- `el` - widget or selector to modify.
 - `val` - if `true` widget will be locked.
 
 ### makeWidget(el)
