@@ -8,13 +8,6 @@
 
   <link rel="stylesheet" href="demo.css"/>
   <script src="../dist/gridstack.all.js"></script>
-  <!--
-  <script src="../src/jquery.js"></script>
-  <script src="../src/gridstack.js"></script>
-  <script src="../src/jquery-ui.js"></script>
-  <script src="../src/gridstack.jQueryUI.js"></script>
-  -->
-  </style>
 </head>
 <body>
   <div class="container-fluid">
@@ -30,6 +23,12 @@
 
   <script type="text/javascript">
     var grid = GridStack.init({float: true});
+    
+    grid.on('added removed change', function(e, items) {
+      var str = '';
+      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+      console.log(e.type + ' ' + items.length + ' items:' + str );
+    });
 
     var items = [
       {x: 2, y: 1, width: 1, height: 2},

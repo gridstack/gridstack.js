@@ -1270,11 +1270,10 @@ describe('gridstack', function() {
         verticalMargin: 10
       };
       var grid = GridStack.init(options);
-      var items = $('.grid-stack-item');
-      for (var i = 0; i < items.length; i++) {
-        grid.locked(items[i], true);
-        expect($(items[i]).attr('data-gs-locked')).toBe('yes');
-      }
+      grid.locked('.grid-stack-item', true);
+      $('.grid-stack-item').each(function (i,item) {
+        expect($(item).attr('data-gs-locked')).toBe('yes');
+      })
     });
     it('should unlock widgets', function() {
       var options = {
@@ -1282,11 +1281,10 @@ describe('gridstack', function() {
         verticalMargin: 10
       };
       var grid = GridStack.init(options);
-      var items = $('.grid-stack-item');
-      for (var i = 0; i < items.length; i++) {
-        grid.locked(items[i], false);
-        expect($(items[i]).attr('data-gs-locked')).toBe(undefined);
-      }
+      grid.locked('.grid-stack-item', false);
+      $('.grid-stack-item').each(function (i,item) {
+        expect($(item).attr('data-gs-locked')).toBe(undefined);
+      })
     });
   });
 

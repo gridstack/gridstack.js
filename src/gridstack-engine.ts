@@ -72,15 +72,15 @@ export class GridStackEngine {
     this._sortNodes(-1);
 
     let nn = node;
-    const hasLocked = Boolean(this.nodes.find(function(n) { return n.locked; }));
+    let hasLocked = Boolean(this.nodes.find(function(n) { return n.locked; }));
     if (!this.float && !hasLocked) {
       nn = {x: 0, y: node.y, width: this.column, height: node.height};
     }
     while (true) {
-      const array1 = [5, 12, 8, 130, 44];
-      const found = array1.find(element => element > 10);
+      let array1 = [5, 12, 8, 130, 44];
+      let found = array1.find(element => element > 10);
 
-      const collisionNode = this.nodes.find( n => n !== node && Utils.isIntercepted(n, nn), {node: node, nn: nn});
+      let collisionNode = this.nodes.find( n => n !== node && Utils.isIntercepted(n, nn), {node: node, nn: nn});
       if (!collisionNode) { return; }
       this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
         collisionNode.width, collisionNode.height, true);
@@ -88,8 +88,8 @@ export class GridStackEngine {
   };
 
   public isAreaEmpty(x: number, y: number, width: number, height: number) {
-    const nn = {x: x || 0, y: y || 0, width: width || 1, height: height || 1};
-    const collisionNode = this.nodes.find(function(n) {
+    let nn = {x: x || 0, y: y || 0, width: width || 1, height: height || 1};
+    let collisionNode = this.nodes.find(function(n) {
       return Utils.isIntercepted(n, nn);
     });
     return !collisionNode;
@@ -100,7 +100,7 @@ export class GridStackEngine {
     if (this.nodes.length === 0) { return; }
     this.batchUpdate();
     this._sortNodes();
-    const copyNodes = this.nodes;
+    let copyNodes = this.nodes;
     this.nodes = []; // pretend we have no nodes to conflict layout to start with...
     copyNodes.forEach(node => {
       if (!node.noMove && !node.locked) {
@@ -141,8 +141,8 @@ export class GridStackEngine {
         }
         let newY = n.y;
         while (newY >= n._packY) {
-          const box = {x: n.x, y: newY, width: n.width, height: n.height};
-          const collisionNode = this.nodes
+          let box = {x: n.x, y: newY, width: n.width, height: n.height};
+          let collisionNode = this.nodes
             .slice(0, i)
             .find(bn => Utils.isIntercepted(box, bn), {n: n, newY: newY});
           if (!collisionNode) {
@@ -156,11 +156,11 @@ export class GridStackEngine {
       this.nodes.forEach((n, i) => {
         if (n.locked) { return; }
         while (n.y > 0) {
-          const newY = n.y - 1;
+          let newY = n.y - 1;
           let canBeMoved = i === 0;
-          const box = {x: n.x, y: newY, width: n.width, height: n.height};
+          let box = {x: n.x, y: newY, width: n.width, height: n.height};
           if (i > 0) {
-            const collisionNode = this.nodes
+            let collisionNode = this.nodes
               .slice(0, i)
               .find(bn => Utils.isIntercepted(box, bn), {n: n, newY: newY});
             canBeMoved = collisionNode === undefined;
@@ -185,7 +185,7 @@ export class GridStackEngine {
     }
 
     // assign defaults for missing required fields
-    const defaults = {width: 1, height: 1, x: 0, y: 0};
+    let defaults = {width: 1, height: 1, x: 0, y: 0};
     node = Utils.defaults(node, defaults);
 
     // convert any strings over
@@ -237,7 +237,7 @@ export class GridStackEngine {
   public getDirtyNodes(verify?: boolean) {
     // compare original X,Y,W,H (or entire node?) instead as _dirty can be a temporary state
     if (verify) {
-      const dirtNodes = [];
+      let dirtNodes = [];
       this.nodes.forEach(function (n) {
         if (n._dirty) {
           if (n.y === n._origY && n.x === n._origX && n.width === n._origW && n.height === n._origH) {
@@ -257,7 +257,7 @@ export class GridStackEngine {
     if (this.batchMode) { return; }
     detachNode = (detachNode === undefined ? true : detachNode);
     nodes = (nodes === undefined ? [] : (Array.isArray(nodes) ? nodes : [nodes]) );
-    const dirtyNodes = nodes.concat(this.getDirtyNodes());
+    let dirtyNodes = nodes.concat(this.getDirtyNodes());
     this.onchange(dirtyNodes, detachNode);
   };
 
@@ -280,12 +280,12 @@ export class GridStackEngine {
       this._sortNodes();
 
       for (var i = 0;; ++i) {
-        const x = i % this.column;
-        const y = Math.floor(i / this.column);
+        let x = i % this.column;
+        let y = Math.floor(i / this.column);
         if (x + node.width > this.column) {
           continue;
         }
-        const box = {x: x, y: y, width: node.width, height: node.height};
+        let box = {x: x, y: y, width: node.width, height: node.height};
         if (!this.nodes.find(n => Utils.isIntercepted(box, n), {x: x, y: y, node: node})) {
           node.x = x;
           node.y = y;
@@ -329,14 +329,14 @@ export class GridStackEngine {
     if (!this.isNodeChangedPosition(node, x, y, width, height)) {
       return false;
     }
-    const hasLocked = Boolean(this.nodes.find(function(n) { return n.locked; }));
+    let hasLocked = Boolean(this.nodes.find(function(n) { return n.locked; }));
 
     if (!this.maxRow && !hasLocked) {
       return true;
     }
 
     let clonedNode;
-    const clone = new GridStackEngine(
+    let clone = new GridStackEngine(
       this.column,
       null,
       this.float,
@@ -371,7 +371,7 @@ export class GridStackEngine {
       return true;
     }
 
-    const clone = new GridStackEngine(
+    let clone = new GridStackEngine(
       this.column,
       null,
       this.float,
@@ -387,10 +387,10 @@ export class GridStackEngine {
     if (typeof width !== 'number') { width = node.width; }
     if (typeof height !== 'number') { height = node.height; }
 
-    if (node.maxWidth !== undefined) { width = Math.min(width, node.maxWidth); }
-    if (node.maxHeight !== undefined) { height = Math.min(height, node.maxHeight); }
-    if (node.minWidth !== undefined) { width = Math.max(width, node.minWidth); }
-    if (node.minHeight !== undefined) { height = Math.max(height, node.minHeight); }
+    if (node.maxWidth) { width = Math.min(width, node.maxWidth); }
+    if (node.maxHeight) { height = Math.min(height, node.maxHeight); }
+    if (node.minWidth) { width = Math.max(width, node.minWidth); }
+    if (node.minHeight) { height = Math.max(height, node.minHeight); }
 
     if (node.x === x && node.y === y && node.width === width && node.height === height) {
       return false;
@@ -404,16 +404,16 @@ export class GridStackEngine {
     if (typeof width !== 'number') { width = node.width; }
     if (typeof height !== 'number') { height = node.height; }
 
-    if (node.maxWidth !== undefined) { width = Math.min(width, node.maxWidth); }
-    if (node.maxHeight !== undefined) { height = Math.min(height, node.maxHeight); }
-    if (node.minWidth !== undefined) { width = Math.max(width, node.minWidth); }
-    if (node.minHeight !== undefined) { height = Math.max(height, node.minHeight); }
+    if (node.maxWidth) { width = Math.min(width, node.maxWidth); }
+    if (node.maxHeight) { height = Math.min(height, node.maxHeight); }
+    if (node.minWidth) { width = Math.max(width, node.minWidth); }
+    if (node.minHeight) { height = Math.max(height, node.minHeight); }
 
     if (node.x === x && node.y === y && node.width === width && node.height === height) {
       return node;
     }
 
-    const resizing = node.width !== width;
+    let resizing = node.width !== width;
     node._dirty = true;
 
     node.x = x;
@@ -447,7 +447,7 @@ export class GridStackEngine {
   };
 
   public endUpdate() {
-    const n = this.nodes.find(function(n) { return n._updating; });
+    let n = this.nodes.find(function(n) { return n._updating; });
     if (n) {
       n._updating = false;
       this.nodes.forEach(function(n) { delete n._packY; });
@@ -467,9 +467,9 @@ export class GridStackEngine {
         // we save the original x,y,w (h isn't cached) to see what actually changed to propagate better.
         // Note: we don't need to check against out of bound scaling/moving as that will be done when using those cache values.
         nodes.forEach(function(node) {
-          const n = layout.find(function(l) { return l._id === node._id });
+          let n = layout.find(function(l) { return l._id === node._id });
           if (!n) return; // no cache for new nodes. Will use those values.
-          const ratio = column / this.column;
+          let ratio = column / this.column;
           // Y changed, push down same amount
           // TODO: detect doing item 'swaps' will help instead of move (especially in 1 column mode)
           if (node.y !== node._origY) {
@@ -502,7 +502,7 @@ export class GridStackEngine {
     if (!this.nodes.length || oldColumn === column) { return; }
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
-    const copy: layout[] = [];
+    let copy: layout[] = [];
     this.nodes.forEach(function(n, i) { copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id} }); // only thing we change is x,y,w and id to find it back
     this._layouts = this._layouts || []; // use array to find larger quick
     this._layouts[oldColumn] = copy;
@@ -523,14 +523,14 @@ export class GridStackEngine {
     // see if we have cached previous layout.
     let cacheNodes = this._layouts[column] || [];
     // if not AND we are going up in size start with the largest layout as down-scaling is more accurate
-    const lastIndex = this._layouts.length - 1;
+    let lastIndex = this._layouts.length - 1;
     if (cacheNodes.length === 0 && column > oldColumn && column < lastIndex) {
       cacheNodes = this._layouts[lastIndex] || [];
       if (cacheNodes.length) {
         // pretend we came from that larger column by assigning those values as starting point
         oldColumn = lastIndex;
         cacheNodes.forEach(function(cacheNode) {
-          const j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
+          let j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
           if (j !== -1) {
             // still current, use cache info positions
             nodes[j].x = cacheNode.x;
@@ -545,7 +545,7 @@ export class GridStackEngine {
     // if we found cache re-use those nodes that are still current
     let newNodes = [];
     cacheNodes.forEach(function(cacheNode) {
-      const j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
+      let j = nodes.findIndex(function(n) {return n && n._id === cacheNode._id});
       if (j !== -1) {
         // still current, use cache info positions
         nodes[j].x = cacheNode.x;
@@ -556,7 +556,7 @@ export class GridStackEngine {
       }
     });
     // ...and add any extra non-cached ones
-    const ratio = column / oldColumn;
+    let ratio = column / oldColumn;
     nodes.forEach(function(node) {
       if (!node) return;
       node.x = (column === 1 ? 0 : Math.round(node.x * ratio));

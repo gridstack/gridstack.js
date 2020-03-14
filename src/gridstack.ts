@@ -8,12 +8,14 @@
 
 import { GridStackEngine } from './gridstack-engine'
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils } from './utils';
-import { GridStackElement, GridItemHTMLElement, GridstackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
+import { GridItemHTMLElement, GridstackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
 import { GridStackDragDropPlugin } from './gridstack-dragdrop-plugin';
 
 // TODO: TEMPORARY until we remove all jquery calls
 // also see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
 import * as $ from './jquery.js';
+
+export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
 export interface GridHTMLElement extends HTMLElement {
   gridstack?: GridStack; // grid's parent DOM element points back to grid class
@@ -37,6 +39,25 @@ interface GridCSSStyleSheet extends CSSStyleSheet {
   _max?: number; // internal tracker of the max # of rows we created
 }
 
+function getElement(els: GridStackElement): GridItemHTMLElement {
+  return (typeof els === 'string' ? 
+    (document.querySelector(els) || document.querySelector('#' + els) || document.querySelector('.' + els)) : els);
+}
+function getElements(els: GridStackElement): GridItemHTMLElement[] {
+  return (typeof els === 'string' ? Array.from(
+    document.querySelectorAll(els) || document.querySelectorAll('#' + els) || document.querySelectorAll('.' + els)
+    ) : [els]);
+}
+function getGridElement(els: string | HTMLElement): GridHTMLElement {
+  return (typeof els === 'string' ? 
+    (document.querySelector(els) || document.querySelector('#' + els) || document.querySelector('.' + els)) : els);
+}
+function getGridElements(els: string | HTMLElement): GridHTMLElement[] {
+  return (typeof els === 'string' ? Array.from(
+    document.querySelectorAll(els) || document.querySelectorAll('#' + els) || document.querySelectorAll('.' + els)
+    ) : [els]);
+}
+
 /**
  * Main gridstack class - you will need to call `GridStack.init()` first to initialize your grid.
  * Note: your grid elements MUST have the following classes for the CSS layout to work:
@@ -49,21 +70,24 @@ interface GridCSSStyleSheet extends CSSStyleSheet {
  */
 export class GridStack {
 
+  /** scoping so users can call GridStack.Utils.sort() for example */
+  public static Utils = Utils;
+
   /**
    * initializing the HTML element, or selector string, into a grid will return the grid. Calling it again will
    * simply return the existing instance (ignore any passed options). There is also an initAll() version that support
    * multiple grids initialization at once.
    * @param options grid options (optional)
-   * @param elOrString element to convert to a grid (default to '.grid-stack' class selector)
+   * @param elOrString element or CSS selector (first one used) to convert to a grid (default to '.grid-stack' class selector)
    *
    * @example
-   * const grid = GridStack.init();
+   * let grid = GridStack.init();
    *
    * Note: the HTMLElement (of type GridHTMLElement) will store a `gridstack: GridStack` value that can be retrieve later
-   * const grid = document.querySelector('.grid-stack').gridstack;
+   * let grid = document.querySelector('.grid-stack').gridstack;
    */
   public static init(options?: GridstackOptions, elOrString: GridStackElement = '.grid-stack'): GridStack {
-    const el: GridHTMLElement = (typeof elOrString === 'string' ? document.querySelector(elOrString) : elOrString);
+    let el = getGridElement(elOrString);
     if (!el) {
       if (typeof elOrString === 'string') {
         console.error('gridstack.js: init() no grid was found. Did you forget class ' + elOrString + ' on your element ?');
@@ -82,15 +106,15 @@ export class GridStack {
   /**
    * Will initialize a list of elements (given a selector) and return an array of grids.
    * @param options grid options (optional)
-   * @param selector element to convert to grids (default to '.grid-stack' class selector)
+   * @param selector elements selector to convert to grids (default to '.grid-stack' class selector)
    *
    * @example
-   * const grids = GridStack.initAll();
+   * let grids = GridStack.initAll();
    * grids.forEach(...)
    */
   public static initAll(options?: GridstackOptions, selector = '.grid-stack'): GridStack[] {
-    const grids: GridStack[] = [];
-    document.querySelectorAll(selector).forEach((el: GridHTMLElement) => {
+    let grids: GridStack[] = [];
+    getGridElements(selector).forEach(el => {
       if (!el.gridstack) {
         el.gridstack = new GridStack(el, options);
       }
@@ -128,9 +152,10 @@ export class GridStack {
    * @param el
    * @param opts
    */
-  public constructor(el: GridHTMLElement, opts: GridstackOptions = {}) {
+  public constructor(el: GridHTMLElement, opts?: GridstackOptions) {
     this.el = el; // exposed HTML element to the user
     this.$el = $(el); // legacy code
+    opts = opts || {}; // handles null/undefined/0
 
     obsoleteOpts(opts, 'width', 'column', 'v0.5.3');
     obsoleteOpts(opts, 'height', 'maxRow', 'v0.5.3');
@@ -149,10 +174,10 @@ export class GridStack {
       delete opts.row;
     }
 
-    const rowAttr = Utils.toNumber(el.getAttribute('data-gs-row'));
+    let rowAttr = Utils.toNumber(el.getAttribute('data-gs-row'));
 
     // elements attributes override any passed options (like CSS style) - merge the two together
-    const defaults: GridstackOptions = {
+    let defaults: GridstackOptions = {
       column: Utils.toNumber(el.getAttribute('data-gs-column')) || 12,
       minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('data-gs-min-row')) || 0,
       maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('data-gs-max-row')) || 0,
@@ -238,9 +263,9 @@ export class GridStack {
       let maxHeight = 0;
       this.engine.nodes.forEach(n => { maxHeight = Math.max(maxHeight, n.y + n.height) });
       cbNodes.forEach(n => {
-        const el = n.el;
+        let el = n.el;
         if (detachNode && n._id === null) {
-          if (el) { el.parentNode.removeChild(el) }
+          if (el && el.parentNode) { el.parentNode.removeChild(el) }
         } else {
           this._writeAttrs(el, n.x, n.y, n.width, n.height);
         }
@@ -251,12 +276,12 @@ export class GridStack {
     this.opts.maxRow);
 
     if (this.opts.auto) {
-      const elements = [];
-      const _this = this;
+      let elements = [];
+      let _this = this;
       this.$el.children('.' + this.opts.itemClass + ':not(.' + this.opts.placeholderClass + ')')
         .each((index, el) => {
-          const x = parseInt(el.getAttribute('data-gs-x'));
-          const y = parseInt(el.getAttribute('data-gs-y'));
+          let x = parseInt(el.getAttribute('data-gs-x'));
+          let y = parseInt(el.getAttribute('data-gs-y'));
           elements.push({
             el: el,
             // if x,y are missing (autoPosition) add them to end of list - but keep their respective DOM order
@@ -272,12 +297,9 @@ export class GridStack {
     let placeholderChild = document.createElement('div');
     placeholderChild.className = 'placeholder-content';
     placeholderChild.innerHTML = this.opts.placeholderText;
-
-    let placeholder = document.createElement('div');
-    placeholder.classList.add(this.opts.placeholderClass, this.opts.itemClass);
-    placeholder.style.display = 'none'
-    placeholder.appendChild(placeholderChild);
-    this.placeholder = placeholder;
+    this.placeholder = document.createElement('div');
+    this.placeholder.classList.add(this.opts.placeholderClass, this.opts.itemClass);
+    this.placeholder.appendChild(placeholderChild);
 
     this._updateContainerHeight();
 
@@ -285,27 +307,27 @@ export class GridStack {
     this.onResizeHandler();
 
     if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
-      const trashZone = $(this.opts.removable);
+      let trashZone = $(this.opts.removable);
       if (!this.dd.isDroppable(trashZone)) {
         this.dd.droppable(trashZone, this.opts.removableOptions);
       }
       this.dd
         .on(trashZone, 'dropover', (event, ui) => {
-          const el = $(ui.draggable).get(0);
-          const node = el.gridstackNode;
+          let el: GridItemHTMLElement = ui.draggable.get(0);
+          let node = el.gridstackNode;
           if (!node || node._grid !== this) {
             return;
           }
-          el.dataset.inTrashZone = true;
+          el.dataset.inTrashZone = 'true';
           this._setupRemovingTimeout(el);
         })
         .on(trashZone, 'dropout', (event, ui) => {
-          const el = $(ui.draggable).get(0);
-          const node = el.gridstackNode;
+          let el: GridItemHTMLElement = ui.draggable.get(0);
+          let node = el.gridstackNode;
           if (!node || node._grid !== this) {
             return;
           }
-          el.dataset.inTrashZone = false;
+          el.dataset.inTrashZone = 'false';
           this._clearRemovingTimeout(el);
         });
     }
@@ -322,7 +344,7 @@ export class GridStack {
    * See also `makeWidget()`.
    *
    * @example
-   * const grid = GridStack.init();
+   * let grid = GridStack.init();
    * grid.addWidget(el, {width: 3, autoPosition: true});
    *
    * @param el widget to add
@@ -335,7 +357,7 @@ export class GridStack {
    * Legacy: Spelled out version of the widgets options, recommend use new version instead.
    *
    * @example
-   * const grid = GridStack.init();
+   * let grid = GridStack.init();
    * grid.addWidget(el, 0, 0, 3, 2, true);
    *
    * @param el widget to add
@@ -390,9 +412,9 @@ export class GridStack {
       return this.opts.cellHeight as number;
     }
     // compute the height taking margin into account (each row has margin other than last one)
-    const el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
-    const height = Utils.toNumber(el.getAttribute('data-gs-height'));
-    const verticalMargin = this.opts.verticalMargin as number;
+    let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
+    let height = Utils.toNumber(el.getAttribute('data-gs-height'));
+    let verticalMargin = this.opts.verticalMargin as number;
 
     return Math.round((el.offsetHeight - (height - 1) * verticalMargin) / height);
   }
@@ -409,7 +431,7 @@ export class GridStack {
    * grid.cellHeight(grid.cellWidth() * 1.2);
    */
   public cellHeight(val: numberOrString, noUpdate?: boolean): void {
-    const heightData = Utils.parseHeight(val);
+    let heightData = Utils.parseHeight(val);
     if (this.opts.cellHeightUnit === heightData.unit && this.opts.cellHeight === heightData.height) {
       return ;
     }
@@ -455,7 +477,7 @@ export class GridStack {
    */
   public column(column: number, doNotPropagate?: boolean) {
     if (this.opts.column === column) { return; }
-    const oldColumn = this.opts.column;
+    let oldColumn = this.opts.column;
 
     // if we go into 1 column mode (which happens if we're sized less than minWidth unless disableOneColumnMode is on)
     // then remember the original columns so we can restore.
@@ -476,7 +498,7 @@ export class GridStack {
     if (this.opts.oneColumnModeDomSort && column === 1) {
       domNodes = [];
       this.$el.children('.' + this.opts.itemClass).each((index, el: GridItemHTMLElement) => {
-        const node = el.gridstackNode;
+        let node = el.gridstackNode;
         if (node) { domNodes.push(node); }
       });
       if (!domNodes.length) { domNodes = undefined; }
@@ -498,11 +520,12 @@ export class GridStack {
    * Destroys a grid instance.
    * @param detachGrid if false nodes and grid will not be removed from the DOM (Optional. Default true).
    */
-  public destroy(detachGrid?: boolean): void {
+  public destroy(detachGrid = true): void {
     $(window).off('resize', this.onResizeHandler);
     this.disable();
-    if (detachGrid !== undefined && !detachGrid) {
+    if (!detachGrid) {
       this.removeAll(false);
+      this.el.classList.remove(this.opts._class);
       delete this.el.gridstack;
     } else {
       this.el.parentNode.removeChild(this.el);
@@ -593,14 +616,13 @@ export class GridStack {
    *
    * Returns an object with properties `x` and `y` i.e. the column and row in the grid.
    */
-  public getCellFromPixel(position: MousePosition, useOffset?: boolean): CellPosition {
-    const containerPos = (useOffset !== undefined && useOffset) ?
-      this.$el.offset() : this.$el.position();
-    const relativeLeft = position.left - containerPos.left;
-    const relativeTop = position.top - containerPos.top;
+  public getCellFromPixel(position: MousePosition, useOffset = false): CellPosition {
+    let containerPos = (useOffset ? this.$el.offset() : this.$el.position());
+    let relativeLeft = position.left - containerPos.left;
+    let relativeTop = position.top - containerPos.top;
 
-    const columnWidth = Math.floor(this.$el.width() / this.opts.column);
-    const rowHeight = Math.floor(this.$el.height() / parseInt(this.el.getAttribute('data-gs-current-row')));
+    let columnWidth = Math.floor(this.$el.width() / this.opts.column);
+    let rowHeight = Math.floor(this.$el.height() / parseInt(this.el.getAttribute('data-gs-current-row')));
 
     return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
   }
@@ -627,8 +649,8 @@ export class GridStack {
    * @param val if true widget will be locked.
    */
   public locked(els: GridStackElement, val: boolean): GridStack {
-    $(els).each((index, el) => {
-      const node = el.gridstackNode;
+    getElements(els).forEach(el => {
+      let node = el.gridstackNode;
       if (node!) return;
       node.locked = (val || false);
       if (node.locked) {
@@ -644,18 +666,15 @@ export class GridStack {
    * If you add elements to your grid by hand, you have to tell gridstack afterwards to make them widgets.
    * If you want gridstack to add the elements for you, use `addWidget()` instead.
    * Makes the given element a widget and returns it.
-   * @param el widget to convert.
+   * @param els widget or single selector to convert.
    *
    * @example
-   * const grid = GridStack.init();
+   * let grid = GridStack.init();
    * grid.el.appendChild('<div id="gsi-1" data-gs-width="3"></div>');
    * grid.makeWidget('gsi-1');
    */
-  public makeWidget(el: GridStackElement): HTMLElement {
-    if (typeof el === 'string') {
-      el = document.querySelector('#' + el) as HTMLElement;
-    }
-
+  public makeWidget(els: GridStackElement): HTMLElement {
+    let el = getElement(els);
     this._prepareElement(el, true);
     this._updateContainerHeight();
     this._triggerAddEvent();
@@ -666,13 +685,13 @@ export class GridStack {
 
   /**
    * Set the maxWidth for a widget.
-   * @param el widget to modify.
+   * @param els widget or selector to modify.
    * @param val A numeric value of the number of columns
    */
   public maxWidth(els: GridStackElement, val: number): GridStack {
     if (isNaN(val)) return;
-    $(els).each((index, el: GridItemHTMLElement) => {
-      const node = el.gridstackNode;
+    getElements(els).forEach(el => {
+      let node = el.gridstackNode;
       if (!node) { return; }
       node.maxWidth = (val || undefined);
       if (node.maxWidth) {
@@ -686,13 +705,13 @@ export class GridStack {
 
   /**
    * Set the minWidth for a widget.
-   * @param el widget to modify.
+   * @param els widget or selector to modify.
    * @param val A numeric value of the number of columns
    */
   public minWidth(els: GridStackElement, val: number): GridStack {
     if (isNaN(val)) return;
-    $(els).each((index, el: GridItemHTMLElement) => {
-      const node = el.gridstackNode;
+    getElements(els).forEach(el => {
+      let node = el.gridstackNode;
       if (!node) { return; }
       if (node.minWidth) {
         el.setAttribute('data-gs-min-width', String(val));
@@ -705,13 +724,13 @@ export class GridStack {
 
   /**
    * Set the maxHeight for a widget.
-   * @param el widget to modify.
+   * @param els widget or selector to modify.
    * @param val A numeric value of the number of rows
    */
   public maxHeight(els: GridStackElement, val: number): GridStack {
     if (isNaN(val)) return;
-    $(els).each((index, el: GridItemHTMLElement) => {
-      const node = el.gridstackNode;
+    getElements(els).forEach(el => {
+      let node = el.gridstackNode;
       if (!node) { return; }
       if (node.maxHeight) {
         el.setAttribute('data-gs-max-height', String(val));
@@ -724,13 +743,13 @@ export class GridStack {
 
   /**
    * Set the minHeight for a widget.
-   * @param el widget to modify.
+   * @param els widget or selector to modify.
    * @param val A numeric value of the number of rows
    */
   public minHeight(els: GridStackElement, val: number): GridStack {
     if (isNaN(val)) return;
-    $(els).each((index, el: GridItemHTMLElement) => {
-      const node = el.gridstackNode;
+    getElements(els).forEach(el => {
+      let node = el.gridstackNode;
       if (!node) { return; }
       if (node.minHeight) {
         el.setAttribute('data-gs-min-height', String(val));
@@ -743,12 +762,12 @@ export class GridStack {
 
   /**
    * Enables/Disables moving.
-   * @param el widget to modify.
+   * @param els widget or selector to modify.
    * @param val if true widget will be draggable.
    */
   public movable(els: GridStackElement, val: boolean): GridStack {
-    $(els).each((index, el: GridItemHTMLElement) => {
-      const node = el.gridstackNode;
+    getElements(els).forEach(el => {
+      let node = el.gridstackNode;
       if (!node) { return; }
       node.noMove = !(val || false);
       if (node.noMove) {
@@ -764,14 +783,14 @@ export class GridStack {
 
   /**
    * Changes widget position
-   * @param el  widget to modify
+   * @param els  widget or singular selector to modify
    * @param x new position x. If value is null or undefined it will be ignored.
    * @param y new position y. If value is null or undefined it will be ignored.
    */
-  public move(el: GridStackElement, x: number, y: number): void {
-    this._updateElement(el, (el, node) => {
-      x = (x !== null && x !== undefined) ? x : node.x;
-      y = (y !== null && y !== undefined) ? y : node.y;
+  public move(els: GridStackElement, x?: number, y?: number): void {
+    this._updateElement(els, (el, node) => {
+      x = (x !== undefined) ? x : node.x;
+      y = (y !== undefined) ? y : node.y;
 
       this.engine.moveNode(node, x, y, node.width, node.height);
     });
@@ -791,11 +810,19 @@ export class GridStack {
    *
    * Note: in some cases it is the same as calling native handler and parsing the event.
    * grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
+   *
    */
   public on(eventName: GridStackEvent, callback: (event: CustomEvent, arg2?: GridStackNode[] | Record<string, any>, arg3?: Record<string, any>) => void) {
+    // check for array of names being passed instead
+    if (eventName.indexOf(' ') !== -1) {
+      var names = eventName.split(' ') as GridStackEvent[];
+      names.forEach(name => this.on(name, callback));
+      return;
+    }
+
     if (eventName === 'change' || eventName === 'added' || eventName === 'removed' || eventName === 'enable' || eventName === 'disable') {
       // native CustomEvent handlers - cash the generic handlers so we can remove
-      const noData = (eventName === 'enable' || eventName === 'disable');
+      let noData = (eventName === 'enable' || eventName === 'disable');
       this._gsEventHandler = this._gsEventHandler || {};
       if (noData) {
         this._gsEventHandler[eventName] = (event) => callback(event);
@@ -814,6 +841,13 @@ export class GridStack {
    * @param eventName of the event (see possible values)
    */
   public off(eventName: GridStackEvent) {
+    // check for array of names being passed instead
+    if (eventName.indexOf(' ') !== -1) {
+      var names = eventName.split(' ') as GridStackEvent[];
+      names.forEach(name => this.off(name));
+      return;
+    }
+
     if (eventName === 'change' || eventName === 'added' || eventName === 'removed' || eventName === 'enable' || eventName === 'disable') {
       // remove native CustomEvent handlers
       if (this._gsEventHandler && this._gsEventHandler[eventName]) {
@@ -828,21 +862,24 @@ export class GridStack {
 
   /**
    * Removes widget from the grid.
-   * @param el  widget to modify
+   * @param el  widget or selector to modify
    * @param detachNode if false DOM node won't be removed from the tree (Default? true).
    */
-  public removeWidget(el: GridStackElement, detachNode?: boolean) {
-    const elItem = $(el).get(0) as GridItemHTMLElement;
-    detachNode = (detachNode === undefined ? true : detachNode);
-    let node = elItem.gridstackNode;
-    // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
-    if (!node) {
-      node = this.engine.nodes.find(n => el === n.el);
-    }
-    if (!node) return;
+  public removeWidget(els: GridStackElement, detachNode?: boolean) {
+    getElements(els).forEach(el => {
+      let node = el.gridstackNode;
+      // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
+      if (!node) {
+        node = this.engine.nodes.find(n => el === n.el);
+      }
+      if (!node) return;
 
-    delete elItem.gridstackNode;
-    this.engine.removeNode(node, detachNode);
+      // remove our DOM data (circular link) and drag&drop permanently
+      delete el.gridstackNode;
+      this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+
+      this.engine.removeNode(node, detachNode);
+    });
     this._triggerRemoveEvent();
     this._triggerChangeEvent();
   }
@@ -852,24 +889,25 @@ export class GridStack {
    * @param detachNode if false DOM nodes won't be removed from the tree (Default? true).
    */
   public removeAll(detachNode?: boolean) {
-    if (detachNode !== false) {
-      // remove our data structure before list gets emptied and DOM elements stay behind
-      this.engine.nodes.forEach(n => delete n.el.gridstackNode);
-    }
+    // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
+    this.engine.nodes.forEach(n => {
+      delete n.el.gridstackNode;
+      this.dd.draggable(n.el, 'destroy').resizable(n.el, 'destroy');
+    });
     this.engine.removeAll(detachNode);
     this._triggerRemoveEvent();
   }
 
   /**
    * Changes widget size
-   * @param el  widget to modify
+   * @param els  widget or singular selector to modify
    * @param width new dimensions width. If value is null or undefined it will be ignored.
    * @param height  new dimensions height. If value is null or undefined it will be ignored.
    */
-  public resize(el: GridStackElement, width: number, height: number): void {
-    this._updateElement(el, (el, node) => {
-      width = (width !== null && width !== undefined) ? width : node.width;
-      height = (height !== null && height !== undefined) ? height : node.height;
+  public resize(els: GridStackElement, width?: number, height?: number): void {
+    this._updateElement(els, (el, node) => {
+      width = (width || node.width);
+      height = (height || node.height);
 
       this.engine.moveNode(node, node.x, node.y, width, height);
     });
@@ -877,12 +915,12 @@ export class GridStack {
 
   /**
    * Enables/Disables resizing.
-   * @param el  widget to modify
+   * @param els  widget or selector to modify
    * @param val  if true widget will be resizable.
    */
   public resizable(els: GridStackElement, val: boolean): GridStack {
-    $(els).each((index, el: GridItemHTMLElement) => {
-      const node = el.gridstackNode;
+    getElements(els).forEach(el => {
+      let node = el.gridstackNode;
       if (!node) { return; }
       node.noResize = !(val || false);
       if (node.noResize) {
@@ -919,18 +957,18 @@ export class GridStack {
 
   /**
    * Updates widget position/size.
-   * @param el widget to modify
+   * @param els  widget or singular selector to modify
    * @param x new position x. If value is null or undefined it will be ignored.
    * @param y new position y. If value is null or undefined it will be ignored.
    * @param width new dimensions width. If value is null or undefined it will be ignored.
    * @param height  new dimensions height. If value is null or undefined it will be ignored.
    */
-  public update(el: GridStackElement, x: number, y: number, width: number, height: number): void {
-    this._updateElement(el, (el, node) => {
-      x = (x !== null && x !== undefined) ? x : node.x;
-      y = (y !== null && y !== undefined) ? y : node.y;
-      width = (width !== null && width !== undefined) ? width : node.width;
-      height = (height !== null && height !== undefined) ? height : node.height;
+  public update(els: GridStackElement, x?: number, y?: number, width?: number, height?: number): void {
+    this._updateElement(els, (el, node) => {
+      x = (x !== undefined) ? x : node.x;
+      y = (y !== undefined) ? y : node.y;
+      width = (width || node.width);
+      height = (height || node.height);
 
       this.engine.moveNode(node, x, y, width, height);
     });
@@ -943,7 +981,7 @@ export class GridStack {
    * @param noUpdate (optional) if true, styles will not be updated
    */
   public verticalMargin(value: numberOrString, noUpdate?: boolean): void {
-    const heightData = Utils.parseHeight(value);
+    let heightData = Utils.parseHeight(value);
 
     if (this.opts.verticalMarginUnit === heightData.unit && this.opts.maxRow === heightData.height) {
       return ;
@@ -979,13 +1017,13 @@ export class GridStack {
    * }
    */
   public willItFit(x: number, y: number, width: number, height: number, autoPosition: boolean): boolean {
-    const node = {x: x, y: y, width: width, height: height, autoPosition: autoPosition};
+    let node = {x: x, y: y, width: width, height: height, autoPosition: autoPosition};
     return this.engine.canBePlacedWithRespectToHeight(node);
   }
 
   private _triggerChangeEvent(skipLayoutChange?: boolean): void {
     if (this.engine.batchMode) { return; }
-    const elements = this.engine.getDirtyNodes(true); // verify they really changed
+    let elements = this.engine.getDirtyNodes(true); // verify they really changed
     if (elements && elements.length) {
       if (!skipLayoutChange) {
         this.engine._layoutsNodesChange(elements);
@@ -1015,7 +1053,7 @@ export class GridStack {
   }
 
   private _triggerEvent(name: string, data?: any) {
-    const event = data ? new CustomEvent(name, {bubbles: false, detail: data}) : new Event(name);
+    let event = data ? new CustomEvent(name, {bubbles: false, detail: data}) : new Event(name);
     this.el.dispatchEvent(event);
   }
 
@@ -1025,7 +1063,7 @@ export class GridStack {
     }
     this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
     // insert style to parent (instead of 'head') to support WebComponent
-    const parent = this.el.parentNode as HTMLElement;
+    let parent = this.el.parentNode as HTMLElement;
     this._styles = Utils.createStylesheet(this._stylesId, parent);
     if (this._styles !== null) {
       this._styles._max = 0;
@@ -1037,7 +1075,7 @@ export class GridStack {
       return;
     }
 
-    const prefix = '.' + this.opts._class + ' .' + this.opts.itemClass;
+    let prefix = '.' + this.opts._class + ' .' + this.opts.itemClass;
     let getHeight;
 
     if (maxHeight === undefined) {
@@ -1052,8 +1090,8 @@ export class GridStack {
     if (this._styles._max !== 0 && maxHeight <= this._styles._max) { // Keep it increasing
       return ;
     }
-    const height = this.opts.cellHeight as number;
-    const margin = this.opts.verticalMargin as number;
+    let height = this.opts.cellHeight as number;
+    let margin = this.opts.verticalMargin as number;
 
     if (!this.opts.verticalMargin || this.opts.cellHeightUnit === this.opts.verticalMarginUnit) {
       getHeight = (nbRows, nbMargins) => {
@@ -1107,31 +1145,34 @@ export class GridStack {
       row = this.opts.minRow;
     }
     // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
-    const cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
+    let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
     if (cssMinHeight > 0) {
-      const verticalMargin = this.opts.verticalMargin as number;
-      const minRow =  Math.round((cssMinHeight + verticalMargin) / (this.getCellHeight() + verticalMargin));
+      let verticalMargin = this.opts.verticalMargin as number;
+      let minRow =  Math.round((cssMinHeight + verticalMargin) / (this.getCellHeight() + verticalMargin));
       if (row < minRow) {
         row = minRow;
       }
     }
     this.el.setAttribute('data-gs-current-row', String(row));
-    if (!this.opts.cellHeight) {
-      return ;
+    if (row === 0) {
+      this.el.style.removeProperty('height');
+      return;
     }
-    if (!this.opts.verticalMargin) {
-      this.el.style['height'] = (row * (this.opts.cellHeight as number)) + this.opts.cellHeightUnit;
-    } else if (this.opts.cellHeightUnit === this.opts.verticalMarginUnit) {
-      this.el.style['height'] = (row * ((this.opts.cellHeight as number) + (this.opts.verticalMargin as number)) -
-        (this.opts.verticalMargin as number)) + this.opts.cellHeightUnit;
+    let cellHeight = this.opts.cellHeight as number;
+    let vMargin = this.opts.verticalMargin as number;
+    let unit = this.opts.cellHeightUnit;
+    if (!cellHeight) {  return }
+
+    if (unit === this.opts.verticalMarginUnit) {
+      this.el.style.height = (row * (cellHeight + vMargin) - vMargin) + unit;
     } else {
-      this.el.style['height'] = 'calc(' + ((row * (this.opts.cellHeight as number)) + this.opts.cellHeightUnit) +
-        ' + ' + ((row * ((this.opts.verticalMargin as number) - 1)) + this.opts.verticalMarginUnit) + ')';
+      this.el.style.height = 'calc(' + (row * cellHeight) + unit +
+        ' + ' + (row * (vMargin - 1) + this.opts.verticalMarginUnit) + ')';
     }
   }
 
   private _setupRemovingTimeout(el: GridItemHTMLElement) {
-    const node = el.gridstackNode;
+    let node = el.gridstackNode;
     if (node._removeTimeout || !this.opts.removable) { return; }
     node._removeTimeout = setTimeout(() => {
       el.classList.add('grid-stack-item-removing');
@@ -1140,7 +1181,7 @@ export class GridStack {
   }
 
   private _clearRemovingTimeout(el: GridItemHTMLElement) {
-    const node = el.gridstackNode;
+    let node = el.gridstackNode;
     if (!node._removeTimeout) { return; }
     clearTimeout(node._removeTimeout);
     node._removeTimeout = null;
@@ -1155,41 +1196,39 @@ export class GridStack {
     // variables used/cashed between the 3 start/move/end methods, in addition to node passed above
     let cellWidth;
     let cellFullHeight; // internal cellHeight + v-margin
-    const self = this;
 
     /** called when item starts moving/resizing */
-    const onStartMoving = function(event, ui) {
-      self.el.append(self.placeholder);
-      self.engine.cleanNodes();
-      self.engine.beginUpdate(node);
-      cellWidth = self.cellWidth();
-      const strictCellHeight = self.getCellHeight(); // heigh without v-margin
+    let onStartMoving = (event, ui) => {
+      this.engine.cleanNodes();
+      this.engine.beginUpdate(node);
+      cellWidth = this.cellWidth();
+      let strictCellHeight = this.getCellHeight(); // heigh without v-margin
       // compute height with v-margin (Note: we add 1 margin as last row is missing it)
-      cellFullHeight = (self.$el.height() + self.getVerticalMargin()) / parseInt(self.el.getAttribute('data-gs-current-row'));
+      cellFullHeight = (this.$el.height() + this.getVerticalMargin()) / parseInt(this.el.getAttribute('data-gs-current-row'));
 
       let { target } = event;
 
-      self.placeholder.setAttribute('data-gs-x', target.getAttribute('data-gs-x'));
-      self.placeholder.setAttribute('data-gs-y', target.getAttribute('data-gs-y'));
-      self.placeholder.setAttribute('data-gs-width', target.getAttribute('data-gs-width'));
-      self.placeholder.setAttribute('data-gs-height', target.getAttribute('data-gs-height'));
-      self.placeholder.style.display = '';
+      this.placeholder.setAttribute('data-gs-x', target.getAttribute('data-gs-x'));
+      this.placeholder.setAttribute('data-gs-y', target.getAttribute('data-gs-y'));
+      this.placeholder.setAttribute('data-gs-width', target.getAttribute('data-gs-width'));
+      this.placeholder.setAttribute('data-gs-height', target.getAttribute('data-gs-height'));
+      this.el.append(this.placeholder);
 
-      node.el = self.placeholder;
+      node.el = this.placeholder;
       node._beforeDragX = node.x;
       node._beforeDragY = node.y;
       node._prevYPix = ui.position.top;
-      const minHeight = (node.minHeight || 1);
-      const verticalMargin = self.opts.verticalMargin as number;
+      let minHeight = (node.minHeight || 1);
+      let verticalMargin = this.opts.verticalMargin as number;
 
       // mineHeight - Each row is cellHeight + verticalMargin, until last one which has no margin below
-      self.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
-      self.dd.resizable(el, 'option', 'minHeight', (strictCellHeight * minHeight) + (minHeight - 1) * verticalMargin);
+      this.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
+      this.dd.resizable(el, 'option', 'minHeight', (strictCellHeight * minHeight) + (minHeight - 1) * verticalMargin);
 
       if (event.type === 'resizestart') {
-        const itemElement = target.querySelector('.grid-stack-item') as HTMLElement;
+        let itemElement = target.querySelector('.grid-stack-item') as HTMLElement;
         if (itemElement) {
-          const ev = document.createEvent('HTMLEvents');
+          let ev = document.createEvent('HTMLEvents');
           ev.initEvent('resizestart', true, false);
           itemElement.dispatchEvent(event);
         }
@@ -1197,56 +1236,54 @@ export class GridStack {
     }
 
     /** called when item is being dragged/resized */
-    const dragOrResize = function(event, ui) {
+    let dragOrResize = (event, ui) => {
       let x = Math.round(ui.position.left / cellWidth);
       let y = Math.floor((ui.position.top + cellFullHeight / 2) / cellFullHeight);
       let width;
       let height;
 
       if (event.type === 'drag') {
-        const distance = ui.position.top - node._prevYPix;
+        let distance = ui.position.top - node._prevYPix;
         node._prevYPix = ui.position.top;
         Utils.updateScrollPosition(el, ui, distance);
-        if (el.dataset.inTrashZone || x < 0 || x >= self.engine.column || y < 0 ||
-          (!self.engine.float && y > self.engine.getRow())) {
+        if (el.dataset.inTrashZone || x < 0 || x >= this.engine.column || y < 0 ||
+          (!this.engine.float && y > this.engine.getRow())) {
           if (!node._temporaryRemoved) {
-            if (self.opts.removable === true) {
-              self._setupRemovingTimeout(el);
+            if (this.opts.removable === true) {
+              this._setupRemovingTimeout(el);
             }
 
             x = node._beforeDragX;
             y = node._beforeDragY;
 
-            $(self.placeholder).detach();
-            self.placeholder.style.display = 'none';
-            self.engine.removeNode(node);
-            self._updateContainerHeight();
+            if (this.placeholder.parentNode === this.el) { this.el.removeChild(this.placeholder) }
+            this.engine.removeNode(node);
+            this._updateContainerHeight();
 
             node._temporaryRemoved = true;
           } else {
             return;
           }
         } else {
-          self._clearRemovingTimeout(el);
+          this._clearRemovingTimeout(el);
 
           if (node._temporaryRemoved) {
-            self.engine.addNode(node);
-            this._writeAttrs(self.placeholder, x, y, width, height);
-            self.placeholder.style.display = '';
-            self.el.appendChild(self.placeholder);
-            node.el = self.placeholder;
+            this.engine.addNode(node);
+            this._writeAttrs(this.placeholder, x, y, width, height);
+            this.el.appendChild(this.placeholder);
+            node.el = this.placeholder;
             node._temporaryRemoved = false;
           }
         }
       } else if (event.type === 'resize')  {
         if (x < 0) return;
         width = Math.round(ui.size.width / cellWidth);
-        height = Math.round((ui.size.height + self.getVerticalMargin()) / cellFullHeight);
+        height = Math.round((ui.size.height + this.getVerticalMargin()) / cellFullHeight);
       }
       // width and height are undefined if not resizing
-      const _lastTriedWidth = width !== undefined ? width : node._lastTriedWidth;
-      const _lastTriedHeight = height !== undefined ? height : node._lastTriedHeight;
-      if (!self.engine.canMoveNode(node, x, y, width, height) ||
+      let _lastTriedWidth = (width || node._lastTriedWidth);
+      let _lastTriedHeight = (height || node._lastTriedHeight);
+      if (!this.engine.canMoveNode(node, x, y, width, height) ||
         (node._lastTriedX === x && node._lastTriedY === y &&
         node._lastTriedWidth === _lastTriedWidth && node._lastTriedHeight === _lastTriedHeight)) {
         return;
@@ -1255,8 +1292,8 @@ export class GridStack {
       node._lastTriedY = y;
       node._lastTriedWidth = width;
       node._lastTriedHeight = height;
-      self.engine.moveNode(node, x, y, width, height);
-      self._updateContainerHeight();
+      this.engine.moveNode(node, x, y, width, height);
+      this._updateContainerHeight();
 
       if (event.type === 'resize')  {
         $(event.target).trigger('gsresize', node);
@@ -1264,23 +1301,22 @@ export class GridStack {
     }
 
     /** called when the item stops moving/resizing */
-    const onEndMoving = function(event): void {
+    let onEndMoving = (event): void => {
       let { target } = event;
       if (!target.gridstackNode) {  return; }
 
-      // const forceNotify = false; what is the point of calling 'change' event with no data, when the 'removed' event is already called ?
-      $(self.placeholder).detach();
+      // let forceNotify = false; what is the point of calling 'change' event with no data, when the 'removed' event is already called ?
+      if (this.placeholder.parentNode === this.el) { this.el.removeChild(this.placeholder) }
       node.el = target;
-      self.placeholder.style.display = 'none';
 
       if (node._isAboutToRemove) {
         // forceNotify = true;
-        const gridToNotify = el.gridstackNode._grid;
+        let gridToNotify = el.gridstackNode._grid;
         gridToNotify._triggerRemoveEvent();
         delete el.gridstackNode;
         el.remove();
       } else {
-        self._clearRemovingTimeout(el);
+        this._clearRemovingTimeout(el);
         if (!node._temporaryRemoved) {
           Utils.removePositioningStyles(target);
           this._writeAttrs(target, node.x, node.y, node.width, node.height);
@@ -1290,14 +1326,14 @@ export class GridStack {
           node.x = node._beforeDragX;
           node.y = node._beforeDragY;
           node._temporaryRemoved = false;
-          self.engine.addNode(node);
+          this.engine.addNode(node);
         }
       }
 
-      self._updateContainerHeight();
-      self._triggerChangeEvent();
+      this._updateContainerHeight();
+      this._triggerChangeEvent();
 
-      self.engine.endUpdate();
+      this.engine.endUpdate();
 
       let nestedGrids = target.querySelectorAll('.grid-stack');
       if (nestedGrids.length && event.type === 'resizestop') {
@@ -1305,13 +1341,13 @@ export class GridStack {
           el.gridstack.onResizeHandler();
         });
 
-        self._triggerNativeEvent(target, '.grid-stack-item', 'resizestop');
-        self._triggerNativeEvent(target, '.grid-stack-item', 'gsresizestop');
+        this._triggerNativeEvent(target, '.grid-stack-item', 'resizestop');
+        this._triggerNativeEvent(target, '.grid-stack-item', 'gsresizestop');
       }
 
       if (event.type === 'resizestop') {
-        // self.$el.trigger('gsresizestop', o); TODO: missing target ?
-        self._triggerNativeEvent(self.el, null, 'gsresizestop');
+        // this.$el.trigger('gsresizestop', o); TODO: missing target ?
+        this._triggerNativeEvent(this.el, null, 'gsresizestop');
       }
     }
 
@@ -1361,10 +1397,10 @@ export class GridStack {
 
   /** call to write x,y,w,h attributes back to element */
   private _writeAttrs(el: HTMLElement, x?: number, y?: number, width?: number, height?: number): void {
-    if (x !== undefined) { el.setAttribute('data-gs-x', String(x)); }
-    if (y !== undefined) { el.setAttribute('data-gs-y', String(y)); }
-    if (width !== undefined) { el.setAttribute('data-gs-width', String(width)); }
-    if (height !== undefined) { el.setAttribute('data-gs-height', String(height)); }
+    if (x !== undefined && x !== null) { el.setAttribute('data-gs-x', String(x)); }
+    if (y !== undefined && y !== null) { el.setAttribute('data-gs-y', String(y)); }
+    if (width) { el.setAttribute('data-gs-width', String(width)); }
+    if (height) { el.setAttribute('data-gs-height', String(height)); }
   }
 
   /** call to write any default attributes back to element */
@@ -1377,10 +1413,10 @@ export class GridStack {
       el.removeAttribute('data-gs-auto-position');
     }
 
-    if (node.minWidth !== undefined) { el.setAttribute('data-gs-min-width', String(node.minWidth)); }
-    if (node.maxWidth !== undefined) { el.setAttribute('data-gs-max-width', String(node.maxWidth)); }
-    if (node.minHeight !== undefined) { el.setAttribute('data-gs-min-height', String(node.minHeight)); }
-    if (node.maxHeight !== undefined) { el.setAttribute('data-gs-max-height', String(node.maxHeight)); }
+    if (node.minWidth) { el.setAttribute('data-gs-min-width', String(node.minWidth)); }
+    if (node.maxWidth) { el.setAttribute('data-gs-max-width', String(node.maxWidth)); }
+    if (node.minHeight) { el.setAttribute('data-gs-min-height', String(node.minHeight)); }
+    if (node.maxHeight) { el.setAttribute('data-gs-max-height', String(node.maxHeight)); }
     if (node.noResize) {
       el.setAttribute('data-gs-no-resize', 'true');
     } else {
@@ -1399,8 +1435,8 @@ export class GridStack {
       el.removeAttribute('data-gs-locked');
     }
 
-    if (node.resizeHandles !== undefined) { el.setAttribute('data-gs-resize-handles', node.resizeHandles); }
-    if (node.id !== undefined) { el.setAttribute('data-gs-id', String(node.id)); }
+    if (node.resizeHandles) { el.setAttribute('data-gs-resize-handles', node.resizeHandles); }
+    if (node.id) { el.setAttribute('data-gs-id', String(node.id)); }
   }
 
   /** call to write any default attributes back to element */
@@ -1423,15 +1459,10 @@ export class GridStack {
     return node;
   }
 
-  private _updateElement(_el: GridStackElement, callback: (el:GridItemHTMLElement, node: GridStackNode) => void): void {
-    let el: GridItemHTMLElement;
-    if (typeof _el === 'string') {
-      el = document.querySelector('#'+_el) as GridItemHTMLElement;
-    } else {
-      el = _el;
-    }
+  private _updateElement(els: GridStackElement, callback: (el:GridItemHTMLElement, node: GridStackNode) => void): void {
+    let el = getElement(els);
     if (!el) { return; }
-    const node = el.gridstackNode;
+    let node = el.gridstackNode;
     if (!node) { return; }
 
     this.engine.cleanNodes();
@@ -1446,7 +1477,7 @@ export class GridStack {
   }
 
   private _setStaticClass() {
-    const staticClassName = 'grid-stack-static';
+    let staticClassName = 'grid-stack-static';
 
     if (this.opts.staticGrid === true) {
       this.el.classList.add(staticClassName);
@@ -1484,14 +1515,13 @@ export class GridStack {
 
     // vars used by the function callback
     let draggingElement: GridItemHTMLElement;
-    const self = this;
 
-    const onDrag = function(event, ui) {
-      const el = draggingElement;
-      const node = el.gridstackNode;
-      const pos = this.getCellFromPixel({left: event.pageX, top: event.pageY}, true);
-      const x = Math.max(0, pos.x);
-      const y = Math.max(0, pos.y);
+    let onDrag = (event, ui) => {
+      let el = draggingElement;
+      let node = el.gridstackNode;
+      let pos = this.getCellFromPixel({left: event.pageX, top: event.pageY}, true);
+      let x = Math.max(0, pos.x);
+      let y = Math.max(0, pos.y);
       if (!node._added) {
         node._added = true;
 
@@ -1503,60 +1533,60 @@ export class GridStack {
         this.engine.beginUpdate(node);
         this.engine.addNode(node);
 
-        this.el.appendChild(self.placeholder);
-        self._writeAttrs(self.placeholder, node.x, node.y, node.width, node.height);
-        self.placeholder.style.display = '';
-        node.el = self.placeholder;
+        this._writeAttrs(this.placeholder, node.x, node.y, node.width, node.height);
+        this.el.appendChild(this.placeholder);
+        node.el = this.placeholder;
         node._beforeDragX = node.x;
         node._beforeDragY = node.y;
 
-        self._updateContainerHeight();
+        this._updateContainerHeight();
       }
-      if (!self.engine.canMoveNode(node, x, y)) {
+      if (!this.engine.canMoveNode(node, x, y)) {
         return;
       }
-      self.engine.moveNode(node, x, y);
-      self._updateContainerHeight();
+      this.engine.moveNode(node, x, y);
+      this._updateContainerHeight();
     };
 
     this.dd
       .droppable(this.el, {
-        accept: (el: GridItemHTMLElement) => {
-          const node: GridStackNode = el.gridstackNode;
+        accept: ($el) => { // TODO: jquery
+          let el: GridItemHTMLElement = $el.get(0);
+          let node: GridStackNode = el.gridstackNode;
           if (node && node._grid === this) {
             return false;
           }
           if (typeof this.opts.acceptWidgets === 'function') {
             return this.opts.acceptWidgets(el);
           }
-          const selector = (this.opts.acceptWidgets === true ? '.grid-stack-item' : this.opts.acceptWidgets as string);
+          let selector = (this.opts.acceptWidgets === true ? '.grid-stack-item' : this.opts.acceptWidgets as string);
           return el.matches(selector);
         }
       })
       .on(this.el, 'dropover', (event, ui) => {
-        const el: GridItemHTMLElement = ui.draggable;
+        let el: GridItemHTMLElement = ui.draggable.get(0);
         let width, height;
 
         // see if we already have a node with widget/height and check for attributes
         let origNode: GridStackNode = el.gridstackNode;
         if (!origNode || !origNode.width || !origNode.height) {
-          const w = parseInt(el.getAttribute('data-gs-width'));
+          let w = parseInt(el.getAttribute('data-gs-width'));
           if (w > 0) { origNode = origNode || {}; origNode.width = w; }
-          const h = parseInt(el.getAttribute('data-gs-height'));
+          let h = parseInt(el.getAttribute('data-gs-height'));
           if (h > 0) { origNode = origNode || {}; origNode.height = h; }
         }
 
         // if not calculate the grid size based on element outer size
         // height: Each row is cellHeight + verticalMargin, until last one which has no margin below
-        const cellWidth = this.cellWidth();
-        const cellHeight = this.getCellHeight();
-        const verticalMargin = this.opts.verticalMargin as number;
+        let cellWidth = this.cellWidth();
+        let cellHeight = this.getCellHeight();
+        let verticalMargin = this.opts.verticalMargin as number;
         width = origNode && origNode.width ? origNode.width : Math.ceil(el.offsetWidth / cellWidth);
         height = origNode && origNode.height ? origNode.height : Math.round((el.offsetHeight + verticalMargin) / (cellHeight + verticalMargin));
 
         draggingElement = el;
 
-        const node = this.engine._prepareNode({width: width, height: height, _added: false, _temporary: true});
+        let node = this.engine._prepareNode({width: width, height: height, _added: false, _temporary: true});
         node._isOutOfGrid = true;
         el.gridstackNode = node;
         el._gridstackNodeOrig = origNode;
@@ -1567,38 +1597,44 @@ export class GridStack {
       .on(this.el, 'dropout', (event, ui) => {
         // jquery-ui bug. Must verify widget is being dropped out
         // check node variable that gets set when widget is out of grid
-        const el: GridItemHTMLElement = ui.draggable;
-        const node = el.gridstackNode;
+        let el: GridItemHTMLElement = ui.draggable.get(0);
+        let node = el.gridstackNode;
         if (!node || !node._isOutOfGrid) {
           return;
         }
         $(el).unbind('drag', onDrag);
         node.el = null;
         this.engine.removeNode(node);
-        $(this.placeholder).detach();
+        if (this.placeholder.parentNode === this.el) {
+          this.el.removeChild(this.placeholder);
+        }
         this._updateContainerHeight();
         el.gridstackNode = el._gridstackNodeOrig;
         return false; // prevent parent from receiving msg (which may be grid as well)
       })
       .on(this.el, 'drop', (event, ui) => {
-        $(this.placeholder).detach();
-
-        const node = $(ui.draggable).get(0).gridstackNode;
+        if (this.placeholder.parentNode === this.el) {
+          this.el.removeChild(this.placeholder);
+        }
+        let el: GridItemHTMLElement = ui.draggable.get(0);
+        let node: GridStackNode = el.gridstackNode;
         delete node._isOutOfGrid;
         node._grid = this;
-        const el = $(ui.draggable).clone(false);
-        el.get(0).gridstackNode = node;
-        const originalNode = $(ui.draggable).get(0)._gridstackNodeOrig;
-        if (originalNode !== undefined && originalNode._grid !== undefined) {
+
+        let $el = ui.draggable.clone(false);
+
+        el = $el.get(0);
+        el.gridstackNode = node;
+        let originalNode = (ui.draggable.get(0) as GridItemHTMLElement)._gridstackNodeOrig;
+        if (originalNode && originalNode._grid) {
           originalNode._grid._triggerRemoveEvent();
         }
         $(ui.helper).remove();
-        node.el = el.get(0);
-        this.placeholder.style.display = 'none';
+        node.el = el;
         Utils.removePositioningStyles(el);
-        el.find('div.ui-resizable-handle').remove();
+        $el.find('div.ui-resizable-handle').remove();
 
-        el
+        $el
           .attr('data-gs-x', node.x)
           .attr('data-gs-y', node.y)
           .attr('data-gs-width', node.width)
@@ -1616,9 +1652,9 @@ export class GridStack {
         this._triggerChangeEvent();
 
         this.engine.endUpdate();
-        $(ui.draggable).unbind('drag', onDrag);
-        delete $(ui.draggable).get(0).gridstackNode;
-        delete $(ui.draggable).get(0)._gridstackNodeOrig;
+        ui.draggable.unbind('drag', onDrag);
+        delete ui.draggable.get(0).gridstackNode;
+        delete ui.draggable.get(0)._gridstackNodeOrig;
         this.$el.trigger('dropped', [originalNode, node]);
         return false; // prevent parent from receiving msg (which may be grid as well)
       });

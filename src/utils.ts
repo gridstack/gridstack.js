@@ -10,7 +10,7 @@ import { GridstackWidget, GridStackNode, GridstackOptions, numberOrString } from
 
 /** checks for obsolete method names */
 export function obsolete(f, oldName: string, newName: string, rev: string) {
-  const wrapper = function() {
+  let wrapper = function() {
     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
     'with `' + newName + '`. It will be **completely** removed in v1.0');
     return f.apply(this, arguments);
@@ -37,7 +37,7 @@ export function obsoleteOptsDel(opts: GridstackOptions, oldName: string, rev: st
 
 /** checks for obsolete Jquery element attributes */
 export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string) {
-  const oldAttr = el.getAttribute(oldName);
+  let oldAttr = el.getAttribute(oldName);
   if (oldAttr !== null) {
     el.setAttribute(newName, oldAttr);
     console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
@@ -45,8 +45,7 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
   }
 }
 
-
-/**
+ /**
  * Utility methods
  */
 export class Utils {
@@ -64,7 +63,7 @@ export class Utils {
    **/
   static sort(nodes: GridStackNode[], dir?: number, column?: number): GridStackNode[] {
     if (!column) {
-      const widths = nodes.map(function (node) { return node.x + node.width; });
+      let widths = nodes.map(function (node) { return node.x + node.width; });
       column = Math.max.apply(Math, widths);
     }
 
@@ -75,7 +74,7 @@ export class Utils {
   }
 
   static createStylesheet(id: string, parent?: HTMLElement): CSSStyleSheet {
-    const style: HTMLStyleElement = document.createElement('style');
+    let style: HTMLStyleElement = document.createElement('style');
     style.setAttribute('type', 'text/css');
     style.setAttribute('data-gs-style-id', id);
     if ((style as any).styleSheet) { // ??? only CSSImportRule have that and different beast...
@@ -89,7 +88,7 @@ export class Utils {
   }
 
   static removeStylesheet(id: string) {
-    const el = document.querySelector('STYLE[data-gs-style-id=' + id + ']');
+    let el = document.querySelector('STYLE[data-gs-style-id=' + id + ']');
     if (!el) return;
     el.parentNode.removeChild(el);
   }
@@ -123,7 +122,7 @@ export class Utils {
     let height: number;
     let heightUnit = 'px';
     if (typeof val === 'string') {
-      const match = val.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw|%)?$/);
+      let match = val.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw|%)?$/);
       if (!match) {
         throw new Error('Invalid height');
       }
@@ -136,7 +135,7 @@ export class Utils {
   }
 
   static without(array, item) {
-    const index = array.indexOf(item);
+    let index = array.indexOf(item);
 
     if (index !== -1) {
       array = array.slice(0);
@@ -148,8 +147,8 @@ export class Utils {
 
   static sortBy(array, getter) {
     return array.slice(0).sort(function (left, right) {
-      const valueLeft = getter(left);
-      const valueRight = getter(right);
+      let valueLeft = getter(left);
+      let valueRight = getter(right);
 
       if (valueRight === valueLeft) {
         return 0;
@@ -160,7 +159,7 @@ export class Utils {
   }
 
   static defaults(target, arg1) {
-    const sources = Array.prototype.slice.call(arguments, 1);
+    let sources = Array.prototype.slice.call(arguments, 1);
 
     sources.forEach(function (source) {
       for (let prop in source) {
@@ -190,7 +189,7 @@ export class Utils {
   }
 
   static removePositioningStyles(el) {
-    const style = el.style;
+    let style = el.style;
     if (style.position) {
       style.removeProperty('position');
     }
@@ -222,19 +221,19 @@ export class Utils {
 
   static updateScrollPosition(el, ui, distance) {
     // is widget in view?
-    const rect = el.getBoundingClientRect();
-    const innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
+    let rect = el.getBoundingClientRect();
+    let innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
     if (rect.top < 0 ||
       rect.bottom > innerHeightOrClientHeight
     ) {
       // set scrollTop of first parent that scrolls
       // if parent is larger than el, set as low as possible
       // to get entire widget on screen
-      const offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
-      const offsetDiffUp = rect.top;
-      const scrollEl = this.getScrollParent(el);
+      let offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
+      let offsetDiffUp = rect.top;
+      let scrollEl = this.getScrollParent(el);
       if (scrollEl !== null) {
-        const prevScroll = scrollEl.scrollTop;
+        let prevScroll = scrollEl.scrollTop;
         if (rect.top < 0 && distance < 0) {
           // moving up
           if (el.offsetHeight > innerHeightOrClientHeight) {
@@ -256,3 +255,4 @@ export class Utils {
     }
   }
 }
+

@@ -2,26 +2,8 @@
   "compilerOptions": {
     /*
     "allowJs": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "inlineSources": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
-    "declaration": true,
-    "lib": [ "es6", "es2015", "dom" ],
-    "module": "es6",
-    "noImplicitAny": false,
-    "outDir": "./dist",
-    "sourceMap": true,
-    "strict": false,
-    "target": "es5",
-     */
-     /*
-     "outDir": "./dist/",
-     "noImplicitAny": false,
-     "module": "commonjs",
-     "target": "es5",
-     "allowJs": true
    */
     "declaration": true,
     "emitDecoratorMetadata": true,

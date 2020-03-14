@@ -8,7 +8,7 @@
 
 import { GridStack } from './gridstack';
 import { GridStackDragDropPlugin, DDOpts, DDKey } from './gridstack-dragdrop-plugin';
-import { GridStackElement } from './types';
+import { GridItemHTMLElement } from './types';
 
 // TODO: TEMPORARY until can remove jquery-ui drag&drop and this class and use HTML5 instead !
 // see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
@@ -23,14 +23,14 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
     super(grid);
   }
 
-  public resizable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
-    const $el = $(el);
-    if (opts === 'disable' || opts === 'enable') {
+  public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+    let $el = $(el);
+    if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
         $el.resizable(opts);
     } else if (opts === 'option') {
       $el.resizable(opts, key, value);
     } else {
-      const handles = $el.data('gs-resize-handles') ? $el.data('gs-resize-handles') : this.grid.opts.resizable.handles;
+      let handles = $el.data('gs-resize-handles') ? $el.data('gs-resize-handles') : this.grid.opts.resizable.handles;
       $el.resizable({...this.grid.opts.resizable, ...{handles: handles}, ...{ // was using $.extend()
         start: opts.start || function() {},
         stop: opts.stop || function() {},
@@ -40,9 +40,9 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
     return this;
   }
 
-  public draggable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
-    const $el = $(el);
-    if (opts === 'disable' || opts === 'enable') {
+  public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+    let $el = $(el);
+    if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
       $el.draggable(opts);
     } else {
       $el.draggable({...this.grid.opts.draggable, ...{ // was using $.extend()
@@ -56,18 +56,18 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
     return this;
   }
 
-  public droppable(el: GridStackElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
-    const $el = $(el);
+  public droppable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+    let $el = $(el);
     $el.droppable(opts);
     return this;
   }
 
-  public isDroppable(el: GridStackElement): boolean {
-    const $el = $(el);
+  public isDroppable(el: GridItemHTMLElement): boolean {
+    let $el = $(el);
     return Boolean($el.data('droppable'));
   }
 
-  public on(el: GridStackElement, eventName: string, callback): GridStackDragDropPlugin {
+  public on(el: GridItemHTMLElement, eventName: string, callback): GridStackDragDropPlugin {
     $(el).on(eventName, callback);
     return this;
   }

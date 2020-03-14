@@ -35,7 +35,8 @@ Change log
 ## 1.1.0-dev (upcoming)
 
 - fix [1187](https://github.com/gridstack/gridstack.js/issues/1187) IE support for `CustomEvent` polyfill - thanks [@phil-blais](https://github.com/phil-blais)
-- include SASS source files to npm package again [1193](https://github.com/gridstack/gridstack.js/pull/1193)
+- fix [1204](https://github.com/gridstack/gridstack.js/issues/1204) destroy drag&drop when removing node(s) instead of just disabling it.
+- include SASS source files to npm package again [1193](https://github.com/gridstack/gridstack.js/pull/1193)	- include SASS source files to npm package again [1193](https://github.com/gridstack/gridstack.js/pull/1193)
 
 ## 1.1.0 (2020-02-29)
 

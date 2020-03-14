@@ -9,7 +9,6 @@
 import { GridStack } from './gridstack';
 
 export type numberOrString = number | string;
-export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 export interface GridItemHTMLElement extends HTMLElement {
   gridstackNode?: GridStackNode; // grid items point back to node
   /** @internal */
