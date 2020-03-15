@@ -24,51 +24,54 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
   }
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
-    let $el = $(el);
+    let $el: JQuery = $(el);
     if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
-        $el.resizable(opts);
+      $el.resizable(opts);
     } else if (opts === 'option') {
       $el.resizable(opts, key, value);
     } else {
       let handles = $el.data('gs-resize-handles') ? $el.data('gs-resize-handles') : this.grid.opts.resizable.handles;
       $el.resizable({...this.grid.opts.resizable, ...{handles: handles}, ...{ // was using $.extend()
-        start: opts.start || function() {},
-        stop: opts.stop || function() {},
-        resize: opts.resize || function() {}
+        start: opts.start, // || function() {},
+        stop: opts.stop, // || function() {},
+        resize: opts.resize // || function() {}
       }});
     }
     return this;
   }
 
   public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
-    let $el = $(el);
+    let $el: JQuery = $(el);
     if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
       $el.draggable(opts);
+    } else if (opts === 'option') {
+      $el.draggable(opts, key, value);
     } else {
       $el.draggable({...this.grid.opts.draggable, ...{ // was using $.extend()
         containment: (this.grid.opts._isNested && !this.grid.opts.dragOut) ?
           $(this.grid.el).parent() : (this.grid.opts.draggable.containment || null),
-        start: opts.start || function() {},
-        stop: opts.stop || function() {},
-        drag: opts.drag || function() {}
+        start: opts.start, // || function() {},
+        stop: opts.stop, // || function() {},
+        drag: opts.drag // || function() {}
       }});
     }
     return this;
   }
 
   public droppable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
-    let $el = $(el);
-    $el.droppable(opts);
+    let $el: JQuery = $(el);
+    $el.droppable(opts, key, value);
     return this;
   }
 
   public isDroppable(el: GridItemHTMLElement): boolean {
-    let $el = $(el);
+    let $el: JQuery = $(el);
     return Boolean($el.data('droppable'));
   }
 
   public on(el: GridItemHTMLElement, eventName: string, callback): GridStackDragDropPlugin {
-    $(el).on(eventName, callback);
+    let $el: JQuery = $(el);
+    $el.on(eventName, callback);
     return this;
   }
 }
@@ -76,7 +79,7 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
 // finally register ourself
 GridStackDragDropPlugin.registerPlugin(JQueryUIGridStackDragDropPlugin);
 
-/* OLD code for reference 
+/* OLD code for reference
 function JQueryUIGridStackDragDropPlugin(grid) {
   GridStack.DragDropPlugin.call(this, grid);
 }

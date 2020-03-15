@@ -5,11 +5,13 @@
  * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
 */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { GridStack } from './gridstack';
 import { GridItemHTMLElement } from './types';
 
 /** drag&drop options currently called from the main code, but others can be passed in grid options */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | {} | any;
 export type DDKey = 'minWidth' | 'minHeight' | string;
 
@@ -18,9 +20,9 @@ export type DDKey = 'minWidth' | 'minHeight' | string;
  */
 export class GridStackDragDropPlugin {
   protected grid: GridStack;
-  static registeredPlugins = [];
-  
-  static registerPlugin(pluginClass) {
+  static registeredPlugins: typeof GridStackDragDropPlugin[] = [];
+
+  static registerPlugin(pluginClass: typeof GridStackDragDropPlugin) {
     GridStackDragDropPlugin.registeredPlugins.push(pluginClass);
   }
 

@@ -7,6 +7,7 @@
 */
 
 import { GridStack } from './gridstack';
+import { GridStackDragDropPlugin } from './gridstack-dragdrop-plugin';
 
 export type numberOrString = number | string;
 export interface GridItemHTMLElement extends HTMLElement {
@@ -52,9 +53,9 @@ export interface GridstackOptions {
   column?: number;
 
   /** class that implement drag'n'drop functionality for gridstack. If false grid will be static.
-   * (default?: null - first available plugin will be used)
+   * (default?: undefined - first available plugin will be used)
    */
-  ddPlugin?: false | null | any;
+  ddPlugin?: false | typeof GridStackDragDropPlugin;
 
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
@@ -66,7 +67,7 @@ export interface GridstackOptions {
   disableResize?: boolean;
 
   /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null }) */
-  draggable?: {} | any;
+  draggable?: DDDragOpt;
 
   /** let user drag nested grid items out of a parent or not (default false) */
   dragOut?: boolean;
@@ -95,7 +96,7 @@ export interface GridstackOptions {
   minWidth?: number;
 
   /**
-   * set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column 
+   * set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column
    * layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: false)
    */
   oneColumnModeDomSort?: boolean;
@@ -106,8 +107,8 @@ export interface GridstackOptions {
   /** placeholder default content (default?: '') */
   placeholderText?: string;
 
-  /** allows to override UI resizable options. (default?: { autoHide?: true, handles?: 'se' }) */
-  resizable?: {} | any;
+  /** allows to override UI resizable options. (default?: { autoHide: true, handles: 'se' }) */
+  resizable?: DDResizeOpt;
 
   /**
    * if true widgets could be removed by dragging outside of the grid. It could also be a selector string,
@@ -117,7 +118,7 @@ export interface GridstackOptions {
   removable?: boolean | string;
 
   /** allows to override UI removable options. (default?: { accept: '.' + opts.itemClass }) */
-  removableOptions?: {};
+  removableOptions?: DDRemoveOpt;
 
   /** time in milliseconds before widget is being removed while dragging outside of the grid. (default?: 2000) */
   removeTimeout?: number;
@@ -187,6 +188,35 @@ export interface GridstackWidget {
   resizeHandles?: string;
   /** value for `data-gs-id` stored on the widget (default?: undefined) */
   id?: numberOrString;
+}
+
+/** Drag&Drop resize options */
+export interface DDResizeOpt {
+  /** do resize handle hide by default until mouse over ? - default: true */
+  autoHide?: boolean;
+  /**
+   * sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east)
+   * Note: it is not recommended to resize from the top sides as weird side effect may occur.
+  */
+  handles?: string;
+}
+
+/** Drag&Drop remove options */
+export interface DDRemoveOpt {
+  /** class that be removed default?: '.' + opts.itemClass */
+  accept?: string;
+}
+
+/** Drag&Drop dragging options */
+export interface DDDragOpt {
+  /** class selector of items that can be dragged. default to '.grid-stack-item-content' */
+  handle?: string;
+  /** default to `true` */
+  scroll?: boolean;
+  /** default to 'body' */
+  appendTo?: string;
+  /** parent constraining where item can be dragged out from (default: null = no constrain) */
+  containment?: string;
 }
 
 /**

@@ -24,7 +24,7 @@ describe('gridstack engine', function() {
     });
   });
 
-  describe('test _prepareNode', function() {
+  describe('test prepareNode', function() {
     var engine;
 
     beforeAll(function() {
@@ -32,20 +32,20 @@ describe('gridstack engine', function() {
     });
 
     it('should prepare a node', function() {
-      expect(engine._prepareNode({}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
-      expect(engine._prepareNode({x: 10}, false)).toEqual(jasmine.objectContaining({x: 10, y: 0, width: 1, height: 1}));
-      expect(engine._prepareNode({x: -10}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
-      expect(engine._prepareNode({y: 10}, false)).toEqual(jasmine.objectContaining({x: 0, y: 10, width: 1, height: 1}));
-      expect(engine._prepareNode({y: -10}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
-      expect(engine._prepareNode({width: 3}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 3, height: 1}));
-      expect(engine._prepareNode({width: 100}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 12, height: 1}));
-      expect(engine._prepareNode({width: 0}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
-      expect(engine._prepareNode({width: -190}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
-      expect(engine._prepareNode({height: 3}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 3}));
-      expect(engine._prepareNode({height: 0}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
-      expect(engine._prepareNode({height: -10}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
-      expect(engine._prepareNode({x: 4, width: 10}, false)).toEqual(jasmine.objectContaining({x: 2, y: 0, width: 10, height: 1}));
-      expect(engine._prepareNode({x: 4, width: 10}, true)).toEqual(jasmine.objectContaining({x: 4, y: 0, width: 8, height: 1}));
+      expect(engine.prepareNode({}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
+      expect(engine.prepareNode({x: 10}, false)).toEqual(jasmine.objectContaining({x: 10, y: 0, width: 1, height: 1}));
+      expect(engine.prepareNode({x: -10}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
+      expect(engine.prepareNode({y: 10}, false)).toEqual(jasmine.objectContaining({x: 0, y: 10, width: 1, height: 1}));
+      expect(engine.prepareNode({y: -10}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
+      expect(engine.prepareNode({width: 3}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 3, height: 1}));
+      expect(engine.prepareNode({width: 100}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 12, height: 1}));
+      expect(engine.prepareNode({width: 0}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
+      expect(engine.prepareNode({width: -190}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
+      expect(engine.prepareNode({height: 3}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 3}));
+      expect(engine.prepareNode({height: 0}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
+      expect(engine.prepareNode({height: -10}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
+      expect(engine.prepareNode({x: 4, width: 10}, false)).toEqual(jasmine.objectContaining({x: 2, y: 0, width: 10, height: 1}));
+      expect(engine.prepareNode({x: 4, width: 10}, true)).toEqual(jasmine.objectContaining({x: 4, y: 0, width: 8, height: 1}));
     });
   });
 
@@ -55,7 +55,7 @@ describe('gridstack engine', function() {
     beforeAll(function() {
       engine = new GridStack.Engine(12, null, true);
       engine.nodes = [
-        engine._prepareNode({x: 3, y: 2, width: 3, height: 2})
+        engine.prepareNode({x: 3, y: 2, width: 3, height: 2})
       ];
     });
 
@@ -76,9 +76,9 @@ describe('gridstack engine', function() {
     beforeAll(function() {
       engine = new GridStack.Engine(12, null, true);
       engine.nodes = [
-        engine._prepareNode({x: 0, y: 0, width: 1, height: 1, idx: 1, _dirty: true}),
-        engine._prepareNode({x: 3, y: 2, width: 3, height: 2, idx: 2, _dirty: true}),
-        engine._prepareNode({x: 3, y: 7, width: 3, height: 2, idx: 3})
+        engine.prepareNode({x: 0, y: 0, width: 1, height: 1, idx: 1, _dirty: true}),
+        engine.prepareNode({x: 3, y: 2, width: 3, height: 2, idx: 2, _dirty: true}),
+        engine.prepareNode({x: 3, y: 7, width: 3, height: 2, idx: 3})
       ];
     });
 
@@ -167,9 +167,9 @@ describe('gridstack engine', function() {
       engine = new GridStack.Engine(12, spy.callback, true);
 
       engine.nodes = [
-        engine._prepareNode({x: 0, y: 0, width: 1, height: 1, idx: 1, _dirty: true}),
-        engine._prepareNode({x: 3, y: 2, width: 3, height: 2, idx: 2, _dirty: true}),
-        engine._prepareNode({x: 3, y: 7, width: 3, height: 2, idx: 3})
+        engine.prepareNode({x: 0, y: 0, width: 1, height: 1, idx: 1, _dirty: true}),
+        engine.prepareNode({x: 3, y: 2, width: 3, height: 2, idx: 2, _dirty: true}),
+        engine.prepareNode({x: 3, y: 7, width: 3, height: 2, idx: 3})
       ];
     });
 

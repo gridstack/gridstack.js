@@ -10,10 +10,10 @@ import { GridstackWidget, GridStackNode, GridstackOptions, numberOrString } from
 
 /** checks for obsolete method names */
 export function obsolete(f, oldName: string, newName: string, rev: string) {
-  let wrapper = function() {
+  let wrapper = (...args) => {
     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
     'with `' + newName + '`. It will be **completely** removed in v1.0');
-    return f.apply(this, arguments);
+    return f.apply(args);
   }
   wrapper.prototype = f.prototype;
   return wrapper;
@@ -45,7 +45,7 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
   }
 }
 
- /**
+/**
  * Utility methods
  */
 export class Utils {
@@ -61,38 +61,53 @@ export class Utils {
    * @param dir 1 for asc, -1 for desc (optional)
    * @param width width of the grid. If undefined the width will be calculated automatically (optional).
    **/
-  static sort(nodes: GridStackNode[], dir?: number, column?: number): GridStackNode[] {
+  static sort(nodes: GridStackNode[], dir?: -1 | 1, column?: number): GridStackNode[] {
     if (!column) {
-      let widths = nodes.map(function (node) { return node.x + node.width; });
-      column = Math.max.apply(Math, widths);
+      let widths = nodes.map(n => n.x + n.width);
+      column = Math.max(...widths);
     }
 
     if (dir === -1)
-      return this.sortBy(nodes, (n) => -(n.x + n.y * column));
+      return nodes.sort((a, b) => (b.x + b.y * column)-(a.x + a.y * column));
     else
-      return this.sortBy(nodes, (n) => (n.x + n.y * column));
+      return nodes.sort((b, a) => (b.x + b.y * column)-(a.x + a.y * column));
   }
 
+  /**
+   * creates a style sheet with style id under given parent
+   * @param id will set the 'data-gs-style-id' attribute to that id
+   * @param parent to insert the stylesheet as first child,
+   * if none supplied it will be appended to the document head instead.
+   */
   static createStylesheet(id: string, parent?: HTMLElement): CSSStyleSheet {
     let style: HTMLStyleElement = document.createElement('style');
     style.setAttribute('type', 'text/css');
     style.setAttribute('data-gs-style-id', id);
-    if ((style as any).styleSheet) { // ??? only CSSImportRule have that and different beast...
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((style as any).styleSheet) { // TODO: only CSSImportRule have that and different beast ??
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (style as any).styleSheet.cssText = '';
     } else {
       style.appendChild(document.createTextNode('')); // WebKit hack
     }
-    if (!parent) { parent = document.getElementsByTagName('head')[0]; } // default to head
-    parent.insertBefore(style, parent.firstChild);
+    if (!parent) {
+      // default to head
+      parent = document.getElementsByTagName('head')[0];
+      parent.appendChild(style);
+    } else {
+      parent.insertBefore(style, parent.firstChild);
+    }
     return style.sheet as CSSStyleSheet;
   }
 
+  /** removed the given stylesheet id */
   static removeStylesheet(id: string) {
     let el = document.querySelector('STYLE[data-gs-style-id=' + id + ']');
-    if (!el) return;
+    if (!el || !el.parentNode) return;
     el.parentNode.removeChild(el);
   }
 
+  /** inserts a CSS rule */
   static insertCSSRule(sheet: CSSStyleSheet, selector: string, rules: string, index: number) {
     if (typeof sheet.insertRule === 'function') {
       sheet.insertRule(selector + '{' + rules + '}', index);
@@ -101,6 +116,7 @@ export class Utils {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static toBool(v: any): boolean {
     if (typeof v === 'boolean') {
       return v;
@@ -113,9 +129,7 @@ export class Utils {
   }
 
   static toNumber(value: null | string): number | null {
-    return value === null || value.length === 0
-      ? null
-      : Number(value);
+    return (value === null || value.length === 0) ? null : Number(value);
   }
 
   static parseHeight(val: numberOrString) {
@@ -134,32 +148,7 @@ export class Utils {
     return { height: height, unit: heightUnit }
   }
 
-  static without(array, item) {
-    let index = array.indexOf(item);
-
-    if (index !== -1) {
-      array = array.slice(0);
-      array.splice(index, 1);
-    }
-
-    return array;
-  }
-
-  static sortBy(array, getter) {
-    return array.slice(0).sort(function (left, right) {
-      let valueLeft = getter(left);
-      let valueRight = getter(right);
-
-      if (valueRight === valueLeft) {
-        return 0;
-      }
-
-      return valueLeft > valueRight ? 1 : -1;
-    });
-  }
-
-  static defaults(target, arg1) {
-    let sources = Array.prototype.slice.call(arguments, 1);
+  static defaults(target, ...sources) {
 
     sources.forEach(function (source) {
       for (let prop in source) {
@@ -172,23 +161,23 @@ export class Utils {
     return target;
   }
 
-  static clone(target) {
+  static clone(target: {}) {
     return {...target}; // was $.extend({}, target)
   }
 
   static throttle(callback, delay) {
     let isWaiting = false;
 
-    return function () {
+    return function (...args) {
       if (!isWaiting) {
-        callback.apply(this, arguments);
+        callback.apply(this, args);
         isWaiting = true;
         setTimeout(function () { isWaiting = false; }, delay);
       }
     }
   }
 
-  static removePositioningStyles(el) {
+  static removePositioningStyles(el: HTMLElement) {
     let style = el.style;
     if (style.position) {
       style.removeProperty('position');
@@ -207,19 +196,20 @@ export class Utils {
     }
   }
 
-  static getScrollParent(el) {
+  static getScrollParent(el: HTMLElement) {
     let returnEl;
     if (el === null) {
       returnEl = null;
     } else if (el.scrollHeight > el.clientHeight) {
       returnEl = el;
     } else {
-      returnEl = this.getScrollParent(el.parentNode);
+      returnEl = this.getScrollParent(el.parentElement);
     }
     return returnEl;
   }
 
-  static updateScrollPosition(el, ui, distance) {
+  /** @private */
+  static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number) {
     // is widget in view?
     let rect = el.getBoundingClientRect();
     let innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
@@ -250,7 +240,7 @@ export class Utils {
           }
         }
         // move widget y by amount scrolled
-        ui.position.top += scrollEl.scrollTop - prevScroll;
+        position.top += scrollEl.scrollTop - prevScroll;
       }
     }
   }
