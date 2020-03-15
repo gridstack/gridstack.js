@@ -277,18 +277,17 @@ export class GridStack {
     this.opts.maxRow);
 
     if (this.opts.auto) {
-      let elements = [];
-      this.$el.children('.' + this.opts.itemClass + ':not(.' + this.opts.placeholderClass + ')')
-        .each((index, el) => {
-          let x = parseInt(el.getAttribute('data-gs-x'));
-          let y = parseInt(el.getAttribute('data-gs-y'));
-          elements.push({
-            el: el,
-            // if x,y are missing (autoPosition) add them to end of list - but keep their respective DOM order
-            i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * this.opts.column
-          });
+      let elements: {el: HTMLElement; i: number}[] = [];
+      this.getGridItems().forEach(el => {
+        let x = parseInt(el.getAttribute('data-gs-x'));
+        let y = parseInt(el.getAttribute('data-gs-y'));
+        elements.push({
+          el,
+          // if x,y are missing (autoPosition) add them to end of list - but keep their respective DOM order
+          i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * this.opts.column
         });
-      elements.sort(x => x.i).forEach( item => { this._prepareElement(item.el) });
+      });
+      elements.sort(e => e.i).forEach(item => { this._prepareElement(item.el) });
     }
     this.engine.saveInitial(); // initial start of items
 
@@ -494,15 +493,12 @@ export class GridStack {
     if (doNotPropagate === true) { return; }
 
     // update the items now - see if the dom order nodes should be passed instead (else default to current list)
-    let domNodes: GridStackNode[];
+    let domNodes: GridStackNode[] = undefined; // explicitly leave not defined
     if (column === 1 && this.opts.oneColumnModeDomSort) {
       domNodes = [];
-      Array.from(this.el.children)
-        .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass))
-        .forEach((el: GridItemHTMLElement) => {
-          let node = el.gridstackNode;
-          if (node) { domNodes.push(node); }
-        });
+      this.getGridItems().forEach(el => {
+        if (el.gridstackNode) { domNodes.push(el.gridstackNode); }
+      });
       if (!domNodes.length) { domNodes = undefined; }
     }
     this.engine.updateNodeWidths(oldColumn, column, domNodes);
@@ -516,6 +512,12 @@ export class GridStack {
    */
   public getColumn(): number {
     return this.opts.column;
+  }
+
+  /** returns an array of grid HTML elements (no placeholder) - used internally to iterate through our children */
+  public getGridItems(): GridItemHTMLElement[] {
+    return Array.from(this.el.children)
+      .filter(el => el.matches('.' + this.opts.itemClass) && !el.matches('.' + this.opts.placeholderClass)) as GridItemHTMLElement[];
   }
 
   /**
@@ -570,10 +572,7 @@ export class GridStack {
    * doEnable`s value by changing the disableDrag grid option (default: true).
    */
   public enableMove(doEnable: boolean, includeNewWidgets = true) {
-    Array.from(this.el.children)
-      .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass))
-      .forEach((el: HTMLElement) => this.movable(el, doEnable));
-
+    this.getGridItems().forEach(el => this.movable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableDrag = !doEnable;
     }
@@ -586,9 +585,7 @@ export class GridStack {
    * doEnable`s value by changing the disableResize grid option (default: true).
    */
   public enableResize(doEnable: boolean, includeNewWidgets = true) {
-    Array.from(this.el.children)
-      .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass))
-      .forEach((el: HTMLElement) => this.resizable(el, doEnable));
+    this.getGridItems().forEach(el => this.resizable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableResize = !doEnable;
     }
