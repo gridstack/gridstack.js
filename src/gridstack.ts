@@ -497,10 +497,12 @@ export class GridStack {
     let domNodes: GridStackNode[];
     if (column === 1 && this.opts.oneColumnModeDomSort) {
       domNodes = [];
-      this.$el.children('.' + this.opts.itemClass).each((index, el: GridItemHTMLElement) => {
-        let node = el.gridstackNode;
-        if (node) { domNodes.push(node); }
-      });
+      Array.from(this.el.children)
+        .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass))
+        .forEach((el: GridItemHTMLElement) => {
+          let node = el.gridstackNode;
+          if (node) { domNodes.push(node); }
+        });
       if (!domNodes.length) { domNodes = undefined; }
     }
     this.engine.updateNodeWidths(oldColumn, column, domNodes);
@@ -568,9 +570,9 @@ export class GridStack {
    * doEnable`s value by changing the disableDrag grid option (default: true).
    */
   public enableMove(doEnable: boolean, includeNewWidgets = true) {
-    this.$el.children('.' + this.opts.itemClass).each((index, el) => {
-      this.movable(el, doEnable);
-    });
+    Array.from(this.el.children)
+      .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass))
+      .forEach((el: HTMLElement) => this.movable(el, doEnable));
 
     if (includeNewWidgets) {
       this.opts.disableDrag = !doEnable;
@@ -584,9 +586,9 @@ export class GridStack {
    * doEnable`s value by changing the disableResize grid option (default: true).
    */
   public enableResize(doEnable: boolean, includeNewWidgets = true) {
-    this.$el.children('.' + this.opts.itemClass).each((index, el) => {
-      this.resizable(el, doEnable);
-    })
+    Array.from(this.el.children)
+      .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass))
+      .forEach((el: HTMLElement) => this.resizable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableResize = !doEnable;
     }
