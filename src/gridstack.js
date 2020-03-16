@@ -2112,7 +2112,7 @@
     var grids = [];
     $(selector).each(function(index, el) {
       if (!el.gridstack) {
-        el.gridstack = new GridStack(el, opts);
+        el.gridstack = new GridStack(el, Utils.clone(opts));
       }
       grids.push(el.gridstack);
     });
