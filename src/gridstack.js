@@ -651,7 +651,7 @@
     // constrain the passed in values and check if we're still changing our node
     var resizing = (node.width !== width || node.height !== height);
     var nn = { x: x, y: y, width: width, height: height,
-      maxWidth: node.maxWidth, maxHeight: NodeIterator.maxHeight, minWidth: node.minWidth, minHeight: node.minHeight};
+      maxWidth: node.maxWidth, maxHeight: node.maxHeight, minWidth: node.minWidth, minHeight: node.minHeight};
     nn = this._prepareNode(nn, resizing);
     if (node.x === nn.x && node.y === nn.y && node.width === nn.width && node.height === nn.height) {
       return null;
