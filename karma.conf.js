@@ -3,6 +3,16 @@
 
 module.exports = function(config) {
   config.set({
+    karmaTypescriptConfig: {
+      compilerOptions: {
+        module: 'commonjs',
+        lib: ['dom', 'es6'],
+        target: 'es5',
+        sourceMap: true,
+        declaration: true
+      }
+    },
+
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -10,13 +20,14 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'karma-typescript'],
 
 
     // list of files / patterns to load in the browser
     files: [
       'dist/gridstack.all.js',
       'spec/*-spec.js',
+      'src/**/*.ts'
       // 'spec/e2e/*-spec.js' issues with ReferenceError: `browser` & `element` is not defined
     ],
 
@@ -33,14 +44,15 @@ module.exports = function(config) {
       'src/gridstack.engine.ts': ['coverage'],
       'src/gridstack.ts': ['coverage'],
       'src/jqueryui-gridstack-dragdrop-plugin.ts': ['coverage'],
-      'src/utils.ts': ['coverage']
+      'src/utils.ts': ['coverage'],
+      'src/*.ts': ['karma-typescript']
     },
 
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'coverage', 'coveralls'],
+    reporters: ['progress', 'coverage', 'coveralls', 'karma-typescript'],
 
     coverageReporter: {
       type: 'lcov', // lcov or lcovonly are required for generating lcov.info files
