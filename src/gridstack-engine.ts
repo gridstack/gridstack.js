@@ -71,8 +71,16 @@ export class GridStackEngine {
     while (true) {
       let collisionNode = this.nodes.find( n => n !== node && Utils.isIntercepted(n, nn), {node: node, nn: nn});
       if (!collisionNode) { return; }
-      this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
-        collisionNode.width, collisionNode.height, true);
+      let moved;
+      if (collisionNode.locked) {
+        // if colliding with a locked item, move ourself instead
+        moved = this.moveNode(node, node.x, collisionNode.y + collisionNode.height,
+          node.width, node.height, true);
+      } else {
+        moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
+          collisionNode.width, collisionNode.height, true);
+      }
+      if (!moved) { return; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
     }
   }
 
@@ -112,7 +120,7 @@ export class GridStackEngine {
   }
 
   /** float getter method */
-  public get float(): boolean { return this._float; }
+  public get float(): boolean { return this._float || false; }
 
   private _sortNodes(dir?: -1 | 1) {
     this.nodes = Utils.sort(this.nodes, dir, this.column);
@@ -180,13 +188,6 @@ export class GridStackEngine {
     let defaults = {width: 1, height: 1, x: 0, y: 0};
     node = Utils.defaults(node, defaults);
 
-    // convert any strings over
-    /* TODO: check
-    node.x = parseInt(node.x);
-    node.y = parseInt(node.y);
-    node.width = parseInt(node.width);
-    node.height = parseInt(node.height);
-    */
     node.autoPosition = node.autoPosition || false;
     node.noResize = node.noResize || false;
     node.noMove = node.noMove || false;
@@ -197,18 +198,28 @@ export class GridStackEngine {
     if (Number.isNaN(node.width))  { node.width = defaults.width; }
     if (Number.isNaN(node.height)) { node.height = defaults.height; }
 
+    if (node.maxWidth) { node.width = Math.min(node.width, node.maxWidth); }
+    if (node.maxHeight) { node.height = Math.min(node.height, node.maxHeight); }
+    if (node.minWidth) { node.width = Math.max(node.width, node.minWidth); }
+    if (node.minHeight) { node.height = Math.max(node.height, node.minHeight); }
+
     if (node.width > this.column) {
       node.width = this.column;
     } else if (node.width < 1) {
       node.width = 1;
     }
 
-    if (node.height < 1) {
+    if (this.maxRow && node.height > this.maxRow) {
+      node.height = this.maxRow;
+    } else if (node.height < 1) {
       node.height = 1;
     }
 
     if (node.x < 0) {
       node.x = 0;
+    }
+    if (node.y < 0) {
+      node.y = 0;
     }
 
     if (node.x + node.width > this.column) {
@@ -218,9 +229,12 @@ export class GridStackEngine {
         node.x = this.column - node.width;
       }
     }
-
-    if (node.y < 0) {
-      node.y = 0;
+    if (this.maxRow && node.y + node.height > this.maxRow) {
+      if (resizing) {
+        node.height = this.maxRow - node.y;
+      } else {
+        node.y = this.maxRow - node.height;
+      }
     }
 
     return node;
@@ -262,11 +276,6 @@ export class GridStackEngine {
 
   public addNode(node: GridStackNode, triggerAddEvent?: boolean) {
     node = this.prepareNode(node);
-
-    if (node.maxWidth) { node.width = Math.min(node.width, node.maxWidth); }
-    if (node.maxHeight) { node.height = Math.min(node.height, node.maxHeight); }
-    if (node.minWidth) { node.width = Math.max(node.width, node.minWidth); }
-    if (node.minHeight) { node.height = Math.max(node.height, node.minHeight); }
 
     node._id = node._id || GridStackEngine._idSeq++;
 
@@ -393,34 +402,27 @@ export class GridStackEngine {
   }
 
   public moveNode(node: GridStackNode, x: number, y: number, width?: number, height?: number, noPack?: boolean): GridStackNode {
+    if (node.locked) { return null; }
     if (typeof x !== 'number') { x = node.x; }
     if (typeof y !== 'number') { y = node.y; }
     if (typeof width !== 'number') { width = node.width; }
     if (typeof height !== 'number') { height = node.height; }
 
-    if (node.maxWidth) { width = Math.min(width, node.maxWidth); }
-    if (node.maxHeight) { height = Math.min(height, node.maxHeight); }
-    if (node.minWidth) { width = Math.max(width, node.minWidth); }
-    if (node.minHeight) { height = Math.max(height, node.minHeight); }
-
-    if (node.x === x && node.y === y && node.width === width && node.height === height) {
-      return node;
+    // constrain the passed in values and check if we're still changing our node
+    let resizing = (node.width !== width || node.height !== height);
+    let nn: GridStackNode = { x, y, width, height,
+      maxWidth: node.maxWidth, maxHeight: node.maxHeight, minWidth: node.minWidth, minHeight: node.minHeight};
+    nn = this.prepareNode(nn, resizing);
+    if (node.x === nn.x && node.y === nn.y && node.width === nn.width && node.height === nn.height) {
+      return null;
     }
 
-    let resizing = node.width !== width;
     node._dirty = true;
 
-    node.x = x;
-    node.y = y;
-    node.width = width;
-    node.height = height;
-
-    node._lastTriedX = x;
-    node._lastTriedY = y;
-    node._lastTriedWidth = width;
-    node._lastTriedHeight = height;
-
-    node = this.prepareNode(node, resizing);
+    node.x = node._lastTriedX = nn.x;
+    node.y = node._lastTriedY = nn.y;
+    node.width = node._lastTriedWidth = nn.width;
+    node.height = node._lastTriedHeight = nn.height;
 
     this._fixCollisions(node);
     if (!noPack) {

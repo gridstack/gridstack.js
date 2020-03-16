@@ -22,7 +22,6 @@ gridstack.js API
   - [gsresizestop(event, ui)](#gsresizestopevent-ui)
 - [API](#api)
   - [addWidget(el, [options])](#addwidgetel-options)
-  - [addWidget(el, [x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])](#addwidgetel-x-y-width-height-autoposition-minwidth-maxwidth-minheight-maxheight-id)
   - [batchUpdate()](#batchupdate)
   - [compact()](#compact)
   - [cellHeight()](#cellheight)
@@ -239,30 +238,19 @@ grid.on('gsresizestop', function(event, element) {
 
 ### addWidget(el, [options])
 
-Creates new widget and returns it. Options is an object containing the fields x,y,width,height,etc... described below.
-
-### addWidget(el, [x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id])
-
-Creates new widget and returns it.
+Creates new widget and returns it. Options is an object containing the fields x,y,width,height,etc...
 
 Parameters:
 
-- `el` - widget to add
-- `x`, `y`, `width`, `height` - widget position/dimensions (optional)
-- `autoPosition` - if `true` then `x`, `y` parameters will be ignored and widget will be places on the first available
-position (optional)
-- `minWidth` minimum width allowed during resize/creation (optional)
-- `maxWidth` maximum width allowed during resize/creation (optional)
-- `minHeight` minimum height allowed during resize/creation (optional)
-- `maxHeight` maximum height allowed during resize/creation (optional)
-- `id` value for `data-gs-id` (optional)
+- `el` - html element or string definition to add
+- `options` widget position/size options (optional) - see GridStackWidget
 
 Widget will be always placed even if result height is more than actual grid height. You need to use `willItFit` method
 before calling `addWidget` for additional check.
 
 ```js
 var grid = GridStack.init();
-grid.addWidget(el, 0, 0, 3, 2, true);
+grid.addWidget('<div><div class="grid-stack-item-content">hello</div></div>', {width: 3});
 ```
 
 ### batchUpdate()
@@ -507,14 +495,13 @@ Returns `true` if the `height` of the grid will be less the vertical constraint.
 have `height` constraint.
 
 ```js
-if (grid.willItFit(newNode.x, newNode.y, newNode.width, newNode.height, true)) {
-  grid.addWidget(newNode.el, newNode.x, newNode.y, newNode.width, newNode.height, true);
+if (grid.willItFit(newNode.x, newNode.y, newNode.width, newNode.height, newNode.autoPosition)) {
+  grid.addWidget(newNode.el, newNode);
 }
 else {
   alert('Not enough free space to place the widget');
 }
 ```
-
 
 ## Utils
 

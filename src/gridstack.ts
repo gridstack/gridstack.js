@@ -119,7 +119,7 @@ export class GridStack {
     let grids: GridStack[] = [];
     getGridElements(selector).forEach(el => {
       if (!el.gridstack) {
-        el.gridstack = new GridStack(el, options);
+        el.gridstack = new GridStack(el, Utils.clone(options));
       }
       grids.push(el.gridstack);
     });
@@ -336,7 +336,7 @@ export class GridStack {
 
 
   /**
-   * Creates new widget and returns it.
+   * add a new widget and returns it.
    *
    * Widget will be always placed even if result height is more than actual grid height.
    * You need to use willItFit method before calling addWidget for additional check.
@@ -344,44 +344,19 @@ export class GridStack {
    *
    * @example
    * let grid = GridStack.init();
-   * grid.addWidget(el, {width: 3, autoPosition: true});
+   * grid.addWidget('<div><div class="grid-stack-item-content">hello</div></div>', {width: 3});
    *
-   * @param el widget to add
-   * @param options widget position/size options (optional)
+   * @param el html element or string definition to add
+   * @param options widget position/size options (optional) - see GridStackWidget
    */
-  public addWidget(el: GridStackElement, options? : GridstackWidget): HTMLElement;
+  public addWidget(el: GridStackElement, options?: GridstackWidget): GridItemHTMLElement {
 
-  /**
-   * Creates new widget and returns it.
-   * Legacy: Spelled out version of the widgets options, recommend use new version instead.
-   *
-   * @example
-   * let grid = GridStack.init();
-   * grid.addWidget(el, 0, 0, 3, 2, true);
-   *
-   * @param el widget to add
-   * @param x widget position x (optional)
-   * @param y widget position y (optional)
-   * @param width  widget dimension width (optional)
-   * @param height widget dimension height (optional)
-   * @param autoPosition if true then x, y parameters will be ignored and widget will be places on the first available position (optional)
-   * @param minWidth minimum width allowed during resize/creation (optional)
-   * @param maxWidth maximum width allowed during resize/creation (optional)
-   * @param minHeight minimum height allowed during resize/creation (optional)
-   * @param maxHeight maximum height allowed during resize/creation (optional)
-   * @param id value for `data-gs-id` (optional)
-   */
-  public addWidget(el: GridStackElement, x? : number | GridstackWidget, y?: number, width?: number, height?: number, autoPosition?: boolean,
-    minWidth?: number, maxWidth?: number, minHeight?: number, maxHeight?: number, id?: numberOrString): HTMLElement {
-    // new way of calling with an object - make sure all items have been properly initialized
-    if (x === undefined || typeof x === 'object') {
-      // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
-      // as the actual value are filled in when _prepareElement() calls el.attr('data-gs-xyz) before adding the node.
-      // opt = this.engine.prepareNode(opt);
-      x = (x || {}) as GridstackWidget;
-    } else {
-      // old legacy way of calling with items spelled out - call us back with single object instead (so we can properly initialized values)
-      return this.addWidget(el, { x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id });
+    // support legacy call for now ?
+    if (arguments.length > 2) {
+      console.warn('gridstack.ts: `addWidget(el, x, y, width...)` is deprecated. Use `addWidget(el, {x, y, width,...})`. It will be removed soon');
+      let a = arguments, i = 1,
+      opt: GridstackWidget = { x:a[i++], y:a[i++], width:a[i++], height:a[i++], autoPosition:a[i++], minWidth:a[i++], maxWidth:a[i++], minHeight:a[i++], maxHeight:a[i++], id:a[i++] };
+      return this.addWidget(el, opt);
     }
 
     if (typeof el === 'string') {
@@ -390,9 +365,13 @@ export class GridStack {
       el = doc.body.children[0] as HTMLElement;
     }
 
-    this._writeAttr(el, x);
-    this.el.appendChild(el);
+    // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
+    // as the actual value are filled in when _prepareElement() calls el.getAttribute('data-gs-xyz) before adding the node.
+    if (options) {
+      this._writeAttr(el, options);
+    }
 
+    this.el.appendChild(el);
     return this.makeWidget(el);
   }
 
@@ -595,6 +574,11 @@ export class GridStack {
    * enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
    */
   public float(val: boolean) {
+    if (val === undefined) {
+      // TODO: should we support and/or change signature ? figure this soon...
+      console.warn('gridstack.ts: getter `float()` is deprecated in 2.x and has been replaced by `getFloat()`. It will be **completely** removed soon');
+      return this.getFloat();
+    }
     this.engine.float = val;
     this._triggerChangeEvent();
   }
@@ -603,7 +587,7 @@ export class GridStack {
    * get the current float mode
    */
   public getFloat(): boolean {
-    return this.engine.float || false;
+    return this.engine.float;
   }
 
   /**
@@ -672,7 +656,7 @@ export class GridStack {
    * grid.el.appendChild('<div id="gsi-1" data-gs-width="3"></div>');
    * grid.makeWidget('gsi-1');
    */
-  public makeWidget(els: GridStackElement): HTMLElement {
+  public makeWidget(els: GridStackElement): GridItemHTMLElement {
     let el = getElement(els);
     this._prepareElement(el, true);
     this._updateContainerHeight();
@@ -1008,8 +992,8 @@ export class GridStack {
    * will be places on the first available position
    *
    * @example
-   * if (grid.willItFit(newNode.x, newNode.y, newNode.width, newNode.height, true)) {
-   *   grid.addWidget(newNode.el, newNode.x, newNode.y, newNode.width, newNode.height, true);
+   * if (grid.willItFit(newNode.x, newNode.y, newNode.width, newNode.height, newNode.autoPosition)) {
+   *   grid.addWidget(newNode.el, newNode);
    * } else {
    *   alert('Not enough free space to place the widget');
    * }
@@ -1400,7 +1384,8 @@ export class GridStack {
   }
 
   /** call to write any default attributes back to element */
-  private _writeAttr(el: HTMLElement, node: GridstackWidget = {}) {
+  private _writeAttr(el: HTMLElement, node: GridstackWidget) {
+    if (!node) return;
     this._writeAttrs(el, node.x, node.y, node.width, node.height);
 
     if (node.autoPosition) {
