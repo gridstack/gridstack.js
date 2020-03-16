@@ -1,5 +1,5 @@
 /**
- * gridstack.js 1.0.0-dev
+ * gridstack.js 1.1.0-dev
  * https://gridstackjs.com/
  * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
@@ -693,12 +693,6 @@
 
     opts = opts || {};
 
-    // if row property exists, replace minRow and maxRow
-    if (opts.row) {
-      opts.minRow = opts.row;
-      opts.maxRow = opts.row;
-    }
-
     this.$el = $(el); // TODO: legacy code
     this.el = this.$el.get(0); // exposed HTML element to the user
 
@@ -714,11 +708,18 @@
     opts.itemClass = opts.itemClass || 'grid-stack-item';
     var isNested = this.$el.closest('.' + opts.itemClass).length > 0;
 
+    // if row property exists, replace minRow and maxRow instead
+    if (opts.row) {
+      opts.minRow = opts.maxRow = opts.row;
+      delete opts.row;
+    }
+    var rowAttr = parseInt(this.$el.attr('data-gs-row'));
+
+    // elements attributes override any passed options (like CSS style) - merge the two together
     this.opts = Utils.defaults(opts, {
-      row: parseInt(this.$el.attr('data-gs-row')) || 0,
       column: parseInt(this.$el.attr('data-gs-column')) || 12,
-      minRow: parseInt(this.$el.attr('data-gs-row')) ? parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-min-row')) || 0,
-      maxRow: parseInt(this.$el.attr('data-gs-row')) ? parseInt(this.$el.attr('data-gs-row')) : parseInt(this.$el.attr('data-gs-max-row')) || 0,
+      minRow: rowAttr ? rowAttr : parseInt(this.$el.attr('data-gs-min-row')) || 0,
+      maxRow: rowAttr ? rowAttr : parseInt(this.$el.attr('data-gs-max-row')) || 0,
       itemClass: 'grid-stack-item',
       placeholderClass: 'grid-stack-placeholder',
       placeholderText: '',
@@ -1504,34 +1505,38 @@
   };
 
   GridStack.prototype.removeWidget = function(el, detachNode) {
-    detachNode = (detachNode === undefined ? true : detachNode);
     el = $(el);
     var node = el.data('_gridstack_node');
     // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
     if (!node) {
       node = this.engine.getNodeDataByDOMEl(el.get(0));
     }
-
+    // remove our DOM data (circular link) and drag&drop permanently
     el.removeData('_gridstack_node');
+    this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+
     this.engine.removeNode(node, detachNode);
     this._triggerRemoveEvent();
     this._triggerChangeEvent(true); // trigger any other changes
   };
 
   GridStack.prototype.removeAll = function(detachNode) {
-    if (detachNode !== false) {
-      // remove our data structure before list gets emptied and DOM elements stay behind
-      this.engine.nodes.forEach(function(node) { $(node.el).removeData('_gridstack_node') });
-    }
+    // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
+    this.engine.nodes.forEach(function(node) {
+      var el = $(node.el);
+      el.removeData('_gridstack_node');
+      this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+    }, this);
+
     this.engine.removeAll(detachNode);
     this._triggerRemoveEvent();
   };
 
   GridStack.prototype.destroy = function(detachGrid) {
     $(window).off('resize', this.onResizeHandler);
-    this.disable();
-    if (detachGrid !== undefined && !detachGrid) {
+    if (detachGrid === false) {
       this.removeAll(false);
+      this.$el.removeClass(this.opts._class);
       delete this.$el.get(0).gridstack;
     } else {
       this.$el.remove();

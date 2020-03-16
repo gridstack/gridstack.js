@@ -1,9 +1,25 @@
-/** gridstack.js 1.0.0-dev - IE and older browsers Polyfills for this library @preserve*/
+/** gridstack.js 1.1.0-dev - IE and older browsers Polyfills for this library @preserve*/
 /**
  * https://gridstackjs.com/
  * (c) 2019-2020 Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
+
+// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
+(function () {
+  if (typeof window.CustomEvent === "function") {
+    return false;
+  }
+
+  function CustomEvent (event, params) {
+    params = params || {bubbles: false, cancelable: false, detail: null};
+    var evt = document.createEvent('CustomEvent');
+    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+    return evt;
+  }
+
+  window.CustomEvent = CustomEvent;
+})();
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN
 Number.isNaN = Number.isNaN || function isNaN(input) {
