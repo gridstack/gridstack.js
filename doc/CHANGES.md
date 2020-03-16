@@ -36,6 +36,8 @@ Change log
 
 - fix [1187](https://github.com/gridstack/gridstack.js/issues/1187) IE support for `CustomEvent` polyfill - thanks [@phil-blais](https://github.com/phil-blais)
 - fix [1204](https://github.com/gridstack/gridstack.js/issues/1204) destroy drag&drop when removing node(s) instead of just disabling it.
+- fix [1181](https://github.com/gridstack/gridstack.js/issues/1181) Locked widgets are still moveable by other widgets.
+- fix [1217](https://github.com/gridstack/gridstack.js/issues/1217) If I set cellHeight to some vh, only first grid will take vh, rest will use px
 - include SASS source files to npm package again [1193](https://github.com/gridstack/gridstack.js/pull/1193)
 
 ## 1.1.0 (2020-02-29)

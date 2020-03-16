@@ -342,8 +342,15 @@
     while (true) {
       var collisionNode = this.nodes.find(Utils._collisionNodeCheck, {node: node, nn: nn});
       if (!collisionNode) { return; }
-      var moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
-        collisionNode.width, collisionNode.height, true);
+      var moved;
+      if (collisionNode.locked) {
+        // if colliding with a locked item, move ourself instead
+        moved = this.moveNode(node, node.x, collisionNode.y + collisionNode.height,
+          node.width, node.height, true);
+      } else {
+        moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
+          collisionNode.width, collisionNode.height, true);
+      }
       if (!moved) { return; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
     }
   };
@@ -635,6 +642,7 @@
   };
 
   GridStackEngine.prototype.moveNode = function(node, x, y, width, height, noPack) {
+    if (node.locked) { return null; }
     if (typeof x !== 'number') { x = node.x; }
     if (typeof y !== 'number') { y = node.y; }
     if (typeof width !== 'number') { width = node.width; }
