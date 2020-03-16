@@ -203,7 +203,7 @@ export interface DDResizeOpt {
 
 /** Drag&Drop remove options */
 export interface DDRemoveOpt {
-  /** class that be removed default?: '.' + opts.itemClass */
+  /** class that can be removed (default?: '.' + opts.itemClass) */
   accept?: string;
 }
 

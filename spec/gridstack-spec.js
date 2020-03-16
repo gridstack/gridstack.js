@@ -753,7 +753,8 @@ describe('gridstack', function() {
     });
     it('should keep all widget options the same (autoPosition off', function() {
       var grid = GridStack.init({float: true});;
-      var widget = grid.addWidget(widgetHTML, 6, 7, 2, 3, false, 1, 4, 2, 5, 'coolWidget');
+      var widget = grid.addWidget(widgetHTML, {x: 6, y:7, width:2, height:3, autoPosition:false,
+        mindWidth:1, maxWidth:4, mindHeight:2, maxHeight:5, id:'coolWidget'});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(7);
@@ -767,9 +768,9 @@ describe('gridstack', function() {
       expect($widget.attr('data-gs-id')).toBe('coolWidget');
 
       // should move widget to top with float=false
-      expect(grid.float()).toBe(true);
+      expect(grid.getFloat()).toBe(true);
       grid.float(false);
-      expect(grid.float()).toBe(false);
+      expect(grid.getFloat()).toBe(false);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(4); // <--- from 7 to 4 below second original widget
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(2);
@@ -783,7 +784,7 @@ describe('gridstack', function() {
 
       // should not move again (no-op)
       grid.float(true);
-      expect(grid.float()).toBe(true);
+      expect(grid.getFloat()).toBe(true);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(6);
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(4);
       expect(parseInt($widget.attr('data-gs-width'), 10)).toBe(2);
@@ -806,7 +807,7 @@ describe('gridstack', function() {
     });
     it('should change x, y coordinates for widgets.', function() {
       var grid = GridStack.init({float: true});
-      var widget = grid.addWidget(widgetHTML, 9, 7, 2, 3, true);
+      var widget = grid.addWidget(widgetHTML, {x:9, y:7, width:2, height:3, autoPosition:true});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).not.toBe(9);
       expect(parseInt($widget.attr('data-gs-y'), 10)).not.toBe(7);
@@ -925,14 +926,14 @@ describe('gridstack', function() {
     it('should clear x position', function() {
       var grid = GridStack.init({float: true});
       var widgetHTML = '<div class="grid-stack-item" data-gs-x="9"><div class="grid-stack-item-content"></div></div>';
-      var widget = grid.addWidget(widgetHTML, null, null, undefined);
+      var widget = grid.addWidget(widgetHTML, {x:null, y:null, width:undefined});
       var $widget = $(widget);
       expect(parseInt($widget.attr('data-gs-x'), 10)).toBe(8);
       expect(parseInt($widget.attr('data-gs-y'), 10)).toBe(0);
     });
   });
 
-  describe('method float()', function() {
+  describe('method getFloat()', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
@@ -941,15 +942,15 @@ describe('gridstack', function() {
     });
     it('should match true/false only', function() {
       var grid = GridStack.init({float: true});
-      expect(grid.float()).toBe(true);
+      expect(grid.getFloat()).toBe(true);
       grid.float(0);
-      expect(grid.float()).toBe(false);
+      expect(grid.getFloat()).toBe(false);
       grid.float(null);
-      expect(grid.float()).toBe(false);
+      expect(grid.getFloat()).toBe(false);
       grid.float(undefined);
-      expect(grid.float()).toBe(false);
+      expect(grid.getFloat()).toBe(false);
       grid.float(false);
-      expect(grid.float()).toBe(false);
+      expect(grid.getFloat()).toBe(false);
     });
   });
 

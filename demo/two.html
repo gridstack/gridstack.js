@@ -135,8 +135,8 @@
     });
 
     function toggleFloat(button, i) {
-      grids[i].float(! grids[i].float());
-      button.innerHTML = 'float: ' + grids[i].float();
+      grids[i].float(! grids[i].getFloat());
+      button.innerHTML = 'float: ' + grids[i].getFloat();
     }
 
     function compact(i) {

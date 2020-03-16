@@ -50,8 +50,8 @@
     };
 
     toggleFloat = function() {
-      grid.float(! grid.float());
-      document.querySelector('#float').innerHTML = 'float: ' + grid.float();
+      grid.float(! grid.getFloat());
+      document.querySelector('#float').innerHTML = 'float: ' + grid.getFloat();
     };
     addNewWidget();
   </script>

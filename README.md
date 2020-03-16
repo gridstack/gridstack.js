@@ -39,6 +39,7 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Touch devices support](#touch-devices-support)
   - [Migrating to v0.6.x](#migrating-to-v06x)
   - [Migrating to v1.0.0](#migrating-to-v100)
+  - [Migrating to v2.0.0](#migrating-to-v200)
 - [Changes](#changes)
 - [The Team](#the-team)
 
@@ -322,6 +323,20 @@ Recommend looking at the [many samples](./demo) for more code examples.
 **NOTE: jQuery Applications** 
 
 We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.4.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring it's own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` + after you import your libs.
+
+## Migrating to v2.0.0
+
+make sure to read v1.0.0 migration first!
+
+v2.x is a Typescript rewrite of 1.x, using classes and overall code cleanup. You code might not need change from 1.x
+
+In general methods that used optional args as getting vs setting are not used in Typescript. 
+Also legacy methods that used to take tons of parameters will now take an object.
+
+```
+removed `addWidget(el, x, y, width, ...)` --> use the widget options version instead `addWidget(el, {x, y, with,...})`
+`float()` to get value --> `getFloat()`
+```
 
 Changes
 =====
