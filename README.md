@@ -78,8 +78,8 @@ npm install --save gridstack
 * Using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.0/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.0/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.1/dist/gridstack.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.1/dist/gridstack.all.js"></script>
 ```
 
 if you need to debug, look at the git demo/ examples for non min includes.
@@ -162,7 +162,7 @@ GridStack.init( {column: N} );
 
 2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.0/dist/gridstack-extra.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.1/dist/gridstack-extra.css"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
@@ -276,15 +276,16 @@ starting in 0.6.x `change` event are no longer sent (for pretty much most nodes!
 
 v1.0.0 removed Jquery from the API and external dependencies, which will require some code changes. Here is a list of the changes:
 
-1. your code only needs to include `gridstack.all.js` and `gristack.css` (don't include other JS) and is recommended you do that as internal dependencies will change over time. If you are jquery based, also see note below.
+1. see [Migrating to v0.6.x](#migrating-to-v06x) if you didn't already
 
-2. code change:
+2. your code only needs to include `gridstack.all.js` and `gristack.css` (don't include other JS) and is recommended you do that as internal dependencies will change over time. If you are jquery based, also see note below.
+
+3. code change:
 
 **OLD** initializing code + adding a widget + adding an event:
 ```js
 // initialization returned Jquery element, requiring second call to get GridStack var
-$('.grid-stack').gridstack(opts?);
-var grid = $('.grid-stack').data('gridstack');
+var grid = $('.grid-stack').gridstack(opts?).data('gridstack');
 
 // returned Jquery element
 grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>'), undefined, undefined, 2, undefined, true);
@@ -292,6 +293,8 @@ grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>')
 // jquery event handler
 $('.grid-stack').on('added', function(e, items) {/* items contains info */});
 
+// grid access after init
+var grid = $('.grid-stack').data('gridstack');
 ```
 **NEW**
 ```js
@@ -305,9 +308,9 @@ grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {
 // event handler
 grid.on('added', function(e, items) {/* items contains info */});
 
+// grid access after init
+var grid = el.gridstack; // where el = document.querySelector('.grid-stack') or other ways...
 ```
- 3. see [Migrating to v0.6.x](#migrating-to-v06x) if you didn't already
-
 Other vars/global changes
 ```
 `GridStackUI` --> `GridStack`
