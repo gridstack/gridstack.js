@@ -1,5 +1,5 @@
 /**
- * gridstack.js 1.1.0-dev
+ * gridstack.js 1.1.1-dev
  * https://gridstackjs.com/
  * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
@@ -342,8 +342,15 @@
     while (true) {
       var collisionNode = this.nodes.find(Utils._collisionNodeCheck, {node: node, nn: nn});
       if (!collisionNode) { return; }
-      var moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
-        collisionNode.width, collisionNode.height, true);
+      var moved;
+      if (collisionNode.locked) {
+        // if colliding with a locked item, move ourself instead
+        moved = this.moveNode(node, node.x, collisionNode.y + collisionNode.height,
+          node.width, node.height, true);
+      } else {
+        moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.height,
+          collisionNode.width, collisionNode.height, true);
+      }
       if (!moved) { return; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
     }
   };
@@ -635,6 +642,7 @@
   };
 
   GridStackEngine.prototype.moveNode = function(node, x, y, width, height, noPack) {
+    if (node.locked) { return null; }
     if (typeof x !== 'number') { x = node.x; }
     if (typeof y !== 'number') { y = node.y; }
     if (typeof width !== 'number') { width = node.width; }
@@ -643,7 +651,7 @@
     // constrain the passed in values and check if we're still changing our node
     var resizing = (node.width !== width || node.height !== height);
     var nn = { x: x, y: y, width: width, height: height,
-      maxWidth: node.maxWidth, maxHeight: NodeIterator.maxHeight, minWidth: node.minWidth, minHeight: node.minHeight};
+      maxWidth: node.maxWidth, maxHeight: node.maxHeight, minWidth: node.minWidth, minHeight: node.minHeight};
     nn = this._prepareNode(nn, resizing);
     if (node.x === nn.x && node.y === nn.y && node.width === nn.width && node.height === nn.height) {
       return null;
@@ -1505,34 +1513,38 @@
   };
 
   GridStack.prototype.removeWidget = function(el, detachNode) {
-    detachNode = (detachNode === undefined ? true : detachNode);
     el = $(el);
     var node = el.data('_gridstack_node');
     // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
     if (!node) {
       node = this.engine.getNodeDataByDOMEl(el.get(0));
     }
-
+    // remove our DOM data (circular link) and drag&drop permanently
     el.removeData('_gridstack_node');
+    this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+
     this.engine.removeNode(node, detachNode);
     this._triggerRemoveEvent();
     this._triggerChangeEvent(true); // trigger any other changes
   };
 
   GridStack.prototype.removeAll = function(detachNode) {
-    if (detachNode !== false) {
-      // remove our data structure before list gets emptied and DOM elements stay behind
-      this.engine.nodes.forEach(function(node) { $(node.el).removeData('_gridstack_node') });
-    }
+    // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
+    this.engine.nodes.forEach(function(node) {
+      var el = $(node.el);
+      el.removeData('_gridstack_node');
+      this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+    }, this);
+
     this.engine.removeAll(detachNode);
     this._triggerRemoveEvent();
   };
 
   GridStack.prototype.destroy = function(detachGrid) {
     $(window).off('resize', this.onResizeHandler);
-    this.disable();
-    if (detachGrid !== undefined && !detachGrid) {
+    if (detachGrid === false) {
       this.removeAll(false);
+      this.$el.removeClass(this.opts._class);
       delete this.$el.get(0).gridstack;
     } else {
       this.$el.remove();
@@ -2108,7 +2120,7 @@
     var grids = [];
     $(selector).each(function(index, el) {
       if (!el.gridstack) {
-        el.gridstack = new GridStack(el, opts);
+        el.gridstack = new GridStack(el, Utils.clone(opts));
       }
       grids.push(el.gridstack);
     });

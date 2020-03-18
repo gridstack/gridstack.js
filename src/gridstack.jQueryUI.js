@@ -1,4 +1,4 @@
-/** gridstack.js 1.1.0-dev - JQuery UI Drag&Drop plugin @preserve */
+/** gridstack.js 1.1.1-dev - JQuery UI Drag&Drop plugin @preserve */
 /**
  * https://gridstackjs.com/
  * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
@@ -31,7 +31,7 @@
 
   JQueryUIGridStackDragDropPlugin.prototype.resizable = function(el, opts) {
     el = $(el);
-    if (opts === 'disable' || opts === 'enable') {
+    if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
       el.resizable(opts);
     } else if (opts === 'option') {
       var key = arguments[2];
@@ -53,7 +53,7 @@
 
   JQueryUIGridStackDragDropPlugin.prototype.draggable = function(el, opts) {
     el = $(el);
-    if (opts === 'disable' || opts === 'enable') {
+    if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
       el.draggable(opts);
     } else {
       el.draggable($.extend({}, this.grid.opts.draggable, {

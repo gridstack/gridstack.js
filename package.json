@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "1.1.0-dev",
+  "version": "1.1.1-dev",
   "description": "JavaScript / TypeScript for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Ember, knockout...)",
   "main": "dist/gridstack",
   "repository": {
@@ -8,7 +8,7 @@
     "url": "git+https://github.com/gridstack/gridstack.js.git"
   },
   "scripts": {
-    "build": "grunt && doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
+    "build": "rm -rf dist/* && grunt && doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
     "test": "grunt lint && karma start karma.conf.js",
     "lint": "grunt lint",
     "reset": "rm -rf dist node_modules",
