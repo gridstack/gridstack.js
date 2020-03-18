@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [1.1.0-dev (upcoming)](#110-dev-upcoming)
+- [1.1.1-dev (upcoming)](#111-dev-upcoming)
+- [1.1.1 (2020-03-17)](#111-2020-03-17)
 - [1.1.0 (2020-02-29)](#110-2020-02-29)
 - [v1.0.0 (2020-02-23)](#v100-2020-02-23)
 - [v0.6.4 (2020-02-17)](#v064-2020-02-17)
@@ -32,7 +33,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 1.1.0-dev (upcoming)
+## 1.1.1-dev (upcoming)
+
+- TBD
+
+## 1.1.1 (2020-03-17)
 
 - fix [1187](https://github.com/gridstack/gridstack.js/issues/1187) IE support for `CustomEvent` polyfill - thanks [@phil-blais](https://github.com/phil-blais)
 - fix [1204](https://github.com/gridstack/gridstack.js/issues/1204) destroy drag&drop when removing node(s) instead of just disabling it.

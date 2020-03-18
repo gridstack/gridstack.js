@@ -12,6 +12,7 @@ yarn.lock
 .npmignore
 .travis.yml
 .eslint*
+.vscode
 Gruntfile.js
 ISSUE_TEMPLATE.md
 PULL_REQUEST_TEMPLATE.md

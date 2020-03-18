@@ -43,7 +43,6 @@ module.exports = function(grunt) {
         files: {
           'dist/gridstack.js': ['src/gridstack.js'],
           'dist/gridstack.d.ts': ['src/gridstack.d.ts'],
-          'dist/gridstack.all.d.ts': ['src/gridstack.d.ts'],
           'dist/gridstack.jQueryUI.js': ['src/gridstack.jQueryUI.js'],
           'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/jquery.js': ['src/jquery.js'],
