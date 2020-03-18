@@ -24,7 +24,6 @@ gridstack.js API
   - [addWidget(el, [options])](#addwidgetel-options)
   - [batchUpdate()](#batchupdate)
   - [compact()](#compact)
-  - [cellHeight()](#cellheight)
   - [cellHeight(val, noUpdate)](#cellheightval-noupdate)
   - [cellWidth()](#cellwidth)
   - [commit()](#commit)
@@ -35,6 +34,7 @@ gridstack.js API
   - [enableMove(doEnable, includeNewWidgets)](#enablemovedoenable-includenewwidgets)
   - [enableResize(doEnable, includeNewWidgets)](#enableresizedoenable-includenewwidgets)
   - [float(val?)](#floatval)
+  - [getCellHeight()](#getcellheight)
   - [getCellFromPixel(position[, useOffset])](#getcellfrompixelposition-useoffset)
   - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
   - [locked(el, val)](#lockedel-val)
@@ -52,7 +52,7 @@ gridstack.js API
   - [setAnimation(doAnimate)](#setanimationdoanimate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
-  - [verticalMargin()](#verticalmargin)
+  - [getVerticalMargin()](#getverticalmargin)
   - [verticalMargin(value, noUpdate)](#verticalmarginvalue-noupdate)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
 - [Utils](#utils)
@@ -261,10 +261,6 @@ starts batch updates. You will see no changes until `commit()` method is called.
 
 re-layout grid items to reclaim any empty space.
 
-### cellHeight()
-
-Gets current cell height.
-
 ### cellHeight(val, noUpdate)
 
 Update current cell height. This method rebuilds an internal CSS stylesheet (unless optional noUpdate=true). Note: You can expect performance issues if
@@ -341,6 +337,11 @@ grid.opts.disableResize = !doEnable;
 set/get floating widgets (default: `false`)
 
 - `val` - boolean to set true/false, else get the current value
+
+### getCellHeight()
+
+Gets current cell height.
+
 
 ### getCellFromPixel(position[, useOffset])
 
@@ -478,7 +479,7 @@ Parameters:
 
 Updates widget position/size.
 
-### verticalMargin()
+### getVerticalMargin()
 
 returns current vertical margin value.
 

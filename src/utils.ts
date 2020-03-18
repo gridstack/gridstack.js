@@ -152,7 +152,7 @@ export class Utils {
 
     sources.forEach(function (source) {
       for (let prop in source) {
-        if (source.hasOwnProperty(prop) && (!target.hasOwnProperty(prop) || target[prop] === undefined)) {
+        if (source.hasOwnProperty(prop) && (target[prop] === null || target[prop] === undefined)) {
           target[prop] = source[prop];
         }
       }
