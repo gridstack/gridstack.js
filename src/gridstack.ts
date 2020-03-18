@@ -44,18 +44,26 @@ function getElement(els: GridStackElement): GridItemHTMLElement {
     (document.querySelector(els) || document.querySelector('#' + els) || document.querySelector('.' + els)) : els);
 }
 function getElements(els: GridStackElement): GridItemHTMLElement[] {
-  return (typeof els === 'string' ? Array.from(
-    document.querySelectorAll(els) || document.querySelectorAll('#' + els) || document.querySelectorAll('.' + els)
-  ) : [els]);
+  if (typeof els === 'string') {
+    let list = document.querySelectorAll(els);
+    if (!list.length) { list = document.querySelectorAll('.' + els) }
+    if (!list.length) { list = document.querySelectorAll('#' + els) }
+    return Array.from(list) as GridItemHTMLElement[];
+  }
+  return [els];
 }
 function getGridElement(els: string | HTMLElement): GridHTMLElement {
   return (typeof els === 'string' ?
     (document.querySelector(els) || document.querySelector('#' + els) || document.querySelector('.' + els)) : els);
 }
 function getGridElements(els: string | HTMLElement): GridHTMLElement[] {
-  return (typeof els === 'string' ? Array.from(
-    document.querySelectorAll(els) || document.querySelectorAll('#' + els) || document.querySelectorAll('.' + els)
-  ) : [els]);
+  if (typeof els === 'string') {
+    let list = document.querySelectorAll(els);
+    if (!list.length) { list = document.querySelectorAll('.' + els) }
+    if (!list.length) { list = document.querySelectorAll('#' + els) }
+    return Array.from(list) as GridHTMLElement[];
+  }
+  return [els];
 }
 
 /**
@@ -354,8 +362,10 @@ export class GridStack {
     // support legacy call for now ?
     if (arguments.length > 2) {
       console.warn('gridstack.ts: `addWidget(el, x, y, width...)` is deprecated. Use `addWidget(el, {x, y, width,...})`. It will be removed soon');
+      // eslint-disable-next-line prefer-rest-params
       let a = arguments, i = 1,
-      opt: GridstackWidget = { x:a[i++], y:a[i++], width:a[i++], height:a[i++], autoPosition:a[i++], minWidth:a[i++], maxWidth:a[i++], minHeight:a[i++], maxHeight:a[i++], id:a[i++] };
+        opt: GridstackWidget = { x:a[i++], y:a[i++], width:a[i++], height:a[i++], autoPosition:a[i++],
+          minWidth:a[i++], maxWidth:a[i++], minHeight:a[i++], maxHeight:a[i++], id:a[i++] };
       return this.addWidget(el, opt);
     }
 
@@ -672,12 +682,11 @@ export class GridStack {
    * @param val A numeric value of the number of columns
    */
   public maxWidth(els: GridStackElement, val: number): GridStack {
-    if (isNaN(val)) return;
     getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) { return; }
       node.maxWidth = (val || undefined);
-      if (node.maxWidth) {
+      if (val) {
         el.setAttribute('data-gs-max-width', String(val));
       } else {
         el.removeAttribute('data-gs-max-width');
@@ -692,11 +701,10 @@ export class GridStack {
    * @param val A numeric value of the number of columns
    */
   public minWidth(els: GridStackElement, val: number): GridStack {
-    if (isNaN(val)) return;
     getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) { return; }
-      if (node.minWidth) {
+      if (val) {
         el.setAttribute('data-gs-min-width', String(val));
       } else {
         el.removeAttribute('data-gs-min-width');
@@ -711,11 +719,10 @@ export class GridStack {
    * @param val A numeric value of the number of rows
    */
   public maxHeight(els: GridStackElement, val: number): GridStack {
-    if (isNaN(val)) return;
     getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) { return; }
-      if (node.maxHeight) {
+      if (val) {
         el.setAttribute('data-gs-max-height', String(val));
       } else {
         el.removeAttribute('data-gs-max-height');
@@ -730,11 +737,10 @@ export class GridStack {
    * @param val A numeric value of the number of rows
    */
   public minHeight(els: GridStackElement, val: number): GridStack {
-    if (isNaN(val)) return;
     getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) { return; }
-      if (node.minHeight) {
+      if (val) {
         el.setAttribute('data-gs-min-height', String(val));
       } else {
         el.removeAttribute('data-gs-min-height');
@@ -1644,4 +1650,5 @@ export class GridStack {
   // legacy method renames
   private setGridWidth = obsolete(GridStack.prototype.column, 'setGridWidth', 'column', 'v0.5.3');
   private setColumn = obsolete(GridStack.prototype.column, 'setColumn', 'column', 'v0.6.4');
+  private getGridHeight =  obsolete(GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
 }

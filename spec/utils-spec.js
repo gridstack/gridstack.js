@@ -1,7 +1,7 @@
 describe('gridstack utils', function() {
   'use strict';
 
-  var utils;
+  let utils;
 
   beforeEach(function() {
     utils = GridStack.Utils;
@@ -11,7 +11,7 @@ describe('gridstack utils', function() {
 
     it('should set gridstack utils.', function() {
       expect(utils).not.toBeNull();
-      expect(typeof utils).toBe('object');
+      expect(typeof utils).toBe('function');
     });
 
   });
@@ -40,7 +40,7 @@ describe('gridstack utils', function() {
   });
 
   describe('test isIntercepted', function() {
-    var src = {x: 3, y: 2, width: 3, height: 2};
+    let src = {x: 3, y: 2, width: 3, height: 2};
 
     it('should intercept.', function() {
       expect(utils.isIntercepted(src, {x: 0, y: 0, width: 4, height: 3})).toEqual(true);
@@ -61,11 +61,11 @@ describe('gridstack utils', function() {
   describe('test createStylesheet/removeStylesheet', function() {
 
     it('should create/remove style DOM', function() {
-      var _id = 'test-123';
+      let _id = 'test-123';
 
       utils.createStylesheet(_id);
 
-      var style = $('STYLE[data-gs-style-id=' + _id + ']');
+      let style = $('STYLE[data-gs-style-id=' + _id + ']');
 
       expect(style.length).toEqual(1);
       expect(style.prop('tagName')).toEqual('STYLE');
@@ -111,7 +111,7 @@ describe('gridstack utils', function() {
 
   describe('test defaults', function() {
     it('should assign missing field or undefined', function() {
-      var src = {};
+      let src = {};
       expect(src).toEqual({});
       expect(utils.defaults(src, {x: 1, y: 2})).toEqual({x: 1, y: 2});
       expect(utils.defaults(src, {x: 10})).toEqual({x: 1, y: 2});

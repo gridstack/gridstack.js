@@ -336,6 +336,8 @@ Also legacy methods that used to take tons of parameters will now take an object
 ```
 removed `addWidget(el, x, y, width, ...)` --> use the widget options version instead `addWidget(el, {x, y, with,...})`
 `float()` to get value --> `getFloat()`
+'cellHeight()` to get value --> `getCellheight()`
+'verticalMargin()` to get value --> `getVerticalMargin()`
 ```
 
 Changes
