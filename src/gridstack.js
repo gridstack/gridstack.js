@@ -867,14 +867,12 @@
         self._updateHeightsOnResize();
       }
 
-      if (self.opts.staticGrid) { return; }
-
       if (!self.opts.disableOneColumnMode && (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <= self.opts.minWidth) {
-        if (self.oneColumnMode) {  return; }
+        if (self.oneColumnMode) { return }
         self.oneColumnMode = true;
         self.column(1);
       } else {
-        if (!self.oneColumnMode) { return; }
+        if (!self.oneColumnMode) { return }
         self.oneColumnMode = false;
         self.column(self._prevColumn);
       }

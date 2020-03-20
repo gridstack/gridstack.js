@@ -35,7 +35,7 @@ Change log
 
 ## 1.1.1-dev (upcoming)
 
-- TBD
+- fix [1229](https://github.com/gridstack/gridstack.js/issues/1229) `staticGrid` no longer disable oneColumnMode
 
 ## 1.1.1 (2020-03-17)
 
