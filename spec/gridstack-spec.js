@@ -886,7 +886,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       grid.destroy();
       expect($('.grid-stack').length).toBe(0);
-      expect(grid.engine).toBe(null);
+      expect(grid.engine).toBe(undefined);
     });
     it('should cleanup gridstack but leave elements', function() {
       let options = {
@@ -897,7 +897,7 @@ describe('gridstack', function() {
       grid.destroy(false);
       expect($('.grid-stack').length).toBe(1);
       expect($('.grid-stack-item').length).toBe(2);
-      expect(grid.engine).toBe(null);
+      expect(grid.engine).toBe(undefined);
       grid.destroy();
     });
   });
