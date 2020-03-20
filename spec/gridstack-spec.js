@@ -145,6 +145,7 @@ describe('gridstack', function() {
         staticGrid: true
       };
       var grid = GridStack.init(options);
+      expect($('.grid-stack').hasClass('grid-stack-static')).toBe(true);
       $('.grid-stack').removeClass('grid-stack-static');
       grid._setStaticClass();
       expect($('.grid-stack').hasClass('grid-stack-static')).toBe(true);
@@ -156,6 +157,7 @@ describe('gridstack', function() {
         staticGrid: false
       };
       var grid = GridStack.init(options);
+      expect($('.grid-stack').hasClass('grid-stack-static')).toBe(false);
       $('.grid-stack').addClass('grid-stack-static');
       grid._setStaticClass();
       expect($('.grid-stack').hasClass('grid-stack-static')).toBe(false);
