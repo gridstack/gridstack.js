@@ -39,6 +39,7 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Touch devices support](#touch-devices-support)
   - [Migrating to v0.6.x](#migrating-to-v06x)
   - [Migrating to v1.0.0](#migrating-to-v100)
+    - [jQuery Application](#jquery-application)
   - [Migrating to v2.0.0](#migrating-to-v200)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -79,8 +80,8 @@ npm install --save gridstack
 * Using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.0/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.0/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.1/dist/gridstack.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.1/dist/gridstack.all.js"></script>
 ```
 
 if you need to debug, look at the git demo/ examples for non min includes.
@@ -94,7 +95,7 @@ creating items dynamically...
 
 <script type="text/javascript">
   var grid = GridStack.init();
-  grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content"> test </div></div>', {width: 2});
+  grid.addWidget('<div><div class="grid-stack-item-content">Item 1</div></div>', {width: 2});
 </script>
 ```
 
@@ -133,7 +134,7 @@ You can easily extend or patch gridstack with code like this:
 ```js
 // extend gridstack with our own custom method
 GridStack.prototype.printCount = function() {
-  console.log('grid has ' + this.grid.nodes.length + ' items');
+  console.log('grid has ' + this.engine.nodes.length + ' items');
 };
 
 var grid = GridStack.init();
@@ -163,7 +164,7 @@ GridStack.init( {column: N} );
 
 2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.0/dist/gridstack-extra.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.1/dist/gridstack-extra.css"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
@@ -277,15 +278,16 @@ starting in 0.6.x `change` event are no longer sent (for pretty much most nodes!
 
 v1.0.0 removed Jquery from the API and external dependencies, which will require some code changes. Here is a list of the changes:
 
-1. your code only needs to include `gridstack.all.js` and `gristack.css` (don't include other JS) and is recommended you do that as internal dependencies will change over time. If you are jquery based, also see note below.
+1. see [Migrating to v0.6.x](#migrating-to-v06x) if you didn't already
 
-2. code change:
+2. your code only needs to include `gridstack.all.js` and `gristack.css` (don't include other JS) and is recommended you do that as internal dependencies will change over time. If you are jquery based, also see note below.
+
+3. code change:
 
 **OLD** initializing code + adding a widget + adding an event:
 ```js
 // initialization returned Jquery element, requiring second call to get GridStack var
-$('.grid-stack').gridstack(opts?);
-var grid = $('.grid-stack').data('gridstack');
+var grid = $('.grid-stack').gridstack(opts?).data('gridstack');
 
 // returned Jquery element
 grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>'), undefined, undefined, 2, undefined, true);
@@ -293,6 +295,8 @@ grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>')
 // jquery event handler
 $('.grid-stack').on('added', function(e, items) {/* items contains info */});
 
+// grid access after init
+var grid = $('.grid-stack').data('gridstack');
 ```
 **NEW**
 ```js
@@ -306,9 +310,9 @@ grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {
 // event handler
 grid.on('added', function(e, items) {/* items contains info */});
 
+// grid access after init
+var grid = el.gridstack; // where el = document.querySelector('.grid-stack') or other ways...
 ```
- 3. see [Migrating to v0.6.x](#migrating-to-v06x) if you didn't already
-
 Other vars/global changes
 ```
 `GridStackUI` --> `GridStack`
@@ -320,9 +324,9 @@ Other vars/global changes
 
 Recommend looking at the [many samples](./demo) for more code examples.
 
-**NOTE: jQuery Applications** 
+### jQuery Application
 
-We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.4.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring it's own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` + after you import your libs.
+We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.4.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring it's own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your libs.
 
 ## Migrating to v2.0.0
 
@@ -349,4 +353,4 @@ View our change log [here](https://github.com/gridstack/gridstack.js/tree/develo
 The Team
 ========
 
-gridstack.js is currently maintained by [Dylan Weiss](https://github.com/radiolips) and [Alain Dumesny](https://github.com/adumesny), originally created by [Pavel Reznikov](https://github.com/troolee). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
+gridstack.js is currently maintained by [Alain Dumesny](https://github.com/adumesny) and [Dylan Weiss](https://github.com/radiolips), originally created by [Pavel Reznikov](https://github.com/troolee). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
