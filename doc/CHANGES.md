@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [1.1.0-dev (upcoming)](#110-dev-upcoming)
+- [1.1.1-dev (upcoming)](#111-dev-upcoming)
+- [1.1.1 (2020-03-17)](#111-2020-03-17)
 - [1.1.0 (2020-02-29)](#110-2020-02-29)
 - [v1.0.0 (2020-02-23)](#v100-2020-02-23)
 - [v0.6.4 (2020-02-17)](#v064-2020-02-17)
@@ -32,13 +33,18 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 1.1.0-dev (upcoming)
+## 1.1.1-dev (upcoming)
+
+- fix [1229](https://github.com/gridstack/gridstack.js/issues/1229) `staticGrid` no longer disable oneColumnMode
+- add `getGridItems()` to return list of HTML grid items
+
+## 1.1.1 (2020-03-17)
 
 - fix [1187](https://github.com/gridstack/gridstack.js/issues/1187) IE support for `CustomEvent` polyfill - thanks [@phil-blais](https://github.com/phil-blais)
 - fix [1204](https://github.com/gridstack/gridstack.js/issues/1204) destroy drag&drop when removing node(s) instead of just disabling it.
-- include SASS source files to npm package again [1193](https://github.com/gridstack/gridstack.js/pull/1193)	- include SASS source files to npm package again [1193](https://github.com/gridstack/gridstack.js/pull/1193)
-- fix [1217](https://github.com/gridstack/gridstack.js/issues/1217) If I set `cellHeight` to some `vh`, only first grid will take `vh`, rest will use `px`
-- add `getGridItems()` to return list of HTML grid items
+- fix [1181](https://github.com/gridstack/gridstack.js/issues/1181) Locked widgets are still moveable by other widgets.
+- fix [1217](https://github.com/gridstack/gridstack.js/issues/1217) If I set cellHeight to some vh, only first grid will take vh, rest will use px
+- include SASS source files to npm package again [1193](https://github.com/gridstack/gridstack.js/pull/1193)
 
 ## 1.1.0 (2020-02-29)
 
