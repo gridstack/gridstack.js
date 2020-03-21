@@ -1,3 +1,5 @@
+import { GridStack } from '../src/gridstack';
+
 describe('gridstack', function() {
   'use strict';
 
@@ -67,7 +69,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         staticGrid: true
       };
-      let grid = GridStack.init(options);
+      let grid: any = GridStack.init(options);
       expect($('.grid-stack').hasClass('grid-stack-static')).toBe(true);
       $('.grid-stack').removeClass('grid-stack-static');
       grid._setStaticClass();
@@ -79,7 +81,7 @@ describe('gridstack', function() {
         verticalMargin: 10,
         staticGrid: false
       };
-      let grid = GridStack.init(options);
+      let grid: any = GridStack.init(options);
       expect($('.grid-stack').hasClass('grid-stack-static')).toBe(false);
       $('.grid-stack').addClass('grid-stack-static');
       grid._setStaticClass();
@@ -826,7 +828,7 @@ describe('gridstack', function() {
     });
     it('should use default', function() {
       let grid = GridStack.init();
-      let widget = grid.addWidget(widgetHTML, {x: 'foo', y: null, width: 'bar', height: ''});
+      let widget = grid.addWidget(widgetHTML, {x: 'foo', y: null, width: 'bar', height: ''} as any);
       
       expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
       expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
@@ -862,7 +864,7 @@ describe('gridstack', function() {
     it('should match true/false only', function() {
       let grid = GridStack.init({float: true});
       expect(grid.getFloat()).toBe(true);
-      grid.float(0);
+      (grid as any).float(0);
       expect(grid.getFloat()).toBe(false);
       grid.float(null);
       expect(grid.getFloat()).toBe(false);
@@ -953,7 +955,7 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should do nothing and return NULL to mean nothing happened', function() {
-      let grid = GridStack.init();
+      let grid:any = GridStack.init();
       let items = $('.grid-stack-item');
       grid._updateElement(items[0], function(el, node) {
         let hasMoved = grid.engine.moveNode(node);
@@ -961,7 +963,7 @@ describe('gridstack', function() {
       });
     });
     it('should do nothing and return node', function() {
-      let grid = GridStack.init();
+      let grid: any = GridStack.init();
       let items = $('.grid-stack-item');
       grid.minWidth(items[0], 1);
       grid.maxWidth(items[0], 2);
@@ -1037,7 +1039,7 @@ describe('gridstack', function() {
         cellHeight: 80,
         verticalMargin: 10
       };
-      let grid = GridStack.init(options);
+      let grid: any = GridStack.init(options);
       spyOn(grid, '_updateStyles');
       grid.verticalMargin(11, true);
       expect(grid._updateStyles).not.toHaveBeenCalled();
@@ -1309,13 +1311,13 @@ describe('gridstack', function() {
     });
     */
     it('warning if OLD grid height is set', function() {
-      let grid = GridStack.init({height: 10}); // old 0.5.2 Opt now maxRow
+      let grid = (GridStack as any).init({height: 10}); // old 0.5.2 Opt now maxRow
       expect(grid.opts.maxRow).toBe(10);
       expect(grid.engine.maxRow).toBe(10);
       expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `height` is deprecated in v0.5.3 and has been replaced with `maxRow`. It will be **completely** removed in v1.0');
     });
     it('warning if OLD oneColumnModeClass is set (no changes)', function() {
-      GridStack.init({oneColumnModeClass: 'foo'}); // deleted 0.6.3 Opt
+      (GridStack as any).init({oneColumnModeClass: 'foo'}); // deleted 0.6.3 Opt
       expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `oneColumnModeClass` is deprecated in v0.6.3. Use class `.grid-stack-1` instead');
     });
   });

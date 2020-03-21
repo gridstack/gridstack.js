@@ -1,8 +1,11 @@
+import { GridStackEngine } from '../src/gridstack-engine';
+
 describe('gridstack engine', function() {
   'use strict';
   let engine;
-  let e = GridStack.Engine;
-  let w = window;
+  // old hacky JS code that's not happy in TS. just cast to `any` and skip warnings
+  let e: any = GridStackEngine;
+  let w: any = window;
 
   let findNode = function(engine, id) {
     return engine.nodes.find(function(i) { return i._id === id; });
@@ -16,7 +19,7 @@ describe('gridstack engine', function() {
   describe('test constructor', function() {
   
     it('should be setup properly', function() {
-      engine = new GridStack.Engine(12);
+      engine = new GridStackEngine(12);
       expect(engine.column).toEqual(12);
       expect(engine.float).toEqual(false);
       expect(engine.maxRow).toEqual(0);
@@ -27,8 +30,8 @@ describe('gridstack engine', function() {
 
     it('should set params correctly.', function() {
       let fkt = function() { };
-      let arr = [1,2,3];
-      engine = new GridStack.Engine(1, fkt, true, 2, arr);
+      let arr: any = [1,2,3];
+      engine = new GridStackEngine(1, fkt, true, 2, arr);
       expect(engine.column).toEqual(1);
       expect(engine.float).toBe(true);
       expect(engine.maxRow).toEqual(2);
@@ -51,7 +54,7 @@ describe('gridstack engine', function() {
   describe('test prepareNode', function() {
 
     beforeAll(function() {
-      engine = new GridStack.Engine(12);
+      engine = new GridStackEngine(12);
     });
     it('should prepare a node', function() {
       expect(engine.prepareNode({}, false)).toEqual(jasmine.objectContaining({x: 0, y: 0, width: 1, height: 1}));
@@ -120,7 +123,7 @@ describe('gridstack engine', function() {
   describe('test isAreaEmpty', function() {
 
     beforeAll(function() {
-      engine = new GridStack.Engine(12, null, true);
+      engine = new GridStackEngine(12, null, true);
       engine.nodes = [
         engine.prepareNode({x: 3, y: 2, width: 3, height: 2})
       ];
@@ -140,7 +143,7 @@ describe('gridstack engine', function() {
   describe('test cleanNodes/getDirtyNodes', function() {
 
     beforeAll(function() {
-      engine = new GridStack.Engine(12, null, true);
+      engine = new GridStackEngine(12, null, true);
       engine.nodes = [
         engine.prepareNode({x: 0, y: 0, width: 1, height: 1, idx: 1, _dirty: true}),
         engine.prepareNode({x: 3, y: 2, width: 3, height: 2, idx: 2, _dirty: true}),
@@ -173,7 +176,7 @@ describe('gridstack engine', function() {
 
   describe('test batchUpdate/commit', function() {
     beforeAll(function() {
-      engine = new GridStack.Engine(12);
+      engine = new GridStackEngine(12);
     });
 
     it('should work on not float grids', function() {
@@ -200,7 +203,7 @@ describe('gridstack engine', function() {
   describe('test batchUpdate/commit', function() {
 
     beforeAll(function() {
-      engine = new GridStack.Engine(12, null, true);
+      engine = new GridStackEngine(12, null, true);
     });
 
     it('should work on float grids', function() {
@@ -222,7 +225,7 @@ describe('gridstack engine', function() {
         callback: function() {}
       };
       spyOn(spy, 'callback');
-      engine = new GridStack.Engine(12, spy.callback, true);
+      engine = new GridStackEngine(12, spy.callback, true);
       engine.nodes = [
         engine.prepareNode({x: 0, y: 0, width: 1, height: 1, idx: 1, _dirty: true}),
         engine.prepareNode({x: 3, y: 2, width: 3, height: 2, idx: 2, _dirty: true}),
@@ -268,7 +271,7 @@ describe('gridstack engine', function() {
   describe('test _packNodes', function() {
     describe('using not float mode', function() {
       beforeEach(function() {
-        engine = new GridStack.Engine(12, null, false);
+        engine = new GridStackEngine(12, null, false);
       });
 
       it('shouldn\'t pack one node with y coord eq 0', function() {
@@ -323,7 +326,7 @@ describe('gridstack engine', function() {
 
   describe('test isNodeChangedPosition', function() {
     beforeAll(function() {
-      engine = new GridStack.Engine(12);
+      engine = new GridStackEngine(12);
     });
     it('should return true for changed x', function() {
       let widget = { x: 1, y: 2, width: 3, height: 4 };
@@ -349,7 +352,7 @@ describe('gridstack engine', function() {
 
   describe('test locked widget', function() {
     beforeAll(function() {
-      engine = new GridStack.Engine(12);
+      engine = new GridStackEngine(12);
     });
     it('should add widgets around locked one', function() {
       let nodes = [
@@ -374,5 +377,4 @@ describe('gridstack engine', function() {
       expect(engine.moveNode(node2, 7, 6)).toEqual(jasmine.objectContaining({x: 7, y: 6, width: 2, height: 3,}));
     });
   });
-
 });
