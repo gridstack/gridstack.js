@@ -27,13 +27,13 @@
 
   <script type="text/javascript">
     const COLUMNS = 30; // # of columns, also need to update CSS
-    var count = 0;
-    var options = {
+    let count = 0;
+    let options = {
       column: COLUMNS,
       cellHeight: 'auto',
       float: false
     };
-    var grid = GridStack.init(options);
+    let grid = GridStack.init(options);
 
     addNewWidget = function() {
       grid.addWidget('<div><div class="grid-stack-item-content">' + count + '</div></div>', {id: count});

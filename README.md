@@ -94,7 +94,7 @@ creating items dynamically...
 <div class="grid-stack"></div>
 
 <script type="text/javascript">
-  var grid = GridStack.init();
+  let grid = GridStack.init();
   grid.addWidget('<div><div class="grid-stack-item-content">Item 1</div></div>', {width: 2});
 </script>
 ```
@@ -137,7 +137,7 @@ GridStack.prototype.printCount = function() {
   console.log('grid has ' + this.engine.nodes.length + ' items');
 };
 
-var grid = GridStack.init();
+let grid = GridStack.init();
 
 // you can now call
 grid.printCount();
@@ -261,7 +261,7 @@ working on touch-based devices.
 Also `alwaysShowResizeHandle` option may be useful:
 
 ```js
-var options = {
+let options = {
   alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 };
 GridStack.init(options);
@@ -287,7 +287,7 @@ v1.0.0 removed Jquery from the API and external dependencies, which will require
 **OLD** initializing code + adding a widget + adding an event:
 ```js
 // initialization returned Jquery element, requiring second call to get GridStack var
-var grid = $('.grid-stack').gridstack(opts?).data('gridstack');
+let grid = $('.grid-stack').gridstack(opts?).data('gridstack');
 
 // returned Jquery element
 grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>'), undefined, undefined, 2, undefined, true);
@@ -296,13 +296,13 @@ grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>')
 $('.grid-stack').on('added', function(e, items) {/* items contains info */});
 
 // grid access after init
-var grid = $('.grid-stack').data('gridstack');
+let grid = $('.grid-stack').data('gridstack');
 ```
 **NEW**
 ```js
 // element identifier defaults to '.grid-stack', returns the grid
 // Note: for Typescript use window.GridStack.init() until next native TS version
-var grid = GridStack.init(opts?, element?);
+let grid = GridStack.init(opts?, element?);
 
 // returns DOM element
 grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {width: 2});
@@ -311,7 +311,7 @@ grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {
 grid.on('added', function(e, items) {/* items contains info */});
 
 // grid access after init
-var grid = el.gridstack; // where el = document.querySelector('.grid-stack') or other ways...
+let grid = el.gridstack; // where el = document.querySelector('.grid-stack') or other ways...
 ```
 Other vars/global changes
 ```
@@ -332,17 +332,19 @@ We're working on implementing HTML5 drag'n'drop through the plugin system. Right
 
 make sure to read v1.0.0 migration first!
 
-v2.x is a Typescript rewrite of 1.x, using classes and overall code cleanup. You code might not need change from 1.x
+v2.x is a Typescript rewrite of 1.x, using classes and overall code cleanup. Your code might need to change from 1.x
 
-In general methods that used optional args as getting vs setting are not used in Typescript. 
-Also legacy methods that used to take tons of parameters will now take an object.
+1. In general methods that used no args = getter vs setter are not used in Typescript. 
+Also legacy methods that used to take tons of parameters will now take a single object (typically `GridstackOptions` or `GridstackWidget`).
 
 ```
-removed `addWidget(el, x, y, width, ...)` --> use the widget options version instead `addWidget(el, {x, y, with,...})`
+removed `addWidget(el, x, y, width, ...)` --> use the widget options version instead `addWidget(el, {with, ...})`
 `float()` to get value --> `getFloat()`
 'cellHeight()` to get value --> `getCellheight()`
 'verticalMargin()` to get value --> `getVerticalMargin()`
 ```
+
+2. `oneColumnMode` would trigger when `window.width` < 768px by default. We now check for grid width instead (more correct and supports nesting). You might need to adjust grid `minWidth` or `disableOneColumnMode`.
 
 Changes
 =====

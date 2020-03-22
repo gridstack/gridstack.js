@@ -102,7 +102,7 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init({
+    let grid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
       ),
@@ -115,7 +115,7 @@
     });
 
     grid.on('added removed change', function(e, items) {
-      var str = '';
+      let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
     });

@@ -58,11 +58,11 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init({ acceptWidgets: '.otherWidgetType' }, '.grid-stack.outer');
-    var gridNest = GridStack.init({ acceptWidgets: '.newWidget' }, '.grid-stack.nested');
+    let grid = GridStack.init({ acceptWidgets: '.otherWidgetType' }, '.grid-stack.outer');
+    let gridNest = GridStack.init({ acceptWidgets: '.newWidget' }, '.grid-stack.nested');
     
     grid.on('added removed change', function(e, items) {
-      var str = '';
+      let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
     });

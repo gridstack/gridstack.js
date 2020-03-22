@@ -19,13 +19,13 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init({
+    let grid = GridStack.init({
       disableOneColumnMode: true, // will manually do 1 column
       float: true });
-    var text = document.querySelector('#column-text');
+    let text = document.querySelector('#column-text');
     
     function resizeGrid() {
-      var width = document.body.clientWidth;
+      let width = document.body.clientWidth;
       if (width < 700) {
         grid.column(1);
         text.innerHTML = 1;
@@ -44,7 +44,7 @@
       }
     };
     
-    var items = [
+    let items = [
       {x: 0, y: 0, width: 2, height: 2},
       {x: 2, y: 0, width: 2, height: 1},
       {x: 5, y: 0, width: 1, height: 1},

@@ -8,8 +8,8 @@ describe('gridstack.js with height', function() {
   });
 
   it('shouldn\'t throw exception when dragging widget outside the grid', function() {
-    var widget = element(by.id('item-1'));
-    var gridContainer = element(by.id('grid'));
+    let widget = element(by.id('item-1'));
+    let gridContainer = element(by.id('grid'));
 
     browser.actions()
       .mouseDown(widget, {x: 20, y: 20})

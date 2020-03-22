@@ -22,16 +22,16 @@
   </div>
   
 <script type="text/javascript">
-  var grid = GridStack.init({float: false});
+  let grid = GridStack.init({float: false});
 
   grid.on('added removed change', function(e, items) {
-    var str = '';
+    let str = '';
     items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
     console.log(e.type + ' ' + items.length + ' items:' + str );
   });
 
   $('.grid-stack .grid-stack-item').click(function(e) {
-    var item = $(e.currentTarget).closest('.grid-stack-item');
+    let item = $(e.currentTarget).closest('.grid-stack-item');
     grid.removeWidget(item);
   });
 </script>
