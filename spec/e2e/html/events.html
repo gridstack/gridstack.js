@@ -22,8 +22,8 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init({float: true});
-    var count = 0;
+    let grid = GridStack.init({float: true});
+    let count = 0;
 
     function addWidget() {
       grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content"><button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>'
@@ -31,25 +31,25 @@
     };
 
     grid.on('added removed change', function(e, items) {
-      var str = '';
+      let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
     });
 
     grid.on('disable', function(event) {
-      var grid = event.target;
+      let grid = event.target;
       console.log('disable');
     });
 
     grid.on('dragstart', function(event, ui) {
-      var grid = this;
-      var el = event.target;
+      let grid = this;
+      let el = event.target;
       console.log('dragStart ' + el.textContent);
     });
 
     grid.on('dragstop', function(event, ui) {
-      var grid = this;
-      var el = event.target;
+      let grid = this;
+      let el = event.target;
       console.log('dragstop ' + el.textContent);
     });
 
@@ -59,29 +59,29 @@
     });
 
     grid.on('enable', function(event) {
-      var grid = event.target;
+      let grid = event.target;
       console.log('enable');
     });
 
     grid.on('resizestart', function(event, ui) {
-      var grid = this;
-      var el = event.target;
-      var w = el.getAttribute('data-gs-width');
-      var h = el.getAttribute('data-gs-height');
+      let grid = this;
+      let el = event.target;
+      let w = el.getAttribute('data-gs-width');
+      let h = el.getAttribute('data-gs-height');
       console.log('resizestart ' + el.textContent + ' size: (' + w + ' x ' + h + ')');
     });
 
     grid.on('resizestop', function(event, ui) {
       // HAPPENS BEFORE we get to update our attr - SKIP
-      var el = event.target;
-      var w = el.getAttribute('data-gs-width');
-      var h = el.getAttribute('data-gs-height');
+      let el = event.target;
+      let w = el.getAttribute('data-gs-width');
+      let h = el.getAttribute('data-gs-height');
       console.log('JQ resizestop ' + el.textContent + ' size: (' + w + ' x ' + h + ')');
     });
 
     grid.on('gsresizestop', function(event, el) {
-      var w = el.getAttribute('data-gs-width');
-      var h = el.getAttribute('data-gs-height');
+      let w = el.getAttribute('data-gs-width');
+      let h = el.getAttribute('data-gs-height');
       console.log('gsresizestop ' + el.textContent + ' size: (' + w + ' x ' + h + ')');
     });
 
@@ -89,7 +89,7 @@
 
     // jQuery-ui event on '.grid-stack-item' propagates up
     grid.on('resize', function(event, ui) {
-      var el = event.target;
+      let el = event.target;
       // console.log('resize size: (' + el.clientWidth + ' x ' + el.clientHeight + ')');
     });
 

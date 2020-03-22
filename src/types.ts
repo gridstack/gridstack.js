@@ -60,7 +60,7 @@ export interface GridstackOptions {
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
 
-  /** disables the onColumnMode when the window width is less than minWidth (default?: false) */
+  /** disables the onColumnMode when the grid width is less than minWidth (default?: false) */
   disableOneColumnMode?: boolean;
 
   /** disallows resizing of widgets (default?: false). */
@@ -92,7 +92,7 @@ export interface GridstackOptions {
    */
   minRow?: number;
 
-  /** minimal width. If window width is less, grid will be shown in one column mode (default?: 768) */
+  /** minimal width. If grid width is less, grid will be shown in one column mode (default?: 768) */
   minWidth?: number;
 
   /**

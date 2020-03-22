@@ -30,8 +30,8 @@
     ko.components.register('dashboard-grid', {
       viewModel: {
         createViewModel: function (controller, componentInfo) {
-          var ViewModel = function (controller, componentInfo) {
-            var grid = null;
+          let ViewModel = function (controller, componentInfo) {
+            let grid = null;
 
             this.widgets = controller.widgets;
 
@@ -40,7 +40,7 @@
                 grid = GridStack.init({auto: false});
               }
 
-              var item = items.find(function (i) { return i.nodeType == 1 });
+              let item = items.find(function (i) { return i.nodeType == 1 });
               grid.addWidget(item);
               ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
                 grid.removeWidget(item);
@@ -61,8 +61,8 @@
         ].join('')
     });
 
-    var Controller = function (widgets) {
-      var self = this;
+    let Controller = function (widgets) {
+      let self = this;
 
       this.widgets = ko.observableArray(widgets);
 
@@ -84,14 +84,14 @@
       };
     };
 
-    var widgets = [
+    let widgets = [
       {x: 0, y: 0, width: 2, height: 2, index: 1},
       {x: 2, y: 0, width: 4, height: 2, index: 2},
       {x: 6, y: 0, width: 2, height: 4, index: 3},
       {x: 1, y: 2, width: 4, height: 2, index: 4}
     ];
 
-    var controller = new Controller(widgets);
+    let controller = new Controller(widgets);
     ko.applyBindings(controller);
   </script>
 </body>

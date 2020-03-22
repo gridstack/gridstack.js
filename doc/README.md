@@ -81,7 +81,7 @@ gridstack.js API
 - `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
 - `ddPlugin` - class that implement drag'n'drop functionality for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
-- `disableOneColumnMode` - disables the onColumnMode when the window width is less than minWidth (default: 'false')
+- `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minWidth (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body', containment: null}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
@@ -91,7 +91,7 @@ gridstack.js API
 - `itemClass` - widget class (default: `'grid-stack-item'`)
 - `maxRow` - maximum rows amount. Default is `0` which means no max.
 - `minRow` - minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
-- `minWidth` - minimal width. If window width is less than or equal to, grid will be shown in one-column mode (default: `768`)
+- `minWidth` - minimal width. If grid width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
@@ -164,7 +164,7 @@ grid.on('change', function(event, items) {
 
 ```js
 grid.on('disable', function(event) {
-  var grid = event.target;
+  let grid = event.target;
 });
 ```
 
@@ -172,8 +172,8 @@ grid.on('disable', function(event) {
 
 ```js
 grid.on('dragstart', function(event, ui) {
-  var grid = this;
-  var element = event.target;
+  let grid = this;
+  let element = event.target;
 });
 ```
 
@@ -181,8 +181,8 @@ grid.on('dragstart', function(event, ui) {
 
 ```js
 grid.on('dragstop', function(event, ui) {
-  var grid = this;
-  var element = event.target;
+  let grid = this;
+  let element = event.target;
 });
 ```
 
@@ -199,7 +199,7 @@ grid.on('dropped', function(event, previousWidget, newWidget) {
 
 ```js
 grid.on('enable', function(event) {
-  var grid = event.target;
+  let grid = event.target;
 });
 ```
 
@@ -217,8 +217,8 @@ grid.on('removed', function(event, items) {
 
 ```js
 grid.on('resizestart', function(event, ui) {
-  var grid = this;
-  var element = event.target;
+  let grid = this;
+  let element = event.target;
 });
 ```
 
@@ -230,7 +230,7 @@ You could instead use the `change` event which has the latest node sizing.
 
 ```js
 grid.on('gsresizestop', function(event, element) {
-  var newHeight = element.getAttribute('data-gs-height');
+  let newHeight = element.getAttribute('data-gs-height');
 });
 ```
 
@@ -249,7 +249,7 @@ Widget will be always placed even if result height is more than actual grid heig
 before calling `addWidget` for additional check.
 
 ```js
-var grid = GridStack.init();
+let grid = GridStack.init();
 grid.addWidget('<div><div class="grid-stack-item-content">hello</div></div>', {width: 3});
 ```
 
@@ -375,7 +375,7 @@ Parameters:
 - `el` - element to convert to a widget
 
 ```js
-var grid = GridStack.init();
+let grid = GridStack.init();
 grid.el.appendChild('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="true"></div>')
 grid.makeWidget('gsi-1');
 ```

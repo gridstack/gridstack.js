@@ -599,7 +599,7 @@ export class GridStackEngine {
   }
 
   // legacy method renames
-  private getGridHeight = obsolete(GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
+  private getGridHeight = obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
 }
 
 /** @internal class to store per column layout bare minimal info (subset of GridstackWidget) */

@@ -22,15 +22,15 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init();
+    let grid = GridStack.init({minRow: 1}); // don't let it collapse when empty
     
     grid.on('added removed change', function(e, items) {
-      var str = '';
+      let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
     });
 
-    var serializedData = [
+    let serializedData = [
       {x: 0, y: 0, width: 2, height: 2},
       {x: 3, y: 1, width: 1, height: 2},
       {x: 4, y: 1, width: 1, height: 1},
@@ -40,7 +40,7 @@
 
     loadGrid = function() {
       grid.removeAll();
-      var items = GridStack.Utils.sort(serializedData);
+      let items = GridStack.Utils.sort(serializedData);
       grid.batchUpdate();
       items.forEach(function (node) {
         grid.addWidget('<div><div class="grid-stack-item-content"></div></div>', node);

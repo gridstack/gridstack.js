@@ -39,11 +39,11 @@ interface GridCSSStyleSheet extends CSSStyleSheet {
   _max?: number; // internal tracker of the max # of rows we created
 }
 
-function getElement(els: GridStackElement): GridItemHTMLElement {
+function getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement {
   return (typeof els === 'string' ?
     (document.querySelector(els) || document.querySelector('#' + els) || document.querySelector('.' + els)) : els);
 }
-function getElements(els: GridStackElement): GridItemHTMLElement[] {
+function getElements(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement[] {
   if (typeof els === 'string') {
     let list = document.querySelectorAll(els);
     if (!list.length) { list = document.querySelectorAll('.' + els) }
@@ -52,11 +52,11 @@ function getElements(els: GridStackElement): GridItemHTMLElement[] {
   }
   return [els];
 }
-function getGridElement(els: string | HTMLElement): GridHTMLElement {
+function getGridElement(els: string | HTMLElement = '.grid-stack'): GridHTMLElement {
   return (typeof els === 'string' ?
     (document.querySelector(els) || document.querySelector('#' + els) || document.querySelector('.' + els)) : els);
 }
-function getGridElements(els: string | HTMLElement): GridHTMLElement[] {
+function getGridElements(els: string | HTMLElement = '.grid-stack'): GridHTMLElement[] {
   if (typeof els === 'string') {
     let list = document.querySelectorAll(els);
     if (!list.length) { list = document.querySelectorAll('.' + els) }
@@ -101,12 +101,12 @@ export class GridStack {
     let el = getGridElement(elOrString);
     if (!el) {
       if (typeof elOrString === 'string') {
-        console.error('gridstack.js: init() no grid was found. Did you forget class ' + elOrString + ' on your element ?');
-        console.error('".grid-stack" is required for proper CSS styling and drag/drop.');
+        console.log('gridstack.js: init() no grid was found. Did you forget class ' + elOrString + ' on your element ?' +
+        '\n".grid-stack" is required for proper CSS styling and drag/drop.');
       } else {
-        console.error('gridstack.js: init() no grid element was passed.');
+        console.log('gridstack.js: init() no grid element was passed.');
       }
-      return;
+      return null;
     }
     if (!el.gridstack) {
       el.gridstack = new GridStack(el, options);
@@ -132,8 +132,8 @@ export class GridStack {
       grids.push(el.gridstack);
     });
     if (grids.length === 0) {
-      console.error('gridstack.js: initAll() no grid was found. Did you forget class ' + selector + ' on your element ?');
-      console.error('".grid-stack" is required for proper CSS styling and drag/drop.');
+      console.log('gridstack.js: initAll() no grid was found. Did you forget class ' + selector + ' on your element ?' +
+      '\n".grid-stack" is required for proper CSS styling and drag/drop.');
     }
     return grids;
   }
@@ -631,9 +631,9 @@ export class GridStack {
     return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
   }
 
-  /** returns the current number of rows */
+  /** returns the current number of rows, which will be at least `minRow` if set */
   public getRow(): number {
-    return this.engine.getRow();
+    return Math.max(this.engine.getRow(), this.opts.minRow);
   }
 
   /**
@@ -1154,10 +1154,7 @@ export class GridStack {
 
   private _updateContainerHeight(): GridStack {
     if (this.engine.batchMode) { return this; }
-    let row = this.engine.getRow();
-    if (row < this.opts.minRow) {
-      row = this.opts.minRow;
-    }
+    let row = this.getRow(); // checks for minRow already
     // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
     let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
     if (cssMinHeight > 0) {
@@ -1518,8 +1515,7 @@ export class GridStack {
       Utils.throttle(() => { this.cellHeight(this.cellWidth(), false)}, 100);
     }
 
-    if (!this.opts.disableOneColumnMode &&
-      (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <= this.opts.minWidth) {
+    if (!this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth) {
       if (this._oneColumnMode) { return this }
       this._oneColumnMode = true;
       this.column(1);
@@ -1684,7 +1680,7 @@ export class GridStack {
   }
 
   // legacy method renames
-  private setGridWidth = obsolete(GridStack.prototype.column, 'setGridWidth', 'column', 'v0.5.3');
-  private setColumn = obsolete(GridStack.prototype.column, 'setColumn', 'column', 'v0.6.4');
-  private getGridHeight =  obsolete(GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
+  private setGridWidth = obsolete(this, GridStack.prototype.column, 'setGridWidth', 'column', 'v0.5.3');
+  private setColumn = obsolete(this, GridStack.prototype.column, 'setColumn', 'column', 'v0.6.4');
+  private getGridHeight =  obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
 }

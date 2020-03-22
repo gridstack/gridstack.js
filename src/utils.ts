@@ -9,11 +9,11 @@
 import { GridstackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
 
 /** checks for obsolete method names */
-export function obsolete(f, oldName: string, newName: string, rev: string) {
+export function obsolete(self, f, oldName: string, newName: string, rev: string) {
   let wrapper = (...args) => {
     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
     'with `' + newName + '`. It will be **completely** removed in v1.0');
-    return f.apply(args);
+    return f.apply(self, args);
   }
   wrapper.prototype = f.prototype;
   return wrapper;

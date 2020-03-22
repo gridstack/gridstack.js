@@ -182,8 +182,10 @@ describe('gridstack engine', function() {
     it('should work on not float grids', function() {
       expect(engine.float).toEqual(false);
       engine.batchUpdate();
+      engine.batchUpdate(); // double for code coverage
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
+      engine.commit();
       engine.commit();
       expect(engine.batchMode).toBeFalse();
       expect(engine.float).toEqual(false);
@@ -377,4 +379,14 @@ describe('gridstack engine', function() {
       expect(engine.moveNode(node2, 7, 6)).toEqual(jasmine.objectContaining({x: 7, y: 6, width: 2, height: 3,}));
     });
   });
+  
+  describe('test compact', function() {
+    beforeAll(function() {
+      engine = new GridStackEngine(12);
+    });
+    it('do nothing', function() {
+      engine.compact();
+    });
+  });
+
 });
