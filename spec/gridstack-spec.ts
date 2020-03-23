@@ -133,26 +133,10 @@ describe('gridstack', function() {
       let cell = grid.getCellFromPixel(pixel);
       expect(cell.x).toBe(2);
       expect(cell.y).toBe(5);
-    });
-    it('should return {x: 2, y: 5}.', function() {
-      let options = {
-        cellHeight: 80,
-        verticalMargin: 10
-      };
-      let grid = GridStack.init(options);
-      let pixel = {top: 500, left: 200};
-      let cell = grid.getCellFromPixel(pixel, false);
+      cell = grid.getCellFromPixel(pixel, false);
       expect(cell.x).toBe(2);
       expect(cell.y).toBe(5);
-    });
-    it('should return {x: 2, y: 5}.', function() {
-      let options = {
-        cellHeight: 80,
-        verticalMargin: 10
-      };
-      let grid = GridStack.init(options);
-      let pixel = {top: 500, left: 200};
-      let cell = grid.getCellFromPixel(pixel, true);
+      cell = grid.getCellFromPixel(pixel, true);
       expect(cell.x).toBe(2);
       expect(cell.y).toBe(5);
     });

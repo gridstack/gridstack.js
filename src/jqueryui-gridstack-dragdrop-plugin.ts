@@ -7,7 +7,7 @@
 */
 
 import { GridStack } from './gridstack';
-import { GridStackDragDropPlugin, DDOpts, DDKey } from './gridstack-dragdrop-plugin';
+import { GridStackDragDropPlugin, DDOpts, DDKey, DDDropOpt } from './gridstack-dragdrop-plugin';
 import { GridItemHTMLElement } from './types';
 
 // TODO: TEMPORARY until can remove jquery-ui drag&drop and this class and use HTML5 instead !
@@ -58,8 +58,13 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
     return this;
   }
 
-  public droppable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+  public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?): GridStackDragDropPlugin {
     let $el: JQuery = $(el);
+    if (typeof opts.accept === 'function' && !opts._accept) {
+      // convert jquery event to generic element
+      opts._accept = opts.accept;
+      opts.accept = ($el: JQuery) => opts._accept($el.get(0));
+    }
     $el.droppable(opts, key, value);
     return this;
   }
@@ -69,9 +74,9 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
     return Boolean($el.data('droppable'));
   }
 
-  public on(el: GridItemHTMLElement, eventName: string, callback): GridStackDragDropPlugin {
+  public on(el: GridItemHTMLElement, eventName: string, callback: (el: GridItemHTMLElement, ui) => void): GridStackDragDropPlugin {
     let $el: JQuery = $(el);
-    $el.on(eventName, callback);
+    $el.on(eventName, (event, ui) => { callback(ui.draggable.get(0), ui) });
     return this;
   }
 }
