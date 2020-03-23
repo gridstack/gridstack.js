@@ -165,6 +165,14 @@ export class Utils {
     return {...target}; // was $.extend({}, target)
   }
 
+  /** return the closest parent matching the given class */
+  static closestByClass(el: HTMLElement, name: string): HTMLElement {
+    el = el.parentElement;
+    if (!el) return null;
+    if (el.classList.contains(name)) return el;
+    return Utils.closestByClass(el, name);
+  }
+
   static throttle(callback, delay) {
     let isWaiting = false;
 

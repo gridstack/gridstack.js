@@ -10,9 +10,15 @@
 import { GridStack } from './gridstack';
 import { GridItemHTMLElement } from './types';
 
+/** Drag&Drop drop options */
+export type DDDropOpt = {
+  /** function or class type that this grid will accept as dropped items (see GridstackOptions.acceptWidgets) */
+  accept?: (el: GridItemHTMLElement) => boolean;
+}
+
 /** drag&drop options currently called from the main code, but others can be passed in grid options */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | {} | any;
+export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | {} | any;
 export type DDKey = 'minWidth' | 'minHeight' | string;
 
 /**
@@ -38,7 +44,7 @@ export class GridStackDragDropPlugin {
     return this;
   }
 
-  public droppable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+  public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?): GridStackDragDropPlugin {
     return this;
   }
 
@@ -46,7 +52,7 @@ export class GridStackDragDropPlugin {
     return false;
   }
 
-  public on(el: GridItemHTMLElement, eventName: string, callback): GridStackDragDropPlugin {
+  public on(el: GridItemHTMLElement, eventName: string, callback: (el: GridItemHTMLElement, ui) => void): GridStackDragDropPlugin {
     return this;
   }
 }

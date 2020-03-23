@@ -247,7 +247,7 @@ export class GridStack {
       this.el.classList.add('grid-stack-rtl');
     }
 
-    this.opts._isNested = this.$el.closest('.' + opts.itemClass).length > 0;
+    this.opts._isNested = Utils.closestByClass(this.el, opts.itemClass) !== null;
     if (this.opts._isNested) {
       this.el.classList.add('grid-stack-nested');
     }
@@ -310,35 +310,10 @@ export class GridStack {
 
     this._updateContainerHeight();
 
-    $(window).resize(this._onResizeHandler.bind(this));
+    window.addEventListener('resize', this._onResizeHandler.bind(this));
     this._onResizeHandler();
 
-    if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
-      let trashZone = $(this.opts.removable);
-      if (!this.dd.isDroppable(trashZone)) {
-        this.dd.droppable(trashZone, this.opts.removableOptions);
-      }
-      this.dd
-        .on(trashZone, 'dropover', (event, ui) => {
-          let el: GridItemHTMLElement = ui.draggable.get(0);
-          let node = el.gridstackNode;
-          if (!node || node._grid !== this) {
-            return;
-          }
-          el.dataset.inTrashZone = 'true';
-          this._setupRemovingTimeout(el);
-        })
-        .on(trashZone, 'dropout', (event, ui) => {
-          let el: GridItemHTMLElement = ui.draggable.get(0);
-          let node = el.gridstackNode;
-          if (!node || node._grid !== this) {
-            return;
-          }
-          el.dataset.inTrashZone = 'false';
-          this._clearRemovingTimeout(el);
-        });
-    }
-
+    this._setupRemoveDrop();
     this._setupAcceptWidget();
   };
 
@@ -437,7 +412,7 @@ export class GridStack {
    * Gets current cell width.
    */
   public cellWidth(): number {
-    // TODO: take margin into account ($horizontal_padding in .scss) to make cellHeight='auto' square ? (see 810-many-columns.html)
+    // TODO: take margin into account (horizontal_padding in .scss) to make cellHeight='auto' square ? (see 810-many-columns.html)
     return Math.round(this.el.offsetWidth / this.opts.column);
   }
 
@@ -519,7 +494,7 @@ export class GridStack {
    * @param detachGrid if false nodes and grid will not be removed from the DOM (Optional. Default true).
    */
   public destroy(detachGrid = true): GridStack {
-    $(window).off('resize', this._onResizeHandler);
+    window.removeEventListener('resize', this._onResizeHandler);
     this.disable();
     if (!detachGrid) {
       this.removeAll(false);
@@ -615,18 +590,24 @@ export class GridStack {
    * Get the position of the cell under a pixel on screen.
    * @param position the position of the pixel to resolve in
    * absolute coordinates, as an object with top and left properties
-   * @param useOffset if true, value will be based on offset vs position (Optional. Default false).
+   * @param useDocRelative if true, value will be based on document position vs parent position (Optional. Default false).
    * Useful when grid is within `position: relative` element
    *
    * Returns an object with properties `x` and `y` i.e. the column and row in the grid.
    */
-  public getCellFromPixel(position: MousePosition, useOffset = false): CellPosition {
-    let containerPos = (useOffset ? this.$el.offset() : this.$el.position());
+  public getCellFromPixel(position: MousePosition, useDocRelative = false): CellPosition {
+    let box = this.el.getBoundingClientRect();
+    let containerPos;
+    if (useDocRelative) {
+      containerPos = {top: box.top + document.documentElement.scrollTop, left: box.left};
+    } else {
+      containerPos = {top: this.el.offsetTop, left: this.el.offsetLeft}
+    }
     let relativeLeft = position.left - containerPos.left;
     let relativeTop = position.top - containerPos.top;
 
-    let columnWidth = Math.floor(this.$el.width() / this.opts.column);
-    let rowHeight = Math.floor(this.$el.height() / parseInt(this.el.getAttribute('data-gs-current-row')));
+    let columnWidth = Math.floor(box.width / this.opts.column);
+    let rowHeight = Math.floor(box.height / parseInt(this.el.getAttribute('data-gs-current-row')));
 
     return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
   }
@@ -1216,7 +1197,7 @@ export class GridStack {
       cellWidth = this.cellWidth();
       let strictCellHeight = this.getCellHeight(); // heigh without v-margin
       // compute height with v-margin (Note: we add 1 margin as last row is missing it)
-      cellFullHeight = (this.$el.height() + this.getVerticalMargin()) / parseInt(this.el.getAttribute('data-gs-current-row'));
+      cellFullHeight = (this.el.getBoundingClientRect().height + this.getVerticalMargin()) / parseInt(this.el.getAttribute('data-gs-current-row'));
 
       let { target } = event;
 
@@ -1398,9 +1379,7 @@ export class GridStack {
     return this;
   }
 
-  private _prepareElement(el: GridItemHTMLElement, triggerAddEvent?: boolean): GridStack {
-    triggerAddEvent = (triggerAddEvent !== undefined ? triggerAddEvent : false);
-
+  private _prepareElement(el: GridItemHTMLElement, triggerAddEvent = false): GridStack {
     el.classList.add(this.opts.itemClass);
     let node = this._readAttr(el, { el: el, _grid: this });
     node = this.engine.addNode(node, triggerAddEvent);
@@ -1527,6 +1506,31 @@ export class GridStack {
     return this;
   }
 
+  /** called to setup a trash drop zone if the user specifies it */
+  private _setupRemoveDrop(): GridStack {
+    if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
+      let trashZone = document.querySelector(this.opts.removable) as HTMLElement;
+      if (!trashZone) return this;
+      if (!this.dd.isDroppable(trashZone)) {
+        this.dd.droppable(trashZone, this.opts.removableOptions);
+      }
+      this.dd
+        .on(trashZone, 'dropover', (el) => {
+          let node = el.gridstackNode;
+          if (!node || node._grid !== this) return;
+          el.dataset.inTrashZone = 'true';
+          this._setupRemovingTimeout(el);
+        })
+        .on(trashZone, 'dropout', (el) => {
+          let node = el.gridstackNode;
+          if (!node || node._grid !== this) return;
+          el.dataset.inTrashZone = 'false';
+          this._clearRemovingTimeout(el);
+        });
+    }
+    return this;
+  }
+
   /** called to add drag over support to support widgets */
   private _setupAcceptWidget(): GridStack {
     if (this.opts.staticGrid || !this.opts.acceptWidgets) return this;
@@ -1534,7 +1538,7 @@ export class GridStack {
     // vars used by the function callback
     let draggingElement: GridItemHTMLElement;
 
-    let onDrag = event => {
+    let onDrag = (event) => {
       let el = draggingElement;
       let node = el.gridstackNode;
       let pos = this.getCellFromPixel({left: event.pageX, top: event.pageY}, true);
@@ -1544,32 +1548,29 @@ export class GridStack {
         node._added = true;
 
         node.el = el;
-        node.autoPosition = true;
         node.x = x;
         node.y = y;
+        delete node.autoPosition;
         this.engine.cleanNodes();
         this.engine.beginUpdate(node);
         this.engine.addNode(node);
 
         this._writeAttrs(this.placeholder, node.x, node.y, node.width, node.height);
         this.el.appendChild(this.placeholder);
-        node.el = this.placeholder;
+        node.el = this.placeholder; // dom we update while dragging...
         node._beforeDragX = node.x;
         node._beforeDragY = node.y;
 
         this._updateContainerHeight();
+      } else if ((x !== node.x || y !== node.y) && this.engine.canMoveNode(node, x, y)) {
+        this.engine.moveNode(node, x, y);
+        this._updateContainerHeight();
       }
-      if (!this.engine.canMoveNode(node, x, y)) {
-        return;
-      }
-      this.engine.moveNode(node, x, y);
-      this._updateContainerHeight();
     };
 
     this.dd
       .droppable(this.el, {
-        accept: ($el) => { // TODO: jquery
-          let el: GridItemHTMLElement = $el.get(0);
+        accept: (el: GridItemHTMLElement) => {
           let node: GridStackNode = el.gridstackNode;
           if (node && node._grid === this) {
             return false;
@@ -1581,8 +1582,7 @@ export class GridStack {
           return el.matches(selector);
         }
       })
-      .on(this.el, 'dropover', (event, ui) => {
-        let el: GridItemHTMLElement = ui.draggable.get(0);
+      .on(this.el, 'dropover', (el) => {
         let width, height;
 
         // see if we already have a node with widget/height and check for attributes
@@ -1612,10 +1612,9 @@ export class GridStack {
         $(el).on('drag', onDrag);
         return false; // prevent parent from receiving msg (which may be grid as well)
       })
-      .on(this.el, 'dropout', (event, ui) => {
+      .on(this.el, 'dropout', (el) => {
         // jquery-ui bug. Must verify widget is being dropped out
         // check node variable that gets set when widget is out of grid
-        let el: GridItemHTMLElement = ui.draggable.get(0);
         let node = el.gridstackNode;
         if (!node || !node._isOutOfGrid) {
           return;
@@ -1630,29 +1629,27 @@ export class GridStack {
         el.gridstackNode = el._gridstackNodeOrig;
         return false; // prevent parent from receiving msg (which may be grid as well)
       })
-      .on(this.el, 'drop', (event, ui) => {
+      .on(this.el, 'drop', (el, ui) => {
         if (this.placeholder.parentNode === this.el) {
           this.el.removeChild(this.placeholder);
         }
-        let el: GridItemHTMLElement = ui.draggable.get(0);
         let node: GridStackNode = el.gridstackNode;
         delete node._isOutOfGrid;
         node._grid = this;
+        let originalNode = el._gridstackNodeOrig;
 
-        let $el = ui.draggable.clone(false);
+        el = el.cloneNode(true) as HTMLElement;
 
-        el = $el.get(0);
         el.gridstackNode = node;
-        let originalNode = (ui.draggable.get(0) as GridItemHTMLElement)._gridstackNodeOrig;
         if (originalNode && originalNode._grid) {
           originalNode._grid._triggerRemoveEvent();
         }
         $(ui.helper).remove();
         node.el = el;
         Utils.removePositioningStyles(el);
-        $el.find('div.ui-resizable-handle').remove();
+        $(el).find('div.ui-resizable-handle').remove();
 
-        $el
+        $(el)
           .attr('data-gs-x', node.x)
           .attr('data-gs-y', node.y)
           .attr('data-gs-width', node.width)
@@ -1662,7 +1659,7 @@ export class GridStack {
           .removeData('draggable')
           .removeClass('ui-draggable ui-draggable-dragging ui-draggable-disabled')
           .unbind('drag', onDrag);
-        this.$el.append(el);
+        this.el.appendChild(el);
         this._prepareElementsByNode(el, node);
         this._updateContainerHeight();
         this.engine.addedNodes.push(node);
