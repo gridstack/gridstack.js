@@ -5,6 +5,9 @@ module.exports = {
     'gridstack-all': './src/index.ts',
     'gridstack-no-jquery': './src/gridstack-only.ts'
   },
+  externals: {
+    jquery: 'jQuery'
+  },
   mode: 'development',
   module: {
     rules: [
