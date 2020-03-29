@@ -7,7 +7,7 @@
 */
 
 import { GridStack } from './gridstack';
-import { GridStackDragDropPlugin, DDOpts, DDKey, DDDropOpt } from './gridstack-dragdrop-plugin';
+import { GridStackDragDropPlugin, DDOpts, DDKey, DDDropOpt, DDCallback } from './gridstack-dragdrop-plugin';
 import { GridItemHTMLElement } from './types';
 
 // TODO: TEMPORARY until can remove jquery-ui drag&drop and this class and use HTML5 instead !
@@ -25,8 +25,12 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     let $el: JQuery = $(el);
-    if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
+    if (opts === 'disable' || opts === 'enable') {
       $el.resizable(opts);
+    } else if (opts === 'destroy') {
+      if ($el.data('ui-resizable')) { // error to call destroy if not there
+        $el.resizable(opts);
+      }
     } else if (opts === 'option') {
       $el.resizable(opts, key, value);
     } else {
@@ -42,8 +46,12 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
 
   public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
     let $el: JQuery = $(el);
-    if (opts === 'disable' || opts === 'enable' || opts === 'destroy') {
+    if (opts === 'disable' || opts === 'enable') {
       $el.draggable(opts);
+    } else if (opts === 'destroy') {
+      if ($el.data('ui-draggable')) { // error to call destroy if not there
+        $el.draggable(opts);
+      }
     } else if (opts === 'option') {
       $el.draggable(opts, key, value);
     } else {
@@ -71,12 +79,18 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
 
   public isDroppable(el: GridItemHTMLElement): boolean {
     let $el: JQuery = $(el);
-    return Boolean($el.data('droppable'));
+    return Boolean($el.data('ui-droppable'));
   }
 
-  public on(el: GridItemHTMLElement, eventName: string, callback: (el: GridItemHTMLElement, ui) => void): GridStackDragDropPlugin {
+  public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDragDropPlugin {
     let $el: JQuery = $(el);
-    $el.on(eventName, (event, ui) => { callback(ui.draggable.get(0), ui) });
+    $el.on(name, (event, ui) => { callback(event, ui.draggable ? ui.draggable.get(0) : event.target) });
+    return this;
+  }
+
+  public off(el: GridItemHTMLElement, name: string): GridStackDragDropPlugin {
+    let $el: JQuery = $(el);
+    $el.off(name);
     return this;
   }
 }

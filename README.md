@@ -332,19 +332,21 @@ We're working on implementing HTML5 drag'n'drop through the plugin system. Right
 
 make sure to read v1.0.0 migration first!
 
-v2.x is a Typescript rewrite of 1.x, using classes and overall code cleanup. Your code might need to change from 1.x
+v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes and overall code cleanup. Your code might need to change from 1.x
 
-1. In general methods that used no args = getter vs setter are not used in Typescript. 
+1. In general methods that used no args (getter) vs setter are not used in Typescript. 
 Also legacy methods that used to take tons of parameters will now take a single object (typically `GridstackOptions` or `GridstackWidget`).
 
 ```
 removed `addWidget(el, x, y, width, ...)` --> use the widget options version instead `addWidget(el, {with, ...})`
 `float()` to get value --> `getFloat()`
-'cellHeight()` to get value --> `getCellheight()`
+'cellHeight()` to get value --> `getCellHeight()`
 'verticalMargin()` to get value --> `getVerticalMargin()`
 ```
 
-2. `oneColumnMode` would trigger when `window.width` < 768px by default. We now check for grid width instead (more correct and supports nesting). You might need to adjust grid `minWidth` or `disableOneColumnMode`.
+2. event signatures are generic and not jquery-ui dependent anymore. `gsresizestop` has been removed as `resizestop|dragstop` are now called **after** the DOm attributes have been updated.
+
+3. `oneColumnMode` would trigger when `window.width` < 768px by default. We now check for grid width instead (more correct and supports nesting). You might need to adjust grid `minWidth` or `disableOneColumnMode`.
 
 Changes
 =====

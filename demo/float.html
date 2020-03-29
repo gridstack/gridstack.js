@@ -28,21 +28,10 @@
     <br><br>
     <div class="grid-stack"></div>
   </div>
-
+  <script src="events.js"></script>
   <script type="text/javascript">
     let grid = GridStack.init({float: true});
-    
-    grid.on('added removed change', function(e, items) {
-      let str = '';
-      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-      console.log(e.type + ' ' + items.length + ' items:' + str );
-    });
-
-    grid.on('added removed change', function(e, items) {
-      let str = '';
-      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-      console.log(e.type + ' ' + items.length + ' items:' + str );
-    });
+    addEvents(grid);
 
     let items = [
       {x: 2, y: 1, width: 1, height: 2},
