@@ -168,7 +168,7 @@
 
       sources.forEach(function(source) {
         for (var prop in source) {
-          if (source.hasOwnProperty(prop) && (!target.hasOwnProperty(prop) || target[prop] === undefined)) {
+          if (Object.prototype.hasOwnProperty.call(source, prop) && (!Object.prototype.hasOwnProperty.call(target, prop) || target[prop] === undefined)) {
             target[prop] = source[prop];
           }
         }
