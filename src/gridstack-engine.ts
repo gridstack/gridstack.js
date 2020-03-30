@@ -598,6 +598,13 @@ export class GridStackEngine {
     return this;
   }
 
+  /** called to remove all internal values */
+  public cleanupNode(node: GridStackNode) {
+    for (let prop in node) {
+      if (prop[0] === '_') delete node[prop];
+    }
+  }
+
   // legacy method renames
   private getGridHeight = obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
 }

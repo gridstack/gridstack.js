@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { GridStack } from './gridstack';
-import { GridItemHTMLElement } from './types';
+import { GridItemHTMLElement, GridStackNode, GridEvent } from './types';
 
 /** Drag&Drop drop options */
 export type DDDropOpt = {
@@ -20,6 +20,9 @@ export type DDDropOpt = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | {} | any;
 export type DDKey = 'minWidth' | 'minHeight' | string;
+
+/** drag&drop events callbacks */
+export type DDCallback = (event: GridEvent, arg2: GridItemHTMLElement) => void;
 
 /**
  * Base class for drag'n'drop plugin.
@@ -52,7 +55,11 @@ export class GridStackDragDropPlugin {
     return false;
   }
 
-  public on(el: GridItemHTMLElement, eventName: string, callback: (el: GridItemHTMLElement, ui) => void): GridStackDragDropPlugin {
+  public on(el: GridItemHTMLElement, eventName: string, callback: DDCallback): GridStackDragDropPlugin {
+    return this;
+  }
+
+  public off(el: GridItemHTMLElement, eventName: string): GridStackDragDropPlugin {
     return this;
   }
 }

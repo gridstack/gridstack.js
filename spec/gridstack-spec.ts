@@ -1417,7 +1417,6 @@ describe('gridstack', function() {
       let fcn = (event: CustomEvent) => {};
       grid.on('added', fcn).on('enable', fcn).on('dragstart', fcn);
       expect((grid as any)._gsEventHandler.enable).not.toBe(undefined);
-      (grid as any)._triggerNativeEvent(grid.el, '.grid-stack-item', 'enable')
       grid.off('added').off('enable').off('dragstart');
       expect((grid as any)._gsEventHandler.enable).toBe(undefined);
     });
@@ -1426,7 +1425,6 @@ describe('gridstack', function() {
       let fcn = (event: CustomEvent) => {};
       grid.on('added enable dragstart', fcn);
       expect((grid as any)._gsEventHandler.enable).not.toBe(undefined);
-      (grid as any)._triggerNativeEvent(grid.el, '.grid-stack-item', 'enable')
       grid.off('added enable dragstart');
       expect((grid as any)._gsEventHandler.enable).toBe(undefined);
     });

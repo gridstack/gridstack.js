@@ -3,7 +3,7 @@
 /**
  * The package's root file.  Exports all exported classes.
  */
-import './gridstack-poly.js';
+// import './gridstack-poly.js';
 
 export * from './types';
 export * from './utils';
@@ -11,3 +11,5 @@ export * from './gridstack-engine';
 export * from './gridstack-dragdrop-plugin';
 export * from './gridstack';
 export * from './jqueryui-gridstack-dragdrop-plugin';
+
+// declare module 'gridstack';
