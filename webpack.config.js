@@ -1,7 +1,13 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.ts',
+  entry: {
+    'gridstack-all': './src/index.ts',
+    'gridstack-no-jquery': './src/gridstack-only.ts'
+  },
+  externals: {
+    jquery: 'jQuery'
+  },
   mode: 'development',
   module: {
     rules: [
@@ -16,7 +22,7 @@ module.exports = {
     extensions: [ '.ts', '.js' ],
   },
   output: {
-    filename: 'gridstack.all.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     library: 'GridStack',
     libraryExport: 'GridStack',
