@@ -2,11 +2,10 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    'gridstack-all': './src/index.ts',
-    'gridstack-no-jquery': './src/gridstack-only.ts'
+    'gridstack.all': './src/index.ts'
   },
   externals: {
-    jquery: 'jQuery'
+    // jquery: 'jQuery'
   },
   mode: 'development',
   module: {
