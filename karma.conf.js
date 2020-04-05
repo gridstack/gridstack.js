@@ -17,7 +17,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/*.ts',
+      'src/**/*.ts',
       'spec/*-spec.ts',
       // 'spec/e2e/*-spec.js' issues with ReferenceError: `browser` & `element` is not defined
     ],

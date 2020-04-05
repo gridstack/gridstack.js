@@ -1,7 +1,7 @@
 /*eslint-disable camelcase */
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
+  // grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
@@ -16,7 +16,7 @@ module.exports = function(grunt) {
     sass: {
       options: {
         implementation: sass,
-			  sourceMap: true
+			  sourceMap: false
       },
       dist: {
         files: {
@@ -25,6 +25,7 @@ module.exports = function(grunt) {
         }
       }
     },
+    /* very little gain
     cssmin: {
       dist: {
         options: {
@@ -37,21 +38,18 @@ module.exports = function(grunt) {
         }
       }
     },
+    */
     copy: {
       dist: {
         files: {
-/*
           'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
-          'dist/jquery.js': ['src/jquery.js'],
-          'dist/jquery-ui.js': ['src/jquery-ui.js'],
-*/
+          'dist/jq/jquery.js': ['src/jq/jquery.js'],
+          'dist/jq/jquery-ui.js': ['src/jq/jquery-ui.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
           'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
         }
       }
     },
-
-    /*
     uglify: {
       options: {
         sourceMap: true,
@@ -62,14 +60,18 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          //'dist/gridstack-poly.min.js': 'src/gridstack-poly.js',
-          //'dist/jquery.min.js': 'src/jquery.js',
-          //'dist/jquery-ui.min.js': 'src/jquery-ui.js'
+          'dist/jq/jqueryui-gridstack-dragdrop-plugin.min.js': 'dist/jq/jqueryui-gridstack-dragdrop-plugin.js',
+          'dist/jq/jquery.min.js': 'src/jq/jquery.js',
+          'dist/jq/jquery-ui.min.js': 'src/jq/jquery-ui.js',
+
+          'dist/gridstack-dragdrop-plugin.min.js': 'dist/gridstack-dragdrop-plugin.js',
+          'dist/gridstack-engine.min.js': 'dist/gridstack-engine.js',
+          'dist/gridstack-poly.min.js': 'src/gridstack-poly.js',
+          'dist/types.min.js': 'dist/types.js',
+          'dist/utils.min.js': 'dist/utils.js',
         }
       }
     },
-    */
-
     eslint: {
       target: ['*.js', 'src/*.js']
     },
@@ -116,7 +118,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('lint', ['eslint']);
-  grunt.registerTask('default', ['sass', 'cssmin', /*'eslint',*/ 'copy', /*'uglify'*/]);
+  grunt.registerTask('default', ['sass', /*'cssmin', 'eslint',*/ 'copy', 'uglify']);
   grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };
 /*eslint-enable camelcase */

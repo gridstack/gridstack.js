@@ -80,17 +80,12 @@
       <div class="col-md-6">
         <a onClick="toggleFloat(this, 0)" class="btn btn-primary" href="#">float: false</a>
         <a onClick="compact(0)" class="btn btn-primary" href="#">Compact</a>
-        <div class="grid-stack grid-stack-6">
-          <div class="grid-stack-item">
-            <div class="grid-stack-item-content"><button onClick="alert('clicked')">click</button></div>
-          </div>
-        </div>
+        <div class="grid-stack grid-stack-6"></div>
       </div>
       <div class="col-md-6">
         <a onClick="toggleFloat(this, 1)" class="btn btn-primary" href="#">float: true</a>
         <a onClick="compact(1)" class="btn btn-primary" href="#">Compact</a>
-        <div class="grid-stack grid-stack-6">
-          </div>
+        <div class="grid-stack grid-stack-6"></div>
       </div>
     </div>
   </div>
@@ -108,7 +103,7 @@
     grids[1].float(true);
 
     let items = [
-      {x: 1, y: 0, width: 2, height: 2},
+      {x: 0, y: 0, width: 2, height: 2},
       {x: 3, y: 1, width: 1, height: 2},
       {x: 4, y: 1, width: 1, height: 1},
       {x: 2, y: 3, width: 3, height: 1, maxWidth: 3, id: 'special', text: 'has maxWidth=3'},
