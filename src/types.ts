@@ -16,16 +16,6 @@ export interface GridItemHTMLElement extends HTMLElement {
   _gridstackNodeOrig?: GridStackNode;
 }
 
-/** generic event sent back from callbacks - extends Event in many cases, or bare when coming from drag&drop plugin */
-export interface GridEvent {
-  /** name of the event */
-  type?: string;
-  /** DOM element this was fired for */
-  target?: HTMLElement;
-
-  [key: string]: any;
-}
-
 /**
  * Defines the options for a Grid
  */

@@ -6,9 +6,9 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { GridStack } from './gridstack';
-import { GridStackDragDropPlugin, DDOpts, DDKey, DDDropOpt, DDCallback } from './gridstack-dragdrop-plugin';
-import { GridItemHTMLElement } from './types';
+import { GridStack } from '../gridstack';
+import { GridStackDragDropPlugin, DDOpts, DDKey, DDDropOpt, DDCallback } from '../gridstack-dragdrop-plugin';
+import { GridItemHTMLElement } from '../types';
 
 // TODO: TEMPORARY until can remove jquery-ui drag&drop and this class and use HTML5 instead !
 // see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
@@ -84,7 +84,7 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
 
   public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDragDropPlugin {
     let $el: JQuery = $(el);
-    $el.on(name, (event, ui) => { callback(event, ui.draggable ? ui.draggable.get(0) : event.target) });
+    $el.on(name, (event, ui) => { callback(event as any, ui.draggable ? ui.draggable.get(0) : event.target) });
     return this;
   }
 

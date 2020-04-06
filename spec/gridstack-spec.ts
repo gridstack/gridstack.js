@@ -1414,7 +1414,7 @@ describe('gridstack', function() {
     });
     it('add 3 single events', function() {
       let grid = GridStack.init();
-      let fcn = (event: CustomEvent) => {};
+      let fcn = (event: Event) => {};
       grid.on('added', fcn).on('enable', fcn).on('dragstart', fcn);
       expect((grid as any)._gsEventHandler.enable).not.toBe(undefined);
       grid.off('added').off('enable').off('dragstart');

@@ -4,10 +4,7 @@ module.exports = {
   entry: {
     'gridstack.all': './src/index.ts'
   },
-  externals: {
-    // jquery: 'jQuery'
-  },
-  mode: 'development',
+  mode: 'production', // vs development
   module: {
     rules: [
       {

@@ -62,6 +62,7 @@ export class GridStackEngine {
     return this;
   }
 
+  /** @internal */
   private _fixCollisions(node: GridStackNode): GridStackEngine {
     this._sortNodes(-1);
 
@@ -125,11 +126,13 @@ export class GridStackEngine {
   /** float getter method */
   public get float(): boolean { return this._float || false; }
 
+  /** @internal */
   private _sortNodes(dir?: -1 | 1): GridStackEngine {
     this.nodes = Utils.sort(this.nodes, dir, this.column);
     return this;
   }
 
+  /** @internal */
   private _packNodes(): GridStackEngine {
     this._sortNodes();
 
@@ -264,6 +267,7 @@ export class GridStackEngine {
     return this.nodes.filter(n => n._dirty);
   }
 
+  /** @internal */
   private _notify(nodes?: GridStackNode | GridStackNode[], detachNode?: boolean): GridStackEngine {
     if (this.batchMode) { return this }
     detachNode = (detachNode === undefined ? true : detachNode);
@@ -605,7 +609,7 @@ export class GridStackEngine {
     }
   }
 
-  // legacy method renames
+  /** @internal legacy method renames */
   private getGridHeight = obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
 }
 
