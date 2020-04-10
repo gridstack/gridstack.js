@@ -36,6 +36,7 @@ Change log
 ## 1.1.1-dev (upcoming)
 
 - fix [1229](https://github.com/gridstack/gridstack.js/issues/1229) `staticGrid` no longer disable oneColumnMode
+- fix [1250](https://github.com/gridstack/gridstack.js/issues/1250) don't remove item from another grid
 - add `getGridItems()` to return list of HTML grid items
 
 ## 1.1.1 (2020-03-17)

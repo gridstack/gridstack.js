@@ -8,10 +8,10 @@ describe('gridstack', function() {
   let gridHTML =
   '<div class="grid-stack">' +
   '  <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2" id="item1">' +
-  '    <div class="grid-stack-item-content"></div>' +
+  '    <div class="grid-stack-item-content">item 1</div>' +
   '  </div>' +
   '  <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4" id="item2">' +
-  '    <div class="grid-stack-item-content"></div>' +
+  '    <div class="grid-stack-item-content">item 2</div>' +
   '  </div>' +
   '</div>';
   let gridstackHTML =
@@ -1383,6 +1383,42 @@ describe('gridstack', function() {
       expect(grids.length).toBe(2);
       expect($(grids[0].el).hasClass('grid-stack-nested')).toBe(false);
       expect($(grids[1].el).hasClass('grid-stack-nested')).toBe(true);
+    });
+  });
+
+  describe('two grids', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should not remove incorrect child', function() {
+      let grids = GridStack.initAll();
+      expect(grids.length).toBe(2);
+      expect(grids[0].engine.nodes.length).toBe(2);
+      expect(grids[1].engine.nodes.length).toBe(2);
+      // should do nothing
+      grids[0].removeWidget( grids[1].engine.nodes[0].el );
+      expect(grids[0].engine.nodes.length).toBe(2);
+      expect(grids[0].el.children.length).toBe(2);
+      expect(grids[1].engine.nodes.length).toBe(2);
+      expect(grids[1].el.children.length).toBe(2);
+      // should empty with no errors
+      grids[1].removeAll();
+      expect(grids[0].engine.nodes.length).toBe(2);
+      expect(grids[0].el.children.length).toBe(2);
+      expect(grids[1].engine.nodes.length).toBe(0);
+      expect(grids[1].el.children.length).toBe(0);
+    });
+    it('should remove 1 child', function() {
+      let grids = GridStack.initAll();
+      grids[1].removeWidget( grids[1].engine.nodes[0].el );
+      expect(grids[0].engine.nodes.length).toBe(2);
+      expect(grids[0].el.children.length).toBe(2);
+      expect(grids[1].engine.nodes.length).toBe(1);
+      expect(grids[1].el.children.length).toBe(1);
     });
   });
 
