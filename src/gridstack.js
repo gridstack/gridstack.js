@@ -1517,6 +1517,7 @@
     if (!node) {
       node = this.engine.getNodeDataByDOMEl(el.get(0));
     }
+    if (!node || node.el.parentElement !== this.el) return; // not our child!
     // remove our DOM data (circular link) and drag&drop permanently
     el.removeData('_gridstack_node');
     this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
