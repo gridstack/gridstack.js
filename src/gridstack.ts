@@ -829,6 +829,7 @@ export class GridStack {
    */
   public removeWidget(els: GridStackElement, detachNode?: boolean): GridStack {
     this.getElements(els).forEach(el => {
+      if (el.parentElement !== this.el) return; // not our child!
       let node = el.gridstackNode;
       // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
       if (!node) {
