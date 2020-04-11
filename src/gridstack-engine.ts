@@ -285,7 +285,7 @@ export class GridStackEngine {
     return this;
   }
 
-  public addNode(node: GridStackNode, triggerAddEvent?: boolean): GridStackNode {
+  public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
     node = this.prepareNode(node);
 
     node._id = node._id || GridStackEngine._idSeq++;
@@ -320,9 +320,10 @@ export class GridStackEngine {
     return node;
   }
 
-  public removeNode(node: GridStackNode, detachNode?: boolean): GridStackEngine {
-    detachNode = (detachNode === undefined ? true : detachNode);
-    this.removedNodes.push(node);
+  public removeNode(node: GridStackNode, detachNode = true, triggerRemoveEvent = false): GridStackEngine {
+    if (triggerRemoveEvent) {
+      this.removedNodes.push(node);
+    }
     node._id = null; // hint that node is being removed
     this.nodes = this.nodes.filter(n => n !== node);
     this._packNodes();
@@ -459,7 +460,7 @@ export class GridStackEngine {
   public endUpdate(): GridStackEngine {
     let n = this.nodes.find(n => n._updating);
     if (n) {
-      n._updating = false;
+      delete n._updating;
       this.nodes.forEach(n => { delete n._packY; });
     }
     return this;

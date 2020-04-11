@@ -152,7 +152,7 @@ describe('gridstack engine', function() {
     });
 
     beforeEach(function() {
-      engine.batchMode = false;
+      delete engine.batchMode;
     });
 
     it('should return all dirty nodes', function() {
@@ -187,8 +187,8 @@ describe('gridstack engine', function() {
       expect(engine.float).toEqual(true);
       engine.commit();
       engine.commit();
-      expect(engine.batchMode).toBeFalse();
-      expect(engine.float).toEqual(false);
+      expect(engine.batchMode).not.toBeTrue();
+      expect(engine.float).not.toBeTrue;
     });
 
     it('should work on float grids', function() {
@@ -197,7 +197,7 @@ describe('gridstack engine', function() {
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
       engine.commit();
-      expect(engine.batchMode).toBeFalse();
+      expect(engine.batchMode).not.toBeTrue();
       expect(engine.float).toEqual(true);
     });
   });
@@ -214,7 +214,7 @@ describe('gridstack engine', function() {
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
       engine.commit();
-      expect(engine.batchMode).toBeFalse();
+      expect(engine.batchMode).not.toBeTrue();
       expect(engine.float).toEqual(true);
     });
   });
