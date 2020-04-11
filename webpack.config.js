@@ -4,7 +4,7 @@ module.exports = {
   entry: {
     'gridstack.all': './src/index.ts'
   },
-  mode: 'production', // vs development
+  mode: 'production', // production vs development
   module: {
     rules: [
       {
