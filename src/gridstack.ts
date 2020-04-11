@@ -827,7 +827,7 @@ export class GridStack {
    * @param el  widget or selector to modify
    * @param detachNode if false DOM node won't be removed from the tree (Default? true).
    */
-  public removeWidget(els: GridStackElement, detachNode?: boolean): GridStack {
+  public removeWidget(els: GridStackElement, detachNode = true): GridStack {
     this.getElements(els).forEach(el => {
       if (el.parentElement !== this.el) return; // not our child!
       let node = el.gridstackNode;
@@ -841,7 +841,7 @@ export class GridStack {
       delete el.gridstackNode;
       this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
 
-      this.engine.removeNode(node, detachNode);
+      this.engine.removeNode(node, detachNode, true); // true for trigger event
     });
     this._triggerRemoveEvent();
     this._triggerChangeEvent();
@@ -1165,9 +1165,9 @@ export class GridStack {
     let node = el.gridstackNode;
     if (!node || !node._removeTimeout) return this;
     clearTimeout(node._removeTimeout);
-    node._removeTimeout = null;
+    delete node._removeTimeout;
     el.classList.remove('grid-stack-item-removing');
-    node._isAboutToRemove = false;
+    delete node._isAboutToRemove;
     return this;
   }
 
@@ -1257,7 +1257,7 @@ export class GridStack {
             this._writeAttrs(this.placeholder, x, y, width, height);
             this.el.appendChild(this.placeholder);
             node.el = this.placeholder;
-            node._temporaryRemoved = false;
+            delete node._temporaryRemoved;
           }
         }
       } else if (event.type === 'resize')  {
@@ -1295,6 +1295,7 @@ export class GridStack {
         if (gridToNotify._gsEventHandler[event.type]) {
           gridToNotify._gsEventHandler[event.type](event, target);
         }
+        gridToNotify.engine.removedNodes.push(node);
         gridToNotify._triggerRemoveEvent();
         delete el.gridstackNode;
         el.remove();
@@ -1308,7 +1309,7 @@ export class GridStack {
           this._writeAttrs(target, node._beforeDragX, node._beforeDragY, node.width, node.height);
           node.x = node._beforeDragX;
           node.y = node._beforeDragY;
-          node._temporaryRemoved = false;
+          delete node._temporaryRemoved;
           this.engine.addNode(node);
         }
         if (this._gsEventHandler[event.type]) {
@@ -1475,7 +1476,7 @@ export class GridStack {
       this.column(1);
     } else {
       if (!this._oneColumnMode) { return this }
-      this._oneColumnMode = false;
+      delete this._oneColumnMode;
       this.column(this._prevColumn);
     }
     return this;
@@ -1499,7 +1500,7 @@ export class GridStack {
         .on(trashZone, 'dropout', (event, el) => {
           let node = el.gridstackNode;
           if (!node || node._grid !== this) return;
-          el.dataset.inTrashZone = 'false';
+          delete el.dataset.inTrashZone;
           this._clearRemovingTimeout(el);
         });
     }
