@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [2.0.0-dev (upcoming)](#200-dev-upcoming)
 - [1.1.1-dev (upcoming)](#111-dev-upcoming)
 - [1.1.1 (2020-03-17)](#111-2020-03-17)
 - [1.1.0 (2020-02-29)](#110-2020-02-29)
@@ -33,11 +34,15 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 2.0.0-dev (upcoming)
+
+- add `getGridItems()` to return list of HTML grid items
+
 ## 1.1.1-dev (upcoming)
 
 - fix [1229](https://github.com/gridstack/gridstack.js/issues/1229) `staticGrid` no longer disable oneColumnMode
+- fix [1195](https://github.com/gridstack/gridstack.js/issues/1195) options broken with ember hash helper - thanks [@btecu](https://github.com/btecu)
 - fix [1250](https://github.com/gridstack/gridstack.js/issues/1250) don't remove item from another grid
-- add `getGridItems()` to return list of HTML grid items
 
 ## 1.1.1 (2020-03-17)
 
