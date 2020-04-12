@@ -242,13 +242,12 @@ export class GridStack {
 
     this._initStyles();
 
-    this.engine = new GridStackEngine(this.opts.column, (cbNodes, detachNode) => {
-      detachNode = (detachNode === undefined ? true : detachNode);
+    this.engine = new GridStackEngine(this.opts.column, (cbNodes, removeDOM = true) => {
       let maxHeight = 0;
       this.engine.nodes.forEach(n => { maxHeight = Math.max(maxHeight, n.y + n.height) });
       cbNodes.forEach(n => {
         let el = n.el;
-        if (detachNode && n._id === null) {
+        if (removeDOM && n._id === null) {
           if (el && el.parentNode) { el.parentNode.removeChild(el) }
         } else {
           this._writeAttrs(el, n.x, n.y, n.width, n.height);
@@ -466,13 +465,13 @@ export class GridStack {
 
   /**
    * Destroys a grid instance.
-   * @param detachGrid if false nodes and grid will not be removed from the DOM (Optional. Default true).
+   * @param removeDOM if `false` grid and items elements will not be removed from the DOM (Optional. Default `true`).
    */
-  public destroy(detachGrid = true): GridStack {
+  public destroy(removeDOM = true): GridStack {
     window.removeEventListener('resize', this._onResizeHandler);
     this.disable();
-    if (!detachGrid) {
-      this.removeAll(false);
+    if (!removeDOM) {
+      this.removeAll(removeDOM);
       this.el.classList.remove(this.opts._class);
       delete this.el.gridstack;
     } else {
@@ -825,9 +824,9 @@ export class GridStack {
   /**
    * Removes widget from the grid.
    * @param el  widget or selector to modify
-   * @param detachNode if false DOM node won't be removed from the tree (Default? true).
+   * @param removeDOM if `false` DOM element won't be removed from the tree (Default? true).
    */
-  public removeWidget(els: GridStackElement, detachNode = true): GridStack {
+  public removeWidget(els: GridStackElement, removeDOM = true): GridStack {
     this.getElements(els).forEach(el => {
       if (el.parentElement !== this.el) return; // not our child!
       let node = el.gridstackNode;
@@ -841,7 +840,7 @@ export class GridStack {
       delete el.gridstackNode;
       this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
 
-      this.engine.removeNode(node, detachNode, true); // true for trigger event
+      this.engine.removeNode(node, removeDOM, true); // true for trigger event
     });
     this._triggerRemoveEvent();
     this._triggerChangeEvent();
@@ -850,15 +849,15 @@ export class GridStack {
 
   /**
    * Removes all widgets from the grid.
-   * @param detachNode if false DOM nodes won't be removed from the tree (Default? true).
+   * @param removeDOM if `false` DOM elements won't be removed from the tree (Default? `true`).
    */
-  public removeAll(detachNode?: boolean): GridStack {
+  public removeAll(removeDOM = true): GridStack {
     // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
     this.engine.nodes.forEach(n => {
       delete n.el.gridstackNode;
       this.dd.draggable(n.el, 'destroy').resizable(n.el, 'destroy');
     });
-    this.engine.removeAll(detachNode);
+    this.engine.removeAll(removeDOM);
     this._triggerRemoveEvent();
     return this;
   }

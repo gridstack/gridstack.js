@@ -28,7 +28,7 @@ gridstack.js API
   - [cellWidth()](#cellwidth)
   - [commit()](#commit)
   - [column(column, doNotPropagate)](#columncolumn-donotpropagate)
-  - [destroy([detachGrid])](#destroydetachgrid)
+  - [destroy([removeDOM])](#destroyremovedom)
   - [disable()](#disable)
   - [enable()](#enable)
   - [enableMove(doEnable, includeNewWidgets)](#enablemovedoenable-includenewwidgets)
@@ -45,8 +45,8 @@ gridstack.js API
   - [minWidth(el, val)](#minwidthel-val)
   - [movable(el, val)](#movableel-val)
   - [move(el, x, y)](#moveel-x-y)
-  - [removeWidget(el[, detachNode])](#removewidgetel-detachnode)
-  - [removeAll([detachNode])](#removealldetachnode)
+  - [removeWidget(el[, removeDOM])](#removewidgetel-removedom)
+  - [removeAll([removeDOM])](#removeallremovedom)
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
@@ -295,13 +295,13 @@ else you will need to generate correct CSS (see https://github.com/gridstack/gri
 - `column` - Integer > 0 (default 12), if missing it will return the current count instead.
 - `doNotPropagate` - if true existing widgets will not be updated during a set.
 
-### destroy([detachGrid])
+### destroy([removeDOM])
 
 Destroys a grid instance.
 
 Parameters:
 
-- `detachGrid` - if `false` nodes and grid will not be removed from the DOM (Optional. Default `true`).
+- `removeDOM` - if `false` nodes and grid will not be removed from the DOM (Optional. Default `true`).
 
 ### disable()
 
@@ -431,22 +431,22 @@ Parameters:
 - `el` - widget to move
 - `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
 
-### removeWidget(el[, detachNode])
+### removeWidget(el[, removeDOM])
 
 Removes widget from the grid.
 
 Parameters:
 
 - `el` - widget to remove.
-- `detachNode` - if `false` node won't be removed from the DOM (Optional. Default `true`).
+- `removeDOM` - if `false` node won't be removed from the DOM (Optional. Default `true`).
 
-### removeAll([detachNode])
+### removeAll([removeDOM])
 
 Removes all widgets from the grid.
 
 Parameters:
 
-- `detachNode` - if `false` nodes won't be removed from the DOM (Optional. Default `true`).
+- `removeDOM` - if `false` nodes won't be removed from the DOM (Optional. Default `true`).
 
 ### resize(el, width, height)
 

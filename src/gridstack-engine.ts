@@ -9,7 +9,7 @@
 import { Utils, obsolete } from './utils';
 import { GridStackNode } from './types';
 
-export type onChangeCB = (nodes: GridStackNode[], detachNode?: boolean) => void;
+export type onChangeCB = (nodes: GridStackNode[], removeDOM?: boolean) => void;
 
 /**
  * Defines the GridStack engine that does most no DOM grid manipulation.
@@ -268,13 +268,12 @@ export class GridStackEngine {
   }
 
   /** @internal */
-  private _notify(nodes?: GridStackNode | GridStackNode[], detachNode?: boolean): GridStackEngine {
+  private _notify(nodes?: GridStackNode | GridStackNode[], removeDOM = true): GridStackEngine {
     if (this.batchMode) { return this }
-    detachNode = (detachNode === undefined ? true : detachNode);
     nodes = (nodes === undefined ? [] : (Array.isArray(nodes) ? nodes : [nodes]) );
     let dirtyNodes = nodes.concat(this.getDirtyNodes());
     if (this.onchange) {
-      this.onchange(dirtyNodes, detachNode);
+      this.onchange(dirtyNodes, removeDOM);
     }
     return this;
   }
@@ -320,25 +319,26 @@ export class GridStackEngine {
     return node;
   }
 
-  public removeNode(node: GridStackNode, detachNode = true, triggerRemoveEvent = false): GridStackEngine {
+  public removeNode(node: GridStackNode, removeDOM = true, triggerRemoveEvent = false): GridStackEngine {
     if (triggerRemoveEvent) {
       this.removedNodes.push(node);
     }
     node._id = null; // hint that node is being removed
     this.nodes = this.nodes.filter(n => n !== node);
     this._packNodes();
-    this._notify(node, detachNode);
+    this._notify(node, removeDOM);
     return this;
   }
 
-  public removeAll(detachNode?: boolean): GridStackEngine {
+  public removeAll(removeDOM = true): GridStackEngine {
     delete this._layouts;
     if (this.nodes.length === 0) { return this }
-    detachNode = (detachNode === undefined ? true : detachNode);
-    this.nodes.forEach(n => { n._id = null; }); // hint that node is being removed
+    if (removeDOM) {
+      this.nodes.forEach(n => { n._id = null; }); // hint that node is being removed
+    }
     this.removedNodes = this.nodes;
     this.nodes = [];
-    this._notify(this.removedNodes, detachNode);
+    this._notify(this.removedNodes, removeDOM);
     return this;
   }
 
