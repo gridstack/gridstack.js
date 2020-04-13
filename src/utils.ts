@@ -173,7 +173,8 @@ export class Utils {
     return Utils.closestByClass(el, name);
   }
 
-  static throttle(callback, delay) {
+  /** @internal */
+  static throttle(callback: () => void, delay: number) {
     let isWaiting = false;
 
     return function (...args) {
@@ -204,7 +205,8 @@ export class Utils {
     }
   }
 
-  static getScrollParent(el: HTMLElement) {
+  /** @internal */
+  static getScrollParent(el: HTMLElement): HTMLElement {
     let returnEl;
     if (el === null) {
       returnEl = null;

@@ -251,7 +251,7 @@ export class GridStackEngine {
   public getDirtyNodes(verify?: boolean): GridStackNode[] {
     // compare original X,Y,W,H (or entire node?) instead as _dirty can be a temporary state
     if (verify) {
-      let dirtNodes = [];
+      let dirtNodes: GridStackNode[] = [];
       this.nodes.forEach(n => {
         if (n._dirty) {
           if (n.y === n._origY && n.x === n._origX && n.width === n._origW && n.height === n._origH) {
@@ -352,7 +352,7 @@ export class GridStackEngine {
       return true;
     }
 
-    let clonedNode;
+    let clonedNode: GridStackNode;
     let clone = new GridStackEngine(
       this.column,
       null,
