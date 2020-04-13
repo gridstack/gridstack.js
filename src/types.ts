@@ -11,7 +11,8 @@ import { GridStackDragDropPlugin } from './gridstack-dragdrop-plugin';
 
 export type numberOrString = number | string;
 export interface GridItemHTMLElement extends HTMLElement {
-  gridstackNode?: GridStackNode; // grid items point back to node
+  /** pointer to grid node instance */
+  gridstackNode?: GridStackNode;
   /** @internal */
   _gridstackNodeOrig?: GridStackNode;
 }
@@ -223,28 +224,50 @@ export interface DDDragOpt {
  * internal descriptions describing the items in the grid
  */
 export interface GridStackNode extends GridstackWidget {
+  /** pointer back to HTML element */
   el?: GridItemHTMLElement;
-  /** @internal need to do that for each and use --stripInternal */
+  /** pointer back to Grid instance */
+  grid?: GridStack;
+  /** @internal */
   _id?: number;
-  _grid?: GridStack;
+  /** @internal */
   _dirty?: boolean;
+  /** @internal */
   _updating?: boolean;
+  /** @internal */
   _added?: boolean;
+  /** @internal */
   _temporary?: boolean;
+  /** @internal */
   _isOutOfGrid?: boolean;
+  /** @internal */
   _origX?: number;
+  /** @internal */
   _origY?: number;
+  /** @internal */
   _packY?: number;
+  /** @internal */
   _origW?: number;
+  /** @internal */
   _origH?: number;
+  /** @internal */
   _lastTriedX?: number;
+  /** @internal */
   _lastTriedY?: number;
+  /** @internal */
   _lastTriedWidth?: number;
+  /** @internal */
   _lastTriedHeight?: number;
+  /** @internal */
   _isAboutToRemove?: boolean;
+  /** @internal */
   _removeTimeout?: number;
+  /** @internal */
   _beforeDragX?: number;
+  /** @internal */
   _beforeDragY?: number;
+  /** @internal */
   _prevYPix?: number;
+  /** @internal */
   _temporaryRemoved?: boolean;
 }

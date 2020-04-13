@@ -216,7 +216,7 @@ export class Utils {
     return returnEl;
   }
 
-  /** @private */
+  /** @internal */
   static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number) {
     // is widget in view?
     let rect = el.getBoundingClientRect();

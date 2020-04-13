@@ -1024,8 +1024,8 @@ export class GridStack {
     return this;
   }
 
-  // @internal eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private _triggerEvent(name: string, data?: any): GridStack {
+  /** @internal */
+  private _triggerEvent(name: string, data?: GridStackNode[]): GridStack {
     let event = data ? new CustomEvent(name, {bubbles: false, detail: data}) : new Event(name);
     this.el.dispatchEvent(event);
     return this;
@@ -1290,7 +1290,7 @@ export class GridStack {
       node.el = target;
 
       if (node._isAboutToRemove) {
-        let gridToNotify = el.gridstackNode._grid;
+        let gridToNotify = el.gridstackNode.grid;
         if (gridToNotify._gsEventHandler[event.type]) {
           gridToNotify._gsEventHandler[event.type](event, target);
         }
@@ -1354,7 +1354,7 @@ export class GridStack {
   /** @internal */
   private _prepareElement(el: GridItemHTMLElement, triggerAddEvent = false): GridStack {
     el.classList.add(this.opts.itemClass);
-    let node = this._readAttr(el, { el: el, _grid: this });
+    let node = this._readAttr(el, { el: el, grid: this });
     node = this.engine.addNode(node, triggerAddEvent);
     el.gridstackNode = node;
 
@@ -1492,13 +1492,13 @@ export class GridStack {
       this.dd
         .on(trashZone, 'dropover', (event, el) => {
           let node = el.gridstackNode;
-          if (!node || node._grid !== this) return;
+          if (!node || node.grid !== this) return;
           el.dataset.inTrashZone = 'true';
           this._setupRemovingTimeout(el);
         })
         .on(trashZone, 'dropout', (event, el) => {
           let node = el.gridstackNode;
-          if (!node || node._grid !== this) return;
+          if (!node || node.grid !== this) return;
           delete el.dataset.inTrashZone;
           this._clearRemovingTimeout(el);
         });
@@ -1543,7 +1543,7 @@ export class GridStack {
       .droppable(this.el, {
         accept: (el: GridItemHTMLElement) => {
           let node: GridStackNode = el.gridstackNode;
-          if (node && node._grid === this) {
+          if (node && node.grid === this) {
             return false;
           }
           if (typeof this.opts.acceptWidgets === 'function') {
@@ -1604,7 +1604,7 @@ export class GridStack {
         }
         let node: GridStackNode = _el.gridstackNode;
         this.engine.cleanupNode(node);
-        node._grid = this;
+        node.grid = this;
         let originalNode = _el._gridstackNodeOrig;
         delete _el.gridstackNode;
         delete _el._gridstackNodeOrig;
@@ -1616,8 +1616,8 @@ export class GridStack {
         let el = _el.cloneNode(true) as GridItemHTMLElement;
 
         el.gridstackNode = node;
-        if (originalNode && originalNode._grid) {
-          originalNode._grid._triggerRemoveEvent();
+        if (originalNode && originalNode.grid) {
+          originalNode.grid._triggerRemoveEvent();
         }
         _el.remove();
         node.el = el;
