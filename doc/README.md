@@ -385,8 +385,8 @@ Parameters:
 
 ```js
 var grid = GridStack.init();
-grid.el.appendChild('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="true"></div>')
-grid.makeWidget('gsi-1');
+grid.el.appendChild('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="true"><div class="grid-stack-item-content"></div></div>')
+grid.makeWidget('#gsi-1');
 ```
 
 ### maxHeight(el, val)
