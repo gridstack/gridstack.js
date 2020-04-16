@@ -72,7 +72,7 @@ export class GridStack {
       return null;
     }
     if (!el.gridstack) {
-      el.gridstack = new GridStack(el, options);
+      el.gridstack = new GridStack(el, Utils.clone(options));
     }
     return el.gridstack
   }
@@ -152,14 +152,11 @@ export class GridStack {
     obsoleteAttr(this.el, 'data-gs-height', 'data-gs-max-row', 'v0.5.3');
     obsoleteAttr(this.el, 'data-gs-current-height', 'data-gs-current-row', 'v1.0.0');
 
-    opts.itemClass = opts.itemClass || 'grid-stack-item';
-
     // if row property exists, replace minRow and maxRow instead
     if (opts.row) {
       opts.minRow = opts.maxRow = opts.row;
       delete opts.row;
     }
-
     let rowAttr = Utils.toNumber(el.getAttribute('data-gs-row'));
 
     // elements attributes override any passed options (like CSS style) - merge the two together
@@ -180,29 +177,28 @@ export class GridStack {
       staticGrid: false,
       _class: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
       animate: Utils.toBool(el.getAttribute('data-gs-animate')) || false,
-      alwaysShowResizeHandle: opts.alwaysShowResizeHandle || false,
-      resizable: Utils.defaults(opts.resizable || {}, {
+      alwaysShowResizeHandle: false,
+      resizable: {
         autoHide: !(opts.alwaysShowResizeHandle || false),
         handles: 'se'
-      }),
-      draggable: Utils.defaults(opts.draggable || {}, {
-        handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) ||
-          '.grid-stack-item-content',
+      },
+      draggable: {
+        handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) || '.grid-stack-item-content',
         scroll: false,
         appendTo: 'body'
-      }),
-      disableDrag: opts.disableDrag || false,
-      disableResize: opts.disableResize || false,
+      },
+      disableDrag: false,
+      disableResize: false,
       rtl: 'auto',
       removable: false,
-      removableOptions: Utils.defaults(opts.removableOptions || {}, {
+      removableOptions: {
         accept: '.' + opts.itemClass
-      }),
+      },
       removeTimeout: 2000,
       verticalMarginUnit: 'px',
       cellHeightUnit: 'px',
-      disableOneColumnMode: opts.disableOneColumnMode || false,
-      oneColumnModeDomSort: opts.oneColumnModeDomSort
+      disableOneColumnMode: false,
+      oneColumnModeDomSort: false
     };
 
     this.opts = Utils.defaults(opts, defaults);
