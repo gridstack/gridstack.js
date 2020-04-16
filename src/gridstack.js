@@ -2106,7 +2106,7 @@
     var el = $(elOrString).get(0);
     if (!el) return;
     if (!el.gridstack) {
-      el.gridstack = new GridStack(el, opts);
+      el.gridstack = new GridStack(el, Utils.clone(opts));
     }
     return el.gridstack
   };
