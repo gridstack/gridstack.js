@@ -20,6 +20,7 @@ export type DDDropOpt = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | {} | any;
 export type DDKey = 'minWidth' | 'minHeight' | string;
+export type DDValue = number | string;
 
 /** drag&drop events callbacks */
 export type DDCallback = (event: Event, arg2: GridItemHTMLElement) => void;
@@ -39,15 +40,15 @@ export class GridStackDragDropPlugin {
     this.grid = grid;
   }
 
-  public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+  public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {
     return this;
   }
 
-  public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?): GridStackDragDropPlugin {
+  public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {
     return this;
   }
 
-  public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?): GridStackDragDropPlugin {
+  public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {
     return this;
   }
 

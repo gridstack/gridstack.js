@@ -72,7 +72,7 @@ export class GridStack {
       return null;
     }
     if (!el.gridstack) {
-      el.gridstack = new GridStack(el, options);
+      el.gridstack = new GridStack(el, Utils.clone(options));
     }
     return el.gridstack
   }
@@ -152,14 +152,11 @@ export class GridStack {
     obsoleteAttr(this.el, 'data-gs-height', 'data-gs-max-row', 'v0.5.3');
     obsoleteAttr(this.el, 'data-gs-current-height', 'data-gs-current-row', 'v1.0.0');
 
-    opts.itemClass = opts.itemClass || 'grid-stack-item';
-
     // if row property exists, replace minRow and maxRow instead
     if (opts.row) {
       opts.minRow = opts.maxRow = opts.row;
       delete opts.row;
     }
-
     let rowAttr = Utils.toNumber(el.getAttribute('data-gs-row'));
 
     // elements attributes override any passed options (like CSS style) - merge the two together
@@ -180,29 +177,28 @@ export class GridStack {
       staticGrid: false,
       _class: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
       animate: Utils.toBool(el.getAttribute('data-gs-animate')) || false,
-      alwaysShowResizeHandle: opts.alwaysShowResizeHandle || false,
-      resizable: Utils.defaults(opts.resizable || {}, {
+      alwaysShowResizeHandle: false,
+      resizable: {
         autoHide: !(opts.alwaysShowResizeHandle || false),
         handles: 'se'
-      }),
-      draggable: Utils.defaults(opts.draggable || {}, {
-        handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) ||
-          '.grid-stack-item-content',
+      },
+      draggable: {
+        handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) || '.grid-stack-item-content',
         scroll: false,
         appendTo: 'body'
-      }),
-      disableDrag: opts.disableDrag || false,
-      disableResize: opts.disableResize || false,
+      },
+      disableDrag: false,
+      disableResize: false,
       rtl: 'auto',
       removable: false,
-      removableOptions: Utils.defaults(opts.removableOptions || {}, {
+      removableOptions: {
         accept: '.' + opts.itemClass
-      }),
+      },
       removeTimeout: 2000,
       verticalMarginUnit: 'px',
       cellHeightUnit: 'px',
-      disableOneColumnMode: opts.disableOneColumnMode || false,
-      oneColumnModeDomSort: opts.oneColumnModeDomSort
+      disableOneColumnMode: false,
+      oneColumnModeDomSort: false
     };
 
     this.opts = Utils.defaults(opts, defaults);
@@ -460,7 +456,7 @@ export class GridStack {
   /** returns an array of grid HTML elements (no placeholder) - used internally to iterate through our children */
   public getGridItems(): GridItemHTMLElement[] {
     return Array.from(this.el.children)
-      .filter(el => el.matches('.' + this.opts.itemClass) && !el.matches('.' + this.opts.placeholderClass)) as GridItemHTMLElement[];
+      .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass) && !el.matches('.' + this.opts.placeholderClass)) as GridItemHTMLElement[];
   }
 
   /**
@@ -781,9 +777,9 @@ export class GridStack {
       let noData = (name === 'enable' || name === 'disable');
       this._gsEventHandler = this._gsEventHandler || {};
       if (noData) {
-        this._gsEventHandler[name] = (event) => callback(event);
+        this._gsEventHandler[name] = (event: Event) => callback(event);
       } else {
-        this._gsEventHandler[name] = (event) => callback(event, event.detail);
+        this._gsEventHandler[name] = (event: CustomEvent) => callback(event, event.detail);
       }
       this.el.addEventListener(name, this._gsEventHandler[name]);
     } else if (name === 'dragstart' || name === 'dragstop' || name === 'resizestart' || name === 'resizestop' || name === 'dropped') {
@@ -1071,11 +1067,11 @@ export class GridStack {
     let margin = this.opts.verticalMargin as number;
 
     if (!this.opts.verticalMargin || this.opts.cellHeightUnit === this.opts.verticalMarginUnit) {
-      getHeight = (nbRows, nbMargins) => {
+      getHeight = (nbRows: number, nbMargins: number) => {
         return (height * nbRows + margin * nbMargins) + this.opts.cellHeightUnit;
       }
     } else {
-      getHeight = (nbRows, nbMargins) => {
+      getHeight = (nbRows: number, nbMargins: number) => {
         if (!nbRows || !nbMargins) {
           return (height * nbRows + margin * nbMargins) + this.opts.cellHeightUnit;
         }
@@ -1173,8 +1169,8 @@ export class GridStack {
   /** @internal prepares the element for drag&drop **/
   private _prepareElementsByNode(el: GridItemHTMLElement, node: GridStackNode): GridStack {
     // variables used/cashed between the 3 start/move/end methods, in addition to node passed above
-    let cellWidth;
-    let cellFullHeight; // internal cellHeight + v-margin
+    let cellWidth: number;
+    let cellFullHeight: number; // internal cellHeight + v-margin
 
     /** called when item starts moving/resizing */
     let onStartMoving = (event, ui) => {
@@ -1220,7 +1216,7 @@ export class GridStack {
     }
 
     /** called when item is being dragged/resized */
-    let dragOrResize = (event, ui) => {
+    let dragOrResize = (event: Event, ui) => {
       let x = Math.round(ui.position.left / cellWidth);
       let y = Math.floor((ui.position.top + cellFullHeight / 2) / cellFullHeight);
       let width;
@@ -1281,8 +1277,8 @@ export class GridStack {
     }
 
     /** called when the item stops moving/resizing */
-    let onEndMoving = (event) => {
-      let { target } = event;
+    let onEndMoving = (event: Event) => {
+      let target: GridItemHTMLElement = event.target as GridItemHTMLElement;
       if (!target.gridstackNode) return;
 
       // let forceNotify = false; what is the point of calling 'change' event with no data, when the 'removed' event is already called ?
@@ -1323,7 +1319,7 @@ export class GridStack {
 
       // if we re-sized a nested grid item, let the children resize as well
       if (event.type === 'resizestop') {
-        target.querySelectorAll('.grid-stack').forEach(el => el.gridstack._onResizeHandler());
+        target.querySelectorAll('.grid-stack').forEach((el: GridHTMLElement) => el.gridstack._onResizeHandler());
       }
     }
 
