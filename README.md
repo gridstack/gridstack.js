@@ -6,7 +6,6 @@ gridstack.js
 [![devDependency Status](https://david-dm.org/gridstack/gridstack.js/dev-status.svg)](https://david-dm.org/gridstack/gridstack.js#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
 [![downloads](https://img.shields.io/npm/dm/gridstack.svg)](https://www.npmjs.com/package/gridstack)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/alaind831)
 
 Mobile-friendly Javascript library (with Typescript bindings) for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Allows you to build draggable, responsive bootstrap v4-friendly layouts. It also has multiple bindings and works great with [React](https://reactjs.org/), [Angular](https://angular.io/), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others. Includes Typescript defines.
 
@@ -14,7 +13,10 @@ Inspired by no-longer maintained gridster, built with love.
 
 Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/).
 
-If you find this lib useful, please [donate](https://www.paypal.me/alaind831) and help support it!
+If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind831) or [Venmo](https://www.venmo.com/adumesny) (adumesny) and help support it!
+
+[![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/alaind831)
+[![Donate](https://img.shields.io/badge/Donate-Venmo-g.svg)](https://www.venmo.com/adumesny)
 
 Join us on Slack: https://gridstackjs.troolee.com
 
