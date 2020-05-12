@@ -258,6 +258,30 @@ working on touch-based devices.
 <script src="gridstack.all.js"></script>
 <script src="jquery.ui.touch-punch.min.js"></script>
 ```
+**NEW**
+```js
+// element identifier defaults to '.grid-stack', returns the grid
+// Note: for Typescript use window.GridStack.init() until next native TS version
+var grid = GridStack.init(opts?, element?);
+
+// returns DOM element
+grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {width: 2});
+
+// event handler
+grid.on('added', function(e, items) {/* items contains info */});
+
+```
+
+Other  vars/global changes
+```
+`GridStackUI` --> `GridStack`
+`GridStackUI.GridStackEngine` --> `GridStack.Engine`
+`grid.container` (jquery grid wrapper) --> `grid.el` (grid DOM element)
+`grid.grid` (GridStackEngine) --> `grid.engine`
+`grid.setColumn(N)` --> `grid.column(N)` and new `grid.column()` to get value, old API still supported though
+```
+
+Recommend looking at the [many samples](./demo) for more code examples.
 
 Also `alwaysShowResizeHandle` option may be useful:
 
