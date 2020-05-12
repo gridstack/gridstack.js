@@ -145,6 +145,7 @@ describe('gridstack', function() {
         staticGrid: true
       };
       var grid = GridStack.init(options);
+      expect($('.grid-stack').hasClass('grid-stack-static')).toBe(true);
       $('.grid-stack').removeClass('grid-stack-static');
       grid._setStaticClass();
       expect($('.grid-stack').hasClass('grid-stack-static')).toBe(true);
@@ -156,6 +157,7 @@ describe('gridstack', function() {
         staticGrid: false
       };
       var grid = GridStack.init(options);
+      expect($('.grid-stack').hasClass('grid-stack-static')).toBe(false);
       $('.grid-stack').addClass('grid-stack-static');
       grid._setStaticClass();
       expect($('.grid-stack').hasClass('grid-stack-static')).toBe(false);
@@ -1324,6 +1326,42 @@ describe('gridstack', function() {
         expect(parseInt(item.attr('data-gs-width'))).toBe(pos[i].w);
         expect(parseInt(item.attr('data-gs-height'))).toBe(pos[i].h);
       }
+    });
+  });
+
+  describe('two grids', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should not remove incorrect child', function() {
+      let grids = GridStack.initAll();
+      expect(grids.length).toBe(2);
+      expect(grids[0].engine.nodes.length).toBe(2);
+      expect(grids[1].engine.nodes.length).toBe(2);
+      // should do nothing
+      grids[0].removeWidget( grids[1].engine.nodes[0].el );
+      expect(grids[0].engine.nodes.length).toBe(2);
+      expect(grids[0].el.children.length).toBe(2);
+      expect(grids[1].engine.nodes.length).toBe(2);
+      expect(grids[1].el.children.length).toBe(2);
+      // should empty with no errors
+      grids[1].removeAll();
+      expect(grids[0].engine.nodes.length).toBe(2);
+      expect(grids[0].el.children.length).toBe(2);
+      expect(grids[1].engine.nodes.length).toBe(0);
+      expect(grids[1].el.children.length).toBe(0);
+    });
+    it('should remove 1 child', function() {
+      let grids = GridStack.initAll();
+      grids[1].removeWidget( grids[1].engine.nodes[0].el );
+      expect(grids[0].engine.nodes.length).toBe(2);
+      expect(grids[0].el.children.length).toBe(2);
+      expect(grids[1].engine.nodes.length).toBe(1);
+      expect(grids[1].el.children.length).toBe(1);
     });
   });
 

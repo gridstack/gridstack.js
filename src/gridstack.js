@@ -168,7 +168,7 @@
 
       sources.forEach(function(source) {
         for (var prop in source) {
-          if (source.hasOwnProperty(prop) && (!target.hasOwnProperty(prop) || target[prop] === undefined)) {
+          if (Object.prototype.hasOwnProperty.call(source, prop) && (!Object.prototype.hasOwnProperty.call(target, prop) || target[prop] === undefined)) {
             target[prop] = source[prop];
           }
         }
@@ -867,14 +867,12 @@
         self._updateHeightsOnResize();
       }
 
-      if (self.opts.staticGrid) { return; }
-
       if (!self.opts.disableOneColumnMode && (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) <= self.opts.minWidth) {
-        if (self.oneColumnMode) {  return; }
+        if (self.oneColumnMode) { return }
         self.oneColumnMode = true;
         self.column(1);
       } else {
-        if (!self.oneColumnMode) { return; }
+        if (!self.oneColumnMode) { return }
         self.oneColumnMode = false;
         self.column(self._prevColumn);
       }
@@ -1519,6 +1517,7 @@
     if (!node) {
       node = this.engine.getNodeDataByDOMEl(el.get(0));
     }
+    if (!node || node.el.parentElement !== this.el) return; // not our child!
     // remove our DOM data (circular link) and drag&drop permanently
     el.removeData('_gridstack_node');
     this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
@@ -2107,7 +2106,7 @@
     var el = $(elOrString).get(0);
     if (!el) return;
     if (!el.gridstack) {
-      el.gridstack = new GridStack(el, opts);
+      el.gridstack = new GridStack(el, Utils.clone(opts));
     }
     return el.gridstack
   };
