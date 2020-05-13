@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "1.1.1-master",
+  "version": "master",
   "description": "JavaScript / TypeScript for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Ember, knockout...)",
   "main": "dist/gridstack",
   "repository": {
