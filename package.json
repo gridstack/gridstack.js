@@ -38,7 +38,7 @@
   "bugs": {
     "url": "https://github.com/gridstack/gridstack.js/issues"
   },
-  "homepage": "http://gridstack.github.io/gridstack.js/",
+  "homepage": "https://github.com/JoshuaDeanEssium/gridstack.js/blob/master/",
   "dependencies": {
     "grunt-build": "^0.1.1",
     "grunt-contrib": "^0.11.0",
