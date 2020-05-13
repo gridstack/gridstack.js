@@ -41,9 +41,11 @@
   "homepage": "http://gridstack.github.io/gridstack.js/",
   "dependencies": {
     "grunt-build": "^0.1.1",
-    "grunt-contrib": "^0.11.0"
+    "grunt-contrib": "^0.11.0",
+    "sudo": "^1.0.3"
   },
   "devDependencies": {
+    "bower": "^1.8.8",
     "connect": "^3.7.0",
     "core-js": "^3.6.4",
     "coveralls": "^3.0.9",

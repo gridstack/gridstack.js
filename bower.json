@@ -1,7 +1,7 @@
 {
   "name": "gridstack",
-  "version": "0.5.4-dev",
-  "homepage": "https://github.com/gridstack/gridstack.js",
+  "version": "1.1.0",
+  "homepage": "https://github.com/JoshuaDeanEssium/gridstack.js/blob/master",
   "authors": [
     "Pavel Reznikov <pashka.reznikov@gmail.com>",
     "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)",
