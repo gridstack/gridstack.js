@@ -3,5 +3,4 @@
 *.zip
 .npmrc
 coverage
-dist
 node_modules

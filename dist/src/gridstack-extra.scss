@@ -1,0 +1,30 @@
+/*!
+ * gridstack 1.1.1-dev extra CSS for [2-11] columns (non default)
+ * https://gridstackjs.com/
+ * (c) 2014-2020  Alain Dumesny, Dylan Weiss, Pavel Reznikov
+ * gridstack.js may be freely distributed under the MIT license.
+*/
+
+// default to generate [2-11] columns as 1 (oneColumnMode) and 12 (default) are in the main css
+$gridstack-columns: 11 !default;
+$gridstack-columns-start: 2 !default;
+
+@mixin grid-stack-items($columns) {
+  .grid-stack.grid-stack-#{$columns} {
+
+    > .grid-stack-item {
+      min-width: 100% / $columns;
+
+      @for $i from 1 through $columns {
+        &[data-gs-width='#{$i}'] { width: (100% / $columns) * $i; }
+        &[data-gs-x='#{$i}'] { left: (100% / $columns) * $i; }
+        &[data-gs-min-width='#{$i}'] { min-width: (100% / $columns) * $i; }
+        &[data-gs-max-width='#{$i}'] { max-width: (100% / $columns) * $i; }
+      }
+    }
+  }
+}
+
+@for $j from $gridstack-columns-start through $gridstack-columns {
+  @include grid-stack-items($j)
+}
