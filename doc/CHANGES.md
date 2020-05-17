@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [1.1.1-dev (upcoming)](#111-dev-upcoming)
+- [1.1.2-dev (upcoming)](#112-dev-upcoming)
+- [1.1.2 (2020-05-17)](#112-2020-05-17)
 - [1.1.1 (2020-03-17)](#111-2020-03-17)
 - [1.1.0 (2020-02-29)](#110-2020-02-29)
 - [v1.0.0 (2020-02-23)](#v100-2020-02-23)
@@ -33,7 +34,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 1.1.1-dev (upcoming)
+## 1.1.2-dev (upcoming)
+
+TBD
+
+## 1.1.2 (2020-05-17)
 
 - fix [1229](https://github.com/gridstack/gridstack.js/issues/1229) `staticGrid` no longer disable oneColumnMode
 - fix [1195](https://github.com/gridstack/gridstack.js/issues/1195) options broken with ember hash helper - thanks [@btecu](https://github.com/btecu)
