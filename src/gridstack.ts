@@ -323,6 +323,10 @@ export class GridStack {
     // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
     // as the actual value are filled in when _prepareElement() calls el.getAttribute('data-gs-xyz) before adding the node.
     if (options) {
+      // make sure we load any DOM attributes that are not specified in passed in options (which override)
+      let domAttr = this._readAttr(el);
+      Utils.defaults(options, domAttr);
+      this.engine.prepareNode(options);
       this._writeAttr(el, options);
     }
 
@@ -1405,7 +1409,7 @@ export class GridStack {
     return this;
   }
 
-  /** @internal call to write any default attributes back to element */
+  /** @internal call to read any default attributes from element */
   private _readAttr(el: HTMLElement, node: GridStackNode = {}): GridstackWidget {
     node.x = Utils.toNumber(el.getAttribute('data-gs-x'));
     node.y = Utils.toNumber(el.getAttribute('data-gs-y'));

@@ -885,14 +885,14 @@ describe('gridstack', function() {
 
   });
 
-  describe('addWidget() with bad string value widget options', function() {
+  describe('addWidget()', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should use default', function() {
+    it('bad string options should use default', function() {
       let grid = GridStack.init();
       let widget = grid.addWidget(widgetHTML, {x: 'foo', y: null, width: 'bar', height: ''} as any);
       
@@ -901,16 +901,7 @@ describe('gridstack', function() {
       expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(1);
       expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(1);
     });
-  });
-
-  describe('addWidget with null options, ', function() {
-    beforeEach(function() {
-      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
-    });
-    afterEach(function() {
-      document.body.removeChild(document.getElementById('gs-cont'));
-    });
-    it('should clear x position', function() {
+    it('null options should clear x position', function() {
       let grid = GridStack.init({float: true});
       let widgetHTML = '<div class="grid-stack-item" data-gs-x="9"><div class="grid-stack-item-content"></div></div>';
       let widget = grid.addWidget(widgetHTML, {x:null, y:null, width:undefined});
@@ -918,7 +909,18 @@ describe('gridstack', function() {
       expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
       expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
     });
-  });
+    it('width attr should be retained', function() { // #1276
+      let grid = GridStack.init({float: true});
+      let widgetHTML = '<div class="grid-stack-item" data-gs-width="3" data-gs-max-width="4" data-gs-id="foo"><div class="grid-stack-item-content"></div></div>';
+      let widget = grid.addWidget(widgetHTML, {x: 1, y: 5});
+      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(5);
+      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(3);
+      expect(parseInt(widget.getAttribute('data-gs-max-width'), 10)).toBe(4);
+      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(1);
+      expect(widget.getAttribute('data-gs-id')).toBe('foo');
+    });
+});
 
   describe('method getFloat()', function() {
     beforeEach(function() {
