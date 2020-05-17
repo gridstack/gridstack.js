@@ -1425,8 +1425,8 @@
 
   /** call to write any default attributes back to element */
   GridStack.prototype._writeAttr = function(el, node) {
+    if (!node) { return; }
     el = $(el);
-    node = node || {};
     // Note: passing null removes the attr in jquery
     if (node.x !== undefined) { el.attr('data-gs-x', node.x); }
     if (node.y !== undefined) { el.attr('data-gs-y', node.y); }
@@ -1444,7 +1444,7 @@
     if (node.id !== undefined) { el.attr('data-gs-id', node.id); }
   };
 
-  /** call to write any default attributes back to element */
+  /** call to read any default attributes back to element */
   GridStack.prototype._readAttr = function(el, node) {
     el = $(el);
     node = node || {};
@@ -1488,6 +1488,9 @@
 
     el = $(el);
     if (opt) { // see knockout above
+      // make sure we load any DOM attributes that are not specified in passed in options (which override)
+      domAttr = this._readAttr(el);
+      Utils.defaults(opt, domAttr);
       this.engine._prepareNode(opt);
     }
     this._writeAttr(el, opt);

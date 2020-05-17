@@ -39,6 +39,7 @@ Change log
 - fix [1195](https://github.com/gridstack/gridstack.js/issues/1195) options broken with ember hash helper - thanks [@btecu](https://github.com/btecu)
 - fix [1250](https://github.com/gridstack/gridstack.js/issues/1250) don't remove item from another grid
 - fix [1261](https://github.com/gridstack/gridstack.js/issues/1261) `init()` clones passed options so second doesn't affect first one
+- fix [1276](https://github.com/gridstack/gridstack.js/issues/1276) `addWidget()` ignores data attributes
 
 ## 1.1.1 (2020-03-17)
 
