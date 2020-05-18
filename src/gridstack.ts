@@ -213,7 +213,7 @@ export class GridStack {
     if (this.opts.ddPlugin === false) {
       this.opts.ddPlugin = GridStackDragDropPlugin;
     } else if (this.opts.ddPlugin === undefined) {
-      this.opts.ddPlugin = GridStackDragDropPlugin.registeredPlugins[0] || GridStackDragDropPlugin;
+      this.opts.ddPlugin = GridStackDragDropPlugin.get();
     }
     this.dd = new (this.opts.ddPlugin as typeof GridStackDragDropPlugin)(this);
 

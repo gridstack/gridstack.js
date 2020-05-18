@@ -8,8 +8,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { GridStack, GridStackElement } from './gridstack';
-import { GridItemHTMLElement } from './types';
-import { DDDragInOpt } from '../dist/types';
+import { GridItemHTMLElement, DDDragInOpt } from './types';
 
 /** Drag&Drop drop options */
 export type DDDropOpt = {
@@ -33,8 +32,14 @@ export class GridStackDragDropPlugin {
   protected grid: GridStack;
   static registeredPlugins: typeof GridStackDragDropPlugin[] = [];
 
+  /** call this method to register your plugin instead of the default no-op one */
   static registerPlugin(pluginClass: typeof GridStackDragDropPlugin) {
     GridStackDragDropPlugin.registeredPlugins.push(pluginClass);
+  }
+
+  /** get the current registered plugin to use */
+  static get(): typeof GridStackDragDropPlugin {
+    return GridStackDragDropPlugin.registeredPlugins[0] || GridStackDragDropPlugin;
   }
 
   public constructor(grid: GridStack) {
