@@ -112,7 +112,7 @@ export interface GridstackOptions {
   resizable?: DDResizeOpt;
 
   /**
-   * if true widgets could be removed by dragging outside of the grid. It could also be a selector string,
+   * if true widgets could be removed by dragging outside of the grid. It could also be a selector string (ex: ".trash"),
    * in this case widgets will be removed by dropping them there (default?: false)
    * See example (http://gridstack.github.io/gridstack.js/demo/two.html)
    */

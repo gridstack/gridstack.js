@@ -192,7 +192,7 @@ export class GridStack {
       rtl: 'auto',
       removable: false,
       removableOptions: {
-        accept: '.' + opts.itemClass
+        accept: '.' + (opts.itemClass || 'grid-stack-item')
       },
       removeTimeout: 2000,
       verticalMarginUnit: 'px',
