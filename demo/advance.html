@@ -111,6 +111,8 @@
       },
       removable: '#trash',
       removeTimeout: 100,
+      // dragIn: '.newWidget',
+      // dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
       acceptWidgets: '.newWidget'
     });
 
@@ -119,7 +121,6 @@
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
     });
-
     // TODO: switch jquery-ui out
     $('.newWidget').draggable({
       revert: 'invalid',

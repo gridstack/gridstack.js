@@ -70,6 +70,12 @@ export interface GridstackOptions {
   /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null }) */
   draggable?: DDDragOpt;
 
+  /** allows to drag external items using this selector - see dragInOption. (default: undefined) */
+  dragIn?: string;
+
+  /** allows to drag external items using these options. (default?: { handle: '.grid-stack-item-content', revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }) */
+  dragInOptions?: DDDragInOpt;
+
   /** let user drag nested grid items out of a parent or not (default false) */
   dragOut?: boolean;
 
@@ -112,7 +118,7 @@ export interface GridstackOptions {
   resizable?: DDResizeOpt;
 
   /**
-   * if true widgets could be removed by dragging outside of the grid. It could also be a selector string,
+   * if true widgets could be removed by dragging outside of the grid. It could also be a selector string (ex: ".trash"),
    * in this case widgets will be removed by dropping them there (default?: false)
    * See example (http://gridstack.github.io/gridstack.js/demo/two.html)
    */
@@ -218,6 +224,12 @@ export interface DDDragOpt {
   appendTo?: string;
   /** parent constraining where item can be dragged out from (default: null = no constrain) */
   containment?: string;
+}
+export interface DDDragInOpt extends DDDragOpt {
+  /** used when draging item from the outside, and canceling (ex: 'invalid')*/
+  revert?: string;
+  /** helper function when dropping (ex: 'clone') */
+  helper?: string;
 }
 
 /**

@@ -187,12 +187,19 @@ export class GridStack {
         scroll: false,
         appendTo: 'body'
       },
+      dragIn: undefined,
+      dragInOptions : {
+        revert: 'invalid',
+        handle: '.grid-stack-item-content',
+        scroll: false,
+        appendTo: 'body'
+      },
       disableDrag: false,
       disableResize: false,
       rtl: 'auto',
       removable: false,
       removableOptions: {
-        accept: '.' + opts.itemClass
+        accept: '.' + (opts.itemClass || 'grid-stack-item')
       },
       removeTimeout: 2000,
       verticalMarginUnit: 'px',
@@ -283,6 +290,7 @@ export class GridStack {
     window.addEventListener('resize', this._onResizeHandler.bind(this));
     this._onResizeHandler();
 
+    this._setupDragIn();
     this._setupRemoveDrop();
     this._setupAcceptWidget();
   };
@@ -1477,6 +1485,16 @@ export class GridStack {
       if (!this._oneColumnMode) { return this }
       delete this._oneColumnMode;
       this.column(this._prevColumn);
+    }
+    return this;
+  }
+
+  /** @internal call to setup dragging in from the outside (say toolbar), with options */
+  private _setupDragIn():  GridStack {
+    if (!this.opts.staticGrid && typeof this.opts.dragIn === 'string') {
+      if (!this.dd.isDraggable(this.opts.dragIn)) {
+        this.dd.dragIn(this.opts.dragIn, this.opts.dragInOptions);
+      }
     }
     return this;
   }

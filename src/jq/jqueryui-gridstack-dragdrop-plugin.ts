@@ -6,9 +6,9 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { GridStack } from '../gridstack';
+import { GridStack, GridStackElement } from '../gridstack';
 import { GridStackDragDropPlugin, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../gridstack-dragdrop-plugin';
-import { GridItemHTMLElement } from '../types';
+import { GridItemHTMLElement, DDDragInOpt } from '../types';
 
 // TODO: TEMPORARY until can remove jquery-ui drag&drop and this class and use HTML5 instead !
 // see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
@@ -66,6 +66,12 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
     return this;
   }
 
+  public dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDragDropPlugin {
+    let $el: JQuery = $(el);
+    $el.draggable(opts);
+    return this;
+  }
+
   public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {
     let $el: JQuery = $(el);
     if (typeof opts.accept === 'function' && !opts._accept) {
@@ -80,6 +86,11 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
   public isDroppable(el: GridItemHTMLElement): boolean {
     let $el: JQuery = $(el);
     return Boolean($el.data('ui-droppable'));
+  }
+
+  public isDraggable(el: GridStackElement): boolean {
+    let $el: JQuery = $(el);
+    return Boolean($el.data('ui-draggable'));
   }
 
   public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDragDropPlugin {
@@ -97,17 +108,3 @@ export class JQueryUIGridStackDragDropPlugin extends GridStackDragDropPlugin {
 
 // finally register ourself
 GridStackDragDropPlugin.registerPlugin(JQueryUIGridStackDragDropPlugin);
-
-/* OLD code for reference
-function JQueryUIGridStackDragDropPlugin(grid) {
-  GridStack.DragDropPlugin.call(this, grid);
-}
-
-GridStack.DragDropPlugin.registerPlugin(JQueryUIGridStackDragDropPlugin);
-
-JQueryUIGridStackDragDropPlugin.prototype = Object.create(GridStack.DragDropPlugin.prototype);
-JQueryUIGridStackDragDropPlugin.prototype.constructor = JQueryUIGridStackDragDropPlugin;
-....
-scope.JQueryUIGridStackDragDropPlugin = JQueryUIGridStackDragDropPlugin;
-return JQueryUIGridStackDragDropPlugin;
-*/
