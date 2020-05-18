@@ -38,6 +38,7 @@ Change log
 
 - re-write to native Typescript, removing all JQuery from main code and API (drag&drop plugin still using for now)
 - add `getGridItems()` to return list of HTML grid items
+- add `{dragIn | dragInOptions}` grid attributes to handle external drag&drop items
 
 ## 1.1.2 (2020-05-17)
 

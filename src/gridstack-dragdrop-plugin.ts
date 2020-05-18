@@ -7,8 +7,9 @@
 */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { GridStack } from './gridstack';
+import { GridStack, GridStackElement } from './gridstack';
 import { GridItemHTMLElement } from './types';
+import { DDDragInOpt } from '../dist/types';
 
 /** Drag&Drop drop options */
 export type DDDropOpt = {
@@ -46,6 +47,14 @@ export class GridStackDragDropPlugin {
 
   public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {
     return this;
+  }
+
+  public dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDragDropPlugin {
+    return this;
+  }
+
+  public isDraggable(el: GridStackElement): boolean {
+    return false;
   }
 
   public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {

@@ -97,6 +97,7 @@
       float: false,
       removable: '.trash',
       removeTimeout: 100,
+      dragIn: '.sidebar .grid-stack-item',
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };
     let grids = GridStack.initAll(options);
@@ -118,14 +119,6 @@
           + (node.text? node.text : '') + '</div></div>', node);
       });
       grid.commit();
-    });
-
-    // TODO: switch jquery-ui out
-    $('.sidebar .grid-stack-item').draggable({
-      revert: 'invalid',
-      handle: '.grid-stack-item-content',
-      scroll: false,
-      appendTo: 'body',
     });
 
     function toggleFloat(button, i) {
