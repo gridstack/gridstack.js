@@ -35,20 +35,30 @@
     });
 
     var serializedData = [
-      {x: 0, y: 0, width: 2, height: 2},
-      {x: 3, y: 1, width: 1, height: 2},
-      {x: 4, y: 1, width: 1, height: 1},
-      {x: 2, y: 3, width: 3, height: 1},
-      {x: 1, y: 3, width: 1, height: 1}
+      {x: 0, y: 0, width: 2, height: 2, id: '0'},
+      {x: 3, y: 1, width: 1, height: 2, id: '1'},
+      {x: 4, y: 1, width: 1, height: 1, id: '2'},
+      {x: 2, y: 3, width: 3, height: 1, id: '3'},
+      {x: 1, y: 3, width: 1, height: 1, id: '4'}
     ];
 
     loadGrid = function() {
-      grid.removeAll();
       var items = GridStack.Utils.sort(serializedData);
       grid.batchUpdate();
-      items.forEach(function (node) {
-        grid.addWidget('<div><div class="grid-stack-item-content"></div></div>', node);
-      });
+
+      if (grid.engine.nodes.length === 0) {
+        // load from empty
+        items.forEach(function (item) {
+          grid.addWidget('<div><div class="grid-stack-item-content">' + item.id + '</div></div>', item);
+        });
+      } else {
+        // else update existing nodes (instead of calling grid.removeAll())
+        grid.engine.nodes.forEach(function (node) {
+          var item = items.find(function(e) { return e.id === node.id});
+          grid.update(node.el, item.x, item.y, item.width, item.height);
+        });
+      }
+
       grid.commit();
     };
 
@@ -59,7 +69,8 @@
           x: node.x,
           y: node.y,
           width: node.width,
-          height: node.height
+          height: node.height,
+          id: node.id
         });
       });
       document.querySelector('#saved-data').value = JSON.stringify(serializedData, null, '  ');
