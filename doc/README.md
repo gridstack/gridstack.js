@@ -36,6 +36,7 @@ gridstack.js API
   - [float(val?)](#floatval)
   - [getCellHeight()](#getcellheight)
   - [getCellFromPixel(position[, useOffset])](#getcellfrompixelposition-useoffset)
+  - [getGridItems(): GridItemHTMLElement[]](#getgriditems-griditemhtmlelement)
   - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
   - [locked(el, val)](#lockedel-val)
   - [makeWidget(el)](#makewidgetel)
@@ -49,6 +50,8 @@ gridstack.js API
   - [removeAll([removeDOM])](#removeallremovedom)
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
+  - [restore(layout: GridStackWidget[], addAndRemove?: boolean)](#restorelayout-gridstackwidget-addandremove-boolean)
+  - [save(): GridStackWidget[]](#save-gridstackwidget)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
@@ -83,6 +86,8 @@ gridstack.js API
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minWidth (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
+- `dragIn` - specify the class of items that can be dragged into the grid (ex: dragIn: '.newWidget'
+- `dragInOptions` - options for items that can be dragged into the grid (ex: dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body', containment: null}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
@@ -361,6 +366,10 @@ Parameters :
 
 Returns an object with properties `x` and `y` i.e. the column and row in the grid.
 
+### getGridItems(): GridItemHTMLElement[]
+
+Return list of GridItem HTML dom elements (excluding temporary placeholder)
+
 ### isAreaEmpty(x, y, width, height)
 
 Checks if specified area is empty.
@@ -463,6 +472,17 @@ Enables/Disables resizing.
 
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable.
+
+### restore(layout: GridStackWidget[], addAndRemove?: boolean)
+
+- used to restore a grid layout for a saved layout list (see `save()`).
+- Optional `addAndRemove` can be passed if new widgets should be added or removed if the are not present (`id` is used to look items up)
+- see [example](http://gridstackjs.com/demo/serialization.html)
+
+### save(): GridStackWidget[]
+
+- returns the layout of the grid that can be serialized (list of item non default attributes, not just w,y,x,y but also min/max and id). See `restore()`
+- see [example](http://gridstackjs.com/demo/serialization.html)
 
 ### setAnimation(doAnimate)
 

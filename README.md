@@ -335,7 +335,7 @@ make sure to read v1.0.0 migration first!
 v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes and overall code cleanup. Your code might need to change from 1.x
 
 1. In general methods that used no args (getter) vs setter are not used in Typescript. 
-Also legacy methods that used to take tons of parameters will now take a single object (typically `GridstackOptions` or `GridstackWidget`).
+Also legacy methods that used to take tons of parameters will now take a single object (typically `GridstackOptions` or `GridStackWidget`).
 
 ```
 removed `addWidget(el, x, y, width, ...)` --> use the widget options version instead `addWidget(el, {with, ...})`

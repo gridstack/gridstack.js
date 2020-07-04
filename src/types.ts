@@ -166,7 +166,7 @@ export interface GridstackOptions {
 /**
  * Gridstack Widget creation options
  */
-export interface GridstackWidget {
+export interface GridStackWidget {
   /** widget position x (default?: 0) */
   x?: number;
   /** widget position y (default?: 0) */
@@ -235,7 +235,7 @@ export interface DDDragInOpt extends DDDragOpt {
 /**
  * internal descriptions describing the items in the grid
  */
-export interface GridStackNode extends GridstackWidget {
+export interface GridStackNode extends GridStackWidget {
   /** pointer back to HTML element */
   el?: GridItemHTMLElement;
   /** pointer back to Grid instance */

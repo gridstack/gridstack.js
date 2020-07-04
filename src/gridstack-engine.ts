@@ -7,7 +7,7 @@
 */
 
 import { Utils, obsolete } from './utils';
-import { GridStackNode } from './types';
+import { GridStackNode, GridStackWidget } from './types';
 
 export type onChangeCB = (nodes: GridStackNode[], removeDOM?: boolean) => void;
 
@@ -466,6 +466,26 @@ export class GridStackEngine {
     return this;
   }
 
+  /** saves the current layout returning a list of widgets for serialization */
+  public save(): GridStackWidget[] {
+    let widgets: GridStackWidget[] = [];
+    Utils.sort(this.nodes);
+    this.nodes.forEach(n => {
+      let w: GridStackNode = {};
+      for (let key in n) { if (key[0] !== '_' && n[key] !== null && n[key] !== undefined ) w[key] = n[key]; }
+      // delete other internals
+      delete w.el;
+      delete w.grid;
+      // delete default values (will be re-created on read)
+      if (!w.autoPosition) delete w.autoPosition;
+      if (!w.noResize) delete w.noResize;
+      if (!w.noMove) delete w.noMove;
+      if (!w.locked) delete w.locked;
+      widgets.push(w);
+    });
+    return widgets;
+  }
+
   /** @internal called whenever a node is added or moved - updates the cached layouts */
   public layoutsNodesChange(nodes: GridStackNode[]): GridStackEngine {
     if (!this._layouts || this._ignoreLayoutsNodeChange) return this;
@@ -614,7 +634,7 @@ export class GridStackEngine {
   private getGridHeight = obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
 }
 
-/** @internal class to store per column layout bare minimal info (subset of GridstackWidget) */
+/** @internal class to store per column layout bare minimal info (subset of GridStackWidget) */
 interface Layout {
   x: number;
   y: number;

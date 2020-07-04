@@ -8,7 +8,7 @@
 
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils } from './utils';
-import { GridItemHTMLElement, GridstackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
+import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
 import { GridStackDragDropPlugin } from './gridstack-dragdrop-plugin';
 
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
@@ -310,14 +310,14 @@ export class GridStack {
    * @param el html element or string definition to add
    * @param options widget position/size options (optional) - see GridStackWidget
    */
-  public addWidget(el: GridStackElement, options?: GridstackWidget): GridItemHTMLElement {
+  public addWidget(el: GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
 
     // support legacy call for now ?
     if (arguments.length > 2) {
       console.warn('gridstack.ts: `addWidget(el, x, y, width...)` is deprecated. Use `addWidget(el, {x, y, width,...})`. It will be removed soon');
       // eslint-disable-next-line prefer-rest-params
       let a = arguments, i = 1,
-        opt: GridstackWidget = { x:a[i++], y:a[i++], width:a[i++], height:a[i++], autoPosition:a[i++],
+        opt: GridStackWidget = { x:a[i++], y:a[i++], width:a[i++], height:a[i++], autoPosition:a[i++],
           minWidth:a[i++], maxWidth:a[i++], minHeight:a[i++], maxHeight:a[i++], id:a[i++] };
       return this.addWidget(el, opt);
     }
@@ -340,6 +340,35 @@ export class GridStack {
 
     this.el.appendChild(el);
     return this.makeWidget(el);
+  }
+
+  /** saves the current layout returning a list of widgets for serialization */
+  public save(): GridStackWidget[] { return this.engine.save(); }
+
+  /** restore the widgets from a list. This will call update() on each (matching by id),
+   * or optionally add/remove widgets that are not there (either a boolean or a callback method) */
+  public restore(layout: GridStackWidget[], addAndRemove?: boolean) {
+    let items = GridStack.Utils.sort(layout);
+    this.batchUpdate();
+    // see if any items are missing from new layout and need to be removed first
+    if (addAndRemove) {
+      this.engine.nodes.forEach(n => {
+        let item = items.find(w => n.id === w.id);
+        if (!item) {
+          this.removeWidget(n.el);
+        }
+      });
+    }
+    // now add/update the widgets
+    items.forEach(w => {
+      let item = this.engine.nodes.find(n => n.id === w.id);
+      if (item) {
+        this.update(item.el, w.x, w.y, w.width, w.height); // TODO: full update
+      } else if (addAndRemove) {
+        this.addWidget('<div><div class="grid-stack-item-content"></div></div>', w);
+      }
+    });
+    this.commit();
   }
 
   /**
@@ -465,7 +494,7 @@ export class GridStack {
     return this.opts.column;
   }
 
-  /** returns an array of grid HTML elements (no placeholder) - used internally to iterate through our children */
+  /** returns an array of grid HTML elements (no placeholder) - used to iterate through our children */
   public getGridItems(): GridItemHTMLElement[] {
     return Array.from(this.el.children)
       .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass) && !el.matches('.' + this.opts.placeholderClass)) as GridItemHTMLElement[];
@@ -1380,7 +1409,7 @@ export class GridStack {
   }
 
   /** @internal call to write any default attributes back to element */
-  private _writeAttr(el: HTMLElement, node: GridstackWidget): GridStack {
+  private _writeAttr(el: HTMLElement, node: GridStackWidget): GridStack {
     if (!node) return this;
     this._writeAttrs(el, node.x, node.y, node.width, node.height);
 
@@ -1418,7 +1447,7 @@ export class GridStack {
   }
 
   /** @internal call to read any default attributes from element */
-  private _readAttr(el: HTMLElement, node: GridStackNode = {}): GridstackWidget {
+  private _readAttr(el: HTMLElement, node: GridStackNode = {}): GridStackWidget {
     node.x = Utils.toNumber(el.getAttribute('data-gs-x'));
     node.y = Utils.toNumber(el.getAttribute('data-gs-y'));
     node.width = Utils.toNumber(el.getAttribute('data-gs-width'));
