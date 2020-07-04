@@ -14,9 +14,11 @@
     <h1>Serialization demo</h1>
     <a onClick="saveGrid()" class="btn btn-primary" href="#">Save</a>
     <a onClick="loadGrid()" class="btn btn-primary" href="#">Load</a>
+    <a onClick="saveGridManual()" class="btn btn-primary" href="#">Save Manual</a>
+    <a onClick="loadGridManual()" class="btn btn-primary" href="#">Load Manual</a>
     <a onClick="clearGrid()" class="btn btn-primary" href="#">Clear</a>
     <br/><br/>
-    <div class="grid-stack"></div>
+    <div class="grid-stack"></div>    
     <hr/>
     <textarea id="saved-data" cols="100" rows="20" readonly="readonly"></textarea>
   </div>
@@ -31,31 +33,56 @@
     });
 
     let serializedData = [
-      {x: 0, y: 0, width: 2, height: 2},
-      {x: 3, y: 1, width: 1, height: 2},
-      {x: 4, y: 1, width: 1, height: 1},
-      {x: 2, y: 3, width: 3, height: 1},
-      {x: 1, y: 3, width: 1, height: 1}
+      {x: 0, y: 0, width: 2, height: 2, id: '0'},
+      {x: 3, y: 1, width: 1, height: 2, id: '1'},
+      {x: 4, y: 1, width: 1, height: 1, id: '2'},
+      {x: 2, y: 3, width: 3, height: 1, id: '3'},
+      {x: 1, y: 3, width: 1, height: 1, id: '4'}
     ];
 
+    // NEW 2.x method
     loadGrid = function() {
-      grid.removeAll();
+      grid.restore(serializedData, true);
+    }
+
+    // NEW 2.x method
+    saveGrid = function() {
+      serializedData = grid.save();
+      document.querySelector('#saved-data').value = JSON.stringify(serializedData, null, '  ');
+    }
+
+    // old (pre 2.x) way to manually load a grid
+    loadGridManual = function() {
       let items = GridStack.Utils.sort(serializedData);
       grid.batchUpdate();
-      items.forEach(function (node) {
-        grid.addWidget('<div><div class="grid-stack-item-content"></div></div>', node);
-      });
+
+      if (grid.engine.nodes.length === 0) {
+        // load from empty
+        items.forEach(function (item) {
+          grid.addWidget('<div><div class="grid-stack-item-content">' + item.id + '</div></div>', item);
+        });
+      } else {
+        // else update existing nodes (instead of calling grid.removeAll())
+        grid.engine.nodes.forEach(function (node) {
+          let item = items.find(function(e) { return e.id === node.id});
+          grid.update(node.el, item.x, item.y, item.width, item.height);
+        });
+      }
+
       grid.commit();
     };
 
-    saveGrid = function() {
+    // old (pre 2.x) way to manually save a grid
+    saveGridManual = function() {
       serializedData = [];
       grid.engine.nodes.forEach(function(node) {
         serializedData.push({
           x: node.x,
           y: node.y,
           width: node.width,
-          height: node.height
+          height: node.height,
+          id: node.id,
+          custom: 'save anything here'
         });
       });
       document.querySelector('#saved-data').value = JSON.stringify(serializedData, null, '  ');

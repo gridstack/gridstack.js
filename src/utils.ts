@@ -6,7 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { GridstackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
+import { GridStackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
 
 /** checks for obsolete method names */
 export function obsolete(self, f, oldName: string, newName: string, rev: string) {
@@ -51,7 +51,7 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
 export class Utils {
 
   /** returns true if a and b overlap */
-  static isIntercepted(a: GridstackWidget, b: GridstackWidget): boolean {
+  static isIntercepted(a: GridStackWidget, b: GridStackWidget): boolean {
     return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
   }
 

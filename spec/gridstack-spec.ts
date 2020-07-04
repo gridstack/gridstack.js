@@ -7,10 +7,10 @@ describe('gridstack', function() {
   // grid has 4x2 and 4x4 top-left aligned - used on most test cases
   let gridHTML =
   '<div class="grid-stack">' +
-  '  <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2" id="item1">' +
+  '  <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2" data-gs-id="item1" id="item1">' +
   '    <div class="grid-stack-item-content">item 1</div>' +
   '  </div>' +
-  '  <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4" id="item2">' +
+  '  <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4" data-gs-id="item2" id="item2">' +
   '    <div class="grid-stack-item-content">item 2</div>' +
   '  </div>' +
   '</div>';
@@ -1467,6 +1467,38 @@ describe('gridstack', function() {
       expect((grid as any)._gsEventHandler.enable).toBe(undefined);
     });
 
+  });
+
+  describe('save & restore', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('save layout', function() {
+      let grid = GridStack.init();
+      let layout = grid.save();
+      expect(layout).toEqual([{x:0, y:0, width:4, height:2, id:'item1'}, {x:4, y:0, width:4, height:4, id:'item2'}]);
+    });
+    it('restore size 1 item', function() {
+      let grid = GridStack.init();
+      grid.restore([{height:3, id:'item1'}]);
+      let layout = grid.save();
+      expect(layout).toEqual([{x:0, y:0, width:4, height:3, id:'item1'}, {x:4, y:0, width:4, height:4, id:'item2'}]);
+    });
+    it('restore move 1 item, delete others', function() {
+      let grid = GridStack.init();
+      grid.restore([{x:2, height:1, id:'item2'}], true);
+      let layout = grid.save();
+      expect(layout).toEqual([{x:2, y:0, width:4, height:1, id:'item2'}]);
+    });
+    it('restore add new, delete others', function() {
+      let grid = GridStack.init();
+      grid.restore([{width:2, height:1, id:'item3'}], true);
+      let layout = grid.save();
+      expect(layout).toEqual([{x:0, y:0, width:2, height:1, id:'item3'}]);
+    });
   });
 
  // ..and finally track log warnings at the end, instead of displaying them....
