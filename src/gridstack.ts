@@ -424,7 +424,7 @@ export class GridStack {
    */
   public cellWidth(): number {
     // TODO: take margin into account (horizontal_padding in .scss) to make cellHeight='auto' square ? (see 810-many-columns.html)
-    return Math.round(this.el.offsetWidth / this.opts.column);
+    return this.el.offsetWidth / this.opts.column;
   }
 
   /**
