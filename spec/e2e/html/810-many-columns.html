@@ -8,11 +8,7 @@
 
   <link rel="stylesheet" href="../../../demo/demo.css"/>
   <link rel="stylesheet" href="810-many-columns.css"/>
-
-  <script src="../../../dist/jquery.min.js"></script>
-  <script src="../../../dist/jquery-ui.min.js"></script>
-  <script src="../../../src/gridstack.js"></script>
-  <script src="../../../src/gridstack.jQueryUI.js"></script>
+  <script src="../../../dist/gridstack.all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -30,8 +26,7 @@
     let count = 0;
     let options = {
       column: COLUMNS,
-      cellHeight: 'auto',
-      float: false
+      cellHeight: 'auto'
     };
     let grid = GridStack.init(options);
 
