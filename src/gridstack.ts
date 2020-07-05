@@ -128,7 +128,7 @@ export class GridStack {
   /** @internal */
   private _stylesId: string;
   /** @internal */
-  private _gsEventHandler: {};
+  private _gsEventHandler = {};
   /** @internal */
   private _styles: GridCSSStyleSheet;
   /** @internal */
@@ -816,7 +816,6 @@ export class GridStack {
     if (name === 'change' || name === 'added' || name === 'removed' || name === 'enable' || name === 'disable') {
       // native CustomEvent handlers - cash the generic handlers so we can easily remove
       let noData = (name === 'enable' || name === 'disable');
-      this._gsEventHandler = this._gsEventHandler || {};
       if (noData) {
         this._gsEventHandler[name] = (event: Event) => callback(event);
       } else {
@@ -838,8 +837,6 @@ export class GridStack {
    * @param name of the event (see possible values)
    */
   public off(name: GridStackEvent): GridStack {
-    if (!this._gsEventHandler) return;
-
     // check for array of names being passed instead
     if (name.indexOf(' ') !== -1) {
       let names = name.split(' ') as GridStackEvent[];
@@ -849,7 +846,7 @@ export class GridStack {
 
     if (name === 'change' || name === 'added' || name === 'removed' || name === 'enable' || name === 'disable') {
       // remove native CustomEvent handlers
-      if (this._gsEventHandler && this._gsEventHandler[name]) {
+      if (this._gsEventHandler[name]) {
         this.el.removeEventListener(name, this._gsEventHandler[name]);
       }
     }
