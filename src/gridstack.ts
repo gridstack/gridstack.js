@@ -233,7 +233,7 @@ export class GridStack {
     this._isAutoCellHeight = (this.opts.cellHeight === 'auto');
     if (this._isAutoCellHeight) {
       // make the cell square initially
-      this.cellHeight(this.cellWidth(), true);
+      this.cellHeight(Math.round(this.cellWidth()), true);
     } else {
       this.cellHeight(this.opts.cellHeight, true);
     }
@@ -1500,7 +1500,7 @@ export class GridStack {
    */
   private _onResizeHandler(): GridStack {
     if (this._isAutoCellHeight) {
-      Utils.throttle(() => { this.cellHeight(this.cellWidth(), false)}, 100);
+      Utils.throttle(() => { this.cellHeight(Math.round(this.cellWidth()), false)}, 100);
     }
 
     if (!this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth) {
