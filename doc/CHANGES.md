@@ -40,6 +40,8 @@ Change log
 - add `getGridItems()` to return list of HTML grid items
 - add `{dragIn | dragInOptions}` grid attributes to handle external drag&drop items
 - add `save()` and `restore()` to serialize grids from JSON, saving all attributes (not just w,h,x,y) [1286](https://github.com/gridstack/gridstack.js/issues/1286)
+- add `margin` to replace `verticalMargin` which affects both dimensions in code, rather than one in code the other in CSS.
+You can now have perfect square cells (default) [723](https://github.com/gridstack/gridstack.js/issues/723)
 - fix [1299](https://github.com/gridstack/gridstack.js/pull/1299) many columns round-off error
 
 ## 1.1.2 (2020-05-17)
@@ -210,7 +212,7 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 ## v0.2.5 (2016-03-02)
 
 - update names to respect js naming convention.
-- `cellHeight` and `verticalMargin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs).
+- `cellHeight` and `margin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs).
 - add `maxWidth`/`maxHeight` methods.
 - add `enableMove`/`enableResize` methods.
 - fix window resize issue [#331](https://github.com/gridstack/gridstack.js/issues/331)).

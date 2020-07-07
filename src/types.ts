@@ -91,6 +91,22 @@ export interface GridstackOptions {
   /** widget class (default?: 'grid-stack-item') */
   itemClass?: string;
 
+  /**
+   * gap size between grid item and content (default?: 10). see also marginTop, marginRight,... Can be:
+   *  an integer (px)
+   *  a string (ex: '2em', '20px', '2rem')
+   */
+  margin?: numberOrString;
+
+  /** optional way to specify each individual margin side - default to margin */
+  marginTop?: numberOrString;
+  marginRight?: numberOrString;
+  marginBottom?: numberOrString;
+  marginLeft?: numberOrString;
+
+  /** (internal) unit for margin (default? 'px') set when `margin` is set as string with unit (ex: 2rem') */
+  marginUnit?: string;
+
   /** maximum rows amount. Default? is 0 which means no maximum rows */
   maxRow?: number;
 
@@ -145,16 +161,6 @@ export interface GridstackOptions {
    * 'grid-stack-static' is also added to the element.
    */
   staticGrid?: boolean;
-
-  /**
-   * vertical gap size (default?: 20). Can be:
-   *  an integer (px)
-   *  a string (ex: '2em', '20px', '2rem')
-   */
-  verticalMargin?: numberOrString;
-
-  /** (internal) unit for verticalMargin (default? 'px') set when `verticalMargin` is set as string with unit (ex: 2rem') */
-  verticalMarginUnit?: string;
 
   /** @internal */
   _isNested?: boolean;

@@ -20,13 +20,13 @@
     <div class="grid-stack"></div>
   </div>
 
-
   <script type="text/javascript">
-    const COLUMNS = 30; // # of columns, also need to update CSS
+    const COLUMNS = 60; // # of columns, also need to update CSS
     let count = 0;
     let options = {
       column: COLUMNS,
-      cellHeight: 'auto'
+      cellHeight: 'auto',
+      margin: 1
     };
     let grid = GridStack.init(options);
 
@@ -35,9 +35,11 @@
       count++
     };
 
+    grid.batchUpdate();
     for (; count <= COLUMNS;) {
       this.addNewWidget(); 
     }
+    grid.commit();
   </script>
 </body>
 </html>
