@@ -64,21 +64,21 @@ Usage
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
 ```bash
-yarn install gridstack
+yarn add gridstack
 or
 npm install --save gridstack
 ```
 
 ## Include
 
-* local:
+* after you install:
 
 ```html
-<link rel="stylesheet" href="gridstack.min.css" />
-<script src="gridstack.all.js"></script>
+<link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.min.css" />
+<script src="node_modules/gridstack/dist/gridstack.all.js"></script>
 ```
 
-* Using CDN (minimized):
+* or using CDN (minimized):
 
 ```html
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.2/dist/gridstack.min.css" />
@@ -92,6 +92,11 @@ if you need to debug, look at the git demo/ examples for non min includes.
 creating items dynamically...
 
 ```html
+<style type="text/css">
+  .grid-stack { background: #FAFAD2; }
+  .grid-stack-item-content { background-color: #18bc9c; }
+</style>
+
 <div class="grid-stack"></div>
 
 <script type="text/javascript">
@@ -103,6 +108,11 @@ creating items dynamically...
 ... or DOM created items
 
 ```html
+<style type="text/css">
+  .grid-stack { background: #FAFAD2; }
+  .grid-stack-item-content { background-color: #18bc9c; }
+</style>
+
 <div class="grid-stack">
   <div class="grid-stack-item">
     <div class="grid-stack-item-content">Item 1</div>
