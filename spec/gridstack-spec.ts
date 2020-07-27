@@ -123,22 +123,38 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should return {x: 2, y: 5}.', function() {
+    it('should return {x: 4, y: 5}.', function() {
+      let cellHeight = 80;
+      let rectMargin = 8; // ??? top/left margin of 8 when calling getBoundingClientRect 
       let options = {
-        cellHeight: 80,
+        cellHeight: cellHeight,
         margin: 5
       };
       let grid = GridStack.init(options);
-      let pixel = {top: 500, left: 200};
+      let pixel = {left: 4 * 800 / 12 + rectMargin, top: 5 * cellHeight + rectMargin};
       let cell = grid.getCellFromPixel(pixel);
-      expect(cell.x).toBe(2);
+      expect(cell.x).toBe(4);
       expect(cell.y).toBe(5);
       cell = grid.getCellFromPixel(pixel, false);
-      expect(cell.x).toBe(2);
+      expect(cell.x).toBe(4);
       expect(cell.y).toBe(5);
       cell = grid.getCellFromPixel(pixel, true);
-      expect(cell.x).toBe(2);
+      expect(cell.x).toBe(4);
       expect(cell.y).toBe(5);
+      pixel = {left: 4 * 800 / 12 + rectMargin, top: 5 * cellHeight + rectMargin};
+
+      // now move 1 pixel in and get prev cell (we were on the edge)
+      pixel.left--;
+      pixel.top--;
+      cell = grid.getCellFromPixel(pixel);
+      expect(cell.x).toBe(3);
+      expect(cell.y).toBe(4);
+      cell = grid.getCellFromPixel(pixel, false);
+      expect(cell.x).toBe(3);
+      expect(cell.y).toBe(4);
+      cell = grid.getCellFromPixel(pixel, true);
+      expect(cell.x).toBe(3);
+      expect(cell.y).toBe(4);
     });
   });
 
@@ -149,14 +165,14 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should return 1/12th of container width.', function() {
+    it('should return 1/12th of container width (not rounded anymore).', function() {
       let options = {
         cellHeight: 80,
         margin: 5,
         column: 12
       };
       let grid = GridStack.init(options);
-      let res = Math.round($('.grid-stack').outerWidth() / 12);
+      let res = $('.grid-stack').outerWidth() / 12;
       expect(grid.cellWidth()).toBe(res);
     });
     it('should return 1/10th of container width.', function() {
@@ -193,21 +209,21 @@ describe('gridstack', function() {
       expect(grid.getRow()).toBe(rows);
 
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * margin);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight);
 
       grid.cellHeight( grid.getCellHeight() ); // should be no-op
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * margin);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight);
 
       cellHeight = 120; // should change and CSS actual height
       grid.cellHeight( cellHeight );
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * margin);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight);
 
       cellHeight = 20; // should change and CSS actual height
       grid.cellHeight( cellHeight );
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * margin);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight);
     });
 
     it('should be square', function() {

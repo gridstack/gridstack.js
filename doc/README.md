@@ -41,7 +41,7 @@ gridstack.js API
   - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
   - [locked(el, val)](#lockedel-val)
   - [makeWidget(el)](#makewidgetel)
-  - [margin(value: number)](#marginvalue-number)
+  - [margin(value: numberOrString)](#marginvalue-numberorstring)
   - [maxHeight(el, val)](#maxheightel-val)
   - [minHeight(el, val)](#minheightel-val)
   - [maxWidth(el, val)](#maxwidthel-val)

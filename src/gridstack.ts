@@ -609,17 +609,20 @@ export class GridStack {
    */
   public getCellFromPixel(position: MousePosition, useDocRelative = false): CellPosition {
     let box = this.el.getBoundingClientRect();
+    // console.log(`getBoundingClientRect left: ${box.left} top: ${box.top} w: ${box.width} h: ${box.height}`)
     let containerPos;
     if (useDocRelative) {
       containerPos = {top: box.top + document.documentElement.scrollTop, left: box.left};
+      // console.log(`getCellFromPixel scrollTop: ${document.documentElement.scrollTop}`)
     } else {
       containerPos = {top: this.el.offsetTop, left: this.el.offsetLeft}
+      // console.log(`getCellFromPixel offsetTop: ${containerPos.left} offsetLeft: ${containerPos.top}`)
     }
     let relativeLeft = position.left - containerPos.left;
     let relativeTop = position.top - containerPos.top;
 
-    let columnWidth = Math.floor(box.width / this.opts.column);
-    let rowHeight = Math.floor(box.height / parseInt(this.el.getAttribute('data-gs-current-row')));
+    let columnWidth = (box.width / this.opts.column);
+    let rowHeight = (box.height / parseInt(this.el.getAttribute('data-gs-current-row')));
 
     return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
   }
