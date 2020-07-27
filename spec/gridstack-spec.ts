@@ -123,22 +123,38 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should return {x: 2, y: 5}.', function() {
+    it('should return {x: 4, y: 5}.', function() {
+      let cellHeight = 80;
+      let rectMargin = 8; // ??? top/left margin of 8 when calling getBoundingClientRect 
       let options = {
-        cellHeight: 80,
-        verticalMargin: 10
+        cellHeight: cellHeight,
+        margin: 5
       };
       let grid = GridStack.init(options);
-      let pixel = {top: 500, left: 200};
+      let pixel = {left: 4 * 800 / 12 + rectMargin, top: 5 * cellHeight + rectMargin};
       let cell = grid.getCellFromPixel(pixel);
-      expect(cell.x).toBe(2);
+      expect(cell.x).toBe(4);
       expect(cell.y).toBe(5);
       cell = grid.getCellFromPixel(pixel, false);
-      expect(cell.x).toBe(2);
+      expect(cell.x).toBe(4);
       expect(cell.y).toBe(5);
       cell = grid.getCellFromPixel(pixel, true);
-      expect(cell.x).toBe(2);
+      expect(cell.x).toBe(4);
       expect(cell.y).toBe(5);
+      pixel = {left: 4 * 800 / 12 + rectMargin, top: 5 * cellHeight + rectMargin};
+
+      // now move 1 pixel in and get prev cell (we were on the edge)
+      pixel.left--;
+      pixel.top--;
+      cell = grid.getCellFromPixel(pixel);
+      expect(cell.x).toBe(3);
+      expect(cell.y).toBe(4);
+      cell = grid.getCellFromPixel(pixel, false);
+      expect(cell.x).toBe(3);
+      expect(cell.y).toBe(4);
+      cell = grid.getCellFromPixel(pixel, true);
+      expect(cell.x).toBe(3);
+      expect(cell.y).toBe(4);
     });
   });
 
@@ -149,20 +165,20 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should return 1/12th of container width.', function() {
+    it('should return 1/12th of container width (not rounded anymore).', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 5,
         column: 12
       };
       let grid = GridStack.init(options);
-      let res = Math.round($('.grid-stack').outerWidth() / 12);
+      let res = $('.grid-stack').outerWidth() / 12;
       expect(grid.cellWidth()).toBe(res);
     });
     it('should return 1/10th of container width.', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 5,
         column: 10
       };
       let grid = GridStack.init(options);
@@ -180,10 +196,10 @@ describe('gridstack', function() {
     });
     it('should start at 80 then become 120', function() {
       let cellHeight = 80;
-      let verticalMargin = 10;
+      let margin = 5;
       let options = {
         cellHeight: cellHeight,
-        verticalMargin: verticalMargin,
+        margin: margin,
         column: 12
       };
       let grid = GridStack.init(options);
@@ -193,21 +209,21 @@ describe('gridstack', function() {
       expect(grid.getRow()).toBe(rows);
 
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight);
 
       grid.cellHeight( grid.getCellHeight() ); // should be no-op
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight);
 
       cellHeight = 120; // should change and CSS actual height
       grid.cellHeight( cellHeight );
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight);
 
       cellHeight = 20; // should change and CSS actual height
       grid.cellHeight( cellHeight );
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(container.css('height'))).toBe(rows * cellHeight + (rows-1) * verticalMargin);
+      expect(parseInt(container.css('height'))).toBe(rows * cellHeight);
     });
 
     it('should be square', function() {
@@ -611,7 +627,7 @@ describe('gridstack', function() {
     it('should set return false.', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       let shouldBeFalse = grid.isAreaEmpty(1, 1, 1, 1);
@@ -620,7 +636,7 @@ describe('gridstack', function() {
     it('should set return true.', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       let shouldBeTrue = grid.isAreaEmpty(5, 5, 1, 1);
@@ -696,7 +712,7 @@ describe('gridstack', function() {
     it('should allow same x, y coordinates for widgets.', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 5,
         float: true
       };
       let grid = GridStack.init(options);
@@ -713,7 +729,7 @@ describe('gridstack', function() {
     it('should not allow same x, y coordinates for widgets.', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       let items = $('.grid-stack-item');
@@ -953,7 +969,7 @@ describe('gridstack', function() {
     it('should cleanup gridstack', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       grid.destroy();
@@ -963,7 +979,7 @@ describe('gridstack', function() {
     it('should cleanup gridstack but leave elements', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       grid.destroy(false);
@@ -984,7 +1000,7 @@ describe('gridstack', function() {
     it('should resize widget', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       let items = $('.grid-stack-item');
@@ -1004,7 +1020,7 @@ describe('gridstack', function() {
     it('should move widget', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 5,
         float: true
       };
       let grid = GridStack.init(options);
@@ -1054,7 +1070,7 @@ describe('gridstack', function() {
     it('should move and resize widget', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 5,
         float: true
       };
       let grid = GridStack.init(options);
@@ -1067,51 +1083,53 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.verticalMargin', function() {
+  describe('grid.margin', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should return verticalMargin', function() {
+    it('should return margin', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 10
       };
       let grid = GridStack.init(options);
-      let vm = grid.getVerticalMargin();
+      let vm = grid.getMargin();
       expect(vm).toBe(10);
     });
-    it('should return update verticalMargin', function() {
+    it('should return update margin', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
-      grid.verticalMargin(11);
-      expect(grid.getVerticalMargin()).toBe(11);
+      grid.margin(11);
+      expect(grid.getMargin()).toBe(11);
     });
     it('should do nothing', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 10,
       };
       let grid = GridStack.init(options);
-      expect(grid.getVerticalMargin()).toBe(10);
-      grid.verticalMargin(10);
-      expect(grid.getVerticalMargin()).toBe(10);
+      expect(grid.getMargin()).toBe(10);
+      grid.margin(10);
+      expect(grid.getMargin()).toBe(10);
     });
+    /*
     it('should not update styles', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid: any = GridStack.init(options);
       spyOn(grid, '_updateStyles');
-      grid.verticalMargin(11, true);
+      grid.margin(11, false);
       expect(grid._updateStyles).not.toHaveBeenCalled();
     });
+    */
   });
 
   describe('grid.opts.rtl', function() {
@@ -1124,7 +1142,7 @@ describe('gridstack', function() {
     it('should add grid-stack-rtl class', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 5,
         rtl: true
       };
       let grid = GridStack.init(options);
@@ -1133,7 +1151,7 @@ describe('gridstack', function() {
     it('should not add grid-stack-rtl class', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       expect($('.grid-stack').hasClass('grid-stack-rtl')).toBe(false);
@@ -1150,7 +1168,7 @@ describe('gridstack', function() {
     it('should enable move for future also', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 5,
         disableDrag: true
       };
       let grid = GridStack.init(options);
@@ -1169,7 +1187,7 @@ describe('gridstack', function() {
     it('should disable move for existing only', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       let items = $('.grid-stack-item');
@@ -1196,7 +1214,7 @@ describe('gridstack', function() {
     it('should enable resize', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10,
+        margin: 5,
         disableResize: true
       };
       let grid = GridStack.init(options);
@@ -1211,7 +1229,7 @@ describe('gridstack', function() {
     it('should disable resize', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       let items = $('.grid-stack-item');
@@ -1233,7 +1251,7 @@ describe('gridstack', function() {
     it('should enable movable and resizable', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       let items = $('.grid-stack-item');
@@ -1261,7 +1279,7 @@ describe('gridstack', function() {
     it('should lock widgets', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       grid.locked('.grid-stack-item', true);
@@ -1272,7 +1290,7 @@ describe('gridstack', function() {
     it('should unlock widgets', function() {
       let options = {
         cellHeight: 80,
-        verticalMargin: 10
+        margin: 5
       };
       let grid = GridStack.init(options);
       grid.locked('.grid-stack-item', false);

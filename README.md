@@ -334,14 +334,15 @@ make sure to read v1.0.0 migration first!
 
 v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes and overall code cleanup. Your code might need to change from 1.x
 
-1. In general methods that used no args (getter) vs setter are not used in Typescript. 
-Also legacy methods that used to take tons of parameters will now take a single object (typically `GridstackOptions` or `GridStackWidget`).
+1. In general methods that used no args (getter) vs setter are not used in Typescript when the arguments differ.
+Also legacy methods that used to take many parameters will now take a single object (typically `GridstackOptions` or `GridStackWidget`).
 
 ```
 removed `addWidget(el, x, y, width, ...)` --> use the widget options version instead `addWidget(el, {with, ...})`
 `float()` to get value --> `getFloat()`
 'cellHeight()` to get value --> `getCellHeight()`
-'verticalMargin()` to get value --> `getVerticalMargin()`
+'verticalMargin' is now 'margin' grid options and applies to all 4 sides.
+'verticalMargin()` to get value --> `getMargin()`
 ```
 
 2. event signatures are generic and not jquery-ui dependent anymore. `gsresizestop` has been removed as `resizestop|dragstop` are now called **after** the DOm attributes have been updated.

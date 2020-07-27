@@ -131,7 +131,7 @@ export class GridStack {
   private _gsEventHandler = {};
   /** @internal */
   private _styles: GridCSSStyleSheet;
-  /** @internal */
+  /** @internal flag to keep cells square during resize */
   private _isAutoCellHeight: boolean;
 
   /**
@@ -145,6 +145,7 @@ export class GridStack {
 
     obsoleteOpts(opts, 'width', 'column', 'v0.5.3');
     obsoleteOpts(opts, 'height', 'maxRow', 'v0.5.3');
+    obsoleteOpts(opts, 'verticalMargin', 'margin', 'v2.0');
     obsoleteOptsDel(opts, 'oneColumnModeClass', 'v0.6.3', '. Use class `.grid-stack-1` instead');
 
     // container attributes
@@ -169,8 +170,8 @@ export class GridStack {
       placeholderText: '',
       handle: '.grid-stack-item-content',
       handleClass: null,
-      cellHeight: 60,
-      verticalMargin: 20,
+      cellHeight: 'auto',
+      margin: 10,
       auto: true,
       minWidth: 768,
       float: false,
@@ -202,13 +203,14 @@ export class GridStack {
         accept: '.' + (opts.itemClass || 'grid-stack-item')
       },
       removeTimeout: 2000,
-      verticalMarginUnit: 'px',
+      marginUnit: 'px',
       cellHeightUnit: 'px',
       disableOneColumnMode: false,
       oneColumnModeDomSort: false
     };
 
     this.opts = Utils.defaults(opts, defaults);
+    this.initMargin();
 
     if (this.opts.ddPlugin === false) {
       this.opts.ddPlugin = GridStackDragDropPlugin;
@@ -232,12 +234,13 @@ export class GridStack {
 
     this._isAutoCellHeight = (this.opts.cellHeight === 'auto');
     if (this._isAutoCellHeight) {
-      // make the cell square initially
-      this.cellHeight(Math.round(this.cellWidth()), true);
+      // make the cell content square initially (will use resize event to keep it square)
+      let marginDiff = - (this.opts.marginRight as number) - (this.opts.marginLeft as number)
+        + (this.opts.marginTop as number) + (this.opts.marginBottom as number);
+      this.cellHeight(this.cellWidth() + marginDiff, false);
     } else {
-      this.cellHeight(this.opts.cellHeight, true);
+      this.cellHeight(this.opts.cellHeight, false);
     }
-    this.verticalMargin(this.opts.verticalMargin, true);
 
     this.el.classList.add(this.opts._class);
 
@@ -386,12 +389,11 @@ export class GridStack {
     if (this.opts.cellHeight && this.opts.cellHeight !== 'auto') {
       return this.opts.cellHeight as number;
     }
-    // compute the height taking margin into account (each row has margin other than last one)
+    // else get first cell height
+    // or do entire grid and # of rows ? (this.el.getBoundingClientRect().height) / parseInt(this.el.getAttribute('data-gs-current-row'))
     let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
     let height = Utils.toNumber(el.getAttribute('data-gs-height'));
-    let verticalMargin = this.opts.verticalMargin as number;
-
-    return Math.round((el.offsetHeight - (height - 1) * verticalMargin) / height);
+    return Math.round(el.offsetHeight / height);
   }
 
   /**
@@ -400,20 +402,20 @@ export class GridStack {
    * Note: You can expect performance issues if call this method too often.
    *
    * @param val the cell height
-   * @param noUpdate (Optional) if true, styles will not be updated
+   * @param update (Optional) if false, styles will not be updated
    *
    * @example
    * grid.cellHeight(grid.cellWidth() * 1.2);
    */
-  public cellHeight(val: numberOrString, noUpdate?: boolean): GridStack {
-    let heightData = Utils.parseHeight(val);
-    if (this.opts.cellHeightUnit === heightData.unit && this.opts.cellHeight === heightData.height) {
+  public cellHeight(val: numberOrString, update = true): GridStack {
+    let data = Utils.parseHeight(val);
+    if (this.opts.cellHeightUnit === data.unit && this.opts.cellHeight === data.height) {
       return this;
     }
-    this.opts.cellHeightUnit = heightData.unit;
-    this.opts.cellHeight = heightData.height;
+    this.opts.cellHeightUnit = data.unit;
+    this.opts.cellHeight = data.height;
 
-    if (!noUpdate) {
+    if (update) {
       this._updateStyles();
     }
     return this;
@@ -423,7 +425,6 @@ export class GridStack {
    * Gets current cell width.
    */
   public cellWidth(): number {
-    // TODO: take margin into account (horizontal_padding in .scss) to make cellHeight='auto' square ? (see 810-many-columns.html)
     return this.el.offsetWidth / this.opts.column;
   }
 
@@ -608,17 +609,20 @@ export class GridStack {
    */
   public getCellFromPixel(position: MousePosition, useDocRelative = false): CellPosition {
     let box = this.el.getBoundingClientRect();
+    // console.log(`getBoundingClientRect left: ${box.left} top: ${box.top} w: ${box.width} h: ${box.height}`)
     let containerPos;
     if (useDocRelative) {
       containerPos = {top: box.top + document.documentElement.scrollTop, left: box.left};
+      // console.log(`getCellFromPixel scrollTop: ${document.documentElement.scrollTop}`)
     } else {
       containerPos = {top: this.el.offsetTop, left: this.el.offsetLeft}
+      // console.log(`getCellFromPixel offsetTop: ${containerPos.left} offsetLeft: ${containerPos.top}`)
     }
     let relativeLeft = position.left - containerPos.left;
     let relativeTop = position.top - containerPos.top;
 
-    let columnWidth = Math.floor(box.width / this.opts.column);
-    let rowHeight = Math.floor(box.height / parseInt(this.el.getAttribute('data-gs-current-row')));
+    let columnWidth = (box.width / this.opts.column);
+    let rowHeight = (box.height / parseInt(this.el.getAttribute('data-gs-current-row')));
 
     return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
   }
@@ -977,28 +981,28 @@ export class GridStack {
   }
 
   /**
-   * Updates the vertical margin - see `GridstackOptions.verticalMargin` for format options.
-   *
+   * Updates the margins which will set all 4 sides at once - see `GridstackOptions.margin` for format options.
    * @param value new vertical margin value
-   * @param noUpdate (optional) if true, styles will not be updated
+   * Note: you can instead use `marginTop | marginBottom | marginLeft | marginRight` GridstackOptions to set the sides separately.
    */
-  public verticalMargin(value: numberOrString, noUpdate?: boolean): GridStack {
-    let heightData = Utils.parseHeight(value);
-
-    if (this.opts.verticalMarginUnit === heightData.unit && this.opts.maxRow === heightData.height) {
-      return this;
+  public margin(value: numberOrString): GridStack {
+    let data = Utils.parseHeight(value);
+    if (this.opts.marginUnit === data.unit && this.opts.margin === data.height) {
+      return;
     }
-    this.opts.verticalMarginUnit = heightData.unit;
-    this.opts.verticalMargin = heightData.height;
+    this.opts.marginUnit = data.unit;
+    this.opts.marginTop =
+    this.opts.marginBottom =
+    this.opts.marginLeft =
+    this.opts.marginRight =
+    this.opts.margin = data.height;
+    this._updateStyles();
 
-    if (!noUpdate) {
-      this._updateStyles();
-    }
     return this;
   }
 
   /** returns current vertical margin value */
-  public getVerticalMargin(): number { return this.opts.verticalMargin as number; }
+  public getMargin(): number { return this.opts.margin as number; }
 
   /**
    * Returns true if the height of the grid will be less the vertical
@@ -1080,19 +1084,14 @@ export class GridStack {
     return this;
   }
 
-  /** @internal */
+  /** @internal updated the CSS styles for row based layout and initial margin setting */
   private _updateStyles(maxHeight?: number): GridStack {
-    if (this._styles === null || this._styles === undefined) {
+    if (!this._styles) {
       return this;
     }
-
-    let prefix = '.' + this.opts._class + ' .' + this.opts.itemClass;
-    let getHeight;
-
     if (maxHeight === undefined) {
       maxHeight = this._styles._max;
     }
-
     this._initStyles();
     this._updateContainerHeight();
     if (!this.opts.cellHeight) { // The rest will be handled by CSS
@@ -1101,49 +1100,39 @@ export class GridStack {
     if (this._styles._max !== 0 && maxHeight <= this._styles._max) { // Keep it increasing
       return this;
     }
-    let height = this.opts.cellHeight as number;
-    let margin = this.opts.verticalMargin as number;
+    let cellHeight = this.opts.cellHeight as number;
+    let cellHeightUnit = this.opts.cellHeightUnit;
+    let prefix = `.${this.opts._class} > .${this.opts.itemClass}`;
 
-    if (!this.opts.verticalMargin || this.opts.cellHeightUnit === this.opts.verticalMarginUnit) {
-      getHeight = (nbRows: number, nbMargins: number) => {
-        return (height * nbRows + margin * nbMargins) + this.opts.cellHeightUnit;
-      }
-    } else {
-      getHeight = (nbRows: number, nbMargins: number) => {
-        if (!nbRows || !nbMargins) {
-          return (height * nbRows + margin * nbMargins) + this.opts.cellHeightUnit;
-        }
-        return 'calc(' + ((height * nbRows) + this.opts.cellHeightUnit) + ' + ' +
-          ((margin * nbMargins) + this.opts.verticalMarginUnit) + ')';
-      }
-    }
-
+    // these are done once only
     if (this._styles._max === 0) {
-      Utils.insertCSSRule(this._styles, prefix, 'min-height: ' + getHeight(1, 0) + ';', 0);
+      Utils.addCSSRule(this._styles, prefix, `min-height: ${cellHeight}${cellHeightUnit}`);
+      // content margins
+      let top: string = this.opts.marginTop + this.opts.marginUnit;
+      let bottom: string = this.opts.marginBottom + this.opts.marginUnit;
+      let right: string = this.opts.marginRight + this.opts.marginUnit;
+      let left: string = this.opts.marginLeft + this.opts.marginUnit;
+      let content = `${prefix} > .grid-stack-item-content`;
+      let placeholder = `.${this.opts._class} > .grid-stack-placeholder > .placeholder-content`;
+      Utils.addCSSRule(this._styles, content, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
+      Utils.addCSSRule(this._styles, placeholder, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
+      // resize handles offset (to match margin)
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-ne`, `right: ${right}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-e`, `right: ${right}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-se`, `right: ${right}; bottom: ${bottom}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-nw`, `left: ${left}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-w`, `left: ${left}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-sw`, `left: ${left}; bottom: ${bottom}`);
     }
 
     if (maxHeight > this._styles._max) {
-      for (let i = this._styles._max; i < maxHeight; ++i) {
-        Utils.insertCSSRule(this._styles,
-          prefix + '[data-gs-height="' + (i + 1) + '"]',
-          'height: ' + getHeight(i + 1, i) + ';',
-          i
-        );
-        Utils.insertCSSRule(this._styles,
-          prefix + '[data-gs-min-height="' + (i + 1) + '"]',
-          'min-height: ' + getHeight(i + 1, i) + ';',
-          i
-        );
-        Utils.insertCSSRule(this._styles,
-          prefix + '[data-gs-max-height="' + (i + 1) + '"]',
-          'max-height: ' + getHeight(i + 1, i) + ';',
-          i
-        );
-        Utils.insertCSSRule(this._styles,
-          prefix + '[data-gs-y="' + i + '"]',
-          'top: ' + getHeight(i, i) + ';',
-          i
-        );
+      let getHeight = (rows: number): string => (cellHeight * rows) + cellHeightUnit;
+      for (let i = this._styles._max + 1; i <= maxHeight; i++) { // start at 1
+        let height: string = getHeight(i);
+        Utils.addCSSRule(this._styles, `${prefix}[data-gs-y="${i-1}"]`,        `top: ${getHeight(i-1)}`); // start at 0
+        Utils.addCSSRule(this._styles, `${prefix}[data-gs-height="${i}"]`,     `height: ${height}`);
+        Utils.addCSSRule(this._styles, `${prefix}[data-gs-min-height="${i}"]`, `min-height: ${height}`);
+        Utils.addCSSRule(this._styles, `${prefix}[data-gs-max-height="${i}"]`, `max-height: ${height}`);
       }
       this._styles._max = maxHeight;
     }
@@ -1154,11 +1143,10 @@ export class GridStack {
   private _updateContainerHeight(): GridStack {
     if (this.engine.batchMode) { return this; }
     let row = this.getRow(); // checks for minRow already
-    // check for css min height. Each row is cellHeight + verticalMargin, until last one which has no margin below
+    // check for css min height
     let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
     if (cssMinHeight > 0) {
-      let verticalMargin = this.opts.verticalMargin as number;
-      let minRow =  Math.round((cssMinHeight + verticalMargin) / (this.getCellHeight() + verticalMargin));
+      let minRow =  Math.round(cssMinHeight / this.getCellHeight());
       if (row < minRow) {
         row = minRow;
       }
@@ -1169,16 +1157,9 @@ export class GridStack {
       return this;
     }
     let cellHeight = this.opts.cellHeight as number;
-    let vMargin = this.opts.verticalMargin as number;
     let unit = this.opts.cellHeightUnit;
     if (!cellHeight) { return this }
-
-    if (unit === this.opts.verticalMarginUnit) {
-      this.el.style.height = (row * (cellHeight + vMargin) - vMargin) + unit;
-    } else {
-      this.el.style.height = 'calc(' + (row * cellHeight) + unit +
-        ' + ' + (row * (vMargin - 1) + this.opts.verticalMarginUnit) + ')';
-    }
+    this.el.style.height = row * cellHeight + unit;
     return this;
   }
 
@@ -1208,7 +1189,7 @@ export class GridStack {
   private _prepareElementsByNode(el: GridItemHTMLElement, node: GridStackNode): GridStack {
     // variables used/cashed between the 3 start/move/end methods, in addition to node passed above
     let cellWidth: number;
-    let cellFullHeight: number; // internal cellHeight + v-margin
+    let cellHeight: number;
 
     /** called when item starts moving/resizing */
     let onStartMoving = (event, ui) => {
@@ -1220,9 +1201,7 @@ export class GridStack {
       this.engine.cleanNodes();
       this.engine.beginUpdate(node);
       cellWidth = this.cellWidth();
-      let strictCellHeight = this.getCellHeight(); // heigh without v-margin
-      // compute height with v-margin (Note: we add 1 margin as last row is missing it)
-      cellFullHeight = (this.el.getBoundingClientRect().height + this.getVerticalMargin()) / parseInt(this.el.getAttribute('data-gs-current-row'));
+      cellHeight = this.getCellHeight();
 
       let { target } = event;
 
@@ -1237,11 +1216,10 @@ export class GridStack {
       node._beforeDragY = node.y;
       node._prevYPix = ui.position.top;
       let minHeight = (node.minHeight || 1);
-      let verticalMargin = this.opts.verticalMargin as number;
 
-      // mineHeight - Each row is cellHeight + verticalMargin, until last one which has no margin below
+      // mineHeight - Each row is cellHeight + margin
       this.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
-      this.dd.resizable(el, 'option', 'minHeight', (strictCellHeight * minHeight) + (minHeight - 1) * verticalMargin);
+      this.dd.resizable(el, 'option', 'minHeight', cellHeight * minHeight);
 
       if (event.type === 'resizestart') {
         let itemElement = target.querySelector('.grid-stack-item') as HTMLElement;
@@ -1256,7 +1234,7 @@ export class GridStack {
     /** called when item is being dragged/resized */
     let dragOrResize = (event: Event, ui) => {
       let x = Math.round(ui.position.left / cellWidth);
-      let y = Math.floor((ui.position.top + cellFullHeight / 2) / cellFullHeight);
+      let y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
       let width;
       let height;
 
@@ -1296,7 +1274,7 @@ export class GridStack {
       } else if (event.type === 'resize')  {
         if (x < 0) return;
         width = Math.round(ui.size.width / cellWidth);
-        height = Math.round((ui.size.height + this.getVerticalMargin()) / cellFullHeight);
+        height = Math.round((ui.size.height + this.getMargin()) / cellHeight);
       }
       // width and height are undefined if not resizing
       let _lastTriedWidth = (width || node._lastTriedWidth);
@@ -1499,8 +1477,13 @@ export class GridStack {
    * and remember the prev columns we used.
    */
   private _onResizeHandler(): GridStack {
+    // make the cells content (minus margin) square again
     if (this._isAutoCellHeight) {
-      Utils.throttle(() => { this.cellHeight(Math.round(this.cellWidth()), false)}, 100);
+      Utils.throttle(() => {
+        let marginDiff = - (this.opts.marginRight as number) - (this.opts.marginLeft as number)
+          + (this.opts.marginTop as number) + (this.opts.marginBottom as number);
+        this.cellHeight(this.cellWidth() + marginDiff);
+      }, 100);
     }
 
     if (!this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth) {
@@ -1610,12 +1593,10 @@ export class GridStack {
         }
 
         // if not calculate the grid size based on element outer size
-        // height: Each row is cellHeight + verticalMargin, until last one which has no margin below
         let cellWidth = this.cellWidth();
         let cellHeight = this.getCellHeight();
-        let verticalMargin = this.opts.verticalMargin as number;
         width = node && node.width ? node.width : Math.ceil(el.offsetWidth / cellWidth);
-        height = node && node.height ? node.height : Math.round((el.offsetHeight + verticalMargin) / (cellHeight + verticalMargin));
+        height = node && node.height ? node.height : Math.round(el.offsetHeight / cellHeight);
 
         let newNode = this.engine.prepareNode({width, height, _added: false, _temporary: true});
         newNode._isOutOfGrid = true;
@@ -1713,6 +1694,48 @@ export class GridStack {
       return Array.from(list) as GridHTMLElement[];
     }
     return [els];
+  }
+
+  /** @internal initialize margin top/bottom/left/right and units */
+  private initMargin(): GridStack {
+    let data = Utils.parseHeight(this.opts.margin);
+    this.opts.marginUnit = data.unit;
+    let margin = this.opts.margin = data.height;
+
+    // see if top/bottom/left/right need to be set as well
+    if (this.opts.marginTop === undefined) {
+      this.opts.marginTop = margin;
+    } else {
+      data = Utils.parseHeight(this.opts.marginTop);
+      this.opts.marginTop = data.height;
+      delete this.opts.margin;
+    }
+
+    if (this.opts.marginBottom === undefined) {
+      this.opts.marginBottom = margin;
+    } else {
+      data = Utils.parseHeight(this.opts.marginBottom);
+      this.opts.marginBottom = data.height;
+      delete this.opts.margin;
+    }
+
+    if (this.opts.marginRight === undefined) {
+      this.opts.marginRight = margin;
+    } else {
+      data = Utils.parseHeight(this.opts.marginRight);
+      this.opts.marginRight = data.height;
+      delete this.opts.margin;
+    }
+
+    if (this.opts.marginLeft === undefined) {
+      this.opts.marginLeft = margin;
+    } else {
+      data = Utils.parseHeight(this.opts.marginLeft);
+      this.opts.marginLeft = data.height;
+      delete this.opts.margin;
+    }
+    this.opts.marginUnit = data.unit; // in case side were spelled out, use those units instead...
+    return this;
   }
 
   // legacy method renames

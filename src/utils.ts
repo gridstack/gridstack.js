@@ -108,11 +108,11 @@ export class Utils {
   }
 
   /** inserts a CSS rule */
-  static insertCSSRule(sheet: CSSStyleSheet, selector: string, rules: string, index: number) {
-    if (typeof sheet.insertRule === 'function') {
-      sheet.insertRule(selector + '{' + rules + '}', index);
-    } else if (typeof sheet.addRule === 'function') {
-      sheet.addRule(selector, rules, index);
+  static addCSSRule(sheet: CSSStyleSheet, selector: string, rules: string) {
+    if (typeof sheet.addRule === 'function') {
+      sheet.addRule(selector, rules);
+    } else if (typeof sheet.insertRule === 'function') {
+      sheet.insertRule(`${selector}{${rules}}`);
     }
   }
 
