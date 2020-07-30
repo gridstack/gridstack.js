@@ -631,6 +631,9 @@ interface GridstackOptions {
    */
   staticGrid ? : boolean;
 
+  /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
+  styleInHead?: boolean;
+
   /**
    * vertical gap size (default?: 20). Can be:
    *  an integer (px)
