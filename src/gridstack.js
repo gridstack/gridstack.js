@@ -1093,7 +1093,7 @@
       Utils.removeStylesheet(this._stylesId);
     }
     this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
-    var styleLocation = this.opts.styleInHead ? false : this.el.parentNode
+    var styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode
     // if styleInHead === false insert style to parent to support WebComponent
     this._styles = Utils.createStylesheet(this._stylesId, styleLocation);
     if (this._styles !== null) {
