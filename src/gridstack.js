@@ -1489,7 +1489,7 @@
     el = $(el);
     if (opt) { // see knockout above
       // make sure we load any DOM attributes that are not specified in passed in options (which override)
-      domAttr = this._readAttr(el);
+      var domAttr = this._readAttr(el);
       Utils.defaults(opt, domAttr);
       this.engine._prepareNode(opt);
     }

@@ -36,7 +36,7 @@ Change log
 
 ## 1.1.2-dev (upcoming)
 
-TBD
+- fix [1311](https://github.com/gridstack/gridstack.js/issues/1311) domAttr is not defined
 
 ## 1.1.2 (2020-05-17)
 
