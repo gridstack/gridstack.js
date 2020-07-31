@@ -170,6 +170,7 @@ export class GridStack {
       placeholderText: '',
       handle: '.grid-stack-item-content',
       handleClass: null,
+      styleInHead: false,
       cellHeight: 'auto',
       margin: 10,
       auto: true,
@@ -1075,9 +1076,9 @@ export class GridStack {
       Utils.removeStylesheet(this._stylesId);
     }
     this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
-    // insert style to parent (instead of 'head') to support WebComponent
-    let parent = this.el.parentNode as HTMLElement;
-    this._styles = Utils.createStylesheet(this._stylesId, parent);
+    // insert style to parent (instead of 'head' by default) to support WebComponent
+    let styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
+    this._styles = Utils.createStylesheet(this._stylesId, styleLocation);
     if (this._styles !== null) {
       this._styles._max = 0;
     }
