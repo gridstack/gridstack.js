@@ -1158,6 +1158,23 @@ describe('gridstack', function() {
     });
   });
 
+  describe('grid.opts.styleInHead', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should add STYLE to parent node as a default', function() {
+      var grid = GridStack.init();
+      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV');
+    });
+    it('should add STYLE to HEAD if styleInHead === true', function() {
+      var grid = GridStack.init({styleInHead: true});
+      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD');
+    });
+  });
+
   describe('grid.enableMove', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);

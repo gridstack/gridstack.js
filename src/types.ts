@@ -162,6 +162,9 @@ export interface GridstackOptions {
    */
   staticGrid?: boolean;
 
+  /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
+  styleInHead?: boolean;
+
   /** @internal */
   _isNested?: boolean;
   /** @internal */
