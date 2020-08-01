@@ -38,6 +38,7 @@ Change log
 
 - fix [1311](https://github.com/gridstack/gridstack.js/issues/1311) domAttr is not defined
 - adds `styleInHead` option to allow for selecting older behavior (adding STYLE element to HEAD element instead of parentNode)
+- update jquery to v3.5.1
 
 ## 1.1.2 (2020-05-17)
 
