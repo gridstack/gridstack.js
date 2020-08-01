@@ -70,18 +70,24 @@ npm install --save gridstack
 
 ## Include
 
-* local:
+after you install:
+
+```js
+import 'gridstack/dist/gridstack.all.js';
+import 'gridstack/dist/gridstack.css';
+```
+* alternatively in html
 
 ```html
-<link rel="stylesheet" href="gridstack.min.css" />
-<script src="gridstack.all.js"></script>
+<link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.min.css" />
+<script src="node_modules/gridstack/dist/gridstack.all.js"></script>
 ```
 
-* Using CDN (minimized):
+* or using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.2/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.2/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.2.0/dist/gridstack.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/gridstack@1.2.0/dist/gridstack.all.js"></script>
 ```
 
 if you need to debug, look at the git demo/ examples for non min includes.
@@ -326,7 +332,7 @@ Recommend looking at the [many samples](./demo) for more code examples.
 
 ### jQuery Application
 
-We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring it's own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your libs.
+We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306))
 
 ## Migrating to v2.0.0
 
