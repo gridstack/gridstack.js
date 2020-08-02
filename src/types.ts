@@ -7,7 +7,7 @@
 */
 
 import { GridStack } from './gridstack';
-import { GridStackDragDropPlugin } from './gridstack-dragdrop-plugin';
+import { GridStackDD } from './gridstack-dd';
 
 export type numberOrString = number | string;
 export interface GridItemHTMLElement extends HTMLElement {
@@ -56,7 +56,7 @@ export interface GridstackOptions {
   /** class that implement drag'n'drop functionality for gridstack. If false grid will be static.
    * (default?: undefined - first available plugin will be used)
    */
-  ddPlugin?: false | typeof GridStackDragDropPlugin;
+  ddPlugin?: false | typeof GridStackDD;
 
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;

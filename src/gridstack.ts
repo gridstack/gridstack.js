@@ -9,7 +9,7 @@
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils } from './utils';
 import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
-import { GridStackDragDropPlugin } from './gridstack-dragdrop-plugin';
+import { GridStackDD } from './gridstack-dd';
 
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
@@ -117,7 +117,7 @@ export class GridStack {
   public opts: GridstackOptions;
 
   /** current drag&drop plugin being used */
-  public dd: GridStackDragDropPlugin;
+  public dd: GridStackDD;
 
   /** @internal */
   private placeholder: HTMLElement;
@@ -214,11 +214,11 @@ export class GridStack {
     this.initMargin();
 
     if (this.opts.ddPlugin === false) {
-      this.opts.ddPlugin = GridStackDragDropPlugin;
+      this.opts.ddPlugin = GridStackDD;
     } else if (this.opts.ddPlugin === undefined) {
-      this.opts.ddPlugin = GridStackDragDropPlugin.get();
+      this.opts.ddPlugin = GridStackDD.get();
     }
-    this.dd = new (this.opts.ddPlugin as typeof GridStackDragDropPlugin)(this);
+    this.dd = new (this.opts.ddPlugin as typeof GridStackDD)(this);
 
     if (this.opts.rtl === 'auto') {
       this.opts.rtl = el.style.direction === 'rtl';
