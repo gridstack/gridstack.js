@@ -1,4 +1,3 @@
-/*eslint-disable camelcase */
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
   // grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -43,8 +42,8 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
-          'dist/jq/jquery.js': ['src/jq/jquery.js'],
-          'dist/jq/jquery-ui.js': ['src/jq/jquery-ui.js'],
+          //'dist/jq/jquery.js': ['src/jq/jquery.js'],
+          //'dist/jq/jquery-ui.js': ['src/jq/jquery-ui.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
           'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
         }
@@ -53,22 +52,22 @@ module.exports = function(grunt) {
     uglify: {
       options: {
         sourceMap: true,
-        sourceMapName: 'dist/gridstack.min.map',
         output: {
           comments: 'some'
         }
       },
       dist: {
         files: {
-          'dist/jq/jqueryui-gridstack-dragdrop-plugin.min.js': 'dist/jq/jqueryui-gridstack-dragdrop-plugin.js',
           'dist/jq/jquery.min.js': 'src/jq/jquery.js',
           'dist/jq/jquery-ui.min.js': 'src/jq/jquery-ui.js',
-
-          'dist/gridstack-dragdrop-plugin.min.js': 'dist/gridstack-dragdrop-plugin.js',
+          /*
+          'dist/jq/gridstack-dd-jqueryui.min.js': 'dist/jq/gridstack-dd-jqueryui.js',
+          'dist/gridstack-dd.min.js': 'dist/gridstack-dd.js',
           'dist/gridstack-engine.min.js': 'dist/gridstack-engine.js',
           'dist/gridstack-poly.min.js': 'src/gridstack-poly.js',
           'dist/types.min.js': 'dist/types.js',
           'dist/utils.min.js': 'dist/utils.js',
+          */
         }
       }
     },
@@ -79,7 +78,7 @@ module.exports = function(grunt) {
     watch: {
       scripts: {
         files: ['src/*.js'],
-        tasks: ['uglify', 'copy'],
+        tasks: ['copy', 'uglify'],
         options: {
         },
       },
@@ -108,6 +107,7 @@ module.exports = function(grunt) {
       },
     },
 
+    // eslint-disable-next-line @typescript-eslint/camelcase
     protractor_webdriver: {
       all: {
         options: {
@@ -121,4 +121,3 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['sass', /*'cssmin', 'eslint',*/ 'copy', 'uglify']);
   grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };
-/*eslint-enable camelcase */

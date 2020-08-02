@@ -8,8 +8,8 @@ import './gridstack-poly.js';
 export * from './types';
 export * from './utils';
 export * from './gridstack-engine';
-export * from './gridstack-dragdrop-plugin';
+export * from './gridstack-dd';
 export * from './gridstack';
-export * from './jq/jqueryui-gridstack-dragdrop-plugin';
+export * from './jq/gridstack-dd-jqueryui';
 
 // declare module 'gridstack'; for umd ?

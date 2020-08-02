@@ -1,5 +1,4 @@
-dist/*.js
+dist/*
 demo/*
 spec/*
-src/jq/jquery.js
-src/jq/jquery-ui.js
+src/jq/*.js

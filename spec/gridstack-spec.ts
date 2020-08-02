@@ -1,5 +1,5 @@
 import { GridStack } from '../src/gridstack';
-import { GridStackDragDropPlugin } from '../src/gridstack-dragdrop-plugin';
+import { GridStackDD } from '../src/gridstack-dd';
 
 describe('gridstack', function() {
   'use strict';
@@ -1473,7 +1473,7 @@ describe('gridstack', function() {
       grid.dd.on();
     });
     it('should use class name', function() {
-      let grid: any = GridStack.init({ddPlugin : GridStackDragDropPlugin});
+      let grid: any = GridStack.init({ddPlugin : GridStackDD});
       expect(grid.dd.isDroppable()).toBe(false);
     });
   });

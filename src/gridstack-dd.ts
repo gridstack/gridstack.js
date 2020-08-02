@@ -1,4 +1,4 @@
-// gridstack-dragdrop-plugin.ts 2.0.0-rc @preserve
+// gridstack-dd.ts 2.0.0-rc @preserve
 
 /**
  * https://gridstackjs.com/
@@ -28,33 +28,33 @@ export type DDCallback = (event: Event, arg2: GridItemHTMLElement) => void;
 /**
  * Base class for drag'n'drop plugin.
  */
-export class GridStackDragDropPlugin {
+export class GridStackDD {
   protected grid: GridStack;
-  static registeredPlugins: typeof GridStackDragDropPlugin[] = [];
+  static registeredPlugins: typeof GridStackDD[] = [];
 
   /** call this method to register your plugin instead of the default no-op one */
-  static registerPlugin(pluginClass: typeof GridStackDragDropPlugin) {
-    GridStackDragDropPlugin.registeredPlugins.push(pluginClass);
+  static registerPlugin(pluginClass: typeof GridStackDD) {
+    GridStackDD.registeredPlugins.push(pluginClass);
   }
 
   /** get the current registered plugin to use */
-  static get(): typeof GridStackDragDropPlugin {
-    return GridStackDragDropPlugin.registeredPlugins[0] || GridStackDragDropPlugin;
+  static get(): typeof GridStackDD {
+    return GridStackDD.registeredPlugins[0] || GridStackDD;
   }
 
   public constructor(grid: GridStack) {
     this.grid = grid;
   }
 
-  public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {
+  public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {
     return this;
   }
 
-  public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {
+  public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {
     return this;
   }
 
-  public dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDragDropPlugin {
+  public dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDD {
     return this;
   }
 
@@ -62,7 +62,7 @@ export class GridStackDragDropPlugin {
     return false;
   }
 
-  public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): GridStackDragDropPlugin {
+  public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): GridStackDD {
     return this;
   }
 
@@ -70,11 +70,11 @@ export class GridStackDragDropPlugin {
     return false;
   }
 
-  public on(el: GridItemHTMLElement, eventName: string, callback: DDCallback): GridStackDragDropPlugin {
+  public on(el: GridItemHTMLElement, eventName: string, callback: DDCallback): GridStackDD {
     return this;
   }
 
-  public off(el: GridItemHTMLElement, eventName: string): GridStackDragDropPlugin {
+  public off(el: GridItemHTMLElement, eventName: string): GridStackDD {
     return this;
   }
 }
