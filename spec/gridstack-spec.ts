@@ -1504,7 +1504,7 @@ describe('gridstack', function() {
 
   });
 
-  describe('save & restore', function() {
+  describe('save & load', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
@@ -1516,23 +1516,29 @@ describe('gridstack', function() {
       let layout = grid.save();
       expect(layout).toEqual([{x:0, y:0, width:4, height:2, id:'item1'}, {x:4, y:0, width:4, height:4, id:'item2'}]);
     });
-    it('restore size 1 item', function() {
+    it('load move 1 item, delete others', function() {
       let grid = GridStack.init();
-      grid.restore([{height:3, id:'item1'}]);
-      let layout = grid.save();
-      expect(layout).toEqual([{x:0, y:0, width:4, height:3, id:'item1'}, {x:4, y:0, width:4, height:4, id:'item2'}]);
-    });
-    it('restore move 1 item, delete others', function() {
-      let grid = GridStack.init();
-      grid.restore([{x:2, height:1, id:'item2'}], true);
+      grid.load([{x:2, height:1, id:'item2'}]);
       let layout = grid.save();
       expect(layout).toEqual([{x:2, y:0, width:4, height:1, id:'item2'}]);
     });
-    it('restore add new, delete others', function() {
+    it('load add new, delete others', function() {
       let grid = GridStack.init();
-      grid.restore([{width:2, height:1, id:'item3'}], true);
+      grid.load([{width:2, height:1, id:'item3'}], true);
       let layout = grid.save();
       expect(layout).toEqual([{x:0, y:0, width:2, height:1, id:'item3'}]);
+    });
+    it('load size 1 item only', function() {
+      let grid = GridStack.init();
+      grid.load([{height:3, id:'item1'}], false);
+      let layout = grid.save();
+      expect(layout).toEqual([{x:0, y:0, width:4, height:3, id:'item1'}, {x:4, y:0, width:4, height:4, id:'item2'}]);
+    });
+    it('load size 1 item only with callback', function() {
+      let grid = GridStack.init();
+      grid.load([{height:3, id:'item1'}], () => {});
+      let layout = grid.save();
+      expect(layout).toEqual([{x:0, y:0, width:4, height:3, id:'item1'}, {x:4, y:0, width:4, height:4, id:'item2'}]);
     });
   });
 

@@ -39,6 +39,7 @@ gridstack.js API
   - [getGridItems(): GridItemHTMLElement[]](#getgriditems-griditemhtmlelement)
   - [getMargin()](#getmargin)
   - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
+  - [load(layout: GridStackWidget[], boolean | ((w: GridStackWidget, add: boolean) => void)  = true)](#loadlayout-gridstackwidget-boolean--w-gridstackwidget-add-boolean--void---true)
   - [locked(el, val)](#lockedel-val)
   - [makeWidget(el)](#makewidgetel)
   - [margin(value: numberOrString)](#marginvalue-numberorstring)
@@ -52,7 +53,6 @@ gridstack.js API
   - [removeAll([removeDOM])](#removeallremovedom)
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
-  - [restore(layout: GridStackWidget[], addAndRemove?: boolean)](#restorelayout-gridstackwidget-addandremove-boolean)
   - [save(): GridStackWidget[]](#save-gridstackwidget)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
@@ -383,6 +383,15 @@ returns current margin value.
 
 Checks if specified area is empty.
 
+### load(layout: GridStackWidget[], boolean | ((w: GridStackWidget, add: boolean) => void)  = true)
+
+- load the widgets from a list (see `save()`). This will call `update()` on each (matching by id) or add/remove widgets that are not there.
+- Optional `addAndRemove` boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving the user control of insertion.
+
+- used to restore a grid layout for a saved layout list (see `save()`).
+- `addAndRemove` boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving the user control of insertion.
+- see [example](http://gridstackjs.com/demo/serialization.html)
+
 ### locked(el, val)
 
 Locks/unlocks widget.
@@ -488,15 +497,9 @@ Enables/Disables resizing.
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable.
 
-### restore(layout: GridStackWidget[], addAndRemove?: boolean)
-
-- used to restore a grid layout for a saved layout list (see `save()`).
-- Optional `addAndRemove` can be passed if new widgets should be added or removed if the are not present (`id` is used to look items up)
-- see [example](http://gridstackjs.com/demo/serialization.html)
-
 ### save(): GridStackWidget[]
 
-- returns the layout of the grid that can be serialized (list of item non default attributes, not just w,y,x,y but also min/max and id). See `restore()`
+- returns the layout of the grid that can be serialized (list of item non default attributes, not just w,y,x,y but also min/max and id). See `load()`
 - see [example](http://gridstackjs.com/demo/serialization.html)
 
 ### setAnimation(doAnimate)

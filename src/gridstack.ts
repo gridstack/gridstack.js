@@ -349,9 +349,17 @@ export class GridStack {
   /** saves the current layout returning a list of widgets for serialization */
   public save(): GridStackWidget[] { return this.engine.save(); }
 
-  /** restore the widgets from a list. This will call update() on each (matching by id),
-   * or optionally add/remove widgets that are not there (either a boolean or a callback method) */
-  public restore(layout: GridStackWidget[], addAndRemove?: boolean) {
+  /**
+   * load the widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
+   *
+   * @param layout list of widgets definition to update/create
+   * @param addAndRemove boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving
+   * the user control of insertion.
+   *
+   * @example
+   * see http://gridstackjs.com/demo/serialization.html
+   **/
+  public load(layout: GridStackWidget[], addAndRemove: boolean | ((w: GridStackWidget, add: boolean) => void)  = true) {
     let items = GridStack.Utils.sort(layout);
     this.batchUpdate();
     // see if any items are missing from new layout and need to be removed first
@@ -359,7 +367,11 @@ export class GridStack {
       this.engine.nodes.forEach(n => {
         let item = items.find(w => n.id === w.id);
         if (!item) {
-          this.removeWidget(n.el);
+          if (typeof(addAndRemove) === 'function') {
+            addAndRemove(n, false);
+          } else {
+            this.removeWidget(n.el);
+          }
         }
       });
     }
@@ -369,7 +381,11 @@ export class GridStack {
       if (item) {
         this.update(item.el, w.x, w.y, w.width, w.height); // TODO: full update
       } else if (addAndRemove) {
-        this.addWidget('<div><div class="grid-stack-item-content"></div></div>', w);
+        if (typeof(addAndRemove) === 'function') {
+          addAndRemove(w, true);
+        } else {
+          this.addWidget('<div><div class="grid-stack-item-content"></div></div>', w);
+        }
       }
     });
     this.commit();
