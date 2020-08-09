@@ -40,7 +40,7 @@ Change log
 - re-write to native Typescript, removing all JQuery from main code and API (drag&drop plugin still using for now which use latest v3.5.1)
 - add `getGridItems()` to return list of HTML grid items
 - add `{dragIn | dragInOptions}` grid attributes to handle external drag&drop items
-- add `save()` and `restore()` to serialize grids from JSON, saving all attributes (not just w,h,x,y) [1286](https://github.com/gridstack/gridstack.js/issues/1286)
+- add `save()` and `load()` to serialize grids from JSON, saving all attributes (not just w,h,x,y) [1286](https://github.com/gridstack/gridstack.js/issues/1286)
 - add `margin` to replace `verticalMargin` which affects both dimensions in code, rather than one in code the other in CSS.
 You can now have perfect square cells (default) [723](https://github.com/gridstack/gridstack.js/issues/723)
 - fix [1299](https://github.com/gridstack/gridstack.js/pull/1299) many columns round-off error
