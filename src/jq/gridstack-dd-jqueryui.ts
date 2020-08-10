@@ -12,8 +12,9 @@ import { GridItemHTMLElement, DDDragInOpt } from '../types';
 
 // TODO: TEMPORARY until can remove jquery-ui drag&drop and this class and use HTML5 instead !
 // see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
-import * as $ from './jquery.js';
-import './jquery-ui.js';
+import * as $ from './jquery';
+export { $ };
+export * from './jquery-ui';
 
 /**
  * Jquery-ui based drag'n'drop plugin.
@@ -67,7 +68,7 @@ export class GridStackDDJQueryUI extends GridStackDD {
   }
 
   public dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDD {
-    let $el: JQuery = $(el);
+    let $el: JQuery = $(el as any); // workaround Type 'string' is not assignable to type 'PlainObject<any>' - see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/29312
     $el.draggable(opts);
     return this;
   }
@@ -89,7 +90,7 @@ export class GridStackDDJQueryUI extends GridStackDD {
   }
 
   public isDraggable(el: GridStackElement): boolean {
-    let $el: JQuery = $(el);
+    let $el: JQuery = $(el as any); // workaround Type 'string' is not assignable to type 'PlainObject<any>' - see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/29312
     return Boolean($el.data('ui-draggable'));
   }
 

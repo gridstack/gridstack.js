@@ -2,15 +2,7 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    'gridstack.all': './src/index.ts',
-    'gridstack': './src/gridstack.ts',
-    /*
-    'types': './src/types.ts',
-    'utils': './src/utils.ts',
-    'gridstack-engine': './src/gridstack-engine.ts',
-    'gridstack-dd': './src/gridstack-dd.ts',
-    'jq/gridstack-dd-jqueryui': './src/jq/gridstack-dd-jqueryui.ts',
-    */
+    'gridstack.all': './src/gridstack.ts',
   },
   mode: 'production', // production vs development
   devtool: 'source-map',

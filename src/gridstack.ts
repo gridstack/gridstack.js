@@ -5,11 +5,22 @@
  * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
  * gridstack.js may be freely distributed under the MIT license.
 */
+import './gridstack-poly.js';
 
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils } from './utils';
 import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
 import { GridStackDD } from './gridstack-dd';
+
+// export all dependent file as well to make it easier for users to just import the main file
+export * from './types';
+export * from './utils';
+export * from './gridstack-engine';
+export * from './gridstack-dd';
+
+// TEMPORARY import the jquery-ui drag&drop since we don't have alternative yet and don't expect users to create their own yet
+import './jq/gridstack-dd-jqueryui';
+export * from './jq/gridstack-dd-jqueryui';
 
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
