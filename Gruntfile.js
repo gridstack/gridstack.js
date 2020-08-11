@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
-  // grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
@@ -24,7 +24,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    /* very little gain
     cssmin: {
       dist: {
         options: {
@@ -37,7 +36,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    */
     copy: {
       dist: {
         files: {
@@ -58,8 +56,8 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/jq/jquery.min.js': 'src/jq/jquery.js',
-          'dist/jq/jquery-ui.min.js': 'src/jq/jquery-ui.js',
+          'dist/jq/jquery.js': 'src/jq/jquery.js',
+          'dist/jq/jquery-ui.js': 'src/jq/jquery-ui.js',
           /*
           'dist/jq/gridstack-dd-jqueryui.min.js': 'dist/jq/gridstack-dd-jqueryui.js',
           'dist/gridstack-dd.min.js': 'dist/gridstack-dd.js',
@@ -84,7 +82,7 @@ module.exports = function(grunt) {
       },
       styles: {
         files: ['src/*.scss'],
-        tasks: ['sass'/*, 'cssmin'*/],
+        tasks: ['sass', 'cssmin'],
         options: {
         },
       }
@@ -118,6 +116,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('lint', ['eslint']);
-  grunt.registerTask('default', ['sass', /*'cssmin', 'eslint',*/ 'copy', 'uglify']);
+  grunt.registerTask('default', ['sass', 'cssmin', /*'eslint',*/ 'copy', 'uglify']);
   grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };

@@ -10,15 +10,17 @@
     "experimentalDecorators": true,
     "inlineSources": true,
     "lib": [ "es6", "es2015", "dom" ],
-    "module": "commonjs",
+    "module": "CommonJS",
     "noImplicitAny": false,
     "outDir": "./dist",
     "sourceMap": true,
     "strict": false,
-    "target": "es5"
+    "target": "ES6"
   }, 
   "exclude": [
-    "./src/**/*.spec.ts"
+    "./src/**/*.spec.ts",
+    "./src/index.ts" // used for webpack all.js
+
   ],
   "include": [
     "./src/**/*.ts"

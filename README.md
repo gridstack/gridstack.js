@@ -37,10 +37,10 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Custom columns CSS](#custom-columns-css)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [Touch devices support](#touch-devices-support)
-  - [Migrating to v0.6.x](#migrating-to-v06x)
-  - [Migrating to v1.0.0](#migrating-to-v100)
+  - [Migrating to v0.6](#migrating-to-v06)
+  - [Migrating to v1](#migrating-to-v1)
     - [jQuery Application](#jquery-application)
-  - [Migrating to v2.0.0](#migrating-to-v200)
+  - [Migrating to v2](#migrating-to-v2)
 - [Changes](#changes)
 - [The Team](#the-team)
 
@@ -70,44 +70,66 @@ npm install --save gridstack
 
 ## Include
 
-after you install:
+ES6 or Typescript
+
+```js
+import { GridStack } from 'gridstack';
+import 'gridstack/dist/gridstack.css';
+```
+
+legacy javascript
 
 ```js
 import 'gridstack/dist/gridstack.all.js';
 import 'gridstack/dist/gridstack.css';
 ```
-* alternatively in html
+
+alternatively in html
 
 ```html
 <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.min.css" />
 <script src="node_modules/gridstack/dist/gridstack.all.js"></script>
 ```
 
-* or using CDN (minimized):
+or using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.2.0/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@1.2.0/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0-rc/dist/gridstack.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.0-rc/dist/gridstack.all.js"></script>
 ```
 
-if you need to debug, look at the git demo/ examples for non min includes.
+.map files are included for debugging purposes.
 
 ## Basic usage
 
 creating items dynamically...
 
-```html
+```js
+// ...in your HTML
 <div class="grid-stack"></div>
 
-<script type="text/javascript">
-  let grid = GridStack.init();
-  grid.addWidget('<div><div class="grid-stack-item-content">Item 1</div></div>', {width: 2});
-</script>
+// ...in your script
+var grid = GridStack.init();
+grid.addWidget('<div><div class="grid-stack-item-content">Item 1</div></div>', {width: 2});
+```
+
+... or creating from list
+
+```js
+// using serialize data instead of .addWidget()
+const serializedData = [
+  {x: 0, y: 0, width: 2, height: 2},
+  {x: 2, y: 3, width: 3, height: 1},
+  {x: 1, y: 3, width: 1, height: 1}
+];
+
+grid.load(serializedData);
 ```
 
 ... or DOM created items
 
-```html
+```js
+// ...in your HTML
 <div class="grid-stack">
   <div class="grid-stack-item">
     <div class="grid-stack-item-content">Item 1</div>
@@ -117,9 +139,8 @@ creating items dynamically...
   </div>
 </div>
 
-<script type="text/javascript">
-  GridStack.init();
-</script>
+// ...in your script
+GridStack.init();
 ```
 
 see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example too.
@@ -276,24 +297,24 @@ GridStack.init(options);
 If you're still experiencing issues on touch devices please check [#444](https://github.com/gridstack/gridstack.js/issues/444)
 
 
-## Migrating to v0.6.x
+## Migrating to v0.6
 
 starting in 0.6.x `change` event are no longer sent (for pretty much most nodes!) when an item is just added/deleted unless it also changes other nodes (was incorrect and causing inefficiencies). You may need to track `added|removed` [events](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) if you didn't and relied on the old broken behavior.
 
-## Migrating to v1.0.0
+## Migrating to v1
 
 v1.0.0 removed Jquery from the API and external dependencies, which will require some code changes. Here is a list of the changes:
 
-1. see [Migrating to v0.6.x](#migrating-to-v06x) if you didn't already
+1. see [Migrating to v0.6](#migrating-to-v06) if you didn't already
 
-2. your code only needs to include `gridstack.all.js` and `gristack.css` (don't include other JS) and is recommended you do that as internal dependencies will change over time. If you are jquery based, also see note below.
+2. your code only needs to include `gridstack.all.js` and `gristack.css` (don't include other JS) and is recommended you do that as internal dependencies will change over time. If you are jquery based, see [jquery app](#jquery-application) below.
 
 3. code change:
 
 **OLD** initializing code + adding a widget + adding an event:
 ```js
 // initialization returned Jquery element, requiring second call to get GridStack var
-let grid = $('.grid-stack').gridstack(opts?).data('gridstack');
+var grid = $('.grid-stack').gridstack(opts?).data('gridstack');
 
 // returned Jquery element
 grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>'), undefined, undefined, 2, undefined, true);
@@ -302,13 +323,13 @@ grid.addWidget($('<div><div class="grid-stack-item-content"> test </div></div>')
 $('.grid-stack').on('added', function(e, items) {/* items contains info */});
 
 // grid access after init
-let grid = $('.grid-stack').data('gridstack');
+var grid = $('.grid-stack').data('gridstack');
 ```
 **NEW**
 ```js
 // element identifier defaults to '.grid-stack', returns the grid
-// Note: for Typescript use window.GridStack.init() until next native TS version
-let grid = GridStack.init(opts?, element?);
+// Note: for Typescript use window.GridStack.init() until next native 2.x TS version
+var grid = GridStack.init(opts?, element?);
 
 // returns DOM element
 grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {width: 2});
@@ -317,9 +338,9 @@ grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {
 grid.on('added', function(e, items) {/* items contains info */});
 
 // grid access after init
-let grid = el.gridstack; // where el = document.querySelector('.grid-stack') or other ways...
+var grid = el.gridstack; // where el = document.querySelector('.grid-stack') or other ways...
 ```
-Other vars/global changes
+Other changes
 ```
 `GridStackUI` --> `GridStack`
 `GridStackUI.GridStackEngine` --> `GridStack.Engine`
@@ -332,22 +353,23 @@ Recommend looking at the [many samples](./demo) for more code examples.
 
 ### jQuery Application
 
-We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306))
+We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306)).
 
-## Migrating to v2.0.0
+Note: v2.0.-rc does not currently support importing GridStack Drag&Drop without also including our jquery + jqueryui. Still trying to figure how to make that bundle possible.
 
-make sure to read v1.0.0 migration first!
+## Migrating to v2
 
-v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes and overall code cleanup. Your code might need to change from 1.x
+make sure to read v1 migration first!
 
-1. In general methods that used no args (getter) vs setter are not used in Typescript when the arguments differ.
-Also legacy methods that used to take many parameters will now take a single object (typically `GridstackOptions` or `GridStackWidget`).
+v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes and overall code cleanup to support ES6 modules. Your code might need to change from 1.x
+
+1. In general methods that used no args (getter) vs setter can't be used in TS when the arguments differ (set/get are also not function calls so API would have changed). Instead we decided to have <b>all set methods return</b> `GridStack` to they can be chain-able (ex: `grid.float(true).cellHeight(10).column(6)`). Also legacy methods that used to take many parameters will now take a single object (typically `GridstackOptions` or `GridStackWidget`).
 
 ```
-removed `addWidget(el, x, y, width, ...)` --> use the widget options version instead `addWidget(el, {with, ...})`
+`addWidget(el, x, y, width, height)` --> `addWidget(el, {with: 2})`
 `float()` to get value --> `getFloat()`
 'cellHeight()` to get value --> `getCellHeight()`
-'verticalMargin' is now 'margin' grid options and applies to all 4 sides.
+'verticalMargin' is now 'margin' grid options and API that applies to all 4 sides.
 'verticalMargin()` to get value --> `getMargin()`
 ```
 
