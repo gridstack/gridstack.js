@@ -23,7 +23,7 @@ export type DDKey = 'minWidth' | 'minHeight' | string;
 export type DDValue = number | string;
 
 /** drag&drop events callbacks */
-export type DDCallback = (event: Event, arg2: GridItemHTMLElement) => void;
+export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: GridItemHTMLElement) => void;
 
 /**
  * Base class for drag'n'drop plugin.

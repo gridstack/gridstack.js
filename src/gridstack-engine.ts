@@ -320,7 +320,7 @@ export class GridStackEngine {
   }
 
   public removeNode(node: GridStackNode, removeDOM = true, triggerRemoveEvent = false): GridStackEngine {
-    if (triggerRemoveEvent) {
+    if (triggerRemoveEvent) { // we wait until final drop to manually track removed items (rather than during drag)
       this.removedNodes.push(node);
     }
     node._id = null; // hint that node is being removed
