@@ -119,7 +119,7 @@ Extras:
 options you can pass when calling `addWidget()`
 
 - `autoPosition` - tells to ignore `x` and `y` attributes and to place element to the first available position. Having either one missing will also do that.
-- `x`, `y` - (number) element position in row/column. Note: if one is missing this will `autoPosition` the item
+- `x`, `y` - (number) element position in column/row. Note: if one is missing this will `autoPosition` the item
 - `width`, `height` - (number) element size in row/column (default 1x1)
 - `maxWidth`, `minWidth`, `maxHeight`, `minHeight` - element constraints in row/column (default none)
 - `locked` - means another widget wouldn't be able to move it during dragging or resizing.
