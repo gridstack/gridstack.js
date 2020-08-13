@@ -70,7 +70,7 @@ export interface GridstackOptions {
   /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null }) */
   draggable?: DDDragOpt;
 
-  /** allows to drag external items using this selector - see dragInOption. (default: undefined) */
+  /** allows to drag external items using this selector - see dragInOptions. (default: undefined) */
   dragIn?: string;
 
   /** allows to drag external items using these options. (default?: { handle: '.grid-stack-item-content', revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }) */

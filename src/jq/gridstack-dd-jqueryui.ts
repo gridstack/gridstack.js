@@ -96,7 +96,7 @@ export class GridStackDDJQueryUI extends GridStackDD {
 
   public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDD {
     let $el: JQuery = $(el);
-    $el.on(name, (event, ui) => { callback(event as any, ui.draggable ? ui.draggable.get(0) : event.target) });
+    $el.on(name, (event, ui) => { callback(event as any, ui.draggable ? ui.draggable[0] : event.target, ui.helper ? ui.helper[0] : null) });
     return this;
   }
 

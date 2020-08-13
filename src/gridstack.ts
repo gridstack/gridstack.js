@@ -1322,11 +1322,12 @@ export class GridStack {
 
     /** called when the item stops moving/resizing */
     let onEndMoving = (event: Event) => {
-      let target: GridItemHTMLElement = event.target as GridItemHTMLElement;
-      if (!target.gridstackNode) return;
-
-      // let forceNotify = false; what is the point of calling 'change' event with no data, when the 'removed' event is already called ?
       if (this.placeholder.parentNode === this.el) { this.el.removeChild(this.placeholder) }
+
+      // if the item has moved to another grid, we're done here
+      let target: GridItemHTMLElement = event.target as GridItemHTMLElement;
+      if (!target.gridstackNode || target.gridstackNode.grid !== this) return;
+
       node.el = target;
 
       if (node._isAboutToRemove) {
@@ -1623,8 +1624,8 @@ export class GridStack {
         // if not calculate the grid size based on element outer size
         let cellWidth = this.cellWidth();
         let cellHeight = this.getCellHeight();
-        width = node && node.width ? node.width : Math.ceil(el.offsetWidth / cellWidth);
-        height = node && node.height ? node.height : Math.round(el.offsetHeight / cellHeight);
+        width = node && node.width ? node.width : Math.round(el.offsetWidth / cellWidth) || 1;
+        height = node && node.height ? node.height : Math.round(el.offsetHeight / cellHeight) || 1;
 
         let newNode = this.engine.prepareNode({width, height, _added: false, _temporary: true});
         newNode._isOutOfGrid = true;
@@ -1651,34 +1652,42 @@ export class GridStack {
         el.gridstackNode = el._gridstackNodeOrig;
         return false; // prevent parent from receiving msg (which may be grid as well)
       })
-      .on(this.el, 'drop', (event, _el: GridItemHTMLElement) => {
-        if (this.placeholder.parentNode === this.el) {
-          this.el.removeChild(this.placeholder);
+      .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
+        this.placeholder.remove();
+
+        // notify of removal from prev grid...
+        let origNode = el._gridstackNodeOrig;
+        delete el._gridstackNodeOrig;
+        if (origNode && origNode.grid && origNode.grid !== this) {
+          let oGrid = origNode.grid;
+          oGrid.placeholder.remove();
+          origNode.el = el; // was using placeholder, have it point to node we've moved instead
+          oGrid.engine.removedNodes.push(origNode);
+          oGrid._triggerRemoveEvent();
         }
-        let node: GridStackNode = _el.gridstackNode;
-        this.engine.cleanupNode(node);
+
+        let node: GridStackNode = el.gridstackNode; // use existing placeholder node as it's already in our list with drop location
+        this.engine.cleanupNode(node); // remove all internal _xyz values
         node.grid = this;
-        let originalNode = _el._gridstackNodeOrig;
-        delete _el.gridstackNode;
-        delete _el._gridstackNodeOrig;
-        this.dd
-          .off(_el, 'drag')
-          .draggable(_el, 'destroy')
-          .resizable(_el, 'destroy');
-
-        let el = _el.cloneNode(true) as GridItemHTMLElement;
-
-        el.gridstackNode = node;
-        if (originalNode && originalNode.grid) {
-          originalNode.grid._triggerRemoveEvent();
+        this.dd.off(el, 'drag');
+        // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
+        // as the helper will be nuked by default (by jqueryui and here to make it the same)
+        if (helper !== el) {
+          helper.remove();
+          el.gridstackNode = origNode; // original item (left behind) is re-stored to pre dragging as the node now has drop info
+          el = el.cloneNode(true) as GridItemHTMLElement;
+        } else {
+          el.remove(); // reduce flicker as we change depth here, and size further down
+          this.dd
+            .draggable(el, 'destroy')
+            .resizable(el, 'destroy');
         }
-        _el.remove();
+        el.gridstackNode = node;
         node.el = el;
-        Utils.removePositioningStyles(el);
 
+        Utils.removePositioningStyles(el);
         this._writeAttr(el, node);
         this.el.appendChild(el);
-        this._prepareElementsByNode(el, node);
         this._updateContainerHeight();
         this.engine.addedNodes.push(node);
         this._triggerAddEvent();
@@ -1686,8 +1695,12 @@ export class GridStack {
 
         this.engine.endUpdate();
         if (this._gsEventHandler['dropped']) {
-          this._gsEventHandler['dropped']({type: 'dropped'}, originalNode, node);
+          this._gsEventHandler['dropped']({type: 'dropped'}, origNode && origNode.grid ? origNode : undefined, node);
         }
+
+        // wait till we return out of the drag callback to set the new drag&resize handler or they may get messed up
+        window.setTimeout(() => this._prepareElementsByNode(el, node));
+
         return false; // prevent parent from receiving msg (which may be grid as well)
       });
     return this;

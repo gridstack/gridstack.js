@@ -373,7 +373,7 @@ v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes a
 'verticalMargin()` to get value --> `getMargin()`
 ```
 
-2. event signatures are generic and not jquery-ui dependent anymore. `gsresizestop` has been removed as `resizestop|dragstop` are now called **after** the DOm attributes have been updated.
+2. event signatures are generic and not jquery-ui dependent anymore. `gsresizestop` has been removed as `resizestop|dragstop` are now called **after** the DOM attributes have been updated.
 
 3. `oneColumnMode` would trigger when `window.width` < 768px by default. We now check for grid width instead (more correct and supports nesting). You might need to adjust grid `minWidth` or `disableOneColumnMode`.
 

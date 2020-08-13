@@ -13,15 +13,6 @@
   <script src="../dist/gridstack.all.js"></script>
 
   <style type="text/css">
-    .grid-stack {
-      min-height: 50px;
-    }
-    #grid2 {
-      background: lightcyan;
-    }
-    #grid2 .grid-stack-item-content {
-      background-color: #9caabc;
-    }
     .grid-stack-item-removing {
       opacity: 0.5;
     }
@@ -37,11 +28,11 @@
       text-align: center;
     }
     .sidebar .grid-stack-item {
-      width: 200px;
-      height: 100px;
+      width: 120px;
+      height: 50px;
       border: 2px dashed green;
       text-align: center;
-      line-height: 100px;
+      line-height: 35px;
       z-index: 10;
       background: rgba(0, 255, 0, 0.1);
       cursor: default;
@@ -60,7 +51,7 @@
       <div class="col-md-3">
         <div class="sidebar">
           
-          <!-- will size to fit content -->
+          <!-- will size to match content -->
           <div class="grid-stack-item">
             <div class="grid-stack-item-content">Drag me</div>
           </div>
@@ -94,12 +85,14 @@
   <script type="text/javascript">
     let options = {
       column: 6,
+      minRow: 1, // don't collapse when empty
       cellHeight: 70,
       disableOneColumnMode: true,
       float: false,
-      removable: '.trash',
+      dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
+      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
+      removable: '.trash', // drag-out delete class
       removeTimeout: 100,
-      dragIn: '.sidebar .grid-stack-item',
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };
     let grids = GridStack.initAll(options);
@@ -117,8 +110,7 @@
       addEvents(grid, i);
       grid.batchUpdate();
       items.forEach(function (node) {
-        grid.addWidget('<div><div class="grid-stack-item-content">' 
-          + (node.text? node.text : '') + '</div></div>', node);
+        grid.addWidget('<div><div class="grid-stack-item-content">' + (node.text? node.text : '') + '</div></div>', node);
       });
       grid.commit();
     });

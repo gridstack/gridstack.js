@@ -27,8 +27,12 @@ function addEvents(grid, id) {
   });
 
   grid.on('dropped', function(event, previousWidget, newWidget) {
-    console.log(g + 'dropped - Removed widget that was dragged out of grid:', previousWidget);
-    console.log(g + 'dropped - Added widget in dropped grid:', newWidget);
+    if (previousWidget) {
+      console.log(g + 'dropped - Removed widget from grid:', previousWidget);
+    }
+    if (newWidget) {
+      console.log(g + 'dropped - Added widget in grid:', newWidget);
+    }
   });
 
   grid.on('enable', function(event) {
