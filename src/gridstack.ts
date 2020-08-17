@@ -1348,9 +1348,12 @@ export class GridStack {
           gridToNotify._gsEventHandler[event.type](event, target);
         }
         gridToNotify.engine.removedNodes.push(node);
+        gridToNotify.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+        delete el.gridstackNode; // hint we're removing it next and break circular link
         gridToNotify._triggerRemoveEvent();
-        delete el.gridstackNode;
-        el.remove();
+        if (el.parentElement) {
+          el.remove(); // finally remove it
+        }
       } else {
         this._clearRemovingTimeout(el);
         if (!node._temporaryRemoved) {
