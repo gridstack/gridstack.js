@@ -1214,10 +1214,11 @@ export class GridStack {
   }
 
   /** @internal prepares the element for drag&drop **/
-  private _prepareElementsByNode(el: GridItemHTMLElement, node: GridStackNode): GridStack {
+  private _prepareDragDropByNode(node: GridStackNode): GridStack {
     // variables used/cashed between the 3 start/move/end methods, in addition to node passed above
     let cellWidth: number;
     let cellHeight: number;
+    let el = node.el;
 
     /** called when item starts moving/resizing */
     let onStartMoving = (event, ui) => {
@@ -1399,7 +1400,7 @@ export class GridStack {
     node = this.engine.addNode(node, triggerAddEvent);
     el.gridstackNode = node;
 
-    this._prepareElementsByNode(el, node);
+    this._prepareDragDropByNode(node);
     return this;
   }
 
@@ -1699,7 +1700,10 @@ export class GridStack {
         }
 
         // wait till we return out of the drag callback to set the new drag&resize handler or they may get messed up
-        window.setTimeout(() => this._prepareElementsByNode(el, node));
+        // IFF we are still there (soe application will use as placeholder and insert their real widget instead)
+        window.setTimeout(() => {
+          if (node.el && node.el.parentElement) this._prepareDragDropByNode(node);
+        });
 
         return false; // prevent parent from receiving msg (which may be grid as well)
       });
