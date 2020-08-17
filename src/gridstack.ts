@@ -895,6 +895,7 @@ export class GridStack {
    * Removes widget from the grid.
    * @param el  widget or selector to modify
    * @param removeDOM if `false` DOM element won't be removed from the tree (Default? true).
+   * @param triggerEvent if `false` (quiet mode) element will not be added to removed list and no 'removed' callbacks will be called (Default? true).
    */
   public removeWidget(els: GridStackElement, removeDOM = true, triggerEvent = true): GridStack {
     this.getElements(els).forEach(el => {
