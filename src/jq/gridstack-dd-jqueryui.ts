@@ -1,4 +1,4 @@
-// gridstack-dd-jqueryui.ts 2.0.0-rc @preserve
+// gridstack-dd-jqueryui.ts 2.0.0-rc2 @preserve
 
 /** JQuery UI Drag&Drop plugin
  * https://gridstackjs.com/

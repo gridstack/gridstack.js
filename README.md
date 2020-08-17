@@ -94,8 +94,8 @@ alternatively in html
 or using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0-rc/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.0-rc/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0-rc2/dist/gridstack.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.0-rc2/dist/gridstack.all.js"></script>
 ```
 
 .map files are included for debugging purposes.

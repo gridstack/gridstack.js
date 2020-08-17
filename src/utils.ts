@@ -1,4 +1,4 @@
-// utils.ts 2.0.0-rc @preserve
+// utils.ts 2.0.0-rc2 @preserve
 
 /**
  * https://gridstackjs.com/

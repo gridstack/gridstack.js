@@ -1,4 +1,4 @@
-// gridstack-engine.ts 2.0.0-rc @preserve
+// gridstack-engine.ts 2.0.0-rc2 @preserve
 
 /**
  * https://gridstackjs.com/
@@ -319,13 +319,15 @@ export class GridStackEngine {
     return node;
   }
 
-  public removeNode(node: GridStackNode, removeDOM = true, triggerRemoveEvent = false): GridStackEngine {
-    if (triggerRemoveEvent) { // we wait until final drop to manually track removed items (rather than during drag)
+  public removeNode(node: GridStackNode, removeDOM = true, triggerEvent = false): GridStackEngine {
+    if (triggerEvent) { // we wait until final drop to manually track removed items (rather than during drag)
       this.removedNodes.push(node);
     }
     node._id = null; // hint that node is being removed
-    this.nodes = this.nodes.filter(n => n !== node);
-    this._packNodes();
+    this.nodes.splice(this.nodes.findIndex(n => n === node), 1);
+    if (!this.float) {
+      this._packNodes();
+    }
     this._notify(node, removeDOM);
     return this;
   }

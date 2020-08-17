@@ -44,7 +44,7 @@ Change log
 - add `margin` to replace `verticalMargin` which affects both dimensions in code, rather than one in code the other in CSS.
 You can now have perfect square cells (default) [723](https://github.com/gridstack/gridstack.js/issues/723)
 - fix [1299](https://github.com/gridstack/gridstack.js/pull/1299) many columns round-off error
-- fix [1102](https://github.com/gridstack/gridstack.js/issues/1102) lose functionality when they are moved to a new grid
+- fix [1102](https://github.com/gridstack/gridstack.js/issues/1102) loose functionality when they are moved to a new grid
 
 ## 1.2.0 (2020-08-01)
 
