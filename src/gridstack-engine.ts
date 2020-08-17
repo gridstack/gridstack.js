@@ -325,7 +325,8 @@ export class GridStackEngine {
     }
     node._id = null; // hint that node is being removed
     // TODO: .splice(findIndex(),1) would be faster but apparently there are cases we have 2 instances ! (see spec 'load add new, delete others')
-    this.nodes = this.nodes.filter(n => n !== node);
+    // this.nodes = this.nodes.filter(n => n !== node);
+    this.nodes.splice(this.nodes.findIndex(n => n === node), 1);
     if (!this.float) {
       this._packNodes();
     }

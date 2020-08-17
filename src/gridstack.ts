@@ -372,16 +372,19 @@ export class GridStack {
    **/
   public load(layout: GridStackWidget[], addAndRemove: boolean | ((w: GridStackWidget, add: boolean) => void)  = true) {
     let items = GridStack.Utils.sort(layout);
+    let removed: GridStackNode[] = [];
     this.batchUpdate();
     // see if any items are missing from new layout and need to be removed first
     if (addAndRemove) {
-      this.engine.nodes.forEach(n => {
+      let copyNodes = [...this.engine.nodes]; // don't loop through array you modify
+      copyNodes.forEach(n => {
         let item = items.find(w => n.id === w.id);
         if (!item) {
           if (typeof(addAndRemove) === 'function') {
             addAndRemove(n, false);
           } else {
-            this.removeWidget(n.el);
+            removed.push(n); // batch keep track
+            this.removeWidget(n.el, true, false);
           }
         }
       });
@@ -399,6 +402,7 @@ export class GridStack {
         }
       }
     });
+    this.engine.removedNodes = removed;
     this.commit();
   }
 
@@ -892,7 +896,7 @@ export class GridStack {
    * @param el  widget or selector to modify
    * @param removeDOM if `false` DOM element won't be removed from the tree (Default? true).
    */
-  public removeWidget(els: GridStackElement, removeDOM = true): GridStack {
+  public removeWidget(els: GridStackElement, removeDOM = true, triggerEvent = true): GridStack {
     this.getElements(els).forEach(el => {
       if (el.parentElement !== this.el) return; // not our child!
       let node = el.gridstackNode;
@@ -906,10 +910,16 @@ export class GridStack {
       delete el.gridstackNode;
       this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
 
-      this.engine.removeNode(node, removeDOM, true); // true for trigger event
+      this.engine.removeNode(node, removeDOM, triggerEvent);
+
+      if (removeDOM && el.parentElement) {
+        el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
+      }
     });
-    this._triggerRemoveEvent();
-    this._triggerChangeEvent();
+    if (triggerEvent) {
+      this._triggerRemoveEvent();
+      this._triggerChangeEvent();
+    }
     return this;
   }
 
