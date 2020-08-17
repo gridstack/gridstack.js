@@ -49,8 +49,8 @@ gridstack.js API
   - [minWidth(el, val)](#minwidthel-val)
   - [movable(el, val)](#movableel-val)
   - [move(el, x, y)](#moveel-x-y)
-  - [removeWidget(el[, removeDOM])](#removewidgetel-removedom)
-  - [removeAll([removeDOM])](#removeallremovedom)
+  - [removeWidget(el, removeDOM = true, triggerEvent = true)](#removewidgetel-removedom--true-triggerevent--true)
+  - [removeAll(removeDOM = true)](#removeallremovedom--true)
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
   - [save(): GridStackWidget[]](#save-gridstackwidget)
@@ -464,7 +464,7 @@ Parameters:
 - `el` - widget to move
 - `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
 
-### removeWidget(el[, removeDOM])
+### removeWidget(el, removeDOM = true, triggerEvent = true)
 
 Removes widget from the grid.
 
@@ -472,8 +472,9 @@ Parameters:
 
 - `el` - widget to remove.
 - `removeDOM` - if `false` node won't be removed from the DOM (Optional. Default `true`).
+- `triggerEvent` if `false` (quiet mode) element will not be added to removed list and no 'removed' callbacks will be called (Default `true`).
 
-### removeAll([removeDOM])
+### removeAll(removeDOM = true)
 
 Removes all widgets from the grid.
 
