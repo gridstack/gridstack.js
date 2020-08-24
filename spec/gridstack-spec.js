@@ -51,7 +51,7 @@ describe('gridstack', function() {
       var fkt = function() { };
       var arr = [1,2,3];
 
-      e.call(w, 1, fkt, true, 2, arr);
+      e.call(w, {column: 1, float: true, maxRow: 2}, fkt, arr);
       expect(w.column).toEqual(1);
       expect(w.float).toBe(true);
       expect(w.maxRow).toEqual(2);
@@ -1350,6 +1350,45 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should have correct position', function() {
+      var items = $('.grid-stack-item');
+      for (var i = 0; i < items.length; i++) {
+        var item = $(items[i]);
+        expect(parseInt(item.attr('data-gs-x'))).toBe(pos[i].x);
+        expect(parseInt(item.attr('data-gs-y'))).toBe(pos[i].y);
+        expect(parseInt(item.attr('data-gs-width'))).toBe(pos[i].w);
+        expect(parseInt(item.attr('data-gs-height'))).toBe(pos[i].h);
+      }
+    });
+  });
+
+  describe('rtl layout', function() {
+    var HTML =
+    '<div style="width: 992px; height: 800px" id="gs-cont">' +
+    '  <div class="grid-stack">' +
+    '    <div class="grid-stack-item" data-gs-width="4" data-gs-height="2" id="item1">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
+    '    <div class="grid-stack-item" data-gs-width="3" data-gs-height="4" id="item2">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
+    '    <div class="grid-stack-item" data-gs-width="6" data-gs-height="4" id="item3">' +
+    '      <div class="grid-stack-item-content"></div>' +
+    '    </div>' +
+    '  </div>' +
+    '</div>';
+
+    var pos = [{x:8, y:0, w:4, h:2}, {x:5, y:0, w:3, h:4}, {x:6, y:4, w:6, h:4}];
+    
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', HTML);
+    });
+
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    it('should have correct position', function() {
+      var grid = GridStack.init({rtl: true});
       var items = $('.grid-stack-item');
       for (var i = 0; i < items.length; i++) {
         var item = $(items[i]);

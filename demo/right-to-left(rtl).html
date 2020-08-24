@@ -58,7 +58,7 @@
       template:
         [
           '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-          '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+          '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
           '     <div class="grid-stack-item-content"><center><button data-bind="click: $root.deleteWidget">Delete me</button><br><h5 data-bind="text: index" /></center><br><p>lorem ipsum</p></div>',
           '   </div>',
           '</div> '
@@ -89,10 +89,10 @@
     };
 
     var widgets = [
-      {x: 0, y: 0, width: 2, height: 2, index: 1},
-      {x: 2, y: 0, width: 4, height: 2, index: 2},
-      {x: 6, y: 0, width: 2, height: 4, index: 3},
-      {x: 1, y: 2, width: 4, height: 2, index: 4}
+      {width: 2, height: 2, index: 1},
+      {width: 4, height: 2, index: 2},
+      {width: 2, height: 4, index: 3},
+      {width: 4, height: 2, index: 4}
     ];
 
     var controller = new Controller(widgets);

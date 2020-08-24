@@ -296,10 +296,11 @@
 
   var idSeq = 0;
 
-  var GridStackEngine = function(column, onchange, float, maxRow, items) {
-    this.column = column || 12;
-    this.float = float || false;
-    this.maxRow = maxRow || 0;
+  var GridStackEngine = function(opts, onchange, items) {
+    this.opts = opts || {};
+    this.column = this.opts.column || 12;
+    this.float = this.opts.float || false;
+    this.maxRow = this.opts.maxRow || 0;
 
     this.nodes = items || [];
     this.onchange = onchange || function() {};
@@ -515,17 +516,18 @@
   };
 
   GridStackEngine.prototype.addNode = function(node, triggerAddEvent) {
-    node = this._prepareNode(node);
+    var rtl = this.opts.rtl || false;
 
+    node = this._prepareNode(node);
     node._id = node._id || ++idSeq;
 
     if (node.autoPosition) {
       this._sortNodes();
 
       for (var i = 0;; ++i) {
-        var x = i % this.column;
+        var x = rtl ? this.column - (i % this.column) - node.width : i % this.column;
         var y = Math.floor(i / this.column);
-        if (x + node.width > this.column) {
+        if (x + node.width > this.column || x < 0) {
           continue;
         }
         if (!this.nodes.find(Utils._isAddNodeIntercepted, {x: x, y: y, node: node})) {
@@ -579,10 +581,8 @@
 
     var clonedNode;
     var clone = new GridStackEngine(
-      this.column,
+      this.opts,
       null,
-      this.float,
-      0,
       this.nodes.map(function(n) {
         if (n === node) {
           clonedNode = $.extend({}, n);
@@ -615,10 +615,8 @@
     }
 
     var clone = new GridStackEngine(
-      this.column,
+      this.opts,
       null,
-      this.float,
-      0,
       this.nodes.map(function(n) { return $.extend({}, n); }));
     clone.addNode(node);
     return clone.getRow() <= this.maxRow;
@@ -805,7 +803,7 @@
 
     this._initStyles();
 
-    this.engine = new GridStackEngine(this.opts.column, function(nodes, detachNode) {
+    this.engine = new GridStackEngine(this.opts, function(nodes, detachNode) {
       detachNode = (detachNode === undefined ? true : detachNode);
       var maxHeight = 0;
       this.nodes.forEach(function(n) {
@@ -825,7 +823,7 @@
         }
       });
       self._updateStyles(maxHeight + 10);
-    }, this.opts.float, this.opts.maxRow);
+    });
 
     if (this.opts.auto) {
       var elements = [];

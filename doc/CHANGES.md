@@ -34,6 +34,10 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 1.2.1 (2020-08-24)
+
+- fix [819](https://github.com/gridstack/gridstack.js/issues/819) gridstack rtl mode layout - resize handle still placed improperly
+
 ## 1.2.0 (2020-08-01)
 
 - fix [1311](https://github.com/gridstack/gridstack.js/issues/1311) domAttr is not defined

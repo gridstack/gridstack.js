@@ -394,17 +394,15 @@ interface GridStack {
 }
 
 /**
- * Defines the GridStack engine that does most no DOM grid manipulation.
+ * Defines the GridStack engine that does most DOM grid manipulation.
  * See GridStack methods and vars for descriptions.
  * 
  * NOTE: values should not be modified - call the GridStack API instead
  */
 interface GridStackEngine {
-  column: number;
-  float: boolean;
-  maxRow: number;
+  options?: GridstackOptions;
+  onChange(nodes: GridStackNode[], detachedNode: boolean): void;
   nodes: GridStackNode[];
-  getRow(): number;
 }
 
 /**
