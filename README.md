@@ -71,12 +71,34 @@ npm install --save gridstack
 
 ## Include
 
-after you install:
+* Using webpack, you can now import the files:
 
 ```js
-import 'gridstack/dist/gridstack.all.js';
+import 'jquery';
+import 'jquery-ui';
+
+import 'gridstack/dist/gridstack-poly'; // optional IE support
+import GridStack from 'gridstack/dist/gridstack';
+import 'gridstack/dist/gridstack.jQueryUI';
 import 'gridstack/dist/gridstack.css';
 ```
+
+If your project doesn't make use of jQuery or jQueryUI and you don't want to include these libs,
+you can use the lightweight files provided by Gridstack instead of the official ones.
+
+For this you have to define an alias in your webpack configuration:
+```
+module.exports = {
+  ...
+  resolve: {
+    alias: {
+      'jquery': 'gridstack/dist/jquery.js',
+      'jquery-ui': 'gridstack/dist/jquery-ui.js',
+    }
+  }
+}
+```
+
 * alternatively in html
 
 ```html

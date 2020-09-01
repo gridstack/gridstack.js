@@ -6,7 +6,6 @@
  * @preserve
 */
 (function(factory) {
-  /* [alain] we compile jquery with our code, so no need to 'load' externally
   if (typeof define === 'function' && define.amd) {
     define(['jquery', 'exports'], factory);
   } else if (typeof exports !== 'undefined') {
@@ -15,7 +14,7 @@
     try { jQueryModule = require('jquery'); } catch (e) {}
 
     factory(jQueryModule || window.jQuery, exports);
-  } else */{
+  } else {
     factory(window.jQuery, window);
   }
 })(function($, scope) {
