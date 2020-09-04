@@ -18,6 +18,10 @@ module.exports = {
   },
   resolve: {
     extensions: [ '.ts', '.js' ],
+    alias: {
+      'jquery': './src/jq/jquery.js',
+      'jquery-ui': './src/jq/jquery-ui.js',
+    }
   },
   output: {
     filename: '[name].js',
