@@ -63,30 +63,42 @@ Usage
 
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
-```bash
+```js
 yarn add gridstack
-or
+// or
 npm install --save gridstack
 ```
 
 ## Include
 
-* Using webpack, you can now import the files:
+```js
+import 'gridstack/dist/gridstack.all.js';
+import 'gridstack/dist/gridstack.css';
+```
+
+* when using webpack/ES6 imports you will need this instead (instead of all.js):
 
 ```js
 import 'jquery';
 import 'jquery-ui';
 
 import 'gridstack/dist/gridstack-poly'; // optional IE support
-import GridStack from 'gridstack/dist/gridstack';
+import GridStack from 'gridstack';
 import 'gridstack/dist/gridstack.jQueryUI';
 import 'gridstack/dist/gridstack.css';
 ```
 
-If your project doesn't make use of jQuery or jQueryUI and you don't want to include these libs,
-you can use the lightweight files provided by Gridstack instead of the official ones.
+If your project doesn't need to bring it's own jQuery (see [section](#jquery-application)) we include 3.5.1 that always export jQuery)
+or jQuery-ui (we include a trimmed version with just drag&drop at 1/5th the size)
+you can use the lightweight files provided by Gridstack instead.
 
-For this you have to define an alias in your webpack configuration:
+either use full paths above
+```js
+import 'gridstack/dist/jquery';
+import 'gridstack/dist/jquery-ui';
+```
+
+or define an alias in your webpack configuration:
 ```
 module.exports = {
   ...
@@ -98,7 +110,6 @@ module.exports = {
   }
 }
 ```
-
 * alternatively in html
 
 ```html
@@ -109,9 +120,11 @@ module.exports = {
 * or using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.2.0/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@1.2.0/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.2.1/dist/gridstack.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/gridstack@1.2.1/dist/gridstack.all.js"></script>
 ```
+
+
 
 if you need to debug, look at the git demo/ examples for non min includes.
 
@@ -203,7 +216,7 @@ GridStack.init( {column: N} );
 
 2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.2.0/dist/gridstack-extra.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.2.1/dist/gridstack-extra.css"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
@@ -365,7 +378,7 @@ Recommend looking at the [many samples](./demo) for more code examples.
 
 ### jQuery Application
 
-We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306))
+We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs.
 
 Changes
 =====
