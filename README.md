@@ -77,7 +77,7 @@ import { GridStack } from 'gridstack';
 import 'gridstack/dist/gridstack.css';
 ```
 
-legacy javascript
+legacy javascript. If you need to import individual files (see [jquery apps](#jquery-application) section)
 
 ```js
 import 'gridstack/dist/gridstack.all.js';

@@ -6,6 +6,7 @@ Change log
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [2.0.0-dev (upcoming)](#200-dev-upcoming)
+- [1.2.1 (2020-09-04)](#121-2020-09-04)
 - [1.2.0 (2020-08-01)](#120-2020-08-01)
 - [1.1.2 (2020-05-17)](#112-2020-05-17)
 - [1.1.1 (2020-03-17)](#111-2020-03-17)
@@ -46,6 +47,10 @@ You can now have perfect square cells (default) [723](https://github.com/gridsta
 - fix [1299](https://github.com/gridstack/gridstack.js/pull/1299) many columns round-off error
 - fix [1102](https://github.com/gridstack/gridstack.js/issues/1102) loose functionality when they are moved to a new grid
 - add optional params to `removeWidget()` to have quiet mode (no callbacks)
+
+## 1.2.1 (2020-09-04)
+
+- fix [1341](https://github.com/gridstack/gridstack.js/pull/1341) Enable the UMD behavior for bundlers compatibility
 
 ## 1.2.0 (2020-08-01)
 
