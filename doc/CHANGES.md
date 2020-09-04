@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [1.2.1 (2020-09-04)](#121-2020-09-04)
 - [1.2.0 (2020-08-01)](#120-2020-08-01)
 - [1.1.2 (2020-05-17)](#112-2020-05-17)
 - [1.1.1 (2020-03-17)](#111-2020-03-17)
@@ -33,6 +34,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 1.2.1 (2020-09-04)
+
+- fix [1341](https://github.com/gridstack/gridstack.js/pull/1341) Enable the UMD behavior for bundlers compatibility
 
 ## 1.2.0 (2020-08-01)
 

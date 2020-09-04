@@ -1,4 +1,4 @@
-// Type definitions for Gridstack 1.2.0
+// Type definitions for Gridstack 1.2.1
 // Project: https://gridstackjs.com/
 // Definitions by: Pascal Senn <https://github.com/PascalSenn>
 //                 Ricky Blankenaufulland <https://github.com/ZoolWay>
