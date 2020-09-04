@@ -10861,9 +10861,9 @@ jQuery.noConflict = function( deep ) {
 // Expose jQuery and $ identifiers, even in AMD
 // (#7102#comment:10, https://github.com/jquery/jquery/pull/557)
 // and CommonJS for browser emulators (#13566)
-//if ( !noGlobal ) { [alain] noGlobal=true when using webpack/TS, yet we compile this in, not AMD load, so always expose
+if ( !noGlobal ) {
 	window.jQuery = window.$ = jQuery;
-//}
+}
 
 
 
