@@ -1,4 +1,4 @@
-// gridstack-dd.ts 2.0.0-rc2 @preserve
+// gridstack-dd.ts 2.0.0 @preserve
 
 /**
  * https://gridstackjs.com/
