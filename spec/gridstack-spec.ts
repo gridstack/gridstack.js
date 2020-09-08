@@ -1172,7 +1172,7 @@ describe('gridstack', function() {
         float: false,
       };
       var grid = GridStack.init(options);
-      expect(grid._styles.ownerNode.parentNode.tagName).toBe('DIV');
+      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV'); // any to access private _styles
     });
     it('should add STYLE to HEAD if styleInHead === true', function() {
       var options = {
@@ -1182,7 +1182,7 @@ describe('gridstack', function() {
         styleInHead: true
       };
       var grid = GridStack.init(options);
-      expect(grid._styles.ownerNode.parentNode.tagName).toBe('HEAD');
+      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD'); // any to access private _styles
     });
   });
 

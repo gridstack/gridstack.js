@@ -5,11 +5,12 @@
 */
 
 (function( factory ) {
+  /* [alain] we compile this in so no need to load with AMD
   if ( typeof define === "function" && define.amd ) {
 
     // AMD. Register as an anonymous module.
     define([ "jquery" ], factory );
-  } else {
+  } else */{
 
     // Browser globals
     factory( jQuery );
