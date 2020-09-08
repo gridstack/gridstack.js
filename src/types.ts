@@ -1,4 +1,4 @@
-// types.ts 2.0.0-rc2 @preserve
+// types.ts 2.0.0 @preserve
 
 /**
  * https://gridstackjs.com/
@@ -235,10 +235,10 @@ export interface DDDragOpt {
   containment?: string;
 }
 export interface DDDragInOpt extends DDDragOpt {
-  /** used when draging item from the outside, and canceling (ex: 'invalid')*/
-  revert?: string;
-  /** helper function when dropping (ex: 'clone') */
-  helper?: string;
+    /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
+    revert?: string | ((event: Event) => HTMLElement);
+    /** helper function when dropping (ex: 'clone' or your own method) */
+    helper?: string | ((event: Event) => HTMLElement);
 }
 
 /**
