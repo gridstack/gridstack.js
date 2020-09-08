@@ -7,9 +7,8 @@
   <title>Column grid demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.1.2/dist/gridstack-extra.css"/>
-
-  <script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.2/dist/gridstack.all.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack-extra.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -35,14 +34,11 @@
     var grid = GridStack.init({float: true});
     var text = document.querySelector('#column-text');
 
-    grid.on('added', function(e, items) {log('added ', items)});
-    grid.on('removed', function(e, items) {log('removed ', items)});
-    grid.on('change', function(e, items) {log('change ', items)});
-    function log(type, items) {
+    grid.on('added removed change', function(e, items) {
       var str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-      console.log(type + items.length + ' items.' + str );
-    }
+      console.log(e.type + ' ' + items.length + ' items:' + str );
+    });
 
     var items = [
       /* match karma testing
