@@ -7,9 +7,7 @@
   <title>Nested grids demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-
-  <script src="https://cdn.jsdelivr.net/npm/gridstack@1.1.2/dist/gridstack.all.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.all.js"></script>
   <style type="text/css">
     .grid-stack .grid-stack {
       /*margin: 0 -10px;*/
@@ -58,7 +56,9 @@
   <script type="text/javascript">
     var nestOptions = {
       acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted, otherwise grid-items causes all sort of issues
-      dragOut: true // let us drag them out!
+      dragOut: true, // var us drag them out!
+      disableOneColumnMode: true, // nested are small, but still want N columns
+      margin: 1
     };
     GridStack.init(null, '.grid-stack.top');
     var grid1 = GridStack.init(nestOptions, '.grid-stack.nested1');
