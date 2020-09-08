@@ -9,10 +9,7 @@
   <link rel="stylesheet" href="https://anijs.github.io/lib/anicollection/anicollection.css" />
   <link rel="stylesheet" href="demo.css"/>
 
-  <script src="../src/jquery.js"></script>
-  <script src="../src/gridstack.js"></script>
-  <script src="../src/jquery-ui.js"></script>
-  <script src="../src/gridstack.jQueryUI.js"></script>
+  <script src="../dist/gridstack.all.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/AniJS/0.9.3/anijs.js"></script>
 </head>
 <body>
@@ -27,11 +24,11 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init();
-    var self = this;
+    let grid = GridStack.init();
+    let self = this;
     grid.on('added', function(e, items) {
       // add anijs data to gridstack item
-      for (var i = 0; i < items.length; i++) {
+      for (let i = 0; i < items.length; i++) {
         items[i].el.setAttribute('data-anijs', 'if: added, do: swing animated, after: $removeAnimations, on: $gridstack');
       }
       AniJS.run();
@@ -41,10 +38,10 @@
     });
 
     function addWidget() {
-      grid.addWidget('<div><div class="grid-stack-item-content"></div></div>', 0, 0, Math.floor(1 + 3 * Math.random()), Math.floor(1 + 3 * Math.random()), true);
+      grid.addWidget('<div><div class="grid-stack-item-content"></div></div>', {width: Math.floor(1 + 3 * Math.random()), height: Math.floor(1 + 3 * Math.random())});
     };
 
-    var animationHelper = AniJS.getHelper();
+    let animationHelper = AniJS.getHelper();
 
     //Defining removeAnimations to remove existing animations
     animationHelper.removeAnimations = function(e, animationContext) {

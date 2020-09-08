@@ -7,11 +7,16 @@
   <title>Float grid demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <script src="../src/jquery.js"></script>
-  <script src="../src/gridstack.js"></script>
-  <script src="../src/jquery-ui.js"></script>
-  <script src="../src/gridstack.jQueryUI.js"></script>
-  </style>
+  <script src="../dist/gridstack.all.js"></script>
+  <!-- need umd vs commonjs ? but then GridStack not found...
+  <script src="../dist/utils.js"></script>
+  <script src="../dist/gridstack-engine.js"></script>
+  <script src="../dist/gridstack.js"></script>
+  <script src="../src/jq/jquery.js"></script>
+  <script src="../src/jq/jquery-ui.js"></script>
+  <script src="../dist/jq/gridstack-dd-jqueryui.js"></script>
+  -->
+
 </head>
 <body>
   <div class="container-fluid">
@@ -23,27 +28,22 @@
     <br><br>
     <div class="grid-stack"></div>
   </div>
-
+  <script src="events.js"></script>
   <script type="text/javascript">
-    var grid = GridStack.init({float: true});
+    let grid = GridStack.init({float: true});
+    addEvents(grid);
 
-    grid.on('added removed change', function(e, items) {
-      var str = '';
-      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-      console.log(e.type + ' ' + items.length + ' items:' + str );
-    });
-
-    var items = [
-      {x: 2, y: 1, width: 1, height: 1},
-      {x: 2, y: 3, width: 3, height: 1},
+    let items = [
+      {x: 2, y: 1, width: 1, height: 2},
+      {x: 2, y: 4, width: 3, height: 1},
       {x: 4, y: 2, width: 1, height: 1},
       {x: 3, y: 1, width: 1, height: 2},
       {x: 0, y: 6, width: 2, height: 2}
     ];
-    var count = 0;
+    let count = 0;
 
     addNewWidget = function() {
-      var node = items[count] || {
+      let node = items[count] || {
         x: Math.round(12 * Math.random()),
         y: Math.round(5 * Math.random()),
         width: Math.round(1 + 3 * Math.random()),
@@ -53,8 +53,8 @@
     };
 
     toggleFloat = function() {
-      grid.float(! grid.float());
-      document.querySelector('#float').innerHTML = 'float: ' + grid.float();
+      grid.float(! grid.getFloat());
+      document.querySelector('#float').innerHTML = 'float: ' + grid.getFloat();
     };
     addNewWidget();
   </script>

@@ -7,12 +7,7 @@
   <title>Nested grids demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-
-  <script src="../src/jquery.js"></script>
-  <script src="../src/gridstack.js"></script>
-  <script src="../src/jquery-ui.js"></script>
-  <script src="../src/gridstack.jQueryUI.js"></script>
-
+  <script src="../dist/gridstack.all.js"></script>
   <style type="text/css">
     .grid-stack .grid-stack {
       /*margin: 0 -10px;*/
@@ -59,18 +54,20 @@
   </div>
 
   <script type="text/javascript">
-    var nestOptions = {
+    let nestOptions = {
       acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted, otherwise grid-items causes all sort of issues
-      dragOut: true // let us drag them out!
+      dragOut: true, // let us drag them out!
+      disableOneColumnMode: true, // nested are small, but still want N columns
+      margin: 1
     };
     GridStack.init(null, '.grid-stack.top');
-    var grid1 = GridStack.init(nestOptions, '.grid-stack.nested1');
+    let grid1 = GridStack.init(nestOptions, '.grid-stack.nested1');
     nestOptions.dragOut = false;
-    var grid2 = GridStack.init(nestOptions, '.grid-stack.nested2');
+    let grid2 = GridStack.init(nestOptions, '.grid-stack.nested2');
 
-    var count = 9;
+    let count = 9;
     addNewWidget = function(grid) {
-      var node = {
+      let node = {
         x: Math.round(12 * Math.random()),
         y: Math.round(5 * Math.random()),
         width: Math.round(1 + 3 * Math.random()),

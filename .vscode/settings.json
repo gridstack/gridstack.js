@@ -10,8 +10,8 @@
     "dragstop",
     "dropover",
     "droppable",
+    "gridster",
     "gsresize",
-    "gsresizestop",
     "jqueryui",
     "resizestart"
   ]

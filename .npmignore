@@ -19,6 +19,8 @@ PULL_REQUEST_TEMPLATE.md
 freelancer
 karma.conf.js
 protractor.conf.js
+tsconfig.json
+webpack.config.js
 
 ## From .gitignore:
 *.log

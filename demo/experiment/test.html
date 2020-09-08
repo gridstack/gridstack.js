@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Drag demo</title>
   <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/cash/6.0.2/cash.min.js"></script>-->\
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <style>
     .item {
       width: 100px;
@@ -42,18 +42,18 @@
         }, opt);
 
         if (opt.handle === "") {
-          var $el = this;
+          let $el = this;
         } else {
-          var $el = this.find(opt.handle);
+          let $el = this.find(opt.handle);
         }
 
         return $el.css('cursor', opt.cursor).on("mousedown", function (e) {
           if (opt.handle === "") {
-            var $drag = $(this).addClass('draggable');
+            let $drag = $(this).addClass('draggable');
           } else {
-            var $drag = $(this).addClass('active-handle').parent().addClass('draggable');
+            let $drag = $(this).addClass('active-handle').parent().addClass('draggable');
           }
-          var z_idx = $drag.css('z-index'),
+          let z_idx = $drag.css('z-index'),
             drg_h = $drag.outerHeight(),
             drg_w = $drag.outerWidth(),
             pos_y = $drag.offset().top + drg_h - e.pageY,

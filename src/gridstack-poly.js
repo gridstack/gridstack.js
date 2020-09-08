@@ -1,9 +1,13 @@
-/** gridstack.js 1.2.1 - IE and older browsers Polyfills for this library @preserve*/
-/**
+// gridstack-poly.js 2.0.0 @preserve
+
+/** IE and older browsers Polyfills for this library
  * https://gridstackjs.com/
  * (c) 2019-2020 Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
+
+/* eslint-disable prefer-rest-params */
+/* eslint-disable no-var */
 
 // https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
 (function () {
