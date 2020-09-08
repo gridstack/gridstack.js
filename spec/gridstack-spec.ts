@@ -1157,6 +1157,34 @@ describe('gridstack', function() {
       expect($('.grid-stack').hasClass('grid-stack-rtl')).toBe(false);
     });
   });
+  
+  describe('grid.opts.styleInHead', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should add STYLE to parent node as a default', function() {
+      var options = {
+        cellHeight: 80,
+        verticalMargin: 10,
+        float: false,
+      };
+      var grid = GridStack.init(options);
+      expect(grid._styles.ownerNode.parentNode.tagName).toBe('DIV');
+    });
+    it('should add STYLE to HEAD if styleInHead === true', function() {
+      var options = {
+        cellHeight: 80,
+        verticalMargin: 10,
+        float: false,
+        styleInHead: true
+      };
+      var grid = GridStack.init(options);
+      expect(grid._styles.ownerNode.parentNode.tagName).toBe('HEAD');
+    });
+  });
 
   describe('grid.opts.styleInHead', function() {
     beforeEach(function() {
