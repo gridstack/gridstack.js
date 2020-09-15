@@ -1,4 +1,4 @@
-// types.ts 2.0.0 @preserve
+// types.ts 2.0.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
@@ -20,7 +20,7 @@ export interface GridItemHTMLElement extends HTMLElement {
 /**
  * Defines the options for a Grid
  */
-export interface GridstackOptions {
+export interface GridStackOptions {
   /**
    * accept widgets dragged from other grids or from outside (default: `false`). Can be:
    * `true` (uses `'.grid-stack-item'` class filter) or `false`,
@@ -173,7 +173,7 @@ export interface GridstackOptions {
 
 
 /**
- * Gridstack Widget creation options
+ * GridStack Widget creation options
  */
 export interface GridStackWidget {
   /** widget position x (default?: 0) */

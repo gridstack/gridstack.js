@@ -1,4 +1,4 @@
-// gridstack.ts 2.0.0 @preserve
+// gridstack.ts 2.0.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
@@ -9,7 +9,7 @@ import './gridstack-poly.js';
 
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils } from './utils';
-import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
+import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString } from './types';
 import { GridStackDD } from './gridstack-dd';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -71,7 +71,7 @@ export class GridStack {
    * Note: the HTMLElement (of type GridHTMLElement) will store a `gridstack: GridStack` value that can be retrieve later
    * let grid = document.querySelector('.grid-stack').gridstack;
    */
-  public static init(options: GridstackOptions = {}, elOrString: GridStackElement = '.grid-stack'): GridStack {
+  public static init(options: GridStackOptions = {}, elOrString: GridStackElement = '.grid-stack'): GridStack {
     let el = GridStack.getGridElement(elOrString);
     if (!el) {
       if (typeof elOrString === 'string') {
@@ -97,7 +97,7 @@ export class GridStack {
    * let grids = GridStack.initAll();
    * grids.forEach(...)
    */
-  public static initAll(options: GridstackOptions = {}, selector = '.grid-stack'): GridStack[] {
+  public static initAll(options: GridStackOptions = {}, selector = '.grid-stack'): GridStack[] {
     let grids: GridStack[] = [];
     GridStack.getGridElements(selector).forEach(el => {
       if (!el.gridstack) {
@@ -125,7 +125,7 @@ export class GridStack {
   public engine: GridStackEngine;
 
   /** grid options - public for classes to access, but use methods to modify! */
-  public opts: GridstackOptions;
+  public opts: GridStackOptions;
 
   /** current drag&drop plugin being used */
   public dd: GridStackDD;
@@ -150,7 +150,7 @@ export class GridStack {
    * @param el
    * @param opts
    */
-  public constructor(el: GridHTMLElement, opts: GridstackOptions = {}) {
+  public constructor(el: GridHTMLElement, opts: GridStackOptions = {}) {
     this.el = el; // exposed HTML element to the user
     opts = opts || {}; // handles null/undefined/0
 
@@ -172,7 +172,7 @@ export class GridStack {
     let rowAttr = Utils.toNumber(el.getAttribute('data-gs-row'));
 
     // elements attributes override any passed options (like CSS style) - merge the two together
-    let defaults: GridstackOptions = {
+    let defaults: GridStackOptions = {
       column: Utils.toNumber(el.getAttribute('data-gs-column')) || 12,
       minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('data-gs-min-row')) || 0,
       maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('data-gs-max-row')) || 0,
@@ -429,7 +429,7 @@ export class GridStack {
   }
 
   /**
-   * Update current cell height - see `GridstackOptions.cellHeight` for format.
+   * Update current cell height - see `GridStackOptions.cellHeight` for format.
    * This method rebuilds an internal CSS style sheet.
    * Note: You can expect performance issues if call this method too often.
    *
@@ -720,17 +720,7 @@ export class GridStack {
    * @param val A numeric value of the number of columns
    */
   public maxWidth(els: GridStackElement, val: number): GridStack {
-    this.getElements(els).forEach(el => {
-      let node = el.gridstackNode;
-      if (!node) { return }
-      node.maxWidth = (val || undefined);
-      if (val) {
-        el.setAttribute('data-gs-max-width', String(val));
-      } else {
-        el.removeAttribute('data-gs-max-width');
-      }
-    });
-    return this;
+    return this._updateAttr(els, val, 'data-gs-max-width', 'maxWidth');
   }
 
   /**
@@ -739,16 +729,7 @@ export class GridStack {
    * @param val A numeric value of the number of columns
    */
   public minWidth(els: GridStackElement, val: number): GridStack {
-    this.getElements(els).forEach(el => {
-      let node = el.gridstackNode;
-      if (!node) { return }
-      if (val) {
-        el.setAttribute('data-gs-min-width', String(val));
-      } else {
-        el.removeAttribute('data-gs-min-width');
-      }
-    });
-    return this;
+    return this._updateAttr(els, val, 'data-gs-min-width', 'minWidth');
   }
 
   /**
@@ -757,16 +738,7 @@ export class GridStack {
    * @param val A numeric value of the number of rows
    */
   public maxHeight(els: GridStackElement, val: number): GridStack {
-    this.getElements(els).forEach(el => {
-      let node = el.gridstackNode;
-      if (!node) { return }
-      if (val) {
-        el.setAttribute('data-gs-max-height', String(val));
-      } else {
-        el.removeAttribute('data-gs-max-height');
-      }
-    });
-    return this;
+    return this._updateAttr(els, val, 'data-gs-max-height', 'maxHeight');
   }
 
   /**
@@ -775,16 +747,7 @@ export class GridStack {
    * @param val A numeric value of the number of rows
    */
   public minHeight(els: GridStackElement, val: number): GridStack {
-    this.getElements(els).forEach(el => {
-      let node = el.gridstackNode;
-      if (!node) { return }
-      if (val) {
-        el.setAttribute('data-gs-min-height', String(val));
-      } else {
-        el.removeAttribute('data-gs-min-height');
-      }
-    });
-    return this;
+    return this._updateAttr(els, val, 'data-gs-min-height', 'minHeight');
   }
 
   /**
@@ -1020,9 +983,9 @@ export class GridStack {
   }
 
   /**
-   * Updates the margins which will set all 4 sides at once - see `GridstackOptions.margin` for format options.
+   * Updates the margins which will set all 4 sides at once - see `GridStackOptions.margin` for format options.
    * @param value new vertical margin value
-   * Note: you can instead use `marginTop | marginBottom | marginLeft | marginRight` GridstackOptions to set the sides separately.
+   * Note: you can instead use `marginTop | marginBottom | marginLeft | marginRight` GridStackOptions to set the sides separately.
    */
   public margin(value: numberOrString): GridStack {
     let data = Utils.parseHeight(value);
@@ -1794,6 +1757,21 @@ export class GridStack {
       delete this.opts.margin;
     }
     this.opts.marginUnit = data.unit; // in case side were spelled out, use those units instead...
+    return this;
+  }
+
+  /** @internal called to update an element(s) attributes and node values */
+  private _updateAttr(els: GridStackElement, val: number, attr: string, field: string): GridStack {
+    this.getElements(els).forEach(el => {
+      if (val) {
+        el.setAttribute(attr, String(val));
+      } else {
+        el.removeAttribute(attr);
+      }
+      if (el.gridstackNode) {
+        el.gridstackNode[field] = (val || undefined);
+      }
+    });
     return this;
   }
 
