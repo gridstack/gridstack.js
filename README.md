@@ -149,7 +149,7 @@ see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example
 
 ## Requirements
 
-Gridstack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). All you need to include is `gridstack.all.js` and `gridstack.css` (layouts are done using CSS column based %).
+GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). All you need to include is `gridstack.all.js` and `gridstack.css` (layouts are done using CSS column based %).
 
 ## API Documentation
 
@@ -365,7 +365,7 @@ make sure to read v1 migration first!
 
 v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes and overall code cleanup to support ES6 modules. Your code might need to change from 1.x
 
-1. In general methods that used no args (getter) vs setter can't be used in TS when the arguments differ (set/get are also not function calls so API would have changed). Instead we decided to have <b>all set methods return</b> `GridStack` to they can be chain-able (ex: `grid.float(true).cellHeight(10).column(6)`). Also legacy methods that used to take many parameters will now take a single object (typically `GridstackOptions` or `GridStackWidget`).
+1. In general methods that used no args (getter) vs setter can't be used in TS when the arguments differ (set/get are also not function calls so API would have changed). Instead we decided to have <b>all set methods return</b> `GridStack` to they can be chain-able (ex: `grid.float(true).cellHeight(10).column(6)`). Also legacy methods that used to take many parameters will now take a single object (typically `GridStackOptions` or `GridStackWidget`).
 
 ```
 `addWidget(el, x, y, width, height)` --> `addWidget(el, {with: 2})`

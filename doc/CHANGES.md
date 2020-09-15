@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [2.0.0-dev (2020-09-07)](#200-dev-2020-09-07)
+- [2.0.0-dev](#200-dev)
+- [2.0.0 (2020-09-07)](#200-2020-09-07)
 - [1.2.1 (2020-09-04)](#121-2020-09-04)
 - [1.2.0 (2020-08-01)](#120-2020-08-01)
 - [1.1.2 (2020-05-17)](#112-2020-05-17)
@@ -36,7 +37,12 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 2.0.0-dev (2020-09-07)
+## 2.0.0-dev
+
+- fix `minWidth()`, `minHeight()`, `maxHeight()` to set node value as well [1359](https://github.com/gridstack/gridstack.js/issues/1359)
+- fix `GridStackOptions` spelling [1359](https://github.com/gridstack/gridstack.js/issues/1359)
+
+## 2.0.0 (2020-09-07)
 
 - re-write to native Typescript, removing all JQuery from main code and API (drag&drop plugin still using jqueryui for now)
 - add `getGridItems()` to return list of HTML grid items

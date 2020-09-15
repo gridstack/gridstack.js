@@ -1,4 +1,4 @@
-// utils.ts 2.0.0 @preserve
+// utils.ts 2.0.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
@@ -6,7 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { GridStackWidget, GridStackNode, GridstackOptions, numberOrString } from './types';
+import { GridStackWidget, GridStackNode, GridStackOptions, numberOrString } from './types';
 
 /** checks for obsolete method names */
 export function obsolete(self, f, oldName: string, newName: string, rev: string) {
@@ -20,7 +20,7 @@ export function obsolete(self, f, oldName: string, newName: string, rev: string)
 }
 
 /** checks for obsolete grid options (can be used for any fields, but msg is about options) */
-export function obsoleteOpts(opts: GridstackOptions, oldName: string, newName: string, rev: string) {
+export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string) {
   if (opts[oldName] !== undefined) {
     opts[newName] = opts[oldName];
     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + ' and has been replaced with `' +
@@ -29,7 +29,7 @@ export function obsoleteOpts(opts: GridstackOptions, oldName: string, newName: s
 }
 
 /** checks for obsolete grid options which are gone */
-export function obsoleteOptsDel(opts: GridstackOptions, oldName: string, rev: string, info: string) {
+export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string) {
   if (opts[oldName] !== undefined) {
     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
   }

@@ -1,4 +1,4 @@
-// gridstack-dd.ts 2.0.0 @preserve
+// gridstack-dd.ts 2.0.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
@@ -12,7 +12,7 @@ import { GridItemHTMLElement, DDDragInOpt } from './types';
 
 /** Drag&Drop drop options */
 export type DDDropOpt = {
-  /** function or class type that this grid will accept as dropped items (see GridstackOptions.acceptWidgets) */
+  /** function or class type that this grid will accept as dropped items (see GridStackOptions.acceptWidgets) */
   accept?: (el: GridItemHTMLElement) => boolean;
 }
 
