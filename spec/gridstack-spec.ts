@@ -52,7 +52,7 @@ describe('gridstack', function() {
     });
     it('use selector no dot', function() {
       let grid = GridStack.init(null, 'grid-stack');
-      expect(grid).not.toBe(null);
+      expect(grid).toEqual(null);
     });
     it('use wrong selector', function() {
       let grid = GridStack.init(null, 'FOO');
@@ -64,7 +64,7 @@ describe('gridstack', function() {
     });
     it('initAll use selector no dot', function() {
       let grids = GridStack.initAll(undefined, 'grid-stack');
-      expect(grids.length).toBe(1);
+      expect(grids.length).toBe(0);
     });
     it('initAll use wrong selector', function() {
       let grids = GridStack.initAll(undefined, 'FOO');

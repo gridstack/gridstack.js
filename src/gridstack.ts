@@ -75,10 +75,10 @@ export class GridStack {
     let el = GridStack.getGridElement(elOrString);
     if (!el) {
       if (typeof elOrString === 'string') {
-        console.log('gridstack.js: init() no grid was found. Did you forget class ' + elOrString + ' on your element ?' +
-        '\n".grid-stack" is required for proper CSS styling and drag/drop.');
+        console.error('GridStack.initAll() no grid was found with selector "' + elOrString + '" - element missing or wrong selector ?' +
+        '\nNote: ".grid-stack" is required for proper CSS styling and drag/drop, and is the default selector.');
       } else {
-        console.log('gridstack.js: init() no grid element was passed.');
+        console.error('GridStack.init() no grid element was passed.');
       }
       return null;
     }
@@ -106,8 +106,8 @@ export class GridStack {
       grids.push(el.gridstack);
     });
     if (grids.length === 0) {
-      console.log('gridstack.js: initAll() no grid was found. Did you forget class ' + selector + ' on your element ?' +
-      '\n".grid-stack" is required for proper CSS styling and drag/drop.');
+      console.error('GridStack.initAll() no grid was found with selector "' + selector + '" - element missing or wrong selector ?' +
+      '\nNote: ".grid-stack" is required for proper CSS styling and drag/drop, and is the default selector.');
     }
     return grids;
   }
@@ -1704,18 +1704,11 @@ export class GridStack {
   }
   /** @internal */
   private static getGridElement(els: string | HTMLElement = '.grid-stack'): GridHTMLElement {
-    return (typeof els === 'string' ?
-      (document.querySelector(els) || document.querySelector('#' + els) || document.querySelector('.' + els)) : els);
+    return (typeof els === 'string' ? document.querySelector(els) : els);
   }
   /** @internal */
   private static getGridElements(els: string | HTMLElement = '.grid-stack'): GridHTMLElement[] {
-    if (typeof els === 'string') {
-      let list = document.querySelectorAll(els);
-      if (!list.length) { list = document.querySelectorAll('.' + els) }
-      if (!list.length) { list = document.querySelectorAll('#' + els) }
-      return Array.from(list) as GridHTMLElement[];
-    }
-    return [els];
+    return (typeof els === 'string') ? Array.from(document.querySelectorAll(els)) : [els];
   }
 
   /** @internal initialize margin top/bottom/left/right and units */
