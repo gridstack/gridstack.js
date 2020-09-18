@@ -826,7 +826,7 @@ export class GridStack {
       // do same for start event to make it easier...
       this._gsEventHandler[name] = callback;
     } else {
-      console.log('gridstack.on(' + name + ') event not supported');
+      console.log('GridStack.on(' + name + ') event not supported, but you can still use $(".grid-stack").on(...) while jquery-ui is still used internally.');
     }
     return this;
   }
