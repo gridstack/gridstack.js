@@ -39,8 +39,7 @@
         >
         to let Vue deal with DOM rendering.
       </p>
-      <p>{{ info }}</p>
-      <button type="button" @click="addNewWidget()">Add Widget</button>
+      <button type="button" @click="addNewWidget()">Add Widget</button> {{ info }}
       <section class="grid-stack"></section>
     </main>
     <script type="module">
@@ -77,13 +76,13 @@
         },
         mounted: function () {
           // Provides access to the GridStack instance across the Vue component.
-          this.grid = GridStack.init({ float: true });
+          this.grid = GridStack.init({ float: true, cellHeight: '70px', minRow: 1 });
 
           // Use an arrow function so that `this` is bound to the Vue instance. Alternatively, use a custom Vue directive on the `.grid-stack` container element: https://vuejs.org/v2/guide/custom-directive.html
           this.grid.on("dragstop", (event, element) => {
-            const node = event.target.gridstackNode;
+            const node = element.gridstackNode;
             // `this` will only access your Vue instance if you used an arrow function, otherwise `this` binds to window scope. see https://hacks.mozilla.org/2015/06/es6-in-depth-arrow-functions/
-            this.info = `You just dragged node #${node.id} to x${node.x} y${node.y} – good job!`;
+            this.info = `you just dragged node #${node.id} to ${node.x},${node.y} – good job!`;
           });
         },
         methods: {
