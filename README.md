@@ -176,6 +176,7 @@ grid.printCount();
 
 search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
 
+- vue.js: see [demo](https://github.com/gridstack/gridstack.js/blob/develop/demo/vuejs.html) 
 - ember: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
 - AngularJS: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
 - Angular8: [lb-gridstack](https://github.com/pfms84/lb-gridstack)
