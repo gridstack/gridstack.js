@@ -681,7 +681,7 @@ export class GridStack {
    * @param val if true widget will be locked.
    */
   public locked(els: GridStackElement, val: boolean): GridStack {
-    this.getElements(els).forEach(el => {
+    GridStack.getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) return;
       node.locked = (val || false);
@@ -703,10 +703,10 @@ export class GridStack {
    * @example
    * let grid = GridStack.init();
    * grid.el.appendChild('<div id="gsi-1" data-gs-width="3"></div>');
-   * grid.makeWidget('gsi-1');
+   * grid.makeWidget('#gsi-1');
    */
   public makeWidget(els: GridStackElement): GridItemHTMLElement {
-    let el = this.getElement(els);
+    let el = GridStack.getElement(els);
     this._prepareElement(el, true);
     this._updateContainerHeight();
     this._triggerAddEvent();
@@ -756,7 +756,7 @@ export class GridStack {
    * @param val if true widget will be draggable.
    */
   public movable(els: GridStackElement, val: boolean): GridStack {
-    this.getElements(els).forEach(el => {
+    GridStack.getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) { return }
       node.noMove = !(val || false);
@@ -861,7 +861,7 @@ export class GridStack {
    * @param triggerEvent if `false` (quiet mode) element will not be added to removed list and no 'removed' callbacks will be called (Default? true).
    */
   public removeWidget(els: GridStackElement, removeDOM = true, triggerEvent = true): GridStack {
-    this.getElements(els).forEach(el => {
+    GridStack.getElements(els).forEach(el => {
       if (el.parentElement !== this.el) return; // not our child!
       let node = el.gridstackNode;
       // For Meteor support: https://github.com/gridstack/gridstack.js/pull/272
@@ -924,7 +924,7 @@ export class GridStack {
    * @param val  if true widget will be resizable.
    */
   public resizable(els: GridStackElement, val: boolean): GridStack {
-    this.getElements(els).forEach(el => {
+    GridStack.getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) { return; }
       node.noResize = !(val || false);
@@ -1450,7 +1450,7 @@ export class GridStack {
 
   /** @internal */
   private _updateElement(els: GridStackElement, callback: (el: GridItemHTMLElement, node: GridStackNode) => void): GridStack {
-    let el = this.getElement(els);
+    let el = GridStack.getElement(els);
     if (!el) { return this; }
     let node = el.gridstackNode;
     if (!node) { return this; }
@@ -1687,28 +1687,38 @@ export class GridStack {
     return this;
   }
 
-  /** @internal */
-  private getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement {
-    return (typeof els === 'string' ?
-      (document.querySelector(els) || document.querySelector('#' + els) || document.querySelector('.' + els)) : els);
+  /** @internal convert a potential selector into actual element */
+  private static getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement {
+    if (typeof els === 'string') {
+      let el = document.querySelector(els);
+      if (!el && els[0] !== '.' && els[0] !== '#') {
+        el = document.querySelector('#' + els);
+        if (!el) { el = document.querySelector('.' + els) }
+      }
+      return el as GridItemHTMLElement;
+    }
+    return els;
   }
-  /** @internal */
-  private getElements(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement[] {
+
+  /** @internal convert a potential selector into actual list of elements */
+  private static getElements(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement[] {
     if (typeof els === 'string') {
       let list = document.querySelectorAll(els);
-      if (!list.length) { list = document.querySelectorAll('.' + els) }
-      if (!list.length) { list = document.querySelectorAll('#' + els) }
+      if (!list.length && els[0] !== '.' && els[0] !== '#') {
+        list = document.querySelectorAll('.' + els);
+        if (!list.length) { list = document.querySelectorAll('#' + els) }
+      }
       return Array.from(list) as GridItemHTMLElement[];
     }
     return [els];
   }
   /** @internal */
   private static getGridElement(els: string | HTMLElement = '.grid-stack'): GridHTMLElement {
-    return (typeof els === 'string' ? document.querySelector(els) : els);
+    return GridStack.getElement(els) as GridHTMLElement;
   }
   /** @internal */
   private static getGridElements(els: string | HTMLElement = '.grid-stack'): GridHTMLElement[] {
-    return (typeof els === 'string') ? Array.from(document.querySelectorAll(els)) : [els];
+    return GridStack.getElements(els) as GridHTMLElement[];
   }
 
   /** @internal initialize margin top/bottom/left/right and units */
@@ -1755,7 +1765,7 @@ export class GridStack {
 
   /** @internal called to update an element(s) attributes and node values */
   private _updateAttr(els: GridStackElement, val: number, attr: string, field: string): GridStack {
-    this.getElements(els).forEach(el => {
+    GridStack.getElements(els).forEach(el => {
       if (val) {
         el.setAttribute(attr, String(val));
       } else {

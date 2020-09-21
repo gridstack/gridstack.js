@@ -411,7 +411,7 @@ Parameters:
 ```js
 let grid = GridStack.init();
 grid.el.appendChild('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="true"></div>')
-grid.makeWidget('gsi-1');
+grid.makeWidget('#gsi-1');
 ```
 
 ### margin(value: numberOrString)
