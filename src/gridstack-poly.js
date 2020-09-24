@@ -1,4 +1,4 @@
-// gridstack-poly.js 2.0.0-rc2 @preserve
+// gridstack-poly.js 2.0.0 @preserve
 
 /** IE and older browsers Polyfills for this library
  * https://gridstackjs.com/
