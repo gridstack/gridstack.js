@@ -21,6 +21,8 @@ export * from './gridstack-dd';
 // TEMPORARY import the jquery-ui drag&drop since we don't have alternative yet and don't expect users to create their own yet
 import './jq/gridstack-dd-jqueryui';
 export * from './jq/gridstack-dd-jqueryui';
+import './dragdrop/gridstack-dd-native';
+export * from './dragdrop/gridstack-dd-native';
 
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
@@ -86,6 +88,16 @@ export class GridStack {
       el.gridstack = new GridStack(el, Utils.clone(options));
     }
     return el.gridstack
+  }
+  /**
+   * Will return i-th DDPlusgin registerd in GridStackDD
+   * @param i i-th plugin (default to 0)
+   *
+   * @example
+   * let GridStackDDJQueryUI = GridStack.getDDPlugin(0);
+   */
+  public static getDDPlugin(i = 0) {
+    return GridStackDD.registeredPlugins[i];
   }
 
   /**
