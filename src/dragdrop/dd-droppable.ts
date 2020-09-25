@@ -4,16 +4,16 @@ import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { DDUtils } from './dd-utils';
 
 export interface DDDropableOpt {
-  accept?: string | ((el: HTMLElement) => boolean) ;
+  accept?: string | ((el: HTMLElement) => boolean);
   drop?: (event: DragEvent, ui) => void;
   over?: (event: DragEvent, ui) => void;
   out?: (event: DragEvent, ui) => void;
 };
 export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<DDDropableOpt> {
-  count = 0;
   el: HTMLElement;
   option: DDDropableOpt;
-  dragEl: HTMLElement;
+  private count = 0;
+  private dragEl: HTMLElement;
   constructor(el: HTMLElement, opts: DDDropableOpt) {
     super();
     this.el = el;
@@ -51,7 +51,7 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
     });
   }
 
-  init() {
+  protected init() {
     this.el.classList.add('ui-droppable');
     this.el.addEventListener('dragenter', this.dragEnter);
     this.el.addEventListener('dragover', this.dragOver);
@@ -59,7 +59,7 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
     this.el.addEventListener('dragleave', this.dragLeave);
   }
 
-  dragEnter = (event: DragEvent) => {
+  protected dragEnter = (event: DragEvent) => {
     if (this.canDrop()) {
       if (0 === this.count) {
         this.dragEl = DDManager.dragElement.el;
@@ -74,13 +74,13 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
     }
     this.count++;
   }
-  dragOver = (event: DragEvent) => {
+  protected dragOver = (event: DragEvent) => {
     if (this.canDrop()) {
       event.preventDefault();
       event.stopPropagation();
     }
   }
-  dragLeave = (event: DragEvent) => {
+  protected dragLeave = (event: DragEvent) => {
     this.count--;
     if (this.canDrop()) {
       if (0 === this.count) {
@@ -93,8 +93,8 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
       event.preventDefault();
     }
   }
-  drop = (event: DragEvent) => {
-    if (this.canDrop()){
+  protected drop = (event: DragEvent) => {
+    if (this.canDrop()) {
       const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drop' });
       if (this.option.drop) {
         this.option.drop(ev, this.ui(DDManager.dragElement))

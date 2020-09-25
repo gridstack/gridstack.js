@@ -7,7 +7,6 @@ export abstract class DDBaseImplement {
   on(event: string, callback: EventCallback): void {
     this.eventRegister[event] = callback;
   }
-
   off(event: string) {
     delete this.eventRegister[event];
   }

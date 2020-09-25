@@ -6,8 +6,8 @@ export interface DDDraggbleOpt {
   appendTo?: string | HTMLElement;
   containment?: string | HTMLElement;
   handle?: string;
-  revert?: string; // not impleament yet
-  scroll?: boolean; // nature support by HTML5 drag drop, can't be switch to off
+  revert?: string | boolean | unknown; // TODO: not impleament yet
+  scroll?: boolean; // nature support by HTML5 drag drop, can't be switch to off actually
   helper?: string | ((event: Event) => HTMLElement);
   start?: (event?, ui?) => void;
   stop?: (event?, ui?) => void;
@@ -43,11 +43,11 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
   enable() {
     super.enable();
     this.el.draggable = true;
-    this.el.classList.remove('ui-dragable-disabled');
+    this.el.classList.remove('ui-draggable-disabled');
   }
 
   disable() {
-    super.disable()
+    super.disable();
     this.el.draggable = false;
     this.el.classList.add('ui-draggable-disabled');
   }
@@ -59,23 +59,6 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
     });
   }
 
-  private createHelper(event: DragEvent) {
-    const helperIsFunction = (typeof this.option.helper) === 'function';
-    const helper = (helperIsFunction
-      ? (this.option.helper as ((event: Event) => HTMLElement)).apply(this.el, [event])
-      : (this.option.helper === "clone" ? DDUtils.clone(this.el) : this.el)
-    ) as HTMLElement;
-    if (!document.body.contains(helper)) {
-      DDUtils.appendTo(helper, (this.option.appendTo === "parent"
-        ? this.el.parentNode
-        : this.option.appendTo));
-    }
-    if (helper === this.el) {
-      this.dragElementOriginStyle = DDDraggble.originStyleProp.map(prop => this.el.style[prop]);
-    }
-    return helper;
-  }
-
   protected init() {
     this.el.draggable = true;
     this.el.classList.add('ui-draggable');
@@ -84,9 +67,11 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
     this.el.addEventListener('dragend', this.dragEnd);
     this.dragThrottle = DDUtils.throttle(this.drag, 100);
   }
+
   protected mouseDown = (event: MouseEvent) => {
     this.mouseDownElement = event.target as HTMLElement;
   }
+
   protected dragStart = (event: DragEvent) => {
     if (this.option.handle && !(
       this.mouseDownElement
@@ -157,6 +142,24 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
     this.helper = undefined;
     this.mouseDownElement = undefined;
   }
+
+  private createHelper(event: DragEvent) {
+    const helperIsFunction = (typeof this.option.helper) === 'function';
+    const helper = (helperIsFunction
+      ? (this.option.helper as ((event: Event) => HTMLElement)).apply(this.el, [event])
+      : (this.option.helper === "clone" ? DDUtils.clone(this.el) : this.el)
+    ) as HTMLElement;
+    if (!document.body.contains(helper)) {
+      DDUtils.appendTo(helper, (this.option.appendTo === "parent"
+        ? this.el.parentNode
+        : this.option.appendTo));
+    }
+    if (helper === this.el) {
+      this.dragElementOriginStyle = DDDraggble.originStyleProp.map(prop => this.el.style[prop]);
+    }
+    return helper;
+  }
+
   private setupHelperStyle() {
     this.helper.style.pointerEvents = 'none';
     this.helper.style.width = this.dragOffset.width + 'px';
@@ -170,6 +173,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
       this.helper.style.transition = null; // recover animation
     }, 100);
   }
+
   private removeHelperStyle() {
     DDDraggble.originStyleProp.forEach(prop => {
       this.helper.style[prop] = this.dragElementOriginStyle[prop] || null;
@@ -203,6 +207,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
   }
 
   private getDragOffset(event: DragEvent, el: HTMLElement, attachedParent: HTMLElement) {
+    // in case ancestor has transform/perspective css properies that change the viewpoint
     const getViewPointFromParent = (parent) => {
       if (!parent) { return null; }
       const testEl = document.createElement('div');

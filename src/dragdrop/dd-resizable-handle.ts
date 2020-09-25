@@ -1,29 +1,30 @@
 import { DDUtils } from "./dd-utils";
 
 export interface DDResizableHandleOpt {
-  start?: Function;
-  move?: Function;
-  stop?: Function;
+  start?: (event) => void;
+  move?: (event) => void;
+  stop?: (event) => void;
 }
 export class DDResizableHandle {
-  public el: HTMLElement;
+  static prefix = 'ui-resizable-';
+  el: HTMLElement;
   host: HTMLElement;
   option: DDResizableHandleOpt;
   dir: string;
-  prefix = 'ui-resizable-';
-  mouseMoving = false;
-  started = false;
-  mouseDownEvent;
+  private mouseMoving = false;
+  private started = false;
+  private mouseDownEvent: MouseEvent;
   constructor(host: HTMLElement, direction: string, option: DDResizableHandleOpt) {
     this.host = host;
     this.dir = direction;
     this.option = option;
     this.init();
   }
+
   init() {
     const el = document.createElement('div');
     el.classList.add('ui-resizable-handle');
-    el.classList.add(`${this.prefix}${this.dir}`);
+    el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
     el.style.zIndex = '100';
     el.style.userSelect = 'none';
     this.el = el;
@@ -32,7 +33,7 @@ export class DDResizableHandle {
     this.mouseMoveThrottle = DDUtils.throttle(this.mouseMove, 100);
   }
 
-  mouseDown = (event: MouseEvent) => {
+  protected mouseDown = (event: MouseEvent) => {
     this.mouseDownEvent = event;
     setTimeout(() => {
       document.addEventListener('mousemove', this.mouseMoveThrottle, true);
@@ -46,8 +47,9 @@ export class DDResizableHandle {
       }, 300);
     }, 100);
   }
-  mouseMoveThrottle: (event: MouseEvent) => void;
-  mouseMove = (event: MouseEvent) => {
+
+  protected mouseMoveThrottle: (event: MouseEvent) => void;
+  protected mouseMove = (event: MouseEvent) => {
     if (!this.started && !this.mouseMoving) {
       if (this.hasMoved(event, this.mouseDownEvent)) {
         this.mouseMoving = true;
@@ -60,7 +62,7 @@ export class DDResizableHandle {
     }
   }
 
-  mouseUp = (event: MouseEvent) => {
+  protected mouseUp = (event: MouseEvent) => {
     if (this.mouseMoving) {
       this.triggleEvent('stop', event);
     }
@@ -70,9 +72,10 @@ export class DDResizableHandle {
     this.started = false;
     this.mouseDownEvent = undefined;
   }
-  hasMoved(event: MouseEvent, oEvent: MouseEvent) {
-    const {clientX, clientY} = event;
-    const {clientX: oClientX, clientY: oClientY} = oEvent;
+
+  private hasMoved(event: MouseEvent, oEvent: MouseEvent) {
+    const { clientX, clientY } = event;
+    const { clientX: oClientX, clientY: oClientY } = oEvent;
     return (
       Math.abs(clientX - oClientX) > 1
       || Math.abs(clientY - oClientY) > 1
