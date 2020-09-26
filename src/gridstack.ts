@@ -144,6 +144,8 @@ export class GridStack {
   private _styles: GridCSSStyleSheet;
   /** @internal flag to keep cells square during resize */
   private _isAutoCellHeight: boolean;
+  /** @internal track event binding to window resize so we can remove */
+  private _windowResizeBind: () => GridStack;
 
   /**
    * Construct a grid item from the given element and options
@@ -302,13 +304,12 @@ export class GridStack {
 
     this._updateContainerHeight();
 
-    this._onResizeHandler = this._onResizeHandler.bind(this); // so we can properly remove later
-    window.addEventListener('resize', this._onResizeHandler);
-    this._onResizeHandler();
+    this.onParentResize();
 
     this._setupDragIn();
     this._setupRemoveDrop();
     this._setupAcceptWidget();
+    this._updateWindowResizeEvent();
   };
 
 
@@ -451,6 +452,7 @@ export class GridStack {
     if (update) {
       this._updateStyles();
     }
+    this._resizeNestedGrids(this.el);
     return this;
   }
 
@@ -539,7 +541,7 @@ export class GridStack {
    * @param removeDOM if `false` grid and items elements will not be removed from the DOM (Optional. Default `true`).
    */
   public destroy(removeDOM = true): GridStack {
-    window.removeEventListener('resize', this._onResizeHandler);
+    this._updateWindowResizeEvent(true);
     this.disable();
     if (!removeDOM) {
       this.removeAll(removeDOM);
@@ -1333,7 +1335,7 @@ export class GridStack {
 
       // if we re-sized a nested grid item, let the children resize as well
       if (event.type === 'resizestop') {
-        target.querySelectorAll('.grid-stack').forEach((el: GridHTMLElement) => el.gridstack._onResizeHandler());
+        this._resizeNestedGrids(target);
       }
     }
 
@@ -1360,6 +1362,16 @@ export class GridStack {
     this._writeAttr(el, node);
     return this;
   }
+
+  /** called to resize children nested grids when we/item resizes */
+  private _resizeNestedGrids(target: HTMLElement): GridStack {
+    target.querySelectorAll('.grid-stack').forEach((el: GridHTMLElement) => {
+      if (el.gridstack) {
+        el.gridstack.onParentResize();
+      }});
+    return this;
+  }
+
 
   /** @internal */
   private _prepareElement(el: GridItemHTMLElement, triggerAddEvent = false): GridStack {
@@ -1471,10 +1483,10 @@ export class GridStack {
   }
 
   /**
-   * @internal called when we are being resized - check if the one Column Mode needs to be turned on/off
-   * and remember the prev columns we used.
+   * called when we are being resized by the window - check if the one Column Mode needs to be turned on/off
+   * and remember the prev columns we used, as well as check for auto cell height (square)
    */
-  private _onResizeHandler(): GridStack {
+  public onParentResize(): GridStack {
     // make the cells content (minus margin) square again
     if (this._isAutoCellHeight) {
       Utils.throttle(() => {
@@ -1488,11 +1500,30 @@ export class GridStack {
       if (this._oneColumnMode) { return this }
       this._oneColumnMode = true;
       this.column(1);
+      this._resizeNestedGrids(this.el);
     } else {
       if (!this._oneColumnMode) { return this }
       delete this._oneColumnMode;
       this.column(this._prevColumn);
+      this._resizeNestedGrids(this.el);
     }
+
+    return this;
+  }
+
+  /** add or remove the window size event handler */
+  private _updateWindowResizeEvent(forceRemove = false): GridStack {
+    const workTodo = (this._isAutoCellHeight || !this.opts.disableOneColumnMode);
+
+    // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting oneColumn (i.e. doing work)
+    if (workTodo && !forceRemove && !this.opts._isNested && !this._windowResizeBind) {
+      this._windowResizeBind = this.onParentResize.bind(this); // so we can properly remove later
+      window.addEventListener('resize', this._windowResizeBind);
+    } else if ((forceRemove || !workTodo) && this._windowResizeBind) {
+      window.removeEventListener('resize', this._windowResizeBind);
+      delete this._windowResizeBind; // remove link to us so we can free
+    }
+
     return this;
   }
 
