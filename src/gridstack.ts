@@ -302,7 +302,8 @@ export class GridStack {
 
     this._updateContainerHeight();
 
-    window.addEventListener('resize', this._onResizeHandler.bind(this));
+    this._onResizeHandler = this._onResizeHandler.bind(this); // so we can properly remove later
+    window.addEventListener('resize', this._onResizeHandler);
     this._onResizeHandler();
 
     this._setupDragIn();
