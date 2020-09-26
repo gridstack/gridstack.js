@@ -41,6 +41,7 @@ Change log
 
 - fix `minWidth()`, `minHeight()`, `maxHeight()` to set node value as well [1359](https://github.com/gridstack/gridstack.js/issues/1359)
 - fix `GridStackOptions` spelling [1359](https://github.com/gridstack/gridstack.js/issues/1359)
+- fix remove window resize event when `grid.destroy()` [1369](https://github.com/gridstack/gridstack.js/issues/1369)
 
 ## 2.0.0 (2020-09-07)
 
