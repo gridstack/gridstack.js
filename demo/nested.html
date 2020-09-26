@@ -60,7 +60,7 @@
       disableOneColumnMode: true, // nested are small, but still want N columns
       margin: 1
     };
-    GridStack.init(null, '.grid-stack.top');
+    GridStack.init({cellHeight: 70}, '.grid-stack.top');
     let grid1 = GridStack.init(nestOptions, '.grid-stack.nested1');
     nestOptions.dragOut = false;
     let grid2 = GridStack.init(nestOptions, '.grid-stack.nested2');

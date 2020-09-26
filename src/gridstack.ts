@@ -1197,17 +1197,17 @@ export class GridStack {
 
     /** called when item starts moving/resizing */
     let onStartMoving = (event, ui) => {
+      let target: HTMLElement = event.target;
+
       // trigger any 'dragstart' / 'resizestart' manually
       if (this._gsEventHandler[event.type]) {
-        this._gsEventHandler[event.type](event, event.target);
+        this._gsEventHandler[event.type](event, target);
       }
 
       this.engine.cleanNodes();
       this.engine.beginUpdate(node);
       cellWidth = this.cellWidth();
       cellHeight = this.getCellHeight();
-
-      let { target } = event;
 
       this.placeholder.setAttribute('data-gs-x', target.getAttribute('data-gs-x'));
       this.placeholder.setAttribute('data-gs-y', target.getAttribute('data-gs-y'));
@@ -1219,20 +1219,10 @@ export class GridStack {
       node._beforeDragX = node.x;
       node._beforeDragY = node.y;
       node._prevYPix = ui.position.top;
-      let minHeight = (node.minHeight || 1);
 
       // mineHeight - Each row is cellHeight + margin
       this.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
-      this.dd.resizable(el, 'option', 'minHeight', cellHeight * minHeight);
-
-      if (event.type === 'resizestart') {
-        let itemElement = target.querySelector('.grid-stack-item') as HTMLElement;
-        if (itemElement) {
-          let ev = document.createEvent('HTMLEvents');
-          ev.initEvent('resizestart', true, false);
-          itemElement.dispatchEvent(event);
-        }
-      }
+      this.dd.resizable(el, 'option', 'minHeight', cellHeight * (node.minHeight || 1));
     }
 
     /** called when item is being dragged/resized */
