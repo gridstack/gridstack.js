@@ -419,8 +419,9 @@ export class GridStack {
   /**
    * Gets current cell height.
    */
-  public getCellHeight(): number {
-    if (this.opts.cellHeight && this.opts.cellHeight !== 'auto') {
+  public getCellHeight(forcePixel = false): number {
+    if (this.opts.cellHeight && this.opts.cellHeight !== 'auto' &&
+       (!forcePixel || !this.opts.cellHeightUnit || this.opts.cellHeightUnit === 'px')) {
       return this.opts.cellHeight as number;
     }
     // else get first cell height
@@ -1209,7 +1210,7 @@ export class GridStack {
       this.engine.cleanNodes();
       this.engine.beginUpdate(node);
       cellWidth = this.cellWidth();
-      cellHeight = this.getCellHeight();
+      cellHeight = this.getCellHeight(true); // force pixels for calculations
 
       this.placeholder.setAttribute('data-gs-x', target.getAttribute('data-gs-x'));
       this.placeholder.setAttribute('data-gs-y', target.getAttribute('data-gs-y'));
@@ -1222,7 +1223,6 @@ export class GridStack {
       node._beforeDragY = node.y;
       node._prevYPix = ui.position.top;
 
-      // mineHeight - Each row is cellHeight + margin
       this.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
       this.dd.resizable(el, 'option', 'minHeight', cellHeight * (node.minHeight || 1));
     }
