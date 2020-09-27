@@ -44,6 +44,7 @@ Change log
 - fix remove window resize event when `grid.destroy()` [1369](https://github.com/gridstack/gridstack.js/issues/1369)
 - fix nested grid resize [1361](https://github.com/gridstack/gridstack.js/issues/1361)
 - fix resize with `cellHeight` '6rem' '6em' not working [1356](https://github.com/gridstack/gridstack.js/issues/1356)
+- fix preserve attributes (min/max/id/etc...) when dragging between grids [1367](https://github.com/gridstack/gridstack.js/issues/1367)
 
 ## 2.0.0 (2020-09-07)
 
