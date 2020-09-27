@@ -1238,24 +1238,24 @@ export class GridStack {
         let distance = ui.position.top - node._prevYPix;
         node._prevYPix = ui.position.top;
         Utils.updateScrollPosition(el, ui.position, distance);
-        if (el.dataset.inTrashZone || x < 0 || x >= this.engine.column || y < 0 ||
-          (!this.engine.float && y > this.engine.getRow())) {
-          if (!node._temporaryRemoved) {
-            if (this.opts.removable === true) {
-              this._setupRemovingTimeout(el);
-            }
-
-            x = node._beforeDragX;
-            y = node._beforeDragY;
-
-            if (this.placeholder.parentNode === this.el) { this.el.removeChild(this.placeholder) }
-            this.engine.removeNode(node);
-            this._updateContainerHeight();
-
-            node._temporaryRemoved = true;
-          } else {
-            return;
+        // if inTrash, outside of the bounds or added to another grid (#393) temporarily remove it from us
+        if (el.dataset.inTrashZone || x < 0 || x >= this.engine.column || y < 0 || (!this.engine.float && y > this.engine.getRow()) || node._added) {
+          if (node._temporaryRemoved) { return; }
+          if (this.opts.removable === true) {
+            this._setupRemovingTimeout(el);
           }
+
+          x = node._beforeDragX;
+          y = node._beforeDragY;
+
+          if (this.placeholder.parentNode === this.el) {
+            this.placeholder.remove();
+          }
+          this.engine.removeNode(node);
+          this._updateContainerHeight();
+
+          node._temporaryRemoved = true;
+          delete node._added; // no need for this now
         } else {
           this._clearRemovingTimeout(el);
 
@@ -1290,7 +1290,9 @@ export class GridStack {
 
     /** called when the item stops moving/resizing */
     let onEndMoving = (event: Event) => {
-      if (this.placeholder.parentNode === this.el) { this.el.removeChild(this.placeholder) }
+      if (this.placeholder.parentNode === this.el) {
+        this.placeholder.remove();
+      }
 
       // if the item has moved to another grid, we're done here
       let target: GridItemHTMLElement = event.target as GridItemHTMLElement;
@@ -1620,6 +1622,11 @@ export class GridStack {
           if (h > 0) { node.height = h; }
         }
 
+        // if the item came from another grid, let it know it was added here to removed duplicate shadow #393
+        if (node.grid && node.grid !== this) {
+          node._added = true;
+        }
+
         // if not calculate the grid size based on element outer size
         let width = node.width || Math.round(el.offsetWidth / this.cellWidth()) || 1;
         let height = node.height || Math.round(el.offsetHeight / this.getCellHeight(true)) || 1;
@@ -1644,7 +1651,7 @@ export class GridStack {
         node.el = null;
         this.engine.removeNode(node);
         if (this.placeholder.parentNode === this.el) {
-          this.el.removeChild(this.placeholder);
+          this.placeholder.remove();
         }
         this._updateContainerHeight();
         el.gridstackNode = el._gridstackNodeOrig;
