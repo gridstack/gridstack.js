@@ -1,3 +1,10 @@
+// dd-elements.ts 2.0.1-dev @preserve
+
+/**
+ * https://gridstackjs.com/
+ * (c) 2020 Alain Dumesny, rhlin
+ * gridstack.js may be freely distributed under the MIT license.
+*/
 import { DDResizable, DDResizableOpt } from './dd-resizable';
 import { GridItemHTMLElement } from './../types';
 import { DDDraggble, DDDraggbleOpt } from './dd-draggable';
