@@ -1,4 +1,4 @@
-// gridstack-dd.ts 3.0.0-dev @preserve
+// gridstack-dd.ts 2.0.1-dev @preserve
 
 /**
  * https://gridstackjs.com/
@@ -30,16 +30,16 @@ export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: Grid
  */
 export class GridStackDD {
   protected grid: GridStack;
-  static registeredPlugins: typeof GridStackDD[] = [];
+  static registeredPlugins: typeof GridStackDD;
 
   /** call this method to register your plugin instead of the default no-op one */
   static registerPlugin(pluginClass: typeof GridStackDD) {
-    GridStackDD.registeredPlugins.push(pluginClass);
+    GridStackDD.registeredPlugins = pluginClass;
   }
 
   /** get the current registered plugin to use */
   static get(): typeof GridStackDD {
-    return GridStackDD.registeredPlugins[0] || GridStackDD;
+    return GridStackDD.registeredPlugins || GridStackDD;
   }
 
   public constructor(grid: GridStack) {

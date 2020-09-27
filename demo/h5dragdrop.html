@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Advanced grid demo</title>
+  <title>HTML5 grid demo</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="demo.css" />
@@ -13,7 +13,7 @@
   <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
 
-  <script src="../dist/gridstack.all.js"></script>
+  <script src="../dist/gridstack.html5.js"></script>
 
   <style type="text/css">
     .grid-stack-item-removing {
@@ -28,7 +28,7 @@
 </head>
 
 <body>
-  <h1>Advanced Demo</h1>
+  <h1>Advanced HTML5 Demo</h1>
   <div class="row">
     <div class="col-md-2 d-none d-md-block">
       <div id="trash" style="padding: 5px; margin-bottom: 15px;" class="text-center">
@@ -114,8 +114,7 @@
       dragIn: '.newWidget',  // class that can be dragged from outside
       dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
       removable: '#trash', // drag-out delete class
-      removeTimeout: 100,
-      ddPlugin: GridStack.getDDPlugin(1)
+      removeTimeout: 100
     });
 
     grid.on('added removed change', function(e, items) {

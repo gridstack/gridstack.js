@@ -1,3 +1,10 @@
+// dd-base-impl.ts 2.0.1-dev @preserve
+
+/**
+ * https://gridstackjs.com/
+ * (c) 2020 Alain Dumesny, rhlin
+ * gridstack.js may be freely distributed under the MIT license.
+*/
 export type EventCallback = (event: Event) => boolean|void;
 export abstract class DDBaseImplement {
   disabled = false;

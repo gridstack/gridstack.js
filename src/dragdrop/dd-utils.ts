@@ -1,3 +1,10 @@
+// dd-utils.ts 2.0.1-dev @preserve
+
+/**
+ * https://gridstackjs.com/
+ * (c) 2020 Alain Dumesny, rhlin
+ * gridstack.js may be freely distributed under the MIT license.
+*/
 export class DDUtils {
   static clone(el: HTMLElement): HTMLElement {
     const node = el.cloneNode(true) as HTMLElement;

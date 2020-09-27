@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "3.0.0-dev",
+  "version": "2.0.1-dev",
   "description": "TypeScript/Javascript lib for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Ember, knockout...)",
   "main": "./dist/gridstack.js",
   "types": "./dist/gridstack.d.ts",

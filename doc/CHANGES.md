@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.0.0-dev](#300-dev)
+- [2.0.1-dev](#201-dev)
 - [2.0.1 (2020-09-26)](#201-2020-09-26)
 - [2.0.0 (2020-09-07)](#200-2020-09-07)
 - [1.2.1 (2020-09-04)](#121-2020-09-04)
@@ -38,7 +38,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 3.0.0-dev
+## 2.0.1-dev
 
 - TBD
 

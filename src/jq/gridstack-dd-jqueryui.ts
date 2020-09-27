@@ -1,4 +1,4 @@
-// gridstack-dd-jqueryui.ts 3.0.0-dev @preserve
+// gridstack-dd-jqueryui.ts 2.0.1-dev @preserve
 
 /** JQuery UI Drag&Drop plugin
  * https://gridstackjs.com/
@@ -10,14 +10,14 @@ import { GridStack, GridStackElement } from '../gridstack';
 import { GridStackDD, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../gridstack-dd';
 import { GridItemHTMLElement, DDDragInOpt } from '../types';
 
-// TODO: TEMPORARY until can remove jquery-ui drag&drop and this class and use HTML5 instead !
-// see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
+// export all jq symbols see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
+// TODO: let user bring their own jq or jq-ui version
 import * as $ from './jquery';
 export { $ };
 export * from './jquery-ui';
 
 /**
- * Jquery-ui based drag'n'drop plugin.
+ * legacy Jquery-ui based drag'n'drop plugin.
  */
 export class GridStackDDJQueryUI extends GridStackDD {
   public constructor(grid: GridStack) {

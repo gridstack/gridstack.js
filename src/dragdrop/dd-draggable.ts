@@ -1,3 +1,10 @@
+// dd-draggable.ts 2.0.1-dev @preserve
+
+/**
+ * https://gridstackjs.com/
+ * (c) 2020 Alain Dumesny, rhlin
+ * gridstack.js may be freely distributed under the MIT license.
+*/
 import { DDManager } from './dd-manager';
 import { DDUtils } from './dd-utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
