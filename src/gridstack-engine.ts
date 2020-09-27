@@ -187,6 +187,8 @@ export class GridStackEngine {
    */
   public prepareNode(node: GridStackNode, resizing?: boolean): GridStackNode {
     node = node || {};
+    node._id = node._id || GridStackEngine._idSeq++;
+
     // if we're missing position, have the grid position us automatically (before we set them to 0,0)
     if (node.x === undefined || node.y === undefined || node.x === null || node.y === null) {
       node.autoPosition = true;
@@ -286,8 +288,6 @@ export class GridStackEngine {
 
   public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
     node = this.prepareNode(node);
-
-    node._id = node._id || GridStackEngine._idSeq++;
 
     if (node.autoPosition) {
       this._sortNodes();

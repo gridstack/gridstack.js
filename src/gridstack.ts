@@ -1152,7 +1152,7 @@ export class GridStack {
     // check for css min height
     let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
     if (cssMinHeight > 0) {
-      let minRow =  Math.round(cssMinHeight / this.getCellHeight());
+      let minRow =  Math.round(cssMinHeight / this.getCellHeight(true));
       if (row < minRow) {
         row = minRow;
       }
@@ -1610,24 +1610,22 @@ export class GridStack {
         }
       })
       .on(this.el, 'dropover', (event, el: GridItemHTMLElement) => {
-        let width, height;
 
         // see if we already have a node with widget/height and check for attributes
-        let node = el.gridstackNode;
-        if (!node || !node.width || !node.height) {
+        let node = el.gridstackNode || {};
+        if (!node.width || !node.height) {
           let w = parseInt(el.getAttribute('data-gs-width'));
-          if (w > 0) { node = node || {}; node.width = w; }
+          if (w > 0) { node.width = w; }
           let h = parseInt(el.getAttribute('data-gs-height'));
-          if (h > 0) { node = node || {}; node.height = h; }
+          if (h > 0) { node.height = h; }
         }
 
         // if not calculate the grid size based on element outer size
-        let cellWidth = this.cellWidth();
-        let cellHeight = this.getCellHeight();
-        width = node && node.width ? node.width : Math.round(el.offsetWidth / cellWidth) || 1;
-        height = node && node.height ? node.height : Math.round(el.offsetHeight / cellHeight) || 1;
+        let width = node.width || Math.round(el.offsetWidth / this.cellWidth()) || 1;
+        let height = node.height || Math.round(el.offsetHeight / this.getCellHeight(true)) || 1;
 
-        let newNode = this.engine.prepareNode({width, height, _added: false, _temporary: true});
+        // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
+        let newNode = this.engine.prepareNode({...node, ...{width, height, _added: false, _temporary: true}});
         newNode._isOutOfGrid = true;
         el.gridstackNode = newNode;
         el._gridstackNodeOrig = node;
@@ -1655,7 +1653,7 @@ export class GridStack {
       .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
         this.placeholder.remove();
 
-        // notify of removal from prev grid...
+        // notify previous grid of removal
         let origNode = el._gridstackNodeOrig;
         delete el._gridstackNodeOrig;
         if (origNode && origNode.grid && origNode.grid !== this) {
@@ -1666,12 +1664,14 @@ export class GridStack {
           oGrid._triggerRemoveEvent();
         }
 
-        let node: GridStackNode = el.gridstackNode; // use existing placeholder node as it's already in our list with drop location
-        this.engine.cleanupNode(node); // remove all internal _xyz values
+        let node = el.gridstackNode; // use existing placeholder node as it's already in our list with drop location
+        const _id = node._id;
+        this.engine.cleanupNode(node); // removes all internal _xyz values (including the _id so add that back)
+        node._id = _id;
         node.grid = this;
         this.dd.off(el, 'drag');
         // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
-        // as the helper will be nuked by default (by jqueryui and here to make it the same)
+        // as the helper will be nuked by jqueryui otherwise
         if (helper !== el) {
           helper.remove();
           el.gridstackNode = origNode; // original item (left behind) is re-stored to pre dragging as the node now has drop info
@@ -1699,7 +1699,7 @@ export class GridStack {
         }
 
         // wait till we return out of the drag callback to set the new drag&resize handler or they may get messed up
-        // IFF we are still there (soe application will use as placeholder and insert their real widget instead)
+        // IFF we are still there (some application will use as placeholder and insert their real widget instead)
         window.setTimeout(() => {
           if (node.el && node.el.parentElement) this._prepareDragDropByNode(node);
         });
