@@ -1,7 +1,8 @@
 /*! jQuery UI - v1.12.1 - 2019-11-20
 * http://jqueryui.com
 * Includes: widget.js, data.js, disable-selection.js, scroll-parent.js, widgets/draggable.js, widgets/droppable.js, widgets/resizable.js, widgets/mouse.js
-* Copyright jQuery Foundation and other contributors; Licensed MIT @preserve*/
+* Copyright jQuery Foundation and other contributors; Licensed MIT
+*/
 
 (function( factory ) {
   /* [alain] we compile this in so no need to load with AMD
@@ -21,7 +22,7 @@ $.ui = $.ui || {};
 var version = $.ui.version = "1.12.1";
 
 
-/*!
+/*
  * jQuery UI Widget 1.12.1
  * http://jqueryui.com
  *
@@ -744,7 +745,7 @@ $.each( { show: "fadeIn", hide: "fadeOut" }, function( method, defaultEffect ) {
 var widget = $.widget;
 
 
-/*!
+/*
  * jQuery UI :data 1.12.1
  * http://jqueryui.com
  *
@@ -773,7 +774,7 @@ var data = $.extend( $.expr[ ":" ], {
     }
 } );
 
-/*!
+/*
  * jQuery UI Disable Selection 1.12.1
  * http://jqueryui.com
  *
@@ -809,7 +810,7 @@ var disableSelection = $.fn.extend( {
 } );
 
 
-/*!
+/*
  * jQuery UI Scroll Parent 1.12.1
  * http://jqueryui.com
  *
@@ -849,7 +850,7 @@ var scrollParent = $.fn.scrollParent = function( includeHidden ) {
 // This file is deprecated
 var ie = $.ui.ie = !!/msie [\w.]+/.exec( navigator.userAgent.toLowerCase() );
 
-/*!
+/*
  * jQuery UI Mouse 1.12.1
  * http://jqueryui.com
  *
@@ -1135,7 +1136,7 @@ var safeBlur = $.ui.safeBlur = function( element ) {
 };
 
 
-/*!
+/*
  * jQuery UI Draggable 1.12.1
  * http://jqueryui.com
  *
@@ -2365,7 +2366,7 @@ $.ui.plugin.add( "draggable", "zIndex", {
 var widgetsDraggable = $.ui.draggable;
 
 
-/*!
+/*
  * jQuery UI Droppable 1.12.1
  * http://jqueryui.com
  *
@@ -2846,7 +2847,7 @@ if ( $.uiBackCompat !== false ) {
 var widgetsDroppable = $.ui.droppable;
 
 
-/*!
+/*
  * jQuery UI Resizable 1.12.1
  * http://jqueryui.com
  *

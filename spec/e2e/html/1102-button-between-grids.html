@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>lose functionality</title>
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack.all.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>lose functionality when dragged</h1>
+    <br/>
+    <div class="grid-stack" id="right-grid">
+      <div class="grid-stack-item">
+        <div class="grid-stack-item-content" id="button1">button1</div>
+      </div>
+    </div>
+     <br/>
+    <br/>
+    <div class="grid-stack" id="left-grid">
+      <div class="grid-stack-item">
+        <div class="grid-stack-item-content" id="button2">button2</div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    GridStack.initAll({acceptWidgets: true});
+
+    function pressed1(){
+      $('.container-fluid').append("button 1 pressed ");
+    }
+    
+    function pressed2(){
+      $('.container-fluid').append("button 2 pressed ");
+    }
+    $('#button1').click(pressed1);
+    $('#button2').click(pressed2);
+  </script>
+</body>
+</html>

@@ -13,10 +13,7 @@
   <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
 
-  <script src="../src/jquery.js"></script>
-  <script src="../src/gridstack.js"></script>
-  <script src="../src/jquery-ui.js"></script>
-  <script src="../src/gridstack.jQueryUI.js"></script>
+  <script src="../dist/gridstack.all.js"></script>
 
   <style type="text/css">
     .grid-stack-item-removing {
@@ -34,21 +31,21 @@
   <h1>Advanced Demo</h1>
   <div class="row">
     <div class="col-md-2 d-none d-md-block">
-      <div id="trash" style="padding: 15px; margin-bottom: 15px;" class="text-center">
+      <div id="trash" style="padding: 5px; margin-bottom: 15px;" class="text-center">
         <div>
-          <ion-icon name="trash" style="font-size: 400%"></ion-icon>
+          <ion-icon name="trash" style="font-size: 300%"></ion-icon>
         </div>
         <div>
           <span>Drop here to remove!</span>
         </div>
       </div>
       <div class="newWidget grid-stack-item">
-        <div class="card-body grid-stack-item-content">
+        <div class="grid-stack-item-content" style="padding: 5px;">
           <div>
-            <ion-icon name="add-circle" style="font-size: 400%"></ion-icon>
+            <ion-icon name="add-circle" style="font-size: 300%"></ion-icon>
           </div>
           <div>
-            <span>Drag me in into the dashboard!</span>
+            <span>Drag me in the dashboard!</span>
           </div>
         </div>
       </div>
@@ -105,30 +102,24 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init({
+    let grid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
       ),
       resizable: {
         handles: 'e, se, s, sw, w'
       },
-      removable: '#trash',
+      acceptWidgets: true,
+      dragIn: '.newWidget',  // class that can be dragged from outside
+      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
+      removable: '#trash', // drag-out delete class
       removeTimeout: 100,
-      acceptWidgets: '.newWidget'
     });
 
     grid.on('added removed change', function(e, items) {
-      var str = '';
+      let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
-    });
-
-    // TODO: switch jquery-ui out
-    $('.newWidget').draggable({
-      revert: 'invalid',
-      scroll: false,
-      appendTo: 'body',
-      helper: 'clone'
     });
   </script>
 </body>

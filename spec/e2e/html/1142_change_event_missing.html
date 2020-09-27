@@ -5,13 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>1142 demo</title>
-
   <link rel="stylesheet" href="../../../demo/demo.css"/>
-
-  <script src="../../../dist/jquery.min.js"></script>
-  <script src="../../../dist/jquery-ui.min.js"></script>
-  <script src="../../../src/gridstack.js"></script>
-  <script src="../../../src/gridstack.jQueryUI.js"></script>
+  <script src="../../../dist/gridstack.all.js"></script>
 </head>
 <body>
   <div class="grid-stack">
@@ -22,16 +17,16 @@
   </div>
   
 <script type="text/javascript">
-  var grid = GridStack.init({float: false});
+  let grid = GridStack.init({float: false});
 
   grid.on('added removed change', function(e, items) {
-    var str = '';
+    let str = '';
     items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
     console.log(e.type + ' ' + items.length + ' items:' + str );
   });
 
   $('.grid-stack .grid-stack-item').click(function(e) {
-    var item = $(e.currentTarget).closest('.grid-stack-item');
+    let item = $(e.currentTarget).closest('.grid-stack-item');
     grid.removeWidget(item);
   });
 </script>

@@ -5,7 +5,12 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [1.1.1-dev (upcoming)](#111-dev-upcoming)
+- [3.0.0-dev](#300-dev)
+- [2.0.1 (2020-09-26)](#201-2020-09-26)
+- [2.0.0 (2020-09-07)](#200-2020-09-07)
+- [1.2.1 (2020-09-04)](#121-2020-09-04)
+- [1.2.0 (2020-08-01)](#120-2020-08-01)
+- [1.1.2 (2020-05-17)](#112-2020-05-17)
 - [1.1.1 (2020-03-17)](#111-2020-03-17)
 - [1.1.0 (2020-02-29)](#110-2020-02-29)
 - [v1.0.0 (2020-02-23)](#v100-2020-02-23)
@@ -33,12 +38,49 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 1.1.1-dev (upcoming)
+## 3.0.0-dev
+
+- TBD
+
+## 2.0.1 (2020-09-26)
+
+- fix `minWidth()`, `minHeight()`, `maxHeight()` to set node value as well [1359](https://github.com/gridstack/gridstack.js/issues/1359)
+- fix `GridStackOptions` spelling [1359](https://github.com/gridstack/gridstack.js/issues/1359)
+- fix remove window resize event when `grid.destroy()` [1369](https://github.com/gridstack/gridstack.js/issues/1369)
+- fix nested grid resize [1361](https://github.com/gridstack/gridstack.js/issues/1361)
+- fix resize with `cellHeight` '6rem' '6em' not working [1356](https://github.com/gridstack/gridstack.js/issues/1356)
+- fix preserve attributes (min/max/id/etc...) when dragging between grids [1367](https://github.com/gridstack/gridstack.js/issues/1367)
+- fix 2 drop shadows when dragging between grids [393](https://github.com/gridstack/gridstack.js/issues/393)
+
+## 2.0.0 (2020-09-07)
+
+- re-write to native Typescript, removing all JQuery from main code and API (drag&drop plugin still using jqueryui for now)
+- add `getGridItems()` to return list of HTML grid items
+- add `{dragIn | dragInOptions}` grid attributes to handle external drag&drop items
+- add `save()` and `load()` to serialize grids from JSON, saving all attributes (not just w,h,x,y) [1286](https://github.com/gridstack/gridstack.js/issues/1286)
+- add `margin` to replace `verticalMargin` which affects both dimensions in code, rather than one in code the other in CSS.
+You can now have perfect square cells (default) [723](https://github.com/gridstack/gridstack.js/issues/723)
+- fix [1299](https://github.com/gridstack/gridstack.js/pull/1299) many columns round-off error
+- fix [1102](https://github.com/gridstack/gridstack.js/issues/1102) loose functionality when they are moved to a new grid
+- add optional params to `removeWidget()` to have quiet mode (no callbacks)
+
+## 1.2.1 (2020-09-04)
+
+- fix [1341](https://github.com/gridstack/gridstack.js/pull/1341) Enable the UMD behavior for bundlers compatibility
+
+## 1.2.0 (2020-08-01)
+
+- fix [1311](https://github.com/gridstack/gridstack.js/issues/1311) domAttr is not defined
+- adds `styleInHead` option to allow for selecting older behavior (adding STYLE element to HEAD element instead of parentNode)
+- update jquery to v3.5.1
+
+## 1.1.2 (2020-05-17)
 
 - fix [1229](https://github.com/gridstack/gridstack.js/issues/1229) `staticGrid` no longer disable oneColumnMode
 - fix [1195](https://github.com/gridstack/gridstack.js/issues/1195) options broken with ember hash helper - thanks [@btecu](https://github.com/btecu)
 - fix [1250](https://github.com/gridstack/gridstack.js/issues/1250) don't remove item from another grid
 - fix [1261](https://github.com/gridstack/gridstack.js/issues/1261) `init()` clones passed options so second doesn't affect first one
+- fix [1276](https://github.com/gridstack/gridstack.js/issues/1276) `addWidget()` ignores data attributes
 
 ## 1.1.1 (2020-03-17)
 
@@ -191,7 +233,7 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 
 - update requirements to the latest versions of jQuery (v3.1.0+) and jquery-ui (v1.12.0+).
 - fix jQuery `size()` ([#486](https://github.com/gridstack/gridstack.js/issues/486)).
-- update `destroy([detachGrid])` call ([#422](https://github.com/gridstack/gridstack.js/issues/422)).
+- update `destroy([removeDOM])` call ([#422](https://github.com/gridstack/gridstack.js/issues/422)).
 - don't mutate options when calling `draggable` and `resizable`. ([#505](https://github.com/gridstack/gridstack.js/issues/505)).
 - update _notify to allow detach ([#411](https://github.com/gridstack/gridstack.js/issues/411)).
 - fix code that checks for jquery-ui ([#481](https://github.com/gridstack/gridstack.js/issues/481)).
@@ -200,7 +242,7 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 ## v0.2.5 (2016-03-02)
 
 - update names to respect js naming convention.
-- `cellHeight` and `verticalMargin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs).
+- `cellHeight` and `margin` can now be string (e.g. '3em', '20px') (Thanks to @jlowcs).
 - add `maxWidth`/`maxHeight` methods.
 - add `enableMove`/`enableResize` methods.
 - fix window resize issue [#331](https://github.com/gridstack/gridstack.js/issues/331)).
@@ -213,7 +255,7 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 - add `setAnimation` method to API
 - add `column` method ([#227](https://github.com/gridstack/gridstack.js/issues/227))
 - add `removable`/`removeTimeout` *(experimental)*
-- add `detachGrid` parameter to `destroy` method ([#216](https://github.com/gridstack/gridstack.js/issues/216)) (thanks @jhpedemonte)
+- add `removeDOM` parameter to `destroy` method ([#216](https://github.com/gridstack/gridstack.js/issues/216)) (thanks @jhpedemonte)
 - add `useOffset` parameter to `getCellFromPixel` method ([#237](https://github.com/gridstack/gridstack.js/issues/237))
 - add `minWidth`, `maxWidth`, `minHeight`, `maxHeight`, `id` parameters to `addWidget` ([#188](https://github.com/gridstack/gridstack.js/issues/188))
 - add `added` and `removed` events for when a widget is added or removed, respectively. ([#54](https://github.com/gridstack/gridstack.js/issues/54))

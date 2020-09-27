@@ -11,11 +11,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="../../../demo/demo.css"/>
-
-  <script src="../../../dist/jquery.min.js"></script>
-  <script src="../../../dist/jquery-ui.min.js"></script>
-  <script src="../../../src/gridstack.js"></script>
-  <script src="../../../src/gridstack.jQueryUI.js"></script>
+  <script src="../../../dist/gridstack.all.js"></script>
 
   <style type="text/css">
     .upper .grid-stack-item-content {
@@ -45,9 +41,9 @@
   </div>
 
   <script type="text/javascript">
-    var options = {
+    let options = {
       cellHeight: 80,
-      verticalMargin: 10,
+      margin: 5,
       float: true
     };
     GridStack.init(options);
