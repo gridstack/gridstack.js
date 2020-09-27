@@ -1,4 +1,4 @@
-// types.ts 2.0.0-dev @preserve
+// types.ts 3.0.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
