@@ -106,13 +106,42 @@ export class Utils {
     if (!el || !el.parentNode) return;
     el.parentNode.removeChild(el);
   }
+  static getAllSelectors(sheet: CSSStyleSheet) { 
+    var ret = [];
+    var rules = sheet.cssRules;
+    // console.log(JSON.stringify(rules));
+    for(var i = 0; i < rules.length; i++) {
+      var rule = rules[i];
+      // console.log(JSON.stringify(rules));
+        var index = rule.cssText.indexOf(" {");
+        if(index >0){
+          var sel = rule.cssText.substr(0,index);
+          ret.push(sel);
+        }
+    }
+    return ret;
+}
 
+static hasCSSRule(sheet: CSSStyleSheet, selector: string) { 
+  // console.log("selector :|"+selector+"|");
+    var selectors = Utils.getAllSelectors(sheet);
+    // console.log(JSON.stringify(selectors));
+    for(var i = 0; i < selectors.length; i++) {
+      if(selectors[i] == selector){
+        //console.log("found |"+selectors[i] +"| et |"+ selector+"|");
+        return true;
+      }
+    }
+    return false;
+}
   /** inserts a CSS rule */
   static addCSSRule(sheet: CSSStyleSheet, selector: string, rules: string) {
-    if (typeof sheet.addRule === 'function') {
-      sheet.addRule(selector, rules);
-    } else if (typeof sheet.insertRule === 'function') {
-      sheet.insertRule(`${selector}{${rules}}`);
+    if(!Utils.hasCSSRule(sheet, selector)){
+      if (typeof sheet.addRule === 'function') {
+        sheet.addRule(selector, rules);
+      } else if (typeof sheet.insertRule === 'function') {
+        sheet.insertRule(`${selector}{${rules}}`);
+      }
     }
   }
 
