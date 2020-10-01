@@ -109,10 +109,8 @@ export class Utils {
   static getAllSelectors(sheet: CSSStyleSheet) { 
     var ret = [];
     var rules = sheet.cssRules;
-    // console.log(JSON.stringify(rules));
     for(var i = 0; i < rules.length; i++) {
       var rule = rules[i];
-      // console.log(JSON.stringify(rules));
         var index = rule.cssText.indexOf(" {");
         if(index >0){
           var sel = rule.cssText.substr(0,index);
@@ -123,12 +121,9 @@ export class Utils {
 }
 
 static hasCSSRule(sheet: CSSStyleSheet, selector: string) { 
-  // console.log("selector :|"+selector+"|");
     var selectors = Utils.getAllSelectors(sheet);
-    // console.log(JSON.stringify(selectors));
     for(var i = 0; i < selectors.length; i++) {
       if(selectors[i] == selector){
-        //console.log("found |"+selectors[i] +"| et |"+ selector+"|");
         return true;
       }
     }
