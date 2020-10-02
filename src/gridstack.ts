@@ -255,7 +255,7 @@ export class GridStack {
 
     this._setStaticClass();
 
-    this._initStyles();
+    this._initStyles(true);
 
     this.engine = new GridStackEngine(this.opts.column, (cbNodes, removeDOM = true) => {
       let maxHeight = 0;
@@ -268,7 +268,7 @@ export class GridStack {
           this._writeAttrs(el, n.x, n.y, n.width, n.height);
         }
       });
-      this._updateStyles(maxHeight + 10);
+      this._updateStyles(false, maxHeight + 10);
     },
     this.opts.float,
     this.opts.maxRow);
@@ -446,7 +446,7 @@ export class GridStack {
     this.opts.cellHeight = data.height;
 
     if (update) {
-      this._updateStyles();
+      this._updateStyles(true);
     }
     this._resizeNestedGrids(this.el);
     return this;
@@ -997,7 +997,7 @@ export class GridStack {
     this.opts.marginLeft =
     this.opts.marginRight =
     this.opts.margin = data.height;
-    this._updateStyles();
+    this._updateStyles(true);
 
     return this;
   }
@@ -1071,29 +1071,31 @@ export class GridStack {
   }
 
   /** @internal */
-  private _initStyles(): GridStack {
-    if (this._stylesId) {
-      Utils.removeStylesheet(this._stylesId);
-    }
-    this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
-    // insert style to parent (instead of 'head' by default) to support WebComponent
-    let styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
-    this._styles = Utils.createStylesheet(this._stylesId, styleLocation);
-    if (this._styles !== null) {
-      this._styles._max = 0;
+  private _initStyles(doForceRecreate: boolean): GridStack {
+    if (!this._stylesId || doForceRecreate) {
+      if (this._stylesId) {
+        Utils.removeStylesheet(this._stylesId);
+      }
+      this._stylesId = 'gridstack-style-' + (Math.random() * 100000).toFixed();
+      // insert style to parent (instead of 'head' by default) to support WebComponent
+      let styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
+      this._styles = Utils.createStylesheet(this._stylesId, styleLocation);
+      if (this._styles !== null) {
+        this._styles._max = 0;
+      }
     }
     return this;
   }
 
   /** @internal updated the CSS styles for row based layout and initial margin setting */
-  private _updateStyles(maxHeight?: number): GridStack {
+  private _updateStyles(doForceRecreate: boolean, maxHeight?: number): GridStack {
     if (!this._styles) {
       return this;
     }
     if (maxHeight === undefined) {
       maxHeight = this._styles._max;
     }
-    this._initStyles();
+    this._initStyles(doForceRecreate);
     this._updateContainerHeight();
     if (!this.opts.cellHeight) { // The rest will be handled by CSS
       return this;
@@ -1808,5 +1810,5 @@ export class GridStack {
   /** @internal */
   private setColumn = obsolete(this, GridStack.prototype.column, 'setColumn', 'column', 'v0.6.4');
   /** @internal */
-  private getGridHeight =  obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
+  private getGridHeight = obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
 }

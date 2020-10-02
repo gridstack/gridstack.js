@@ -109,11 +109,11 @@ export class Utils {
 
   /** inserts a CSS rule */
   static addCSSRule(sheet: CSSStyleSheet, selector: string, rules: string) {
-    if (typeof sheet.addRule === 'function') {
-      sheet.addRule(selector, rules);
-    } else if (typeof sheet.insertRule === 'function') {
-      sheet.insertRule(`${selector}{${rules}}`);
-    }
+      if (typeof sheet.addRule === 'function') {
+        sheet.addRule(selector, rules);
+      } else if (typeof sheet.insertRule === 'function') {
+        sheet.insertRule(`${selector}{${rules}}`);
+      }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
