@@ -74,7 +74,7 @@ gridstack.js API
    * advance condition such as this mobile browser agent check:
    `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
    See [example](http://gridstack.github.io/gridstack.js/demo/advance.html)
-- `animate` - turns animation on (default: `false`)
+- `animate` - turns animation on to smooth transitions (default: `true`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight` - one cell height (default: `auto`). Can be:
   * an integer (px)
