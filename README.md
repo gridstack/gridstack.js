@@ -382,6 +382,8 @@ v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes a
 
 3. `oneColumnMode` would trigger when `window.width` < 768px by default. We now check for grid width instead (more correct and supports nesting). You might need to adjust grid `minWidth` or `disableOneColumnMode`.
 
+**Note:** 2.x no longer support legacy IE11 and older due to using more compact ES6 output and typecsript native code. You will need to stay at 1.x
+
 Changes
 =====
 
