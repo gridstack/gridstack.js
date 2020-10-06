@@ -41,6 +41,7 @@ Change log
 ## 2.0.1-dev
 
 - fix `animate` to not re-create CSS style each time (should be faster too) and made it default now since so much nicer. pass `{animate: false}` grid options if you want instant again [937](https://github.com/gridstack/gridstack.js/issues/937)
+- fix `resizable: { handles: ...}` forcing `alwaysShowResizeHandle` behavior [1373](https://github.com/gridstack/gridstack.js/issues/1373)
 
 ## 2.0.1 (2020-09-26)
 
