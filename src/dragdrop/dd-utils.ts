@@ -36,7 +36,7 @@ export class DDUtils {
       if (!isWaiting) {
         callback(...args);
         isWaiting = true;
-        setTimeout(function () { isWaiting = false; }, delay);
+        setTimeout(() => isWaiting = false, delay);
       }
     }
   }
