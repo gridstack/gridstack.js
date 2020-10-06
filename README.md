@@ -96,8 +96,8 @@ alternatively in html
 or using CDN (minimized):
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack.all.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.1/dist/gridstack.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.1/dist/gridstack.all.js"></script>
 ```
 
 .map files are included for debugging purposes.
@@ -194,7 +194,7 @@ GridStack.init( {column: N} );
 
 2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.0/dist/gridstack-extra.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.1/dist/gridstack-extra.css"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
