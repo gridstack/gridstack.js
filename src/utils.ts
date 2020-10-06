@@ -8,6 +8,11 @@
 
 import { GridStackWidget, GridStackNode, GridStackOptions, numberOrString } from './types';
 
+export interface HeightData {
+  height: number;
+  unit: string;
+}
+
 /** checks for obsolete method names */
 export function obsolete(self, f, oldName: string, newName: string, rev: string) {
   let wrapper = (...args) => {
@@ -132,7 +137,7 @@ export class Utils {
     return (value === null || value.length === 0) ? null : Number(value);
   }
 
-  static parseHeight(val: numberOrString) {
+  static parseHeight(val: numberOrString): HeightData {
     let height: number;
     let heightUnit = 'px';
     if (typeof val === 'string') {
@@ -145,15 +150,20 @@ export class Utils {
     } else {
       height = val;
     }
-    return { height: height, unit: heightUnit }
+    return { height, unit: heightUnit }
   }
 
-  static defaults(target, ...sources) {
+  /** copies unset fields in target to use the given default sources values */
+  static defaults(target, ...sources): {} {
 
-    sources.forEach(function (source) {
-      for (let prop in source) {
-        if (Object.prototype.hasOwnProperty.call(source, prop) && (target[prop] === null || target[prop] === undefined)) {
-          target[prop] = source[prop];
+    sources.forEach(source => {
+      for (const key in source) {
+        if (!source.hasOwnProperty(key)) { return; }
+        if (target[key] === null || target[key] === undefined) {
+          target[key] = source[key];
+        } else if (typeof source[key] === 'object' && typeof target[key] === 'object') {
+          // property is an object, recursively add it's field over... #1373
+          this.defaults(target[key], source[key]);
         }
       }
     });
@@ -161,7 +171,8 @@ export class Utils {
     return target;
   }
 
-  static clone(target: {}) {
+  /** makes a shallow copy of the passed json struct */
+  static clone(target: {}): {} {
     return {...target}; // was $.extend({}, target)
   }
 
@@ -177,11 +188,11 @@ export class Utils {
   static throttle(callback: () => void, delay: number) {
     let isWaiting = false;
 
-    return function (...args) {
+    return (...args) => {
       if (!isWaiting) {
         callback.apply(this, args);
         isWaiting = true;
-        setTimeout(function () { isWaiting = false; }, delay);
+        setTimeout(() => isWaiting = false, delay);
       }
     }
   }

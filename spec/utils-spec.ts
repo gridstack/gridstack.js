@@ -104,6 +104,10 @@ describe('gridstack utils', function() {
       expect(src).toEqual({x: 1, y: 2, width: undefined});
       expect(Utils.defaults(src, {x: 10, width: 3})).toEqual({x: 1, y: 2, width: 3});
       expect(Utils.defaults(src, {height: undefined})).toEqual({x: 1, y: 2, width: 3, height: undefined});
+      src = {x: 1, y: 2, sub: {foo: 1, two: 2}};
+      expect(src).toEqual({x: 1, y: 2, sub: {foo: 1, two: 2}});
+      expect(Utils.defaults(src, {x: 10, width: 3})).toEqual({x: 1, y: 2, width: 3, sub: {foo: 1, two: 2}});
+      expect(Utils.defaults(src, {sub: {three: 3}})).toEqual({x: 1, y: 2, width: 3, sub: {foo: 1, two: 2, three: 3}});
     });
   });
 

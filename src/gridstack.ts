@@ -186,7 +186,7 @@ export class GridStack {
       staticGrid: false,
       _class: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
       animate: true,
-      alwaysShowResizeHandle: false,
+      alwaysShowResizeHandle: opts.alwaysShowResizeHandle || false,
       resizable: {
         autoHide: !(opts.alwaysShowResizeHandle || false),
         handles: 'se'
