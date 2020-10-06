@@ -63,6 +63,7 @@ You can now have perfect square cells (default) [723](https://github.com/gridsta
 - fix [1299](https://github.com/gridstack/gridstack.js/pull/1299) many columns round-off error
 - fix [1102](https://github.com/gridstack/gridstack.js/issues/1102) loose functionality when they are moved to a new grid
 - add optional params to `removeWidget()` to have quiet mode (no callbacks)
+- drop support for IE11 due to more compact ES6 output and newer TS code
 
 ## 1.2.1 (2020-09-04)
 
