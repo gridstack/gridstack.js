@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gridstack.js Vue integration example</title>
+  </head>
+  <body>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/gridstack@2.0.1/dist/gridstack.css"
+    />
+    <script src="https://unpkg.com/gridstack@2.0.1/dist/gridstack.all.js"></script>
+    <main id="app">
+      <h1>How to integrate GridStack.js with Vue.js</h1>
+      <p>
+        As with any virtualDOM-based framework, you need to check if Vue has
+        rendered the DOM (or any updates to it) <strong>before</strong> you
+        initialize GridStack or call its methods. As a basic example, check this
+        component's <code>mounted</code> hook.
+      </p>
+      <p>
+        If your app requires more complex render logic than the inline template
+        in `addWidget`, consider
+        <a
+          href="https://github.com/gridstack/gridstack.js/tree/develop/doc#makewidgetel"
+          >makeWidget</a
+        >
+        to let Vue deal with DOM rendering.
+      </p>
+      <button type="button" @click="addNewWidget()">Add Widget</button> {{ info
+      }}
+      <section class="grid-stack"></section>
+    </main>
+    <script type="module">
+      import { createApp } from "https://unpkg.com/vue@3.0.0/dist/vue.esm-browser.js";
+
+      createApp({
+        data() {
+          return {
+            count: 0,
+            info: "",
+          };
+        },
+        items: [
+          { x: 2, y: 1, width: 1, height: 2 },
+          { x: 2, y: 4, width: 3, height: 1 },
+          { x: 4, y: 2, width: 1, height: 1 },
+          { x: 3, y: 1, width: 1, height: 2 },
+          { x: 0, y: 6, width: 2, height: 2 },
+        ],
+        watch: {
+          /**
+           * Clear the info text after a two second timeout. Clears previous timeout first.
+           */
+          info: function (newVal, oldVal) {
+            if (newVal.length === 0) return;
+
+            window.clearTimeout(this.timerId);
+            this.timerId = window.setTimeout(() => {
+              this.info = "";
+            }, 2000);
+          },
+        },
+        mounted: function () {
+          // Provides access to the GridStack instance across the Vue component.
+          this.grid = GridStack.init({
+            float: true,
+            cellHeight: "70px",
+            minRow: 1,
+          });
+
+          // Use an arrow function so that `this` is bound to the Vue instance. Alternatively, use a custom Vue directive on the `.grid-stack` container element: https://vuejs.org/v2/guide/custom-directive.html
+          this.grid.on("dragstop", (event, element) => {
+            const node = element.gridstackNode;
+            // `this` will only access your Vue instance if you used an arrow function, otherwise `this` binds to window scope. see https://hacks.mozilla.org/2015/06/es6-in-depth-arrow-functions/
+            this.info = `you just dragged node #${node.id} to ${node.x},${node.y} – good job!`;
+          });
+        },
+        methods: {
+          addNewWidget: function () {
+            const node = this.$options.items[this.count] || {
+              x: Math.round(12 * Math.random()),
+              y: Math.round(5 * Math.random()),
+              width: Math.round(1 + 3 * Math.random()),
+              height: Math.round(1 + 3 * Math.random()),
+            };
+            this.count++;
+            this.grid.addWidget(
+              `<div><div class="grid-stack-item-content">${this.count}</div></div>`,
+              { id: this.count, ...node }
+            );
+          },
+        },
+      }).mount("#app");
+    </script>
+    <style>
+      /* Optional styles for demos */
+      .btn-primary {
+        color: #fff;
+        background-color: #007bff;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .grid-stack {
+        background: #fafad2;
+      }
+
+      .grid-stack-item-content {
+        color: #2c3e50;
+        text-align: center;
+        background-color: #18bc9c;
+      }
+    </style>
+  </body>
+</html>
