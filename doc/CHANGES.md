@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [2.0.1-dev](#201-dev)
+- [2.0.2-dev](#202-dev)
+- [2.0.2 (2020-10-05)](#202-2020-10-05)
 - [2.0.1 (2020-09-26)](#201-2020-09-26)
 - [2.0.0 (2020-09-07)](#200-2020-09-07)
 - [1.2.1 (2020-09-04)](#121-2020-09-04)
@@ -38,7 +39,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 2.0.1-dev
+## 2.0.2-dev
+
+- TBD
+
+## 2.0.2 (2020-10-05)
 
 - fix `animate` to not re-create CSS style each time (should be faster too) and made it default now since so much nicer. pass `{animate: false}` grid options if you want instant again [937](https://github.com/gridstack/gridstack.js/issues/937)
 - fix `resizable: { handles: ...}` forcing `alwaysShowResizeHandle` behavior [1373](https://github.com/gridstack/gridstack.js/issues/1373)
