@@ -1,4 +1,4 @@
-// gridstack-engine.ts 2.0.1-dev @preserve
+// gridstack-engine.ts 2.0.2-dev @preserve
 
 /**
  * https://gridstackjs.com/
