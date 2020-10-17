@@ -396,7 +396,7 @@ export class GridStack {
         if (typeof(addAndRemove) === 'function') {
           addAndRemove(w, true);
         } else {
-          this.addWidget('<div><div class="grid-stack-item-content"></div></div>', w);
+          this.addWidget(`<div><div class="grid-stack-item-content">${w.html || ''}</div></div>`, w);
         }
       }
     });
@@ -539,7 +539,7 @@ export class GridStack {
    */
   public destroy(removeDOM = true): GridStack {
     this._updateWindowResizeEvent(true);
-    this.disable();
+    this.setStatic(true); // permanently removes DD
     if (!removeDOM) {
       this.removeAll(removeDOM);
       this.el.classList.remove(this.opts._class);
@@ -586,6 +586,7 @@ export class GridStack {
    * doEnable`s value by changing the disableDrag grid option (default: true).
    */
   public enableMove(doEnable: boolean, includeNewWidgets = true): GridStack {
+    if (doEnable && this.opts.staticGrid) { return this; } // can't move a static grid!
     this.getGridItems().forEach(el => this.movable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableDrag = !doEnable;
@@ -600,6 +601,7 @@ export class GridStack {
    * doEnable`s value by changing the disableResize grid option (default: true).
    */
   public enableResize(doEnable: boolean, includeNewWidgets = true): GridStack {
+    if (doEnable && this.opts.staticGrid) { return this; } // can't size a static grid!
     this.getGridItems().forEach(el => this.resizable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableResize = !doEnable;
@@ -756,6 +758,7 @@ export class GridStack {
    * @param val if true widget will be draggable.
    */
   public movable(els: GridStackElement, val: boolean): GridStack {
+    if (val && this.opts.staticGrid) { return this; } // can't move a static grid!
     GridStack.getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) { return }
@@ -764,6 +767,7 @@ export class GridStack {
         this.dd.draggable(el, 'disable');
         el.classList.remove('ui-draggable-handle');
       } else {
+        this._prepareDragDropByNode(node); // init DD if need be
         this.dd.draggable(el, 'enable');
         el.classList.remove('ui-draggable-handle');
       }
@@ -872,7 +876,7 @@ export class GridStack {
 
       // remove our DOM data (circular link) and drag&drop permanently
       delete el.gridstackNode;
-      this.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+      this.dd.remove(el);
 
       this.engine.removeNode(node, removeDOM, triggerEvent);
 
@@ -895,7 +899,7 @@ export class GridStack {
     // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
     this.engine.nodes.forEach(n => {
       delete n.el.gridstackNode;
-      this.dd.draggable(n.el, 'destroy').resizable(n.el, 'destroy');
+      this.dd.remove(n.el);
     });
     this.engine.removeAll(removeDOM);
     this._triggerRemoveEvent();
@@ -924,6 +928,7 @@ export class GridStack {
    * @param val  if true widget will be resizable.
    */
   public resizable(els: GridStackElement, val: boolean): GridStack {
+    if (val && this.opts.staticGrid) { return this; } // can't resize a static grid!
     GridStack.getElements(els).forEach(el => {
       let node = el.gridstackNode;
       if (!node) { return; }
@@ -931,6 +936,7 @@ export class GridStack {
       if (node.noResize) {
         this.dd.resizable(el, 'disable');
       } else {
+        this._prepareDragDropByNode(node); // init DD if need be
         this.dd.resizable(el, 'enable');
       }
     });
@@ -951,13 +957,19 @@ export class GridStack {
   }
 
   /**
-   * Toggle the grid static state. Also toggle the grid-stack-static class.
-   * @param staticValue if true the grid become static.
+   * Toggle the grid static state, which permanently removes/add Drag&Drop support, unlike disable()/enable() that just turns it off/on.
+   * Also toggle the grid-stack-static class.
+   * @param val if true the grid become static.
    */
-  public setStatic(staticValue: boolean): GridStack {
-    this.opts.staticGrid = (staticValue === true);
-    this.enableMove(!staticValue);
-    this.enableResize(!staticValue);
+  public setStatic(val: boolean): GridStack {
+    if (this.opts.staticGrid === val) { return this; }
+    this.opts.staticGrid = val;
+    // either delete Drag&drop or initialize it
+    if (val) {
+      this.getGridItems().forEach(el => this.dd.remove(el));
+    } else {
+      this.engine.nodes.forEach(n => this._prepareDragDropByNode(n));
+    }
     this._setStaticClass();
     return this;
   }
@@ -1191,6 +1203,12 @@ export class GridStack {
 
   /** @internal prepares the element for drag&drop **/
   private _prepareDragDropByNode(node: GridStackNode): GridStack {
+    // check if init already done or not needed (static/disabled)
+    if (node._initDD || this.opts.staticGrid ||
+      ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
+      return;
+    }
+
     // variables used/cashed between the 3 start/move/end methods, in addition to node passed above
     let cellWidth: number;
     let cellHeight: number;
@@ -1304,7 +1322,7 @@ export class GridStack {
           gridToNotify._gsEventHandler[event.type](event, target);
         }
         gridToNotify.engine.removedNodes.push(node);
-        gridToNotify.dd.draggable(el, 'destroy').resizable(el, 'destroy');
+        gridToNotify.dd.remove(el);
         delete el.gridstackNode; // hint we're removing it next and break circular link
         gridToNotify._triggerRemoveEvent();
         if (el.parentElement) {
@@ -1350,16 +1368,14 @@ export class GridStack {
         stop: onEndMoving,
         resize: dragOrResize
       });
+    node._initDD = true; // we've set DD support now
 
     if (node.noMove || this.opts.disableDrag || this.opts.staticGrid) {
       this.dd.draggable(el, 'disable');
     }
-
     if (node.noResize || this.opts.disableResize || this.opts.staticGrid) {
       this.dd.resizable(el, 'disable');
     }
-
-    this._writeAttr(el, node);
     return this;
   }
 
@@ -1379,7 +1395,7 @@ export class GridStack {
     let node = this._readAttr(el, { el: el, grid: this });
     node = this.engine.addNode(node, triggerAddEvent);
     el.gridstackNode = node;
-
+    this._writeAttr(el, node);
     this._prepareDragDropByNode(node);
     return this;
   }
@@ -1474,7 +1490,7 @@ export class GridStack {
   private _setStaticClass(): GridStack {
     let staticClassName = 'grid-stack-static';
 
-    if (this.opts.staticGrid === true) {
+    if (this.opts.staticGrid) {
       this.el.classList.add(staticClassName);
     } else {
       this.el.classList.remove(staticClassName);
@@ -1683,9 +1699,7 @@ export class GridStack {
           el = el.cloneNode(true) as GridItemHTMLElement;
         } else {
           el.remove(); // reduce flicker as we change depth here, and size further down
-          this.dd
-            .draggable(el, 'destroy')
-            .resizable(el, 'destroy');
+          this.dd.remove(el);
         }
         el.gridstackNode = node;
         node.el = el;
