@@ -31,8 +31,7 @@
     let grid = GridStack.init(options);
 
     addNewWidget = function() {
-      grid.addWidget('<div><div class="grid-stack-item-content">' + count + '</div></div>', {id: count});
-      count++
+      grid.addWidget({content: String(count++)});
     };
 
     grid.batchUpdate();

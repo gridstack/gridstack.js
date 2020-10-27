@@ -68,8 +68,8 @@
         width: Math.round(1 + 3 * Math.random()),
         height: Math.round(1 + 3 * Math.random())
       };
-      grid.addWidget('<div><div class="grid-stack-item-content"><button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>'
-        + count++ + (n.text ? n.text : '') + '</div></div>', n);
+      n.content = '<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>' + count++ + (n.text ? n.text : '');
+      grid.addWidget(n);
     };
 
     function column(n) {

@@ -101,18 +101,14 @@
     let items = [
       {x: 0, y: 0, width: 2, height: 2},
       {x: 3, y: 1, width: 1, height: 2},
-      {x: 4, y: 1, width: 1, height: 1},
-      {x: 2, y: 3, width: 3, height: 1, maxWidth: 3, id: 'special', text: 'has maxWidth=3'},
-      {x: 2, y: 5, width: 1, height: 1}
+      {x: 4, y: 1, width: 1},
+      {x: 2, y: 3, width: 3, maxWidth: 3, id: 'special', content: 'has maxWidth=3'},
+      {x: 2, y: 5, width: 1}
     ];
 
     grids.forEach(function (grid, i) {
       addEvents(grid, i);
-      grid.batchUpdate();
-      items.forEach(function (node) {
-        grid.addWidget('<div><div class="grid-stack-item-content">' + (node.text? node.text : '') + '</div></div>', node);
-      });
-      grid.commit();
+      grid.load(items);
     });
 
     function toggleFloat(button, i) {

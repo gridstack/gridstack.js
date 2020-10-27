@@ -318,32 +318,47 @@ export class GridStack {
    *
    * @example
    * let grid = GridStack.init();
-   * grid.addWidget('<div><div class="grid-stack-item-content">hello</div></div>', {width: 3});
+   * grid.addWidget({width: 3, content: 'hello'});
+   * grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {width: 3});
    *
-   * @param el html element or string definition to add
-   * @param options widget position/size options (optional) - see GridStackWidget
+   * @param el html element, or string definition, or GridStackWidget (which can have content string as well) to add
+   * @param options widget position/size options (optional, and ignore if first param is already option) - see GridStackWidget
    */
-  public addWidget(el: GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
+  public addWidget(els?: GridStackWidget | GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
 
     // support legacy call for now ?
     if (arguments.length > 2) {
-      console.warn('gridstack.ts: `addWidget(el, x, y, width...)` is deprecated. Use `addWidget(el, {x, y, width,...})`. It will be removed soon');
+      console.warn('gridstack.ts: `addWidget(el, x, y, width...)` is deprecated. Use `addWidget({x, y, width, content, ...})`. It will be removed soon');
       // eslint-disable-next-line prefer-rest-params
       let a = arguments, i = 1,
         opt: GridStackWidget = { x:a[i++], y:a[i++], width:a[i++], height:a[i++], autoPosition:a[i++],
           minWidth:a[i++], maxWidth:a[i++], minHeight:a[i++], maxHeight:a[i++], id:a[i++] };
-      return this.addWidget(el, opt);
+      return this.addWidget(els, opt);
     }
 
-    if (typeof el === 'string') {
+    function isGridStackWidget(w: GridStackWidget): w is GridStackWidget { // https://medium.com/ovrsea/checking-the-type-of-an-object-in-typescript-the-type-guards-24d98d9119b0
+      return w.x !== undefined || w.y !== undefined || w.width !== undefined || w.height !== undefined || w.content !== undefined ? true : false;
+    }
+
+    let el: HTMLElement;
+    if (typeof els === 'string') {
       let doc = document.implementation.createHTMLDocument();
-      doc.body.innerHTML = el;
+      doc.body.innerHTML = els;
       el = doc.body.children[0] as HTMLElement;
+    } else if (arguments.length === 0 || arguments.length === 1 && isGridStackWidget(els)) {
+      let content = els ? (els as GridStackWidget).content || '' : '';
+      options = els;
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = `<div class="grid-stack-item"><div class="grid-stack-item-content">${content}</div></div>`;
+      el = doc.body.children[0] as HTMLElement;
+    } else {
+      el = els as HTMLElement;
     }
 
     // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
     // as the actual value are filled in when _prepareElement() calls el.getAttribute('data-gs-xyz) before adding the node.
     if (options) {
+      options = {...options};  // make a copy before we modify in case caller re-uses it
       // make sure we load any DOM attributes that are not specified in passed in options (which override)
       let domAttr = this._readAttr(el);
       Utils.defaults(options, domAttr);
@@ -356,7 +371,21 @@ export class GridStack {
   }
 
   /** saves the current layout returning a list of widgets for serialization */
-  public save(): GridStackWidget[] { return this.engine.save(); }
+  public save(saveContent = true): GridStackWidget[] {
+    let list = this.engine.save(saveContent);
+    // check for HTML content as well
+    if (saveContent) {
+      list.forEach(n => {
+        if (n.el) {
+          let sub = n.el.querySelector('.grid-stack-item-content');
+          n.content = sub ? sub.innerHTML : undefined;
+          if (!n.content) delete n.content;
+          delete n.el;
+        }
+      });
+    }
+    return list;
+  }
 
   /**
    * load the widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
@@ -396,7 +425,7 @@ export class GridStack {
         if (typeof(addAndRemove) === 'function') {
           addAndRemove(w, true);
         } else {
-          this.addWidget(`<div><div class="grid-stack-item-content">${w.html || ''}</div></div>`, w);
+          this.addWidget(w);
         }
       }
     });
@@ -1030,7 +1059,7 @@ export class GridStack {
    *
    * @example
    * if (grid.willItFit(newNode.x, newNode.y, newNode.width, newNode.height, newNode.autoPosition)) {
-   *   grid.addWidget(newNode.el, newNode);
+   *   grid.addWidget(newNode);
    * } else {
    *   alert('Not enough free space to place the widget');
    * }

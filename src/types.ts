@@ -204,8 +204,8 @@ export interface GridStackWidget {
   resizeHandles?: string;
   /** value for `data-gs-id` stored on the widget (default?: undefined) */
   id?: numberOrString;
-  /** html to append inside the content */
-  html?: string;
+  /** html to append inside as content */
+  content?: string;
 }
 
 /** Drag&Drop resize options */
