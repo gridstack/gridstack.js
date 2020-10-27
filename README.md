@@ -344,12 +344,13 @@ grid.on('added', function(e, items) {/* items contains info */});
 var grid = el.gridstack; // where el = document.querySelector('.grid-stack') or other ways...
 ```
 Other changes
-```
+
+```js
 `GridStackUI` --> `GridStack`
 `GridStackUI.GridStackEngine` --> `GridStack.Engine`
-`grid.container` (jquery grid wrapper) --> `grid.el` (grid DOM element)
+`grid.container` (jquery grid wrapper) --> `grid.el` // (grid DOM element)
 `grid.grid` (GridStackEngine) --> `grid.engine`
-`grid.setColumn(N)` --> `grid.column(N)` and new `grid.column()` to get value, old API still supported though
+`grid.setColumn(N)` --> `grid.column(N)` and `grid.column()` // to get value, old API still supported though
 ```
 
 Recommend looking at the [many samples](./demo) for more code examples.

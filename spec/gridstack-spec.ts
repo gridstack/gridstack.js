@@ -252,12 +252,7 @@ describe('gridstack', function() {
       };
       let grid = GridStack.init(options);
       let items = $('.grid-stack-item');
-      grid.column(10, false);
-      expect(grid.getColumn()).toBe(10);
-      for (let j = 0; j < items.length; j++) {
-        expect(parseInt($(items[j]).attr('data-gs-y'), 10)).toBe(0);
-      }
-      grid.column(9, true);
+      grid.column(9);
       expect(grid.getColumn()).toBe(9);
       for (let j = 0; j < items.length; j++) {
         expect(parseInt($(items[j]).attr('data-gs-y'), 10)).toBe(0);
@@ -268,7 +263,28 @@ describe('gridstack', function() {
         expect(parseInt($(items[j]).attr('data-gs-y'), 10)).toBe(0);
       }
     });
-    it('should change column number and relayout items', function() {
+    it('no sizing, no moving', function() {
+      let grid = GridStack.init({column: 12});
+      let items = $('.grid-stack-item');
+      grid.column(8, 'none');
+      expect(grid.getColumn()).toBe(8);
+      for (let j = 0; j < items.length; j++) {
+        expect(parseInt($(items[j]).attr('data-gs-width'), 10)).toBe(4);
+        expect(parseInt($(items[j]).attr('data-gs-y'), 10)).toBe(0);
+      }
+    });
+    it('no sizing, but moving down', function() {
+      let grid = GridStack.init({column: 12});
+      let items = $('.grid-stack-item');
+      grid.column(7, 'none');
+      expect(grid.getColumn()).toBe(7);
+      for (let j = 0; j < items.length; j++) {
+        expect(parseInt($(items[j]).attr('data-gs-width'), 10)).toBe(4);
+      }
+      expect(parseInt($(items[0]).attr('data-gs-y'), 10)).toBe(0);
+      expect(parseInt($(items[1]).attr('data-gs-y'), 10)).toBe(2);
+    });
+    it('should change column number and re-layout items', function() {
       let options = {
         column: 12,
         float: true

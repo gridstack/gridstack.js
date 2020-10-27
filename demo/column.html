@@ -15,6 +15,15 @@
     <h1>column() grid demo</h1>
     <div><span>Number of Columns:</span> <span id="column-text">12</span></div>
     <div>
+      <label>Choose re-layout:</label>
+      <select onchange="layout = this.value">
+        <option value="moveScale">move + scale</option>
+        <option value="move">move</option>
+        <option value="scale">scale</option>
+        <option value="none">none</option>
+      </select>
+    </div>
+    <div>
       <a onClick="addWidget()" class="btn btn-primary" href="#">Add Widget</a>
       <a onClick="setOneColumn(false)" class="btn btn-primary" href="#">1 Column</a>
       <a onClick="setOneColumn(true)" class="btn btn-primary" href="#">1 Column DOM</a>
@@ -33,6 +42,7 @@
   <script type="text/javascript">
     let grid = GridStack.init({float: true});
     let text = document.querySelector('#column-text');
+    let layout = 'moveScale';
 
     grid.on('added removed change', function(e, items) {
       let str = '';
@@ -73,12 +83,12 @@
     };
 
     function column(n) {
-      grid.column(n);
+      grid.column(n, layout);
       text.innerHTML = n;
     }
     function setOneColumn(dom) {
       grid.opts.oneColumnModeDomSort = dom;
-      grid.column(1);
+      grid.column(1, layout);
       text.innerHTML = dom ? '1 DOM' : '1';
     }
 

@@ -7,7 +7,7 @@
 */
 
 import { Utils, obsolete } from './utils';
-import { GridStackNode, GridStackWidget } from './types';
+import { GridStackNode, LayoutOptions } from './types';
 
 export type onChangeCB = (nodes: GridStackNode[], removeDOM?: boolean) => void;
 
@@ -534,8 +534,10 @@ export class GridStackEngine {
    * @param oldColumn previous number of columns
    * @param column  new column number
    * @param nodes different sorted list (ex: DOM order) instead of current list
+   * @param layout specify the type of re-layout that will happen (position, size, etc...).
+   * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public updateNodeWidths(oldColumn: number, column: number, nodes: GridStackNode[]): GridStackEngine {
+  public updateNodeWidths(oldColumn: number, column: number, nodes: GridStackNode[], layout: LayoutOptions = 'moveScale'): GridStackEngine {
     if (!this.nodes.length || oldColumn === column) { return this }
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
@@ -594,10 +596,13 @@ export class GridStackEngine {
     });
     // ...and add any extra non-cached ones
     let ratio = column / oldColumn;
+    let move = layout === 'move' || layout === 'moveScale';
+    let scale = layout === 'scale' || layout === 'moveScale';
     nodes.forEach(node => {
       if (!node) return this;
-      node.x = (column === 1 ? 0 : Math.round(node.x * ratio));
-      node.width = ((column === 1 || oldColumn === 1) ? 1 : (Math.round(node.width * ratio) || 1));
+      node.x = (column === 1 ? 0 : (move ? Math.round(node.x * ratio) : Math.min(node.x, column - 1)));
+      node.width = ((column === 1 || oldColumn === 1) ? 1 :
+        scale ? (Math.round(node.width * ratio) || 1) : (Math.min(node.width, column)));
       newNodes.push(node);
     });
 

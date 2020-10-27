@@ -13,6 +13,15 @@
     <div>
       <span>Number of Columns:</span> <span id="column-text"></span>
     </div>
+    <div>
+      <label>Choose re-layout:</label>
+      <select onchange="layout = this.value">
+        <option value="moveScale">move + scale</option>
+        <option value="move">move</option>
+        <option value="scale">scale</option>
+        <option value="none">none</option>
+      </select>
+    </div>
     <br/>
     <div class="grid-stack">
     </div>
@@ -23,23 +32,24 @@
       disableOneColumnMode: true, // will manually do 1 column
       float: true });
     let text = document.querySelector('#column-text');
+    let layout = 'moveScale';
     
     function resizeGrid() {
       let width = document.body.clientWidth;
       if (width < 700) {
-        grid.column(1);
+        grid.column(1, layout);
         text.innerHTML = 1;
       } else if (width < 850) {
-        grid.column(3);
+        grid.column(3, layout);
         text.innerHTML = 3;
       } else if (width < 950) {
-        grid.column(6);
+        grid.column(6, layout);
         text.innerHTML = 6;
       } else if (width < 1100) {
-        grid.column(8);
+        grid.column(8, layout);
         text.innerHTML = 8;
       } else {
-        grid.column(12);
+        grid.column(12, layout);
         text.innerHTML = 12;
       }
     };
