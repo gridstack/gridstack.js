@@ -137,6 +137,7 @@ You need to add `noResize` and `noMove` attributes to completely lock the widget
 - `noMove` - disable element moving
 - `resizeHandles` - sets resize handles for a specific widget.
 - `id`- (number | string) good for quick identification (for example in change event)
+- `html` - (string) html content to be added when calling `grid.load()` as content inside the item
 
 ## Item attributes
 

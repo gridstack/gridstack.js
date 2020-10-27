@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Static Grid</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack.all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Static vs can move/drag Demo</h1>
+    <div>
+      <a class="btn btn-primary" onClick="grid.setStatic(true)" href="#">Static</a>
+      <a class="btn btn-primary" onclick="grid.setStatic(false)" id="float" href="#">Editable</a>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let grid = GridStack.init({
+      float: true,
+      cellHeight: 70,
+      staticGrid: true
+    });
+    addEvents(grid);
+
+    let serializedData = [
+      {x: 0, y: 0, width: 2, height: 2, id: '0'},
+      {x: 3, y: 1, width: 1, height: 2, id: 'no_move', noMove: true, html: 'no move'},
+      {x: 4, y: 1, width: 1, height: 1, id: '2'},
+      {x: 2, y: 3, width: 3, height: 1, id: 'no_resize', noResize: true, html: 'no resize'},
+      {x: 1, y: 3, width: 1, height: 1, id: 'locked', locked: true, html: 'locked'}
+    ];
+    grid.load(serializedData, true);
+
+  </script>
+</body>
+</html>

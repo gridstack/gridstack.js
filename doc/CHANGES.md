@@ -41,7 +41,9 @@ Change log
 
 ## 2.0.2-dev
 
-- TBD
+- fix grid `static: true` to no longer add any drag&drop (even disabled) which should speed things up, and `setStatic(T/F)` will now correctly add it back/delete for items that need it only. 
+Also fixed JQ draggable warning if not initialized first [858](https://github.com/gridstack/gridstack.js/issues/858)
+- add `GridStackWidget.html` now lets you add any HTML content when calling `grid.load()`
 
 ## 2.0.2 (2020-10-05)
 

@@ -26,9 +26,9 @@ export class GridStackDDJQueryUI extends GridStackDD {
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {
     let $el: JQuery = $(el);
-    if (opts === 'disable' || opts === 'enable') {
-      $el.resizable(opts);
-    } else if (opts === 'destroy') {
+    if (opts === 'enable') {
+      $el.resizable().resizable(opts);
+    } else if (opts === 'disable' || opts === 'destroy') {
       if ($el.data('ui-resizable')) { // error to call destroy if not there
         $el.resizable(opts);
       }
@@ -47,9 +47,9 @@ export class GridStackDDJQueryUI extends GridStackDD {
 
   public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {
     let $el: JQuery = $(el);
-    if (opts === 'disable' || opts === 'enable') {
-      $el.draggable(opts);
-    } else if (opts === 'destroy') {
+    if (opts === 'enable') {
+      $el.draggable().draggable('enable');
+    } else if (opts === 'disable' || opts === 'destroy') {
       if ($el.data('ui-draggable')) { // error to call destroy if not there
         $el.draggable(opts);
       }

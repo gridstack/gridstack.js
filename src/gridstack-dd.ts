@@ -46,6 +46,15 @@ export class GridStackDD {
     this.grid = grid;
   }
 
+  /** removes any drag&drop present (called during destroy) */
+  public remove(el: GridItemHTMLElement): GridStackDD {
+    this.draggable(el, 'destroy').resizable(el, 'destroy');
+    if (el.gridstackNode) {
+      delete el.gridstackNode._initDD; // reset our DD init flag
+    }
+    return this;
+  }
+
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {
     return this;
   }
