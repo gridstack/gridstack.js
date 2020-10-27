@@ -137,7 +137,7 @@ You need to add `noResize` and `noMove` attributes to completely lock the widget
 - `noMove` - disable element moving
 - `resizeHandles` - sets resize handles for a specific widget.
 - `id`- (number | string) good for quick identification (for example in change event)
-- `html` - (string) html content to be added when calling `grid.load()` as content inside the item
+- `content` - (string) html content to be added when calling `grid.load()/addWidget()` as content inside the item
 
 ## Item attributes
 
@@ -254,21 +254,23 @@ grid.on('resizestop', function(event: Event, el: GridItemHTMLElement) {
 
 ## API
 
-### addWidget(el, [options])
+### addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)
 
 Creates new widget and returns it. Options is an object containing the fields x,y,width,height,etc...
 
 Parameters:
 
-- `el` - html element or string definition to add
-- `options` widget position/size options (optional) - see GridStackWidget
+- `el`: GridStackWidget | GridStackElement -  html element, or string definition, or GridStackWidget (which can have content string as well) to add
+- `options`: GridStackWidget - widget position/size options (optional, and ignore if first param is already option) - see GridStackWidget
 
 Widget will be always placed even if result height is more than actual grid height. You need to use `willItFit` method
 before calling `addWidget` for additional check.
 
 ```js
 let grid = GridStack.init();
-grid.addWidget('<div><div class="grid-stack-item-content">hello</div></div>', {width: 3});
+grid.addWidget({width: 3, content: 'hello'});
+// or
+grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {width: 3});
 ```
 
 ### batchUpdate()
@@ -499,9 +501,9 @@ Enables/Disables resizing.
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable.
 
-### save(): GridStackWidget[]
+### save(saveContent = true): GridStackWidget[]
 
-- returns the layout of the grid that can be serialized (list of item non default attributes, not just w,y,x,y but also min/max and id). See `load()`
+- returns the layout of the grid (and optionally the html content as well) that can be serialized (list of item non default attributes, not just w,y,x,y but also min/max and id). See `load()`
 - see [example](http://gridstackjs.com/demo/serialization.html)
 
 ### setAnimation(doAnimate)

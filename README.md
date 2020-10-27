@@ -112,7 +112,7 @@ creating items dynamically...
 
 // ...in your script
 var grid = GridStack.init();
-grid.addWidget('<div><div class="grid-stack-item-content">Item 1</div></div>', {width: 2});
+grid.addWidget({width: 2, content: 'item 1'});
 ```
 
 ... or creating from list
@@ -121,8 +121,8 @@ grid.addWidget('<div><div class="grid-stack-item-content">Item 1</div></div>', {
 // using serialize data instead of .addWidget()
 const serializedData = [
   {x: 0, y: 0, width: 2, height: 2},
-  {x: 2, y: 3, width: 3, height: 1},
-  {x: 1, y: 3, width: 1, height: 1}
+  {x: 2, y: 3, width: 3, content: 'item 2'},
+  {x: 1, y: 3}
 ];
 
 grid.load(serializedData);
@@ -370,12 +370,13 @@ v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes a
 
 1. In general methods that used no args (getter) vs setter can't be used in TS when the arguments differ (set/get are also not function calls so API would have changed). Instead we decided to have <b>all set methods return</b> `GridStack` to they can be chain-able (ex: `grid.float(true).cellHeight(10).column(6)`). Also legacy methods that used to take many parameters will now take a single object (typically `GridStackOptions` or `GridStackWidget`).
 
-```
+```js
 `addWidget(el, x, y, width, height)` --> `addWidget(el, {with: 2})`
-`float()` to get value --> `getFloat()`
-'cellHeight()` to get value --> `getCellHeight()`
-'verticalMargin' is now 'margin' grid options and API that applies to all 4 sides.
-'verticalMargin()` to get value --> `getMargin()`
+// Note: in 2.1.x you can now just do addWidget({with: 2, content: "text"})
+`float()` --> `getFloat()` // to get value
+`cellHeight()` --> `getCellHeight()` // to get value
+`verticalMargin` --> `margin` // grid options and API that applies to all 4 sides.
+`verticalMargin()` --> `getMargin()` // to get value
 ```
 
 2. event signatures are generic and not jquery-ui dependent anymore. `gsresizestop` has been removed as `resizestop|dragstop` are now called **after** the DOM attributes have been updated.

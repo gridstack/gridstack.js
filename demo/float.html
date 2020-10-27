@@ -35,13 +35,14 @@
     let count = 0;
 
     addNewWidget = function() {
-      let node = items[count] || {
+      let n = items[count] || {
         x: Math.round(12 * Math.random()),
         y: Math.round(5 * Math.random()),
         width: Math.round(1 + 3 * Math.random()),
         height: Math.round(1 + 3 * Math.random())
       };
-      grid.addWidget('<div><div class="grid-stack-item-content">' + count++ + '</div></div>', node);
+      n.content = String(count++);
+      grid.addWidget(n);
     };
 
     toggleFloat = function() {

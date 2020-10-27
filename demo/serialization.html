@@ -33,8 +33,8 @@
     });
 
     let serializedData = [
-      {x: 0, y: 0, width: 2, height: 2, id: '0'},
-      {x: 3, y: 1, width: 1, height: 2, id: '1'},
+      {x: 0, y: 0, width: 2, height: 2, id: '0', content: "big 2x2"},
+      {x: 3, y: 1, width: 1, height: 2, id: '1', content: "<button onclick=\"alert('clicked!')\">Press me</button>"},
       {x: 4, y: 1, width: 1, height: 1, id: '2'},
       {x: 2, y: 3, width: 3, height: 1, id: '3'},
       {x: 1, y: 3, width: 1, height: 1, id: '4'}
@@ -59,7 +59,7 @@
       if (grid.engine.nodes.length === 0) {
         // load from empty
         items.forEach(function (item) {
-          grid.addWidget('<div><div class="grid-stack-item-content">' + item.id + '</div></div>', item);
+          grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">' + item.id + '</div></div>', item);
         });
       } else {
         // else update existing nodes (instead of calling grid.removeAll())
