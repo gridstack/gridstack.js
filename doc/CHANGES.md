@@ -46,6 +46,7 @@ Also fixed JQ draggable warning if not initialized first [858](https://github.co
 - add `addWidget(opt)` now handles just passing a `GridStackWidget` which creates the default divs, simplifying your code. Old API still supported.
 - add `save(saveContent = true)` now lets you optionally save the HTML content in the node property, with load() restoring it [1418](https://github.com/gridstack/gridstack.js/issues/1418)
 - add `GridStackWidget.content` now lets you add any HTML content when calling `load()/save()` or `addWidget()` [1418](https://github.com/gridstack/gridstack.js/issues/1418)
+- add `LayoutOptions` to `column()` for multiple re-layout options, including 'none' that will preserve the x and width, until out of bound/overlap [1338](https://github.com/gridstack/gridstack.js/issues/1338)
 
 ## 2.0.2 (2020-10-05)
 

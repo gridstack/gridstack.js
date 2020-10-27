@@ -8,7 +8,7 @@
 
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils } from './utils';
-import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString } from './types';
+import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, LayoutOptions } from './types';
 import { GridStackDD } from './gridstack-dd';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -510,12 +510,13 @@ export class GridStack {
   /**
    * set the number of columns in the grid. Will update existing widgets to conform to new number of columns,
    * as well as cache the original layout so you can revert back to previous positions without loss.
-   * Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [1-11],
+   * Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [2-11],
    * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
    * @param column - Integer > 0 (default 12).
-   * @param doNotPropagate if true existing widgets will not be updated (optional)
+   * @param layout specify the type of re-layout that will happen (position, size, etc...).
+   * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public column(column: number, doNotPropagate?: boolean): GridStack {
+  public column(column: number, layout: LayoutOptions = 'moveScale'): GridStack {
     if (this.opts.column === column) { return this; }
     let oldColumn = this.opts.column;
 
@@ -531,8 +532,6 @@ export class GridStack {
     this.el.classList.add('grid-stack-' + column);
     this.opts.column = this.engine.column = column;
 
-    if (doNotPropagate === true) { return this; }
-
     // update the items now - see if the dom order nodes should be passed instead (else default to current list)
     let domNodes: GridStackNode[] = undefined; // explicitly leave not defined
     if (column === 1 && this.opts.oneColumnModeDomSort) {
@@ -542,7 +541,7 @@ export class GridStack {
       });
       if (!domNodes.length) { domNodes = undefined; }
     }
-    this.engine.updateNodeWidths(oldColumn, column, domNodes);
+    this.engine.updateNodeWidths(oldColumn, column, domNodes, layout);
 
     // and trigger our event last...
     this._triggerChangeEvent(true); // skip layout update

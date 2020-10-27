@@ -9,6 +9,10 @@
 import { GridStack } from './gridstack';
 import { GridStackDD } from './gridstack-dd';
 
+
+/** different layout options when changing # of columns and other re-layouts */
+export type LayoutOptions = 'moveScale' | 'move' | 'scale' | 'none';
+
 export type numberOrString = number | string;
 export interface GridItemHTMLElement extends HTMLElement {
   /** pointer to grid node instance */

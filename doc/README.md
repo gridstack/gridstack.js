@@ -21,13 +21,13 @@ gridstack.js API
   - [resizestart(event, el)](#resizestartevent-el)
   - [resizestop(event, el)](#resizestopevent-el)
 - [API](#api)
-  - [addWidget(el, [options])](#addwidgetel-options)
+  - [addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
   - [batchUpdate()](#batchupdate)
   - [compact()](#compact)
   - [cellHeight(val: number, update = true)](#cellheightval-number-update--true)
   - [cellWidth()](#cellwidth)
   - [commit()](#commit)
-  - [column(column, doNotPropagate)](#columncolumn-donotpropagate)
+  - [column(column: number, layout: LayoutOptions = 'moveScale')](#columncolumn-number-layout-layoutoptions--movescale)
   - [destroy([removeDOM])](#destroyremovedom)
   - [disable()](#disable)
   - [enable()](#enable)
@@ -53,7 +53,7 @@ gridstack.js API
   - [removeAll(removeDOM = true)](#removeallremovedom--true)
   - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
-  - [save(): GridStackWidget[]](#save-gridstackwidget)
+  - [save(saveContent = true): GridStackWidget[]](#savesavecontent--true-gridstackwidget)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
   - [update(el, x, y, width, height)](#updateel-x-y-width-height)
@@ -298,7 +298,7 @@ Gets current cell width (grid width / # of columns).
 
 Ends batch updates. Updates DOM nodes. You must call it after `batchUpdate()`.
 
-### column(column, doNotPropagate)
+### column(column: number, layout: LayoutOptions = 'moveScale')
 
 set/get the number of columns in the grid. Will update existing widgets to conform to new number of columns,
 as well as cache the original layout so you can revert back to previous positions without loss.
@@ -306,7 +306,9 @@ Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [2-11],
 else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
 
 - `column` - Integer > 0 (default 12), if missing it will return the current count instead.
-- `doNotPropagate` - if true existing widgets will not be updated during a set.
+- `layout` - specify the type of re-layout that will happen (position, size, etc...).
+Note: items will never be outside of the current column boundaries. default ('moveScale'). Ignored for 1 column.
+Possible values: 'moveScale' | 'move' | 'scale' | 'none'
 
 ### destroy([removeDOM])
 
