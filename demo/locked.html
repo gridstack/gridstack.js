@@ -46,7 +46,8 @@
         width: Math.round(1 + 3 * Math.random()),
         height: Math.round(1 + 3 * Math.random())
       };
-      grid.addWidget('<div><div class="grid-stack-item-content">' + (n.text ? n.text : count) + '</div></div>', n);
+      n.content = n.text ? n.text : String(count);
+      grid.addWidget(n);
       count++
     };
 

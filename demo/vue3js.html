@@ -29,16 +29,14 @@
       <section class="grid-stack"></section>
     </main>
     <script type="module">
-      import Vue from "https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.esm.browser.js";
+      import { createApp } from "https://cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.esm-browser.js";
 
-      let app = new Vue({
-        el: "#app",
-        data: {
-          // Reference to the GridStack instance to access it later
-          grid: undefined,
-          count: 0,
-          info: "",
-          timerId: undefined,
+      createApp({
+        data() {
+          return {
+            count: 0,
+            info: "",
+          };
         },
         items: [
           { x: 2, y: 1, height: 2 },
@@ -83,7 +81,7 @@
             this.grid.addWidget(node);
           },
         },
-      });
+      }).mount("#app");
     </script>
   </body>
 </html>
