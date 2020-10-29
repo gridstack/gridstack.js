@@ -7,7 +7,7 @@
   <title>Float grid demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.2/dist/gridstack.all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@2.1.0/dist/gridstack.all.js"></script>
 
 </head>
 <body>
@@ -35,13 +35,14 @@
     var count = 0;
 
     addNewWidget = function() {
-      var node = items[count] || {
+      var n = items[count] || {
         x: Math.round(12 * Math.random()),
         y: Math.round(5 * Math.random()),
         width: Math.round(1 + 3 * Math.random()),
         height: Math.round(1 + 3 * Math.random())
       };
-      grid.addWidget('<div><div class="grid-stack-item-content">' + count++ + '</div></div>', node);
+      n.content = String(count++);
+      grid.addWidget(n);
     };
 
     toggleFloat = function() {
