@@ -39,12 +39,16 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
     super.enable();
     this.el.classList.remove('ui-droppable-disabled');
     this.el.addEventListener('dragenter', this.dragEnter);
+    this.el.addEventListener('drop', this.drop);
+    this.el.addEventListener('dragleave', this.dragLeave);
   }
   disable() {
     if (this.disabled) { return; }
     super.disable();
     this.el.classList.add('ui-droppable-disabled');
     this.el.removeEventListener('dragenter', this.dragEnter);
+    this.el.removeEventListener('drop', this.drop);
+    this.el.removeEventListener('dragleave', this.dragLeave);
   }
   updateOption(opts) {
     Object.keys(opts).forEach(key => {
@@ -57,27 +61,22 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
   protected init() {
     this.el.classList.add('ui-droppable');
     this.el.addEventListener('dragenter', this.dragEnter);
-    // this.el.addEventListener('dragover', this.dragOver);
-    // this.el.addEventListener('drop', this.drop);
-    // this.el.addEventListener('dragleave', this.dragLeave);
+    this.el.addEventListener('drop', this.drop);
+    this.el.addEventListener('dragleave', this.dragLeave);
     this.setupAccept();
   }
 
   protected dragEnter = (event: DragEvent) => {
-    if (this.canDrop()) {
-      if (0 === this.count) {
-        this.dragEl = DDManager.dragElement.el;
-        this.dragEl.addEventListener('dragend', this.resetCount);
-        const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropover' });
-        if (this.option.over) {
-          this.option.over(ev, this.ui(DDManager.dragElement))
-        }
-        this.triggerEvent('dropover', ev);
-        event.preventDefault();
-        this.el.addEventListener('dragover', this.dragOver);
-        this.el.addEventListener('drop', this.drop);
-        this.el.addEventListener('dragleave', this.dragLeave);
+    if (0 === this.count && this.canDrop()) {
+      this.dragEl = DDManager.dragElement.el;
+      this.dragEl.addEventListener('dragend', this.resetCount);
+      const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropover' });
+      if (this.option.over) {
+        this.option.over(ev, this.ui(DDManager.dragElement))
       }
+      this.triggerEvent('dropover', ev);
+      this.el.addEventListener('dragover', this.dragOver);
+      event.preventDefault();
     }
     this.count++;
   }
@@ -87,17 +86,13 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
   }
   protected dragLeave = (event: DragEvent) => {
     this.count--;
-    if (this.canDrop()) {
-      if (0 === this.count) {
-        const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropout' });
-        if (this.option.out) {
-          this.option.out(ev, this.ui(DDManager.dragElement))
-        }
-        this.triggerEvent('dropout', ev);
-        this.el.removeEventListener('dragover', this.dragOver);
-        this.el.removeEventListener('drop', this.drop);
-        this.el.removeEventListener('dragleave', this.dragLeave);
+    if (0 === this.count && this.canDrop()) {
+      this.el.removeEventListener('dragover', this.dragOver);
+      const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropout' });
+      if (this.option.out) {
+        this.option.out(ev, this.ui(DDManager.dragElement))
       }
+      this.triggerEvent('dropout', ev);
       event.preventDefault();
     }
   }
