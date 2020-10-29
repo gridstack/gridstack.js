@@ -84,12 +84,13 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected setupAutoHide() {
     if (this.option.autoHide) {
       this.el.classList.add('ui-resizable-autohide');
-      this.el.addEventListener('mouseenter', this.showHandlers);
-      this.el.addEventListener('mouseleave', this.hideHandlers);
+      // use mouseover/mouseout instead of mouseenter mouseleave to get better performance;
+      this.el.addEventListener('mouseover', this.showHandlers);
+      this.el.addEventListener('mouseout', this.hideHandlers);
     } else {
       this.el.classList.remove('ui-resizable-autohide');
-      this.el.removeEventListener('mouseenter', this.showHandlers);
-      this.el.removeEventListener('mouseleave', this.hideHandlers);
+      this.el.removeEventListener('mouseover', this.showHandlers);
+      this.el.removeEventListener('mouseout', this.hideHandlers);
     }
   }
 
@@ -243,8 +244,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   destory() {
     this.removeHandlers();
     if (this.option.autoHide) {
-      this.el.removeEventListener('mouseenter', this.showHandlers);
-      this.el.removeEventListener('mouseleave', this.hideHandlers);
+      this.el.removeEventListener('mouseover', this.showHandlers);
+      this.el.removeEventListener('mouseout', this.hideHandlers);
     }
     this.el.classList.remove('ui-resizable');
     this.el = undefined;
