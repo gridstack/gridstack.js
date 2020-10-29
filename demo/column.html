@@ -16,11 +16,12 @@
     <div><span>Number of Columns:</span> <span id="column-text">12</span></div>
     <div>
       <label>Choose re-layout:</label>
-      <select onchange="layout = this.value">
+      <select onchange="setLayout(this.value)">
         <option value="moveScale">move + scale</option>
         <option value="move">move</option>
         <option value="scale">scale</option>
         <option value="none">none</option>
+        <option value="custom">custom</option>
       </select>
     </div>
     <div>
@@ -90,6 +91,17 @@
       grid.opts.oneColumnModeDomSort = dom;
       grid.column(1, layout);
       text.innerHTML = dom ? '1 DOM' : '1';
+    }
+    // dummy test method that moves items to the right each new layout... grid engine will validate those values (can't be neg or out of bounds) anyway...
+    function columnLayout(column, oldColumn, nodes, oldNodes) {
+      oldNodes.forEach(n => {
+        n.x = n.x + 1;
+        nodes.push(n);
+      });
+      oldNodes.length = 0;
+    }
+    function setLayout(name) {
+      layout = name === 'custom' ? this.columnLayout : name;
     }
 
   </script>

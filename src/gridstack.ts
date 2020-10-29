@@ -8,7 +8,7 @@
 
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils } from './utils';
-import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, LayoutOptions } from './types';
+import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, ColumnOptions } from './types';
 import { GridStackDD } from './gridstack-dd';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -516,7 +516,7 @@ export class GridStack {
    * @param layout specify the type of re-layout that will happen (position, size, etc...).
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public column(column: number, layout: LayoutOptions = 'moveScale'): GridStack {
+  public column(column: number, layout: ColumnOptions = 'moveScale'): GridStack {
     if (this.opts.column === column) { return this; }
     let oldColumn = this.opts.column;
 

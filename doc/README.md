@@ -27,7 +27,7 @@ gridstack.js API
   - [cellHeight(val: number, update = true)](#cellheightval-number-update--true)
   - [cellWidth()](#cellwidth)
   - [commit()](#commit)
-  - [column(column: number, layout: LayoutOptions = 'moveScale')](#columncolumn-number-layout-layoutoptions--movescale)
+  - [column(column: number, layout: ColumnOptions = 'moveScale')](#columncolumn-number-layout-columnoptions--movescale)
   - [destroy([removeDOM])](#destroyremovedom)
   - [disable()](#disable)
   - [enable()](#enable)
@@ -298,7 +298,7 @@ Gets current cell width (grid width / # of columns).
 
 Ends batch updates. Updates DOM nodes. You must call it after `batchUpdate()`.
 
-### column(column: number, layout: LayoutOptions = 'moveScale')
+### column(column: number, layout: ColumnOptions = 'moveScale')
 
 set/get the number of columns in the grid. Will update existing widgets to conform to new number of columns,
 as well as cache the original layout so you can revert back to previous positions without loss.
@@ -308,7 +308,9 @@ else you will need to generate correct CSS (see https://github.com/gridstack/gri
 - `column` - Integer > 0 (default 12), if missing it will return the current count instead.
 - `layout` - specify the type of re-layout that will happen (position, size, etc...).
 Note: items will never be outside of the current column boundaries. default ('moveScale'). Ignored for 1 column.
-Possible values: 'moveScale' | 'move' | 'scale' | 'none'
+Possible values: 'moveScale' | 'move' | 'scale' | 'none' | (column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void.
+A custom function option takes new/old column count, and array of new/old positions.
+Note: new list may be partially already filled if we have a partial cache of the layout at that size (items were added later). If complete cache is present this won't get called at all.
 
 ### destroy([removeDOM])
 
