@@ -11,7 +11,7 @@ import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 
 export interface DDDraggbleOpt {
   appendTo?: string | HTMLElement;
-  containment?: string | HTMLElement;
+  containment?: string | HTMLElement; // TODO: not impleament yet
   handle?: string;
   revert?: string | boolean | unknown; // TODO: not impleament yet
   scroll?: boolean; // nature support by HTML5 drag drop, can't be switch to off actually
@@ -22,7 +22,7 @@ export interface DDDraggbleOpt {
   drag?: (event?, ui?) => void;
 };
 export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<DDDraggbleOpt> {
-  static basePosition: 'fixed'| 'absolute'= 'absolute';
+  static basePosition: 'fixed' | 'absolute' = 'absolute';
   static dragEventListinerOption = DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
   static originStyleProp = ['transition', 'pointerEvents', 'position',
     'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange'];
@@ -195,8 +195,10 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
     this.helper.style.position = this.option.basePosision || DDDraggble.basePosition;
     this.helper.style.zIndex = '1000';
     setTimeout(() => {
-      this.helper.style.transition = null; // recover animation
-    }, 100);
+      if (this.helper) {
+        this.helper.style.transition = null; // recover animation
+      }
+    }, 0);
   }
 
   private removeHelperStyle() {
@@ -213,10 +215,10 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
     this.paintTimer = requestAnimationFrame(() => {
       this.paintTimer = undefined;
       const offset = this.dragOffset;
-      let containmentRect = {left: 0, top: 0};
+      let containmentRect = { left: 0, top: 0 };
       if (this.helper.style.position === 'absolute') {
-        const {left, top} = this.helperContainment.getBoundingClientRect();
-        containmentRect = {left, top};
+        const { left, top } = this.helperContainment.getBoundingClientRect();
+        containmentRect = { left, top };
       }
       this.helper.style.left = event.clientX + offset.offsetLeft - containmentRect.left + 'px';
       this.helper.style.top = event.clientY + offset.offsetTop - containmentRect.top + 'px';

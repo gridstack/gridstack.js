@@ -6,7 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 export class DDUtils {
-  static isEventSupportPassiveOption = ((()=>{
+  static isEventSupportPassiveOption = ((() => {
     let supportsPassive = false;
     let passiveTest = () => {
       // do nothing
@@ -78,10 +78,10 @@ export class DDUtils {
     }
   }
 
-  static initEvent<T>(e: DragEvent|MouseEvent, info: {type: string; target?: EventTarget}) {
+  static initEvent<T>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }) {
     const kbdProps = 'altKey,ctrlKey,metaKey,shiftKey'.split(',');
     const ptProps = 'pageX,pageY,clientX,clientY,screenX,screenY'.split(',');
-    const evt = {type: info.type};
+    const evt = { type: info.type };
     const obj = {
       button: 0,
       which: 0,
@@ -89,10 +89,10 @@ export class DDUtils {
       bubbles: true,
       cancelable: true,
       originEvent: e,
-      target: info.target? info.target : e.target
+      target: info.target ? info.target : e.target
     }
     if (e instanceof DragEvent) {
-      Object.assign(obj, {dataTransfer: e.dataTransfer});
+      Object.assign(obj, { dataTransfer: e.dataTransfer });
     }
     DDUtils.copyProps(evt, e, kbdProps);
     DDUtils.copyProps(evt, e, ptProps);
