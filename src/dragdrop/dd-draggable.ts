@@ -145,6 +145,9 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
       this.dragFollowTimer = undefined;
       return;
     } else {
+      if (this.paintTimer) {
+        cancelAnimationFrame(this.paintTimer);
+      }
       document.removeEventListener('dragover', this.dragThrottle, DDDraggble.dragEventListinerOption);
       this.el.removeEventListener('dragend', this.dragEnd);
     }
@@ -210,8 +213,13 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
     this.paintTimer = requestAnimationFrame(() => {
       this.paintTimer = undefined;
       const offset = this.dragOffset;
-      this.helper.style.left = event.clientX + offset.offsetLeft + 'px';
-      this.helper.style.top = event.clientY + offset.offsetTop + 'px';
+      let containmentRect = {left: 0, top: 0};
+      if (this.helper.style.position === 'absolute') {
+        const {left, top} = this.helperContainment.getBoundingClientRect();
+        containmentRect = {left, top};
+      }
+      this.helper.style.left = event.clientX + offset.offsetLeft - containmentRect.left + 'px';
+      this.helper.style.top = event.clientY + offset.offsetTop - containmentRect.top + 'px';
     });
   }
 
@@ -251,7 +259,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
       const testEl = document.createElement('div');
       DDUtils.addElStyles(testEl, {
         opacity: '0',
-        position: this.option.basePosision || DDDraggble.basePosition,
+        position: 'fixed',
         top: 0 + 'px',
         left: 0 + 'px',
         width: '1px',
