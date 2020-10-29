@@ -39,18 +39,12 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
     super.enable();
     this.el.classList.remove('ui-droppable-disabled');
     this.el.addEventListener('dragenter', this.dragEnter);
-    this.el.addEventListener('dragover', this.dragOver);
-    this.el.addEventListener('drop', this.drop);
-    this.el.addEventListener('dragleave', this.dragLeave);
   }
   disable() {
     if (this.disabled) { return; }
     super.disable();
     this.el.classList.add('ui-droppable-disabled');
     this.el.removeEventListener('dragenter', this.dragEnter);
-    this.el.removeEventListener('dragover', this.dragOver);
-    this.el.removeEventListener('drop', this.drop);
-    this.el.removeEventListener('dragleave', this.dragLeave);
   }
   updateOption(opts) {
     Object.keys(opts).forEach(key => {
@@ -63,9 +57,9 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
   protected init() {
     this.el.classList.add('ui-droppable');
     this.el.addEventListener('dragenter', this.dragEnter);
-    this.el.addEventListener('dragover', this.dragOver);
-    this.el.addEventListener('drop', this.drop);
-    this.el.addEventListener('dragleave', this.dragLeave);
+    // this.el.addEventListener('dragover', this.dragOver);
+    // this.el.addEventListener('drop', this.drop);
+    // this.el.addEventListener('dragleave', this.dragLeave);
     this.setupAccept();
   }
 
@@ -80,15 +74,16 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
         }
         this.triggerEvent('dropover', ev);
         event.preventDefault();
+        this.el.addEventListener('dragover', this.dragOver);
+        this.el.addEventListener('drop', this.drop);
+        this.el.addEventListener('dragleave', this.dragLeave);
       }
     }
     this.count++;
   }
   protected dragOver = (event: DragEvent) => {
-    if (this.canDrop()) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    event.preventDefault();
+    event.stopPropagation();
   }
   protected dragLeave = (event: DragEvent) => {
     this.count--;
@@ -99,6 +94,9 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
           this.option.out(ev, this.ui(DDManager.dragElement))
         }
         this.triggerEvent('dropout', ev);
+        this.el.removeEventListener('dragover', this.dragOver);
+        this.el.removeEventListener('drop', this.drop);
+        this.el.removeEventListener('dragleave', this.dragLeave);
       }
       event.preventDefault();
     }
