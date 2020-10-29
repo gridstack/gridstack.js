@@ -4,14 +4,23 @@
   <title>Responsive grid demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.2/dist/gridstack-extra.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.2/dist/gridstack.all.js"></script>
+  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@2.1.0/dist/gridstack.all.js"></script>
 </head>
 <body>
   <div>
     <h1>Responsive grid demo</h1>
     <div>
       <span>Number of Columns:</span> <span id="column-text"></span>
+    </div>
+    <div>
+      <label>Choose re-layout:</label>
+      <select onchange="layout = this.value">
+        <option value="moveScale">move + scale</option>
+        <option value="move">move</option>
+        <option value="scale">scale</option>
+        <option value="none">none</option>
+      </select>
     </div>
     <br/>
     <div class="grid-stack">
@@ -23,40 +32,37 @@
       disableOneColumnMode: true, // will manually do 1 column
       float: true });
     var text = document.querySelector('#column-text');
+    var layout = 'moveScale';
     
     function resizeGrid() {
       var width = document.body.clientWidth;
       if (width < 700) {
-        grid.column(1);
+        grid.column(1, layout);
         text.innerHTML = 1;
       } else if (width < 850) {
-        grid.column(3);
+        grid.column(3, layout);
         text.innerHTML = 3;
       } else if (width < 950) {
-        grid.column(6);
+        grid.column(6, layout);
         text.innerHTML = 6;
       } else if (width < 1100) {
-        grid.column(8);
+        grid.column(8, layout);
         text.innerHTML = 8;
       } else {
-        grid.column(12);
+        grid.column(12, layout);
         text.innerHTML = 12;
       }
     };
     
     var items = [
-      {x: 0, y: 0, width: 2, height: 2},
-      {x: 2, y: 0, width: 2, height: 1},
-      {x: 5, y: 0, width: 1, height: 1},
-      {x: 1, y: 3, width: 4, height: 1},
-      {x: 5, y: 2, width: 2, height: 1},
-      {x: 0, y: 4, width: 12, height: 1}
+      {x: 0, y: 0, width: 2, height: 2, content: '0'},
+      {x: 2, y: 0, width: 2, content: '1'},
+      {x: 5, y: 0, content: '2'},
+      {x: 1, y: 3, width: 4, content: '3'},
+      {x: 5, y: 2, width: 2, content: '4'},
+      {x: 0, y: 4, width: 12, content: '5'}
     ];
-    grid.batchUpdate();
-    items.forEach(function(node, index) {
-      grid.addWidget('<div><div class="grid-stack-item-content">' + index + '</div></div>', node);
-    });
-    grid.commit();
+    grid.load(items);
     resizeGrid();
 
     window.addEventListener('resize', function() {resizeGrid()});

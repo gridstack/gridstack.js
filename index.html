@@ -11,12 +11,16 @@
 
   <!-- Bootstrap core CSS -->
   <link href="https://bootswatch.com/4/yeti/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/gridstack@2.0.2/dist/gridstack.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/gridstack@2.1.0/dist/gridstack.min.css" rel="stylesheet" />
   <link rel="stylesheet"
     href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css" />
   <style type="text/css">
     .grid-stack-item {
       border: 0;
+    }
+    .grid-stack-item-content {
+      background-color: white;
+      text-align: center;
     }
 
     h1 {
@@ -54,7 +58,7 @@
       background-color: #cc6857;
     }
 
-    .newWidget {
+    .newWidget > .grid-stack-item-content {
       background-color: #6cad84;
     }
   </style>
@@ -79,7 +83,7 @@
           <a class="nav-link" href="#getStarted">Getting Started</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="https://github.com/gridstack/gridstack.js/tree/develop/doc" target="_blank">Docs</a>
+          <a class="nav-link" href="https://github.com/gridstack/gridstack.js/blob/develop/README.md" target="_blank">Docs</a>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="moreExamples" data-toggle="dropdown" aria-haspopup="true"
@@ -126,7 +130,7 @@
           </p>
           <hr class="my-4" />
           <p>
-            gridstack.js is a JS/Typescript library designed to help developers create
+            gridstack.js is a modern Typescript library designed to help developers create
             beautiful draggable, resizable, responsive bootstrap-friendly
             layouts with just a few lines of code.<br>
             You can create more advanced grids: allow users to persist
@@ -143,7 +147,7 @@
             <li>save/restore</li>
             <li>drag between multiple grids</li>
             <li>nested grids</li>
-            <li>external Angular, React, Ember, Knockout.js bindings and more</li>
+            <li>external Angular, Vue, React, Ember, Knockout.js bindings and more</li>
           </ul>
           <p>
             If you find this lib useful, please donate
@@ -168,72 +172,7 @@
       <div class="row">
         <div class="col-sm-12" style="padding-bottom: 25px;">
           <div style="padding: 15px; border: 1px solid white">
-            <div class="grid-stack" id="simple-grid" data-gs-animate="yes">
-              <div class="grid-stack-item card" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">1</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">
-                    2
-                  </p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="8" data-gs-y="0" data-gs-width="2" data-gs-height="2"
-                data-gs-min-width="2">
-                <div class="grid-stack-item-content card-body bg-white" style="overflow: hidden">
-                  <p class="card-text text-center" style="margin-bottom: 0">
-                    Drag me!
-                  </p>
-                  <p class="card-text text-center" style="margin-bottom: 0">
-                    <ion-icon name="hand" style="font-size: 300%"></ion-icon>
-                  </p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="10" data-gs-y="0" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">4</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="0" data-gs-y="2" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">5</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="2" data-gs-y="2" data-gs-width="2" data-gs-height="4">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">6</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="8" data-gs-y="2" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">7</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="0" data-gs-y="4" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">8</p>
-                  <p class="card-text text-center"></p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="4" data-gs-y="4" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">9</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="8" data-gs-y="4" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">10</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="10" data-gs-y="4" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">11</p>
-                </div>
-              </div>
-            </div>
+            <div class="grid-stack" id="simple-grid"></div>
           </div>
         </div>
       </div>
@@ -250,8 +189,8 @@
           <h3>Code</h3>
           <pre>
 <code class="html">
-&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/gridstack@2.0.2/dist/gridstack.min.css&quot; /&gt;
-&lt;script src=&quot;https://cdn.jsdelivr.net/npm/gridstack@2.0.2/dist/gridstack.all.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/npm/gridstack@2.1.0/dist/gridstack.min.css&quot; /&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/gridstack@2.1.0/dist/gridstack.all.js&quot;&gt;&lt;/script&gt;
 
 &lt;div class=&quot;grid-stack&quot;&gt;
   &lt;div class=&quot;grid-stack-item&quot; data-gs-x=&quot;0&quot; data-gs-y=&quot;0&quot; data-gs-width=&quot;4&quot; data-gs-height=&quot;2&quot;&gt;
@@ -271,7 +210,7 @@
           <p>
             ...and that's it! Drag, drop, and resize to your heart's content.
             Looking for more complex examples? Check out the advanced example below, the links in the nav
-            bar, or our docs in GitHub.
+            bar, or our docs in <a href="https://github.com/gridstack/gridstack.js/blob/develop/README.md" target="_blank">GitHub</a>
           </p>
         </div>
       </div>
@@ -295,7 +234,7 @@
               <span>Drop here to remove widget!</span>
             </div>
           </div>
-          <div class="text-center card text-white newWidget grid-stack-item">
+          <div class="text-center card text-white grid-stack-item newWidget">
             <div class="card-body grid-stack-item-content">
               <div>
                 <ion-icon name="add-circle" style="font-size: 400%"></ion-icon>
@@ -308,79 +247,7 @@
         </div>
         <div class="col-sm-12 col-md-10" style="padding-bottom: 25px;">
           <div style="padding: 15px; border: 1px solid white">
-            <div class="grid-stack" id="advanced-grid" data-gs-animate="yes">
-              <div class="grid-stack-item card" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">1</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4"
-                data-gs-no-move="yes" data-gs-no-resize="yes" data-gs-locked="yes">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">
-                    I can't be moved or dragged!
-                  </p>
-                  <p class="card-text text-center">
-                    <ion-icon name="ios-lock" style="font-size:300%"></ion-icon>
-                  </p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="8" data-gs-y="0" data-gs-width="2" data-gs-height="2"
-                data-gs-min-width="2" data-gs-no-resize="yes">
-                <div class="grid-stack-item-content card-body bg-white" style="overflow: hidden">
-                  <p class="card-text text-center" style="margin-bottom: 0">
-                    Drag me!
-                  </p>
-                  <p class="card-text text-center" style="margin-bottom: 0">
-                    <ion-icon name="hand" style="font-size: 300%"></ion-icon>
-                  </p>
-                  <p class="card-text text-center" style="margin-bottom: 0">
-                    ...but don't resize me!
-                  </p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="10" data-gs-y="0" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">4</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="0" data-gs-y="2" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">5</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="2" data-gs-y="2" data-gs-width="2" data-gs-height="4">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">6</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="8" data-gs-y="2" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">7</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="0" data-gs-y="4" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">8</p>
-                  <p class="card-text text-center"></p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="4" data-gs-y="4" data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">9</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="8" data-gs-y="4" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">10</p>
-                </div>
-              </div>
-              <div class="grid-stack-item card" data-gs-x="10" data-gs-y="4" data-gs-width="2" data-gs-height="2">
-                <div class="grid-stack-item-content card-body bg-white">
-                  <p class="card-text text-center">11</p>
-                </div>
-              </div>
-            </div>
+            <div class="grid-stack" id="advanced-grid"></div>
           </div>
         </div>
       </div>
@@ -459,32 +326,54 @@
   <script src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.2/dist/gridstack.all.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@2.1.0/dist/gridstack.all.js"></script>
   <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous">
   </script>
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
 
   <script type="text/javascript">
+    var simple = [
+      {x: 0, y: 0, width: 4, height: 2, content: '1'},
+      {x: 4, y: 0, width: 4, height: 4, content: '2'},
+      {x: 8, y: 0, width: 2, height: 2, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon>'},
+      {x: 10, y: 0, width: 2, height: 2, content: '4'},
+      {x: 0, y: 2, width: 2, height: 2, content: '5'},
+      {x: 2, y: 2, width: 2, height: 4, content: '6'},
+      {x: 8, y: 2, width: 4, height: 2, content: '7'},
+      {x: 0, y: 4, width: 2, height: 2, content: '8'},
+      {x: 4, y: 4, width: 4, height: 2, content: '9'},
+      {x: 8, y: 4, width: 2, height: 2, content: '10'},
+      {x: 10, y: 4, width: 2, height: 2, content: '11'},
+    ];
+   var advanced = [
+      {x: 0, y: 0, width: 4, height: 2, content: '1'},
+      {x: 4, y: 0, width: 4, height: 4, noMove: true, noResize: true, locked: true, content: 'I can\'t be moved or dragged!<br><ion-icon name="ios-lock" style="font-size:300%"></ion-icon>'},
+      {x: 8, y: 0, width: 2, height: 2, minWidth: 2, noResize: true, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon><p class="card-text text-center" style="margin-bottom: 0">...but don\'t resize me!</p>'},
+      {x: 10, y: 0, width: 2, height: 2, content: '4'},
+      {x: 0, y: 2, width: 2, height: 2, content: '5'},
+      {x: 2, y: 2, width: 2, height: 4, content: '6'},
+      {x: 8, y: 2, width: 4, height: 2, content: '7'},
+      {x: 0, y: 4, width: 2, height: 2, content: '8'},
+      {x: 4, y: 4, width: 4, height: 2, content: '9'},
+      {x: 8, y: 4, width: 2, height: 2, content: '10'},
+      {x: 10, y: 4, width: 2, height: 2, content: '11'},
+    ];
+
     var simpleGrid = GridStack.init({
-      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator
-        .userAgent),
-      resizable: {
-        handles: 'e, se, s, sw, w'
-      }
+      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+      resizable: { handles: 'e, se, s, sw, w' }
     }, '#simple-grid');
+    simpleGrid.load(simple);
 
     var advGrid = GridStack.init({
-      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      ),
-      resizable: {
-        handles: 'e, se, s, sw, w'
-      },
+      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+      resizable: { handles: 'e, se, s, sw, w' },
       removable: '#trash',
       removeTimeout: 100,
       acceptWidgets: '.newWidget'
     }, '#advanced-grid');
+    advGrid.load(advanced);
     
     $('.newWidget').draggable({
       revert: 'invalid',
