@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [2.0.2-dev](#202-dev)
+- [2.1.0-dev](#210-dev)
+- [2.1.0 (2020-10-28)](#210-2020-10-28)
 - [2.0.2 (2020-10-05)](#202-2020-10-05)
 - [2.0.1 (2020-09-26)](#201-2020-09-26)
 - [2.0.0 (2020-09-07)](#200-2020-09-07)
@@ -39,7 +40,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 2.0.2-dev
+## 2.1.0-dev
+
+- TBD
+
+## 2.1.0 (2020-10-28)
 
 - fix grid `static: true` to no longer add any drag&drop (even disabled) which should speed things up, and `setStatic(T/F)` will now correctly add it back/delete for items that need it only. 
 Also fixed JQ draggable warning if not initialized first [858](https://github.com/gridstack/gridstack.js/issues/858)
