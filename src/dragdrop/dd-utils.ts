@@ -6,6 +6,21 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 export class DDUtils {
+  static isEventSupportPassiveOption = ((()=>{
+    let supportsPassive = false;
+    let passiveTest = () => {
+      // do nothing
+    };
+    document.addEventListener('test', passiveTest, {
+      get passive() {
+        supportsPassive = true;
+        return true;
+      }
+    });
+    document.removeEventListener('test', passiveTest);
+    return supportsPassive;
+  })());
+
   static clone(el: HTMLElement): HTMLElement {
     const node = el.cloneNode(true) as HTMLElement;
     node.removeAttribute('id');

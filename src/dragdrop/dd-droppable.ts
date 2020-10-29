@@ -17,6 +17,7 @@ export interface DDDropableOpt {
   out?: (event: DragEvent, ui) => void;
 };
 export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<DDDropableOpt> {
+  accept: (el: HTMLElement) => boolean;
   el: HTMLElement;
   option: DDDropableOpt;
   private count = 0;
@@ -56,6 +57,7 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
       const value = opts[key];
       this.option[key] = value;
     });
+    this.setupAccept();
   }
 
   protected init() {
@@ -64,6 +66,7 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
     this.el.addEventListener('dragover', this.dragOver);
     this.el.addEventListener('drop', this.drop);
     this.el.addEventListener('dragleave', this.dragLeave);
+    this.setupAccept();
   }
 
   protected dragEnter = (event: DragEvent) => {
@@ -117,15 +120,16 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
     this.dragEl = undefined;
   }
   private canDrop() {
-    let accept;
+    return DDManager.dragElement && (!this.accept || this.accept(DDManager.dragElement.el));
+  }
+  private setupAccept() {
     if (this.option.accept && typeof this.option.accept === 'string') {
-      accept = (el: HTMLElement) => {
+      this.accept = (el: HTMLElement) => {
         return el.matches(this.option.accept as string)
       }
     } else {
-      accept = this.option.accept as ((el: HTMLElement) => boolean);
+      this.accept = this.option.accept as ((el: HTMLElement) => boolean);
     }
-    return DDManager.dragElement && (!accept || accept(DDManager.dragElement.el));
   }
 
   destroy() {
