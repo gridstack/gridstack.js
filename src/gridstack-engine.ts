@@ -639,10 +639,11 @@ export class GridStackEngine {
   }
 
   /** called to remove all internal values */
-  public cleanupNode(node: GridStackNode) {
+  public cleanupNode(node: GridStackNode): GridStackEngine {
     for (let prop in node) {
       if (prop[0] === '_') delete node[prop];
     }
+    return this;
   }
 
   /** @internal legacy method renames */
