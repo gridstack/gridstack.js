@@ -1,14 +1,13 @@
 // dd-elements.ts 2.0.2-dev @preserve
-
 /**
  * https://gridstackjs.com/
- * (c) 2020 Alain Dumesny, rhlin
+ * (c) 2020 rhlin, Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
 import { DDResizable, DDResizableOpt } from './dd-resizable';
 import { GridItemHTMLElement } from './../types';
-import { DDDraggble, DDDraggbleOpt } from './dd-draggable';
-import { DDDropable, DDDropableOpt } from './dd-droppable';
+import { DDDraggable, DDDraggableOpt } from './dd-draggable';
+import { DDDroppable, DDDroppableOpt } from './dd-droppable';
 export interface DDElementHost extends GridItemHTMLElement {
   ddElement?: DDElement;
 }
@@ -18,8 +17,8 @@ export class DDElement {
     return el.ddElement;
   }
   el: DDElementHost;
-  ddDraggable?: DDDraggble;
-  ddDroppable?: DDDropable;
+  ddDraggable?: DDDraggable;
+  ddDroppable?: DDDroppable;
   ddResizable?: DDResizable;
   constructor(el: DDElementHost) {
     this.el = el;
@@ -54,9 +53,9 @@ export class DDElement {
     }
     return;
   }
-  setupDraggable(opts: DDDraggbleOpt) {
+  setupDraggable(opts: DDDraggableOpt) {
     if (!this.ddDraggable) {
-      this.ddDraggable = new DDDraggble(this.el, opts);
+      this.ddDraggable = new DDDraggable(this.el, opts);
     } else {
       this.ddDraggable.updateOption(opts);
     }
@@ -73,9 +72,9 @@ export class DDElement {
     this.ddDraggable.destroy();
     this.ddDraggable = undefined;
   }
-  setupDroppable(opts: DDDropableOpt) {
+  setupDroppable(opts: DDDroppableOpt) {
     if (!this.ddDroppable) {
-      this.ddDroppable = new DDDropable(this.el, opts);
+      this.ddDroppable = new DDDroppable(this.el, opts);
     } else {
       this.ddDroppable.updateOption(opts);
     }

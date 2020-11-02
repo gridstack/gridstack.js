@@ -1,34 +1,33 @@
 // dd-draggable.ts 2.0.2-dev @preserve
-
 /**
  * https://gridstackjs.com/
- * (c) 2020 Alain Dumesny, rhlin
+ * (c) 2020 rhlin, Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
 import { DDManager } from './dd-manager';
 import { DDUtils } from './dd-utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 
-export interface DDDraggbleOpt {
+export interface DDDraggableOpt {
   appendTo?: string | HTMLElement;
-  containment?: string | HTMLElement; // TODO: not impleament yet
+  containment?: string | HTMLElement; // TODO: not implemented yet
   handle?: string;
-  revert?: string | boolean | unknown; // TODO: not impleament yet
+  revert?: string | boolean | unknown; // TODO: not implemented yet
   scroll?: boolean; // nature support by HTML5 drag drop, can't be switch to off actually
   helper?: string | ((event: Event) => HTMLElement);
-  basePosision?: 'fixed' | 'absolute';
+  basePosition?: 'fixed' | 'absolute';
   start?: (event?, ui?) => void;
   stop?: (event?, ui?) => void;
   drag?: (event?, ui?) => void;
 };
-export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<DDDraggbleOpt> {
+export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt<DDDraggableOpt> {
   static basePosition: 'fixed' | 'absolute' = 'absolute';
-  static dragEventListinerOption = DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
+  static dragEventListenerOption = DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
   static originStyleProp = ['transition', 'pointerEvents', 'position',
     'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange'];
   el: HTMLElement;
   helper: HTMLElement;
-  option: DDDraggbleOpt;
+  option: DDDraggableOpt;
   dragOffset: {
     left: number;
     top: number;
@@ -45,7 +44,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
   parentOriginStylePosition: string;
   helperContainment: HTMLElement;
 
-  constructor(el: HTMLElement, option: DDDraggbleOpt) {
+  constructor(el: HTMLElement, option: DDDraggableOpt) {
     super();
     this.el = el;
     this.option = option || {};
@@ -84,7 +83,6 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
     this.el.classList.add('ui-draggable');
     this.el.addEventListener('mousedown', this.mouseDown);
     this.el.addEventListener('dragstart', this.dragStart);
-    this.dragThrottle = DDUtils.throttle(this.drag, 100);
   }
 
   protected mouseDown = (event: MouseEvent) => {
@@ -119,17 +117,16 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
 
   protected setupDragFollowNodeNNotifyStart(ev) {
     this.setupHelperStyle();
-    document.addEventListener('dragover', this.dragThrottle, DDDraggble.dragEventListinerOption);
+    document.addEventListener('dragover', this.drag, DDDraggable.dragEventListenerOption);
     this.el.addEventListener('dragend', this.dragEnd);
     if (this.option.start) {
       this.option.start(ev, this.ui());
     }
-    this.triggerEvent('dragstart', ev);
     this.dragging = true;
     this.helper.classList.add('ui-draggable-dragging');
+    this.triggerEvent('dragstart', ev);
   }
 
-  protected dragThrottle: (event: DragEvent) => void;
   protected drag = (event: DragEvent) => {
     this.dragFollow(event);
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drag' });
@@ -148,7 +145,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
       if (this.paintTimer) {
         cancelAnimationFrame(this.paintTimer);
       }
-      document.removeEventListener('dragover', this.dragThrottle, DDDraggble.dragEventListinerOption);
+      document.removeEventListener('dragover', this.drag, DDDraggable.dragEventListenerOption);
       this.el.removeEventListener('dragend', this.dragEnd);
     }
     this.dragging = false;
@@ -181,7 +178,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
         : this.option.appendTo));
     }
     if (helper === this.el) {
-      this.dragElementOriginStyle = DDDraggble.originStyleProp.map(prop => this.el.style[prop]);
+      this.dragElementOriginStyle = DDDraggable.originStyleProp.map(prop => this.el.style[prop]);
     }
     return helper;
   }
@@ -191,8 +188,8 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
     this.helper.style.width = this.dragOffset.width + 'px';
     this.helper.style.height = this.dragOffset.height + 'px';
     this.helper.style['willChange'] = 'left, top';
-    this.helper.style.transition = 'none'; // show up instancely
-    this.helper.style.position = this.option.basePosision || DDDraggble.basePosition;
+    this.helper.style.transition = 'none'; // show up instantly
+    this.helper.style.position = this.option.basePosition || DDDraggable.basePosition;
     this.helper.style.zIndex = '1000';
     setTimeout(() => {
       if (this.helper) {
@@ -202,7 +199,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
   }
 
   private removeHelperStyle() {
-    DDDraggble.originStyleProp.forEach(prop => {
+    DDDraggable.originStyleProp.forEach(prop => {
       this.helper.style[prop] = this.dragElementOriginStyle[prop] || null;
     });
     this.dragElementOriginStyle = undefined;
@@ -227,7 +224,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
 
   private setupHelperContainmentStyle() {
     this.helperContainment = this.helper.parentElement;
-    if (this.option.basePosision !== 'fixed') {
+    if (this.option.basePosition !== 'fixed') {
       this.parentOriginStylePosition = this.helperContainment.style.position;
       if (window.getComputedStyle(this.helperContainment).position.match(/static/)) {
         this.helperContainment.style.position = 'relative';
@@ -255,7 +252,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
   }
 
   private getDragOffset(event: DragEvent, el: HTMLElement, attachedParent: HTMLElement) {
-    // in case ancestor has transform/perspective css properies that change the viewpoint
+    // in case ancestor has transform/perspective css properties that change the viewpoint
     const getViewPointFromParent = (parent) => {
       if (!parent) { return null; }
       const testEl = document.createElement('div');
@@ -293,9 +290,9 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
   }
   destroy() {
     if (this.dragging) {
-      // Destroy while draggging should remove dragend listener and manally trigger
-      // dragend, otherwise dragEnd can't perform dragstop becasue eventResistry is
-      // destoryed.
+      // Destroy while dragging should remove dragend listener and manually trigger
+      // dragend, otherwise dragEnd can't perform dragstop because eventRegistry is
+      // destroyed.
       this.dragEnd({} as DragEvent);
     }
     this.el.draggable = false;
@@ -317,7 +314,7 @@ export class DDDraggble extends DDBaseImplement implements HTMLElementExtendOpt<
         top: offset.top - containmentRect.top,
         left: offset.left - containmentRect.left
       }, //Current CSS position of the helper as { top, left } object
-      offset: { top: offset.top, left: offset.left }// Current offset position of the helper as { top, left } object.
+      offset: { top: offset.top, left: offset.left } // Current offset position of the helper as { top, left } object.
     };
   }
 }

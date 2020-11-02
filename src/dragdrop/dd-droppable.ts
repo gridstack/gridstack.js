@@ -1,28 +1,27 @@
 // dd-droppable.ts 2.0.2-dev @preserve
-
 /**
  * https://gridstackjs.com/
- * (c) 2020 Alain Dumesny, rhlin
+ * (c) 2020 rhlin, Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
-import { DDDraggble } from './dd-draggable';
+import { DDDraggable } from './dd-draggable';
 import { DDManager } from './dd-manager';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { DDUtils } from './dd-utils';
 
-export interface DDDropableOpt {
+export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);
   drop?: (event: DragEvent, ui) => void;
   over?: (event: DragEvent, ui) => void;
   out?: (event: DragEvent, ui) => void;
 };
-export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<DDDropableOpt> {
+export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt<DDDroppableOpt> {
   accept: (el: HTMLElement) => boolean;
   el: HTMLElement;
-  option: DDDropableOpt;
+  option: DDDroppableOpt;
   private acceptable: boolean = null;
   private style;
-  constructor(el: HTMLElement, opts: DDDropableOpt) {
+  constructor(el: HTMLElement, opts: DDDroppableOpt) {
     super();
     this.el = el;
     this.option = opts || {};
@@ -152,10 +151,10 @@ export class DDDropable extends DDBaseImplement implements HTMLElementExtendOpt<
     super.destroy();
   }
 
-  ui(ddDraggble: DDDraggble) {
+  ui(DDDraggable: DDDraggable) {
     return {
-      draggable: ddDraggble.el,
-      ...ddDraggble.ui()
+      draggable: DDDraggable.el,
+      ...DDDraggable.ui()
     };
   }
 }

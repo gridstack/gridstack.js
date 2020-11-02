@@ -184,7 +184,7 @@ export class Utils {
     return Utils.closestByClass(el, name);
   }
 
-  /** @internal */
+  /** delay calling the given function by certain amount of time */
   static throttle(callback: () => void, delay: number) {
     let isWaiting = false;
 

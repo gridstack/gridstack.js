@@ -1,8 +1,7 @@
 // dd-utils.ts 2.0.2-dev @preserve
-
 /**
  * https://gridstackjs.com/
- * (c) 2020 Alain Dumesny, rhlin
+ * (c) 2020 rhlin, Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
 export class DDUtils {
@@ -44,17 +43,6 @@ export class DDUtils {
     }
   }
 
-  static throttle(callback: (...args) => void, delay: number) {
-    let isWaiting = false;
-
-    return (...args) => {
-      if (!isWaiting) {
-        callback(...args);
-        isWaiting = true;
-        setTimeout(() => isWaiting = false, delay);
-      }
-    }
-  }
   static addElStyles(el: HTMLElement, styles: { [prop: string]: string | string[] }) {
     if (styles instanceof Object) {
       for (const s in styles) {
