@@ -14,7 +14,8 @@ export interface HeightData {
 }
 
 /** checks for obsolete method names */
-export function obsolete(self, f, oldName: string, newName: string, rev: string) {
+// eslint-disable-next-line
+export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
   let wrapper = (...args) => {
     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
     'with `' + newName + '`. It will be **completely** removed in v1.0');
@@ -25,7 +26,7 @@ export function obsolete(self, f, oldName: string, newName: string, rev: string)
 }
 
 /** checks for obsolete grid options (can be used for any fields, but msg is about options) */
-export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string) {
+export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string): void {
   if (opts[oldName] !== undefined) {
     opts[newName] = opts[oldName];
     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + ' and has been replaced with `' +
@@ -34,14 +35,14 @@ export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: s
 }
 
 /** checks for obsolete grid options which are gone */
-export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string) {
+export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string): void {
   if (opts[oldName] !== undefined) {
     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
   }
 }
 
 /** checks for obsolete Jquery element attributes */
-export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string) {
+export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string): void {
   let oldAttr = el.getAttribute(oldName);
   if (oldAttr !== null) {
     el.setAttribute(newName, oldAttr);
@@ -106,14 +107,14 @@ export class Utils {
   }
 
   /** removed the given stylesheet id */
-  static removeStylesheet(id: string) {
+  static removeStylesheet(id: string): void {
     let el = document.querySelector('STYLE[data-gs-style-id=' + id + ']');
     if (!el || !el.parentNode) return;
     el.parentNode.removeChild(el);
   }
 
   /** inserts a CSS rule */
-  static addCSSRule(sheet: CSSStyleSheet, selector: string, rules: string) {
+  static addCSSRule(sheet: CSSStyleSheet, selector: string, rules: string): void {
     if (typeof sheet.addRule === 'function') {
       sheet.addRule(selector, rules);
     } else if (typeof sheet.insertRule === 'function') {
@@ -122,7 +123,7 @@ export class Utils {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static toBool(v: any): boolean {
+  static toBool(v: unknown): boolean {
     if (typeof v === 'boolean') {
       return v;
     }
@@ -154,6 +155,7 @@ export class Utils {
   }
 
   /** copies unset fields in target to use the given default sources values */
+  // eslint-disable-next-line
   static defaults(target, ...sources): {} {
 
     sources.forEach(source => {
@@ -172,8 +174,9 @@ export class Utils {
   }
 
   /** makes a shallow copy of the passed json struct */
+  // eslint-disable-next-line
   static clone(target: {}): {} {
-    return {...target}; // was $.extend({}, target)
+    return {...target};
   }
 
   /** return the closest parent matching the given class */
@@ -185,7 +188,7 @@ export class Utils {
   }
 
   /** @internal */
-  static throttle(callback: () => void, delay: number) {
+  static throttle(callback: () => void, delay: number): () => void {
     let isWaiting = false;
 
     return (...args) => {
@@ -197,7 +200,7 @@ export class Utils {
     }
   }
 
-  static removePositioningStyles(el: HTMLElement) {
+  static removePositioningStyles(el: HTMLElement): void {
     let style = el.style;
     if (style.position) {
       style.removeProperty('position');
@@ -230,7 +233,7 @@ export class Utils {
   }
 
   /** @internal */
-  static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number) {
+  static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
     // is widget in view?
     let rect = el.getBoundingClientRect();
     let innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);

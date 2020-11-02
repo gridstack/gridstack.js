@@ -18,7 +18,7 @@ export type DDDropOpt = {
 
 /** drag&drop options currently called from the main code, but others can be passed in grid options */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | {} | any;
+export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | any;
 export type DDKey = 'minWidth' | 'minHeight' | string;
 export type DDValue = number | string;
 
@@ -33,7 +33,7 @@ export class GridStackDD {
   static registeredPlugins: typeof GridStackDD;
 
   /** call this method to register your plugin instead of the default no-op one */
-  static registerPlugin(pluginClass: typeof GridStackDD) {
+  static registerPlugin(pluginClass: typeof GridStackDD): void {
     GridStackDD.registeredPlugins = pluginClass;
   }
 

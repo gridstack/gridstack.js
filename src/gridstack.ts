@@ -310,8 +310,7 @@ export class GridStack {
     this._setupRemoveDrop();
     this._setupAcceptWidget();
     this._updateWindowResizeEvent();
-  };
-
+  }
 
   /**
    * add a new widget and returns it.
@@ -401,7 +400,7 @@ export class GridStack {
    * @example
    * see http://gridstackjs.com/demo/serialization.html
    **/
-  public load(layout: GridStackWidget[], addAndRemove: boolean | ((w: GridStackWidget, add: boolean) => void)  = true) {
+  public load(layout: GridStackWidget[], addAndRemove: boolean | ((w: GridStackWidget, add: boolean) => void)  = true): GridStack {
     let items = GridStack.Utils.sort(layout);
     let removed: GridStackNode[] = [];
     this.batchUpdate();
@@ -435,6 +434,7 @@ export class GridStack {
     });
     this.engine.removedNodes = removed;
     this.commit();
+    return this;
   }
 
   /**
@@ -502,7 +502,7 @@ export class GridStack {
     this._triggerAddEvent();
     this._triggerChangeEvent();
     return this;
-  };
+  }
 
   /** re-layout grid items to reclaim any empty space */
   public compact(): GridStack {
@@ -1215,7 +1215,7 @@ export class GridStack {
   private _setupRemovingTimeout(el: GridItemHTMLElement): GridStack {
     let node = el.gridstackNode;
     if (!node || node._removeTimeout || !this.opts.removable) return this;
-    node._removeTimeout = setTimeout(() => {
+    node._removeTimeout = window.setTimeout(() => {
       el.classList.add('grid-stack-item-removing');
       node._isAboutToRemove = true;
     }, this.opts.removeTimeout);
