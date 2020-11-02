@@ -10,11 +10,12 @@ import { GridStack, GridStackElement } from '../gridstack';
 import { GridStackDD, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../gridstack-dd';
 import { GridItemHTMLElement, DDDragInOpt } from '../types';
 
-// export all jq symbols see https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
-// TODO: let user bring their own jq or jq-ui version
-import * as $ from './jquery';
+// export jq symbols see
+// https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
+// https://stackoverflow.com/questions/33998262/jquery-ui-and-webpack-how-to-manage-it-into-module
+import * as $ from 'jquery';
 export { $ };
-export * from './jquery-ui';
+import 'jquery-ui';
 
 /**
  * legacy Jquery-ui based drag'n'drop plugin.
