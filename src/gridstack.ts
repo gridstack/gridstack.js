@@ -1773,11 +1773,23 @@ export class GridStack {
   /** @internal convert a potential selector into actual element */
   private static getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement {
     if (typeof els === 'string') {
-      let el = document.querySelector(els);
-      if (!el && els[0] !== '.' && els[0] !== '#') {
-        el = document.querySelector('#' + els);
-        if (!el) { el = document.querySelector('.' + els) }
+      if (!els.length) { return null}
+      if (els[0] === '#') {
+        return document.getElementById(els.substring(1));
       }
+      if (els[0] === '.') {
+        return document.querySelector(els);
+      }
+
+      // if we start with a digit, assume it's an id (error calling querySelector('#1')) as class are not valid CSS
+      if(!isNaN(+els[0])) { // start with digit
+        return document.getElementById(els);
+      }
+
+      // finally try string, then id then class
+      let el = document.querySelector(els);
+      if (!el) { el = document.getElementById(els) }
+      if (!el) { el = document.querySelector('.' + els) }
       return el as GridItemHTMLElement;
     }
     return els;
