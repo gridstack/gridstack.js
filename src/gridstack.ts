@@ -186,7 +186,7 @@ export class GridStack {
       auto: true,
       minWidth: 768,
       float: false,
-      staticGrid: false,
+      staticGrid: Utils.toBool(el.getAttribute('data-gs-static-grid')) || false,
       _class: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
       animate: true,
       alwaysShowResizeHandle: opts.alwaysShowResizeHandle || false,
@@ -719,7 +719,7 @@ export class GridStack {
       if (!node) return;
       node.locked = (val || false);
       if (node.locked) {
-        el.setAttribute('data-gs-locked', 'yes');
+        el.setAttribute('data-gs-locked', 'true');
       } else {
         el.removeAttribute('data-gs-locked');
       }
@@ -995,12 +995,7 @@ export class GridStack {
   public setStatic(val: boolean): GridStack {
     if (this.opts.staticGrid === val) { return this; }
     this.opts.staticGrid = val;
-    // either delete Drag&drop or initialize it
-    if (val) {
-      this.getGridItems().forEach(el => this.dd.remove(el));
-    } else {
-      this.engine.nodes.forEach(n => this._prepareDragDropByNode(n));
-    }
+    this.engine.nodes.forEach(n => this._prepareDragDropByNode(n)); // either delete Drag&drop or initialize it
     this._setStaticClass();
     return this;
   }
@@ -1234,11 +1229,23 @@ export class GridStack {
 
   /** @internal prepares the element for drag&drop **/
   private _prepareDragDropByNode(node: GridStackNode): GridStack {
+    // check for disabled grid first
+    if (this.opts.staticGrid || node.locked) {
+      if (node._initDD) {
+        this.dd.remove(node.el); // nukes everything instead of just disable, will add some styles back next
+        delete node._initDD;
+      }
+      node.el.classList.add('ui-draggable-disabled', 'ui-resizable-disabled'); // add styles one might depend on #1435
+      return;
+    }
     // check if init already done or not needed (static/disabled)
     if (node._initDD || this.opts.staticGrid ||
       ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
       return;
     }
+
+    // remove our style that look like D&D
+    node.el.classList.remove('ui-draggable-disabled', 'ui-resizable-disabled');
 
     // variables used/cashed between the 3 start/move/end methods, in addition to node passed above
     let cellWidth: number;
@@ -1401,10 +1408,11 @@ export class GridStack {
       });
     node._initDD = true; // we've set DD support now
 
-    if (node.noMove || this.opts.disableDrag || this.opts.staticGrid) {
+    // finally fine tune drag vs move by disabling any part...
+    if (node.noMove || this.opts.disableDrag) {
       this.dd.draggable(el, 'disable');
     }
-    if (node.noResize || this.opts.disableResize || this.opts.staticGrid) {
+    if (node.noResize || this.opts.disableResize) {
       this.dd.resizable(el, 'disable');
     }
     return this;
@@ -1519,12 +1527,15 @@ export class GridStack {
 
   /** @internal */
   private _setStaticClass(): GridStack {
-    let staticClassName = 'grid-stack-static';
+    let classes = ['grid-stack-static'];
 
     if (this.opts.staticGrid) {
-      this.el.classList.add(staticClassName);
+      this.el.classList.add(...classes);
+      this.el.setAttribute('data-gs-static-grid', 'true');
     } else {
-      this.el.classList.remove(staticClassName);
+      this.el.classList.remove(...classes);
+      this.el.removeAttribute('data-gs-static-grid');
+
     }
     return this;
   }

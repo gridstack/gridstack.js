@@ -117,7 +117,7 @@ gridstack.js API
 
 ## Grid attributes
 
-most of the above options are also available as HTML attributes using the `data-gs-` name prefix with standard dash lower case naming convention (ex: `data-gs-column`, `data-gs-min-row`, etc..).
+most of the above options are also available as HTML attributes using the `data-gs-` name prefix with standard dash lower case naming convention (ex: `data-gs-column`, `data-gs-min-row`, `data-gs-static-grid`, etc..).
 
 Extras:
 - `data-gs-current-row` - (internal) current rows amount. Set by the library only. Can be used by the CSS rules.

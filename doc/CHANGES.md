@@ -42,7 +42,8 @@ Change log
 
 ## 2.1.0-dev
 
-- TBD
+- fix `class="ui-draggable-disabled ui-resizable-disabled"` have been added back to static grid items, so existing CSS rule to style continue working [1435](https://github.com/gridstack/gridstack.js/issues/1435)
+- add `data-gs-staticGrid` attribute
 
 ## 2.1.0 (2020-10-28)
 

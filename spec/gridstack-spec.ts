@@ -1345,7 +1345,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       grid.locked('.grid-stack-item', true);
       $('.grid-stack-item').each(function (i,item) {
-        expect($(item).attr('data-gs-locked')).toBe('yes');
+        expect($(item).attr('data-gs-locked')).toBe('true');
       })
     });
     it('should unlock widgets', function() {
