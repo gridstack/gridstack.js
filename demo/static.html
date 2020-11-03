@@ -13,19 +13,20 @@
 <body>
   <div class="container-fluid">
     <h1>Static vs can move/drag Demo</h1>
+    <p>we start with a static grid (no drag&drop initialized) with button to make it editable.</p>
     <div>
       <a class="btn btn-primary" onClick="grid.setStatic(true)" href="#">Static</a>
       <a class="btn btn-primary" onclick="grid.setStatic(false)" id="float" href="#">Editable</a>
     </div>
     <br><br>
-    <div class="grid-stack"></div>
+    <div class="grid-stack" data-gs-static-grid="true"></div>
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
     let grid = GridStack.init({
       float: true,
       cellHeight: 70,
-      staticGrid: true
+      //staticGrid: true // same but testing data-gs above
     });
     addEvents(grid);
 
