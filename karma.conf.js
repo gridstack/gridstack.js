@@ -2,9 +2,19 @@
 
 module.exports = function(config) {
   config.set({
+
+    // see https://www.npmjs.com/package/karma-typescript
     karmaTypescriptConfig: {
       compilerOptions: {
         lib: ['dom', 'es6'],
+      },
+      bundlerOptions: {
+        resolve: {
+          alias: {
+            'jquery': './src/jq/jquery.js',
+            'jquery-ui': './src/jq/jquery-ui.js',
+          }
+        }
       }
     },
 
