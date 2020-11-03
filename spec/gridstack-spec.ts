@@ -952,7 +952,70 @@ describe('gridstack', function() {
       expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(1);
       expect(widget.getAttribute('data-gs-id')).toBe('foo');
     });
-});
+  });
+
+  describe('makeWidget()', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('passing element', function() {
+      let grid = GridStack.init();
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = '<div><div class="grid-stack-item-content"></div></div>';
+      let el = doc.body.children[0] as HTMLElement;
+      grid.el.appendChild(el);
+      let widget = grid.makeWidget(el);
+      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+    });
+    it('passing class', function() {
+      let grid = GridStack.init();
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = '<div class="item"><div class="grid-stack-item-content"></div></div>';
+      let el = doc.body.children[0] as HTMLElement;
+      grid.el.appendChild(el);
+      let widget = grid.makeWidget('.item');
+      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+    });
+    it('passing class no dot', function() {
+      let grid = GridStack.init();
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = '<div class="item"><div class="grid-stack-item-content"></div></div>';
+      let el = doc.body.children[0] as HTMLElement;
+      grid.el.appendChild(el);
+      let widget = grid.makeWidget('item');
+      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+    });
+    it('passing id', function() {
+      let grid = GridStack.init();
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = '<div id="item"><div class="grid-stack-item-content"></div></div>';
+      let el = doc.body.children[0] as HTMLElement;
+      grid.el.appendChild(el);
+      let widget = grid.makeWidget('#item');
+      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+    });
+    it('passing id no #', function() {
+      let grid = GridStack.init();
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = '<div id="item"><div class="grid-stack-item-content"></div></div>';
+      let el = doc.body.children[0] as HTMLElement;
+      grid.el.appendChild(el);
+      let widget = grid.makeWidget('item');
+      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+    });
+    it('passing id as number', function() {
+      let grid = GridStack.init();
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = '<div id="1"><div class="grid-stack-item-content"></div></div>';
+      let el = doc.body.children[0] as HTMLElement;
+      grid.el.appendChild(el);
+      let widget = grid.makeWidget('1');
+      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+    });
+  });
 
   describe('method getFloat()', function() {
     beforeEach(function() {
