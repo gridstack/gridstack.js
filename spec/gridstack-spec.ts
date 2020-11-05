@@ -1172,11 +1172,10 @@ describe('gridstack', function() {
     it('should return margin', function() {
       let options = {
         cellHeight: 80,
-        margin: 10
+        margin: 12
       };
       let grid = GridStack.init(options);
-      let vm = grid.getMargin();
-      expect(vm).toBe(10);
+      expect(grid.getMargin()).toBe(12);
     });
     it('should return update margin', function() {
       let options = {
@@ -1184,31 +1183,60 @@ describe('gridstack', function() {
         margin: 5
       };
       let grid = GridStack.init(options);
-      grid.margin(11);
+      grid.margin('11rem');
       expect(grid.getMargin()).toBe(11);
     });
-    it('should do nothing', function() {
+    it('should change unit', function() {
       let options = {
         cellHeight: 80,
         margin: 10,
       };
       let grid = GridStack.init(options);
       expect(grid.getMargin()).toBe(10);
-      grid.margin(10);
+      grid.margin('10rem');
       expect(grid.getMargin()).toBe(10);
     });
-    /*
-    it('should not update styles', function() {
+    it('should not update styles, with same value', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
       let grid: any = GridStack.init(options);
+      expect(grid.getMargin()).toBe(5);
       spyOn(grid, '_updateStyles');
-      grid.margin(11, false);
+      grid.margin('5px', false);
       expect(grid._updateStyles).not.toHaveBeenCalled();
+      expect(grid.getMargin()).toBe(5);
     });
-    */
+    it('should set top/bot/left value directly', function() {
+      let options = {
+        cellHeight: 80,
+        marginTop: 5,
+        marginBottom: 0,
+        marginLeft: 1,
+      };
+      let grid: any = GridStack.init(options);
+      expect(grid.getMargin()).toBe(undefined);
+      expect(grid.opts.marginTop).toBe(5);
+      expect(grid.opts.marginBottom).toBe(0);
+      expect(grid.opts.marginLeft).toBe(1);
+      expect(grid.opts.marginRight).toBe(10); // default value
+    });
+    it('should set all 4 sides, and overall margin', function() {
+      let options = {
+        cellHeight: 80,
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginRight: 5,
+      };
+      let grid: any = GridStack.init(options);
+      expect(grid.getMargin()).toBe(5);
+      expect(grid.opts.marginTop).toBe(5);
+      expect(grid.opts.marginBottom).toBe(5);
+      expect(grid.opts.marginLeft).toBe(5);
+      expect(grid.opts.marginRight).toBe(5);
+    });
   });
 
   describe('grid.opts.rtl', function() {

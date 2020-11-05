@@ -1041,7 +1041,7 @@ export class GridStack {
     return this;
   }
 
-  /** returns current vertical margin value */
+  /** returns current margin value (undefined if all 4 sides don't match) */
   public getMargin(): number { return this.opts.margin as number; }
 
   /**
@@ -1324,7 +1324,7 @@ export class GridStack {
       } else if (event.type === 'resize')  {
         if (x < 0) return;
         width = Math.round(ui.size.width / cellWidth);
-        height = Math.round((ui.size.height + this.getMargin()) / cellHeight);
+        height = Math.round(ui.size.height / cellHeight);
       }
       // width and height are undefined if not resizing
       let _lastTriedWidth = (width || node._lastTriedWidth);
@@ -1855,6 +1855,9 @@ export class GridStack {
       delete this.opts.margin;
     }
     this.opts.marginUnit = data.unit; // in case side were spelled out, use those units instead...
+    if (this.opts.marginTop === this.opts.marginBottom && this.opts.marginLeft === this.opts.marginRight && this.opts.marginTop === this.opts.marginRight) {
+      this.opts.margin = this.opts.marginTop; // makes it easier to check for no-ops in setMargin()
+    }
     return this;
   }
 
