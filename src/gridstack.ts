@@ -7,7 +7,7 @@
 */
 
 import { GridStackEngine } from './gridstack-engine';
-import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils } from './utils';
+import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils, HeightData } from './utils';
 import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, ColumnOptions } from './types';
 import { GridStackDD } from './gridstack-dd';
 
@@ -1021,27 +1021,27 @@ export class GridStack {
   }
 
   /**
-   * Updates the margins which will set all 4 sides at once - see `GridStackOptions.margin` for format options.
-   * @param value new vertical margin value
-   * Note: you can instead use `marginTop | marginBottom | marginLeft | marginRight` GridStackOptions to set the sides separately.
+   * Updates the margins which will set all 4 sides at once - see `GridStackOptions.margin` for format options (CSS string format of 1,2,4 values or single number).
+   * @param value margin value
    */
   public margin(value: numberOrString): GridStack {
-    let data = Utils.parseHeight(value);
-    if (this.opts.marginUnit === data.unit && this.opts.margin === data.height) {
-      return;
+    let isMultiValue = (typeof value === 'string' && value.split(' ').length > 1);
+    // check if we can skip re-creating our CSS file... won't check if multi values (too much hassle)
+    if (!isMultiValue) {
+      let data = Utils.parseHeight(value);
+      if (this.opts.marginUnit === data.unit && this.opts.margin === data.height) return;
     }
-    this.opts.marginUnit = data.unit;
-    this.opts.marginTop =
-    this.opts.marginBottom =
-    this.opts.marginLeft =
-    this.opts.marginRight =
-    this.opts.margin = data.height;
+    // re-use existing margin handling
+    this.opts.margin = value;
+    this.opts.marginTop = this.opts.marginBottom = this.opts.marginLeft = this.opts.marginRight = undefined;
+    this.initMargin();
+
     this._updateStyles(true); // true = force re-create
 
     return this;
   }
 
-  /** returns current margin value (undefined if all 4 sides don't match) */
+  /** returns current margin number value (undefined if 4 sides don't match) */
   public getMargin(): number { return this.opts.margin as number; }
 
   /**
@@ -1818,9 +1818,28 @@ export class GridStack {
 
   /** @internal initialize margin top/bottom/left/right and units */
   private initMargin(): GridStack {
-    let data = Utils.parseHeight(this.opts.margin);
-    this.opts.marginUnit = data.unit;
-    let margin = this.opts.margin = data.height;
+
+    let data: HeightData;
+    let margin = 0;
+
+    // support passing multiple values like CSS (ex: '5px 10px 0 20px')
+    let margins: string[] = [];
+    if (typeof this.opts.margin === 'string') {
+      margins = this.opts.margin.split(' ')
+    }
+    if (margins.length === 2) { // top/bot, left/right like CSS
+      this.opts.marginTop = this.opts.marginBottom = margins[0];
+      this.opts.marginLeft = this.opts.marginRight = margins[1];
+    } else if (margins.length === 4) { // Clockwise like CSS
+      this.opts.marginTop = margins[0];
+      this.opts.marginRight = margins[1];
+      this.opts.marginBottom = margins[2];
+      this.opts.marginLeft = margins[3];
+    } else {
+      data = Utils.parseHeight(this.opts.margin);
+      this.opts.marginUnit = data.unit;
+      margin = this.opts.margin = data.height;
+    }
 
     // see if top/bottom/left/right need to be set as well
     if (this.opts.marginTop === undefined) {

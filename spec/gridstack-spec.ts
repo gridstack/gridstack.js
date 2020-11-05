@@ -1204,7 +1204,7 @@ describe('gridstack', function() {
       let grid: any = GridStack.init(options);
       expect(grid.getMargin()).toBe(5);
       spyOn(grid, '_updateStyles');
-      grid.margin('5px', false);
+      grid.margin('5px');
       expect(grid._updateStyles).not.toHaveBeenCalled();
       expect(grid.getMargin()).toBe(5);
     });
@@ -1236,6 +1236,46 @@ describe('gridstack', function() {
       expect(grid.opts.marginBottom).toBe(5);
       expect(grid.opts.marginLeft).toBe(5);
       expect(grid.opts.marginRight).toBe(5);
+    });
+    it('init 2 values', function() {
+      let options = {
+        cellHeight: 80,
+        margin: '5px 10'
+      };
+      let grid: any = GridStack.init(options);
+      expect(grid.getMargin()).toBe(undefined);
+      expect(grid.opts.marginTop).toBe(5);
+      expect(grid.opts.marginBottom).toBe(5);
+      expect(grid.opts.marginLeft).toBe(10);
+      expect(grid.opts.marginRight).toBe(10);
+    });
+    it('init 4 values', function() {
+      let options = {
+        cellHeight: 80,
+        margin: '1 2 0em 3'
+      };
+      let grid: any = GridStack.init(options);
+      expect(grid.getMargin()).toBe(undefined);
+      expect(grid.opts.marginTop).toBe(1);
+      expect(grid.opts.marginRight).toBe(2);
+      expect(grid.opts.marginBottom).toBe(0);
+      expect(grid.opts.marginLeft).toBe(3);
+    });
+    it('set 2 values, should update style', function() {
+      let options = {
+        cellHeight: 80,
+        margin: 5
+      };
+      let grid = GridStack.init(options); 
+      expect(grid.getMargin()).toBe(5);
+      spyOn(grid as any, '_updateStyles');
+      grid.margin('1px 0');
+      expect((grid as any)._updateStyles).toHaveBeenCalled();
+      expect(grid.getMargin()).toBe(undefined);
+      expect(grid.opts.marginTop).toBe(1);
+      expect(grid.opts.marginBottom).toBe(1);
+      expect(grid.opts.marginLeft).toBe(0);
+      expect(grid.opts.marginRight).toBe(0);
     });
   });
 
