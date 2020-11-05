@@ -100,13 +100,15 @@ export interface GridStackOptions {
   itemClass?: string;
 
   /**
-   * gap size between grid item and content (default?: 10). see also marginTop, marginRight,... Can be:
+   * gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below
    *  an integer (px)
-   *  a string (ex: '2em', '20px', '2rem')
+   *  a string with possible units (ex: '2em', '20px', '2rem')
+   *  string with space separated values (ex: '5px 10px 0 20px' for all 4 sides, or '5em 10em' for top/bottom and left/right pairs like CSS).
+   * Note: all sides must have same units (last one wins, default px)
    */
   margin?: numberOrString;
 
-  /** optional way to specify each individual margin side - default to margin */
+  /** OLD way to optionally set each side - use margin: '5px 10px 0 20px' instead. Used internally to store each side. */
   marginTop?: numberOrString;
   marginRight?: numberOrString;
   marginBottom?: numberOrString;

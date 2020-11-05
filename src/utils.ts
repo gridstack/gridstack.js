@@ -140,18 +140,18 @@ export class Utils {
 
   static parseHeight(val: numberOrString): HeightData {
     let height: number;
-    let heightUnit = 'px';
+    let unit = 'px';
     if (typeof val === 'string') {
       let match = val.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw|%)?$/);
       if (!match) {
         throw new Error('Invalid height');
       }
-      heightUnit = match[2] || 'px';
+      unit = match[2] || 'px';
       height = parseFloat(match[1]);
     } else {
       height = val;
     }
-    return { height, unit: heightUnit }
+    return { height, unit };
   }
 
   /** copies unset fields in target to use the given default sources values */

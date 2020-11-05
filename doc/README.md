@@ -384,7 +384,7 @@ Return list of GridItem HTML dom elements (excluding temporary placeholder)
 
 ### getMargin()
 
-returns current margin value.
+returns current margin value (undefined if all 4 sides don't match).
 
 ### isAreaEmpty(x, y, width, height)
 
@@ -423,9 +423,11 @@ grid.makeWidget('#gsi-1');
 
 ### margin(value: numberOrString)
 
-set the top/right/bottom/left margin between grid item and content. Parameters:
-- `value` - new margin value. see `cellHeight` for possible value formats.
-Note: you can instead use `marginTop | marginBottom | marginLeft | marginRight` so set the sides separately.
+gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below
+ - an `integer` (px)
+ - a string with possible units (ex: `'5'`, `'2em'`, `'20px'`, `'2rem'`)
+ - string with space separated values (ex: `'5px 10px 0 20px'` for all 4 sides, or `'5em 10em'` for top/bottom and left/right pairs like CSS).
+ - Note: all sides must have same units (last one wins, default px)
 
 ### maxHeight(el, val)
 

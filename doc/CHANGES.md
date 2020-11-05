@@ -46,6 +46,7 @@ Change log
 - add `data-gs-static-grid` attribute
 - fix getting DOM element by id with number works (api that uses `GridStackElement` handle more string formats)
 - fix setting `marginTop` (or any 4 sides) to cause resize to break. Thanks [@deadivan](https://github.com/deadivan) for suggested fix.
+- add `margin` support multi CSS format `'5px 10px 0 20px'` or `'5em 10em'`
 
 ## 2.1.0 (2020-10-28)
 
