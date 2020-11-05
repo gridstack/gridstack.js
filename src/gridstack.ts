@@ -1854,6 +1854,10 @@ export class GridStack {
       this.opts.marginLeft = data.height;
       delete this.opts.margin;
     }
+    
+    //without this.opts.margin, getMargin method will return undefined, and affect resize behavior
+    if(!this.opts.margin) this.opts.margin = Math.round((this.opts.marginTop + this.opts.marginBottom) / 2);
+    
     this.opts.marginUnit = data.unit; // in case side were spelled out, use those units instead...
     return this;
   }
