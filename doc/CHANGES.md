@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [2.1.0-dev](#210-dev)
+- [2.2.0-dev](#220-dev)
+- [2.2.0 (2020-11-7)](#220-2020-11-7)
 - [2.1.0 (2020-10-28)](#210-2020-10-28)
 - [2.0.2 (2020-10-05)](#202-2020-10-05)
 - [2.0.1 (2020-09-26)](#201-2020-09-26)
@@ -40,13 +41,17 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 2.1.0-dev
+## 2.2.0-dev
 
-- fix `class="ui-draggable-disabled ui-resizable-disabled"` have been added back to static grid items, so existing CSS rule to style continue working [1435](https://github.com/gridstack/gridstack.js/issues/1435)
+- TBD
+
+## 2.2.0 (2020-11-7)
+
+- add `margin` option now support multi values CSS format `'5px 10px 0 20px'` or `'5em 10em'`
 - add `data-gs-static-grid` attribute
+- fix `class="ui-draggable-disabled ui-resizable-disabled"` have been added back to static grid items, so existing CSS rule to style continue working [1435](https://github.com/gridstack/gridstack.js/issues/1435)
 - fix getting DOM element by id with number works (api that uses `GridStackElement` handle more string formats)
 - fix setting `marginTop` (or any 4 sides) to cause resize to break. Thanks [@deadivan](https://github.com/deadivan) for suggested fix.
-- add `margin` support multi CSS format `'5px 10px 0 20px'` or `'5em 10em'`
 
 ## 2.1.0 (2020-10-28)
 
