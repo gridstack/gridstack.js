@@ -1,5 +1,5 @@
 /* required file for gridstack to work */
-@import "https://cdn.jsdelivr.net/npm/gridstack@2.1.0/dist/gridstack.min.css";
+@import "https://cdn.jsdelivr.net/npm/gridstack@2.2.0/dist/gridstack.min.css";
 
 /* Optional styles for demos */
 .btn-primary {
