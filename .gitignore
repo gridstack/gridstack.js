@@ -1,6 +1,14 @@
-node_modules
-bower_components
 coverage
 dist
 *.tgz
 *.zip
+
+!node_modules/
+node_modules/*
+!node_modules/gridstack/
+node_modules/gridstack/*
+!node_modules/gridstack/dist/
+node_modules/gridstack/dist/*
+!node_modules/gridstack/dist/gridstack.all.js
+!node_modules/gridstack/dist/gridstack.min.css
+!node_modules/gridstack/dist/gridstack-extra.min.css

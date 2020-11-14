@@ -1,0 +1,21 @@
+{
+  "name": "gridstack",
+  "version": "0.0.1",
+  "description": "website for gridstack.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gridstack/gridstack.js.git"
+  },
+  "scripts": {
+    "reset": "rm -rf dist node_modules coverage && yarn"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gridstack/gridstack.js/issues"
+  },
+  "homepage": "http://gridstack.github.io/gridstack.js/",
+  "dependencies": {
+    "gridstack": "2.2.0"
+  },
+  "devDependencies": {}
+}
