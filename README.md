@@ -1,5 +1,4 @@
-gridstack.js
-============
+# gridstack.js
 
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 [![Dependency Status](https://david-dm.org/gridstack/gridstack.js.svg)](https://david-dm.org/gridstack/gridstack.js)
@@ -39,29 +38,24 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Custom columns CSS](#custom-columns-css)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [Touch devices support](#touch-devices-support)
-  - [Migrating to v0.6](#migrating-to-v06)
-  - [Migrating to v1](#migrating-to-v1)
-    - [jQuery Application](#jquery-application)
-  - [Migrating to v2](#migrating-to-v2)
+- [Migrating to v0.6](#migrating-to-v06)
+- [Migrating to v1](#migrating-to-v1)
+- [Migrating to v2](#migrating-to-v2)
+- [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-Demo and examples
-====
+# Demo and examples
 
 Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/)
 
 
-Usage
-=====
+# Usage
 
 ## Install
-
-* Using yarn / npm:
-
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
 ```js
@@ -76,31 +70,15 @@ ES6 or Typescript
 
 ```js
 import { GridStack } from 'gridstack';
-import 'gridstack/dist/gridstack.css';
-```
-
-legacy javascript. If you need to import individual files (see [jquery apps](#jquery-application) section)
-
-```js
-import 'gridstack/dist/gridstack.all.js';
-import 'gridstack/dist/gridstack.css';
+import 'gridstack/dist/gridstack.min.css';
 ```
 
 alternatively in html
 
 ```html
-<link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.min.css" />
+<link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
 <script src="node_modules/gridstack/dist/gridstack.all.js"></script>
 ```
-
-or using CDN (minimized):
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.2.0/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@2.2.0/dist/gridstack.all.js"></script>
-```
-
-.map files are included for debugging purposes.
 
 ## Basic usage
 
@@ -149,7 +127,7 @@ see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example
 
 ## Requirements
 
-GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). All you need to include is `gridstack.all.js` and `gridstack.css` (layouts are done using CSS column based %).
+GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). All you need to include is `gridstack.all.js` and `gridstack.min.css` (layouts are done using CSS column based %).
 
 ## API Documentation
 
@@ -177,11 +155,11 @@ grid.printCount();
 search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
 
 - vue.js: see [demo v3](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue3js.html) or [demo v2](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue2js.html) 
+- React: [react gridstack example](https://github.com/Inder2108/react-gridstack-example)
 - ember: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
+- Angular9: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance. recommend for concept ONLY. Working on creating an Angular wrapper as that is we use ourself...
 - AngularJS: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
-- Angular8: [lb-gridstack](https://github.com/pfms84/lb-gridstack)
 - Rails: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
-- React: [react-gridstack](https://github.com/pitrho/react-gridstack)
 
 ## Change grid columns
 
@@ -194,12 +172,12 @@ GridStack.init( {column: N} );
 
 2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.2.0/dist/gridstack-extra.css"/>
+<link href="node_modules/gridstack/dist/gridstack-extra.css" rel="stylesheet"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
 
-Note: we added `grid-stack-N` class and `gridstack-extra.css` which defines CSS for grids with custom [1-12] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
+Note: we added `.grid-stack-N` and include `gridstack-extra.css` which defines CSS for grids with custom [2-11] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
 
 See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html) with 6 columns
 
@@ -300,11 +278,11 @@ GridStack.init(options);
 If you're still experiencing issues on touch devices please check [#444](https://github.com/gridstack/gridstack.js/issues/444)
 
 
-## Migrating to v0.6
+# Migrating to v0.6
 
 starting in 0.6.x `change` event are no longer sent (for pretty much most nodes!) when an item is just added/deleted unless it also changes other nodes (was incorrect and causing inefficiencies). You may need to track `added|removed` [events](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) if you didn't and relied on the old broken behavior.
 
-## Migrating to v1
+# Migrating to v1
 
 v1.0.0 removed Jquery from the API and external dependencies, which will require some code changes. Here is a list of the changes:
 
@@ -355,15 +333,7 @@ Other changes
 
 Recommend looking at the [many samples](./demo) for more code examples.
 
-### jQuery Application
-
-We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306)).
-
-Note: v2.0.0 does not currently support importing GridStack Drag&Drop without also including our jquery + jqueryui. Still trying to figure how to make that bundle possible. You will have to use 1.x
-
-As for events, you can still use `$(".grid-stack").on(...)` while jqueryui is used internally for things we don't support, but recommended you don't as that will get dropped at some point.
-
-## Migrating to v2
+# Migrating to v2
 
 make sure to read v1 migration first!
 
@@ -386,13 +356,20 @@ v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes a
 
 **Note:** 2.x no longer support legacy IE11 and older due to using more compact ES6 output and typecsript native code. You will need to stay at 1.x
 
-Changes
-=====
+# jQuery Application
+
+We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306)).
+
+Note: v2.0.0 does not currently support importing GridStack Drag&Drop without also including our jquery + jqueryui. Still trying to figure how to make that bundle possible. You will have to use 1.x
+
+As for events, you can still use `$(".grid-stack").on(...)` while jqueryui is used internally for things we don't support, but recommended you don't as that will get dropped at some point.
+
+
+# Changes
 
 View our change log [here](https://github.com/gridstack/gridstack.js/tree/develop/doc/CHANGES.md).
 
 
-The Team
-========
+# The Team
 
 gridstack.js is currently maintained by [Alain Dumesny](https://github.com/adumesny) and [Dylan Weiss](https://github.com/radiolips), originally created by [Pavel Reznikov](https://github.com/troolee). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
