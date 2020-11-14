@@ -49,9 +49,9 @@ Change log
 
 - add `margin` option now support multi values CSS format `'5px 10px 0 20px'` or `'5em 10em'`
 - add `data-gs-static-grid` attribute
-- fix `class="ui-draggable-disabled ui-resizable-disabled"` have been added back to static grid items, so existing CSS rule to style continue working [1435](https://github.com/gridstack/gridstack.js/issues/1435)
-- fix getting DOM element by id with number works (api that uses `GridStackElement` handle more string formats)
-- fix setting `marginTop` (or any 4 sides) to cause resize to break. Thanks [@deadivan](https://github.com/deadivan) for suggested fix.
+- fix [1435](https://github.com/gridstack/gridstack.js/issues/1435) `class="ui-draggable-disabled ui-resizable-disabled"` have been added back to static grid items, so existing CSS rule to style continue working 
+- fix [1439](https://github.com/gridstack/gridstack.js/pull/1439) getting DOM element by id with number works (api that uses `GridStackElement` handle more string formats)
+- fix [1442](https://github.com/gridstack/gridstack.js/pull/1442) setting `marginTop` (or any 4 sides) to cause resize to break. Thanks [@deadivan](https://github.com/deadivan) for suggested fix.
 
 ## 2.1.0 (2020-10-28)
 
