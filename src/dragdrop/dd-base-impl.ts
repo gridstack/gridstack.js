@@ -1,8 +1,7 @@
 // dd-base-impl.ts 2.0.2-dev @preserve
-
 /**
  * https://gridstackjs.com/
- * (c) 2020 Alain Dumesny, rhlin
+ * (c) 2020 rhlin, Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
 export type EventCallback = (event: Event) => boolean|void;
@@ -28,7 +27,7 @@ export abstract class DDBaseImplement {
   }
   triggerEvent(eventName: string, event: Event): boolean|void {
     if (this.disabled) { return; }
-    if (!this.eventRegister) {return; } // used when destory before triggerEvent fire
+    if (!this.eventRegister) {return; } // used when destroy before triggerEvent fire
     if (this.eventRegister[eventName]) {
       return this.eventRegister[eventName](event);
     }

@@ -1,12 +1,9 @@
 // dd-resizable-handle.ts 2.0.2-dev @preserve
-
 /**
  * https://gridstackjs.com/
- * (c) 2020 Alain Dumesny, rhlin
+ * (c) 2020 rhlin, Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
-import { DDUtils } from "./dd-utils";
-
 export interface DDResizableHandleOpt {
   start?: (event) => void;
   move?: (event) => void;
@@ -37,17 +34,16 @@ export class DDResizableHandle {
     this.el = el;
     this.host.appendChild(this.el);
     this.el.addEventListener('mousedown', this.mouseDown);
-    this.mouseMoveThrottle = DDUtils.throttle(this.mouseMove, 100);
   }
 
   protected mouseDown = (event: MouseEvent) => {
     this.mouseDownEvent = event;
     setTimeout(() => {
-      document.addEventListener('mousemove', this.mouseMoveThrottle, true);
+      document.addEventListener('mousemove', this.mouseMove, true);
       document.addEventListener('mouseup', this.mouseUp);
       setTimeout(() => {
         if (!this.mouseMoving) {
-          document.removeEventListener('mousemove', this.mouseMoveThrottle, true);
+          document.removeEventListener('mousemove', this.mouseMove, true);
           document.removeEventListener('mouseup', this.mouseUp);
           this.mouseDownEvent = undefined;
         }
@@ -55,25 +51,24 @@ export class DDResizableHandle {
     }, 100);
   }
 
-  protected mouseMoveThrottle: (event: MouseEvent) => void;
   protected mouseMove = (event: MouseEvent) => {
     if (!this.started && !this.mouseMoving) {
       if (this.hasMoved(event, this.mouseDownEvent)) {
         this.mouseMoving = true;
-        this.triggleEvent('start', this.mouseDownEvent);
+        this.triggerEvent('start', this.mouseDownEvent);
         this.started = true;
       }
     }
     if (this.started) {
-      this.triggleEvent('move', event);
+      this.triggerEvent('move', event);
     }
   }
 
   protected mouseUp = (event: MouseEvent) => {
     if (this.mouseMoving) {
-      this.triggleEvent('stop', event);
+      this.triggerEvent('stop', event);
     }
-    document.removeEventListener('mousemove', this.mouseMoveThrottle, true);
+    document.removeEventListener('mousemove', this.mouseMove, true);
     document.removeEventListener('mouseup', this.mouseUp);
     this.mouseMoving = false;
     this.started = false;
@@ -97,11 +92,11 @@ export class DDResizableHandle {
     this.el.style.display = 'none';
   }
 
-  destory() {
+  destroy() {
     this.host.removeChild(this.el);
   }
 
-  triggleEvent(name: string, event: MouseEvent) {
+  triggerEvent(name: string, event: MouseEvent) {
     if (this.option[name]) {
       this.option[name](event);
     }
