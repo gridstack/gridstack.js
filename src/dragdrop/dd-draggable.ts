@@ -1,4 +1,5 @@
-// dd-draggable.ts 2.0.2-dev @preserve
+// dd-draggable.ts 2.2.0-dev @preserve
+
 /**
  * https://gridstackjs.com/
  * (c) 2020 rhlin, Alain Dumesny
@@ -107,7 +108,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (this.helper !== this.el) {
       this.setupDragFollowNodeNNotifyStart(ev);
     } else {
-      this.dragFollowTimer = setTimeout(() => {
+      this.dragFollowTimer = window.setTimeout(() => {
         this.dragFollowTimer = undefined;
         this.setupDragFollowNodeNNotifyStart(ev);
       }, 0);

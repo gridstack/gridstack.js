@@ -17,9 +17,6 @@ export * from './utils';
 export * from './gridstack-engine';
 export * from './gridstack-dd';
 
-// TEMPORARY import the jquery-ui drag&drop since we don't have alternative yet and don't expect users to create their own yet
-export * from './jq/gridstack-dd-jqueryui';
-
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
 export interface GridHTMLElement extends HTMLElement {

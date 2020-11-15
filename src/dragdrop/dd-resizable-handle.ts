@@ -1,4 +1,5 @@
-// dd-resizable-handle.ts 2.0.2-dev @preserve
+// dd-resizable-handle.ts 2.2.0-dev @preserve
+
 /**
  * https://gridstackjs.com/
  * (c) 2020 rhlin, Alain Dumesny
