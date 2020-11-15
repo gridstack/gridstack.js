@@ -9,5 +9,4 @@ export * from './gridstack-dd';
 export * from './gridstack';
 
 export * from './dragdrop/gridstack-dd-native';
-
 // declare module 'gridstack'; for umd ?

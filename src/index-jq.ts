@@ -9,5 +9,4 @@ export * from './gridstack-dd';
 export * from './gridstack';
 
 export * from './jq/gridstack-dd-jqueryui';
-
 // declare module 'gridstack'; for umd ?

@@ -7,5 +7,4 @@ export * from './utils';
 export * from './gridstack-engine';
 export * from './gridstack-dd';
 export * from './gridstack';
-
 // declare module 'gridstack'; for umd ?
