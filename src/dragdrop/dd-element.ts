@@ -9,85 +9,97 @@ import { DDResizable, DDResizableOpt } from './dd-resizable';
 import { GridItemHTMLElement } from './../types';
 import { DDDraggable, DDDraggableOpt } from './dd-draggable';
 import { DDDroppable, DDDroppableOpt } from './dd-droppable';
+
 export interface DDElementHost extends GridItemHTMLElement {
   ddElement?: DDElement;
 }
+
 export class DDElement {
-  static init(el) {
-    el.ddElement = new DDElement(el);
+
+  static init(el: DDElementHost): DDElement {
+    if (!el.ddElement) { el.ddElement = new DDElement(el); }
     return el.ddElement;
   }
-  el: DDElementHost;
-  ddDraggable?: DDDraggable;
-  ddDroppable?: DDDroppable;
-  ddResizable?: DDResizable;
+
+  public el: DDElementHost;
+  public ddDraggable?: DDDraggable;
+  public ddDroppable?: DDDroppable;
+  public ddResizable?: DDResizable;
+
   constructor(el: DDElementHost) {
     this.el = el;
   }
-  on(eventName: string, callback: (event: MouseEvent) => void) {
+
+  public on(eventName: string, callback: (event: MouseEvent) => void): DDElement {
     if (this.ddDraggable && ['drag', 'dragstart', 'dragstop'].indexOf(eventName) > -1) {
       this.ddDraggable.on(eventName as 'drag' | 'dragstart' | 'dragstop', callback);
-      return;
-    }
-    if (this.ddDroppable && ['drop', 'dropover', 'dropout'].indexOf(eventName) > -1) {
+    } else if (this.ddDroppable && ['drop', 'dropover', 'dropout'].indexOf(eventName) > -1) {
       this.ddDroppable.on(eventName as 'drop' | 'dropover' | 'dropout', callback);
-      return;
-    }
-    if (this.ddResizable && ['resizestart', 'resize', 'resizestop'].indexOf(eventName) > -1) {
+    } else if (this.ddResizable && ['resizestart', 'resize', 'resizestop'].indexOf(eventName) > -1) {
       this.ddResizable.on(eventName as 'resizestart' | 'resize' | 'resizestop', callback);
-      return;
     }
-    return;
+    return this;
   }
-  off(eventName: string) {
+
+  public off(eventName: string): DDElement {
     if (this.ddDraggable && ['drag', 'dragstart', 'dragstop'].indexOf(eventName) > -1) {
       this.ddDraggable.off(eventName as 'drag' | 'dragstart' | 'dragstop');
-      return;
-    }
-    if (this.ddDroppable && ['drop', 'dropover', 'dropout'].indexOf(eventName) > -1) {
+    } else if (this.ddDroppable && ['drop', 'dropover', 'dropout'].indexOf(eventName) > -1) {
       this.ddDroppable.off(eventName as 'drop' | 'dropover' | 'dropout');
-      return;
-    }
-    if (this.ddResizable && ['resizestart', 'resize', 'resizestop'].indexOf(eventName) > -1) {
+    } else if (this.ddResizable && ['resizestart', 'resize', 'resizestop'].indexOf(eventName) > -1) {
       this.ddResizable.off(eventName as 'resizestart' | 'resize' | 'resizestop');
-      return;
     }
-    return;
+    return this;
   }
-  setupDraggable(opts: DDDraggableOpt) {
+
+  public setupDraggable(opts: DDDraggableOpt): DDElement {
     if (!this.ddDraggable) {
       this.ddDraggable = new DDDraggable(this.el, opts);
     } else {
       this.ddDraggable.updateOption(opts);
     }
+    return this;
   }
-  setupResizable(opts: DDResizableOpt) {
+
+  public cleanDraggable(): DDElement {
+    if (this.ddDraggable) {
+      this.ddDraggable.destroy();
+      delete this.ddDraggable;
+    }
+    return this;
+  }
+
+  public setupResizable(opts: DDResizableOpt): DDElement {
     if (!this.ddResizable) {
       this.ddResizable = new DDResizable(this.el, opts);
     } else {
       this.ddResizable.updateOption(opts);
     }
+    return this;
   }
-  cleanDraggable() {
-    if (!this.ddDraggable) { return; }
-    this.ddDraggable.destroy();
-    this.ddDraggable = undefined;
+
+  public cleanResizable(): DDElement {
+    if (this.ddResizable) {
+      this.ddResizable.destroy();
+      delete this.ddResizable;
+    }
+    return this;
   }
-  setupDroppable(opts: DDDroppableOpt) {
+
+  public setupDroppable(opts: DDDroppableOpt): DDElement {
     if (!this.ddDroppable) {
       this.ddDroppable = new DDDroppable(this.el, opts);
     } else {
       this.ddDroppable.updateOption(opts);
     }
+    return this;
   }
-  cleanDroppable() {
-    if (!this.ddDroppable) { return; }
-    this.ddDroppable.destroy();
-    this.ddDroppable = undefined;
-  }
-  cleanResizable() {
-    if (!this.cleanResizable) { return; }
-    this.ddResizable.destroy();
-    this.ddResizable = undefined;
+
+  public cleanDroppable(): DDElement {
+    if (this.ddDroppable) {
+      this.ddDroppable.destroy();
+      delete this.ddDroppable;
+    }
+    return this;
   }
 }

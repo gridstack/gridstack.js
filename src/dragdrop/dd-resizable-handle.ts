@@ -10,15 +10,17 @@ export interface DDResizableHandleOpt {
   move?: (event) => void;
   stop?: (event) => void;
 }
+
 export class DDResizableHandle {
-  static prefix = 'ui-resizable-';
-  el: HTMLElement;
-  host: HTMLElement;
-  option: DDResizableHandleOpt;
-  dir: string;
+  public el: HTMLElement;
+  public host: HTMLElement;
+  public option: DDResizableHandleOpt;
+  public dir: string;
   private mouseMoving = false;
   private started = false;
   private mouseDownEvent: MouseEvent;
+  private static prefix = 'ui-resizable-';
+
   constructor(host: HTMLElement, direction: string, option: DDResizableHandleOpt) {
     this.host = host;
     this.dir = direction;
@@ -26,7 +28,7 @@ export class DDResizableHandle {
     this.init();
   }
 
-  init() {
+  public init(): DDResizableHandle {
     const el = document.createElement('div');
     el.classList.add('ui-resizable-handle');
     el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
@@ -35,9 +37,10 @@ export class DDResizableHandle {
     this.el = el;
     this.host.appendChild(this.el);
     this.el.addEventListener('mousedown', this.mouseDown);
+    return this;
   }
 
-  protected mouseDown = (event: MouseEvent) => {
+  private mouseDown = (event: MouseEvent): void => {
     this.mouseDownEvent = event;
     setTimeout(() => {
       document.addEventListener('mousemove', this.mouseMove, true);
@@ -46,13 +49,13 @@ export class DDResizableHandle {
         if (!this.mouseMoving) {
           document.removeEventListener('mousemove', this.mouseMove, true);
           document.removeEventListener('mouseup', this.mouseUp);
-          this.mouseDownEvent = undefined;
+          delete this.mouseDownEvent;
         }
       }, 300);
     }, 100);
   }
 
-  protected mouseMove = (event: MouseEvent) => {
+  private mouseMove = (event: MouseEvent): void => {
     if (!this.started && !this.mouseMoving) {
       if (this.hasMoved(event, this.mouseDownEvent)) {
         this.mouseMoving = true;
@@ -65,7 +68,7 @@ export class DDResizableHandle {
     }
   }
 
-  protected mouseUp = (event: MouseEvent) => {
+  private mouseUp = (event: MouseEvent): void => {
     if (this.mouseMoving) {
       this.triggerEvent('stop', event);
     }
@@ -73,10 +76,10 @@ export class DDResizableHandle {
     document.removeEventListener('mouseup', this.mouseUp);
     this.mouseMoving = false;
     this.started = false;
-    this.mouseDownEvent = undefined;
+    delete this.mouseDownEvent;
   }
 
-  private hasMoved(event: MouseEvent, oEvent: MouseEvent) {
+  private hasMoved(event: MouseEvent, oEvent: MouseEvent): boolean {
     const { clientX, clientY } = event;
     const { clientX: oClientX, clientY: oClientY } = oEvent;
     return (
@@ -85,22 +88,15 @@ export class DDResizableHandle {
     );
   }
 
-  show() {
-    this.el.style.display = 'block';
-  }
-
-  hide() {
-    this.el.style.display = 'none';
-  }
-
-  destroy() {
+  public destroy(): DDResizableHandle {
     this.host.removeChild(this.el);
+    return this;
   }
 
-  triggerEvent(name: string, event: MouseEvent) {
+  private triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
     if (this.option[name]) {
       this.option[name](event);
     }
+    return this;
   }
-
 }

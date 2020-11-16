@@ -5,8 +5,10 @@
  * (c) 2020 rhlin, Alain Dumesny
  * gridstack.js may be freely distributed under the MIT license.
 */
+
 export class DDUtils {
-  static isEventSupportPassiveOption = ((() => {
+
+  public static isEventSupportPassiveOption = ((() => {
     let supportsPassive = false;
     let passiveTest = () => {
       // do nothing
@@ -21,13 +23,13 @@ export class DDUtils {
     return supportsPassive;
   })());
 
-  static clone(el: HTMLElement): HTMLElement {
+  public static clone(el: HTMLElement): HTMLElement {
     const node = el.cloneNode(true) as HTMLElement;
     node.removeAttribute('id');
     return node;
   }
 
-  static appendTo(el: HTMLElement, parent: string | HTMLElement | Node) {
+  public static appendTo(el: HTMLElement, parent: string | HTMLElement | Node): void {
     let parentNode: HTMLElement;
     if (typeof parent === 'string') {
       parentNode = document.querySelector(parent as string);
@@ -38,13 +40,14 @@ export class DDUtils {
       parentNode.append(el);
     }
   }
-  static setPositionRelative(el) {
+
+  public static setPositionRelative(el): void {
     if (!(/^(?:r|a|f)/).test(window.getComputedStyle(el).position)) {
       el.style.position = "relative";
     }
   }
 
-  static addElStyles(el: HTMLElement, styles: { [prop: string]: string | string[] }) {
+  public static addElStyles(el: HTMLElement, styles: { [prop: string]: string | string[] }): void {
     if (styles instanceof Object) {
       for (const s in styles) {
         if (styles.hasOwnProperty(s)) {
@@ -60,14 +63,8 @@ export class DDUtils {
       }
     }
   }
-  static copyProps(dst, src, props) {
-    for (let i = 0; i < props.length; i++) {
-      const p = props[i];
-      dst[p] = src[p];
-    }
-  }
 
-  static initEvent<T>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }) {
+  public static initEvent<T>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): T {
     const kbdProps = 'altKey,ctrlKey,metaKey,shiftKey'.split(',');
     const ptProps = 'pageX,pageY,clientX,clientY,screenX,screenY'.split(',');
     const evt = { type: info.type };
@@ -87,5 +84,12 @@ export class DDUtils {
     DDUtils.copyProps(evt, e, ptProps);
     DDUtils.copyProps(evt, obj, Object.keys(obj));
     return evt as unknown as T;
+  }
+
+  private static copyProps(dst: unknown, src: unknown, props: string[]): void {
+    for (let i = 0; i < props.length; i++) {
+      const p = props[i];
+      dst[p] = src[p];
+    }
   }
 }

@@ -123,6 +123,7 @@ export class GridStackDDNative extends GridStackDD {
     dEl.off(name);
     return this;
   }
+
   private getGridStackDDElement(el: GridStackElement): DDElement {
     let dEl;
     if (typeof el === 'string') {

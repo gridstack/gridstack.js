@@ -8,7 +8,7 @@
 
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils, HeightData } from './utils';
-import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, ColumnOptions } from './types';
+import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, ColumnOptions, DDUIData } from './types';
 import { GridStackDD } from './gridstack-dd';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -533,7 +533,7 @@ export class GridStack {
     this.opts.column = this.engine.column = column;
 
     // update the items now - see if the dom order nodes should be passed instead (else default to current list)
-    let domNodes: GridStackNode[] = undefined; // explicitly leave not defined
+    let domNodes: GridStackNode[];
     if (column === 1 && this.opts.oneColumnModeDomSort) {
       domNodes = [];
       this.getGridItems().forEach(el => {
@@ -1227,18 +1227,18 @@ export class GridStack {
   /** @internal prepares the element for drag&drop **/
   private _prepareDragDropByNode(node: GridStackNode): GridStack {
     // check for disabled grid first
-    if (this.opts.staticGrid || node.locked) {
+    if (this.opts.staticGrid || node.locked ||
+      ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
       if (node._initDD) {
         this.dd.remove(node.el); // nukes everything instead of just disable, will add some styles back next
         delete node._initDD;
       }
       node.el.classList.add('ui-draggable-disabled', 'ui-resizable-disabled'); // add styles one might depend on #1435
-      return;
+      return this;
     }
-    // check if init already done or not needed (static/disabled)
-    if (node._initDD || this.opts.staticGrid ||
-      ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
-      return;
+    // check if init already done
+    if (node._initDD) {
+      return this;
     }
 
     // remove our style that look like D&D
@@ -1250,8 +1250,8 @@ export class GridStack {
     let el = node.el;
 
     /** called when item starts moving/resizing */
-    let onStartMoving = (event, ui) => {
-      let target: HTMLElement = event.target;
+    let onStartMoving = (event: Event, ui: DDUIData): void => {
+      let target = event.target as HTMLElement;
 
       // trigger any 'dragstart' / 'resizestart' manually
       if (this._gsEventHandler[event.type]) {
@@ -1279,7 +1279,7 @@ export class GridStack {
     }
 
     /** called when item is being dragged/resized */
-    let dragOrResize = (event: Event, ui) => {
+    let dragOrResize = (event: Event, ui: DDUIData): void => {
       let x = Math.round(ui.position.left / cellWidth);
       let y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
       let width;
@@ -1340,7 +1340,7 @@ export class GridStack {
     }
 
     /** called when the item stops moving/resizing */
-    let onEndMoving = (event: Event) => {
+    let onEndMoving = (event: Event): void => {
       if (this.placeholder.parentNode === this.el) {
         this.placeholder.remove();
       }
