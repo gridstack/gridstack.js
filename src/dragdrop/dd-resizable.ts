@@ -8,6 +8,8 @@
 import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { DDUtils } from './dd-utils';
+import { DDUIData, Rect, Size } from '../types';
+
 export interface DDResizableOpt {
   autoHide?: boolean;
   handles?: string;
@@ -16,56 +18,69 @@ export interface DDResizableOpt {
   minHeight?: number;
   minWidth?: number;
   basePosition?: 'fixed' | 'absolute';
-  start?: (event: MouseEvent, ui) => void;
-  stop?: (event: MouseEvent, ui) => void;
-  resize?: (event: MouseEvent, ui) => void;
+  start?: (event: Event, ui: DDUIData) => void;
+  stop?: (event: Event) => void;
+  resize?: (event: Event, ui: DDUIData) => void;
 }
+
 export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt<DDResizableOpt> {
-  static originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
-  el: HTMLElement;
-  option: DDResizableOpt;
-  handlers: DDResizableHandle[];
-  helper: HTMLElement;
-  originalRect;
-  temporalRect;
+
+  public el: HTMLElement;
+  public option: DDResizableOpt;
+  public handlers: DDResizableHandle[];
+  public helper: HTMLElement;
+  public originalRect: Rect;
+  public temporalRect: Rect;
+
   private startEvent: MouseEvent;
   private elOriginStyle;
   private parentOriginStylePosition;
-  constructor(el: HTMLElement, opts: DDResizableOpt) {
+  private static originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
+
+  constructor(el: HTMLElement, opts: DDResizableOpt = {}) {
     super();
     this.el = el;
-    this.option = opts || {};
+    this.option = opts;
     this.init();
   }
-  on(event: 'resizestart' | 'resize' | 'resizestop', callback: (event: DragEvent) => void): void {
+
+  public on(event: 'resizestart' | 'resize' | 'resizestop', callback: (event: DragEvent) => void): void {
     super.on(event, callback);
   }
-  off(event: 'resizestart' | 'resize' | 'resizestop') {
+
+  public off(event: 'resizestart' | 'resize' | 'resizestop'): void {
     super.off(event);
   }
-  enable() {
-    if (!this.disabled) { return; }
-    super.enable();
-    this.el.classList.remove('ui-resizable-disabled');
-  }
-  disable() {
-    if (this.disabled) { return; }
-    super.disable();
-    this.el.classList.add('ui-resizable-disabled');
-  }
-  updateOption(opts: DDResizableOpt) {
-    let updateHandles = false;
-    let updateAutoHide = false;
-    if (opts.handles !== this.option.handles) {
-      updateHandles = true;
+
+  public enable(): void {
+    if (this.disabled) {
+      super.enable();
+      this.el.classList.remove('ui-resizable-disabled');
     }
-    if (opts.autoHide !== this.option.autoHide) {
-      updateAutoHide = true;
+  }
+
+  public disable(): void {
+    if (!this.disabled) {
+      super.disable();
+      this.el.classList.add('ui-resizable-disabled');
     }
-    Object.keys(opts).forEach(key => {
-      const value = opts[key];
-      this.option[key] = value;
-    });
+  }
+
+  public destroy(): void {
+    this.removeHandlers();
+    if (this.option.autoHide) {
+      this.el.removeEventListener('mouseover', this.showHandlers);
+      this.el.removeEventListener('mouseout', this.hideHandlers);
+    }
+    this.el.classList.remove('ui-resizable');
+    delete this.el;
+    super.destroy();
+  }
+
+  public updateOption(opts: DDResizableOpt): DDResizable {
+    let updateHandles = (opts.handles && opts.handles !== this.option.handles);
+    let updateAutoHide = (opts.autoHide && opts.autoHide !== this.option.autoHide);
+    Object.keys(opts).forEach(key => this.option[key] = opts[key]);
     if (updateHandles) {
       this.removeHandlers();
       this.setupHandlers();
@@ -73,15 +88,17 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     if (updateAutoHide) {
       this.setupAutoHide();
     }
+    return this;
   }
 
-  protected init() {
+  protected init(): DDResizable {
     this.el.classList.add('ui-resizable');
     this.setupAutoHide();
     this.setupHandlers();
+    return this;
   }
 
-  protected setupAutoHide() {
+  protected setupAutoHide(): DDResizable {
     if (this.option.autoHide) {
       this.el.classList.add('ui-resizable-autohide');
       // use mouseover/mouseout instead of mouseenter mouseleave to get better performance;
@@ -92,17 +109,18 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       this.el.removeEventListener('mouseover', this.showHandlers);
       this.el.removeEventListener('mouseout', this.hideHandlers);
     }
+    return this;
   }
 
-  protected showHandlers = () => {
+  private showHandlers = () => {
     this.el.classList.remove('ui-resizable-autohide');
   }
 
-  protected hideHandlers = () => {
+  private hideHandlers = () => {
     this.el.classList.add('ui-resizable-autohide');
   }
 
-  protected setupHandlers() {
+  protected setupHandlers(): DDResizable {
     let handlerDirection = this.option.handles || 'e,s,se';
     if (handlerDirection === 'all') {
       handlerDirection = 'n,e,s,w,se,sw,ne,nw';
@@ -120,9 +138,10 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
           this.resizing(event, dir);
         }
       }));
+    return this;
   }
 
-  protected resizeStart(event: MouseEvent) {
+  protected resizeStart(event: MouseEvent): DDResizable {
     this.originalRect = this.el.getBoundingClientRect();
     this.startEvent = event;
     this.setupHelper();
@@ -133,9 +152,10 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     this.el.classList.add('ui-resizable-resizing');
     this.triggerEvent('resizestart', ev);
+    return this;
   }
 
-  protected resizing(event: MouseEvent, dir: string) {
+  protected resizing(event: MouseEvent, dir: string): DDResizable {
     this.temporalRect = this.getChange(event, dir);
     this.applyChange();
     const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
@@ -143,22 +163,24 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       this.option.resize(ev, this.ui());
     }
     this.triggerEvent('resize', ev);
+    return this;
   }
 
-  protected resizeStop(event: MouseEvent) {
+  protected resizeStop(event: MouseEvent): DDResizable {
     const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resizestop', target: this.el });
     if (this.option.stop) {
-      this.option.stop(ev, this.ui());
+      this.option.stop(ev); // Note: ui() not used by gridstack so don't pass
     }
     this.el.classList.remove('ui-resizable-resizing');
     this.triggerEvent('resizestop', ev);
     this.cleanHelper();
-    this.startEvent = undefined;
-    this.originalRect = undefined;
-    this.temporalRect = undefined;
+    delete this.startEvent;
+    delete this.originalRect;
+    delete this.temporalRect;
+    return this;
   }
 
-  private setupHelper() {
+  private setupHelper(): DDResizable {
     this.elOriginStyle = DDResizable.originStyleProp.map(prop => this.el.style[prop]);
     this.parentOriginStylePosition = this.el.parentElement.style.position;
     if (window.getComputedStyle(this.el.parentElement).position.match(/static/)) {
@@ -167,16 +189,20 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.el.style.position = this.option.basePosition || 'absolute'; // or 'fixed'
     this.el.style.opacity = '0.8';
     this.el.style.zIndex = '1000';
+    return this;
   }
-  private cleanHelper() {
+
+  private cleanHelper(): DDResizable {
     DDResizable.originStyleProp.forEach(prop => {
       this.el.style[prop] = this.elOriginStyle[prop] || null;
     });
     this.el.parentElement.style.position = this.parentOriginStylePosition || null;
+    return this;
   }
-  private getChange(event: MouseEvent, dir: string) {
+
+  private getChange(event: MouseEvent, dir: string): Rect {
     const oEvent = this.startEvent;
-    const newRect = {
+    const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
       height: this.originalRect.height,
       left: this.originalRect.left,
@@ -215,7 +241,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     return newRect;
   }
 
-  private getReShapeSize(oWidth, oHeight) {
+  private getReShapeSize(oWidth: number, oHeight: number): Size {
     const maxWidth = this.option.maxWidth || oWidth;
     const minWidth = this.option.minWidth || oWidth;
     const maxHeight = this.option.maxHeight || oHeight;
@@ -225,7 +251,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     return { width, height };
   }
 
-  private applyChange() {
+  private applyChange(): DDResizable {
     let containmentRect = { left: 0, top: 0, width: 0, height: 0 };
     if (this.el.style.position === 'absolute') {
       const containmentEl = this.el.parentElement;
@@ -236,48 +262,41 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       const value = this.temporalRect[key];
       this.el.style[key] = value - containmentRect[key] + 'px';
     });
+    return this;
   }
 
-  protected removeHandlers() {
+  protected removeHandlers(): DDResizable {
     this.handlers.forEach(handle => handle.destroy());
-    this.handlers = undefined;
+    delete this.handlers;
+    return this;
   }
 
-  destroy() {
-    this.removeHandlers();
-    if (this.option.autoHide) {
-      this.el.removeEventListener('mouseover', this.showHandlers);
-      this.el.removeEventListener('mouseout', this.hideHandlers);
-    }
-    this.el.classList.remove('ui-resizable');
-    this.el = undefined;
-    super.destroy();
-  }
-
-  ui = () => {
+  private ui = (): DDUIData => {
     const containmentEl = this.el.parentElement;
     const containmentRect = containmentEl.getBoundingClientRect();
     const rect = this.temporalRect || this.originalRect;
     return {
-      element: [this.el], // The object representing the element to be resized
-      helper: [], // TODO: not support yet - The object representing the helper that's being resized
-      originalElement: [this.el],// we don't wrap here, so simplify as this.el //The object representing the original element before it is wrapped
-      originalPosition: {
-        left: this.originalRect.left - containmentRect.left,
-        top: this.originalRect.top - containmentRect.top
-      }, // The position represented as { left, top } before the resizable is resized
-      originalSize: {
-        width: this.originalRect.width,
-        height: this.originalRect.height
-      },// The size represented as { width, height } before the resizable is resized
       position: {
         left: rect.left - containmentRect.left,
         top: rect.top - containmentRect.top
-      }, // The current position represented as { left, top }
+      },
       size: {
         width: rect.width,
         height: rect.height
-      } // The current size represented as { width, height }
+      }
+      /* Gridstack ONLY needs position set above... keep around in case.
+      element: [this.el], // The object representing the element to be resized
+      helper: [], // TODO: not support yet - The object representing the helper that's being resized
+      originalElement: [this.el],// we don't wrap here, so simplify as this.el //The object representing the original element before it is wrapped
+      originalPosition: { // The position represented as { left, top } before the resizable is resized
+        left: this.originalRect.left - containmentRect.left,
+        top: this.originalRect.top - containmentRect.top
+      },
+      originalSize: { // The size represented as { width, height } before the resizable is resized
+        width: this.originalRect.width,
+        height: this.originalRect.height
+      }
+      */
     };
   }
 }

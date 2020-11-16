@@ -6,6 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 import { DDDraggable } from './dd-draggable';
+
 export class DDManager {
   static dragElement: DDDraggable;
 }

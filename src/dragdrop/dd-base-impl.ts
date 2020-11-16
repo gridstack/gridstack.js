@@ -7,26 +7,32 @@
 */
 export type EventCallback = (event: Event) => boolean|void;
 export abstract class DDBaseImplement {
-  disabled = false;
+  protected disabled = false;
   private eventRegister: {
     [eventName: string]: EventCallback;
   } = {};
-  on(event: string, callback: EventCallback): void {
+
+  public on(event: string, callback: EventCallback): void {
     this.eventRegister[event] = callback;
   }
-  off(event: string) {
+
+  public off(event: string): void {
     delete this.eventRegister[event];
   }
-  enable(): void {
+
+  public enable(): void {
     this.disabled = false;
   }
-  disable(): void {
+
+  public disable(): void {
     this.disabled = true;
   }
-  destroy() {
-    this.eventRegister = undefined;
+
+  public destroy(): void {
+    delete this.eventRegister;
   }
-  triggerEvent(eventName: string, event: Event): boolean|void {
+
+  public triggerEvent(eventName: string, event: Event): boolean|void {
     if (this.disabled) { return; }
     if (!this.eventRegister) {return; } // used when destroy before triggerEvent fire
     if (this.eventRegister[eventName]) {
@@ -38,5 +44,5 @@ export abstract class DDBaseImplement {
 export interface HTMLElementExtendOpt<T> {
   el: HTMLElement;
   option: T;
-  updateOption(T): void;
+  updateOption(T): DDBaseImplement;
 }

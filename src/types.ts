@@ -253,6 +253,30 @@ export interface DDDragInOpt extends DDDragOpt {
     helper?: string | ((event: Event) => HTMLElement);
 }
 
+export interface Size {
+  width: number;
+  height: number;
+}
+export interface Position {
+  top: number;
+  left: number;
+}
+export interface Rect extends Size, Position {}
+
+/** data that is passed during drag and resizing callbacks */
+export interface DDUIData {
+  position?: Position;
+  size?: Size;
+  /* fields not used by GridStack but sent by jq ? leave in case we go back to them...
+  originalPosition? : Position;
+  offset?: Position;
+  originalSize?: Size;
+  element?: HTMLElement[];
+  helper?: HTMLElement[];
+  originalElement?: HTMLElement[];
+  */
+}
+
 /**
  * internal descriptions describing the items in the grid
  */
