@@ -54,6 +54,13 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     super();
     this.el = el;
     this.option = option;
+    // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
+    this.mouseDown = this.mouseDown.bind(this);
+    this.dragStart = this.dragStart.bind(this);
+    this.drag = this.drag.bind(this);
+    this.dragEnd = this.dragEnd.bind(this);
+    this.dragFollow = this.dragFollow.bind(this);
+
     this.init();
   }
 
@@ -106,11 +113,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  private mouseDown = (event: MouseEvent): void => {
+  private mouseDown(event: MouseEvent): void {
     this.mouseDownElement = event.target as HTMLElement;
   }
 
-  private dragStart = (event: DragEvent): void => {
+  private dragStart(event: DragEvent): void {
     if (this.option.handle && !(
       this.mouseDownElement
       && this.mouseDownElement.matches(
@@ -149,7 +156,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  private drag = (event: DragEvent): void => {
+  private drag(event: DragEvent): void {
     this.dragFollow(event);
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drag' });
     if (this.option.drag) {
@@ -158,7 +165,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.triggerEvent('drag', ev);
   }
 
-  private dragEnd = (event: DragEvent): void => {
+  private dragEnd(event: DragEvent): void {
     if (this.dragFollowTimer) {
       clearTimeout(this.dragFollowTimer);
       delete this.dragFollowTimer;
@@ -229,7 +236,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  private dragFollow = (event: DragEvent): void => {
+  private dragFollow(event: DragEvent): void {
     if (this.paintTimer) {
       cancelAnimationFrame(this.paintTimer);
     }

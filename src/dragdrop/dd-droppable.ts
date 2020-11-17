@@ -29,6 +29,12 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     super();
     this.el = el;
     this.option = opts;
+    // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
+    this.dragEnter = this.dragEnter.bind(this);
+    this.dragOver = this.dragOver.bind(this);
+    this.dragLeave = this.dragLeave.bind(this);
+    this.drop = this.drop.bind(this);
+
     this.init();
   }
 
@@ -80,7 +86,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  protected dragEnter = (event: DragEvent): void => {
+  protected dragEnter(event: DragEvent): void {
     this.el.removeEventListener('dragenter', this.dragEnter);
     this.acceptable = this.canDrop();
     if (this.acceptable) {
@@ -97,12 +103,12 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     this.el.addEventListener('dragleave', this.dragLeave);
   }
 
-  private dragOver = (event: DragEvent): void => {
+  private dragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
   }
 
-  private dragLeave = (event: DragEvent): void => {
+  private dragLeave(event: DragEvent): void {
     if (this.el.contains(event.relatedTarget as HTMLElement)) { return; }
     this.el.removeEventListener('dragleave', this.dragLeave);
     this.el.classList.remove('ui-droppable-over');
@@ -119,7 +125,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     this.el.addEventListener('dragenter', this.dragEnter);
   }
 
-  private drop = (event: DragEvent): void => {
+  private drop(event: DragEvent): void {
     if (this.acceptable) {
       event.preventDefault();
       const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drop' });
