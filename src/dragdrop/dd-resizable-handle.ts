@@ -25,6 +25,11 @@ export class DDResizableHandle {
     this.host = host;
     this.dir = direction;
     this.option = option;
+    // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
+    this.mouseDown = this.mouseDown.bind(this);
+    this.mouseMove = this.mouseMove.bind(this);
+    this.mouseUp = this.mouseUp.bind(this);
+
     this.init();
   }
 
@@ -40,7 +45,7 @@ export class DDResizableHandle {
     return this;
   }
 
-  private mouseDown = (event: MouseEvent): void => {
+  private mouseDown(event: MouseEvent): void {
     this.mouseDownEvent = event;
     setTimeout(() => {
       document.addEventListener('mousemove', this.mouseMove, true);
@@ -55,7 +60,7 @@ export class DDResizableHandle {
     }, 100);
   }
 
-  private mouseMove = (event: MouseEvent): void => {
+  private mouseMove(event: MouseEvent): void {
     if (!this.started && !this.mouseMoving) {
       if (this.hasMoved(event, this.mouseDownEvent)) {
         this.mouseMoving = true;
@@ -68,7 +73,7 @@ export class DDResizableHandle {
     }
   }
 
-  private mouseUp = (event: MouseEvent): void => {
+  private mouseUp(event: MouseEvent): void {
     if (this.mouseMoving) {
       this.triggerEvent('stop', event);
     }
