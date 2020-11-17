@@ -8,7 +8,7 @@
 import { DDManager } from './dd-manager';
 import { DDUtils } from './dd-utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
-import { DDUIData } from '../types';
+import { GridItemHTMLElement, DDUIData } from '../types';
 
 export interface DDDraggableOpt {
   appendTo?: string | HTMLElement;
@@ -93,6 +93,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     this.el.draggable = false;
     this.el.classList.remove('ui-draggable');
+    this.el.removeEventListener('mousedown', this.mouseDown);
     this.el.removeEventListener('dragstart', this.dragStart);
     delete this.el;
     delete this.helper;
@@ -229,9 +230,12 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   private removeHelperStyle(): DDDraggable {
-    DDDraggable.originStyleProp.forEach(prop => {
-      this.helper.style[prop] = this.dragElementOriginStyle[prop] || null;
-    });
+    // don't bother restoring styles if we're gonna remove anyway...
+    if (! (this.helper as GridItemHTMLElement)?.gridstackNode?._isAboutToRemove) {
+      DDDraggable.originStyleProp.forEach(prop => {
+        this.helper.style[prop] = this.dragElementOriginStyle[prop] || null;
+      });
+    }
     delete this.dragElementOriginStyle;
     return this;
   }
