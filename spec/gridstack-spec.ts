@@ -1634,6 +1634,7 @@ describe('gridstack', function() {
     });
   });
 
+  /*
   describe('ddPlugin option', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
@@ -1652,7 +1653,8 @@ describe('gridstack', function() {
       expect(grid.dd.isDroppable()).toBe(false);
     });
   });
-
+  */
+ 
   describe('grid.on events', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);

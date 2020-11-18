@@ -8,7 +8,7 @@
 import { DDManager } from './dd-manager';
 import { DDElement } from './dd-element';
 
-import { GridStack, GridStackElement } from '../gridstack';
+import { GridStackElement } from '../gridstack';
 import { GridStackDD, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../gridstack-dd';
 import { GridItemHTMLElement, DDDragInOpt } from '../types';
 
@@ -16,9 +16,6 @@ import { GridItemHTMLElement, DDDragInOpt } from '../types';
  * HTML 5 Native DragDrop based drag'n'drop plugin.
  */
 export class GridStackDDNative extends GridStackDD {
-  public constructor(grid: GridStack) {
-    super(grid);
-  }
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDDNative {
     let dEl = this.getGridStackDDElement(el);
@@ -31,9 +28,10 @@ export class GridStackDDNative extends GridStackDD {
     } else if (opts === 'option') {
       dEl.setupResizable({ [key]: value });
     } else {
-      let handles = dEl.el.getAttribute('gs-resize-handles') ? dEl.el.getAttribute('gs-resize-handles') : this.grid.opts.resizable.handles;
+      const grid = el.gridstackNode.grid;
+      let handles = dEl.el.getAttribute('gs-resize-handles') ? dEl.el.getAttribute('gs-resize-handles') : grid.opts.resizable.handles;
       dEl.setupResizable({
-        ...this.grid.opts.resizable,
+        ...grid.opts.resizable,
         ...{ handles: handles },
         ...{
           start: opts.start,
@@ -56,12 +54,13 @@ export class GridStackDDNative extends GridStackDD {
     } else if (opts === 'option') {
       dEl.setupDraggable({ [key]: value });
     } else {
+      const grid = el.gridstackNode.grid;
       dEl.setupDraggable({
-        ...this.grid.opts.draggable,
+        ...grid.opts.draggable,
         ...{
-          containment: (this.grid.opts._isNested && !this.grid.opts.dragOut)
-            ? this.grid.el.parentElement
-            : (this.grid.opts.draggable.containment || null),
+          containment: (grid.opts._isNested && !grid.opts.dragOut)
+            ? grid.el.parentElement
+            : (grid.opts.draggable.containment || null),
           start: opts.start,
           stop: opts.stop,
           drag: opts.drag
