@@ -8,7 +8,7 @@
 
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils, HeightData } from './utils';
-import { GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, ColumnOptions, DDUIData } from './types';
+import { GridStackElement, GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, ColumnOptions, DDUIData } from './types';
 import { GridStackDD } from './gridstack-dd';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -16,8 +16,6 @@ export * from './types';
 export * from './utils';
 export * from './gridstack-engine';
 export * from './gridstack-dd';
-
-export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
 export interface GridHTMLElement extends HTMLElement {
   gridstack?: GridStack; // grid's parent DOM element points back to grid class
@@ -1766,48 +1764,19 @@ export class GridStack {
 
   /** @internal convert a potential selector into actual element */
   private static getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement {
-    if (typeof els === 'string') {
-      if (!els.length) { return null}
-      if (els[0] === '#') {
-        return document.getElementById(els.substring(1));
-      }
-      if (els[0] === '.') {
-        return document.querySelector(els);
-      }
-
-      // if we start with a digit, assume it's an id (error calling querySelector('#1')) as class are not valid CSS
-      if(!isNaN(+els[0])) { // start with digit
-        return document.getElementById(els);
-      }
-
-      // finally try string, then id then class
-      let el = document.querySelector(els);
-      if (!el) { el = document.getElementById(els) }
-      if (!el) { el = document.querySelector('.' + els) }
-      return el as GridItemHTMLElement;
-    }
-    return els;
+    return Utils.getElement(els);
   }
-
-  /** @internal convert a potential selector into actual list of elements */
+  /** @internal */
   private static getElements(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement[] {
-    if (typeof els === 'string') {
-      let list = document.querySelectorAll(els);
-      if (!list.length && els[0] !== '.' && els[0] !== '#') {
-        list = document.querySelectorAll('.' + els);
-        if (!list.length) { list = document.querySelectorAll('#' + els) }
-      }
-      return Array.from(list) as GridItemHTMLElement[];
-    }
-    return [els];
+    return Utils.getElements(els);
   }
   /** @internal */
-  private static getGridElement(els: string | HTMLElement = '.grid-stack'): GridHTMLElement {
-    return GridStack.getElement(els) as GridHTMLElement;
+  private static getGridElement(els: GridStackElement): GridHTMLElement {
+    return GridStack.getElement(els);
   }
   /** @internal */
-  private static getGridElements(els: string | HTMLElement = '.grid-stack'): GridHTMLElement[] {
-    return GridStack.getElements(els) as GridHTMLElement[];
+  private static getGridElements(els: string): GridHTMLElement[] {
+    return Utils.getElements(els);
   }
 
   /** @internal initialize margin top/bottom/left/right and units */
