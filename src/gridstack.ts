@@ -1592,22 +1592,24 @@ export class GridStack {
     if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
       let trashZone = document.querySelector(this.opts.removable) as HTMLElement;
       if (!trashZone) return this;
+      // only register ONE dropover/dropout callback for the 'trash', and it will
+      // update the passed in item and parent grid because the 'trash' is a shared resource anyway,
+      // and Native DD only has 1 event CB (having a list and technically a per grid removableOptions complicates things greatly)
       if (!dd.isDroppable(trashZone)) {
-        dd.droppable(trashZone, this.opts.removableOptions);
+        dd.droppable(trashZone, this.opts.removableOptions)
+          .on(trashZone, 'dropover', function(event, el) { // don't use => notation to avoid using 'this' as grid by mistake...
+            let node = el.gridstackNode;
+            if (!node || !node.grid) return;
+            el.dataset.inTrashZone = 'true';
+            node.grid._setupRemovingTimeout(el);
+          })
+          .on(trashZone, 'dropout', function(event, el) { // same
+            let node = el.gridstackNode;
+            if (!node || !node.grid) return;
+            delete el.dataset.inTrashZone;
+            node.grid._clearRemovingTimeout(el);
+          });
       }
-      dd
-        .on(trashZone, 'dropover', (event, el) => {
-          let node = el.gridstackNode;
-          if (!node || node.grid !== this) return;
-          el.dataset.inTrashZone = 'true';
-          this._setupRemovingTimeout(el);
-        })
-        .on(trashZone, 'dropout', (event, el) => {
-          let node = el.gridstackNode;
-          if (!node || node.grid !== this) return;
-          delete el.dataset.inTrashZone;
-          this._clearRemovingTimeout(el);
-        });
     }
     return this;
   }
