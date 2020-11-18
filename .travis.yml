@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 8.17.0
+- 10.19.0
 dist: trusty
 sudo: required
 addons:
