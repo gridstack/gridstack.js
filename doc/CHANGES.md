@@ -43,7 +43,7 @@ Change log
 
 ## 2.2.0-dev
 
-- TBD
+- del `ddPlugin` grid option as we only have one drag&drop plugin at runtime, which is defined by the include you use (HTML5 vs jquery vs none)
 
 ## 2.2.0 (2020-11-7)
 

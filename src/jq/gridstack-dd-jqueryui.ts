@@ -6,7 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { GridStack, GridStackElement } from '../gridstack';
+import { GridStackElement } from '../gridstack';
 import { GridStackDD, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../gridstack-dd';
 import { GridItemHTMLElement, DDDragInOpt } from '../types';
 
@@ -22,9 +22,6 @@ import './jquery-ui';
  * legacy Jquery-ui based drag'n'drop plugin.
  */
 export class GridStackDDJQueryUI extends GridStackDD {
-  public constructor(grid: GridStack) {
-    super(grid);
-  }
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {
     let $el: JQuery = $(el);
@@ -37,9 +34,10 @@ export class GridStackDDJQueryUI extends GridStackDD {
     } else if (opts === 'option') {
       $el.resizable(opts, key, value);
     } else {
-      let handles = $el.data('gs-resize-handles') ? $el.data('gs-resize-handles') : this.grid.opts.resizable.handles;
+      const grid = el.gridstackNode.grid;
+      let handles = $el.data('gs-resize-handles') ? $el.data('gs-resize-handles') : grid.opts.resizable.handles;
       $el.resizable({
-        ...this.grid.opts.resizable,
+        ...grid.opts.resizable,
         ...{ handles: handles },
         ...{
           start: opts.start, // || function() {},
@@ -62,9 +60,10 @@ export class GridStackDDJQueryUI extends GridStackDD {
     } else if (opts === 'option') {
       $el.draggable(opts, key, value);
     } else {
-      $el.draggable({...this.grid.opts.draggable, ...{ // was using $.extend()
-        containment: (this.grid.opts._isNested && !this.grid.opts.dragOut) ?
-          $(this.grid.el).parent() : (this.grid.opts.draggable.containment || null),
+      const grid = el.gridstackNode.grid;
+      $el.draggable({...grid.opts.draggable, ...{ // was using $.extend()
+        containment: (grid.opts._isNested && !grid.opts.dragOut) ?
+          $(grid.el).parent() : (grid.opts.draggable.containment || null),
         start: opts.start, // || function() {},
         stop: opts.stop, // || function() {},
         drag: opts.drag // || function() {}

@@ -7,7 +7,6 @@
 */
 
 import { GridStack } from './gridstack';
-import { GridStackDD } from './gridstack-dd';
 
 
 /** different layout options when changing # of columns,
@@ -60,11 +59,6 @@ export interface GridStackOptions {
 
   /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns */
   column?: number;
-
-  /** class that implement drag'n'drop functionality for gridstack. If false grid will be static.
-   * (default?: undefined - first available plugin will be used)
-   */
-  ddPlugin?: false | typeof GridStackDD;
 
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;

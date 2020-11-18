@@ -7,7 +7,7 @@
 */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { GridStack, GridStackElement } from './gridstack';
+import { GridStackElement } from './gridstack';
 import { GridItemHTMLElement, DDDragInOpt } from './types';
 
 /** Drag&Drop drop options */
@@ -29,7 +29,6 @@ export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: Grid
  * Base class for drag'n'drop plugin.
  */
 export class GridStackDD {
-  protected grid: GridStack;
   static registeredPlugins: typeof GridStackDD;
 
   /** call this method to register your plugin instead of the default no-op one */
@@ -40,10 +39,6 @@ export class GridStackDD {
   /** get the current registered plugin to use */
   static get(): typeof GridStackDD {
     return GridStackDD.registeredPlugins || GridStackDD;
-  }
-
-  public constructor(grid: GridStack) {
-    this.grid = grid;
   }
 
   /** removes any drag&drop present (called during destroy) */

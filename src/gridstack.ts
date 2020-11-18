@@ -42,6 +42,9 @@ interface GridCSSStyleSheet extends CSSStyleSheet {
   _max?: number; // internal tracker of the max # of rows we created\
 }
 
+/** current drag&drop plugin being used - first grid will initialize */
+let dd: GridStackDD;
+
 /**
  * Main gridstack class - you will need to call `GridStack.init()` first to initialize your grid.
  * Note: your grid elements MUST have the following classes for the CSS layout to work:
@@ -122,9 +125,6 @@ export class GridStack {
 
   /** grid options - public for classes to access, but use methods to modify! */
   public opts: GridStackOptions;
-
-  /** current drag&drop plugin being used */
-  public dd: GridStackDD;
 
   /** @internal */
   private placeholder: HTMLElement;
@@ -223,12 +223,7 @@ export class GridStack {
     this.opts = Utils.defaults(opts, defaults);
     this.initMargin();
 
-    if (this.opts.ddPlugin === false) {
-      this.opts.ddPlugin = GridStackDD;
-    } else if (this.opts.ddPlugin === undefined) {
-      this.opts.ddPlugin = GridStackDD.get();
-    }
-    this.dd = new (this.opts.ddPlugin as typeof GridStackDD)(this);
+    dd = dd || new (GridStackDD.get())();
 
     if (this.opts.rtl === 'auto') {
       this.opts.rtl = el.style.direction === 'rtl';
@@ -792,11 +787,11 @@ export class GridStack {
       if (!node) { return }
       node.noMove = !(val || false);
       if (node.noMove) {
-        this.dd.draggable(el, 'disable');
+        dd.draggable(el, 'disable');
         el.classList.remove('ui-draggable-handle');
       } else {
         this._prepareDragDropByNode(node); // init DD if need be
-        this.dd.draggable(el, 'enable');
+        dd.draggable(el, 'enable');
         el.classList.remove('ui-draggable-handle');
       }
     });
@@ -904,7 +899,7 @@ export class GridStack {
 
       // remove our DOM data (circular link) and drag&drop permanently
       delete el.gridstackNode;
-      this.dd.remove(el);
+      dd.remove(el);
 
       this.engine.removeNode(node, removeDOM, triggerEvent);
 
@@ -927,7 +922,7 @@ export class GridStack {
     // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
     this.engine.nodes.forEach(n => {
       delete n.el.gridstackNode;
-      this.dd.remove(n.el);
+      dd.remove(n.el);
     });
     this.engine.removeAll(removeDOM);
     this._triggerRemoveEvent();
@@ -962,10 +957,10 @@ export class GridStack {
       if (!node) { return; }
       node.noResize = !(val || false);
       if (node.noResize) {
-        this.dd.resizable(el, 'disable');
+        dd.resizable(el, 'disable');
       } else {
         this._prepareDragDropByNode(node); // init DD if need be
-        this.dd.resizable(el, 'enable');
+        dd.resizable(el, 'enable');
       }
     });
     return this;
@@ -1230,7 +1225,7 @@ export class GridStack {
     if (this.opts.staticGrid || node.locked ||
       ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
       if (node._initDD) {
-        this.dd.remove(node.el); // nukes everything instead of just disable, will add some styles back next
+        dd.remove(node.el); // nukes everything instead of just disable, will add some styles back next
         delete node._initDD;
       }
       node.el.classList.add('ui-draggable-disabled', 'ui-resizable-disabled'); // add styles one might depend on #1435
@@ -1274,8 +1269,8 @@ export class GridStack {
       node._beforeDragY = node.y;
       node._prevYPix = ui.position.top;
 
-      this.dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
-      this.dd.resizable(el, 'option', 'minHeight', cellHeight * (node.minHeight || 1));
+      dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
+      dd.resizable(el, 'option', 'minHeight', cellHeight * (node.minHeight || 1));
     }
 
     /** called when item is being dragged/resized */
@@ -1357,7 +1352,7 @@ export class GridStack {
           gridToNotify._gsEventHandler[event.type](event, target);
         }
         gridToNotify.engine.removedNodes.push(node);
-        gridToNotify.dd.remove(el);
+        dd.remove(el);
         delete el.gridstackNode; // hint we're removing it next and break circular link
         gridToNotify._triggerRemoveEvent();
         if (el.parentElement) {
@@ -1392,7 +1387,7 @@ export class GridStack {
       }
     }
 
-    this.dd
+    dd
       .draggable(el, {
         start: onStartMoving,
         stop: onEndMoving,
@@ -1407,10 +1402,10 @@ export class GridStack {
 
     // finally fine tune drag vs move by disabling any part...
     if (node.noMove || this.opts.disableDrag) {
-      this.dd.draggable(el, 'disable');
+      dd.draggable(el, 'disable');
     }
     if (node.noResize || this.opts.disableResize) {
-      this.dd.resizable(el, 'disable');
+      dd.resizable(el, 'disable');
     }
     return this;
   }
@@ -1585,8 +1580,8 @@ export class GridStack {
   /** @internal call to setup dragging in from the outside (say toolbar), with options */
   private _setupDragIn():  GridStack {
     if (!this.opts.staticGrid && typeof this.opts.dragIn === 'string') {
-      if (!this.dd.isDraggable(this.opts.dragIn)) {
-        this.dd.dragIn(this.opts.dragIn, this.opts.dragInOptions);
+      if (!dd.isDraggable(this.opts.dragIn)) {
+        dd.dragIn(this.opts.dragIn, this.opts.dragInOptions);
       }
     }
     return this;
@@ -1597,10 +1592,10 @@ export class GridStack {
     if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
       let trashZone = document.querySelector(this.opts.removable) as HTMLElement;
       if (!trashZone) return this;
-      if (!this.dd.isDroppable(trashZone)) {
-        this.dd.droppable(trashZone, this.opts.removableOptions);
+      if (!dd.isDroppable(trashZone)) {
+        dd.droppable(trashZone, this.opts.removableOptions);
       }
-      this.dd
+      dd
         .on(trashZone, 'dropover', (event, el) => {
           let node = el.gridstackNode;
           if (!node || node.grid !== this) return;
@@ -1650,7 +1645,7 @@ export class GridStack {
       }
     };
 
-    this.dd
+    dd
       .droppable(this.el, {
         accept: (el: GridItemHTMLElement) => {
           let node: GridStackNode = el.gridstackNode;
@@ -1690,7 +1685,7 @@ export class GridStack {
         el.gridstackNode = newNode;
         el._gridstackNodeOrig = node;
 
-        this.dd.on(el, 'drag', onDrag);
+        dd.on(el, 'drag', onDrag);
         return false; // prevent parent from receiving msg (which may be grid as well)
       })
       .on(this.el, 'dropout', (event, el: GridItemHTMLElement) => {
@@ -1700,7 +1695,7 @@ export class GridStack {
         if (!node || !node._isOutOfGrid) {
           return;
         }
-        this.dd.off(el, 'drag');
+        dd.off(el, 'drag');
         node.el = null;
         this.engine.removeNode(node);
         if (this.placeholder.parentNode === this.el) {
@@ -1729,7 +1724,7 @@ export class GridStack {
         this.engine.cleanupNode(node); // removes all internal _xyz values (including the _id so add that back)
         node._id = _id;
         node.grid = this;
-        this.dd.off(el, 'drag');
+        dd.off(el, 'drag');
         // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
         // as the helper will be nuked by jqueryui otherwise
         if (helper !== el) {
@@ -1738,7 +1733,7 @@ export class GridStack {
           el = el.cloneNode(true) as GridItemHTMLElement;
         } else {
           el.remove(); // reduce flicker as we change depth here, and size further down
-          this.dd.remove(el);
+          dd.remove(el);
         }
         el.gridstackNode = node;
         node.el = el;
