@@ -24,6 +24,8 @@ export interface GridItemHTMLElement extends HTMLElement {
   _gridstackNodeOrig?: GridStackNode;
 }
 
+export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
+
 /**
  * Defines the options for a Grid
  */
