@@ -8,6 +8,6 @@ export * from './gridstack-engine';
 export * from './gridstack-dd';
 export * from './gridstack';
 
-export * from './dragdrop/gridstack-dd-native';
+export * from './h5/gridstack-dd-native';
 
 // declare module 'gridstack'; for umd ?
