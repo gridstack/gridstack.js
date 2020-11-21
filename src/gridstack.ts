@@ -298,7 +298,7 @@ export class GridStack {
     placeholderChild.className = 'placeholder-content';
     placeholderChild.innerHTML = this.opts.placeholderText;
     this.placeholder = document.createElement('div');
-    this.placeholder.classList.add(this.opts.placeholderClass, this.opts.itemClass);
+    this.placeholder.classList.add(this.opts.placeholderClass, defaults.itemClass, this.opts.itemClass);
     this.placeholder.appendChild(placeholderChild);
 
     this._updateContainerHeight();
