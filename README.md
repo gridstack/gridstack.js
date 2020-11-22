@@ -271,9 +271,9 @@ If you're still experiencing issues on touch devices please check [#444](https:/
 
 search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
 
-- vue.js: see [demo v3](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue3js.html) or [demo v2](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue2js.html) 
-- React: [react-gridstack-example](https://github.com/Inder2108/react-gridstack-example/blob/master/src/App.js) or read on what [hooks to use](https://github.com/gridstack/gridstack.js/issues/735#issuecomment-329888796)
-- ember: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
+- Vue.js: see [demo](https://gridstackjs.com/demo/vue3js.html) with [v3 src](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue3js.html) or [v2 src](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue2js.html) 
+- React: see [demo](https://gridstackjs.com/demo/react.html) with [src](https://github.com/gridstack/gridstack.js/blob/develop/demo/react.html), or  [react-gridstack-example](https://github.com/Inder2108/react-gridstack-example/blob/master/src/App.js), or read on what [hooks to use](https://github.com/gridstack/gridstack.js/issues/735#issuecomment-329888796)
+- Ember: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
 - Angular9: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for concept ONLY. You can do component or directive. Working on exposing the Angular component wrapper we use internally.
 - AngularJS: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
 - Rails: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
