@@ -43,7 +43,8 @@ Change log
 
 ## 2.2.0-dev
 
-- TBD
+- we now have a React example, in addition to Vue - Angular is next!. thanks [@eloparco](https://github.com/eloparco)
+- fix placeholder not having custom `GridStackOptions.itemClass`. thanks [@pablosichert](https://github.com/pablosichert)
 
 ## 2.2.0 (2020-11-7)
 
