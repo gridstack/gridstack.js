@@ -54,13 +54,13 @@ describe('gridstack utils', function() {
       let _id = 'test-123';
       Utils.createStylesheet(_id);
 
-      let style = $('STYLE[data-gs-style-id=' + _id + ']');
-      expect(style.length).toEqual(1);
-      expect(style.prop('tagName')).toEqual('STYLE');
+      let style = document.querySelector('STYLE[data-gs-style-id=' + _id + ']');
+      expect(style).not.toBe(null);
+      // expect(style.prop('tagName')).toEqual('STYLE');
 
       Utils.removeStylesheet(_id)
-      style = $('STYLE[data-gs-style-id=' + _id + ']');
-      expect(style.length).toEqual(0);
+      style = document.querySelector('STYLE[data-gs-style-id=' + _id + ']');
+      expect(style).toBe(null);
     });
 
   });

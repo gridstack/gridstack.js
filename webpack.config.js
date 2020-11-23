@@ -2,9 +2,9 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    'gridstack.all': './src/index-jq.ts',
-    'gridstack.h5': './src/index-h5.ts',
-    'gridstack.static': './src/index-static.ts'
+    'gridstack-h5': './src/index-h5.ts',
+    'gridstack-jq': './src/index-jq.ts',
+    'gridstack-static': './src/index-static.ts'
   },
   mode: 'production', // production vs development
   devtool: 'source-map',
@@ -12,9 +12,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.ts$/,
         use: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: ['/node_modules/', '/src/h5/', '/src/index-*.ts'], // TODO: doesn't seem to excluded for generating .d.ts !
       },
     ],
   },

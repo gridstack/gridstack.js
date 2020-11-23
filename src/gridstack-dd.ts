@@ -50,15 +50,17 @@ export abstract class GridStackDD extends GridStackDDI {
 
   public abstract resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD;
 
+  public abstract isResizable(el: HTMLElement): boolean;
+
   public abstract draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD;
 
   public abstract dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDD;
 
-  public abstract isDraggable(el: GridStackElement): boolean;
+  public abstract isDraggable(el: HTMLElement): boolean;
 
   public abstract droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): GridStackDD;
 
-  public abstract isDroppable(el: GridItemHTMLElement): boolean;
+  public abstract isDroppable(el: HTMLElement): boolean;
 
   public abstract on(el: GridItemHTMLElement, eventName: string, callback: DDCallback): GridStackDD;
 
@@ -223,20 +225,20 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
 /** @internal called to setup a trash drop zone if the user specifies it */
 GridStack.prototype._setupRemoveDrop = function(): GridStack {
   if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
-    let trashZone = document.querySelector(this.opts.removable) as HTMLElement;
-    if (!trashZone) return this;
+    let trashEl = document.querySelector(this.opts.removable) as HTMLElement;
+    if (!trashEl) return this;
     // only register ONE dropover/dropout callback for the 'trash', and it will
     // update the passed in item and parent grid because the 'trash' is a shared resource anyway,
     // and Native DD only has 1 event CB (having a list and technically a per grid removableOptions complicates things greatly)
-    if (!GridStackDD.get().isDroppable(trashZone)) {
-      GridStackDD.get().droppable(trashZone, this.opts.removableOptions)
-        .on(trashZone, 'dropover', function(event, el) { // don't use => notation to avoid using 'this' as grid by mistake...
+    if (!GridStackDD.get().isDroppable(trashEl)) {
+      GridStackDD.get().droppable(trashEl, this.opts.removableOptions)
+        .on(trashEl, 'dropover', function(event, el) { // don't use => notation to avoid using 'this' as grid by mistake...
           let node = el.gridstackNode;
           if (!node || !node.grid) return;
           el.dataset.inTrashZone = 'true';
           node.grid._setupRemovingTimeout(el);
         })
-        .on(trashZone, 'dropout', function(event, el) { // same
+        .on(trashEl, 'dropout', function(event, el) { // same
           let node = el.gridstackNode;
           if (!node || !node.grid) return;
           delete el.dataset.inTrashZone;
