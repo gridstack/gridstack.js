@@ -5,7 +5,10 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.0.0-dev](#300-dev)
+- [2.2.0-dev](#220-dev)
+- [2.2.0 (2020-11-7)](#220-2020-11-7)
+- [2.1.0 (2020-10-28)](#210-2020-10-28)
+- [2.0.2 (2020-10-05)](#202-2020-10-05)
 - [2.0.1 (2020-09-26)](#201-2020-09-26)
 - [2.0.0 (2020-09-07)](#200-2020-09-07)
 - [1.2.1 (2020-09-04)](#121-2020-09-04)
@@ -38,9 +41,33 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 3.0.0-dev
+## 2.2.0-dev
 
-- TBD
+- we now have a React example, in addition to Vue - Angular is next!. thanks [@eloparco](https://github.com/eloparco)
+- fix placeholder not having custom `GridStackOptions.itemClass`. thanks [@pablosichert](https://github.com/pablosichert)
+
+## 2.2.0 (2020-11-7)
+
+- add `margin` option now support multi values CSS format `'5px 10px 0 20px'` or `'5em 10em'`
+- add `data-gs-static-grid` attribute
+- fix [1435](https://github.com/gridstack/gridstack.js/issues/1435) `class="ui-draggable-disabled ui-resizable-disabled"` have been added back to static grid items, so existing CSS rule to style continue working 
+- fix [1439](https://github.com/gridstack/gridstack.js/pull/1439) getting DOM element by id with number works (api that uses `GridStackElement` handle more string formats)
+- fix [1442](https://github.com/gridstack/gridstack.js/pull/1442) setting `marginTop` (or any 4 sides) to cause resize to break. Thanks [@deadivan](https://github.com/deadivan) for suggested fix.
+
+## 2.1.0 (2020-10-28)
+
+- fix grid `static: true` to no longer add any drag&drop (even disabled) which should speed things up, and `setStatic(T/F)` will now correctly add it back/delete for items that need it only. 
+Also fixed JQ draggable warning if not initialized first [858](https://github.com/gridstack/gridstack.js/issues/858)
+- add `addWidget(opt)` now handles just passing a `GridStackWidget` which creates the default divs, simplifying your code. Old API still supported.
+- add `save(saveContent = true)` now lets you optionally save the HTML content in the node property, with load() restoring it [1418](https://github.com/gridstack/gridstack.js/issues/1418)
+- add `GridStackWidget.content` now lets you add any HTML content when calling `load()/save()` or `addWidget()` [1418](https://github.com/gridstack/gridstack.js/issues/1418)
+- add `ColumnOptions` to `column(n, options)` for multiple re-layout options, including 'none' that will preserve the x and width, until out of bound/overlap [1338](https://github.com/gridstack/gridstack.js/issues/1338)
+including a custom function for you to create the new layout [1332](https://github.com/gridstack/gridstack.js/issues/1332)
+
+## 2.0.2 (2020-10-05)
+
+- fix `animate` to not re-create CSS style each time (should be faster too) and made it default now since so much nicer. pass `{animate: false}` grid options if you want instant again [937](https://github.com/gridstack/gridstack.js/issues/937)
+- fix `resizable: { handles: ...}` forcing `alwaysShowResizeHandle` behavior [1373](https://github.com/gridstack/gridstack.js/issues/1373)
 
 ## 2.0.1 (2020-09-26)
 
@@ -63,6 +90,7 @@ You can now have perfect square cells (default) [723](https://github.com/gridsta
 - fix [1299](https://github.com/gridstack/gridstack.js/pull/1299) many columns round-off error
 - fix [1102](https://github.com/gridstack/gridstack.js/issues/1102) loose functionality when they are moved to a new grid
 - add optional params to `removeWidget()` to have quiet mode (no callbacks)
+- drop support for IE11 due to more compact ES6 output and newer TS code
 
 ## 1.2.1 (2020-09-04)
 

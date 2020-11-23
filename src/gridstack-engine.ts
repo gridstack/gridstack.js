@@ -1,4 +1,4 @@
-// gridstack-engine.ts 3.0.0-dev @preserve
+// gridstack-engine.ts 2.2.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
@@ -7,7 +7,7 @@
 */
 
 import { Utils, obsolete } from './utils';
-import { GridStackNode, GridStackWidget } from './types';
+import { GridStackNode, ColumnOptions } from './types';
 
 export type onChangeCB = (nodes: GridStackNode[], removeDOM?: boolean) => void;
 
@@ -471,14 +471,14 @@ export class GridStackEngine {
   }
 
   /** saves the current layout returning a list of widgets for serialization */
-  public save(): GridStackWidget[] {
-    let widgets: GridStackWidget[] = [];
+  public save(saveElement = true): GridStackNode[] {
+    let widgets: GridStackNode[] = [];
     Utils.sort(this.nodes);
     this.nodes.forEach(n => {
       let w: GridStackNode = {};
       for (let key in n) { if (key[0] !== '_' && n[key] !== null && n[key] !== undefined ) w[key] = n[key]; }
       // delete other internals
-      delete w.el;
+      if (!saveElement) delete w.el;
       delete w.grid;
       // delete default values (will be re-created on read)
       if (!w.autoPosition) delete w.autoPosition;
@@ -534,8 +534,10 @@ export class GridStackEngine {
    * @param oldColumn previous number of columns
    * @param column  new column number
    * @param nodes different sorted list (ex: DOM order) instead of current list
+   * @param layout specify the type of re-layout that will happen (position, size, etc...).
+   * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public updateNodeWidths(oldColumn: number, column: number, nodes: GridStackNode[]): GridStackEngine {
+  public updateNodeWidths(oldColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
     if (!this.nodes.length || oldColumn === column) { return this }
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
@@ -582,24 +584,33 @@ export class GridStackEngine {
     // if we found cache re-use those nodes that are still current
     let newNodes: GridStackNode[] = [];
     cacheNodes.forEach(cacheNode => {
-      let j = nodes.findIndex(n => n && n._id === cacheNode._id);
+      let j = nodes.findIndex(n => n._id === cacheNode._id);
       if (j !== -1) {
         // still current, use cache info positions
         nodes[j].x = cacheNode.x;
         nodes[j].y = cacheNode.y;
         nodes[j].width = cacheNode.width;
         newNodes.push(nodes[j]);
-        nodes[j] = null; // erase it so we know what's left
+        nodes.splice(j, 1);
       }
     });
     // ...and add any extra non-cached ones
-    let ratio = column / oldColumn;
-    nodes.forEach(node => {
-      if (!node) return this;
-      node.x = (column === 1 ? 0 : Math.round(node.x * ratio));
-      node.width = ((column === 1 || oldColumn === 1) ? 1 : (Math.round(node.width * ratio) || 1));
-      newNodes.push(node);
-    });
+    if (nodes.length) {
+      if (typeof layout === 'function') {
+        layout(column, oldColumn, newNodes, nodes);
+      } else {
+        let ratio = column / oldColumn;
+        let move = (layout === 'move' || layout === 'moveScale');
+        let scale = (layout === 'scale' || layout === 'moveScale');
+        nodes.forEach(node => {
+          node.x = (column === 1 ? 0 : (move ? Math.round(node.x * ratio) : Math.min(node.x, column - 1)));
+          node.width = ((column === 1 || oldColumn === 1) ? 1 :
+            scale ? (Math.round(node.width * ratio) || 1) : (Math.min(node.width, column)));
+          newNodes.push(node);
+        });
+        nodes = [];
+      }
+    }
 
     // finally re-layout them in reverse order (to get correct placement)
     newNodes = Utils.sort(newNodes, -1, column);
@@ -628,10 +639,11 @@ export class GridStackEngine {
   }
 
   /** called to remove all internal values */
-  public cleanupNode(node: GridStackNode) {
+  public cleanupNode(node: GridStackNode): GridStackEngine {
     for (let prop in node) {
       if (prop[0] === '_') delete node[prop];
     }
+    return this;
   }
 
   /** @internal legacy method renames */

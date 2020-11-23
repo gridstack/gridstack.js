@@ -1,5 +1,4 @@
-gridstack.js
-============
+# gridstack.js
 
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 [![Dependency Status](https://david-dm.org/gridstack/gridstack.js.svg)](https://david-dm.org/gridstack/gridstack.js)
@@ -7,11 +6,11 @@ gridstack.js
 [![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
 [![downloads](https://img.shields.io/npm/dm/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
-Mobile-friendly Javascript library (with Typescript bindings) for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Allows you to build draggable, responsive bootstrap v4-friendly layouts. It also has multiple bindings and works great with [React](https://reactjs.org/), [Angular](https://angular.io/), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others. Includes Typescript defines.
+Mobile-friendly modern Typescript library for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Has multiple bindings and works great with [React](https://reactjs.org/), [Vue](https://vuejs.org/), [Angular](https://angular.io/), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others (see [frameworks](#gridstackjs-for-specific-frameworks) section).
 
 Inspired by no-longer maintained gridster, built with love.
 
-Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/).
+Check http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/).
 
 If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind831) or [Venmo](https://www.venmo.com/adumesny) (adumesny) and help support it!
 
@@ -34,34 +33,30 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Requirements](#requirements)
   - [API Documentation](#api-documentation)
   - [Extend Library](#extend-library)
-  - [gridstack.js for specific frameworks](#gridstackjs-for-specific-frameworks)
   - [Change grid columns](#change-grid-columns)
   - [Custom columns CSS](#custom-columns-css)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [Touch devices support](#touch-devices-support)
+- [gridstack.js for specific frameworks](#gridstackjs-for-specific-frameworks)
+- [Migrating](#migrating)
   - [Migrating to v0.6](#migrating-to-v06)
   - [Migrating to v1](#migrating-to-v1)
-    - [jQuery Application](#jquery-application)
   - [Migrating to v2](#migrating-to-v2)
+- [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-Demo and examples
-====
+# Demo and examples
 
 Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/)
 
 
-Usage
-=====
+# Usage
 
 ## Install
-
-* Using yarn / npm:
-
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
 ```js
@@ -75,32 +70,16 @@ npm install --save gridstack
 ES6 or Typescript
 
 ```js
-import { GridStack } from 'gridstack';
-import 'gridstack/dist/gridstack.css';
-```
-
-legacy javascript. If you need to import individual files (see [jquery apps](#jquery-application) section)
-
-```js
-import 'gridstack/dist/gridstack.all.js';
-import 'gridstack/dist/gridstack.css';
+import GridStack from 'gridstack';
+import 'gridstack/dist/gridstack.min.css';
 ```
 
 alternatively in html
 
 ```html
-<link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.min.css" />
+<link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
 <script src="node_modules/gridstack/dist/gridstack.all.js"></script>
 ```
-
-or using CDN (minimized):
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.1/dist/gridstack.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/gridstack@2.0.1/dist/gridstack.all.js"></script>
-```
-
-.map files are included for debugging purposes.
 
 ## Basic usage
 
@@ -112,7 +91,7 @@ creating items dynamically...
 
 // ...in your script
 var grid = GridStack.init();
-grid.addWidget('<div><div class="grid-stack-item-content">Item 1</div></div>', {width: 2});
+grid.addWidget({width: 2, content: 'item 1'});
 ```
 
 ... or creating from list
@@ -121,8 +100,8 @@ grid.addWidget('<div><div class="grid-stack-item-content">Item 1</div></div>', {
 // using serialize data instead of .addWidget()
 const serializedData = [
   {x: 0, y: 0, width: 2, height: 2},
-  {x: 2, y: 3, width: 3, height: 1},
-  {x: 1, y: 3, width: 1, height: 1}
+  {x: 2, y: 3, width: 3, content: 'item 2'},
+  {x: 1, y: 3}
 ];
 
 grid.load(serializedData);
@@ -149,7 +128,7 @@ see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example
 
 ## Requirements
 
-GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). All you need to include is `gridstack.all.js` and `gridstack.css` (layouts are done using CSS column based %).
+GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). All you need to include is `gridstack.all.js` and `gridstack.min.css` (layouts are done using CSS column based %).
 
 ## API Documentation
 
@@ -172,17 +151,6 @@ let grid = GridStack.init();
 grid.printCount();
 ```
 
-## gridstack.js for specific frameworks
-
-search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
-
-- vue.js: see [demo](https://github.com/gridstack/gridstack.js/blob/develop/demo/vuejs.html) 
-- ember: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
-- AngularJS: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
-- Angular8: [lb-gridstack](https://github.com/pfms84/lb-gridstack)
-- Rails: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
-- React: [react-gridstack](https://github.com/pitrho/react-gridstack)
-
 ## Change grid columns
 
 GridStack makes it very easy if you need [1-12] columns out of the box (default is 12), but you always need **2 things** if you need to customize this:
@@ -194,12 +162,12 @@ GridStack.init( {column: N} );
 
 2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@2.0.1/dist/gridstack-extra.css"/>
+<link href="node_modules/gridstack/dist/gridstack-extra.css" rel="stylesheet"/>
 
 <div class="grid-stack grid-stack-N">...</div>
 ```
 
-Note: we added `grid-stack-N` class and `gridstack-extra.css` which defines CSS for grids with custom [1-12] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
+Note: we added `.grid-stack-N` and include `gridstack-extra.css` which defines CSS for grids with custom [2-11] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
 
 See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html) with 6 columns
 
@@ -323,7 +291,18 @@ GridStack.init(options);
 
 If you're still experiencing issues on touch devices please check [#444](https://github.com/gridstack/gridstack.js/issues/444)
 
+# gridstack.js for specific frameworks
 
+search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
+
+- Vue.js: see [demo](https://gridstackjs.com/demo/vue3js.html) with [v3 src](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue3js.html) or [v2 src](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue2js.html) 
+- React: see [demo](https://gridstackjs.com/demo/react.html) with [src](https://github.com/gridstack/gridstack.js/blob/develop/demo/react.html), or  [react-gridstack-example](https://github.com/Inder2108/react-gridstack-example/blob/master/src/App.js), or read on what [hooks to use](https://github.com/gridstack/gridstack.js/issues/735#issuecomment-329888796)
+- Ember: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
+- Angular9: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for concept ONLY. You can do component or directive. Working on exposing the Angular component wrapper we use internally.
+- AngularJS: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
+- Rails: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
+
+# Migrating
 ## Migrating to v0.6
 
 starting in 0.6.x `change` event are no longer sent (for pretty much most nodes!) when an item is just added/deleted unless it also changes other nodes (was incorrect and causing inefficiencies). You may need to track `added|removed` [events](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) if you didn't and relied on the old broken behavior.
@@ -332,11 +311,11 @@ starting in 0.6.x `change` event are no longer sent (for pretty much most nodes!
 
 v1.0.0 removed Jquery from the API and external dependencies, which will require some code changes. Here is a list of the changes:
 
-1. see [Migrating to v0.6](#migrating-to-v06) if you didn't already
+0. see previous step if not on v0.6 already
 
-2. your code only needs to include `gridstack.all.js` and `gristack.css` (don't include other JS) and is recommended you do that as internal dependencies will change over time. If you are jquery based, see [jquery app](#jquery-application) below.
+1. your code only needs to `import GridStack from 'gridstack'` or include `gridstack.all.js` and `gristack.css` (don't include other JS) and is recommended you do that as internal dependencies will change over time. If you are jquery based, see [jquery app](#jquery-application) section.
 
-3. code change:
+2. code change:
 
 **OLD** initializing code + adding a widget + adding an event:
 ```js
@@ -367,18 +346,42 @@ grid.on('added', function(e, items) {/* items contains info */});
 // grid access after init
 var grid = el.gridstack; // where el = document.querySelector('.grid-stack') or other ways...
 ```
-Other changes
-```
+Other rename changes
+
+```js
 `GridStackUI` --> `GridStack`
 `GridStackUI.GridStackEngine` --> `GridStack.Engine`
-`grid.container` (jquery grid wrapper) --> `grid.el` (grid DOM element)
+`grid.container` (jquery grid wrapper) --> `grid.el` // (grid DOM element)
 `grid.grid` (GridStackEngine) --> `grid.engine`
-`grid.setColumn(N)` --> `grid.column(N)` and new `grid.column()` to get value, old API still supported though
+`grid.setColumn(N)` --> `grid.column(N)` and `grid.column()` // to get value, old API still supported though
 ```
 
 Recommend looking at the [many samples](./demo) for more code examples.
 
-### jQuery Application
+## Migrating to v2
+
+make sure to read v1 migration first!
+
+v2 is a Typescript rewrite of 1.x, removing all jquery events, using classes and overall code cleanup to support ES6 modules. Your code might need to change from 1.x
+
+1. In general methods that used no args (getter) vs setter can't be used in TS when the arguments differ (set/get are also not function calls so API would have changed). Instead we decided to have <b>all set methods return</b> `GridStack` to they can be chain-able (ex: `grid.float(true).cellHeight(10).column(6)`). Also legacy methods that used to take many parameters will now take a single object (typically `GridStackOptions` or `GridStackWidget`).
+
+```js
+`addWidget(el, x, y, width, height)` --> `addWidget(el, {with: 2})`
+// Note: in 2.1.x you can now just do addWidget({with: 2, content: "text"})
+`float()` --> `getFloat()` // to get value
+`cellHeight()` --> `getCellHeight()` // to get value
+`verticalMargin` --> `margin` // grid options and API that applies to all 4 sides.
+`verticalMargin()` --> `getMargin()` // to get value
+```
+
+2. event signatures are generic and not jquery-ui dependent anymore. `gsresizestop` has been removed as `resizestop|dragstop` are now called **after** the DOM attributes have been updated.
+
+3. `oneColumnMode` would trigger when `window.width` < 768px by default. We now check for grid width instead (more correct and supports nesting). You might need to adjust grid `minWidth` or `disableOneColumnMode`.
+
+**Note:** 2.x no longer support legacy IE11 and older due to using more compact ES6 output and typecsript native code. You will need to stay at 1.x
+
+# jQuery Application
 
 We're working on implementing HTML5 drag'n'drop through the plugin system. Right now it is still jquery-ui based. Because of that we are still bundling `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) internally in `gridstack.all.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306)).
 
@@ -386,33 +389,12 @@ Note: v2.0.0 does not currently support importing GridStack Drag&Drop without al
 
 As for events, you can still use `$(".grid-stack").on(...)` while jqueryui is used internally for things we don't support, but recommended you don't as that will get dropped at some point.
 
-## Migrating to v2
 
-make sure to read v1 migration first!
-
-v2.x is a Typescript rewrite of 1.x, removing all jquery events, using classes and overall code cleanup to support ES6 modules. Your code might need to change from 1.x
-
-1. In general methods that used no args (getter) vs setter can't be used in TS when the arguments differ (set/get are also not function calls so API would have changed). Instead we decided to have <b>all set methods return</b> `GridStack` to they can be chain-able (ex: `grid.float(true).cellHeight(10).column(6)`). Also legacy methods that used to take many parameters will now take a single object (typically `GridStackOptions` or `GridStackWidget`).
-
-```
-`addWidget(el, x, y, width, height)` --> `addWidget(el, {with: 2})`
-`float()` to get value --> `getFloat()`
-'cellHeight()` to get value --> `getCellHeight()`
-'verticalMargin' is now 'margin' grid options and API that applies to all 4 sides.
-'verticalMargin()` to get value --> `getMargin()`
-```
-
-2. event signatures are generic and not jquery-ui dependent anymore. `gsresizestop` has been removed as `resizestop|dragstop` are now called **after** the DOM attributes have been updated.
-
-3. `oneColumnMode` would trigger when `window.width` < 768px by default. We now check for grid width instead (more correct and supports nesting). You might need to adjust grid `minWidth` or `disableOneColumnMode`.
-
-Changes
-=====
+# Changes
 
 View our change log [here](https://github.com/gridstack/gridstack.js/tree/develop/doc/CHANGES.md).
 
 
-The Team
-========
+# The Team
 
 gridstack.js is currently maintained by [Alain Dumesny](https://github.com/adumesny) and [Dylan Weiss](https://github.com/radiolips), originally created by [Pavel Reznikov](https://github.com/troolee). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.

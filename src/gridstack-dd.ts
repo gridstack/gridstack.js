@@ -1,4 +1,4 @@
-// gridstack-dd.ts 3.0.0-dev @preserve
+// gridstack-dd.ts 2.2.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
@@ -18,7 +18,7 @@ export type DDDropOpt = {
 
 /** drag&drop options currently called from the main code, but others can be passed in grid options */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | {} | any;
+export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | any;
 export type DDKey = 'minWidth' | 'minHeight' | string;
 export type DDValue = number | string;
 
@@ -30,20 +30,29 @@ export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: Grid
  */
 export class GridStackDD {
   protected grid: GridStack;
-  static registeredPlugins: typeof GridStackDD[] = [];
+  static registeredPlugins: typeof GridStackDD;
 
   /** call this method to register your plugin instead of the default no-op one */
-  static registerPlugin(pluginClass: typeof GridStackDD) {
-    GridStackDD.registeredPlugins.push(pluginClass);
+  static registerPlugin(pluginClass: typeof GridStackDD): void {
+    GridStackDD.registeredPlugins = pluginClass;
   }
 
   /** get the current registered plugin to use */
   static get(): typeof GridStackDD {
-    return GridStackDD.registeredPlugins[0] || GridStackDD;
+    return GridStackDD.registeredPlugins || GridStackDD;
   }
 
   public constructor(grid: GridStack) {
     this.grid = grid;
+  }
+
+  /** removes any drag&drop present (called during destroy) */
+  public remove(el: GridItemHTMLElement): GridStackDD {
+    this.draggable(el, 'destroy').resizable(el, 'destroy');
+    if (el.gridstackNode) {
+      delete el.gridstackNode._initDD; // reset our DD init flag
+    }
+    return this;
   }
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {

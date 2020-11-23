@@ -3,6 +3,9 @@ const path = require('path');
 module.exports = {
   entry: {
     'gridstack.all': './src/gridstack.ts',
+    //'gridstack.all': './src/index-jq.ts',
+    //'gridstack.html5': './src/index-html5.ts',
+    //'gridstack.static': './src/index-static.ts'
   },
   mode: 'production', // production vs development
   devtool: 'source-map',
@@ -19,8 +22,8 @@ module.exports = {
   resolve: {
     extensions: [ '.ts', '.js' ],
     alias: {
-      'jquery': './src/jq/jquery.js',
-      'jquery-ui': './src/jq/jquery-ui.js',
+      'jquery': '/src/jq/jquery.js',
+      'jquery-ui': '/src/jq/jquery-ui.js',
     }
   },
   output: {

@@ -10,7 +10,7 @@
 
     // AMD. Register as an anonymous module.
     define([ "jquery" ], factory );
-  } else */{
+  } else */ {
 
     // Browser globals
     factory( jQuery );

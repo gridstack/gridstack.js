@@ -1,4 +1,4 @@
-// types.ts 3.0.0-dev @preserve
+// types.ts 2.2.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
@@ -8,6 +8,14 @@
 
 import { GridStack } from './gridstack';
 import { GridStackDD } from './gridstack-dd';
+
+
+/** different layout options when changing # of columns,
+ * including a custom function that takes new/old column count, and array of new/old positions
+ * Note: new list may be partially already filled if we have a cache of the layout at that size and new items were added later.
+ */
+export type ColumnOptions = 'moveScale' | 'move' | 'scale' | 'none' |
+  ((column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void);
 
 export type numberOrString = number | string;
 export interface GridItemHTMLElement extends HTMLElement {
@@ -92,13 +100,15 @@ export interface GridStackOptions {
   itemClass?: string;
 
   /**
-   * gap size between grid item and content (default?: 10). see also marginTop, marginRight,... Can be:
+   * gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below
    *  an integer (px)
-   *  a string (ex: '2em', '20px', '2rem')
+   *  a string with possible units (ex: '2em', '20px', '2rem')
+   *  string with space separated values (ex: '5px 10px 0 20px' for all 4 sides, or '5em 10em' for top/bottom and left/right pairs like CSS).
+   * Note: all sides must have same units (last one wins, default px)
    */
   margin?: numberOrString;
 
-  /** optional way to specify each individual margin side - default to margin */
+  /** OLD way to optionally set each side - use margin: '5px 10px 0 20px' instead. Used internally to store each side. */
   marginTop?: numberOrString;
   marginRight?: numberOrString;
   marginBottom?: numberOrString;
@@ -204,6 +214,8 @@ export interface GridStackWidget {
   resizeHandles?: string;
   /** value for `data-gs-id` stored on the widget (default?: undefined) */
   id?: numberOrString;
+  /** html to append inside as content */
+  content?: string;
 }
 
 /** Drag&Drop resize options */
@@ -291,4 +303,6 @@ export interface GridStackNode extends GridStackWidget {
   _prevYPix?: number;
   /** @internal */
   _temporaryRemoved?: boolean;
+  /** @internal */
+  _initDD?: boolean;
 }
