@@ -563,6 +563,7 @@ export class GridStack {
       this.el.parentNode.removeChild(this.el);
     }
     this._removeStylesheet();
+    delete this.placeholder;
     delete this.engine;
     return this;
   }

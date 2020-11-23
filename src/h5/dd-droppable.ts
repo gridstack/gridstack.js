@@ -23,7 +23,6 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   public el: HTMLElement;
   public option: DDDroppableOpt;
   private acceptable: boolean = null;
-  private style;
 
   constructor(el: HTMLElement, opts: DDDroppableOpt = {}) {
     super();
@@ -82,7 +81,6 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     this.el.classList.add('ui-droppable');
     this.el.addEventListener('dragenter', this.dragEnter);
     this.setupAccept();
-    this.createStyleSheet();
     return this;
   }
 
@@ -160,20 +158,6 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
       this.accept = this.option.accept as ((el: HTMLElement) => boolean);
     }
     return this;
-  }
-
-  // TODO: share this with other instances and when do remove ???
-  private createStyleSheet(): DDDroppable {
-    const content = `.ui-droppable.ui-droppable-over > *:not(.ui-droppable) {pointer-events: none;}`;
-    this.style = document.createElement('style');
-    this.style.innerText = content;
-    this.el.appendChild(this.style);
-    return this;
-  }
-
-  // TODO: not call
-  private removeStyleSheet() {
-    this.el.removeChild(this.style);
   }
 
   private ui(drag: DDDraggable) {

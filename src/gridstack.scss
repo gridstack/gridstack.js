@@ -65,7 +65,6 @@ $animation_speed: .3s !default;
     &.ui-resizable-resizing {
       z-index: 100;
 
-      > .grid-stack-item-content,
       > .grid-stack-item-content {
         box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
         opacity: 0.8;
@@ -124,5 +123,10 @@ $animation_speed: .3s !default;
   &.grid-stack-animate .grid-stack-item.ui-resizable-resizing,
   &.grid-stack-animate .grid-stack-item.grid-stack-placeholder{
     @include vendor(transition, left .0s, top .0s, height .0s, width .0s);
+  }
+
+  // without this, the html5 drag will flicker between no-drop and drop when dragging over second grid
+  &.ui-droppable.ui-droppable-over > *:not(.ui-droppable) {
+    pointer-events: none;
   }
 }
