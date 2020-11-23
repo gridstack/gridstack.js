@@ -1129,7 +1129,7 @@ export class GridStack {
     // check for css min height
     let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
     if (cssMinHeight > 0) {
-      let minRow =  Math.round(cssMinHeight / this.getCellHeight(true));
+      let minRow = Math.round(cssMinHeight / this.getCellHeight(true));
       if (row < minRow) {
         row = minRow;
       }
