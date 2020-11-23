@@ -7,7 +7,6 @@
 */
 
 import { GridStack } from './gridstack';
-import { GridStackDD } from './gridstack-dd';
 
 
 /** different layout options when changing # of columns,
@@ -24,6 +23,8 @@ export interface GridItemHTMLElement extends HTMLElement {
   /** @internal */
   _gridstackNodeOrig?: GridStackNode;
 }
+
+export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
 /**
  * Defines the options for a Grid
@@ -60,11 +61,6 @@ export interface GridStackOptions {
 
   /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns */
   column?: number;
-
-  /** class that implement drag'n'drop functionality for gridstack. If false grid will be static.
-   * (default?: undefined - first available plugin will be used)
-   */
-  ddPlugin?: false | typeof GridStackDD;
 
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
@@ -251,6 +247,30 @@ export interface DDDragInOpt extends DDDragOpt {
     revert?: string | ((event: Event) => HTMLElement);
     /** helper function when dropping (ex: 'clone' or your own method) */
     helper?: string | ((event: Event) => HTMLElement);
+}
+
+export interface Size {
+  width: number;
+  height: number;
+}
+export interface Position {
+  top: number;
+  left: number;
+}
+export interface Rect extends Size, Position {}
+
+/** data that is passed during drag and resizing callbacks */
+export interface DDUIData {
+  position?: Position;
+  size?: Size;
+  /* fields not used by GridStack but sent by jq ? leave in case we go back to them...
+  originalPosition? : Position;
+  offset?: Position;
+  originalSize?: Size;
+  element?: HTMLElement[];
+  helper?: HTMLElement[];
+  originalElement?: HTMLElement[];
+  */
 }
 
 /**

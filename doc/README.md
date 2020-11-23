@@ -82,7 +82,6 @@ gridstack.js API
   * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
   * `'auto'` - height will be square cells initially.
 - `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
-- `ddPlugin` - class that implement drag'n'drop functionality for gridstack. If `false` grid will be static. (default: `null` - first available plugin will be used)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minWidth (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
