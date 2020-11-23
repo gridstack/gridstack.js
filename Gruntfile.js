@@ -40,8 +40,6 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
-          //'dist/jq/jquery.js': ['src/jq/jquery.js'],
-          //'dist/jq/jquery-ui.js': ['src/jq/jquery-ui.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
           'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
         }
@@ -58,14 +56,6 @@ module.exports = function(grunt) {
         files: {
           'dist/jq/jquery.js': 'src/jq/jquery.js',
           'dist/jq/jquery-ui.js': 'src/jq/jquery-ui.js',
-          /*
-          'dist/jq/gridstack-dd-jqueryui.min.js': 'dist/jq/gridstack-dd-jqueryui.js',
-          'dist/gridstack-dd.min.js': 'dist/gridstack-dd.js',
-          'dist/gridstack-engine.min.js': 'dist/gridstack-engine.js',
-          'dist/gridstack-poly.min.js': 'src/gridstack-poly.js',
-          'dist/types.min.js': 'dist/types.js',
-          'dist/utils.min.js': 'dist/utils.js',
-          */
         }
       }
     },

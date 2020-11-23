@@ -89,14 +89,19 @@ export class GridStackDDJQueryUI extends GridStackDD {
     return this;
   }
 
-  public isDroppable(el: GridItemHTMLElement): boolean {
+  public isDroppable(el: HTMLElement): boolean {
     let $el: JQuery = $(el);
     return Boolean($el.data('ui-droppable'));
   }
 
-  public isDraggable(el: GridStackElement): boolean {
-    let $el: JQuery = $(el as any); // workaround Type 'string' is not assignable to type 'PlainObject<any>' - see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/29312
+  public isDraggable(el: HTMLElement): boolean {
+    let $el: JQuery = $(el);
     return Boolean($el.data('ui-draggable'));
+  }
+
+  public isResizable(el: HTMLElement): boolean {
+    let $el: JQuery = $(el);
+    return Boolean($el.data('ui-resizable'));
   }
 
   public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDD {

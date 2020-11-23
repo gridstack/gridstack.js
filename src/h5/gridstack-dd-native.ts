@@ -99,14 +99,19 @@ export class GridStackDDNative extends GridStackDD {
     return this;
   }
 
-  /** true if at least one of them is droppable */
-  public isDroppable(el: GridItemHTMLElement): boolean {
-    return this.getDDElements(el).some(dEl => !!(dEl.ddDroppable));
+  /** true if element is droppable */
+  public isDroppable(el: DDElementHost): boolean {
+    return el && el.ddElement && el.ddElement.ddDroppable && !el.ddElement.ddDroppable.disabled;
   }
 
-  /** true if at least one of them is draggable */
-  public isDraggable(el: GridStackElement): boolean {
-    return this.getDDElements(el).some(dEl => !!(dEl.ddDraggable));
+  /** true if element is draggable */
+  public isDraggable(el: DDElementHost): boolean {
+    return el && el.ddElement && el.ddElement.ddDraggable && !el.ddElement.ddDraggable.disabled;
+  }
+
+  /** true if element is draggable */
+  public isResizable(el: DDElementHost): boolean {
+    return el && el.ddElement && el.ddElement.ddResizable && !el.ddElement.ddResizable.disabled;
   }
 
   public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDDNative {
@@ -126,10 +131,13 @@ export class GridStackDDNative extends GridStackDD {
     return this;
   }
 
-  private getDDElements(els: GridStackElement): DDElement[] {
-    let list = Utils.getElements(els) as DDElementHost[];
-    if (!list.length) { return []; }
-    return list.map(e => e.ddElement || DDElement.init(e));
+  /** returns a list of DD elements, creating them on the fly by default */
+  private getDDElements(els: GridStackElement, create = true): DDElement[] {
+    let hosts = Utils.getElements(els) as DDElementHost[];
+    if (!hosts.length) { return []; }
+    let list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));
+    if (!create) { list.filter(d => d); } // remove nulls
+    return list;
   }
 }
 
