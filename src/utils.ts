@@ -6,7 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { GridStackWidget, GridStackNode, GridStackOptions, numberOrString } from './types';
+import { GridStackElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString } from './types';
 
 export interface HeightData {
   height: number;
@@ -55,6 +55,44 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
  * Utility methods
  */
 export class Utils {
+
+  /** convert a potential selector into actual list of html elements */
+  static getElements(els: GridStackElement): HTMLElement[] {
+    if (typeof els === 'string') {
+      let list = document.querySelectorAll(els);
+      if (!list.length && els[0] !== '.' && els[0] !== '#') {
+        list = document.querySelectorAll('.' + els);
+        if (!list.length) { list = document.querySelectorAll('#' + els) }
+      }
+      return Array.from(list) as HTMLElement[];
+    }
+    return [els];
+  }
+
+  /** convert a potential selector into actual single element */
+  static getElement(els: GridStackElement): HTMLElement {
+    if (typeof els === 'string') {
+      if (!els.length) { return null}
+      if (els[0] === '#') {
+        return document.getElementById(els.substring(1));
+      }
+      if (els[0] === '.') {
+        return document.querySelector(els);
+      }
+
+      // if we start with a digit, assume it's an id (error calling querySelector('#1')) as class are not valid CSS
+      if(!isNaN(+els[0])) { // start with digit
+        return document.getElementById(els);
+      }
+
+      // finally try string, then id then class
+      let el = document.querySelector(els);
+      if (!el) { el = document.getElementById(els) }
+      if (!el) { el = document.querySelector('.' + els) }
+      return el as HTMLElement;
+    }
+    return els;
+  }
 
   /** returns true if a and b overlap */
   static isIntercepted(a: GridStackWidget, b: GridStackWidget): boolean {
@@ -187,7 +225,7 @@ export class Utils {
     return Utils.closestByClass(el, name);
   }
 
-  /** @internal */
+  /** delay calling the given function by certain amount of time */
   static throttle(callback: () => void, delay: number): () => void {
     let isWaiting = false;
 

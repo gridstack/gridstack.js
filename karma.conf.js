@@ -27,13 +27,15 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'src/**/*.ts',
+      'src/**/*.ts', // TODO: have to list files else the import in each won't be found!
       'spec/*-spec.ts',
       // 'spec/e2e/*-spec.js' issues with ReferenceError: `browser` & `element` is not defined
     ],
-
-    // list of files to exclude
+    // BUT list of files to exclude
     exclude: [
+      'src/index*.ts',
+      'src/jq/*', // use h5 version for unit testing
+      // 'src/h5/*', // use jq version for unit testing
     ],
 
     // preprocess matching files before serving them to the browser
