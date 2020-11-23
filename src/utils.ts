@@ -76,7 +76,7 @@ export class Utils {
       if (els[0] === '#') {
         return document.getElementById(els.substring(1));
       }
-      if (els[0] === '.') {
+      if (els[0] === '.' || els[0] === '[') {
         return document.querySelector(els);
       }
 

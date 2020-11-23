@@ -123,7 +123,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
 
       // see if we already have a node with widget/height and check for attributes
       let node = el.gridstackNode || {};
-      if (!node.width || !node.height) {
+      if (el.getAttribute && (!node.width || !node.height)) {
         let w = parseInt(el.getAttribute('data-gs-width'));
         if (w > 0) { node.width = w; }
         let h = parseInt(el.getAttribute('data-gs-height'));
@@ -180,6 +180,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       }
 
       let node = el.gridstackNode; // use existing placeholder node as it's already in our list with drop location
+      if (!node) { return false; }
       const _id = node._id;
       this.engine.cleanupNode(node); // removes all internal _xyz values (including the _id so add that back)
       node._id = _id;
