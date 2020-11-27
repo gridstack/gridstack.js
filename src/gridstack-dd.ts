@@ -110,7 +110,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       accept: (el: GridItemHTMLElement) => {
         let node: GridStackNode = el.gridstackNode;
         if (node && node.grid === this) {
-          return false;
+          return true; // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
         }
         if (typeof this.opts.acceptWidgets === 'function') {
           return this.opts.acceptWidgets(el);
@@ -120,9 +120,11 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       }
     })
     .on(this.el, 'dropover', (event, el: GridItemHTMLElement) => {
+      // ignore dropping on ourself, and prevent parent from receiving event
+      let node = el.gridstackNode || {};
+      if (node.grid === this) { return false; }
 
       // see if we already have a node with widget/height and check for attributes
-      let node = el.gridstackNode || {};
       if (el.getAttribute && (!node.width || !node.height)) {
         let w = parseInt(el.getAttribute('data-gs-width'));
         if (w > 0) { node.width = w; }
@@ -166,6 +168,10 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       return false; // prevent parent from receiving msg (which may be grid as well)
     })
     .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
+      let node = el.gridstackNode;
+      // ignore drop on ourself from ourself - dragend will handle the simple move instead
+      if (node && node.grid === this) { return false; }
+
       this.placeholder.remove();
 
       // notify previous grid of removal
@@ -179,7 +185,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         oGrid._triggerRemoveEvent();
       }
 
-      let node = el.gridstackNode; // use existing placeholder node as it's already in our list with drop location
+      // use existing placeholder node as it's already in our list with drop location
       if (!node) { return false; }
       const _id = node._id;
       this.engine.cleanupNode(node); // removes all internal _xyz values (including the _id so add that back)
