@@ -12,13 +12,21 @@ export interface DDResizableHandleOpt {
 }
 
 export class DDResizableHandle {
-  public el: HTMLElement;
-  public host: HTMLElement;
-  public option: DDResizableHandleOpt;
-  public dir: string;
+  /** @internal */
+  private el: HTMLElement;
+  /** @internal */
+  private host: HTMLElement;
+  /** @internal */
+  private option: DDResizableHandleOpt;
+  /** @internal */
+  private dir: string;
+  /** @internal */
   private mouseMoving = false;
+  /** @internal */
   private started = false;
+  /** @internal */
   private mouseDownEvent: MouseEvent;
+  /** @internal */
   private static prefix = 'ui-resizable-';
 
   constructor(host: HTMLElement, direction: string, option: DDResizableHandleOpt) {
@@ -26,9 +34,9 @@ export class DDResizableHandle {
     this.dir = direction;
     this.option = option;
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
-    this.mouseDown = this.mouseDown.bind(this);
-    this.mouseMove = this.mouseMove.bind(this);
-    this.mouseUp = this.mouseUp.bind(this);
+    this._mouseDown = this._mouseDown.bind(this);
+    this._mouseMove = this._mouseMove.bind(this);
+    this._mouseUp = this._mouseUp.bind(this);
 
     this.init();
   }
@@ -41,50 +49,59 @@ export class DDResizableHandle {
     el.style.userSelect = 'none';
     this.el = el;
     this.host.appendChild(this.el);
-    this.el.addEventListener('mousedown', this.mouseDown);
+    this.el.addEventListener('mousedown', this._mouseDown);
     return this;
   }
 
-  private mouseDown(event: MouseEvent): void {
+  public destroy(): DDResizableHandle {
+    this.host.removeChild(this.el);
+    return this;
+  }
+
+  /** @internal */
+  private _mouseDown(event: MouseEvent): void {
     this.mouseDownEvent = event;
     setTimeout(() => {
-      document.addEventListener('mousemove', this.mouseMove, true);
-      document.addEventListener('mouseup', this.mouseUp);
+      document.addEventListener('mousemove', this._mouseMove, true);
+      document.addEventListener('mouseup', this._mouseUp);
       setTimeout(() => {
         if (!this.mouseMoving) {
-          document.removeEventListener('mousemove', this.mouseMove, true);
-          document.removeEventListener('mouseup', this.mouseUp);
+          document.removeEventListener('mousemove', this._mouseMove, true);
+          document.removeEventListener('mouseup', this._mouseUp);
           delete this.mouseDownEvent;
         }
       }, 300);
     }, 100);
   }
 
-  private mouseMove(event: MouseEvent): void {
+  /** @internal */
+  private _mouseMove(event: MouseEvent): void {
     if (!this.started && !this.mouseMoving) {
-      if (this.hasMoved(event, this.mouseDownEvent)) {
+      if (this._hasMoved(event, this.mouseDownEvent)) {
         this.mouseMoving = true;
-        this.triggerEvent('start', this.mouseDownEvent);
+        this._triggerEvent('start', this.mouseDownEvent);
         this.started = true;
       }
     }
     if (this.started) {
-      this.triggerEvent('move', event);
+      this._triggerEvent('move', event);
     }
   }
 
-  private mouseUp(event: MouseEvent): void {
+  /** @internal */
+  private _mouseUp(event: MouseEvent): void {
     if (this.mouseMoving) {
-      this.triggerEvent('stop', event);
+      this._triggerEvent('stop', event);
     }
-    document.removeEventListener('mousemove', this.mouseMove, true);
-    document.removeEventListener('mouseup', this.mouseUp);
+    document.removeEventListener('mousemove', this._mouseMove, true);
+    document.removeEventListener('mouseup', this._mouseUp);
     this.mouseMoving = false;
     this.started = false;
     delete this.mouseDownEvent;
   }
 
-  private hasMoved(event: MouseEvent, oEvent: MouseEvent): boolean {
+  /** @internal */
+  private _hasMoved(event: MouseEvent, oEvent: MouseEvent): boolean {
     const { clientX, clientY } = event;
     const { clientX: oClientX, clientY: oClientY } = oEvent;
     return (
@@ -93,12 +110,8 @@ export class DDResizableHandle {
     );
   }
 
-  public destroy(): DDResizableHandle {
-    this.host.removeChild(this.el);
-    return this;
-  }
-
-  private triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
+  /** @internal */
+  private _triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
     if (this.option[name]) {
       this.option[name](event);
     }

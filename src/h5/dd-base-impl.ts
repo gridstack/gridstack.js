@@ -7,10 +7,12 @@
 */
 export type EventCallback = (event: Event) => boolean|void;
 export abstract class DDBaseImplement {
-  // returns the enable state, but you have to call enable()/disable() to change (as other things need to happen)
+  /** returns the enable state, but you have to call enable()/disable() to change (as other things need to happen) */
   public get disabled(): boolean   { return this._disabled; }
 
+  /** @internal */
   private _disabled = false;
+  /** @internal */
   private _eventRegister: {
     [eventName: string]: EventCallback;
   } = {};

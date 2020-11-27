@@ -13,13 +13,16 @@ import { GridStackDD, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../g
 import { GridItemHTMLElement, DDDragInOpt } from '../types';
 import { Utils } from '../utils';
 
+// export our base class (what user should use) and all associated types
+export * from '../gridstack-dd';
+
 /**
  * HTML 5 Native DragDrop based drag'n'drop plugin.
  */
 export class GridStackDDNative extends GridStackDD {
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDDNative {
-    this.getDDElements(el).forEach(dEl => {
+    this._getDDElements(el).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
         dEl.ddResizable[opts]();
       } else if (opts === 'destroy') {
@@ -46,7 +49,7 @@ export class GridStackDDNative extends GridStackDD {
   }
 
   public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDDNative {
-    this.getDDElements(el).forEach(dEl => {
+    this._getDDElements(el).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
         dEl.ddDraggable && dEl.ddDraggable[opts]();
       } else if (opts === 'destroy') {
@@ -74,7 +77,7 @@ export class GridStackDDNative extends GridStackDD {
   }
 
   public dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDDNative {
-    this.getDDElements(el).forEach(dEl => dEl.setupDraggable(opts));
+    this._getDDElements(el).forEach(dEl => dEl.setupDraggable(opts));
     return this;
   }
 
@@ -83,7 +86,7 @@ export class GridStackDDNative extends GridStackDD {
       opts._accept = opts.accept;
       opts.accept = (el) => opts._accept(el);
     }
-    this.getDDElements(el).forEach(dEl => {
+    this._getDDElements(el).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
         dEl.ddDroppable && dEl.ddDroppable[opts]();
       } else if (opts === 'destroy') {
@@ -115,7 +118,7 @@ export class GridStackDDNative extends GridStackDD {
   }
 
   public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDDNative {
-    this.getDDElements(el).forEach(dEl =>
+    this._getDDElements(el).forEach(dEl =>
       dEl.on(name, (event: Event) => {
         callback(
           event,
@@ -127,12 +130,12 @@ export class GridStackDDNative extends GridStackDD {
   }
 
   public off(el: GridItemHTMLElement, name: string): GridStackDD {
-    this.getDDElements(el).forEach(dEl => dEl.off(name));
+    this._getDDElements(el).forEach(dEl => dEl.off(name));
     return this;
   }
 
-  /** returns a list of DD elements, creating them on the fly by default */
-  private getDDElements(els: GridStackElement, create = true): DDElement[] {
+  /** @internal returns a list of DD elements, creating them on the fly by default */
+  private _getDDElements(els: GridStackElement, create = true): DDElement[] {
     let hosts = Utils.getElements(els) as DDElementHost[];
     if (!hosts.length) { return []; }
     let list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));

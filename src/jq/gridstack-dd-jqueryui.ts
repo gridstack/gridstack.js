@@ -18,6 +18,9 @@ import * as $ from './jquery'; // compile this in... having issues TS/ES6 app wo
 export { $ };
 import './jquery-ui';
 
+// export our base class (what user should use) and all associated types
+export * from '../gridstack-dd';
+
 /**
  * legacy Jquery-ui based drag'n'drop plugin.
  */
