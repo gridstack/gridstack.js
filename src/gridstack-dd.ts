@@ -120,9 +120,12 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       }
     })
     .on(this.el, 'dropover', (event, el: GridItemHTMLElement) => {
-      // ignore dropping on ourself, and prevent parent from receiving event
+      // ignore drop enter on ourself, and prevent parent from receiving event
       let node = el.gridstackNode || {};
-      if (node.grid === this) { return false; }
+      if (node.grid === this) {
+        delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
+        return false;
+      }
 
       // see if we already have a node with widget/height and check for attributes
       if (el.getAttribute && (!node.width || !node.height)) {
@@ -151,12 +154,18 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       return false; // prevent parent from receiving msg (which may be grid as well)
     })
     .on(this.el, 'dropout', (event, el: GridItemHTMLElement) => {
+      let node = el.gridstackNode;
+      if (!node) { return; }
+
+      // clear any added flag now that we are leaving #1484
+      delete node._added;
+
       // jquery-ui bug. Must verify widget is being dropped out
       // check node variable that gets set when widget is out of grid
-      let node = el.gridstackNode;
-      if (!node || !node._isOutOfGrid) {
+      if (!node._isOutOfGrid) {
         return;
       }
+
       GridStackDD.get().off(el, 'drag');
       node.el = null;
       this.engine.removeNode(node);
