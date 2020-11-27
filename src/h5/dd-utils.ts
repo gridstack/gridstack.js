@@ -80,13 +80,14 @@ export class DDUtils {
     if (e instanceof DragEvent) {
       Object.assign(obj, { dataTransfer: e.dataTransfer });
     }
-    DDUtils.copyProps(evt, e, kbdProps);
-    DDUtils.copyProps(evt, e, ptProps);
-    DDUtils.copyProps(evt, obj, Object.keys(obj));
+    DDUtils._copyProps(evt, e, kbdProps);
+    DDUtils._copyProps(evt, e, ptProps);
+    DDUtils._copyProps(evt, obj, Object.keys(obj));
     return evt as unknown as T;
   }
 
-  private static copyProps(dst: unknown, src: unknown, props: string[]): void {
+  /** @internal */
+  private static _copyProps(dst: unknown, src: unknown, props: string[]): void {
     for (let i = 0; i < props.length; i++) {
       const p = props[i];
       dst[p] = src[p];

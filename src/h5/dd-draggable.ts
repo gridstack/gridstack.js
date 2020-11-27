@@ -10,6 +10,7 @@ import { DDUtils } from './dd-utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { GridItemHTMLElement, DDUIData } from '../types';
 
+// TODO: merge with DDDragOpt ?
 export interface DDDraggableOpt {
   appendTo?: string | HTMLElement;
   containment?: string | HTMLElement; // TODO: not implemented yet
@@ -34,19 +35,30 @@ export interface DragOffset {
 
 export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt<DDDraggableOpt> {
   public el: HTMLElement;
-  public helper: HTMLElement;
   public option: DDDraggableOpt;
-  public dragOffset: DragOffset;
-  public dragElementOriginStyle: Array<string>;
-  public dragFollowTimer: number;
-  public mouseDownElement: HTMLElement;
-  public dragging = false;
-  public paintTimer: number;
-  public parentOriginStylePosition: string;
-  public helperContainment: HTMLElement;
+  public helper: HTMLElement; // used by GridStackDDNative
 
+  /** @internal */
+  private dragOffset: DragOffset;
+  /** @internal */
+  private dragElementOriginStyle: Array<string>;
+  /** @internal */
+  private dragFollowTimer: number;
+  /** @internal */
+  private mouseDownElement: HTMLElement;
+  /** @internal */
+  private dragging = false;
+  /** @internal */
+  private paintTimer: number;
+  /** @internal */
+  private parentOriginStylePosition: string;
+  /** @internal */
+  private helperContainment: HTMLElement;
+  /** @internal */
   private static basePosition: 'fixed' | 'absolute' = 'absolute';
+  /** @internal */
   private static dragEventListenerOption = DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
+  /** @internal */
   private static originStyleProp = ['transition', 'pointerEvents', 'position',
     'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange'];
 
@@ -55,13 +67,16 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.el = el;
     this.option = option;
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
-    this.mouseDown = this.mouseDown.bind(this);
-    this.dragStart = this.dragStart.bind(this);
-    this.drag = this.drag.bind(this);
-    this.dragEnd = this.dragEnd.bind(this);
-    this.dragFollow = this.dragFollow.bind(this);
+    this._mouseDown = this._mouseDown.bind(this);
+    this._dragStart = this._dragStart.bind(this);
+    this._drag = this._drag.bind(this);
+    this._dragEnd = this._dragEnd.bind(this);
+    this._dragFollow = this._dragFollow.bind(this);
 
-    this.init();
+    this.el.draggable = true;
+    this.el.classList.add('ui-draggable');
+    this.el.addEventListener('mousedown', this._mouseDown);
+    this.el.addEventListener('dragstart', this._dragStart);
   }
 
   public on(event: 'drag' | 'dragstart' | 'dragstop', callback: (event: DragEvent) => void): void {
@@ -89,12 +104,12 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       // Destroy while dragging should remove dragend listener and manually trigger
       // dragend, otherwise dragEnd can't perform dragstop because eventRegistry is
       // destroyed.
-      this.dragEnd({} as DragEvent);
+      this._dragEnd({} as DragEvent);
     }
     this.el.draggable = false;
     this.el.classList.remove('ui-draggable');
-    this.el.removeEventListener('mousedown', this.mouseDown);
-    this.el.removeEventListener('dragstart', this.dragStart);
+    this.el.removeEventListener('mousedown', this._mouseDown);
+    this.el.removeEventListener('dragstart', this._dragStart);
     delete this.el;
     delete this.helper;
     delete this.option;
@@ -106,19 +121,13 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  protected init(): DDDraggable {
-    this.el.draggable = true;
-    this.el.classList.add('ui-draggable');
-    this.el.addEventListener('mousedown', this.mouseDown);
-    this.el.addEventListener('dragstart', this.dragStart);
-    return this;
-  }
-
-  private mouseDown(event: MouseEvent): void {
+  /** @internal */
+  private _mouseDown(event: MouseEvent): void {
     this.mouseDownElement = event.target as HTMLElement;
   }
 
-  private dragStart(event: DragEvent): void {
+  /** @internal */
+  private _dragStart(event: DragEvent): void {
     if (this.option.handle && !(
       this.mouseDownElement
       && this.mouseDownElement.matches(
@@ -129,25 +138,26 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       return;
     }
     DDManager.dragElement = this;
-    this.helper = this.createHelper(event);
-    this.setupHelperContainmentStyle();
-    this.dragOffset = this.getDragOffset(event, this.el, this.helperContainment);
+    this.helper = this._createHelper(event);
+    this._setupHelperContainmentStyle();
+    this.dragOffset = this._getDragOffset(event, this.el, this.helperContainment);
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dragstart' });
     if (this.helper !== this.el) {
-      this.setupDragFollowNodeNotifyStart(ev);
+      this._setupDragFollowNodeNotifyStart(ev);
     } else {
       this.dragFollowTimer = window.setTimeout(() => {
         delete this.dragFollowTimer;
-        this.setupDragFollowNodeNotifyStart(ev);
+        this._setupDragFollowNodeNotifyStart(ev);
       }, 0);
     }
-    this.cancelDragGhost(event);
+    this._cancelDragGhost(event);
   }
 
-  protected setupDragFollowNodeNotifyStart(ev: Event): DDDraggable {
-    this.setupHelperStyle();
-    document.addEventListener('dragover', this.drag, DDDraggable.dragEventListenerOption);
-    this.el.addEventListener('dragend', this.dragEnd);
+  /** @internal */
+  private _setupDragFollowNodeNotifyStart(ev: Event): DDDraggable {
+    this._setupHelperStyle();
+    document.addEventListener('dragover', this._drag, DDDraggable.dragEventListenerOption);
+    this.el.addEventListener('dragend', this._dragEnd);
     if (this.option.start) {
       this.option.start(ev, this.ui());
     }
@@ -157,8 +167,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  private drag(event: DragEvent): void {
-    this.dragFollow(event);
+  /** @internal */
+  private _drag(event: DragEvent): void {
+    this._dragFollow(event);
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drag' });
     if (this.option.drag) {
       this.option.drag(ev, this.ui());
@@ -166,7 +177,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.triggerEvent('drag', ev);
   }
 
-  private dragEnd(event: DragEvent): void {
+  /** @internal */
+  private _dragEnd(event: DragEvent): void {
     if (this.dragFollowTimer) {
       clearTimeout(this.dragFollowTimer);
       delete this.dragFollowTimer;
@@ -175,14 +187,14 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       if (this.paintTimer) {
         cancelAnimationFrame(this.paintTimer);
       }
-      document.removeEventListener('dragover', this.drag, DDDraggable.dragEventListenerOption);
-      this.el.removeEventListener('dragend', this.dragEnd);
+      document.removeEventListener('dragover', this._drag, DDDraggable.dragEventListenerOption);
+      this.el.removeEventListener('dragend', this._dragEnd);
     }
     this.dragging = false;
     this.helper.classList.remove('ui-draggable-dragging');
     this.helperContainment.style.position = this.parentOriginStylePosition || null;
     if (this.helper === this.el) {
-      this.removeHelperStyle();
+      this._removeHelperStyle();
     } else {
       this.helper.remove();
     }
@@ -196,7 +208,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     delete this.mouseDownElement;
   }
 
-  private createHelper(event: DragEvent): HTMLElement {
+  /** @internal */
+  private _createHelper(event: DragEvent): HTMLElement {
     const helperIsFunction = (typeof this.option.helper) === 'function';
     const helper = (helperIsFunction
       ? (this.option.helper as ((event: Event) => HTMLElement)).apply(this.el, [event])
@@ -213,7 +226,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return helper;
   }
 
-  private setupHelperStyle(): DDDraggable {
+  /** @internal */
+  private _setupHelperStyle(): DDDraggable {
     this.helper.style.pointerEvents = 'none';
     this.helper.style.width = this.dragOffset.width + 'px';
     this.helper.style.height = this.dragOffset.height + 'px';
@@ -229,7 +243,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  private removeHelperStyle(): DDDraggable {
+  /** @internal */
+  private _removeHelperStyle(): DDDraggable {
     // don't bother restoring styles if we're gonna remove anyway...
     if (! (this.helper as GridItemHTMLElement)?.gridstackNode?._isAboutToRemove) {
       DDDraggable.originStyleProp.forEach(prop => {
@@ -240,7 +255,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  private dragFollow(event: DragEvent): void {
+  /** @internal */
+  private _dragFollow(event: DragEvent): void {
     if (this.paintTimer) {
       cancelAnimationFrame(this.paintTimer);
     }
@@ -257,7 +273,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     });
   }
 
-  private setupHelperContainmentStyle(): DDDraggable {
+  /** @internal */
+  private _setupHelperContainmentStyle(): DDDraggable {
     this.helperContainment = this.helper.parentElement;
     if (this.option.basePosition !== 'fixed') {
       this.parentOriginStylePosition = this.helperContainment.style.position;
@@ -268,7 +285,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  private cancelDragGhost(e: DragEvent): DDDraggable {
+  /** @internal */
+  private _cancelDragGhost(e: DragEvent): DDDraggable {
     if (e.dataTransfer != null) {
       e.dataTransfer.setData('text', '');
     }
@@ -288,7 +306,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  private getDragOffset(event: DragEvent, el: HTMLElement, parent: HTMLElement): DragOffset {
+  /** @internal */
+  private _getDragOffset(event: DragEvent, el: HTMLElement, parent: HTMLElement): DragOffset {
 
     // in case ancestor has transform/perspective css properties that change the viewpoint
     let xformOffsetX = 0;
@@ -323,7 +342,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     };
   }
 
-  /** public -> called by DDDroppable as well */
+  /** @internal TODO: set to public as called by DDDroppable! */
   public ui = (): DDUIData => {
     const containmentEl = this.el.parentElement;
     const containmentRect = containmentEl.getBoundingClientRect();
