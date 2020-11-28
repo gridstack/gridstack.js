@@ -172,8 +172,8 @@ export class Utils {
     return Boolean(v);
   }
 
-  static toNumber(value: null | string): number | null {
-    return (value === null || value.length === 0) ? null : Number(value);
+  static toNumber(value: null | string): number {
+    return (value === null || value.length === 0) ? undefined : Number(value);
   }
 
   static parseHeight(val: numberOrString): HeightData {
@@ -209,6 +209,18 @@ export class Utils {
     });
 
     return target;
+  }
+
+  /** given 2 objects return true if they have the same values. Checks for Object {} having same fields and values (just 1 level down) */
+  static same(a: unknown, b: unknown): boolean {
+    if (typeof a !== 'object')  { return a == b; }
+    if (typeof a !== typeof b) { return false; }
+    // else we have object, check just 1 level deep for being same things...
+    if (Object.keys(a).length !== Object.keys(b).length) { return false; }
+    for (const key in a) {
+      if (a[key] !== b[key]) { return false; }
+    }
+    return true;
   }
 
   /** makes a shallow copy of the passed json struct */

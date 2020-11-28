@@ -128,6 +128,8 @@ export class GridStack {
   /** @internal */
   private _prevColumn: number;
   /** @internal */
+  private _ignoreLayoutsNodeChange: boolean;
+  /** @internal */
   public _gsEventHandler = {};
   /** @internal */
   private _styles: GridCSSStyleSheet;
@@ -287,12 +289,10 @@ export class GridStack {
 
     this._updateContainerHeight();
 
-    this.onParentResize();
-
     this._setupDragIn();
     this._setupRemoveDrop();
     this._setupAcceptWidget();
-    this._updateWindowResizeEvent();
+    this._updateWindowResizeEvent(); // finally this may size us down to 1 column
   }
 
   /**
@@ -307,7 +307,7 @@ export class GridStack {
    * grid.addWidget({width: 3, content: 'hello'});
    * grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {width: 3});
    *
-   * @param el html element, or string definition, or GridStackWidget (which can have content string as well) to add
+   * @param el  GridStackWidget (which can have content string as well), html element, or string definition to add
    * @param options widget position/size options (optional, and ignore if first param is already option) - see GridStackWidget
    */
   public addWidget(els?: GridStackWidget | GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
@@ -343,17 +343,22 @@ export class GridStack {
 
     // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
     // as the actual value are filled in when _prepareElement() calls el.getAttribute('data-gs-xyz) before adding the node.
-    if (options) {
-      options = {...options};  // make a copy before we modify in case caller re-uses it
-      // make sure we load any DOM attributes that are not specified in passed in options (which override)
-      let domAttr = this._readAttr(el);
-      Utils.defaults(options, domAttr);
-      this.engine.prepareNode(options);
-      this._writeAttr(el, options);
-    }
+    // So make sure we load any DOM attributes that are not specified in passed in options (which override)
+    let domAttr = this._readAttr(el);
+    options = {...(options || {})};  // make a copy before we modify in case caller re-uses it
+    Utils.defaults(options, domAttr);
+    this.engine.prepareNode(options);
+    this._writeAttr(el, options);
 
     this.el.appendChild(el);
-    return this.makeWidget(el);
+
+    // similar to makeWidget() that doesn't read attr again and worse re-create a new node and loose any _id
+    this._prepareElement(el, true, options);
+    this._updateContainerHeight();
+    this._triggerAddEvent();
+    this._triggerChangeEvent();
+
+    return el;
   }
 
   /** saves the current layout returning a list of widgets for serialization */
@@ -385,6 +390,14 @@ export class GridStack {
    **/
   public load(layout: GridStackWidget[], addAndRemove: boolean | ((w: GridStackWidget, add: boolean) => void)  = true): GridStack {
     let items = GridStack.Utils.sort(layout);
+
+    // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
+    // the original wanted layout so we can scale back up correctly #1471
+    if (this._prevColumn && this._prevColumn !== this.opts.column && items.some(n => (n.x + n.width) > this.opts.column)) {
+      this._ignoreLayoutsNodeChange = true; // skip layout update
+      this.engine.cacheLayout(items, this._prevColumn, true);
+    }
+
     let removed: GridStackNode[] = [];
     this.batchUpdate();
     // see if any items are missing from new layout and need to be removed first
@@ -404,7 +417,7 @@ export class GridStack {
     }
     // now add/update the widgets
     items.forEach(w => {
-      let item = this.engine.nodes.find(n => n.id === w.id);
+      let item = (w.id || w.id === 0) ? this.engine.nodes.find(n => n.id === w.id) : undefined;
       if (item) {
         this.update(item.el, w.x, w.y, w.width, w.height); // TODO: full update
       } else if (addAndRemove) {
@@ -417,6 +430,10 @@ export class GridStack {
     });
     this.engine.removedNodes = removed;
     this.commit();
+
+    // after commit, clear that flag
+    delete this._ignoreLayoutsNodeChange;
+
     return this;
   }
 
@@ -531,7 +548,10 @@ export class GridStack {
     this.engine.updateNodeWidths(oldColumn, column, domNodes, layout);
 
     // and trigger our event last...
-    this._triggerChangeEvent(true); // skip layout update
+    this._ignoreLayoutsNodeChange = true; // skip layout update
+    this._triggerChangeEvent();
+    delete this._ignoreLayoutsNodeChange;
+
     return this;
   }
 
@@ -1007,11 +1027,11 @@ export class GridStack {
   }
 
   /** @internal */
-  private _triggerChangeEvent(skipLayoutChange?: boolean): GridStack {
+  private _triggerChangeEvent(): GridStack {
     if (this.engine.batchMode) { return this; }
     let elements = this.engine.getDirtyNodes(true); // verify they really changed
     if (elements && elements.length) {
-      if (!skipLayoutChange) {
+      if (!this._ignoreLayoutsNodeChange) {
         this.engine.layoutsNodesChange(elements);
       }
       this._triggerEvent('change', elements);
@@ -1024,7 +1044,9 @@ export class GridStack {
   private _triggerAddEvent(): GridStack {
     if (this.engine.batchMode) { return this }
     if (this.engine.addedNodes && this.engine.addedNodes.length > 0) {
-      this.engine.layoutsNodesChange(this.engine.addedNodes);
+      if (!this._ignoreLayoutsNodeChange) {
+        this.engine.layoutsNodesChange(this.engine.addedNodes);
+      }
       // prevent added nodes from also triggering 'change' event (which is called next)
       this.engine.addedNodes.forEach(n => { delete n._dirty; });
       this._triggerEvent('added', this.engine.addedNodes);
@@ -1157,12 +1179,20 @@ export class GridStack {
 
 
   /** @internal */
-  private _prepareElement(el: GridItemHTMLElement, triggerAddEvent = false): GridStack {
-    el.classList.add(this.opts.itemClass);
-    let node = this._readAttr(el, { el: el, grid: this });
-    node = this.engine.addNode(node, triggerAddEvent);
+  private _prepareElement(el: GridItemHTMLElement, triggerAddEvent = false, node?: GridStackNode): GridStack {
+    if (!node) {
+      el.classList.add(this.opts.itemClass);
+      node = this._readAttr(el);
+    }
     el.gridstackNode = node;
-    this._writeAttr(el, node);
+    node.el = el;
+    node.grid = this;
+    let copy = {...node};
+    node = this.engine.addNode(node, triggerAddEvent);
+    // write node attr back in case there was collision or we have to fix bad values during addNode()
+    if (!Utils.same(node, copy)) {
+      this._writeAttr(el, node);
+    }
     this._prepareDragDropByNode(node);
     return this;
   }
@@ -1230,6 +1260,14 @@ export class GridStack {
     node.locked = Utils.toBool(el.getAttribute('data-gs-locked'));
     node.resizeHandles = el.getAttribute('data-gs-resize-handles');
     node.id = el.getAttribute('data-gs-id');
+
+    // remove any key not found (null or false which is default)
+    for (const key in node) {
+      if (!node.hasOwnProperty(key)) { return; }
+      if (node[key] === null || node[key] === false) {
+        delete node[key];
+      }
+    }
 
     return node;
   }
@@ -1305,6 +1343,7 @@ export class GridStack {
     if (workTodo && !forceRemove && !this.opts._isNested && !this._windowResizeBind) {
       this._windowResizeBind = this.onParentResize.bind(this); // so we can properly remove later
       window.addEventListener('resize', this._windowResizeBind);
+      this.onParentResize(); // initially call it once...
     } else if ((forceRemove || !workTodo) && this._windowResizeBind) {
       window.removeEventListener('resize', this._windowResizeBind);
       delete this._windowResizeBind; // remove link to us so we can free
