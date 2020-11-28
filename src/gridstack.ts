@@ -389,7 +389,7 @@ export class GridStack {
    * see http://gridstackjs.com/demo/serialization.html
    **/
   public load(layout: GridStackWidget[], addAndRemove: boolean | ((w: GridStackWidget, add: boolean) => void)  = true): GridStack {
-    let items = GridStack.Utils.sort(layout);
+    let items = GridStack.Utils.sort(layout, -1, this._prevColumn || this.opts.column);
 
     // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
@@ -1264,7 +1264,7 @@ export class GridStack {
     // remove any key not found (null or false which is default)
     for (const key in node) {
       if (!node.hasOwnProperty(key)) { return; }
-      if (node[key] === null || node[key] === false) {
+      if (!node[key] && node[key] !== 0) { // 0 can be valid value (x,y only really)
         delete node[key];
       }
     }
