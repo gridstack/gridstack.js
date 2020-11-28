@@ -299,6 +299,8 @@ GridStack.prototype._setupDragIn = function():  GridStack {
 
 /** @internal prepares the element for drag&drop **/
 GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): GridStack {
+  let el = node.el;
+
   // check for disabled grid first
   if (this.opts.staticGrid || node.locked ||
     ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
@@ -311,6 +313,13 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
   }
   // check if init already done
   if (node._initDD) {
+    // fine tune drag vs move by disabling any part...
+    if (node.noMove || this.opts.disableDrag) {
+      GridStackDD.get().draggable(el, 'disable');
+    }
+    if (node.noResize || this.opts.disableResize) {
+      GridStackDD.get().resizable(el, 'disable');
+    }
     return this;
   }
 
@@ -320,7 +329,6 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
   // variables used/cashed between the 3 start/move/end methods, in addition to node passed above
   let cellWidth: number;
   let cellHeight: number;
-  let el = node.el;
 
   /** called when item starts moving/resizing */
   let onStartMoving = (event: Event, ui: DDUIData): void => {

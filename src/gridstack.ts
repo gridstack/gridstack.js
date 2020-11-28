@@ -419,7 +419,7 @@ export class GridStack {
     items.forEach(w => {
       let item = (w.id || w.id === 0) ? this.engine.nodes.find(n => n.id === w.id) : undefined;
       if (item) {
-        this.update(item.el, w.x, w.y, w.width, w.height); // TODO: full update
+        this.update(item.el, w);
       } else if (addAndRemove) {
         if (typeof(addAndRemove) === 'function') {
           addAndRemove(w, true);
@@ -716,20 +716,10 @@ export class GridStack {
   /**
    * Locks/unlocks widget.
    * @param el element or selector to modify.
-   * @param val if true widget will be locked.
+   * @param locked if true widget will be locked.
    */
-  public locked(els: GridStackElement, val: boolean): GridStack {
-    GridStack.getElements(els).forEach(el => {
-      let node = el.gridstackNode;
-      if (!node) return;
-      node.locked = (val || false);
-      if (node.locked) {
-        el.setAttribute('data-gs-locked', 'true');
-      } else {
-        el.removeAttribute('data-gs-locked');
-      }
-    });
-    return this;
+  public locked(els: GridStackElement, locked: boolean): GridStack {
+    return this.update(els, {locked});
   }
 
   /**
@@ -755,37 +745,37 @@ export class GridStack {
   /**
    * Set the maxWidth for a widget.
    * @param els widget or selector to modify.
-   * @param val A numeric value of the number of columns
+   * @param maxWidth A numeric value of the number of columns
    */
-  public maxWidth(els: GridStackElement, val: number): GridStack {
-    return this._updateAttr(els, val, 'data-gs-max-width', 'maxWidth');
+  public maxWidth(els: GridStackElement, maxWidth: number): GridStack {
+    return this.update(els, {maxWidth});
   }
 
   /**
    * Set the minWidth for a widget.
    * @param els widget or selector to modify.
-   * @param val A numeric value of the number of columns
+   * @param minWidth A numeric value of the number of columns
    */
-  public minWidth(els: GridStackElement, val: number): GridStack {
-    return this._updateAttr(els, val, 'data-gs-min-width', 'minWidth');
+  public minWidth(els: GridStackElement, minWidth: number): GridStack {
+    return this.update(els, {minWidth});
   }
 
   /**
    * Set the maxHeight for a widget.
    * @param els widget or selector to modify.
-   * @param val A numeric value of the number of rows
+   * @param maxHeight A numeric value of the number of rows
    */
-  public maxHeight(els: GridStackElement, val: number): GridStack {
-    return this._updateAttr(els, val, 'data-gs-max-height', 'maxHeight');
+  public maxHeight(els: GridStackElement, maxHeight: number): GridStack {
+    return this.update(els, {maxHeight});
   }
 
   /**
    * Set the minHeight for a widget.
    * @param els widget or selector to modify.
-   * @param val A numeric value of the number of rows
+   * @param minHeight A numeric value of the number of rows
    */
-  public minHeight(els: GridStackElement, val: number): GridStack {
-    return this._updateAttr(els, val, 'data-gs-min-height', 'minHeight');
+  public minHeight(els: GridStackElement, minHeight: number): GridStack {
+    return this.update(els, {minHeight});
   }
 
   /**
@@ -795,13 +785,7 @@ export class GridStack {
    * @param y new position y. If value is null or undefined it will be ignored.
    */
   public move(els: GridStackElement, x?: number, y?: number): GridStack {
-    this._updateElement(els, (el, node) => {
-      x = (x !== undefined) ? x : node.x;
-      y = (y !== undefined) ? y : node.y;
-
-      this.engine.moveNode(node, x, y, node.width, node.height);
-    });
-    return this;
+    return this.update(els, {x, y});
   }
 
   /**
@@ -926,13 +910,7 @@ export class GridStack {
    * @param height  new dimensions height. If value is null or undefined it will be ignored.
    */
   public resize(els: GridStackElement, width?: number, height?: number): GridStack {
-    this._updateElement(els, (el, node) => {
-      width = (width || node.width);
-      height = (height || node.height);
-
-      this.engine.moveNode(node, node.x, node.y, width, height);
-    });
-    return this;
+    return this.update(els, {width, height});
   }
 
   /**
@@ -963,20 +941,76 @@ export class GridStack {
 
   /**
    * Updates widget position/size.
-   * @param els  widget or singular selector to modify
-   * @param x new position x. If value is null or undefined it will be ignored.
-   * @param y new position y. If value is null or undefined it will be ignored.
-   * @param width new dimensions width. If value is null or undefined it will be ignored.
-   * @param height  new dimensions height. If value is null or undefined it will be ignored.
+   * @param els  widget or selector of objects to modify (note: setting the same x,y for multiple items will be indeterministic and likely unwanted)
+   * @param opt new widget options (x,y,width,height, etc..). Only those set will be updated.
    */
-  public update(els: GridStackElement, x?: number, y?: number, width?: number, height?: number): GridStack {
-    this._updateElement(els, (el, node) => {
-      x = (x !== undefined) ? x : node.x;
-      y = (y !== undefined) ? y : node.y;
-      width = (width || node.width);
-      height = (height || node.height);
+  public update(els: GridStackElement, opt: GridStackWidget): GridStack {
 
-      this.engine.moveNode(node, x, y, width, height);
+    // support legacy call for now ?
+    if (arguments.length > 2) {
+      console.warn('gridstack.ts: `update(el, x, y, width, height)` is deprecated. Use `update({x, width, content, ...})`. It will be removed soon');
+      // eslint-disable-next-line prefer-rest-params
+      let a = arguments, i = 1;
+      opt = { x:a[i++], y:a[i++], width:a[i++], height:a[i++] };
+      return this.update(els, opt);
+    }
+
+    GridStack.getElements(els).forEach(el => {
+      if (!el || !el.gridstackNode) { return; }
+      let n = el.gridstackNode;
+      let w = {...opt}; // make a copy we can modify in case they re-use it or multiple items
+      delete w.autoPosition;
+
+      // move/resize widget if anything changed
+      let keys = ['x', 'y', 'width', 'height'];
+      let m: GridStackWidget;
+      if (keys.some(k => w[k] !== undefined && w[k] !== n[k])) {
+        m = {};
+        keys.forEach(k => {
+          m[k] = (w[k] !== undefined) ? w[k] : n[k];
+          delete w[k];
+        });
+      }
+      // for a move as well IFF there is any min/max fields set
+      if (!m && (w.minWidth || w.minHeight || w.maxWidth || w.maxHeight)) {
+        m = {}; // will use node position but validate values
+      }
+
+      // check for content changing
+      if (w.content) {
+        let sub = el.querySelector('.grid-stack-item-content');
+        if (sub && sub.innerHTML !== w.content) {
+          sub.innerHTML = w.content;
+        }
+        delete w.content;
+      }
+
+      // any remaining fields are assigned, but check for dragging changes, resize constrain
+      let changed = false;
+      let ddChanged = false;
+      for (const key in w) {
+        if (key[0] !== '_' && n[key] !== w[key]) {
+          n[key] = w[key];
+          changed = true;
+          ddChanged = ddChanged || (!this.opts.staticGrid && (key === 'noResize' || key === 'noMove' || key === 'locked'));
+        }
+      }
+
+      // finally move the widget
+      if (m) {
+        this.engine.cleanNodes();
+        this.engine.beginUpdate(n);
+        this.engine.moveNode(n, m.x, m.y, m.width, m.height);
+        this._updateContainerHeight();
+        this._triggerChangeEvent();
+        this.engine.endUpdate();
+      }
+      if (changed) { // move will only update x,y,width,height so update the rest too
+        this._writeAttr(el, n);
+      }
+      if (ddChanged) {
+        this._prepareDragDropByNode(n);
+      }
     });
     return this;
   }
@@ -1211,36 +1245,25 @@ export class GridStack {
     if (!node) return this;
     this._writeAttrs(el, node.x, node.y, node.width, node.height);
 
-    if (node.autoPosition) {
-      el.setAttribute('data-gs-auto-position', 'true');
-    } else {
-      el.removeAttribute('data-gs-auto-position');
+    let attrs /*: GridStackWidget*/ = { // remaining attributes
+      autoPosition: 'data-gs-auto-position',
+      minWidth: 'data-gs-min-width',
+      minHeight: 'data-gs-min-height',
+      maxWidth: 'data-gs-max-width',
+      maxHeight: 'data-gs-max-height',
+      noResize: 'data-gs-no-resize',
+      noMove: 'data-gs-no-move',
+      locked: 'data-gs-locked',
+      id: 'data-gs-id',
+      resizeHandles: 'data-gs-resize-handles'
+    };
+    for (const key in attrs) {
+      if (node[key]) { // 0 is valid for x,y only but done above already and not in list
+        el.setAttribute(attrs[key], String(node[key]));
+      } else {
+        el.removeAttribute(attrs[key]);
+      }
     }
-
-    if (node.minWidth) { el.setAttribute('data-gs-min-width', String(node.minWidth)); }
-    if (node.maxWidth) { el.setAttribute('data-gs-max-width', String(node.maxWidth)); }
-    if (node.minHeight) { el.setAttribute('data-gs-min-height', String(node.minHeight)); }
-    if (node.maxHeight) { el.setAttribute('data-gs-max-height', String(node.maxHeight)); }
-    if (node.noResize) {
-      el.setAttribute('data-gs-no-resize', 'true');
-    } else {
-      el.removeAttribute('data-gs-no-resize');
-    }
-
-    if (node.noMove) {
-      el.setAttribute('data-gs-no-move', 'true');
-    } else {
-      el.removeAttribute('data-gs-no-move');
-    }
-
-    if (node.locked) {
-      el.setAttribute('data-gs-locked', 'true');
-    } else {
-      el.removeAttribute('data-gs-locked');
-    }
-
-    if (node.resizeHandles) { el.setAttribute('data-gs-resize-handles', node.resizeHandles); }
-    if (node.id) { el.setAttribute('data-gs-id', String(node.id)); }
     return this;
   }
 
@@ -1270,25 +1293,6 @@ export class GridStack {
     }
 
     return node;
-  }
-
-  /** @internal */
-  private _updateElement(els: GridStackElement, callback: (el: GridItemHTMLElement, node: GridStackNode) => void): GridStack {
-    let el = GridStack.getElement(els);
-    if (!el) { return this; }
-    let node = el.gridstackNode;
-    if (!node) { return this; }
-
-    this.engine.cleanNodes();
-    this.engine.beginUpdate(node);
-
-    callback.call(this, el, node);
-
-    this._updateContainerHeight();
-    this._triggerChangeEvent();
-
-    this.engine.endUpdate();
-    return this;
   }
 
   /** @internal */

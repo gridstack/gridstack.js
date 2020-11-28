@@ -33,12 +33,14 @@
     });
 
     let serializedData = [
-      {x: 0, y: 0, width: 2, height: 2, id: '0', content: "big 2x2"},
+      {x: 0, y: 0, width: 2, height: 2, id: '0'},
       {x: 3, y: 1, width: 1, height: 2, id: '1', content: "<button onclick=\"alert('clicked!')\">Press me</button>"},
       {x: 4, y: 1, width: 1, height: 1, id: '2'},
       {x: 2, y: 3, width: 3, height: 1, id: '3'},
       {x: 1, y: 3, width: 1, height: 1, id: '4'}
     ];
+    serializedData.forEach((n, i) =>
+      n.content = `<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br> ${i}<br> ${n.content ? n.content : ''}`);
 
     // NEW 2.x method
     loadGrid = function() {
@@ -65,7 +67,7 @@
         // else update existing nodes (instead of calling grid.removeAll())
         grid.engine.nodes.forEach(function (node) {
           let item = items.find(function(e) { return e.id === node.id});
-          grid.update(node.el, item.x, item.y, item.width, item.height);
+          grid.move(node.el, item.x, item.y, item.width, item.height);
         });
       }
 
