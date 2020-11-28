@@ -196,17 +196,21 @@ export class GridStackEngine {
 
     // assign defaults for missing required fields
     let defaults = {width: 1, height: 1, x: 0, y: 0};
-    node = Utils.defaults(node, defaults);
+    Utils.defaults(node, defaults);
 
-    node.autoPosition = node.autoPosition || false;
-    node.noResize = node.noResize || false;
-    node.noMove = node.noMove || false;
+    if (!node.autoPosition) { delete node.autoPosition; }
+    if (!node.noResize) { delete node.noResize; }
+    if (!node.noMove) { delete node.noMove; }
 
     // check for NaN (in case messed up strings were passed. can't do parseInt() || defaults.x above as 0 is valid #)
-    if (Number.isNaN(node.x))      { node.x = defaults.x; node.autoPosition = true; }
-    if (Number.isNaN(node.y))      { node.y = defaults.y; node.autoPosition = true; }
-    if (Number.isNaN(node.width))  { node.width = defaults.width; }
-    if (Number.isNaN(node.height)) { node.height = defaults.height; }
+    if (typeof node.x == 'string')      { node.x = Number(node.x); }
+    if (typeof node.y == 'string')      { node.y = Number(node.y); }
+    if (typeof node.width == 'string')  { node.width = Number(node.width); }
+    if (typeof node.height == 'string') { node.height = Number(node.height); }
+    if (isNaN(node.x))      { node.x = defaults.x; node.autoPosition = true; }
+    if (isNaN(node.y))      { node.y = defaults.y; node.autoPosition = true; }
+    if (isNaN(node.width))  { node.width = defaults.width; }
+    if (isNaN(node.height)) { node.height = defaults.height; }
 
     if (node.maxWidth) { node.width = Math.min(node.width, node.maxWidth); }
     if (node.maxHeight) { node.height = Math.min(node.height, node.maxHeight); }
@@ -541,10 +545,7 @@ export class GridStackEngine {
     if (!this.nodes.length || oldColumn === column) { return this }
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
-    let copy: Layout[] = [];
-    this.nodes.forEach((n, i) => { copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id} }); // only thing we change is x,y,w and id to find it back
-    this._layouts = this._layouts || []; // use array to find larger quick
-    this._layouts[oldColumn] = copy;
+    this.cacheLayout(this.nodes, oldColumn);
 
     // if we're going to 1 column and using DOM order rather than default sorting, then generate that layout
     if (column === 1 && nodes && nodes.length) {
@@ -637,6 +638,24 @@ export class GridStackEngine {
     });
     return this;
   }
+
+  /**
+   * call to cache the given layout internally to the given location so we can restore back when column changes size
+   * @param nodes list of nodes
+   * @param column corresponding column index to save it under
+   * @param clear if true, will force other caches to be removed (default false)
+   */
+  public cacheLayout(nodes: GridStackNode[], column: number, clear = false): GridStackEngine {
+    let copy: Layout[] = [];
+    nodes.forEach((n, i) => {
+      n._id = n._id || GridStackEngine._idSeq++; // make sure we have an id in case this is new layout, else re-use id already set
+      copy[i] = {x: n.x, y: n.y, width: n.width, _id: n._id} // only thing we change is x,y,w and id to find it back
+    });
+    this._layouts = clear ? [] : this._layouts || []; // use array to find larger quick
+    this._layouts[column] = copy;
+    return this;
+  }
+
 
   /** called to remove all internal values */
   public cleanupNode(node: GridStackNode): GridStackEngine {
