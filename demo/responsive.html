@@ -4,8 +4,8 @@
   <title>Responsive grid demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
-  <script src="../node_modules/gridstack/dist/gridstack.all.js"></script>
+  <link rel="stylesheet" href="../node_modules/gridstack/dist/gridstack-extra.css"/>
+  <script src="../node_modules/gridstack/dist/gridstack-h5.js"></script>
 </head>
 <body>
   <div>
@@ -28,14 +28,14 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init({
+    let grid = GridStack.init({
       disableOneColumnMode: true, // will manually do 1 column
       float: true });
-    var text = document.querySelector('#column-text');
-    var layout = 'moveScale';
+    let text = document.querySelector('#column-text');
+    let layout = 'moveScale';
     
     function resizeGrid() {
-      var width = document.body.clientWidth;
+      let width = document.body.clientWidth;
       if (width < 700) {
         grid.column(1, layout);
         text.innerHTML = 1;
@@ -54,13 +54,13 @@
       }
     };
     
-    var items = [
-      {x: 0, y: 0, width: 2, height: 2, content: '0'},
-      {x: 2, y: 0, width: 2, content: '1'},
+    let items = [
+      {x: 0, y: 0, w: 2, h: 2, content: '0'},
+      {x: 2, y: 0, w: 2, content: '1'},
       {x: 5, y: 0, content: '2'},
-      {x: 1, y: 3, width: 4, content: '3'},
-      {x: 5, y: 2, width: 2, content: '4'},
-      {x: 0, y: 4, width: 12, content: '5'}
+      {x: 1, y: 3, w: 4, content: '3'},
+      {x: 5, y: 2, w: 2, content: '4'},
+      {x: 0, y: 4, w: 12, content: '5'}
     ];
     grid.load(items);
     resizeGrid();

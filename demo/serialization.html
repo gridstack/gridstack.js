@@ -7,7 +7,7 @@
   <title>Serialization demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <script src="../node_modules/gridstack/dist/gridstack.all.js"></script>
+  <script src="../node_modules/gridstack/dist/gridstack-h5.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -24,21 +24,23 @@
   </div>
 
   <script type="text/javascript">
-    var grid = GridStack.init({minRow: 1}); // don't var it collapse when empty
+    let grid = GridStack.init({minRow: 1}); // don't let it collapse when empty
     
     grid.on('added removed change', function(e, items) {
-      var str = '';
+      let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
     });
 
-    var serializedData = [
-      {x: 0, y: 0, width: 2, height: 2, id: '0', content: "big 2x2"},
-      {x: 3, y: 1, width: 1, height: 2, id: '1', content: "<button onclick=\"alert('clicked!')\">Press me</button>"},
-      {x: 4, y: 1, width: 1, height: 1, id: '2'},
-      {x: 2, y: 3, width: 3, height: 1, id: '3'},
-      {x: 1, y: 3, width: 1, height: 1, id: '4'}
+    let serializedData = [
+      {x: 0, y: 0, w: 2, h: 2, id: '0'},
+      {x: 3, y: 1, h: 2, id: '1', content: "<button onclick=\"alert('clicked!')\">Press me</button>"},
+      {x: 4, y: 1, id: '2'},
+      {x: 2, y: 3, w: 3, id: '3'},
+      {x: 1, y: 3, id: '4'}
     ];
+    serializedData.forEach((n, i) =>
+      n.content = `<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br> ${i}<br> ${n.content ? n.content : ''}`);
 
     // NEW 2.x method
     loadGrid = function() {
@@ -53,7 +55,7 @@
 
     // old (pre 2.x) way to manually load a grid
     loadGridManual = function() {
-      var items = GridStack.Utils.sort(serializedData);
+      let items = GridStack.Utils.sort(serializedData);
       grid.batchUpdate();
 
       if (grid.engine.nodes.length === 0) {
@@ -64,8 +66,8 @@
       } else {
         // else update existing nodes (instead of calling grid.removeAll())
         grid.engine.nodes.forEach(function (node) {
-          var item = items.find(function(e) { return e.id === node.id});
-          grid.update(node.el, item.x, item.y, item.width, item.height);
+          let item = items.find(function(e) { return e.id === node.id});
+          grid.move(node.el, item.x, item.y, item.w, item.h);
         });
       }
 
@@ -79,8 +81,8 @@
         serializedData.push({
           x: node.x,
           y: node.y,
-          width: node.width,
-          height: node.height,
+          w: node.w,
+          h: node.h,
           id: node.id,
           custom: 'save anything here'
         });

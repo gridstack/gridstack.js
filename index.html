@@ -181,7 +181,7 @@
           <pre>
 <code class="html">npm install gridstack</code>
 <p class="text-white">then in html:</p>
-<code class="html">&lt;script src="node_modules/gridstack/dist/gridstack.all.js"&gt;&lt;/script&gt;
+<code class="html">&lt;script src="node_modules/gridstack/dist/gridstack-h5.js"&gt;&lt;/script&gt;
 &lt;link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/&gt;
 &lt;style type="text/css"&gt;
   .grid-stack { background: #FAFAD2; }
@@ -193,7 +193,7 @@
 &lt;script type=&quot;text/javascript&quot;&gt;
   var items = [
     {content: 'my first widget'}, // will default to location (0,0) and 1x1
-    {width: 2, content: 'another longer widget!'} // will be placed next at (1,0) and 2x1
+    {w: 2, content: 'another longer widget!'} // will be placed next at (1,0) and 2x1
   ];
   var grid = GridStack.init();
   grid.load(items);
@@ -321,36 +321,36 @@
 
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-  <script src="node_modules/gridstack/dist/gridstack.all.js"></script>
+  <script src="node_modules/gridstack/dist/gridstack-h5.js"></script>
   <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
 
   <script type="text/javascript">
     var simple = [
-      {x: 0, y: 0, width: 4, height: 2, content: '1'},
-      {x: 4, y: 0, width: 4, height: 4, content: '2'},
-      {x: 8, y: 0, width: 2, height: 2, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon>'},
-      {x: 10, y: 0, width: 2, height: 2, content: '4'},
-      {x: 0, y: 2, width: 2, height: 2, content: '5'},
-      {x: 2, y: 2, width: 2, height: 4, content: '6'},
-      {x: 8, y: 2, width: 4, height: 2, content: '7'},
-      {x: 0, y: 4, width: 2, height: 2, content: '8'},
-      {x: 4, y: 4, width: 4, height: 2, content: '9'},
-      {x: 8, y: 4, width: 2, height: 2, content: '10'},
-      {x: 10, y: 4, width: 2, height: 2, content: '11'},
+      {x: 0, y: 0, w: 4, h: 2, content: '1'},
+      {x: 4, y: 0, w: 4, h: 4, content: '2'},
+      {x: 8, y: 0, w: 2, h: 2, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon>'},
+      {x: 10, y: 0, w: 2, h: 2, content: '4'},
+      {x: 0, y: 2, w: 2, h: 2, content: '5'},
+      {x: 2, y: 2, w: 2, h: 4, content: '6'},
+      {x: 8, y: 2, w: 4, h: 2, content: '7'},
+      {x: 0, y: 4, w: 2, h: 2, content: '8'},
+      {x: 4, y: 4, w: 4, h: 2, content: '9'},
+      {x: 8, y: 4, w: 2, h: 2, content: '10'},
+      {x: 10, y: 4, w: 2, h: 2, content: '11'},
     ];
    var advanced = [
-      {x: 0, y: 0, width: 4, height: 2, content: '1'},
-      {x: 4, y: 0, width: 4, height: 4, noMove: true, noResize: true, locked: true, content: 'I can\'t be moved or dragged!<br><ion-icon name="ios-lock" style="font-size:300%"></ion-icon>'},
-      {x: 8, y: 0, width: 2, height: 2, minWidth: 2, noResize: true, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon><p class="card-text text-center" style="margin-bottom: 0">...but don\'t resize me!</p>'},
-      {x: 10, y: 0, width: 2, height: 2, content: '4'},
-      {x: 0, y: 2, width: 2, height: 2, content: '5'},
-      {x: 2, y: 2, width: 2, height: 4, content: '6'},
-      {x: 8, y: 2, width: 4, height: 2, content: '7'},
-      {x: 0, y: 4, width: 2, height: 2, content: '8'},
-      {x: 4, y: 4, width: 4, height: 2, content: '9'},
-      {x: 8, y: 4, width: 2, height: 2, content: '10'},
-      {x: 10, y: 4, width: 2, height: 2, content: '11'},
+      {x: 0, y: 0, w: 4, h: 2, content: '1'},
+      {x: 4, y: 0, w: 4, h: 4, noMove: true, noResize: true, locked: true, content: 'I can\'t be moved or dragged!<br><ion-icon name="ios-lock" style="font-size:300%"></ion-icon>'},
+      {x: 8, y: 0, w: 2, h: 2, minW: 2, noResize: true, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon><p class="card-text text-center" style="margin-bottom: 0">...but don\'t resize me!</p>'},
+      {x: 10, y: 0, w: 2, h: 2, content: '4'},
+      {x: 0, y: 2, w: 2, h: 2, content: '5'},
+      {x: 2, y: 2, w: 2, h: 4, content: '6'},
+      {x: 8, y: 2, w: 4, h: 2, content: '7'},
+      {x: 0, y: 4, w: 2, h: 2, content: '8'},
+      {x: 4, y: 4, w: 4, h: 2, content: '9'},
+      {x: 8, y: 4, w: 2, h: 2, content: '10'},
+      {x: 10, y: 4, w: 2, h: 2, content: '11'},
     ];
 
     var simpleGrid = GridStack.init({
