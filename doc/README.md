@@ -76,7 +76,7 @@ gridstack.js API
   * `'auto'` - height will be square cells initially.
 - `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
 - `disableDrag` - disallows dragging of widgets (default: `false`).
-- `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minWidth (default: 'false')
+- `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minW (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `dragIn` - specify the class of items that can be dragged into the grid (ex: dragIn: '.newWidget'
 - `dragInOptions` - options for items that can be dragged into the grid (ex: dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }
@@ -95,7 +95,7 @@ gridstack.js API
 - `marginLeft`: numberOrString
 - `maxRow` - maximum rows amount. Default is `0` which means no max.
 - `minRow` - minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
-- `minWidth` - minimal width. If grid width is less than or equal to, grid will be shown in one-column mode (default: `768`)
+- `minW` - minimal width. If grid width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
@@ -116,12 +116,12 @@ Extras:
 
 ## Item Options
 
-options you can pass when calling `addWidget()`
+options you can pass when calling `addWidget()`, `update()`, `load()` and many others
 
 - `autoPosition` - tells to ignore `x` and `y` attributes and to place element to the first available position. Having either one missing will also do that.
 - `x`, `y` - (number) element position in column/row. Note: if one is missing this will `autoPosition` the item
-- `width`, `height` - (number) element size in column/row (default 1x1)
-- `maxWidth`, `minWidth`, `maxHeight`, `minHeight` - element constraints in column/row (default none)
+- `w`, `h` - (number) element size in column/row (default 1x1)
+- `maxW`, `minW`, `maxH`, `minH` - element constraints in column/row (default none)
 - `locked` - means another widget wouldn't be able to move it during dragging or resizing.
 The widget can still be dragged or resized by the user.
 You need to add `noResize` and `noMove` attributes to completely lock the widget.
@@ -260,9 +260,9 @@ before calling `addWidget` for additional check.
 
 ```js
 let grid = GridStack.init();
-grid.addWidget({width: 3, content: 'hello'});
+grid.addWidget({w: 3, content: 'hello'});
 // or
-grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {width: 3});
+grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {w: 3});
 ```
 
 ### batchUpdate()
@@ -478,7 +478,7 @@ Returns `true` if the `height` of the grid will be less the vertical constraint.
 have `height` constraint.
 
 ```js
-if (grid.willItFit(newNode.x, newNode.y, newNode.width, newNode.height, newNode.autoPosition)) {
+if (grid.willItFit(newNode.x, newNode.y, newNode.w, newNode.h, newNode.autoPosition)) {
   grid.addWidget(newNode.el, newNode);
 }
 else {

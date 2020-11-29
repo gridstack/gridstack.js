@@ -31,11 +31,11 @@
     addEvents(grid);
 
     let serializedData = [
-      {x: 0, y: 0, width: 2, height: 2, id: '0'},
-      {x: 3, y: 1, width: 1, height: 2, id: 'no_move', noMove: true, content: 'no move'},
-      {x: 4, y: 1, width: 1, height: 1, id: '2'},
-      {x: 2, y: 3, width: 3, height: 1, id: 'no_resize', noResize: true, content: 'no resize'},
-      {x: 1, y: 3, width: 1, height: 1, id: 'locked', locked: true, content: 'locked'}
+      {x: 0, y: 0, w: 2, h: 2, id: '0'},
+      {x: 3, y: 1, h: 2, id: 'no_move', noMove: true, content: 'no move'},
+      {x: 4, y: 1, id: '2'},
+      {x: 2, y: 3, w: 3, id: 'no_resize', noResize: true, content: 'no resize'},
+      {x: 1, y: 3, id: 'locked', locked: true, content: 'locked'}
     ];
     grid.load(serializedData, true);
 

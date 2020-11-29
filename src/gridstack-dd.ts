@@ -21,7 +21,7 @@ export type DDDropOpt = {
 /** drag&drop options currently called from the main code, but others can be passed in grid options */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | any;
-export type DDKey = 'minWidth' | 'minHeight' | string;
+export type DDKey = 'minWidth' | 'minHeight';
 export type DDValue = number | string;
 
 /** drag&drop events callbacks */
@@ -92,7 +92,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       this.engine.beginUpdate(node);
       this.engine.addNode(node);
 
-      this._writeAttrs(this.placeholder, node.x, node.y, node.width, node.height);
+      this._writeAttrs(this.placeholder, node.x, node.y, node.w, node.h);
       this.el.appendChild(this.placeholder);
       node.el = this.placeholder; // dom we update while dragging...
       node._beforeDragX = node.x;
@@ -128,11 +128,11 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       }
 
       // see if we already have a node with widget/height and check for attributes
-      if (el.getAttribute && (!node.width || !node.height)) {
+      if (el.getAttribute && (!node.w || !node.h)) {
         let w = parseInt(el.getAttribute('gs-w'));
-        if (w > 0) { node.width = w; }
+        if (w > 0) { node.w = w; }
         let h = parseInt(el.getAttribute('gs-h'));
-        if (h > 0) { node.height = h; }
+        if (h > 0) { node.h = h; }
       }
 
       // if the item came from another grid, let it know it was added here to removed duplicate shadow #393
@@ -141,11 +141,11 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       }
 
       // if not calculate the grid size based on element outer size
-      let width = node.width || Math.round(el.offsetWidth / this.cellWidth()) || 1;
-      let height = node.height || Math.round(el.offsetHeight / this.getCellHeight(true)) || 1;
+      let w = node.w || Math.round(el.offsetWidth / this.cellWidth()) || 1;
+      let h = node.h || Math.round(el.offsetHeight / this.getCellHeight(true)) || 1;
 
       // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
-      let newNode = this.engine.prepareNode({...node, ...{width, height, _added: false, _temporary: true}});
+      let newNode = this.engine.prepareNode({...node, ...{w, h, _added: false, _temporary: true}});
       newNode._isOutOfGrid = true;
       el.gridstackNode = newNode;
       el._gridstackNodeOrig = node;
@@ -355,16 +355,16 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     node._beforeDragY = node.y;
     node._prevYPix = ui.position.top;
 
-    GridStackDD.get().resizable(el, 'option', 'minWidth', cellWidth * (node.minWidth || 1));
-    GridStackDD.get().resizable(el, 'option', 'minHeight', cellHeight * (node.minHeight || 1));
+    GridStackDD.get().resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1));
+    GridStackDD.get().resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
   }
 
   /** called when item is being dragged/resized */
   let dragOrResize = (event: Event, ui: DDUIData): void => {
     let x = Math.round(ui.position.left / cellWidth);
     let y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
-    let width;
-    let height;
+    let w;
+    let h;
 
     if (event.type === 'drag') {
       let distance = ui.position.top - node._prevYPix;
@@ -393,7 +393,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
 
         if (node._temporaryRemoved) {
           this.engine.addNode(node);
-          this._writeAttrs(this.placeholder, x, y, width, height);
+          this._writeAttrs(this.placeholder, x, y, w, h);
           this.el.appendChild(this.placeholder);
           node.el = this.placeholder;
           delete node._temporaryRemoved;
@@ -401,22 +401,22 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       }
     } else if (event.type === 'resize')  {
       if (x < 0) return;
-      width = Math.round(ui.size.width / cellWidth);
-      height = Math.round(ui.size.height / cellHeight);
+      w = Math.round(ui.size.width / cellWidth);
+      h = Math.round(ui.size.height / cellHeight);
     }
     // width and height are undefined if not resizing
-    let _lastTriedWidth = (width || node._lastTriedWidth);
-    let _lastTriedHeight = (height || node._lastTriedHeight);
-    if (!this.engine.canMoveNode(node, x, y, width, height) ||
+    let _lastTriedW = (w || node._lastTriedW);
+    let _lastTriedH = (h || node._lastTriedH);
+    if (!this.engine.canMoveNode(node, x, y, w, h) ||
       (node._lastTriedX === x && node._lastTriedY === y &&
-      node._lastTriedWidth === _lastTriedWidth && node._lastTriedHeight === _lastTriedHeight)) {
+      node._lastTriedW === _lastTriedW && node._lastTriedH === _lastTriedH)) {
       return;
     }
     node._lastTriedX = x;
     node._lastTriedY = y;
-    node._lastTriedWidth = width;
-    node._lastTriedHeight = height;
-    this.engine.moveNode(node, x, y, width, height);
+    node._lastTriedW = w;
+    node._lastTriedH = h;
+    this.engine.moveNode(node, x, y, w, h);
     this._updateContainerHeight();
   }
 
@@ -448,10 +448,10 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       this._clearRemovingTimeout(el);
       if (!node._temporaryRemoved) {
         Utils.removePositioningStyles(target);
-        this._writeAttrs(target, node.x, node.y, node.width, node.height);
+        this._writeAttrs(target, node.x, node.y, node.w, node.h);
       } else {
         Utils.removePositioningStyles(target);
-        this._writeAttrs(target, node._beforeDragX, node._beforeDragY, node.width, node.height);
+        this._writeAttrs(target, node._beforeDragX, node._beforeDragY, node.w, node.h);
         node.x = node._beforeDragX;
         node.y = node._beforeDragY;
         delete node._temporaryRemoved;

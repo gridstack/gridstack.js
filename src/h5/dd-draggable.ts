@@ -24,7 +24,7 @@ export interface DDDraggableOpt {
   drag?: (event: Event, ui: DDUIData) => void;
 }
 
-export interface DragOffset {
+interface DragOffset {
   left: number;
   top: number;
   width: number;
