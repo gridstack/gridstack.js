@@ -1,4 +1,4 @@
-// dd-base-impl.ts 2.2.0-dev @preserve
+// dd-base-impl.ts 3.0.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
