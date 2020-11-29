@@ -7,7 +7,7 @@
 */
 
 import { GridStackEngine } from './gridstack-engine';
-import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, Utils, HeightData } from './utils';
+import { obsoleteOpts, obsoleteAttr, Utils, HeightData } from './utils';
 import { GridStackElement, GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, ColumnOptions } from './types';
 import { GridStackDDI } from './gridstack-ddi';
 
@@ -149,20 +149,20 @@ export class GridStack {
 
     obsoleteOpts(opts, 'verticalMargin', 'margin', 'v2.0');
 
-    obsoleteAttr(this.el, 'data-gs-current-height', 'data-gs-current-row', 'v1.0.0');
+    obsoleteAttr(this.el, 'data-gs-current-height', 'gs-current-row', 'v1.0.0');
 
     // if row property exists, replace minRow and maxRow instead
     if (opts.row) {
       opts.minRow = opts.maxRow = opts.row;
       delete opts.row;
     }
-    let rowAttr = Utils.toNumber(el.getAttribute('data-gs-row'));
+    let rowAttr = Utils.toNumber(el.getAttribute('gs-row'));
 
     // elements attributes override any passed options (like CSS style) - merge the two together
     let defaults: GridStackOptions = {
-      column: Utils.toNumber(el.getAttribute('data-gs-column')) || 12,
-      minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('data-gs-min-row')) || 0,
-      maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('data-gs-max-row')) || 0,
+      column: Utils.toNumber(el.getAttribute('gs-column')) || 12,
+      minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-min-row')) || 0,
+      maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-max-row')) || 0,
       itemClass: 'grid-stack-item',
       placeholderClass: 'grid-stack-placeholder',
       placeholderText: '',
@@ -174,7 +174,7 @@ export class GridStack {
       auto: true,
       minWidth: 768,
       float: false,
-      staticGrid: Utils.toBool(el.getAttribute('data-gs-static-grid')) || false,
+      staticGrid: Utils.toBool(el.getAttribute('gs-static')) || false,
       _class: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
       animate: true,
       alwaysShowResizeHandle: opts.alwaysShowResizeHandle || false,
@@ -207,8 +207,8 @@ export class GridStack {
       disableOneColumnMode: false,
       oneColumnModeDomSort: false
     };
-    if (el.getAttribute('data-gs-animate')) {
-      defaults.animate = Utils.toBool(el.getAttribute('data-gs-animate'))
+    if (el.getAttribute('gs-animate')) {
+      defaults.animate = Utils.toBool(el.getAttribute('gs-animate'))
     }
 
     this.opts = Utils.defaults(opts, defaults);
@@ -260,8 +260,8 @@ export class GridStack {
     if (this.opts.auto) {
       let elements: {el: HTMLElement; i: number}[] = [];
       this.getGridItems().forEach(el => {
-        let x = parseInt(el.getAttribute('data-gs-x'));
-        let y = parseInt(el.getAttribute('data-gs-y'));
+        let x = parseInt(el.getAttribute('gs-x'));
+        let y = parseInt(el.getAttribute('gs-y'));
         elements.push({
           el,
           // if x,y are missing (autoPosition) add them to end of list - but keep their respective DOM order
@@ -336,7 +336,7 @@ export class GridStack {
     }
 
     // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
-    // as the actual value are filled in when _prepareElement() calls el.getAttribute('data-gs-xyz) before adding the node.
+    // as the actual value are filled in when _prepareElement() calls el.getAttribute('gs-xyz) before adding the node.
     // So make sure we load any DOM attributes that are not specified in passed in options (which override)
     let domAttr = this._readAttr(el);
     options = {...(options || {})};  // make a copy before we modify in case caller re-uses it
@@ -448,9 +448,9 @@ export class GridStack {
       return this.opts.cellHeight as number;
     }
     // else get first cell height
-    // or do entire grid and # of rows ? (this.el.getBoundingClientRect().height) / parseInt(this.el.getAttribute('data-gs-current-row'))
+    // or do entire grid and # of rows ? (this.el.getBoundingClientRect().height) / parseInt(this.el.getAttribute('gs-current-row'))
     let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
-    let height = Utils.toNumber(el.getAttribute('data-gs-height'));
+    let height = Utils.toNumber(el.getAttribute('gs-h'));
     return Math.round(el.offsetHeight / height);
   }
 
@@ -686,7 +686,7 @@ export class GridStack {
     let relativeTop = position.top - containerPos.top;
 
     let columnWidth = (box.width / this.opts.column);
-    let rowHeight = (box.height / parseInt(this.el.getAttribute('data-gs-current-row')));
+    let rowHeight = (box.height / parseInt(this.el.getAttribute('gs-current-row')));
 
     return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
   }
@@ -715,7 +715,7 @@ export class GridStack {
    *
    * @example
    * let grid = GridStack.init();
-   * grid.el.appendChild('<div id="gsi-1" data-gs-width="3"></div>');
+   * grid.el.appendChild('<div id="gsi-1" gs-w="3"></div>');
    * grid.makeWidget('#gsi-1');
    */
   public makeWidget(els: GridStackElement): GridItemHTMLElement {
@@ -1097,10 +1097,10 @@ export class GridStack {
       let getHeight = (rows: number): string => (cellHeight * rows) + cellHeightUnit;
       for (let i = this._styles._max + 1; i <= maxHeight; i++) { // start at 1
         let height: string = getHeight(i);
-        Utils.addCSSRule(this._styles, `${prefix}[data-gs-y="${i-1}"]`,        `top: ${getHeight(i-1)}`); // start at 0
-        Utils.addCSSRule(this._styles, `${prefix}[data-gs-height="${i}"]`,     `height: ${height}`);
-        Utils.addCSSRule(this._styles, `${prefix}[data-gs-min-height="${i}"]`, `min-height: ${height}`);
-        Utils.addCSSRule(this._styles, `${prefix}[data-gs-max-height="${i}"]`, `max-height: ${height}`);
+        Utils.addCSSRule(this._styles, `${prefix}[gs-y="${i-1}"]`,        `top: ${getHeight(i-1)}`); // start at 0
+        Utils.addCSSRule(this._styles, `${prefix}[gs-h="${i}"]`,     `height: ${height}`);
+        Utils.addCSSRule(this._styles, `${prefix}[gs-min-h="${i}"]`, `min-height: ${height}`);
+        Utils.addCSSRule(this._styles, `${prefix}[gs-max-h="${i}"]`, `max-height: ${height}`);
       }
       this._styles._max = maxHeight;
     }
@@ -1119,7 +1119,7 @@ export class GridStack {
         row = minRow;
       }
     }
-    this.el.setAttribute('data-gs-current-row', String(row));
+    this.el.setAttribute('gs-current-row', String(row));
     if (row === 0) {
       this.el.style.removeProperty('height');
       return this;
@@ -1162,10 +1162,10 @@ export class GridStack {
 
   /** @internal call to write x,y,w,h attributes back to element */
   private _writeAttrs(el: HTMLElement, x?: number, y?: number, width?: number, height?: number): GridStack {
-    if (x !== undefined && x !== null) { el.setAttribute('data-gs-x', String(x)); }
-    if (y !== undefined && y !== null) { el.setAttribute('data-gs-y', String(y)); }
-    if (width) { el.setAttribute('data-gs-width', String(width)); }
-    if (height) { el.setAttribute('data-gs-height', String(height)); }
+    if (x !== undefined && x !== null) { el.setAttribute('gs-x', String(x)); }
+    if (y !== undefined && y !== null) { el.setAttribute('gs-y', String(y)); }
+    if (width) { el.setAttribute('gs-w', String(width)); }
+    if (height) { el.setAttribute('gs-h', String(height)); }
     return this;
   }
 
@@ -1175,16 +1175,16 @@ export class GridStack {
     this._writeAttrs(el, node.x, node.y, node.width, node.height);
 
     let attrs /*: GridStackWidget*/ = { // remaining attributes
-      autoPosition: 'data-gs-auto-position',
-      minWidth: 'data-gs-min-width',
-      minHeight: 'data-gs-min-height',
-      maxWidth: 'data-gs-max-width',
-      maxHeight: 'data-gs-max-height',
-      noResize: 'data-gs-no-resize',
-      noMove: 'data-gs-no-move',
-      locked: 'data-gs-locked',
-      id: 'data-gs-id',
-      resizeHandles: 'data-gs-resize-handles'
+      autoPosition: 'gs-auto-position',
+      minWidth: 'gs-min-w',
+      minHeight: 'gs-min-h',
+      maxWidth: 'gs-max-w',
+      maxHeight: 'gs-max-h',
+      noResize: 'gs-no-resize',
+      noMove: 'gs-no-move',
+      locked: 'gs-locked',
+      id: 'gs-id',
+      resizeHandles: 'gs-resize-handles'
     };
     for (const key in attrs) {
       if (node[key]) { // 0 is valid for x,y only but done above already and not in list
@@ -1198,20 +1198,20 @@ export class GridStack {
 
   /** @internal call to read any default attributes from element */
   private _readAttr(el: HTMLElement, node: GridStackNode = {}): GridStackWidget {
-    node.x = Utils.toNumber(el.getAttribute('data-gs-x'));
-    node.y = Utils.toNumber(el.getAttribute('data-gs-y'));
-    node.width = Utils.toNumber(el.getAttribute('data-gs-width'));
-    node.height = Utils.toNumber(el.getAttribute('data-gs-height'));
-    node.maxWidth = Utils.toNumber(el.getAttribute('data-gs-max-width'));
-    node.minWidth = Utils.toNumber(el.getAttribute('data-gs-min-width'));
-    node.maxHeight = Utils.toNumber(el.getAttribute('data-gs-max-height'));
-    node.minHeight = Utils.toNumber(el.getAttribute('data-gs-min-height'));
-    node.autoPosition = Utils.toBool(el.getAttribute('data-gs-auto-position'));
-    node.noResize = Utils.toBool(el.getAttribute('data-gs-no-resize'));
-    node.noMove = Utils.toBool(el.getAttribute('data-gs-no-move'));
-    node.locked = Utils.toBool(el.getAttribute('data-gs-locked'));
-    node.resizeHandles = el.getAttribute('data-gs-resize-handles');
-    node.id = el.getAttribute('data-gs-id');
+    node.x = Utils.toNumber(el.getAttribute('gs-x'));
+    node.y = Utils.toNumber(el.getAttribute('gs-y'));
+    node.width = Utils.toNumber(el.getAttribute('gs-w'));
+    node.height = Utils.toNumber(el.getAttribute('gs-h'));
+    node.maxWidth = Utils.toNumber(el.getAttribute('gs-max-w'));
+    node.minWidth = Utils.toNumber(el.getAttribute('gs-min-w'));
+    node.maxHeight = Utils.toNumber(el.getAttribute('gs-max-h'));
+    node.minHeight = Utils.toNumber(el.getAttribute('gs-min-h'));
+    node.autoPosition = Utils.toBool(el.getAttribute('gs-auto-position'));
+    node.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
+    node.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
+    node.locked = Utils.toBool(el.getAttribute('gs-locked'));
+    node.resizeHandles = el.getAttribute('gs-resize-handles');
+    node.id = el.getAttribute('gs-id');
 
     // remove any key not found (null or false which is default)
     for (const key in node) {
@@ -1230,10 +1230,10 @@ export class GridStack {
 
     if (this.opts.staticGrid) {
       this.el.classList.add(...classes);
-      this.el.setAttribute('data-gs-static-grid', 'true');
+      this.el.setAttribute('gs-static', 'true');
     } else {
       this.el.classList.remove(...classes);
-      this.el.removeAttribute('data-gs-static-grid');
+      this.el.removeAttribute('gs-static');
 
     }
     return this;

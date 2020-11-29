@@ -119,14 +119,14 @@ export class Utils {
 
   /**
    * creates a style sheet with style id under given parent
-   * @param id will set the 'data-gs-style-id' attribute to that id
+   * @param id will set the 'gs-style-id' attribute to that id
    * @param parent to insert the stylesheet as first child,
    * if none supplied it will be appended to the document head instead.
    */
   static createStylesheet(id: string, parent?: HTMLElement): CSSStyleSheet {
     let style: HTMLStyleElement = document.createElement('style');
     style.setAttribute('type', 'text/css');
-    style.setAttribute('data-gs-style-id', id);
+    style.setAttribute('gs-style-id', id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((style as any).styleSheet) { // TODO: only CSSImportRule have that and different beast ??
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,7 +146,7 @@ export class Utils {
 
   /** removed the given stylesheet id */
   static removeStylesheet(id: string): void {
-    let el = document.querySelector('STYLE[data-gs-style-id=' + id + ']');
+    let el = document.querySelector('STYLE[gs-style-id=' + id + ']');
     if (!el || !el.parentNode) return;
     el.parentNode.removeChild(el);
   }

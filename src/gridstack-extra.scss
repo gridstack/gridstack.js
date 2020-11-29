@@ -16,10 +16,10 @@ $gridstack-columns: 11 !default;
       min-width: 100% / $columns;
 
       @for $i from 1 through $columns {
-        &[data-gs-width='#{$i}'] { width: (100% / $columns) * $i; }
-        &[data-gs-x='#{$i}'] { left: (100% / $columns) * $i; }
-        &[data-gs-min-width='#{$i}'] { min-width: (100% / $columns) * $i; }
-        &[data-gs-max-width='#{$i}'] { max-width: (100% / $columns) * $i; }
+        &[gs-w='#{$i}'] { width: (100% / $columns) * $i; }
+        &[gs-x='#{$i}'] { left: (100% / $columns) * $i; }
+        &[gs-min-w='#{$i}'] { min-width: (100% / $columns) * $i; }
+        &[gs-max-w='#{$i}'] { max-width: (100% / $columns) * $i; }
       }
     }
   }

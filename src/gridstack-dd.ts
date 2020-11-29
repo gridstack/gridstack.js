@@ -129,9 +129,9 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
 
       // see if we already have a node with widget/height and check for attributes
       if (el.getAttribute && (!node.width || !node.height)) {
-        let w = parseInt(el.getAttribute('data-gs-width'));
+        let w = parseInt(el.getAttribute('gs-w'));
         if (w > 0) { node.width = w; }
-        let h = parseInt(el.getAttribute('data-gs-height'));
+        let h = parseInt(el.getAttribute('gs-h'));
         if (h > 0) { node.height = h; }
       }
 
@@ -344,10 +344,10 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     cellWidth = this.cellWidth();
     cellHeight = this.getCellHeight(true); // force pixels for calculations
 
-    this.placeholder.setAttribute('data-gs-x', target.getAttribute('data-gs-x'));
-    this.placeholder.setAttribute('data-gs-y', target.getAttribute('data-gs-y'));
-    this.placeholder.setAttribute('data-gs-width', target.getAttribute('data-gs-width'));
-    this.placeholder.setAttribute('data-gs-height', target.getAttribute('data-gs-height'));
+    this.placeholder.setAttribute('gs-x', target.getAttribute('gs-x'));
+    this.placeholder.setAttribute('gs-y', target.getAttribute('gs-y'));
+    this.placeholder.setAttribute('gs-w', target.getAttribute('gs-w'));
+    this.placeholder.setAttribute('gs-h', target.getAttribute('gs-h'));
     this.el.append(this.placeholder);
 
     node.el = this.placeholder;

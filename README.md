@@ -42,6 +42,7 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Migrating to v0.6](#migrating-to-v06)
   - [Migrating to v1](#migrating-to-v1)
   - [Migrating to v2](#migrating-to-v2)
+  - [Migrating to v3](#migrating-to-v3)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -115,7 +116,7 @@ grid.load(serializedData);
   <div class="grid-stack-item">
     <div class="grid-stack-item-content">Item 1</div>
   </div>
-  <div class="grid-stack-item" data-gs-width="2">
+  <div class="grid-stack-item" gs-w="2">
     <div class="grid-stack-item-content">Item 2 wider</div>
   </div>
 </div>
@@ -173,30 +174,30 @@ See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.htm
 
 ## Custom columns CSS
 
-If you need > 12 columns or want to generate the CSS manually you will need to generate CSS rules for `.grid-stack-item[data-gs-width="X"]` and `.grid-stack-item[data-gs-x="X"]`.
+If you need > 12 columns or want to generate the CSS manually you will need to generate CSS rules for `.grid-stack-item[gs-w="X"]` and `.grid-stack-item[gs-x="X"]`.
 
 For instance for 3-column grid you need to rewrite CSS to be:
 
 ```css
-.grid-stack-item[data-gs-width="3"]  { width: 100% }
-.grid-stack-item[data-gs-width="2"]  { width: 66.66666667% }
-.grid-stack-item[data-gs-width="1"]  { width: 33.33333333% }
+.grid-stack-item[gs-w="3"]  { width: 100% }
+.grid-stack-item[gs-w="2"]  { width: 66.66666667% }
+.grid-stack-item[gs-w="1"]  { width: 33.33333333% }
 
-.grid-stack-item[data-gs-x="2"]  { left: 66.66666667% }
-.grid-stack-item[data-gs-x="1"]  { left: 33.33333333% }
+.grid-stack-item[gs-x="2"]  { left: 66.66666667% }
+.grid-stack-item[gs-x="1"]  { left: 33.33333333% }
 ```
 
 For 4-column grid it should be:
 
 ```css
-.grid-stack-item[data-gs-width="4"]  { width: 100% }
-.grid-stack-item[data-gs-width="3"]  { width: 75% }
-.grid-stack-item[data-gs-width="2"]  { width: 50% }
-.grid-stack-item[data-gs-width="1"]  { width: 25% }
+.grid-stack-item[gs-w="4"]  { width: 100% }
+.grid-stack-item[gs-w="3"]  { width: 75% }
+.grid-stack-item[gs-w="2"]  { width: 50% }
+.grid-stack-item[gs-w="1"]  { width: 25% }
 
-.grid-stack-item[data-gs-x="3"]  { left: 75% }
-.grid-stack-item[data-gs-x="2"]  { left: 50% }
-.grid-stack-item[data-gs-x="1"]  { left: 25% }
+.grid-stack-item[gs-x="3"]  { left: 75% }
+.grid-stack-item[gs-x="2"]  { left: 50% }
+.grid-stack-item[gs-x="1"]  { left: 25% }
 ```
 
 and so on.
@@ -211,10 +212,10 @@ Better yet, here is a SASS code snippet which can make life much easier (Thanks 
   min-width: (100% / $gridstack-columns);
 
   @for $i from 1 through $gridstack-columns {
-    &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
-    &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-    &[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-    &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+    &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
+    &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
+    &[gs-min-w='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
+    &[gs-max-w='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
   }
 }
 ```
@@ -356,6 +357,20 @@ v2 is a Typescript rewrite of 1.x, removing all jquery events, using classes and
 3. `oneColumnMode` would trigger when `window.width` < 768px by default. We now check for grid width instead (more correct and supports nesting). You might need to adjust grid `minWidth` or `disableOneColumnMode`.
 
 **Note:** 2.x no longer support legacy IE11 and older due to using more compact ES6 output and typecsript native code. You will need to stay at 1.x
+
+## Migrating to v3
+
+make sure to read v2 migration first!
+
+v3 has a new HTML5 drag&drop plugging (65k total, all native code), while still allowing you to use the legacy jquery-ui version (188k), or a new static grid version (35k, no user drag&drop but full API support). You will need to decide which version to use as `gridstack.all.js` no longer exist (same as `gridstack-jq.js`) - see include info at top.
+
+Some breaking changes:
+
+1. include (as mentioned) need to change
+
+2. `GridStack.update(el, opt)` now takes `GridStackWidget` options instead, BUT legacy call in JS will continue working the same for now
+
+3. item attribute like `data-gs-min-width` is now `gs-min-w`. We removed 'data-' from all attributes, and shorten 'width|height' to just 'w|h' to require typing and more efficient.
 
 # jQuery Application
 

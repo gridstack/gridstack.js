@@ -109,10 +109,10 @@ gridstack.js API
 
 ## Grid attributes
 
-most of the above options are also available as HTML attributes using the `data-gs-` name prefix with standard dash lower case naming convention (ex: `data-gs-column`, `data-gs-min-row`, `data-gs-static-grid`, etc..).
+most of the above options are also available as HTML attributes using the `gs-` name prefix with standard dash lower case naming convention (ex: `gs-column`, `gs-min-row`, `gs-static`, etc..).
 
 Extras:
-- `data-gs-current-row` - (internal) current rows amount. Set by the library only. Can be used by the CSS rules.
+- `gs-current-row` - (internal) current rows amount. Set by the library only. Can be used by the CSS rules.
 
 ## Item Options
 
@@ -133,7 +133,7 @@ You need to add `noResize` and `noMove` attributes to completely lock the widget
 
 ## Item attributes
 
-all item options are also available as HTML attributes using the `data-gs-` name prefix with standard dash lower case naming convention (ex: `data-gs-x`, `data-gs-min-width`, etc..).
+all item options are also available as HTML attributes using the `gs-` name prefix with standard dash lower case naming convention (ex: `gs-x`, `gs-min-w`, etc..).
 
 ## Events
 
@@ -187,7 +187,7 @@ called after the user is done moving the item, with updated DOM attributes.
 
 ```js
 grid.on('dragstop', function(event: Event, el: GridItemHTMLElement) {
-  let x = parseInt(el.getAttribute('data-gs-x')) || 0;
+  let x = parseInt(el.getAttribute('gs-x')) || 0;
   // or all values...
   let node: GridStackNode = el.gridstackNode; // {x, y, width, height, id, ....}
 });
@@ -237,7 +237,7 @@ called after the user is done resizing the item, with updated DOM attributes.
 
 ```js
 grid.on('resizestop', function(event: Event, el: GridItemHTMLElement) {
-  let width = parseInt(el.getAttribute('data-gs-width')) || 0;
+  let width = parseInt(el.getAttribute('gs-w')) || 0;
   // or all values...
   let node: GridStackNode = el.gridstackNode; // {x, y, width, height, id, ....}
 });
@@ -402,7 +402,7 @@ Parameters:
 
 ```js
 let grid = GridStack.init();
-grid.el.appendChild('<div id="gsi-1" data-gs-x="0" data-gs-y="0" data-gs-width="3" data-gs-height="2" data-gs-auto-position="true"></div>')
+grid.el.appendChild('<div id="gsi-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true"></div>')
 grid.makeWidget('#gsi-1');
 ```
 

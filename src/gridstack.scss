@@ -99,19 +99,19 @@ $animation_speed: .3s !default;
     }
 
     @for $i from 1 through $gridstack-columns {
-      &[data-gs-width='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
-      &[data-gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-      &[data-gs-min-width='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-      &[data-gs-max-width='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+      &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
+      &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
+      &[gs-min-w='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
+      &[gs-max-w='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
     }
   }
 
   &.grid-stack-1>.grid-stack-item {
     min-width: 100%;
-    &[data-gs-width='1'] { width: 100%; }
-    &[data-gs-x='1'] { left: 100%; }
-    &[data-gs-min-width='1'] { min-width: 100%; }
-    &[data-gs-max-width='1'] { max-width: 100%; }
+    &[gs-w='1'] { width: 100%; }
+    &[gs-x='1'] { left: 100%; }
+    &[gs-min-w='1'] { min-width: 100%; }
+    &[gs-max-w='1'] { max-width: 100%; }
   }
 
   &.grid-stack-animate,
