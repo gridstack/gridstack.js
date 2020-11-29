@@ -8,10 +8,10 @@ describe('gridstack', function() {
   // grid has 4x2 and 4x4 top-left aligned - used on most test cases
   let gridHTML =
   '<div class="grid-stack">' +
-  '  <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="4" data-gs-height="2" data-gs-id="gsItem1" id="item1">' +
+  '  <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="4" gs-h="2" gs-id="gsItem1" id="item1">' +
   '    <div class="grid-stack-item-content">item 1 text</div>' +
   '  </div>' +
-  '  <div class="grid-stack-item" data-gs-x="4" data-gs-y="0" data-gs-width="4" data-gs-height="4" data-gs-id="gsItem2" id="item2">' +
+  '  <div class="grid-stack-item" gs-x="4" gs-y="0" gs-w="4" gs-h="4" gs-id="gsItem2" id="item2">' +
   '    <div class="grid-stack-item-content">item 2 text</div>' +
   '  </div>' +
   '</div>';
@@ -205,7 +205,7 @@ describe('gridstack', function() {
         column: 12
       };
       let grid = GridStack.init(options);
-      let rows = parseInt(grid.el.getAttribute('data-gs-current-row'));
+      let rows = parseInt(grid.el.getAttribute('gs-current-row'));
       
       expect(grid.getRow()).toBe(rows);
 
@@ -256,12 +256,12 @@ describe('gridstack', function() {
       grid.column(9);
       expect(grid.getColumn()).toBe(9);
       for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('data-gs-y'), 10)).toBe(0);
+        expect(parseInt(items[j].getAttribute('gs-y'), 10)).toBe(0);
       }
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
       for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('data-gs-y'), 10)).toBe(0);
+        expect(parseInt(items[j].getAttribute('gs-y'), 10)).toBe(0);
       }
     });
     it('no sizing, no moving', function() {
@@ -270,8 +270,8 @@ describe('gridstack', function() {
       grid.column(8, 'none');
       expect(grid.getColumn()).toBe(8);
       for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('data-gs-width'), 10)).toBe(4);
-        expect(parseInt(items[j].getAttribute('data-gs-y'), 10)).toBe(0);
+        expect(parseInt(items[j].getAttribute('gs-w'), 10)).toBe(4);
+        expect(parseInt(items[j].getAttribute('gs-y'), 10)).toBe(0);
       }
     });
     it('no sizing, but moving down', function() {
@@ -280,10 +280,10 @@ describe('gridstack', function() {
       grid.column(7, 'none');
       expect(grid.getColumn()).toBe(7);
       for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('data-gs-width'), 10)).toBe(4);
+        expect(parseInt(items[j].getAttribute('gs-w'), 10)).toBe(4);
       }
-      expect(parseInt(items[0].getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(items[1].getAttribute('data-gs-y'), 10)).toBe(2);
+      expect(parseInt(items[0].getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(items[1].getAttribute('gs-y'), 10)).toBe(2);
     });
     it('should change column number and re-layout items', function() {
       let options = {
@@ -295,110 +295,110 @@ describe('gridstack', function() {
       let el2 = document.getElementById('item2')
 
       // items start at 4x2 and 4x4
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(4);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(4);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(4);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(4);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
       // 1 column will have item1, item2
       grid.column(1);
       expect(grid.getColumn()).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(2);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
       // add default 1x1 item to the end (1 column)
       let el3 = grid.addWidget();
       expect(el3).not.toBe(null);
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(6);
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(6);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
 
       // back to 12 column and initial layout (other than new item3)
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(4);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(4);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(4);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(4);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(6); // ??? keep same row, but might more intuitive higher
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1); // ??? could take entire width if it did above
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(6); // ??? keep same row, but might more intuitive higher
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1); // ??? could take entire width if it did above
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
 
       // back to 1 column, move item2 to beginning to [3][1][2] vertically
       grid.column(1);
       expect(grid.getColumn()).toBe(1);
       grid.move(el3, 0, 0);
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
 
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(3);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(3);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
       // back to 12 column, el3 to be beginning still, but [1][2] to be in 1 columns still but wide 4x2 and 4x still
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
 
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(4);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(4);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(4);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(4);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
       // 2 column will have item1, item2, item3 in 1 column still but half the width
       grid.column(1); // test convert from small, should use 12 layout still
       grid.column(2);
       expect(grid.getColumn()).toBe(2);
 
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1); // 1 as we scaled from 12 columns
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1); // 1 as we scaled from 12 columns
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
 
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(4);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
     });
   });
 
@@ -424,37 +424,37 @@ describe('gridstack', function() {
       grid.commit();
       
       // items are item1[1x1], item3[1x1], item2[2x1]
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(1);
 
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(2);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(2);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(1);
 
       // items are item1[1x1], item3[1x2], item2[1x1] in 1 column
       grid.column(1);
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(1);
 
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(3);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(3);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(1);
     });
     it('should support oneColumnModeDomSort ON going to 1 column', function() {
       let options = {
@@ -468,37 +468,37 @@ describe('gridstack', function() {
       let el3 = grid.addWidget({x:1, y:0, width:1, height:2});
 
       // items are item1[1x1], item3[1x1], item2[2x1]
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(1);
 
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(2);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(2);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(2);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(1);
 
       // items are item1[1x1], item2[1x1], item3[1x2] in 1 column dom ordered
       grid.column(1);
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el1.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(1);
 
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(1);
 
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(2);
-      expect(parseInt(el3.getAttribute('data-gs-width'))).toBe(1);
-      expect(parseInt(el3.getAttribute('data-gs-height'))).toBe(2);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(2);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(2);
     });
   });
 
@@ -582,7 +582,7 @@ describe('gridstack', function() {
     it('should have row attr', function() {
       let HTML = 
         '<div style="width: 800px; height: 600px" id="gs-cont">' +
-        '  <div class="grid-stack" data-gs-row="4" data-gs-current-height="1"></div>' + // old attr current-height
+        '  <div class="grid-stack" gs-row="4" gs-current-height="1"></div>' + // old attr current-height
         '</div>';
       document.body.insertAdjacentHTML('afterbegin', HTML);
       let grid = GridStack.init();
@@ -602,7 +602,7 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should set data-gs-min-width to 2.', function() {
+    it('should set gs-min-w to 2.', function() {
       let grid = GridStack.init();
       let items = Utils.getElements('.grid-stack-item');
       for (let i = 0; i < items.length; i++) {
@@ -613,10 +613,10 @@ describe('gridstack', function() {
           .maxHeight(items[i], 5);
       }
       for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('data-gs-min-width'), 10)).toBe(2);
-        expect(parseInt(items[j].getAttribute('data-gs-max-width'), 10)).toBe(3);
-        expect(parseInt(items[j].getAttribute('data-gs-min-height'), 10)).toBe(4);
-        expect(parseInt(items[j].getAttribute('data-gs-max-height'), 10)).toBe(5);
+        expect(parseInt(items[j].getAttribute('gs-min-w'), 10)).toBe(2);
+        expect(parseInt(items[j].getAttribute('gs-max-w'), 10)).toBe(3);
+        expect(parseInt(items[j].getAttribute('gs-min-h'), 10)).toBe(4);
+        expect(parseInt(items[j].getAttribute('gs-max-h'), 10)).toBe(5);
       }
       // remove all constrain
       grid
@@ -625,10 +625,10 @@ describe('gridstack', function() {
         .minHeight('grid-stack-item', undefined)
         .maxHeight(undefined, 0);
       for (let j = 0; j < items.length; j++) {
-        expect(items[j].getAttribute('data-gs-min-width')).toBe(null);
-        expect(items[j].getAttribute('data-gs-max-width')).toBe(null);
-        expect(items[j].getAttribute('data-gs-min-height')).toBe(null);
-        expect(items[j].getAttribute('data-gs-max-height')).toBe(null);
+        expect(items[j].getAttribute('gs-min-w')).toBe(null);
+        expect(items[j].getAttribute('gs-max-w')).toBe(null);
+        expect(items[j].getAttribute('gs-min-h')).toBe(null);
+        expect(items[j].getAttribute('gs-max-h')).toBe(null);
       }
     });
   });
@@ -737,8 +737,8 @@ describe('gridstack', function() {
       for (let i = 0; i < items.length; i++) {
         let el = grid.addWidget(items[i]);
         let oldEl = items[i];
-        expect(parseInt(oldEl.getAttribute('data-gs-x'), 10)).toBe(parseInt(el.getAttribute('data-gs-x'), 10));
-        expect(parseInt(oldEl.getAttribute('data-gs-y'), 10)).toBe(parseInt(el.getAttribute('data-gs-y'), 10));
+        expect(parseInt(oldEl.getAttribute('gs-x'), 10)).toBe(parseInt(el.getAttribute('gs-x'), 10));
+        expect(parseInt(oldEl.getAttribute('gs-y'), 10)).toBe(parseInt(el.getAttribute('gs-y'), 10));
       }
     });
     it('should not allow same x, y coordinates for widgets.', function() {
@@ -751,7 +751,7 @@ describe('gridstack', function() {
       for (let i = 0; i < items.length; i++) {
         let el = items[i].cloneNode(true) as HTMLElement;
         el = grid.addWidget(el);
-        expect(parseInt(el.getAttribute('data-gs-y'), 10)).not.toBe(parseInt(items[i].getAttribute('data-gs-y'), 10));
+        expect(parseInt(el.getAttribute('gs-y'), 10)).not.toBe(parseInt(items[i].getAttribute('gs-y'), 10));
       }
     });
   });
@@ -768,45 +768,45 @@ describe('gridstack', function() {
       let widget = grid.addWidget({x: 6, y:7, width:2, height:3, autoPosition:false,
         minWidth:1, maxWidth:4, minHeight:2, maxHeight:5, id:'coolWidget'});
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(6);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(7);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(3);
-      expect(widget.getAttribute('data-gs-auto-position')).toBe(null);
-      expect(parseInt(widget.getAttribute('data-gs-min-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-max-width'), 10)).toBe(4);
-      expect(parseInt(widget.getAttribute('data-gs-min-height'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('data-gs-max-height'), 10)).toBe(5);
-      expect(widget.getAttribute('data-gs-id')).toBe('coolWidget');
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(6);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(7);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(2);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(3);
+      expect(widget.getAttribute('gs-auto-position')).toBe(null);
+      expect(parseInt(widget.getAttribute('gs-min-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-max-w'), 10)).toBe(4);
+      expect(parseInt(widget.getAttribute('gs-min-h'), 10)).toBe(2);
+      expect(parseInt(widget.getAttribute('gs-max-h'), 10)).toBe(5);
+      expect(widget.getAttribute('gs-id')).toBe('coolWidget');
 
       // should move widget to top with float=false
       expect(grid.getFloat()).toBe(true);
       grid.float(false);
       expect(grid.getFloat()).toBe(false);
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(6);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(4); // <--- from 7 to 4 below second original widget
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(3);
-      expect(widget.getAttribute('data-gs-auto-position')).toBe(null);
-      expect(parseInt(widget.getAttribute('data-gs-min-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-max-width'), 10)).toBe(4);
-      expect(parseInt(widget.getAttribute('data-gs-min-height'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('data-gs-max-height'), 10)).toBe(5);
-      expect(widget.getAttribute('data-gs-id')).toBe('coolWidget');
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(6);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(4); // <--- from 7 to 4 below second original widget
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(2);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(3);
+      expect(widget.getAttribute('gs-auto-position')).toBe(null);
+      expect(parseInt(widget.getAttribute('gs-min-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-max-w'), 10)).toBe(4);
+      expect(parseInt(widget.getAttribute('gs-min-h'), 10)).toBe(2);
+      expect(parseInt(widget.getAttribute('gs-max-h'), 10)).toBe(5);
+      expect(widget.getAttribute('gs-id')).toBe('coolWidget');
 
       // should not move again (no-op)
       grid.float(true);
       expect(grid.getFloat()).toBe(true);
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(6);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(4);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(3);
-      expect(widget.getAttribute('data-gs-auto-position')).toBe(null);
-      expect(parseInt(widget.getAttribute('data-gs-min-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-max-width'), 10)).toBe(4);
-      expect(parseInt(widget.getAttribute('data-gs-min-height'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('data-gs-max-height'), 10)).toBe(5);
-      expect(widget.getAttribute('data-gs-id')).toBe('coolWidget');
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(6);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(4);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(2);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(3);
+      expect(widget.getAttribute('gs-auto-position')).toBe(null);
+      expect(parseInt(widget.getAttribute('gs-min-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-max-w'), 10)).toBe(4);
+      expect(parseInt(widget.getAttribute('gs-min-h'), 10)).toBe(2);
+      expect(parseInt(widget.getAttribute('gs-max-h'), 10)).toBe(5);
+      expect(widget.getAttribute('gs-id')).toBe('coolWidget');
     });
   });
 
@@ -821,8 +821,8 @@ describe('gridstack', function() {
       let grid = GridStack.init({float: true});
       let widget = grid.addWidget({x:9, y:7, width:2, height:3, autoPosition:true});
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).not.toBe(9);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).not.toBe(7);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).not.toBe(9);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).not.toBe(7);
     });
   });
 
@@ -837,75 +837,75 @@ describe('gridstack', function() {
       let grid = GridStack.init();
       let widget = grid.addWidget({height: 2, id: 'optionWidget'});
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(2);
-      // expect(widget.getAttribute('data-gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('data-gs-min-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-min-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-id')).toBe('optionWidget');
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(2);
+      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
+      expect(widget.getAttribute('gs-min-w')).toBe(null);
+      expect(widget.getAttribute('gs-max-w')).toBe(null);
+      expect(widget.getAttribute('gs-min-h')).toBe(null);
+      expect(widget.getAttribute('gs-max-h')).toBe(null);
+      expect(widget.getAttribute('gs-id')).toBe('optionWidget');
     });
     it('should autoPosition (missing X)', function() {
       let grid = GridStack.init();
       let widget = grid.addWidget({y: 9, height: 2, id: 'optionWidget'});
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(2);
-      // expect(widget.getAttribute('data-gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('data-gs-min-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-min-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-id')).toBe('optionWidget');
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(2);
+      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
+      expect(widget.getAttribute('gs-min-w')).toBe(null);
+      expect(widget.getAttribute('gs-max-w')).toBe(null);
+      expect(widget.getAttribute('gs-min-h')).toBe(null);
+      expect(widget.getAttribute('gs-max-h')).toBe(null);
+      expect(widget.getAttribute('gs-id')).toBe('optionWidget');
     });
     it('should autoPosition (missing Y)', function() {
       let grid = GridStack.init();
       let widget = grid.addWidget({x: 9, height: 2, id: 'optionWidget'});
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(2);
-      // expect(widget.getAttribute('data-gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('data-gs-min-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-min-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-id')).toBe('optionWidget');
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(2);
+      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
+      expect(widget.getAttribute('gs-min-w')).toBe(null);
+      expect(widget.getAttribute('gs-max-w')).toBe(null);
+      expect(widget.getAttribute('gs-min-h')).toBe(null);
+      expect(widget.getAttribute('gs-max-h')).toBe(null);
+      expect(widget.getAttribute('gs-id')).toBe('optionWidget');
     });
     it('should autoPosition (correct X, missing Y)', function() {
       let grid = GridStack.init();
       let widget = grid.addWidget({x: 8, height: 2, id: 'optionWidget'});
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(2);
-      // expect(widget.getAttribute('data-gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('data-gs-min-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-min-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-id')).toBe('optionWidget');
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(2);
+      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
+      expect(widget.getAttribute('gs-min-w')).toBe(null);
+      expect(widget.getAttribute('gs-max-w')).toBe(null);
+      expect(widget.getAttribute('gs-min-h')).toBe(null);
+      expect(widget.getAttribute('gs-max-h')).toBe(null);
+      expect(widget.getAttribute('gs-id')).toBe('optionWidget');
     });
     it('should autoPosition (empty options)', function() {
       let grid = GridStack.init();
       let widget = grid.addWidget();
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(1);
-      // expect(widget.getAttribute('data-gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('data-gs-min-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-width')).toBe(null);
-      expect(widget.getAttribute('data-gs-min-height')).toBe(null);
-      expect(widget.getAttribute('data-gs-max-height')).toBe(null);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(1);
+      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
+      expect(widget.getAttribute('gs-min-w')).toBe(null);
+      expect(widget.getAttribute('gs-max-w')).toBe(null);
+      expect(widget.getAttribute('gs-min-h')).toBe(null);
+      expect(widget.getAttribute('gs-max-h')).toBe(null);
     });
 
   });
@@ -921,29 +921,29 @@ describe('gridstack', function() {
       let grid = GridStack.init();
       let widget = grid.addWidget({x: 'foo', y: null, width: 'bar', height: ''} as any);
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(1);
     });
     it('null options should clear x position', function() {
       let grid = GridStack.init({float: true});
-      let HTML = '<div class="grid-stack-item" data-gs-x="9"><div class="grid-stack-item-content"></div></div>';
+      let HTML = '<div class="grid-stack-item" gs-x="9"><div class="grid-stack-item-content"></div></div>';
       let widget = grid.addWidget(HTML, {x:null, y:null, width:undefined});
       
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
     });
     it('width attr should be retained', function() { // #1276
       let grid = GridStack.init({float: true});
-      let HTML = '<div class="grid-stack-item" data-gs-width="3" data-gs-max-width="4" data-gs-id="foo"><div class="grid-stack-item-content"></div></div>';
+      let HTML = '<div class="grid-stack-item" gs-w="3" gs-max-w="4" gs-id="foo"><div class="grid-stack-item-content"></div></div>';
       let widget = grid.addWidget(HTML, {x: 1, y: 5});
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('data-gs-y'), 10)).toBe(5);
-      expect(parseInt(widget.getAttribute('data-gs-width'), 10)).toBe(3);
-      expect(parseInt(widget.getAttribute('data-gs-max-width'), 10)).toBe(4);
-      expect(parseInt(widget.getAttribute('data-gs-height'), 10)).toBe(1);
-      expect(widget.getAttribute('data-gs-id')).toBe('foo');
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(1);
+      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(5);
+      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(3);
+      expect(parseInt(widget.getAttribute('gs-max-w'), 10)).toBe(4);
+      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(1);
+      expect(widget.getAttribute('gs-id')).toBe('foo');
     });
   });
 
@@ -961,7 +961,7 @@ describe('gridstack', function() {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let widget = grid.makeWidget(el);
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
     });
     it('passing class', function() {
       let grid = GridStack.init();
@@ -970,7 +970,7 @@ describe('gridstack', function() {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let widget = grid.makeWidget('.item');
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
     });
     it('passing class no dot', function() {
       let grid = GridStack.init();
@@ -979,7 +979,7 @@ describe('gridstack', function() {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let widget = grid.makeWidget('item');
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
     });
     it('passing id', function() {
       let grid = GridStack.init();
@@ -988,7 +988,7 @@ describe('gridstack', function() {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let widget = grid.makeWidget('#item');
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
     });
     it('passing id no #', function() {
       let grid = GridStack.init();
@@ -997,7 +997,7 @@ describe('gridstack', function() {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let widget = grid.makeWidget('item');
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
     });
     it('passing id as number', function() {
       let grid = GridStack.init();
@@ -1006,7 +1006,7 @@ describe('gridstack', function() {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let widget = grid.makeWidget('1');
-      expect(parseInt(widget.getAttribute('data-gs-x'), 10)).toBe(0);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
     });
   });
 
@@ -1077,8 +1077,8 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
       grid.resize(items[0], 5, 5);
-      expect(parseInt(items[0].getAttribute('data-gs-width'), 10)).toBe(5);
-      expect(parseInt(items[0].getAttribute('data-gs-height'), 10)).toBe(5);
+      expect(parseInt(items[0].getAttribute('gs-w'), 10)).toBe(5);
+      expect(parseInt(items[0].getAttribute('gs-h'), 10)).toBe(5);
     });
   });
 
@@ -1098,8 +1098,8 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
       grid.move(items[0], 5, 5);
-      expect(parseInt(items[0].getAttribute('data-gs-x'), 10)).toBe(5);
-      expect(parseInt(items[0].getAttribute('data-gs-y'), 10)).toBe(5);
+      expect(parseInt(items[0].getAttribute('gs-x'), 10)).toBe(5);
+      expect(parseInt(items[0].getAttribute('gs-y'), 10)).toBe(5);
     });
   });
 
@@ -1113,13 +1113,13 @@ describe('gridstack', function() {
     it('should move and resize widget', function() {
       let grid = GridStack.init({float: true});
       let el = Utils.getElements('.grid-stack-item')[1];
-      expect(parseInt(el.getAttribute('data-gs-width'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
       
       grid.update(el, {x: 5, y: 4, height: 2});
-      expect(parseInt(el.getAttribute('data-gs-x'), 10)).toBe(5);
-      expect(parseInt(el.getAttribute('data-gs-y'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-width'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-height'), 10)).toBe(2);
+      expect(parseInt(el.getAttribute('gs-x'), 10)).toBe(5);
+      expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(2);
     });
     it('should change noMove', function() {
       let grid = GridStack.init({float: true});
@@ -1128,17 +1128,17 @@ describe('gridstack', function() {
       let dd = GridStackDD.get();
       
       grid.update(el, {noMove: true, noResize: false});
-      expect(el.getAttribute('data-gs-no-move')).toBe('true');
-      expect(el.getAttribute('data-gs-no-resize')).toBe(null); // false is no-op
+      expect(el.getAttribute('gs-no-move')).toBe('true');
+      expect(el.getAttribute('gs-no-resize')).toBe(null); // false is no-op
       expect(dd.isResizable(el)).toBe(true);
       expect(dd.isDraggable(el)).toBe(false);
       expect(dd.isResizable(items[0])).toBe(true);
       expect(dd.isDraggable(items[0])).toBe(true);
 
-      expect(parseInt(el.getAttribute('data-gs-x'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(el.getAttribute('data-gs-width'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-height'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-x'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(4);
     });
     it('should change content and id, and move', function() {
       let grid = GridStack.init({float: true});
@@ -1147,57 +1147,57 @@ describe('gridstack', function() {
       let sub = el.querySelector('.grid-stack-item-content');
 
       grid.update(el, {id: 'newID', y: 1, content: 'new content'});
-      expect(el.getAttribute('data-gs-id')).toBe('newID');
+      expect(el.getAttribute('gs-id')).toBe('newID');
       expect(sub.innerHTML).toBe('new content');
-      expect(parseInt(el.getAttribute('data-gs-x'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-y'), 10)).toBe(1);
-      expect(parseInt(el.getAttribute('data-gs-width'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-height'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-x'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(1);
+      expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(4);
     });
     it('should change max and constrain a wanted resize', function() {
       let grid = GridStack.init({float: true});
       let items = Utils.getElements('.grid-stack-item');
       let el = items[1];
-      expect(el.getAttribute('data-gs-max-width')).toBe(null);
+      expect(el.getAttribute('gs-max-w')).toBe(null);
 
       grid.update(el, {maxWidth: 2, width: 5});
-      expect(parseInt(el.getAttribute('data-gs-x'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(el.getAttribute('data-gs-width'), 10)).toBe(2);
-      expect(parseInt(el.getAttribute('data-gs-height'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-max-width'), 10)).toBe(2);
+      expect(parseInt(el.getAttribute('gs-x'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(2);
+      expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-max-w'), 10)).toBe(2);
     });
     it('should change max and constrain existing', function() {
       let grid = GridStack.init({float: true});
       let items = Utils.getElements('.grid-stack-item');
       let el = items[1];
-      expect(el.getAttribute('data-gs-max-width')).toBe(null);
+      expect(el.getAttribute('gs-max-w')).toBe(null);
 
       grid.update(el, {maxWidth: 2});
-      expect(parseInt(el.getAttribute('data-gs-x'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-y'), 10)).toBe(0);
-      expect(parseInt(el.getAttribute('data-gs-height'), 10)).toBe(4);
-      expect(parseInt(el.getAttribute('data-gs-max-width'), 10)).toBe(2);
-      expect(parseInt(el.getAttribute('data-gs-width'), 10)).toBe(2);
+      expect(parseInt(el.getAttribute('gs-x'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(4);
+      expect(parseInt(el.getAttribute('gs-max-w'), 10)).toBe(2);
+      expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(2);
     });
     it('should change all max and move', function() {
       let grid = GridStack.init({float: true});
       let items = Utils.getElements('.grid-stack-item');
 
       items.forEach(item => {
-        expect(item.getAttribute('data-gs-max-width')).toBe(null);
-        expect(item.getAttribute('data-gs-max-height')).toBe(null);
+        expect(item.getAttribute('gs-max-w')).toBe(null);
+        expect(item.getAttribute('gs-max-h')).toBe(null);
       });
 
       grid.update('.grid-stack-item', {maxWidth: 2, maxHeight: 2});
-      expect(parseInt(items[0].getAttribute('data-gs-x'), 10)).toBe(0);
-      expect(parseInt(items[1].getAttribute('data-gs-x'), 10)).toBe(4);
+      expect(parseInt(items[0].getAttribute('gs-x'), 10)).toBe(0);
+      expect(parseInt(items[1].getAttribute('gs-x'), 10)).toBe(4);
       items.forEach(item => {
-        expect(parseInt(item.getAttribute('data-gs-y'), 10)).toBe(0);
-        expect(parseInt(item.getAttribute('data-gs-height'), 10)).toBe(2);
-        expect(parseInt(item.getAttribute('data-gs-width'), 10)).toBe(2);
-        expect(parseInt(item.getAttribute('data-gs-max-width'), 10)).toBe(2);
-        expect(parseInt(item.getAttribute('data-gs-max-height'), 10)).toBe(2);
+        expect(parseInt(item.getAttribute('gs-y'), 10)).toBe(0);
+        expect(parseInt(item.getAttribute('gs-h'), 10)).toBe(2);
+        expect(parseInt(item.getAttribute('gs-w'), 10)).toBe(2);
+        expect(parseInt(item.getAttribute('gs-max-w'), 10)).toBe(2);
+        expect(parseInt(item.getAttribute('gs-max-h'), 10)).toBe(2);
       });
     });
 
@@ -1534,7 +1534,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       grid.locked('.grid-stack-item', true);
       Utils.getElements('.grid-stack-item').forEach(item => {
-        expect(item.getAttribute('data-gs-locked')).toBe('true');
+        expect(item.getAttribute('gs-locked')).toBe('true');
       })
     });
     it('should unlock widgets', function() {
@@ -1545,7 +1545,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       grid.locked('.grid-stack-item', false);
       Utils.getElements('.grid-stack-item').forEach(item => {
-        expect(item.getAttribute('data-gs-locked')).toBe(null);
+        expect(item.getAttribute('gs-locked')).toBe(null);
       })
     });
   });
@@ -1554,16 +1554,16 @@ describe('gridstack', function() {
     let HTML = 
     '<div style="width: 800px; height: 600px" id="gs-cont">' +
     '  <div class="grid-stack">' +
-    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="0" data-gs-width="12" data-gs-height="9">' +
+    '    <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="12" gs-h="9">' +
     '      <div class="grid-stack-item-content"></div>' +
     '    </div>' +
-    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="9" data-gs-width="12" data-gs-height="5">' +
+    '    <div class="grid-stack-item" gs-x="0" gs-y="9" gs-w="12" gs-h="5">' +
     '      <div class="grid-stack-item-content"></div>' +
     '    </div>' +
-    '    <div class="grid-stack-item" data-gs-x="0" data-gs-y="14" data-gs-width="7" data-gs-height="6">' +
+    '    <div class="grid-stack-item" gs-x="0" gs-y="14" gs-w="7" gs-h="6">' +
     '      <div class="grid-stack-item-content"></div>' +
     '    </div>' +
-    '    <div class="grid-stack-item" data-gs-x="7" data-gs-y="14" data-gs-width="5" data-gs-height="6">' +
+    '    <div class="grid-stack-item" gs-x="7" gs-y="14" gs-w="5" gs-h="6">' +
     '      <div class="grid-stack-item-content"></div>' +
     '    </div>' +
     '  </div>' +
@@ -1578,10 +1578,10 @@ describe('gridstack', function() {
     it('should have correct position', function() {
       let items = Utils.getElements('.grid-stack-item');
       for (let i = 0; i < items.length; i++) {
-        expect(parseInt(items[i].getAttribute('data-gs-x'))).toBe(pos[i].x);
-        expect(parseInt(items[i].getAttribute('data-gs-y'))).toBe(pos[i].y);
-        expect(parseInt(items[i].getAttribute('data-gs-width'))).toBe(pos[i].w);
-        expect(parseInt(items[i].getAttribute('data-gs-height'))).toBe(pos[i].h);
+        expect(parseInt(items[i].getAttribute('gs-x'))).toBe(pos[i].x);
+        expect(parseInt(items[i].getAttribute('gs-y'))).toBe(pos[i].y);
+        expect(parseInt(items[i].getAttribute('gs-w'))).toBe(pos[i].w);
+        expect(parseInt(items[i].getAttribute('gs-h'))).toBe(pos[i].h);
       }
     });
   });
@@ -1597,23 +1597,23 @@ describe('gridstack', function() {
       let grid = GridStack.init({float: true});
 
       let el3 = grid.addWidget({x: 3, y: 5});
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(3);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(5);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(3);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(5);
 
       grid.compact();
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(8);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(8);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
     });
     it('not move locked item', function() {
       let grid = GridStack.init({float: true});
 
       let el3 = grid.addWidget({x: 3, y: 5, locked: true, noMove: true});
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(3);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(5);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(3);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(5);
 
       grid.compact();
-      expect(parseInt(el3.getAttribute('data-gs-x'))).toBe(3);
-      expect(parseInt(el3.getAttribute('data-gs-y'))).toBe(5);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(3);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(5);
     });
   });
 
@@ -1627,15 +1627,15 @@ describe('gridstack', function() {
     it('not move locked item, size down added one', function() {
       let grid = GridStack.init();
       let el1 = grid.addWidget({x: 0, y: 1, width: 12, height: 1, locked: true});
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
 
       let el2 = grid.addWidget({x: 2, y: 0, height: 3});
-      expect(parseInt(el1.getAttribute('data-gs-x'))).toBe(0);
-      expect(parseInt(el1.getAttribute('data-gs-y'))).toBe(1);
-      expect(parseInt(el2.getAttribute('data-gs-x'))).toBe(2);
-      expect(parseInt(el2.getAttribute('data-gs-y'))).toBe(2);
-      expect(parseInt(el2.getAttribute('data-gs-height'))).toBe(3);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(3);
     });
 
   });

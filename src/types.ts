@@ -208,7 +208,7 @@ export interface GridStackWidget {
   locked?: boolean;
   /** widgets can have their own resize handles. For example 'e,w' will make the particular widget only resize east and west. */
   resizeHandles?: string;
-  /** value for `data-gs-id` stored on the widget (default?: undefined) */
+  /** value for `gs-id` stored on the widget (default?: undefined) */
   id?: numberOrString;
   /** html to append inside as content */
   content?: string;

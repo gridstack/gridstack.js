@@ -14,15 +14,15 @@ function addEvents(grid, id) {
 
   grid.on('dragstart', function(event, el) {
     let node = el.gridstackNode;
-    let x = el.getAttribute('data-gs-x');
-    let y= el.getAttribute('data-gs-y');
+    let x = el.getAttribute('gs-x');
+    let y= el.getAttribute('gs-y');
     console.log(g + 'dragstart ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') vs (' + x + ',' + y + ')');
   });
 
   grid.on('dragstop', function(event, el) {
     let node = el.gridstackNode;
-    let x = el.getAttribute('data-gs-x');
-    let y= el.getAttribute('data-gs-y');
+    let x = el.getAttribute('gs-x');
+    let y= el.getAttribute('gs-y');
     console.log(g + 'dragstop ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') vs (' + x + ',' + y + ')');
   });
 
@@ -41,14 +41,14 @@ function addEvents(grid, id) {
   });
 
   grid.on('resizestart', function(event, el) {
-    let w = el.getAttribute('data-gs-width');
-    let h = el.getAttribute('data-gs-height');
+    let w = el.getAttribute('gs-w');
+    let h = el.getAttribute('gs-h');
     console.log(g + 'resizestart ' + el.textContent + ' size: (' + w + ' x ' + h + ')');
   });
 
   grid.on('resizestop', function(event, el) {
-    let w = el.getAttribute('data-gs-width');
-    let h = el.getAttribute('data-gs-height');
+    let w = el.getAttribute('gs-w');
+    let h = el.getAttribute('gs-h');
     console.log(g + 'resizestop ' + el.textContent + ' size: (' + w + ' x ' + h + ')');
   });
 }

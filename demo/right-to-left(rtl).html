@@ -54,7 +54,7 @@
       template:
         [
           '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-          '   <div class="grid-stack-item" data-bind="attr: {\'data-gs-x\': $data.x, \'data-gs-y\': $data.y, \'data-gs-width\': $data.width, \'data-gs-height\': $data.height, \'data-gs-auto-position\': $data.auto_position}">',
+          '   <div class="grid-stack-item" data-bind="attr: {\'gs-x\': $data.x, \'gs-y\': $data.y, \'gs-w\': $data.width, \'gs-h\': $data.height, \'gs-auto-position\': $data.auto_position}">',
           '     <div class="grid-stack-item-content"><center><button data-bind="click: $root.deleteWidget">Delete me</button><br><h5 data-bind="text: index" /></center><br><p>lorem ipsum</p></div>',
           '   </div>',
           '</div> '
