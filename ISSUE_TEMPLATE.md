@@ -2,14 +2,15 @@
 Describe your issue here.
 
 ## Your environment
-* version of gridstack.js
+* version of gridstack.js AND if using HTML5 vs Jquery plugin (v3+)
 * which browser and its version
 
 ## Steps to reproduce
-Tell us how to reproduce this issue. Please provide a working demo, you can use [this template](https://jsfiddle.net/adumesny/jqhkry7g) as a base.
+MUST provide a working demo (keep it simple!) ad steps, you can use 
+https://jsfiddle.net/adumesny/jqhkry7g as a base.
 
-## Expected behaviour
+## Expected behavior
 Tell us what should happen
 
-## Actual behaviour
+## Actual behavior
 Tell us what happens instead
