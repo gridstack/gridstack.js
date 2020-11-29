@@ -7,7 +7,7 @@
 */
 
 import { GridStackEngine } from './gridstack-engine';
-import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, obsolete, Utils, HeightData } from './utils';
+import { obsoleteOpts, obsoleteOptsDel, obsoleteAttr, Utils, HeightData } from './utils';
 import { GridStackElement, GridItemHTMLElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, ColumnOptions } from './types';
 import { GridStackDDI } from './gridstack-ddi';
 
@@ -147,14 +147,8 @@ export class GridStack {
     this.el = el; // exposed HTML element to the user
     opts = opts || {}; // handles null/undefined/0
 
-    obsoleteOpts(opts, 'width', 'column', 'v0.5.3');
-    obsoleteOpts(opts, 'height', 'maxRow', 'v0.5.3');
     obsoleteOpts(opts, 'verticalMargin', 'margin', 'v2.0');
-    obsoleteOptsDel(opts, 'oneColumnModeClass', 'v0.6.3', '. Use class `.grid-stack-1` instead');
 
-    // container attributes
-    obsoleteAttr(this.el, 'data-gs-width', 'data-gs-column', 'v0.5.3');
-    obsoleteAttr(this.el, 'data-gs-height', 'data-gs-max-row', 'v0.5.3');
     obsoleteAttr(this.el, 'data-gs-current-height', 'data-gs-current-row', 'v1.0.0');
 
     // if row property exists, replace minRow and maxRow instead
@@ -714,15 +708,6 @@ export class GridStack {
   }
 
   /**
-   * Locks/unlocks widget.
-   * @param el element or selector to modify.
-   * @param locked if true widget will be locked.
-   */
-  public locked(els: GridStackElement, locked: boolean): GridStack {
-    return this.update(els, {locked});
-  }
-
-  /**
    * If you add elements to your grid by hand, you have to tell gridstack afterwards to make them widgets.
    * If you want gridstack to add the elements for you, use `addWidget()` instead.
    * Makes the given element a widget and returns it.
@@ -740,52 +725,6 @@ export class GridStack {
     this._triggerAddEvent();
     this._triggerChangeEvent();
     return el;
-  }
-
-  /**
-   * Set the maxWidth for a widget.
-   * @param els widget or selector to modify.
-   * @param maxWidth A numeric value of the number of columns
-   */
-  public maxWidth(els: GridStackElement, maxWidth: number): GridStack {
-    return this.update(els, {maxWidth});
-  }
-
-  /**
-   * Set the minWidth for a widget.
-   * @param els widget or selector to modify.
-   * @param minWidth A numeric value of the number of columns
-   */
-  public minWidth(els: GridStackElement, minWidth: number): GridStack {
-    return this.update(els, {minWidth});
-  }
-
-  /**
-   * Set the maxHeight for a widget.
-   * @param els widget or selector to modify.
-   * @param maxHeight A numeric value of the number of rows
-   */
-  public maxHeight(els: GridStackElement, maxHeight: number): GridStack {
-    return this.update(els, {maxHeight});
-  }
-
-  /**
-   * Set the minHeight for a widget.
-   * @param els widget or selector to modify.
-   * @param minHeight A numeric value of the number of rows
-   */
-  public minHeight(els: GridStackElement, minHeight: number): GridStack {
-    return this.update(els, {minHeight});
-  }
-
-  /**
-   * Changes widget position
-   * @param els  widget or singular selector to modify
-   * @param x new position x. If value is null or undefined it will be ignored.
-   * @param y new position y. If value is null or undefined it will be ignored.
-   */
-  public move(els: GridStackElement, x?: number, y?: number): GridStack {
-    return this.update(els, {x, y});
   }
 
   /**
@@ -904,16 +843,6 @@ export class GridStack {
   }
 
   /**
-   * Changes widget size
-   * @param els  widget or singular selector to modify
-   * @param width new dimensions width. If value is null or undefined it will be ignored.
-   * @param height  new dimensions height. If value is null or undefined it will be ignored.
-   */
-  public resize(els: GridStackElement, width?: number, height?: number): GridStack {
-    return this.update(els, {width, height});
-  }
-
-  /**
    * Toggle the grid animation state.  Toggles the `grid-stack-animate` class.
    * @param doAnimate if true the grid will animate.
    */
@@ -940,7 +869,7 @@ export class GridStack {
   }
 
   /**
-   * Updates widget position/size.
+   * Updates widget position/size and other info. Note: if you need to call this on all nodes, use load() instead which will update what changed.
    * @param els  widget or selector of objects to modify (note: setting the same x,y for multiple items will be indeterministic and likely unwanted)
    * @param opt new widget options (x,y,width,height, etc..). Only those set will be updated.
    */
@@ -1357,21 +1286,13 @@ export class GridStack {
   }
 
   /** @internal convert a potential selector into actual element */
-  public static getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement {
-    return Utils.getElement(els);
-  }
+  public static getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement { return Utils.getElement(els) }
   /** @internal */
-  public static getElements(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement[] {
-    return Utils.getElements(els);
-  }
+  public static getElements(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement[] { return Utils.getElements(els) }
   /** @internal */
-  public static getGridElement(els: GridStackElement): GridHTMLElement {
-    return GridStack.getElement(els);
-  }
+  public static getGridElement(els: GridStackElement): GridHTMLElement { return GridStack.getElement(els) }
   /** @internal */
-  public static getGridElements(els: string): GridHTMLElement[] {
-    return Utils.getElements(els);
-  }
+  public static getGridElements(els: string): GridHTMLElement[] { return Utils.getElements(els) }
 
   /** @internal initialize margin top/bottom/left/right and units */
   private initMargin(): GridStack {
@@ -1437,21 +1358,6 @@ export class GridStack {
     return this;
   }
 
-  /** @internal called to update an element(s) attributes and node values */
-  private _updateAttr(els: GridStackElement, val: number, attr: string, field: string): GridStack {
-    GridStack.getElements(els).forEach(el => {
-      if (val) {
-        el.setAttribute(attr, String(val));
-      } else {
-        el.removeAttribute(attr);
-      }
-      if (el.gridstackNode) {
-        el.gridstackNode[field] = (val || undefined);
-      }
-    });
-    return this;
-  }
-
   /*
    * drag&drop empty stubs that will be implemented in gridstack-dd.ts for non static grid
    * so we don't incur the load unless needed.
@@ -1486,11 +1392,19 @@ export class GridStack {
   /** @internal prepares the element for drag&drop **/
   public _prepareDragDropByNode(node: GridStackNode): GridStack { return this; }
 
-  // legacy method renames
+  // 2.x API that just calls the new and better update() - keep those around for backward compat only...
   /** @internal */
-  private setGridWidth = obsolete(this, GridStack.prototype.column, 'setGridWidth', 'column', 'v0.5.3');
+  public locked(els: GridStackElement, locked: boolean): GridStack { return this.update(els, {locked}) }
   /** @internal */
-  private setColumn = obsolete(this, GridStack.prototype.column, 'setColumn', 'column', 'v0.6.4');
+  public maxWidth(els: GridStackElement, maxWidth: number): GridStack { return this.update(els, {maxWidth}) }
   /** @internal */
-  private getGridHeight = obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
+  public minWidth(els: GridStackElement, minWidth: number): GridStack {  return this.update(els, {minWidth}) }
+  /** @internal */
+  public maxHeight(els: GridStackElement, maxHeight: number): GridStack { return this.update(els, {maxHeight}) }
+  /** @internal */
+  public minHeight(els: GridStackElement, minHeight: number): GridStack { return this.update(els, {minHeight}) }
+  /** @internal */
+  public move(els: GridStackElement, x?: number, y?: number): GridStack { return this.update(els, {x, y}) }
+  /** @internal */
+  public resize(els: GridStackElement, width?: number, height?: number): GridStack { return this.update(els, {width, height}) }
 }
