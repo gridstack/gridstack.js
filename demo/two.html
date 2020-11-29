@@ -8,9 +8,9 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="../node_modules/gridstack/dist/gridstack-extra.min.css"/>
+  <link rel="stylesheet" href="../node_modules/gridstack/dist/gridstack-extra.css"/>
 
-  <script src="../node_modules/gridstack/dist/gridstack.all.js"></script>
+  <script src="../node_modules/gridstack/dist/gridstack-h5.js"></script>
 
   <style type="text/css">
     .grid-stack-item-removing {
@@ -56,7 +56,7 @@
             <div class="grid-stack-item-content">Drag me</div>
           </div>
           <!-- manually force a drop size of 2x1 -->
-          <div class="grid-stack-item" data-gs-width="2" data-gs-height="1">
+          <div class="grid-stack-item" gs-w="2" gs-h="1">
             <div class="grid-stack-item-content">Drag me 2x1</div>
           </div>
 
@@ -83,7 +83,7 @@
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
-    var options = {
+    let options = {
       column: 6,
       minRow: 1, // don't collapse when empty
       cellHeight: 70,
@@ -95,15 +95,15 @@
       removeTimeout: 100,
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };
-    var grids = GridStack.initAll(options);
+    let grids = GridStack.initAll(options);
     grids[1].float(true);
 
-    var items = [
-      {x: 0, y: 0, width: 2, height: 2},
-      {x: 3, y: 1, width: 1, height: 2},
-      {x: 4, y: 1, width: 1},
-      {x: 2, y: 3, width: 3, maxWidth: 3, id: 'special', content: 'has maxWidth=3'},
-      {x: 2, y: 5, width: 1}
+    let items = [
+    {x: 0, y: 0, w: 2, h: 2},
+      {x: 3, y: 1, h: 2},
+      {x: 4, y: 1},
+      {x: 2, y: 3, w: 3, maxW: 3, id: 'special', content: 'has maxW=3'},
+      {x: 2, y: 5}
     ];
 
     grids.forEach(function (grid, i) {

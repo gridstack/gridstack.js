@@ -10,5 +10,6 @@ node_modules/gridstack/*
 !node_modules/gridstack/dist/
 node_modules/gridstack/dist/*
 !node_modules/gridstack/dist/gridstack.all.js
+!node_modules/gridstack/dist/gridstack-h5.js
 !node_modules/gridstack/dist/gridstack.min.css
 !node_modules/gridstack/dist/gridstack-extra.min.css
