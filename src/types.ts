@@ -187,19 +187,19 @@ export interface GridStackWidget {
   /** widget position y (default?: 0) */
   y?: number;
   /** widget dimension width (default?: 1) */
-  width?: number;
+  w?: number;
   /** widget dimension height (default?: 1) */
-  height?: number;
+  h?: number;
   /** if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) */
   autoPosition?: boolean;
   /** minimum width allowed during resize/creation (default?: undefined = un-constrained) */
-  minWidth?: number;
+  minW?: number;
   /** maximum width allowed during resize/creation (default?: undefined = un-constrained) */
-  maxWidth?: number;
+  maxW?: number;
   /** minimum height allowed during resize/creation (default?: undefined = un-constrained) */
-  minHeight?: number;
+  minH?: number;
   /** maximum height allowed during resize/creation (default?: undefined = un-constrained) */
-  maxHeight?: number;
+  maxH?: number;
   /** prevent resizing (default?: undefined = un-constrained) */
   noResize?: boolean;
   /** prevents moving (default?: undefined = un-constrained) */
@@ -308,9 +308,9 @@ export interface GridStackNode extends GridStackWidget {
   /** @internal */
   _lastTriedY?: number;
   /** @internal */
-  _lastTriedWidth?: number;
+  _lastTriedW?: number;
   /** @internal */
-  _lastTriedHeight?: number;
+  _lastTriedH?: number;
   /** @internal */
   _isAboutToRemove?: boolean;
   /** @internal */

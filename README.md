@@ -92,7 +92,7 @@ creating items dynamically...
 
 // ...in your script
 var grid = GridStack.init();
-grid.addWidget({width: 2, content: 'item 1'});
+grid.addWidget({w: 2, content: 'item 1'});
 ```
 
 ... or creating from list
@@ -100,8 +100,8 @@ grid.addWidget({width: 2, content: 'item 1'});
 ```js
 // using serialize data instead of .addWidget()
 const serializedData = [
-  {x: 0, y: 0, width: 2, height: 2},
-  {x: 2, y: 3, width: 3, content: 'item 2'},
+  {x: 0, y: 0, w: 2, h: 2},
+  {x: 2, y: 3, w: 3, content: 'item 2'},
   {x: 1, y: 3}
 ];
 
@@ -315,7 +315,7 @@ var grid = $('.grid-stack').data('gridstack');
 var grid = GridStack.init(opts?, element?);
 
 // returns DOM element
-grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {width: 2});
+grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {w: 2});
 
 // event handler
 grid.on('added', function(e, items) {/* items contains info */});
@@ -362,7 +362,7 @@ v2 is a Typescript rewrite of 1.x, removing all jquery events, using classes and
 
 make sure to read v2 migration first!
 
-v3 has a new HTML5 drag&drop plugging (65k total, all native code), while still allowing you to use the legacy jquery-ui version (188k), or a new static grid version (35k, no user drag&drop but full API support). You will need to decide which version to use as `gridstack.all.js` no longer exist (same as `gridstack-jq.js`) - see include info at top.
+v3 has a new HTML5 drag&drop plugging (63k total, all native code), while still allowing you to use the legacy jquery-ui version (186k), or a new static grid version (34k, no user drag&drop but full API support). You will need to decide which version to use as `gridstack.all.js` no longer exist (same as `gridstack-jq.js`) - see include info at top.
 
 Some breaking changes:
 
@@ -371,6 +371,8 @@ Some breaking changes:
 2. `GridStack.update(el, opt)` now takes `GridStackWidget` options instead, BUT legacy call in JS will continue working the same for now
 
 3. item attribute like `data-gs-min-width` is now `gs-min-w`. We removed 'data-' from all attributes, and shorten 'width|height' to just 'w|h' to require typing and more efficient.
+
+4. `GridStackWidget` used in most API `width|height|minWidth|minHeight|maxWidth|maxHeight` are now shorter `w|h|minW|minH|maxW|maxH` as well
 
 # jQuery Application
 

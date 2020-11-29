@@ -3,7 +3,7 @@ function addEvents(grid, id) {
 
   grid.on('added removed change', function(event, items) {
     let str = '';
-    items.forEach(function(item) { str += ' (' + item.x + ',' + item.y + ' ' + item.width + 'x' + item.height + ')'; });
+    items.forEach(function(item) { str += ' (' + item.x + ',' + item.y + ' ' + item.w + 'x' + item.h + ')'; });
     console.log(g + event.type + ' ' + items.length + ' items (x,y w h):' + str );
   });
 

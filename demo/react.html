@@ -23,11 +23,11 @@
         count: 0,
         info: "",
         items: [
-          { x: 2, y: 1, height: 2 },
-          { x: 2, y: 4, width: 3 },
-          { x: 4, y: 2, width: 1 },
-          { x: 3, y: 1, height: 2 },
-          { x: 0, y: 6, width: 2, height: 2 },
+          { x: 2, y: 1, h: 2 },
+          { x: 2, y: 4, w: 3 },
+          { x: 4, y: 2 },
+          { x: 3, y: 1, h: 2 },
+          { x: 0, y: 6, w: 2, h: 2 },
         ],
       };
 
@@ -60,8 +60,8 @@
         const node = this.state.items[this.state.count] || {
           x: Math.round(12 * Math.random()),
           y: Math.round(5 * Math.random()),
-          width: Math.round(1 + 3 * Math.random()),
-          height: Math.round(1 + 3 * Math.random()),
+          w: Math.round(1 + 3 * Math.random()),
+          h: Math.round(1 + 3 * Math.random()),
         };
         node.id = node.content = String(this.state.count);
         this.setState((prevState) => ({

@@ -9,7 +9,7 @@
 import { GridStackElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString } from './types';
 
 export interface HeightData {
-  height: number;
+  h: number;
   unit: string;
 }
 
@@ -96,7 +96,7 @@ export class Utils {
 
   /** returns true if a and b overlap */
   static isIntercepted(a: GridStackWidget, b: GridStackWidget): boolean {
-    return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
+    return !(a.x + a.w <= b.x || b.x + b.w <= a.x || a.y + a.h <= b.y || b.y + b.h <= a.y);
   }
 
   /**
@@ -107,7 +107,7 @@ export class Utils {
    **/
   static sort(nodes: GridStackNode[], dir?: -1 | 1, column?: number): GridStackNode[] {
     if (!column) {
-      let widths = nodes.map(n => n.x + n.width);
+      let widths = nodes.map(n => n.x + n.w);
       column = Math.max(...widths);
     }
 
@@ -177,7 +177,7 @@ export class Utils {
   }
 
   static parseHeight(val: numberOrString): HeightData {
-    let height: number;
+    let h: number;
     let unit = 'px';
     if (typeof val === 'string') {
       let match = val.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw|%)?$/);
@@ -185,11 +185,11 @@ export class Utils {
         throw new Error('Invalid height');
       }
       unit = match[2] || 'px';
-      height = parseFloat(match[1]);
+      h = parseFloat(match[1]);
     } else {
-      height = val;
+      h = val;
     }
-    return { height, unit };
+    return { h, unit };
   }
 
   /** copies unset fields in target to use the given default sources values */
