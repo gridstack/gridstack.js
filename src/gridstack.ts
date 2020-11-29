@@ -1396,13 +1396,13 @@ export class GridStack {
   /** @internal */
   public locked(els: GridStackElement, locked: boolean): GridStack { return this.update(els, {locked}) }
   /** @internal */
-  public maxW(els: GridStackElement, maxW: number): GridStack { return this.update(els, {maxW}) }
+  public maxWidth(els: GridStackElement, maxW: number): GridStack { return this.update(els, {maxW}) }
   /** @internal */
-  public minW(els: GridStackElement, minW: number): GridStack {  return this.update(els, {minW}) }
+  public minWidth(els: GridStackElement, minW: number): GridStack {  return this.update(els, {minW}) }
   /** @internal */
-  public maxH(els: GridStackElement, maxH: number): GridStack { return this.update(els, {maxH}) }
+  public maxHeight(els: GridStackElement, maxH: number): GridStack { return this.update(els, {maxH}) }
   /** @internal */
-  public minH(els: GridStackElement, minH: number): GridStack { return this.update(els, {minH}) }
+  public minHeight(els: GridStackElement, minH: number): GridStack { return this.update(els, {minH}) }
   /** @internal */
   public move(els: GridStackElement, x?: number, y?: number): GridStack { return this.update(els, {x, y}) }
   /** @internal */

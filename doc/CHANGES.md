@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [2.2.0-dev](#220-dev)
+- [3.3.0 (2020-11-29)](#330-2020-11-29)
 - [2.2.0 (2020-11-7)](#220-2020-11-7)
 - [2.1.0 (2020-10-28)](#210-2020-10-28)
 - [2.0.2 (2020-10-05)](#202-2020-10-05)
@@ -41,8 +41,9 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 2.2.0-dev
+## 3.3.0 (2020-11-29)
 
+- the big news is we finally have a native HTML5 drag&drop plugin (zero jquery)! Huge thanks to [@rhlin](https://github.com/rhlin) for creating this in stealth mode. Read all about it in main doc.
 - we now have a React example, in addition to Vue - Angular is next!. thanks [@eloparco](https://github.com/eloparco)
 - fix placeholder not having custom `GridStackOptions.itemClass`. thanks [@pablosichert](https://github.com/pablosichert)
 - fix [1484](https://github.com/gridstack/gridstack.js/issues/1484) dragging between 2 grids and back (regression in 2.0.1) 
@@ -51,6 +52,7 @@ Change log
 Hiding `locked()`, `move()`, `resize()`, `minWidth()`, etc... as they just simply call update() which does all the constrain now as well!
 - del `ddPlugin` grid option as we only have one drag&drop plugin at runtime, which is defined by the include you use (HTML5 vs jquery vs none)
 -  change attribute like `data-gs-min-width` is now `gs-min-w`. We removed 'data-' from all attributes, and shorten 'width|height' to just 'w|h' to require typing and more efficient [1491](https://github.com/gridstack/gridstack.js/pull/1491)
+- **** see [migrating to v3](https://github.com/gridstack/gridstack.js#migrating-to-v3) ****
 
 ## 2.2.0 (2020-11-7)
 

@@ -71,16 +71,27 @@ npm install --save gridstack
 ES6 or Typescript
 
 ```js
-import GridStack from 'gridstack';
 import 'gridstack/dist/gridstack.min.css';
+import GridStack from 'gridstack';
+// THEN to get HTML5 drag&drop
+import 'gridstack/dist/h5/gridstack-dd-native';
+// OR to get legacy jquery-ui drag&drop
+import 'gridstack/dist/jq/gridstack-dd-jqueryui';
+// OR nothing to get static grids (API driven, no user drag&drop)
 ```
-
-alternatively in html
+Alternatively in html
 
 ```html
 <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
+<!-- HTML5 drag&drop (63k) -->
 <script src="node_modules/gridstack/dist/gridstack-h5.js"></script>
+<!-- OR jquery-ui drag&drop (188k) -->
+<script src="node_modules/gridstack/dist/gridstack-jq.js"></script>
+<!-- OR static grid (34k) -->
+<script src="node_modules/gridstack/dist/gridstack-static.js"></script>
 ```
+
+Note: the API is the same, regardless of the plugin (or lack thereof) so you can switch at any time. The Jquery version will export $ that it bundles. Read more at [migrating to v3](#migrating-to-v3)
 
 ## Basic usage
 
@@ -129,7 +140,7 @@ see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example
 
 ## Requirements
 
-GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). All you need to include is `gridstack-h5.js` and `gridstack.min.css` (layouts are done using CSS column based %).
+GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). v3.0.0 is a complete HTML5 re-write which removes all jqeury dependency (still available for legacy apps). All you need to include now is `gridstack-h5.js` and `gridstack.min.css` (layouts are done using CSS column based %).
 
 ## API Documentation
 
@@ -362,23 +373,27 @@ v2 is a Typescript rewrite of 1.x, removing all jquery events, using classes and
 
 make sure to read v2 migration first!
 
-v3 has a new HTML5 drag&drop plugging (63k total, all native code), while still allowing you to use the legacy jquery-ui version (186k), or a new static grid version (34k, no user drag&drop but full API support). You will need to decide which version to use as `gridstack.all.js` no longer exist (same as `gridstack-jq.js`) - see include info at top.
+v3 has a new HTML5 drag&drop plugging (63k total, all native code), while still allowing you to use the legacy jquery-ui version instead (188k), or a new static grid version (34k, no user drag&drop but full API support). You will need to decide which version to use as `gridstack.all.js` no longer exist (same is now `gridstack-jq.js`) - see [include info](#include).
 
-Some breaking changes:
+Note: HTML5 is almost on parity with the old jquery-ui based drag&drop. the `containment` (prevent a child from being dragged outside it's parent) and `revert` (not clear what it for yet) are not yet implemented in initial release of v3.0.0
+
+Breaking changes:
 
 1. include (as mentioned) need to change
 
-2. `GridStack.update(el, opt)` now takes `GridStackWidget` options instead, BUT legacy call in JS will continue working the same for now
+2. `GridStack.update(el, opt)` now takes single `GridStackWidget` options instead of only supporting (x,y,w,h) BUT legacy call in JS will continue working the same for now. That method is a complete re-write and does the right constrain and updates now for all the available params.
 
-3. item attribute like `data-gs-min-width` is now `gs-min-w`. We removed 'data-' from all attributes, and shorten 'width|height' to just 'w|h' to require typing and more efficient.
+3. `locked()`, `move()`, `resize()`, `minWidth()`, `minHeight()`, `maxWidth()`, `maxHeight()` methods are hidden from Typescript (JS can still call for now) as they are just 1 liner wrapper around `update(el, opt)` anyway and will go away soon. (ex: `move(el, x, y)` => `update(el, {x, y})`)
 
-4. `GridStackWidget` used in most API `width|height|minWidth|minHeight|maxWidth|maxHeight` are now shorter `w|h|minW|minH|maxW|maxH` as well
+4. item attribute like `data-gs-min-width` is now `gs-min-w`. We removed 'data-' from all attributes, and shorten 'width|height' to just 'w|h' to require less typing and more efficient (2k saved in .js alone!).
+
+5. `GridStackWidget` used in most API `width|height|minWidth|minHeight|maxWidth|maxHeight` are now shorter `w|h|minW|minH|maxW|maxH` as well
 
 # jQuery Application
 
 We now have a native HTML5 drag'n'drop through the plugin system (default), but the jquery-ui version can be used instead. It will bundle `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) in `gridstack-jq.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306)).
 
-NOTE: v2.x / v3.0.0 does not currently support importing GridStack Drag&Drop without also including our jquery + jquery-ui. Still trying to figure how to make that bundle possible. You will have to use 1.x for now...
+NOTE: v2.x / v3.x does not currently support importing GridStack Drag&Drop without also including our jquery + jquery-ui. Still trying to figure how to make that bundle possible. You will have to use 1.x for now...
 
 As for events, you can still use `$(".grid-stack").on(...)` for the version that uses jquery-ui for things we don't support.
 
