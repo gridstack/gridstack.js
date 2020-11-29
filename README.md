@@ -85,7 +85,7 @@ Alternatively in html
 <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
 <!-- HTML5 drag&drop (63k) -->
 <script src="node_modules/gridstack/dist/gridstack-h5.js"></script>
-<!-- OR jquery-ui drag&drop (188k) -->
+<!-- OR jquery-ui drag&drop (186k) -->
 <script src="node_modules/gridstack/dist/gridstack-jq.js"></script>
 <!-- OR static grid (34k) -->
 <script src="node_modules/gridstack/dist/gridstack-static.js"></script>

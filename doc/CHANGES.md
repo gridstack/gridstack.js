@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [3.3.0-dev](#330-dev)
 - [3.3.0 (2020-11-29)](#330-2020-11-29)
 - [2.2.0 (2020-11-7)](#220-2020-11-7)
 - [2.1.0 (2020-10-28)](#210-2020-10-28)
@@ -41,6 +42,9 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 3.3.0-dev
+
+- TBD
 ## 3.3.0 (2020-11-29)
 
 - the big news is we finally have a native HTML5 drag&drop plugin (zero jquery)! Huge thanks to [@rhlin](https://github.com/rhlin) for creating this in stealth mode. Read all about it in main doc.
@@ -51,7 +55,8 @@ Change log
 - fix [1235](https://github.com/gridstack/gridstack.js/issues/1235) `update(el, opts)` re-write to take all `GridStackWidget` options (not just x,y,width,height) and do everything efficiently.
 Hiding `locked()`, `move()`, `resize()`, `minWidth()`, etc... as they just simply call update() which does all the constrain now as well!
 - del `ddPlugin` grid option as we only have one drag&drop plugin at runtime, which is defined by the include you use (HTML5 vs jquery vs none)
--  change attribute like `data-gs-min-width` is now `gs-min-w`. We removed 'data-' from all attributes, and shorten 'width|height' to just 'w|h' to require typing and more efficient [1491](https://github.com/gridstack/gridstack.js/pull/1491)
+- change attribute `data-gs-min-width` is now `gs-min-w`. We removed 'data-' from all attributes, and shorten 'width|height' to just 'w|h' to require less typing and more efficient (2k saved in .js alone!) [1491](https://github.com/gridstack/gridstack.js/pull/1491) [1492](https://github.com/gridstack/gridstack.js/pull/1492)
+- also `GridStackWidget` used in most API `width|height|minWidth|minHeight|maxWidth|maxHeight` are now shorter `w|h|minW|minH|maxW|maxH` as well [1493](https://github.com/gridstack/gridstack.js/pull/1493)
 - **** see [migrating to v3](https://github.com/gridstack/gridstack.js#migrating-to-v3) ****
 
 ## 2.2.0 (2020-11-7)
