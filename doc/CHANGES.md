@@ -48,7 +48,7 @@ Change log
 - fix [1484](https://github.com/gridstack/gridstack.js/issues/1484) dragging between 2 grids and back (regression in 2.0.1) 
 - fix [1471](https://github.com/gridstack/gridstack.js/issues/1471) `load()` into 1 column mode doesn't resize back to 12 correctly
 - fix [1235](https://github.com/gridstack/gridstack.js/issues/1235) `update(el, opts)` re-write to take all `GridStackWidget` options (not just x,y,width,height) and do everything efficiently.
-Fixed `locked()`, `move()`, `resize()`, `minWidth()`,etc... to call update() instead which does all the constrain, not just update attributes!
+Hiding `locked()`, `move()`, `resize()`, `minWidth()`, etc... as they just simply call update() which does all the constrain now as well!
 - del `ddPlugin` grid option as we only have one drag&drop plugin at runtime, which is defined by the include you use (HTML5 vs jquery vs none)
 
 ## 2.2.0 (2020-11-7)

@@ -40,23 +40,16 @@ gridstack.js API
   - [getMargin()](#getmargin)
   - [isAreaEmpty(x, y, width, height)](#isareaemptyx-y-width-height)
   - [load(layout: GridStackWidget[], boolean | ((w: GridStackWidget, add: boolean) => void)  = true)](#loadlayout-gridstackwidget-boolean--w-gridstackwidget-add-boolean--void---true)
-  - [locked(el, val)](#lockedel-val)
   - [makeWidget(el)](#makewidgetel)
   - [margin(value: numberOrString)](#marginvalue-numberorstring)
-  - [maxHeight(el, val)](#maxheightel-val)
-  - [minHeight(el, val)](#minheightel-val)
-  - [maxWidth(el, val)](#maxwidthel-val)
-  - [minWidth(el, val)](#minwidthel-val)
   - [movable(el, val)](#movableel-val)
-  - [move(el, x, y)](#moveel-x-y)
   - [removeWidget(el, removeDOM = true, triggerEvent = true)](#removewidgetel-removedom--true-triggerevent--true)
   - [removeAll(removeDOM = true)](#removeallremovedom--true)
-  - [resize(el, width, height)](#resizeel-width-height)
   - [resizable(el, val)](#resizableel-val)
   - [save(saveContent = true): GridStackWidget[]](#savesavecontent--true-gridstackwidget)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
-  - [update(el, x, y, width, height)](#updateel-x-y-width-height)
+  - [update(el: GridStackElement, opts: GridStackWidget)](#updateel-gridstackelement-opts-gridstackwidget)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
 - [Utils](#utils)
   - [GridStack.Utils.sort(nodes[, dir[, width]])](#gridstackutilssortnodes-dir-width)
@@ -398,13 +391,6 @@ Checks if specified area is empty.
 - `addAndRemove` boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving the user control of insertion.
 - see [example](http://gridstackjs.com/demo/serialization.html)
 
-### locked(el, val)
-
-Locks/unlocks widget.
-
-- `el` - widget or selector to modify.
-- `val` - if `true` widget will be locked.
-
 ### makeWidget(el)
 
 If you add elements to your gridstack container by hand, you have to tell gridstack afterwards to make them widgets. If you want gridstack to add the elements for you, use `addWidget` instead.
@@ -428,49 +414,12 @@ gap between grid item and content (default?: 10). This will set all 4 sides and 
  - string with space separated values (ex: `'5px 10px 0 20px'` for all 4 sides, or `'5em 10em'` for top/bottom and left/right pairs like CSS).
  - Note: all sides must have same units (last one wins, default px)
 
-### maxHeight(el, val)
-
-Set the `maxHeight` for a widget.
-
-- `el` - widget to modify.
-- `val` - A numeric value of the number of rows
-
-### minHeight(el, val)
-
-Set the `minHeight` for a widget.
-
-- `el` - widget to modify.
-- `val` - A numeric value of the number of rows
-
-### maxWidth(el, val)
-
-Set the `maxWidth` for a widget.
-
-- `el` - widget to modify.
-- `val` - A numeric value of the number of columns
-
-### minWidth(el, val)
-
-Set the `minWidth` for a widget.
-
-- `el` - widget to modify.
-- `val` - A numeric value of the number of columns
-
 ### movable(el, val)
 
 Enables/Disables moving.
 
 - `el` - widget to modify
 - `val` - if `true` widget will be draggable.
-
-### move(el, x, y)
-
-Changes widget position
-
-Parameters:
-
-- `el` - widget to move
-- `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
 
 ### removeWidget(el, removeDOM = true, triggerEvent = true)
 
@@ -489,15 +438,6 @@ Removes all widgets from the grid.
 Parameters:
 
 - `removeDOM` - if `false` nodes won't be removed from the DOM (Optional. Default `true`).
-
-### resize(el, width, height)
-
-Changes widget size
-
-Parameters:
-
-- `el` - widget to resize
-- `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
 
 ### resizable(el, val)
 
@@ -523,15 +463,14 @@ Toggle the grid static state.  Also toggle the `grid-stack-static` class.
 
 - `staticValue` - if `true` the grid becomes static.
 
-### update(el, x, y, width, height)
+### update(el: GridStackElement, opts: GridStackWidget)
 
 Parameters:
 
-- `el` - widget to move
-- `x`, `y` - new position. If value is `null` or `undefined` it will be ignored.
-- `width`, `height` - new dimensions. If value is `null` or `undefined` it will be ignored.
+- `el` - widget to move (element or class string)
+- `opts` - updates all the possible item attributes passed in the structure (x,y,width,height, etc..). Only those set will be updated.
 
-Updates widget position/size.
+Updates widget position/size and other info. Note: if you need to call this on all nodes, use load() instead which will update what changed and more.
 
 ### willItFit(x, y, width, height, autoPosition)
 

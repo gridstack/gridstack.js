@@ -1768,27 +1768,13 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
+    /* saving as example
     it('warning if OLD setGridWidth is called', function() {
       let grid: any = GridStack.init();
       grid.setGridWidth(11); // old 0.5.2 API
       expect(grid.getColumn()).toBe(11);
       expect(console.warn).toHaveBeenCalledWith('gridstack.js: Function `setGridWidth` is deprecated in v0.5.3 and has been replaced with `column`. It will be **completely** removed in v1.0');
     });
-    it('warning if OLD setColumn is called', function() {
-      let grid: any = GridStack.init();
-      grid.setColumn(10); // old 0.6.4 API
-      expect(grid.getColumn()).toBe(10);
-      expect(console.warn).toHaveBeenCalledWith('gridstack.js: Function `setColumn` is deprecated in v0.6.4 and has been replaced with `column`. It will be **completely** removed in v1.0');
-    });
-    it('warning if OLD grid height is set', function() {
-      let grid = (GridStack as any).init({height: 10}); // old 0.5.2 Opt now maxRow
-      expect(grid.opts.maxRow).toBe(10);
-      expect(grid.engine.maxRow).toBe(10);
-      expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `height` is deprecated in v0.5.3 and has been replaced with `maxRow`. It will be **completely** removed in v1.0');
-    });
-    it('warning if OLD oneColumnModeClass is set (no changes)', function() {
-      (GridStack as any).init({oneColumnModeClass: 'foo'}); // deleted 0.6.3 Opt
-      expect(console.warn).toHaveBeenCalledWith('gridstack.js: Option `oneColumnModeClass` is deprecated in v0.6.3. Use class `.grid-stack-1` instead');
-    });
+    */
   });
 });
