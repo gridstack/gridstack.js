@@ -55,7 +55,7 @@ export class GridStack {
   /**
    * initializing the HTML element, or selector string, into a grid will return the grid. Calling it again will
    * simply return the existing instance (ignore any passed options). There is also an initAll() version that support
-   * multiple grids initialization at once.
+   * multiple grids initialization at once. Or you can use addGrid() to create the entire grid from JSON.
    * @param options grid options (optional)
    * @param elOrString element or CSS selector (first one used) to convert to a grid (default to '.grid-stack' class selector)
    *
@@ -104,6 +104,30 @@ export class GridStack {
       '\nNote: ".grid-stack" is required for proper CSS styling and drag/drop, and is the default selector.');
     }
     return grids;
+  }
+
+  /**
+   * call to create a grid with the given options, including loading any children from JSON structure. This will call GridStack.init(), then
+   * grid.load() on any passed children (recursively). Great alternative to calling init() if you want entire grid to come from
+   * JSON serialized data, including options.
+   * @param parent HTML element parent to the grid
+   * @param opt grids options used to initialize the grid, and list of children
+   */
+  public static addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack {
+    if (!parent) { return null; }
+
+    // create the grid element
+    let doc = document.implementation.createHTMLDocument();
+    doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
+    let el = doc.body.children[0] as HTMLElement;
+    parent.append(el);
+
+    // create grid class and load any children
+    let grid = GridStack.init(opt, el);
+    if (opt.children) {
+      grid.load(opt.children);
+    }
+    return grid;
   }
 
   /** scoping so users can call GridStack.Utils.sort() for example */
@@ -373,28 +397,6 @@ export class GridStack {
   }
 
   /**
-   * call to create a grid with the given options, including loading any children
-   * @param parent HTML element parent to the grid
-   * @param opt grids options used to initialize the grid, and list of children
-   */
-  public addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack {
-    if (!parent) { return null; }
-
-    // create the grid element
-    let doc = document.implementation.createHTMLDocument();
-    doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
-    let el = doc.body.children[0] as HTMLElement;
-    parent.append(el);
-
-    // create grid class and load any children
-    let grid = GridStack.init(opt, el);
-    if (opt.children) {
-      grid.load(opt.children);
-    }
-    return grid;
-  }
-
-  /**
    * load the widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
    *
    * @param layout list of widgets definition to update/create
@@ -452,7 +454,7 @@ export class GridStack {
         }
         if (w.subGrid) { // see if there is a sub-grid to create too
           let content = w.el.querySelector('.grid-stack-item-content') as HTMLElement;
-          this.addGrid(content, w.subGrid);
+          GridStack.addGrid(content, w.subGrid);
         }
       }
     });

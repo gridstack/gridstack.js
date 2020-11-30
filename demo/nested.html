@@ -4,13 +4,11 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nested grids demo</title>
-
+  <title>Nested grids demo (ES6)</title>
   <link rel="stylesheet" href="demo.css"/>
   <script src="../dist/gridstack-h5.js"></script>
   <style type="text/css">
     .grid-stack .grid-stack {
-      /*margin: 0 -10px;*/
       background: rgba(255, 255, 255, 0.3);
     }
     .grid-stack .grid-stack .grid-stack-item-content {
@@ -21,42 +19,44 @@
 <body>
   <div class="container-fluid">
     <h1>Nested grids demo</h1>
-    <a class="btn btn-primary" onClick="addNewWidget(grid1)" href="#">Add Widget Grid1</a>
-    <a class="btn btn-primary" onClick="addNewWidget(grid2)" href="#">Add Widget Grid2</a>
+    <p>This example uses new v3.1 API to load the entire nested grid from JSON, and shows dragging between nested grid items (pink) vs dragging higher grid items (green)</p>
+    <!-- <p>Note: initial v3.0.0 HTML5 release doesn't support 'dragOut:false' constrain (always true) so this uses JQ version for now.</p>  -->
+    <a class="btn btn-primary" onClick="addNewWidget('.nested1')" href="#">Add Widget Grid1</a>
+    <a class="btn btn-primary" onClick="addNewWidget('.nested2')" href="#">Add Widget Grid2</a>
     <br><br>
 
     <div class="grid-stack"></div>
   </div>
 
   <script type="text/javascript">
-    let sub1 = [ {w: 3}, {w: 3}, {w: 3}, {w: 3}, {w: 3}, {w: 3}];
-    let sub2 = [ {w: 3}, {x:0, y: 1, w: 3}];
+    let sub1 = [ {w:3}, {w:3}, {w:3}, {w:3}, {w:3}, {w:3}];
+    let sub2 = [ {w:3}, {x:0, y:1, w:3}];
     let count = 0;
     [...sub1, ...sub2].forEach(d => d.content = String(count++));
     let subOptions = {
+      itemClass: 'sub', // style sub items differently and use to prevent dragging in/out
       acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted, otherwise grid-items causes all sort of issues
       disableOneColumnMode: true, // nested are small, but still want N columns
-      itemClass: 'sub',
       margin: 1
     };
-    let items = [
+    let layout = {cellHeight: 70, children: [
       {w:1, content: 'regular item'},
       {x:1, w:4, h:4, content: 'nested 1 - can drag items out', subGrid: {children: sub1, dragOut: true, class: 'nested1', ...subOptions}},
-      {x:5, w:4, h:4, content: 'nested 2 - constrained to parent (default)', subGrid: {children: sub2, class: 'nested2', ...subOptions}},
-    ];
+      {x:5, w:4, h:4, content: 'nested 2 - constrained to parent (default)', subGrid: {children: sub2, dragOut: false, class: 'nested2', ...subOptions}},
+    ]};
 
-    let grid = GridStack.init({cellHeight: 70});
-    grid.load(items);
+    GridStack.addGrid(document.querySelector('.container-fluid'), layout);
 
-    addNewWidget = function(grid) {
+    addNewWidget = function(selector) {
+      grid = document.querySelector(selector).gridstack;
       let node = {
         x: Math.round(12 * Math.random()),
         y: Math.round(5 * Math.random()),
         w: Math.round(1 + 3 * Math.random()),
-        h: Math.round(1 + 3 * Math.random())
+        h: Math.round(1 + 3 * Math.random()),
+        content: count++
       };
-      // Note: we have additional style .sub here so add the HTML passed directly...
-      grid.addWidget('<div class="grid-stack-item sub"><div class="grid-stack-item-content">' + count++ + '</div></div>', node);
+      grid.addWidget(node);
       return false;
     };
   </script>
