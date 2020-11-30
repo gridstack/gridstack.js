@@ -74,7 +74,9 @@ gridstack.js API
   * a string (ex: '100px', '10em', '10rem', '10%', `10vh')
   * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
   * `'auto'` - height will be square cells initially.
+- `children`?: GridStackWidget[] - list of children item to create when calling load() or addGrid()
 - `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
+- `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minW (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
@@ -130,6 +132,7 @@ You need to add `noResize` and `noMove` attributes to completely lock the widget
 - `resizeHandles` - sets resize handles for a specific widget.
 - `id`- (number | string) good for quick identification (for example in change event)
 - `content` - (string) html content to be added when calling `grid.load()/addWidget()` as content inside the item
+- `subGrid`: GridStackOptions - optional nested grid options and list of children
 
 ## Item attributes
 

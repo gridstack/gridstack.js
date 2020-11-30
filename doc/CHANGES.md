@@ -44,7 +44,8 @@ Change log
 
 ## 3.3.0-dev
 
-- TBD
+- add new `addGrid(parent, opts)` to create a grid and load children, which is used by `load()` to supports nested grids creation. see [nested.html](https://github.com/gridstack/gridstack.js/blob/develop/demo/nested.html) demo.
+
 ## 3.3.0 (2020-11-29)
 
 - the big news is we finally have a native HTML5 drag&drop plugin (zero jquery)! Huge thanks to [@rhlin](https://github.com/rhlin) for creating this in stealth mode. Read all about it in main doc.
