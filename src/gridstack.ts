@@ -329,7 +329,7 @@ export class GridStack {
       let content = els ? (els as GridStackWidget).content || '' : '';
       options = els;
       let doc = document.implementation.createHTMLDocument();
-      doc.body.innerHTML = `<div class="grid-stack-item"><div class="grid-stack-item-content">${content}</div></div>`;
+      doc.body.innerHTML = `<div class="grid-stack-item ${this.opts.itemClass || ''}"><div class="grid-stack-item-content">${content}</div></div>`;
       el = doc.body.children[0] as HTMLElement;
     } else {
       el = els as HTMLElement;
@@ -373,6 +373,28 @@ export class GridStack {
   }
 
   /**
+   * call to create a grid with the given options, including loading any children
+   * @param parent HTML element parent to the grid
+   * @param opt grids options used to initialize the grid, and list of children
+   */
+  public addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack {
+    if (!parent) { return null; }
+
+    // create the grid element
+    let doc = document.implementation.createHTMLDocument();
+    doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
+    let el = doc.body.children[0] as HTMLElement;
+    parent.append(el);
+
+    // create grid class and load any children
+    let grid = GridStack.init(opt, el);
+    if (opt.children) {
+      grid.load(opt.children);
+    }
+    return grid;
+  }
+
+  /**
    * load the widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
    *
    * @param layout list of widgets definition to update/create
@@ -382,7 +404,7 @@ export class GridStack {
    * @example
    * see http://gridstackjs.com/demo/serialization.html
    **/
-  public load(layout: GridStackWidget[], addAndRemove: boolean | ((w: GridStackWidget, add: boolean) => void)  = true): GridStack {
+  public load(layout: GridStackWidget[], addAndRemove: boolean | ((g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement)  = true): GridStack {
     let items = GridStack.Utils.sort(layout, -1, this._prevColumn || this.opts.column);
 
     // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
@@ -394,6 +416,7 @@ export class GridStack {
 
     let removed: GridStackNode[] = [];
     this.batchUpdate();
+
     // see if any items are missing from new layout and need to be removed first
     if (addAndRemove) {
       let copyNodes = [...this.engine.nodes]; // don't loop through array you modify
@@ -401,7 +424,7 @@ export class GridStack {
         let item = items.find(w => n.id === w.id);
         if (!item) {
           if (typeof(addAndRemove) === 'function') {
-            addAndRemove(n, false);
+            addAndRemove(this, n, false);
           } else {
             removed.push(n); // batch keep track
             this.removeWidget(n.el, true, false);
@@ -409,19 +432,31 @@ export class GridStack {
         }
       });
     }
+
     // now add/update the widgets
     items.forEach(w => {
       let item = (w.id || w.id === 0) ? this.engine.nodes.find(n => n.id === w.id) : undefined;
       if (item) {
         this.update(item.el, w);
+        if (w.subGrid && w.subGrid.children) { // update any sub grid as well
+          let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
+          if (sub && sub.gridstack) {
+            sub.gridstack.load(w.subGrid.children); // TODO: support updating grid options ?
+          }
+        }
       } else if (addAndRemove) {
         if (typeof(addAndRemove) === 'function') {
-          addAndRemove(w, true);
+          w = addAndRemove(this, w, true).gridstackNode;
         } else {
-          this.addWidget(w);
+          w = this.addWidget(w).gridstackNode;
+        }
+        if (w.subGrid) { // see if there is a sub-grid to create too
+          let content = w.el.querySelector('.grid-stack-item-content') as HTMLElement;
+          this.addGrid(content, w.subGrid);
         }
       }
     });
+
     this.engine.removedNodes = removed;
     this.commit();
 

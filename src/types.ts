@@ -59,8 +59,14 @@ export interface GridStackOptions {
   /** (internal) unit for cellHeight (default? 'px') which is set when a string cellHeight with a unit is passed (ex: '10rem') */
   cellHeightUnit?: string;
 
+  /** list of children item to create when calling load() or addGrid() */
+  children?: GridStackWidget[];
+
   /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns */
   column?: number;
+
+  /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance */
+  class?: string;
 
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
@@ -212,6 +218,8 @@ export interface GridStackWidget {
   id?: numberOrString;
   /** html to append inside as content */
   content?: string;
+  /** optional nested grid options and list of children */
+  subGrid?: GridStackOptions;
 }
 
 /** Drag&Drop resize options */

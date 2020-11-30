@@ -607,10 +607,10 @@ describe('gridstack', function() {
       let items = Utils.getElements('.grid-stack-item');
       for (let i = 0; i < items.length; i++) {
         grid
-          .minW(items[i], 2)
-          .maxW(items[i], 3)
-          .minH(items[i], 4)
-          .maxH(items[i], 5);
+          .minWidth(items[i], 2)
+          .maxWidth(items[i], 3)
+          .minHeight(items[i], 4)
+          .maxHeight(items[i], 5);
       }
       for (let j = 0; j < items.length; j++) {
         expect(parseInt(items[j].getAttribute('gs-min-w'), 10)).toBe(2);
@@ -620,10 +620,10 @@ describe('gridstack', function() {
       }
       // remove all constrain
       grid
-        .minW('grid-stack-item', 0)
-        .maxW('.grid-stack-item', null)
-        .minH('grid-stack-item', undefined)
-        .maxH(undefined, 0);
+        .minWidth('grid-stack-item', 0)
+        .maxWidth('.grid-stack-item', null)
+        .minHeight('grid-stack-item', undefined)
+        .maxHeight(undefined, 0);
       for (let j = 0; j < items.length; j++) {
         expect(items[j].getAttribute('gs-min-w')).toBe(null);
         expect(items[j].getAttribute('gs-max-w')).toBe(null);
@@ -1753,7 +1753,7 @@ describe('gridstack', function() {
     });
     it('load size 1 item only with callback', function() {
       let grid = GridStack.init();
-      grid.load([{h:3, id:'gsItem1'}], () => {});
+      grid.load([{h:3, id:'gsItem1'}], () => null);
       let layout = grid.save(false);
       expect(layout).toEqual([{x:0, y:0, w:4, h:3, id:'gsItem1'}, {x:4, y:0, w:4, h:4, id:'gsItem2'}]);
     });
