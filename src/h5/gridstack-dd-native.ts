@@ -24,7 +24,7 @@ export class GridStackDDNative extends GridStackDD {
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDDNative {
     this._getDDElements(el).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
-        dEl.ddResizable[opts]();
+        dEl.ddResizable && dEl.ddResizable[opts]();
       } else if (opts === 'destroy') {
         if (dEl.ddResizable) {
           dEl.cleanResizable();
