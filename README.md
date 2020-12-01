@@ -326,7 +326,9 @@ var grid = $('.grid-stack').data('gridstack');
 var grid = GridStack.init(opts?, element?);
 
 // returns DOM element
-grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {w: 2});
+grid.addWidget('<div><div class="grid-stack-item-content"> test </div></div>', {width: 2});
+// Note: in 3.x it's ever simpler 
+// grid.addWidget({w:2, content: 'test'})
 
 // event handler
 grid.on('added', function(e, items) {/* items contains info */});
