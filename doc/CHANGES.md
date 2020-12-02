@@ -44,7 +44,10 @@ Change log
 
 ## 3.3.0-dev
 
-- add new `addGrid(parent, opts)` to create a grid and load children, which is used by `load()` to supports nested grids creation. see [nested.html](https://github.com/gridstack/gridstack.js/blob/develop/demo/nested.html) demo.
+- add new `addGrid(parent, opts)` to create a grid and load children instead of `init() + load()`, which is used by `load()` to supports nested grids creation.
+see [nested.html](https://github.com/gridstack/gridstack.js/blob/develop/demo/nested.html) demo.
+- `save()` will now work on nested grids, recursively saving info. added flag to also allow saving the current grid options + children
+(needed for nested grids) so you can now call new `adddGrid()` to re-create everything from JSON.
 
 ## 3.3.0 (2020-11-29)
 

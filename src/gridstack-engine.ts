@@ -368,13 +368,13 @@ export class GridStackEngine {
       0,
       this.nodes.map(n => {
         if (n === node) {
-          clonedNode = Utils.clone(n);
+          clonedNode = {...n};
           return clonedNode;
         }
-        return Utils.clone(n);
+        return {...n};
       }));
 
-    if (!clonedNode) {  return true;}
+    if (!clonedNode) {return true}
 
     clone.moveNode(clonedNode, x, y, w, h);
 
@@ -401,7 +401,7 @@ export class GridStackEngine {
       null,
       this.float,
       0,
-      this.nodes.map(n => Utils.clone(n)));
+      this.nodes.map(n => {return {...n}}));
     clone.addNode(node);
     return clone.getRow() <= this.maxRow;
   }

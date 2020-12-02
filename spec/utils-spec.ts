@@ -111,18 +111,6 @@ describe('gridstack utils', function() {
     });
   });
 
-  describe('clone', function() {
-    it('should match content', function() {
-      let a = [1,2,3];
-      let v1 = {one: 1, two: 'two', three: a};
-      let v2: any = Utils.clone(v1);
-      expect(v1 === v2).toBeFalse();
-      expect(v1.one).toEqual(v2.one);
-      expect(v1.two).toEqual(v2.two);
-      expect(v1.three).toEqual(v2.three);
-    });
-  });
-
   describe('removePositioningStyles', function() {
     it('should remove styles', function() {
       let doc = document.implementation.createHTMLDocument();

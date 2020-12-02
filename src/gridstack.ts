@@ -40,6 +40,55 @@ interface GridCSSStyleSheet extends CSSStyleSheet {
   _max?: number; // internal tracker of the max # of rows we created\
 }
 
+// default values for grid options - used during init and when saving out
+const GridDefaults: GridStackOptions = {
+  column: 12,
+  minRow: 0,
+  maxRow: 0,
+  itemClass: 'grid-stack-item',
+  placeholderClass: 'grid-stack-placeholder',
+  placeholderText: '',
+  handle: '.grid-stack-item-content',
+  handleClass: null,
+  styleInHead: false,
+  cellHeight: 'auto',
+  margin: 10,
+  auto: true,
+  minWidth: 768,
+  float: false,
+  staticGrid: false,
+  animate: true,
+  alwaysShowResizeHandle: false,
+  resizable: {
+    autoHide: true,
+    handles: 'se'
+  },
+  draggable: {
+    handle: '.grid-stack-item-content',
+    scroll: false,
+    appendTo: 'body'
+  },
+  dragIn: undefined,
+  dragInOptions : {
+    revert: 'invalid',
+    handle: '.grid-stack-item-content',
+    scroll: false,
+    appendTo: 'body'
+  },
+  disableDrag: false,
+  disableResize: false,
+  rtl: 'auto',
+  removable: false,
+  removableOptions: {
+    accept: '.grid-stack-item'
+  },
+  removeTimeout: 2000,
+  marginUnit: 'px',
+  cellHeightUnit: 'px',
+  disableOneColumnMode: false,
+  oneColumnModeDomSort: false
+};
+
 /**
  * Main gridstack class - you will need to call `GridStack.init()` first to initialize your grid.
  * Note: your grid elements MUST have the following classes for the CSS layout to work:
@@ -77,7 +126,7 @@ export class GridStack {
       return null;
     }
     if (!el.gridstack) {
-      el.gridstack = new GridStack(el, Utils.clone(options));
+      el.gridstack = new GridStack(el, {...options});
     }
     return el.gridstack
   }
@@ -95,7 +144,7 @@ export class GridStack {
     let grids: GridStack[] = [];
     GridStack.getGridElements(selector).forEach(el => {
       if (!el.gridstack) {
-        el.gridstack = new GridStack(el, Utils.clone(options));
+        el.gridstack = new GridStack(el, {...options});
       }
       grids.push(el.gridstack);
     });
@@ -183,24 +232,12 @@ export class GridStack {
     let rowAttr = Utils.toNumber(el.getAttribute('gs-row'));
 
     // elements attributes override any passed options (like CSS style) - merge the two together
-    let defaults: GridStackOptions = {
+    let defaults: GridStackOptions = {...GridDefaults,
       column: Utils.toNumber(el.getAttribute('gs-column')) || 12,
       minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-min-row')) || 0,
       maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-max-row')) || 0,
-      itemClass: 'grid-stack-item',
-      placeholderClass: 'grid-stack-placeholder',
-      placeholderText: '',
-      handle: '.grid-stack-item-content',
-      handleClass: null,
-      styleInHead: false,
-      cellHeight: 'auto',
-      margin: 10,
-      auto: true,
-      minWidth: 768,
-      float: false,
       staticGrid: Utils.toBool(el.getAttribute('gs-static')) || false,
-      _class: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
-      animate: true,
+      _styleSheetClass: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
       alwaysShowResizeHandle: opts.alwaysShowResizeHandle || false,
       resizable: {
         autoHide: !(opts.alwaysShowResizeHandle || false),
@@ -211,27 +248,11 @@ export class GridStack {
         scroll: false,
         appendTo: 'body'
       },
-      dragIn: undefined,
-      dragInOptions : {
-        revert: 'invalid',
-        handle: '.grid-stack-item-content',
-        scroll: false,
-        appendTo: 'body'
-      },
-      disableDrag: false,
-      disableResize: false,
-      rtl: 'auto',
-      removable: false,
       removableOptions: {
         accept: '.' + (opts.itemClass || 'grid-stack-item')
       },
-      removeTimeout: 2000,
-      marginUnit: 'px',
-      cellHeightUnit: 'px',
-      disableOneColumnMode: false,
-      oneColumnModeDomSort: false
     };
-    if (el.getAttribute('gs-animate')) {
+    if (el.getAttribute('gs-animate')) { // default to true, but if set to false use that instead
       defaults.animate = Utils.toBool(el.getAttribute('gs-animate'))
     }
 
@@ -247,8 +268,11 @@ export class GridStack {
       this.el.classList.add('grid-stack-rtl');
     }
 
-    this.opts._isNested = Utils.closestByClass(this.el, this.opts.itemClass) !== null;
-    if (this.opts._isNested) {
+    // check if we're been nested, and if so update our style and keep pointer around (used during save)
+    let parentGridItemEl = Utils.closestByClass(this.el, GridDefaults.itemClass) as GridItemHTMLElement;
+    if (parentGridItemEl && parentGridItemEl.gridstackNode) {
+      this.opts._isNested = parentGridItemEl.gridstackNode;
+      this.opts._isNested.subGrid = this;
       this.el.classList.add('grid-stack-nested');
     }
 
@@ -262,7 +286,7 @@ export class GridStack {
       this.cellHeight(this.opts.cellHeight, false);
     }
 
-    this.el.classList.add(this.opts._class);
+    this.el.classList.add(this.opts._styleSheetClass);
 
     this._setStaticClass();
     this._updateStyles();
@@ -379,9 +403,15 @@ export class GridStack {
     return el;
   }
 
-  /** saves the current layout returning a list of widgets for serialization */
-  public save(saveContent = true): GridStackWidget[] {
+  /**
+   * saves the current layout returning a list of widgets for serialization (with default to save content), which might include any nested grids.
+   * Optionally you can also save the grid with options itself, so you can call the new GridStack.addGrid()
+   * to recreate everything from scratch. GridStackOptions.children would then contain the widget list.
+   */
+  public save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions {
+    // return copied nodes we can modify at will...
     let list = this.engine.save(saveContent);
+
     // check for HTML content as well
     if (saveContent) {
       list.forEach(n => {
@@ -393,6 +423,30 @@ export class GridStack {
         }
       });
     }
+
+    // check if save entire grid options (needed for recursive) + children...
+    if (saveGridOpt) {
+
+      // check for nested grid
+      list.forEach(n => {
+        if (n.subGrid) {
+          n.subGrid = (n.subGrid as GridStack).save(saveContent, true) as GridStackOptions;
+        }
+      })
+
+      let o: GridStackOptions = {...this.opts};
+      // delete default values that will be recreated on launch
+      if (o.marginBottom === o.marginTop && o.marginRight === o.marginLeft && o.marginTop === o.marginRight) {
+        o.margin = o.marginTop;
+        delete o.marginTop; delete o.marginRight; delete o.marginBottom; delete o.marginLeft;
+      }
+      if (o.rtl === (this.el.style.direction === 'rtl')) { o.rtl = 'auto' }
+      if (this._isAutoCellHeight) { o.cellHeight = 'auto' }
+      Utils.removeInternalAndSame(o, GridDefaults);
+      o.children = list;
+      return o;
+    }
+
     return list;
   }
 
@@ -440,10 +494,10 @@ export class GridStack {
       let item = (w.id || w.id === 0) ? this.engine.nodes.find(n => n.id === w.id) : undefined;
       if (item) {
         this.update(item.el, w);
-        if (w.subGrid && w.subGrid.children) { // update any sub grid as well
+        if (w.subGrid && (w.subGrid as GridStackOptions).children) { // update any sub grid as well
           let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
           if (sub && sub.gridstack) {
-            sub.gridstack.load(w.subGrid.children); // TODO: support updating grid options ?
+            sub.gridstack.load((w.subGrid as GridStackOptions).children); // TODO: support updating grid options ?
           }
         }
       } else if (addAndRemove) {
@@ -454,7 +508,7 @@ export class GridStack {
         }
         if (w.subGrid) { // see if there is a sub-grid to create too
           let content = w.el.querySelector('.grid-stack-item-content') as HTMLElement;
-          GridStack.addGrid(content, w.subGrid);
+          w.subGrid = GridStack.addGrid(content, w.subGrid as GridStackOptions);
         }
       }
     });
@@ -600,22 +654,26 @@ export class GridStack {
   }
 
   /**
-   * Destroys a grid instance.
-   * @param removeDOM if `false` grid and items elements will not be removed from the DOM (Optional. Default `true`).
+   * Destroys a grid instance. DO NOT CALL any methods or access any vars after this as it will free up members.
+   * @param removeDOM if `false` grid and items HTML elements will not be removed from the DOM (Optional. Default `true`).
    */
   public destroy(removeDOM = true): GridStack {
+    if (!this.el) { return; } // prevent multiple calls
     this._updateWindowResizeEvent(true);
     this.setStatic(true); // permanently removes DD
     if (!removeDOM) {
       this.removeAll(removeDOM);
-      this.el.classList.remove(this.opts._class);
-      delete this.el.gridstack;
+      this.el.classList.remove(this.opts._styleSheetClass);
     } else {
       this.el.parentNode.removeChild(this.el);
     }
     this._removeStylesheet();
+    delete this.opts._isNested;
+    delete this.opts;
     delete this.placeholder;
     delete this.engine;
+    delete this.el.gridstack; // remove circular dependency that would prevent a freeing
+    delete this.el;
     return this;
   }
 
@@ -1096,7 +1154,7 @@ export class GridStack {
 
     let cellHeight = this.opts.cellHeight as number;
     let cellHeightUnit = this.opts.cellHeightUnit;
-    let prefix = `.${this.opts._class} > .${this.opts.itemClass}`;
+    let prefix = `.${this.opts._styleSheetClass} > .${this.opts.itemClass}`;
 
     // create one as needed
     if (!this._styles) {
@@ -1116,7 +1174,7 @@ export class GridStack {
       let right: string = this.opts.marginRight + this.opts.marginUnit;
       let left: string = this.opts.marginLeft + this.opts.marginUnit;
       let content = `${prefix} > .grid-stack-item-content`;
-      let placeholder = `.${this.opts._class} > .grid-stack-placeholder > .placeholder-content`;
+      let placeholder = `.${this.opts._styleSheetClass} > .grid-stack-placeholder > .placeholder-content`;
       Utils.addCSSRule(this._styles, content, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
       Utils.addCSSRule(this._styles, placeholder, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
       // resize handles offset (to match margin)
@@ -1281,6 +1339,8 @@ export class GridStack {
    * and remember the prev columns we used, as well as check for auto cell height (square)
    */
   public onParentResize(): GridStack {
+    if (!this.el) {return} // return if we're gone
+
     // make the cells content (minus margin) square again
     if (this._isAutoCellHeight) {
       Utils.throttle(() => {

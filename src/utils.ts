@@ -223,18 +223,27 @@ export class Utils {
     return true;
   }
 
-  /** makes a shallow copy of the passed json struct */
-  // eslint-disable-next-line
-  static clone(target: {}): {} {
-    return {...target};
+  /** removes field from the first object if same as the second objects (like diffing) and internal '_' for saving */
+  static removeInternalAndSame(a: unknown, b: unknown):void {
+    if (typeof a !== 'object' || typeof b !== 'object') return;
+    for (let key in a) {
+      let val = a[key];
+      if (val && typeof val === 'object') {
+        for (let i in val) {
+          if (val[i] === b[key][i] || i[0] === '_') { delete val[i] }
+        }
+        if (!Object.keys(val).length) { delete a[key] }
+      } else if (val === b[key] || key[0] === '_') { delete a[key] }
+    }
   }
 
   /** return the closest parent matching the given class */
   static closestByClass(el: HTMLElement, name: string): HTMLElement {
-    el = el.parentElement;
-    if (!el) return null;
-    if (el.classList.contains(name)) return el;
-    return Utils.closestByClass(el, name);
+
+    while(el = el.parentElement) {
+      if (el.classList.contains(name)) return el;
+    }
+    return null;
   }
 
   /** delay calling the given function by certain amount of time */
