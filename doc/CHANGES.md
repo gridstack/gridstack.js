@@ -48,6 +48,7 @@ Change log
 see [nested.html](https://github.com/gridstack/gridstack.js/blob/develop/demo/nested.html) demo.
 - `save()` will now work on nested grids, recursively saving info. added flag to also allow saving the current grid options + children
 (needed for nested grids) so you can now call new `adddGrid()` to re-create everything from JSON.
+- fix [1505](https://github.com/gridstack/gridstack.js/issues/1505) don't call `movable()`/`resizable()` on locked items error. thanks [@infime](https://github.com/infime)
 
 ## 3.3.0 (2020-11-29)
 
