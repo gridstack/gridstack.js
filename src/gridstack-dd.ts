@@ -502,10 +502,10 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
  * @param val if true widget will be draggable.
  */
 GridStack.prototype.movable = function(els: GridStackElement, val: boolean): GridStack {
-  if (val && this.opts.staticGrid) { return this; } // can't move a static grid!
+  if (this.opts.staticGrid) { return this; } // can't move a static grid!
   GridStack.getElements(els).forEach(el => {
     let node = el.gridstackNode;
-    if (!node) { return }
+    if (!node || node.locked) { return }
     node.noMove = !(val || false);
     if (node.noMove) {
       GridStackDD.get().draggable(el, 'disable');
@@ -525,10 +525,10 @@ GridStack.prototype.movable = function(els: GridStackElement, val: boolean): Gri
  * @param val  if true widget will be resizable.
  */
 GridStack.prototype.resizable = function(els: GridStackElement, val: boolean): GridStack {
-  if (val && this.opts.staticGrid) { return this; } // can't resize a static grid!
+  if (this.opts.staticGrid) { return this; } // can't resize a static grid!
   GridStack.getElements(els).forEach(el => {
     let node = el.gridstackNode;
-    if (!node) { return; }
+    if (!node || node.locked) { return; }
     node.noResize = !(val || false);
     if (node.noResize) {
       GridStackDD.get().resizable(el, 'disable');

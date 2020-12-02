@@ -678,12 +678,16 @@ export class GridStack {
   }
 
   /**
-   * Disables widgets moving/resizing. This is a shortcut for:
+   * Temporarily disables widgets moving/resizing.
+   * If you want a more permanent way (which freezes up resources) use `setStatic(true)` instead.
+   * Note: no-op for static grid
+   * This is a shortcut for:
    * @example
    *  grid.enableMove(false);
    *  grid.enableResize(false);
    */
   public disable(): GridStack {
+    if (this.opts.staticGrid) { return; }
     this.enableMove(false);
     this.enableResize(false);
     this._triggerEvent('disable');
@@ -691,12 +695,15 @@ export class GridStack {
   }
 
   /**
-   * Enables widgets moving/resizing. This is a shortcut for:
+   * Re-enables widgets moving/resizing - see disable().
+   * Note: no-op for static grid.
+   * This is a shortcut for:
    * @example
    *  grid.enableMove(true);
    *  grid.enableResize(true);
    */
   public enable(): GridStack {
+    if (this.opts.staticGrid) { return; }
     this.enableMove(true);
     this.enableResize(true);
     this._triggerEvent('enable');
@@ -704,14 +711,14 @@ export class GridStack {
   }
 
   /**
-   * Enables/disables widget moving.
+   * Enables/disables widget moving. No-op for static grids.
    *
    * @param doEnable
    * @param includeNewWidgets will force new widgets to be draggable as per
    * doEnable`s value by changing the disableDrag grid option (default: true).
    */
   public enableMove(doEnable: boolean, includeNewWidgets = true): GridStack {
-    if (doEnable && this.opts.staticGrid) { return this; } // can't move a static grid!
+    if (this.opts.staticGrid) { return this; } // can't move a static grid!
     this.getGridItems().forEach(el => this.movable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableDrag = !doEnable;
@@ -720,13 +727,13 @@ export class GridStack {
   }
 
   /**
-   * Enables/disables widget resizing
+   * Enables/disables widget resizing. No-op for static grids.
    * @param doEnable
    * @param includeNewWidgets will force new widgets to be draggable as per
    * doEnable`s value by changing the disableResize grid option (default: true).
    */
   public enableResize(doEnable: boolean, includeNewWidgets = true): GridStack {
-    if (doEnable && this.opts.staticGrid) { return this; } // can't size a static grid!
+    if (this.opts.staticGrid) { return this; } // can't size a static grid!
     this.getGridItems().forEach(el => this.resizable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableResize = !doEnable;
@@ -1465,13 +1472,13 @@ export class GridStack {
   /* eslint-disable @typescript-eslint/no-unused-vars */
 
   /**
-   * Enables/Disables moving.
+   * Enables/Disables moving. No-op for static grids.
    * @param els widget or selector to modify.
    * @param val if true widget will be draggable.
    */
   public movable(els: GridStackElement, val: boolean): GridStack { return this; }
   /**
-   * Enables/Disables resizing.
+   * Enables/Disables resizing. No-op for static grids.
    * @param els  widget or selector to modify
    * @param val  if true widget will be resizable.
    */

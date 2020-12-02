@@ -24,11 +24,9 @@ export class GridStackDDNative extends GridStackDD {
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDDNative {
     this._getDDElements(el).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
-        dEl.ddResizable && dEl.ddResizable[opts]();
+        dEl.ddResizable && dEl.ddResizable[opts](); // can't create DD as it requires options for setupResizable()
       } else if (opts === 'destroy') {
-        if (dEl.ddResizable) {
-          dEl.cleanResizable();
-        }
+        dEl.ddResizable && dEl.cleanResizable();
       } else if (opts === 'option') {
         dEl.setupResizable({ [key]: value });
       } else {
@@ -51,11 +49,9 @@ export class GridStackDDNative extends GridStackDD {
   public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDDNative {
     this._getDDElements(el).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
-        dEl.ddDraggable && dEl.ddDraggable[opts]();
+        dEl.ddDraggable && dEl.ddDraggable[opts](); // can't create DD as it requires options for setupDraggable()
       } else if (opts === 'destroy') {
-        if (dEl.ddDraggable) { // error to call destroy if not there
-          dEl.cleanDraggable();
-        }
+        dEl.ddDraggable && dEl.cleanDraggable();
       } else if (opts === 'option') {
         dEl.setupDraggable({ [key]: value });
       } else {
