@@ -1036,7 +1036,7 @@ describe('gridstack', function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
-      //document.body.removeChild(document.getElementsByClassName('grid-stack')[0]);
+      document.getElementById('gs-cont').remove();
     });
     it('should cleanup gridstack', function() {
       let options = {
@@ -1044,8 +1044,10 @@ describe('gridstack', function() {
         margin: 5
       };
       let grid = GridStack.init(options);
+      let gridEl = grid.el;
       grid.destroy();
-      expect(grid.el.parentElement).toBe(null);
+      expect(gridEl.parentElement).toBe(null);
+      expect(grid.el).toBe(undefined);
       expect(grid.engine).toBe(undefined);
     });
     it('should cleanup gridstack but leave elements', function() {
@@ -1054,11 +1056,13 @@ describe('gridstack', function() {
         margin: 5
       };
       let grid = GridStack.init(options);
+      let gridEl = grid.el;
       grid.destroy(false);
-      expect(grid.el.parentElement).not.toBe(null);
+      expect(gridEl.parentElement).not.toBe(null);
       expect(Utils.getElements('.grid-stack-item').length).toBe(2);
+      expect(grid.el).toBe(undefined);
       expect(grid.engine).toBe(undefined);
-      grid.destroy();
+      grid.destroy(); // sanity check for call twice!
     });
   });
 
@@ -1661,7 +1665,9 @@ describe('gridstack', function() {
       document.body.insertAdjacentHTML('afterbegin', gridHTML);
     });
     afterEach(function() {
-      document.body.removeChild(document.getElementById('gs-cont'));
+      let els = document.body.querySelectorAll('.grid-stack');
+      expect(els.length).toBe(2);
+      els.forEach(g => g.remove());
     });
     it('should not remove incorrect child', function() {
       let grids = GridStack.initAll();

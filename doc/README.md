@@ -21,6 +21,7 @@ gridstack.js API
   - [resizestart(event, el)](#resizestartevent-el)
   - [resizestop(event, el)](#resizestopevent-el)
 - [API](#api)
+  - [addGrid(parent: HTMLElement, opt: GridStackOptions)](#addgridparent-htmlelement-opt-gridstackoptions)
   - [addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
   - [batchUpdate()](#batchupdate)
   - [compact()](#compact)
@@ -248,6 +249,11 @@ grid.on('resizestop', function(event: Event, el: GridItemHTMLElement) {
 
 
 ## API
+
+### addGrid(parent: HTMLElement, opt: GridStackOptions) 
+
+create a grid under given parent, with given options and loading children recursively (for nested grids), instead of `init() + load()`. Used by `load()` to supports nested grids creation.
+see [nested.html](https://github.com/gridstack/gridstack.js/blob/develop/demo/nested.html) demo
 
 ### addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)
 

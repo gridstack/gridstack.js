@@ -14,11 +14,11 @@
     <h1>Serialization demo</h1>
     <a onClick="saveGrid()" class="btn btn-primary" href="#">Save</a>
     <a onClick="loadGrid()" class="btn btn-primary" href="#">Load</a>
-    <a onClick="saveGridManual()" class="btn btn-primary" href="#">Save Manual</a>
-    <a onClick="loadGridManual()" class="btn btn-primary" href="#">Load Manual</a>
+    <a onClick="saveFullGrid()" class="btn btn-primary" href="#">Save Full</a>
+    <a onClick="loadFullGrid()" class="btn btn-primary" href="#">Load Full</a>
     <a onClick="clearGrid()" class="btn btn-primary" href="#">Clear</a>
     <br/><br/>
-    <div class="grid-stack"></div>    
+    <div id="gridCont"><div class="grid-stack"></div></div>
     <hr/>
     <textarea id="saved-data" cols="100" rows="20" readonly="readonly"></textarea>
   </div>
@@ -41,54 +41,33 @@
     ];
     serializedData.forEach((n, i) =>
       n.content = `<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br> ${i}<br> ${n.content ? n.content : ''}`);
+    let serializedFull;
 
-    // NEW 2.x method
+    // 2.x method - just saving list of widgets with content (default)
     loadGrid = function() {
-      grid.load(serializedData, true);
+      grid.load(serializedData, true); // update things
     }
 
-    // NEW 2.x method
+    // 2.x method
     saveGrid = function() {
+      delete serializedFull;
       serializedData = grid.save();
       document.querySelector('#saved-data').value = JSON.stringify(serializedData, null, '  ');
     }
 
-    // old (pre 2.x) way to manually load a grid
-    loadGridManual = function() {
-      let items = GridStack.Utils.sort(serializedData);
-      grid.batchUpdate();
+    // 3.1 full method saving the grid options + children (which is recursive for nested grids)
+    saveFullGrid = function() {
+      serializedFull = grid.save(true, true);
+      serializedData = serializedFull.children;
+      document.querySelector('#saved-data').value = JSON.stringify(serializedFull, null, '  ');
+    }
 
-      if (grid.engine.nodes.length === 0) {
-        // load from empty
-        items.forEach(function (item) {
-          grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">' + item.id + '</div></div>', item);
-        });
-      } else {
-        // else update existing nodes (instead of calling grid.removeAll())
-        grid.engine.nodes.forEach(function (node) {
-          let item = items.find(function(e) { return e.id === node.id});
-          grid.move(node.el, item.x, item.y, item.w, item.h);
-        });
-      }
-
-      grid.commit();
-    };
-
-    // old (pre 2.x) way to manually save a grid
-    saveGridManual = function() {
-      serializedData = [];
-      grid.engine.nodes.forEach(function(node) {
-        serializedData.push({
-          x: node.x,
-          y: node.y,
-          w: node.w,
-          h: node.h,
-          id: node.id,
-          custom: 'save anything here'
-        });
-      });
-      document.querySelector('#saved-data').value = JSON.stringify(serializedData, null, '  ');
-    };
+    // 3.1 full method to reload from scratch - delete the grid and add it back from JSON
+    loadFullGrid = function() {
+      if (!serializedFull) return;
+      grid.destroy(true); // nuke everything
+      grid = GridStack.addGrid(document.querySelector('#gridCont'), serializedFull)
+    }
 
     clearGrid = function() {
       grid.removeAll();

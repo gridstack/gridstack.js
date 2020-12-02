@@ -177,10 +177,10 @@ export interface GridStackOptions {
   /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
   styleInHead?: boolean;
 
-  /** @internal */
-  _isNested?: boolean;
-  /** @internal */
-  _class?: string;
+  /** @internal point to a parent grid item if we're nested */
+  _isNested?: GridStackNode;
+  /** @internal unique class name for our generated CSS style sheet */
+  _styleSheetClass?: string;
 }
 
 
@@ -218,8 +218,8 @@ export interface GridStackWidget {
   id?: numberOrString;
   /** html to append inside as content */
   content?: string;
-  /** optional nested grid options and list of children */
-  subGrid?: GridStackOptions;
+  /** optional nested grid options and list of children, which then turns into actual instance at runtime */
+  subGrid?: GridStackOptions | GridStack;
 }
 
 /** Drag&Drop resize options */
