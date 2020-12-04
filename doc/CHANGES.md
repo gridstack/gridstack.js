@@ -5,8 +5,9 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.3.0-dev](#330-dev)
-- [3.3.0 (2020-11-29)](#330-2020-11-29)
+- [3.1.0-dev](#310-dev)
+- [3.1.0 (2020-12-4)](#310-2020-12-4)
+- [3.0.0 (2020-11-29)](#300-2020-11-29)
 - [2.2.0 (2020-11-7)](#220-2020-11-7)
 - [2.1.0 (2020-10-28)](#210-2020-10-28)
 - [2.0.2 (2020-10-05)](#202-2020-10-05)
@@ -42,15 +43,20 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 3.3.0-dev
+## 3.1.0-dev
+
+- TBD
+
+## 3.1.0 (2020-12-4)
 
 - add new `addGrid(parent, opts)` to create a grid and load children instead of `init() + load()`, which is used by `load()` to supports nested grids creation.
 see [nested.html](https://github.com/gridstack/gridstack.js/blob/develop/demo/nested.html) demo.
 - `save()` will now work on nested grids, recursively saving info. added flag to also allow saving the current grid options + children
 (needed for nested grids) so you can now call new `adddGrid()` to re-create everything from JSON.
 - fix [1505](https://github.com/gridstack/gridstack.js/issues/1505) don't call `movable()`/`resizable()` on locked items error. thanks [@infime](https://github.com/infime)
+- fix [1517](https://github.com/gridstack/gridstack.js/pull/1517) force typescript 3.6 as 3.7 has breaking change
 
-## 3.3.0 (2020-11-29)
+## 3.0.0 (2020-11-29)
 
 - the big news is we finally have a native HTML5 drag&drop plugin (zero jquery)! Huge thanks to [@rhlin](https://github.com/rhlin) for creating this in stealth mode. Read all about it in main doc.
 - we now have a React example, in addition to Vue - Angular is next!. thanks [@eloparco](https://github.com/eloparco)
