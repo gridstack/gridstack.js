@@ -11,6 +11,15 @@ import { GridStackNode, ColumnOptions, GridStackWidget } from './types';
 
 export type onChangeCB = (nodes: GridStackNode[], removeDOM?: boolean) => void;
 
+/** options used for creations - similar to GridStackOptions */
+export interface GridStackEngineOptions {
+  column?: number;
+  maxRow?: number;
+  float?: boolean;
+  nodes?: GridStackNode[];
+  onChange?: onChangeCB;
+}
+
 /**
  * Defines the GridStack engine that does most no DOM grid manipulation.
  * See GridStack methods and vars for descriptions.
@@ -21,7 +30,7 @@ export class GridStackEngine {
   public column: number;
   public maxRow: number;
   public nodes: GridStackNode[];
-  public onchange: onChangeCB;
+  public onChange: onChangeCB;
   public addedNodes: GridStackNode[] = [];
   public removedNodes: GridStackNode[] = [];
   public batchMode: boolean;
@@ -36,12 +45,12 @@ export class GridStackEngine {
   /** @internal */
   private static _idSeq = 1;
 
-  public constructor(column = 12, onchange?: onChangeCB, float = false, maxRow = 0, nodes: GridStackNode[] = []) {
-    this.column = column;
-    this.onchange = onchange;
-    this._float = float;
-    this.maxRow = maxRow;
-    this.nodes = nodes;
+  public constructor(opts: GridStackEngineOptions = {}) {
+    this.column = opts.column || 12;
+    this.onChange = opts.onChange;
+    this._float = opts.float;
+    this.maxRow = opts.maxRow;
+    this.nodes = opts.nodes || [];
   }
 
   public batchUpdate(): GridStackEngine {
@@ -278,8 +287,8 @@ export class GridStackEngine {
     if (this.batchMode) { return this }
     nodes = (nodes === undefined ? [] : (Array.isArray(nodes) ? nodes : [nodes]) );
     let dirtyNodes = nodes.concat(this.getDirtyNodes());
-    if (this.onchange) {
-      this.onchange(dirtyNodes, removeDOM);
+    if (this.onChange) {
+      this.onChange(dirtyNodes, removeDOM);
     }
     return this;
   }
@@ -328,9 +337,8 @@ export class GridStackEngine {
       this.removedNodes.push(node);
     }
     node._id = null; // hint that node is being removed
-    // TODO: .splice(findIndex(),1) would be faster but apparently there are cases we have 2 instances ! (see spec 'load add new, delete others')
-    // this.nodes = this.nodes.filter(n => n !== node);
-    this.nodes.splice(this.nodes.findIndex(n => n === node), 1);
+    // don't use 'faster' .splice(findIndex(),1) in case node isn't in our list, or in multiple times.
+    this.nodes = this.nodes.filter(n => n !== node);
     if (!this.float) {
       this._packNodes();
     }
@@ -354,59 +362,54 @@ export class GridStackEngine {
     if (!this.isNodeChangedPosition(node, x, y, w, h)) {
       return false;
     }
-    let hasLocked = Boolean(this.nodes.find(n => n.locked));
+    let hasLocked = this.nodes.some(n => n.locked);
 
     if (!this.maxRow && !hasLocked) {
       return true;
     }
 
     let clonedNode: GridStackNode;
-    let clone = new GridStackEngine(
-      this.column,
-      null,
-      this.float,
-      0,
-      this.nodes.map(n => {
+    let clone = new GridStackEngine({
+      column: this.column,
+      float: this.float,
+      nodes: this.nodes.map(n => {
         if (n === node) {
           clonedNode = {...n};
           return clonedNode;
         }
         return {...n};
-      }));
+      })
+    });
 
-    if (!clonedNode) {return true}
+    if (!clonedNode) return true;
 
     clone.moveNode(clonedNode, x, y, w, h);
 
     let canMove = true;
     if (hasLocked) {
-      canMove = canMove && !Boolean(clone.nodes.find(n => {
-        return n !== clonedNode && Boolean(n.locked) && Boolean(n._dirty);
-      }));
+      canMove = !clone.nodes.some(n => n.locked && n._dirty && n !== clonedNode);
     }
-    if (this.maxRow) {
-      canMove = canMove && (clone.getRow() <= this.maxRow);
+    if (this.maxRow && canMove) {
+      canMove = (clone.getRow() <= this.maxRow);
     }
 
     return canMove;
   }
 
-  public canBePlacedWithRespectToHeight(node: GridStackNode): boolean {
-    if (!this.maxRow) {
-      return true;
-    }
+  /** return true if can fit in grid height constrain only (always true if no maxRow) */
+  public willItFit(node: GridStackNode): boolean {
+    if (!this.maxRow) return true;
 
-    let clone = new GridStackEngine(
-      this.column,
-      null,
-      this.float,
-      0,
-      this.nodes.map(n => {return {...n}}));
+    let clone = new GridStackEngine({
+      column: this.column,
+      float: this.float,
+      nodes: this.nodes.map(n => {return {...n}})
+    });
     clone.addNode(node);
     return clone.getRow() <= this.maxRow;
   }
 
-  public isNodeChangedPosition(node: GridStackNode, x: number, y: number, w: number, h: number): boolean {
+  public isNodeChangedPosition(node: GridStackNode, x: number, y: number, w?: number, h?: number): boolean {
     if (typeof x !== 'number') { x = node.x; }
     if (typeof y !== 'number') { y = node.y; }
     if (typeof w !== 'number') { w = node.w; }

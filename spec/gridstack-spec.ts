@@ -566,11 +566,11 @@ describe('gridstack', function() {
     it('willItFit()', function() {
       // default 4x2 and 4x4 so anything pushing more than 1 will fail
       let grid = GridStack.init({maxRow: 5});
-      expect(grid.willItFit(0, 0, 1, 1, false)).toBe(true);
-      expect(grid.willItFit(0, 0, 1, 3, false)).toBe(true);
-      expect(grid.willItFit(0, 0, 1, 4, false)).toBe(false);
-      expect(grid.willItFit(0, 0, 12, 1, false)).toBe(true);
-      expect(grid.willItFit(0, 0, 12, 2, false)).toBe(false);
+      expect(grid.willItFit({x:0, y:0, w:1, h:1})).toBe(true);
+      expect(grid.willItFit({x:0, y:0, w:1, h:3})).toBe(true);
+      expect(grid.willItFit({x:0, y:0, w:1, h:4})).toBe(false);
+      expect(grid.willItFit({x:0, y:0, w:12, h:1})).toBe(true);
+      expect(grid.willItFit({x:0, y:0, w:12, h:2})).toBe(false);
     });
 
   });
@@ -1773,6 +1773,11 @@ describe('gridstack', function() {
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('willItFit() legacy', function() {
+      let grid = GridStack.init({maxRow: 5});
+      expect((grid as any).willItFit(0, 0, 1, 3, false)).toBe(true);
+      expect((grid as any).willItFit(0, 0, 1, 4, false)).toBe(false);
     });
     /* saving as example
     it('warning if OLD setGridWidth is called', function() {

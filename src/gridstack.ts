@@ -291,19 +291,24 @@ export class GridStack {
     this._setStaticClass();
     this._updateStyles();
 
-    this.engine = new GridStackEngine(this.opts.column, (cbNodes, removeDOM = true) => {
-      let maxH = 0;
-      this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
-      cbNodes.forEach(n => {
-        let el = n.el;
-        if (removeDOM && n._id === null) {
-          if (el && el.parentNode) { el.parentNode.removeChild(el) }
-        } else {
-          this._writeAttrs(el, n.x, n.y, n.w, n.h);
-        }
-      });
-      this._updateStyles(false, maxH); // false = don't recreate, just append if need be
-    }, this.opts.float, this.opts.maxRow);
+    this.engine = new GridStackEngine({
+      column: this.opts.column,
+      float: this.opts.float,
+      maxRow: this.opts.maxRow,
+      onChange: (cbNodes, removeDOM = true) => {
+        let maxH = 0;
+        this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
+        cbNodes.forEach(n => {
+          let el = n.el;
+          if (removeDOM && n._id === null) {
+            if (el && el.parentNode) { el.parentNode.removeChild(el) }
+          } else {
+            this._writeAttrs(el, n.x, n.y, n.w, n.h);
+          }
+        });
+        this._updateStyles(false, maxH); // false = don't recreate, just append if need be
+      }
+    });
 
     if (this.opts.auto) {
       let elements: {el: HTMLElement; i: number}[] = [];
@@ -341,7 +346,7 @@ export class GridStack {
    * add a new widget and returns it.
    *
    * Widget will be always placed even if result height is more than actual grid height.
-   * You need to use willItFit method before calling addWidget for additional check.
+   * You need to use `willItFit()` before calling addWidget for additional check.
    * See also `makeWidget()`.
    *
    * @example
@@ -1071,24 +1076,27 @@ export class GridStack {
   public getMargin(): number { return this.opts.margin as number; }
 
   /**
-   * Returns true if the height of the grid will be less the vertical
+   * Returns true if the height of the grid will be less than the vertical
    * constraint. Always returns true if grid doesn't have height constraint.
-   * @param x new position x. If value is null or undefined it will be ignored.
-   * @param y new position y. If value is null or undefined it will be ignored.
-   * @param w new dimensions width. If value is null or undefined it will be ignored.
-   * @param h new dimensions height. If value is null or undefined it will be ignored.
-   * @param autoPosition if true then x, y parameters will be ignored and widget
-   * will be places on the first available position
+   * @param node contains x,y,w,h,auto-position options
    *
    * @example
-   * if (grid.willItFit(newNode.x, newNode.y, newNode.w, newNode.h, newNode.autoPosition)) {
-   *   grid.addWidget(newNode);
+   * if (grid.willItFit(newWidget)) {
+   *   grid.addWidget(newWidget);
    * } else {
    *   alert('Not enough free space to place the widget');
    * }
    */
-  public willItFit(x: number, y: number, w: number, h: number, autoPosition: boolean): boolean {
-    return this.engine.canBePlacedWithRespectToHeight({x, y, w, h, autoPosition});
+  public willItFit(node: GridStackWidget): boolean {
+    // support legacy call for now
+    if (arguments.length > 1) {
+      console.warn('gridstack.ts: `willItFit(x,y,w,h,autoPosition)` is deprecated. Use `willItFit({x, y,...})`. It will be removed soon');
+      // eslint-disable-next-line prefer-rest-params
+      let a = arguments, i = 0,
+        w: GridStackWidget = { x:a[i++], y:a[i++], w:a[i++], h:a[i++], autoPosition:a[i++] };
+      return this.willItFit(w);
+    }
+    return this.engine.willItFit(node);
   }
 
   /** @internal */
@@ -1276,7 +1284,7 @@ export class GridStack {
     if (!node) return this;
     this._writeAttrs(el, node.x, node.y, node.w, node.h);
 
-    let attrs /*: GridStackWidget*/ = { // remaining attributes
+    let attrs /*: like GridStackWidget but strings */ = { // remaining attributes
       autoPosition: 'gs-auto-position',
       minW: 'gs-min-w',
       minH: 'gs-min-h',
