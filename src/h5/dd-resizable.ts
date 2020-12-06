@@ -38,10 +38,10 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   private temporalRect: Rect;
   /** @internal */
   private startEvent: MouseEvent;
+  /** @internal value saved in the same order as _originStyleProp[] */
+  private elOriginStyleVal: string[];
   /** @internal */
-  private elOriginStyle;
-  /** @internal */
-  private parentOriginStylePosition;
+  private parentOriginStylePosition: string;
   /** @internal */
   private static _originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
 
@@ -193,7 +193,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   private _setupHelper(): DDResizable {
-    this.elOriginStyle = DDResizable._originStyleProp.map(prop => this.el.style[prop]);
+    this.elOriginStyleVal = DDResizable._originStyleProp.map(prop => this.el.style[prop]);
     this.parentOriginStylePosition = this.el.parentElement.style.position;
     if (window.getComputedStyle(this.el.parentElement).position.match(/static/)) {
       this.el.parentElement.style.position = 'relative';
@@ -206,8 +206,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   private _cleanHelper(): DDResizable {
-    DDResizable._originStyleProp.forEach(prop => {
-      this.el.style[prop] = this.elOriginStyle[prop] || null;
+    DDResizable._originStyleProp.forEach((prop, i) => {
+      this.el.style[prop] = this.elOriginStyleVal[i] || null;
     });
     this.el.parentElement.style.position = this.parentOriginStylePosition || null;
     return this;
