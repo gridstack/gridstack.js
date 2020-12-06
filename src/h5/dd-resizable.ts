@@ -242,13 +242,13 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     const reshape = this._getReShapeSize(newRect.width, newRect.height);
     if (newRect.width !== reshape.width) {
       if (dir.indexOf('w') > -1) {
-        newRect.left += reshape.width - newRect.width;
+        newRect.left += newRect.width - reshape.width;
       }
       newRect.width = reshape.width;
     }
     if (newRect.height !== reshape.height) {
       if (dir.indexOf('n') > -1) {
-        newRect.top += reshape.height - newRect.height;
+        newRect.top += newRect.height - reshape.height;
       }
       newRect.height = reshape.height;
     }
@@ -274,7 +274,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       const { left, top } = containmentEl.getBoundingClientRect();
       containmentRect = { left, top, width: 0, height: 0 };
     }
-    Object.keys(this.temporalRect || this.originalRect).forEach(key => {
+    if (!this.temporalRect) return this;
+    Object.keys(this.temporalRect).forEach(key => {
       const value = this.temporalRect[key];
       this.el.style[key] = value - containmentRect[key] + 'px';
     });

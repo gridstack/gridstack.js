@@ -21,7 +21,7 @@ export type DDDropOpt = {
 /** drag&drop options currently called from the main code, but others can be passed in grid options */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type DDOpts = 'enable' | 'disable' | 'destroy' | 'option' | string | any;
-export type DDKey = 'minWidth' | 'minHeight';
+export type DDKey = 'minWidth' | 'minHeight' | 'maxWidth' | 'maxHeight';
 export type DDValue = number | string;
 
 /** drag&drop events callbacks */
@@ -373,14 +373,21 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
 
     GridStackDD.get().resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1));
     GridStackDD.get().resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
+    // also set max if set #1330
+    if (node.maxW) {
+      GridStackDD.get().resizable(el, 'option', 'maxWidth', cellWidth * node.maxW);
+    }
+    if (node.maxH) {
+      GridStackDD.get().resizable(el, 'option', 'maxHeight', cellHeight * node.maxH);
+    }
   }
 
   /** called when item is being dragged/resized */
   let dragOrResize = (event: Event, ui: DDUIData): void => {
     let x = Math.round(ui.position.left / cellWidth);
     let y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
-    let w;
-    let h;
+    let w: number;
+    let h: number;
 
     if (event.type === 'drag') {
       let distance = ui.position.top - node._prevYPix;
@@ -388,7 +395,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       Utils.updateScrollPosition(el, ui.position, distance);
       // if inTrash, outside of the bounds or added to another grid (#393) temporarily remove it from us
       if (el.dataset.inTrashZone || x < 0 || x >= this.engine.column || y < 0 || (!this.engine.float && y > this.engine.getRow()) || node._added) {
-        if (node._temporaryRemoved) { return; }
+        if (node._temporaryRemoved) return;
         if (this.opts.removable === true) {
           this._setupRemovingTimeout(el);
         }
@@ -415,19 +422,15 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
           delete node._temporaryRemoved;
         }
       }
+      if (node._lastTriedX === x && node._lastTriedY === y) return;
     } else if (event.type === 'resize')  {
       if (x < 0) return;
       w = Math.round(ui.size.width / cellWidth);
       h = Math.round(ui.size.height / cellHeight);
+      if (w === node.w && h === node.h) return;
     }
-    // width and height are undefined if not resizing
-    let _lastTriedW = (w || node._lastTriedW);
-    let _lastTriedH = (h || node._lastTriedH);
-    if (!this.engine.canMoveNode(node, x, y, w, h) ||
-      (node._lastTriedX === x && node._lastTriedY === y &&
-      node._lastTriedW === _lastTriedW && node._lastTriedH === _lastTriedH)) {
-      return;
-    }
+
+    if (!this.engine.canMoveNode(node, x, y, w, h)) return;
     node._lastTriedX = x;
     node._lastTriedY = y;
     node._lastTriedW = w;
