@@ -46,7 +46,12 @@ Change log
 ## 3.1.0-dev
 
 - fix [1419](https://github.com/gridstack/gridstack.js/issues/1419) dragging into a fixed row grid works better (check if it will fit, else try to append, else won't insert)
+-- **possible BREAK** (unlikely you use engine directly)
+* engine constructor takes Options struct rather than spelling arguments (easier to extend/use)
+* `canBePlacedWithRespectToHeight()` -> `willItFit()` like grid method
+
 - fix [1330](https://github.com/gridstack/gridstack.js/issues/1330) `maxW` does not work as intended with resizable handle `"w"`
+- fix [1472](https://github.com/gridstack/gridstack.js/issues/1472) support all options for new dragged in widgets (read all `gs-xyz` attributes)
 
 ## 3.1.0 (2020-12-4)
 

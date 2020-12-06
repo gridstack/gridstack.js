@@ -1307,7 +1307,8 @@ export class GridStack {
   }
 
   /** @internal call to read any default attributes from element */
-  private _readAttr(el: HTMLElement, node: GridStackNode = {}): GridStackWidget {
+  private _readAttr(el: HTMLElement): GridStackWidget {
+    let node: GridStackNode = {};
     node.x = Utils.toNumber(el.getAttribute('gs-x'));
     node.y = Utils.toNumber(el.getAttribute('gs-y'));
     node.w = Utils.toNumber(el.getAttribute('gs-w'));

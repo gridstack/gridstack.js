@@ -130,18 +130,15 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
     })
     .on(this.el, 'dropover', (event, el: GridItemHTMLElement) => {
       // ignore drop enter on ourself, and prevent parent from receiving event
-      let node = el.gridstackNode || {};
-      if (node.grid === this) {
+      let node = el.gridstackNode;
+      if (node && node.grid === this) {
         delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
         return false;
       }
 
-      // see if we already have a node with widget/height and check for attributes
-      if (el.getAttribute && (!node.w || !node.h)) {
-        let w = parseInt(el.getAttribute('gs-w'));
-        if (w > 0) { node.w = w; }
-        let h = parseInt(el.getAttribute('gs-h'));
-        if (h > 0) { node.h = h; }
+      // load any element attributes if we don't have a node
+      if (!node) {
+        node = this._readAttr(el);
       }
 
       // if the item came from another grid, let it know it was added here to removed duplicate shadow #393
