@@ -45,7 +45,7 @@ Change log
 
 ## 3.1.0-dev
 
-- TBD
+- fix [1419](https://github.com/gridstack/gridstack.js/issues/1419) dragging into a fixed row grid works better (check if it will fit, else try to append, else won't insert)
 
 ## 3.1.0 (2020-12-4)
 

@@ -70,6 +70,9 @@ export abstract class GridStackDD extends GridStackDDI {
 /********************************************************************************
  * GridStack code that is doing drag&drop extracted here so main class is smaller
  * for static grid that don't do any of this work anyway. Saves about 10k.
+ * TODO: no code hint in code below as this is <any> so look at alternatives ?
+ * https://www.typescriptlang.org/docs/handbook/declaration-merging.html
+ * https://www.typescriptlang.org/docs/handbook/mixins.html
  ********************************************************************************/
 
 /** @internal called to add drag over support to support widgets */
@@ -82,12 +85,18 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
     let x = Math.max(0, pos.x);
     let y = Math.max(0, pos.y);
     if (!node._added) {
-      node._added = true;
-
-      node.el = el;
       node.x = x;
       node.y = y;
       delete node.autoPosition;
+
+      // don't accept *initial* location if doesn't fit #1419 (locked drop region, or can't grow), but maybe try if it will go somewhere
+      if (!this.engine.willItFit(node)) {
+        node.autoPosition = true; // ignore x,y and try for any slot...
+        if (!this.engine.willItFit(node)) return; // full grid or can't grow
+      }
+      node._added = true;
+
+      node.el = el;
       this.engine.cleanNodes();
       this.engine.beginUpdate(node);
       this.engine.addNode(node);
@@ -178,6 +187,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
     })
     .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
+      let wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
       // ignore drop on ourself from ourself - dragend will handle the simple move instead
       if (node && node.grid === this) { return false; }
 
@@ -186,7 +196,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       // notify previous grid of removal
       let origNode = el._gridstackNodeOrig;
       delete el._gridstackNodeOrig;
-      if (origNode && origNode.grid && origNode.grid !== this) {
+      if (wasAdded && origNode && origNode.grid && origNode.grid !== this) {
         let oGrid = origNode.grid;
         oGrid.placeholder.remove();
         origNode.el = el; // was using placeholder, have it point to node we've moved instead
@@ -194,23 +204,29 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         oGrid._triggerRemoveEvent();
       }
 
-      // use existing placeholder node as it's already in our list with drop location
       if (!node) { return false; }
-      const _id = node._id;
-      this.engine.cleanupNode(node); // removes all internal _xyz values (including the _id so add that back)
-      node._id = _id;
-      node.grid = this;
+
+      // use existing placeholder node as it's already in our list with drop location
+      if (wasAdded) {
+        const _id = node._id;
+        this.engine.cleanupNode(node); // removes all internal _xyz values (including the _id so add that back)
+        node._id = _id;
+        node.grid = this;
+      }
       GridStackDD.get().off(el, 'drag');
       // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
       // as the helper will be nuked by jqueryui otherwise
       if (helper !== el) {
         helper.remove();
         el.gridstackNode = origNode; // original item (left behind) is re-stored to pre dragging as the node now has drop info
-        el = el.cloneNode(true) as GridItemHTMLElement;
+        if (wasAdded) {
+          el = el.cloneNode(true) as GridItemHTMLElement;
+        }
       } else {
         el.remove(); // reduce flicker as we change depth here, and size further down
         GridStackDD.get().remove(el);
       }
+      if (!wasAdded) return false;
       el.gridstackNode = node;
       node.el = el;
 

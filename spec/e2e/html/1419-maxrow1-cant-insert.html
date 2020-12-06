@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>1 row max</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+
+  <script src="../../../dist/gridstack-h5.js"></script>
+
+  <style type="text/css">
+    .sidebar {
+      background: rgba(0, 255, 0, 0.1);
+      height: 150px;
+      padding: 25px 0;
+      text-align: center;
+    }
+    .sidebar .grid-stack-item {
+      width: 120px;
+      height: 50px;
+      border: 2px dashed green;
+      text-align: center;
+      line-height: 35px;
+      z-index: 10;
+      background: rgba(0, 255, 0, 0.1);
+      cursor: default;
+      display: inline-block;
+    }
+    .sidebar .grid-stack-item .grid-stack-item-content {
+      background: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <p>1 Row max should prevent dragging from outside to push down, only go to empty slot (until we have push right)</p>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="sidebar">
+          
+          <div class="grid-stack-item" gs-w="2" gs-h="1">
+            <div class="grid-stack-item-content">Drag me 2x1</div>
+          </div>
+          <div class="grid-stack-item" gs-w="1" gs-h="1">
+            <div class="grid-stack-item-content">Drag me</div>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="grid-stack"></div>
+      </div>
+    </div>
+  </div>
+  <script src="../../../demo/events.js"></script>
+  <script type="text/javascript">
+    let options = {
+      row: 1,
+      cellHeight: 120,
+      dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
+      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
+      acceptWidgets: true
+    };
+    let grid = GridStack.init(options);
+    addEvents(grid);
+    grid.addWidget({x: 0});
+  </script>
+</body>
+</html>
