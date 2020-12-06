@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>resize maxW</title>
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-h5.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <p>resize to left with maxW set</p>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="../../../demo/events.js"></script>
+  <script type="text/javascript">
+    let grid = GridStack.init({resizable: { handles: 'sw, se, w, e, s' }});
+    addEvents(grid);
+    grid.load([{x: 2, y: 0, maxW: 1, content: 'max 1'}, {x: 5, y: 0, maxW: 2, content: 'max 2'}]);
+  </script>
+</body>
+</html>
