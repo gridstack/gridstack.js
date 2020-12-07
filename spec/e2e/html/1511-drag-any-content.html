@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Float grid demo</title>
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-h5.js"></script>
+  <style>
+    .x {
+      width:100%;
+      height:100%;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Float grid demo</h1>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="../../../demo/events.js"></script>
+  <script type="text/javascript">
+    let grid = GridStack.init({float: true, cellHeight: 70});
+    addEvents(grid);
+    var items = [
+      {x: 0, y: 0, w: 2, h: 2, content: '<table class="x"><tr><td><span>table should work</span></td></tr></table>'},
+      {x: 2, y: 0, w: 2, h: 2, content: '<div class="x"><span>using a span</span></div>'},
+      {x: 4, y: 0, w: 2, h: 2, content: '<div class="x">using a div</div>'},
+      {x: 6, y: 0, w: 2, h: 2, content: 'works anywhere'},
+    ];
+
+    grid.load(items);
+  </script>
+</body>
+</html>

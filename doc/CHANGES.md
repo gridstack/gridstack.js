@@ -52,6 +52,7 @@ Change log
 
 - fix [1330](https://github.com/gridstack/gridstack.js/issues/1330) `maxW` does not work as intended with resizable handle `"w"`
 - fix [1472](https://github.com/gridstack/gridstack.js/issues/1472) support all options for new dragged in widgets (read all `gs-xyz` attributes)
+- fix [1511](https://github.com/gridstack/gridstack.js/issues/1511) dragging any grid item content works
 
 ## 3.1.0 (2020-12-4)
 

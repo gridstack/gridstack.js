@@ -121,22 +121,18 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal */
+  /** @internal call when mouse goes down before a dragstart happens */
   private _mouseDown(event: MouseEvent): void {
-    this.mouseDownElement = event.target as HTMLElement;
+    // make sure we are clicking on a drag handle or child of it...
+    let className = this.option.handle.substring(1);
+    let el = event.target as HTMLElement;
+    while (el && !el.classList.contains(className)) { el = el.parentElement; }
+    this.mouseDownElement = el;
   }
 
   /** @internal */
   private _dragStart(event: DragEvent): void {
-    if (this.option.handle && !(
-      this.mouseDownElement
-      && this.mouseDownElement.matches(
-        `${this.option.handle}, ${this.option.handle} > *`
-      )
-    )) {
-      event.preventDefault();
-      return;
-    }
+    if (!this.mouseDownElement) { event.preventDefault();  return; }
     DDManager.dragElement = this;
     this.helper = this._createHelper(event);
     this._setupHelperContainmentStyle();
