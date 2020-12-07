@@ -291,7 +291,6 @@ export class GridStack {
     this.el.classList.add(this.opts._styleSheetClass);
 
     this._setStaticClass();
-    this._updateStyles();
 
     this.engine = new GridStackEngine({
       column: this.opts.column,
@@ -336,7 +335,7 @@ export class GridStack {
     this.placeholder.classList.add(this.opts.placeholderClass, defaults.itemClass, this.opts.itemClass);
     this.placeholder.appendChild(placeholderChild);
 
-    this._updateContainerHeight();
+    this._updateStyles();
 
     this._setupDragIn();
     this._setupRemoveDrop();
@@ -588,7 +587,8 @@ export class GridStack {
    * Gets current cell width.
    */
   public cellWidth(): number {
-    return this.el.offsetWidth / this.opts.column;
+    // use parent width if we're 0 (no size yet)
+    return (this.el.offsetWidth || this.el.parentElement.offsetWidth || window.innerWidth) / this.opts.column;
   }
 
   /**
@@ -1171,7 +1171,9 @@ export class GridStack {
     }
 
     this._updateContainerHeight();
-    if (!this.opts.cellHeight) { // The rest will be handled by CSS TODO: I don't understand this usage
+
+    // if user is telling us they will handle the CSS themselves by setting heights to 0. Do we need this opts really ??
+    if (this.opts.cellHeight === 0) {
       return this;
     }
 
@@ -1363,7 +1365,7 @@ export class GridStack {
    * and remember the prev columns we used, as well as check for auto cell height (square)
    */
   public onParentResize(): GridStack {
-    if (!this.el) {return} // return if we're gone
+    if (!this.el || !this.el.clientWidth) return; // return if we're gone or no size yet (will get called again)
 
     // make the cells content (minus margin) square again
     if (this._isAutoCellHeight) {
