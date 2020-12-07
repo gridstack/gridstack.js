@@ -210,6 +210,8 @@ export class GridStack {
   private _isAutoCellHeight: boolean;
   /** @internal track event binding to window resize so we can remove */
   private _windowResizeBind: () => GridStack;
+  /** @internal true when loading items to insert first rather than append */
+  private _insertNotAppend: boolean;
 
   /**
    * Construct a grid item from the given element and options
@@ -397,7 +399,11 @@ export class GridStack {
     this.engine.prepareNode(options);
     this._writeAttr(el, options);
 
-    this.el.appendChild(el);
+    if (this._insertNotAppend) {
+      this.el.prepend(el);
+    } else {
+      this.el.appendChild(el);
+    }
 
     // similar to makeWidget() that doesn't read attr again and worse re-create a new node and loose any _id
     this._prepareElement(el, true, options);
@@ -467,6 +473,7 @@ export class GridStack {
    **/
   public load(layout: GridStackWidget[], addAndRemove: boolean | ((g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement)  = true): GridStack {
     let items = GridStack.Utils.sort(layout, -1, this._prevColumn || this.opts.column);
+    this._insertNotAppend = true; // since create in reverse order...
 
     // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
@@ -503,6 +510,7 @@ export class GridStack {
           let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
           if (sub && sub.gridstack) {
             sub.gridstack.load((w.subGrid as GridStackOptions).children); // TODO: support updating grid options ?
+            this._insertNotAppend = true; // got reset by above call
           }
         }
       } else if (addAndRemove) {
@@ -523,7 +531,7 @@ export class GridStack {
 
     // after commit, clear that flag
     delete this._ignoreLayoutsNodeChange;
-
+    delete this._insertNotAppend;
     return this;
   }
 
