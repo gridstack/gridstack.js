@@ -1,0 +1,32 @@
+<html>
+<head>
+  <title>Web Component demo</title>
+  <!-- Polyfills only needed for Firefox and Edge. -->
+  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@latest/webcomponents-loader.js"></script>
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-h5.js"></script>
+</head>
+<body>
+  <h1>LitElement Web Component</h1>
+  <script type="module">
+    import {LitElement, html, css} from 'https://unpkg.com/lit-element/lit-element.js?module';
+
+    class MyElement extends LitElement {
+      static get properties() { return {} }
+      render() { return html`<style>:host {display: block;} </style><slot></slot>`; }
+    }
+    customElements.define('my-element', MyElement);
+</script>
+
+<my-element class="grid-stack"></my-element>
+
+<script type="text/javascript">
+  let items = [
+    {x:0, y:0, w:2, content: 'item 0'},
+    {x:0, y:1, content: 'item 1'}
+  ];
+  let grid = GridStack.init();
+  grid.load(items);
+</script>
+</body>
+</html>
