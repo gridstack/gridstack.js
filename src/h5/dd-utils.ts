@@ -1,4 +1,4 @@
-// dd-utils.ts 3.1.1 @preserve
+// dd-utils.ts 3.1.2 @preserve
 
 /**
  * https://gridstackjs.com/

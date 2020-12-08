@@ -1,4 +1,4 @@
-// gridstack-GridStackDD.get().ts 3.1.1 @preserve
+// gridstack-GridStackDD.get().ts 3.1.2 @preserve
 
 /**
  * https://gridstackjs.com/
