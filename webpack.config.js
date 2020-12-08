@@ -7,8 +7,8 @@ module.exports = {
     'gridstack-static': './src/index-static.ts'
   },
   mode: 'production', // production vs development
-  // devtool: 'source-map',
-  devtool: 'eval-source-map', // for best (large .js) debugging. see https://survivejs.com/webpack/building/source-maps/
+  devtool: 'source-map',
+  // devtool: 'eval-source-map', // for best (large .js) debugging. see https://survivejs.com/webpack/building/source-maps/
   module: {
     rules: [
       {
