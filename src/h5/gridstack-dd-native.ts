@@ -1,4 +1,4 @@
-// gridstack-dd-native.ts 3.1.0-dev @preserve
+// gridstack-dd-native.ts 3.1.1 @preserve
 
 /**
  * https://gridstackjs.com/

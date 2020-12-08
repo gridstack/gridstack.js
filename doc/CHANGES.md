@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.1.0-dev](#310-dev)
+- [3.1.1 (2020-12-7)](#311-2020-12-7)
 - [3.1.0 (2020-12-4)](#310-2020-12-4)
 - [3.0.0 (2020-11-29)](#300-2020-11-29)
 - [2.2.0 (2020-11-7)](#220-2020-11-7)
@@ -43,7 +43,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 3.1.0-dev
+## 3.1.1 (2020-12-7)
 
 - fix [1419](https://github.com/gridstack/gridstack.js/issues/1419) dragging into a fixed row grid works better (check if it will fit, else try to append, else won't insert)
 -- **possible BREAK** (unlikely you use engine directly)
