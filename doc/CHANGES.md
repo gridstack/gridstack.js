@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.1.0-dev](#310-dev)
+- [3.1.2 (2020-12-7)](#311-2020-12-7)
 - [3.1.0 (2020-12-4)](#310-2020-12-4)
 - [3.0.0 (2020-11-29)](#300-2020-11-29)
 - [2.2.0 (2020-11-7)](#220-2020-11-7)
@@ -43,7 +43,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 3.1.0-dev
+## 3.1.2 (2020-12-7)
 
 - fix [1419](https://github.com/gridstack/gridstack.js/issues/1419) dragging into a fixed row grid works better (check if it will fit, else try to append, else won't insert)
 -- **possible BREAK** (unlikely you use engine directly)
@@ -53,6 +53,7 @@ Change log
 - fix [1330](https://github.com/gridstack/gridstack.js/issues/1330) `maxW` does not work as intended with resizable handle `"w"`
 - fix [1472](https://github.com/gridstack/gridstack.js/issues/1472) support all options for new dragged in widgets (read all `gs-xyz` attributes)
 - fix [1511](https://github.com/gridstack/gridstack.js/issues/1511) dragging any grid item content works
+- fix [1438](https://github.com/gridstack/gridstack.js/issues/1438) web-component fixes & grid with 0 size initially.
 
 ## 3.1.0 (2020-12-4)
 

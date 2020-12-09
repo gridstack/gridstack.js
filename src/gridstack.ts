@@ -1,4 +1,4 @@
-// gridstack.ts 3.1.0-dev @preserve
+// gridstack.ts 3.1.2 @preserve
 
 /**
  * https://gridstackjs.com/
@@ -210,6 +210,8 @@ export class GridStack {
   private _isAutoCellHeight: boolean;
   /** @internal track event binding to window resize so we can remove */
   private _windowResizeBind: () => GridStack;
+  /** @internal true when loading items to insert first rather than append */
+  private _insertNotAppend: boolean;
 
   /**
    * Construct a grid item from the given element and options
@@ -289,7 +291,6 @@ export class GridStack {
     this.el.classList.add(this.opts._styleSheetClass);
 
     this._setStaticClass();
-    this._updateStyles();
 
     this.engine = new GridStackEngine({
       column: this.opts.column,
@@ -334,7 +335,7 @@ export class GridStack {
     this.placeholder.classList.add(this.opts.placeholderClass, defaults.itemClass, this.opts.itemClass);
     this.placeholder.appendChild(placeholderChild);
 
-    this._updateContainerHeight();
+    this._updateStyles();
 
     this._setupDragIn();
     this._setupRemoveDrop();
@@ -397,7 +398,11 @@ export class GridStack {
     this.engine.prepareNode(options);
     this._writeAttr(el, options);
 
-    this.el.appendChild(el);
+    if (this._insertNotAppend) {
+      this.el.prepend(el);
+    } else {
+      this.el.appendChild(el);
+    }
 
     // similar to makeWidget() that doesn't read attr again and worse re-create a new node and loose any _id
     this._prepareElement(el, true, options);
@@ -467,6 +472,7 @@ export class GridStack {
    **/
   public load(layout: GridStackWidget[], addAndRemove: boolean | ((g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement)  = true): GridStack {
     let items = GridStack.Utils.sort(layout, -1, this._prevColumn || this.opts.column);
+    this._insertNotAppend = true; // since create in reverse order...
 
     // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
@@ -503,6 +509,7 @@ export class GridStack {
           let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
           if (sub && sub.gridstack) {
             sub.gridstack.load((w.subGrid as GridStackOptions).children); // TODO: support updating grid options ?
+            this._insertNotAppend = true; // got reset by above call
           }
         }
       } else if (addAndRemove) {
@@ -523,7 +530,7 @@ export class GridStack {
 
     // after commit, clear that flag
     delete this._ignoreLayoutsNodeChange;
-
+    delete this._insertNotAppend;
     return this;
   }
 
@@ -580,7 +587,8 @@ export class GridStack {
    * Gets current cell width.
    */
   public cellWidth(): number {
-    return this.el.offsetWidth / this.opts.column;
+    // use parent width if we're 0 (no size yet)
+    return (this.el.offsetWidth || this.el.parentElement.offsetWidth || window.innerWidth) / this.opts.column;
   }
 
   /**
@@ -1163,7 +1171,9 @@ export class GridStack {
     }
 
     this._updateContainerHeight();
-    if (!this.opts.cellHeight) { // The rest will be handled by CSS TODO: I don't understand this usage
+
+    // if user is telling us they will handle the CSS themselves by setting heights to 0. Do we need this opts really ??
+    if (this.opts.cellHeight === 0) {
       return this;
     }
 
@@ -1355,7 +1365,7 @@ export class GridStack {
    * and remember the prev columns we used, as well as check for auto cell height (square)
    */
   public onParentResize(): GridStack {
-    if (!this.el) {return} // return if we're gone
+    if (!this.el || !this.el.clientWidth) return; // return if we're gone or no size yet (will get called again)
 
     // make the cells content (minus margin) square again
     if (this._isAutoCellHeight) {
