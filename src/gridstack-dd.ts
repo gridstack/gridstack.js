@@ -342,6 +342,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
   // variables used/cashed between the 3 start/move/end methods, in addition to node passed above
   let cellWidth: number;
   let cellHeight: number;
+  let minRow: number;
 
   /** called when item starts moving/resizing */
   let onStartMoving = (event: Event, ui: DDUIData): void => {
@@ -351,6 +352,11 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     if (this._gsEventHandler[event.type]) {
       this._gsEventHandler[event.type](event, target);
     }
+
+    // Saving `minRow` and adding new ones for resizing
+    minRow = this.opts.minRow;
+    this.opts.minRow = this.getRow() + 100;
+    this._updateContainerHeight();
 
     this.engine.cleanNodes();
     this.engine.beginUpdate(node);
@@ -422,6 +428,8 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       if (node._lastTriedX === x && node._lastTriedY === y) return;
     } else if (event.type === 'resize')  {
       if (x < 0) return;
+      // Scrolling page if needed
+      Utils.updateScrollResize(event as MouseEvent, el, cellHeight);
       w = Math.round(ui.size.width / cellWidth);
       h = Math.round(ui.size.height / cellHeight);
       if (w === node.w && h === node.h) return;
@@ -482,6 +490,10 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     this._triggerChangeEvent();
 
     this.engine.endUpdate();
+
+    // Removing lines rows added on `resizestart`
+    this.opts.minRow = minRow;
+    this._updateContainerHeight();
 
     // if we re-sized a nested grid item, let the children resize as well
     if (event.type === 'resizestop') {

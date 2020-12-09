@@ -327,5 +327,27 @@ export class Utils {
       }
     }
   }
+
+  /** @internal */
+  static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
+    let scrollEl = this.getScrollParent(el);
+    if (scrollEl === null) return;
+
+    //const width = scrollEl.clientWidth;
+    const height = scrollEl.clientHeight;
+
+    const top = event.clientY < distance;
+    const bottom = event.clientY > height - distance;
+
+    if (top) {
+      // This also can be done with a timeout to keep scrolling while the mouse is
+      // in the scrolling zone. (will have smoother behavior)
+      scrollEl.scrollBy({ behavior: 'smooth', top: event.clientY - distance});
+    }
+
+    if (bottom) {
+      scrollEl.scrollBy({ behavior: 'smooth', top: distance - (height - event.clientY)});
+    }
+  }
 }
 
