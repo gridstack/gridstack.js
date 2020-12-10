@@ -138,18 +138,18 @@
 
       grid.on('dragstop', (event, element) => {
         const node = element.gridstackNode
-        setState({
-          ...state,
+        setState(prevState => ({
+          ...prevState,
           info: `you just dragged node #${node.id} to ${node.x},${node.y} – good job!`,
-        })
+        }))
 
         let timerId
         window.clearTimeout(timerId)
         timerId = window.setTimeout(() => {
-          setState({
-            ...state,
+          setState(prevState => ({
+            ...prevState,
             info: '',
-          })
+          }))
         }, 2000)
       })
     }, [])
@@ -167,7 +167,7 @@
             }
             node.id = node.content = String(state.count)
             setState(prevState => ({
-              ...state,
+              ...prevState,
               count: prevState.count + 1,
             }))
             grid.addWidget(node)
@@ -175,6 +175,7 @@
         >
           Add Widget
         </button>
+        <div>{JSON.stringify(state)}</div>
         <section class="grid-stack uncontrolled"></section>
       </div>
     )
