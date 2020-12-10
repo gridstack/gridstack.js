@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gridstack.js React integration example</title>
+  <link rel="stylesheet" href="demo.css" />
+  <script src="../dist/gridstack-h5.js"></script>
+
+  <!-- Scripts to use react inside html -->
+  <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <h1>Using GridStack.js with React hooks</h1>
+    <p>
+      As with any virtualDOM-based framework, you need to check if Reacthas rendered the DOM (or any updates to it)
+      <strong>before</strong> you initialize GridStack or call its methods. This example shows how to make rendered
+      components widgets:
+    </p>
+    <ol>
+      <li>Render items, each with a reference</li>
+      <li>Convert each rendered item to a widget using the reference and the <a
+          href="https://github.com/gridstack/gridstack.js/tree/develop/doc#makewidgetel">
+          makeWidget</a> function</li>
+    </ol>
+  </div>
+  <div>
+    <h2>Controlled stack</h2>
+    <div id="controlled-stack"></div>
+  </div>
+  <div>
+    <h2>Uncontrolled stack</h2>
+    <div id="uncontrolled-stack"></div>
+  </div>
+</body>
+
+<script type="text/babel">
+  const { useState, useEffect, createRef, useRef } = React
+
+  const Item = ({ id }) => <div>I am item: {id}</div>
+
+  //
+  // Controlled example
+  //
+
+  const ControlledStack = ({ items, addItem }) => {
+    const refs = useRef({})
+    const gridRef = useRef()
+
+    if (Object.keys(refs.current).length !== items.length) {
+      items.forEach(({ id }) => {
+        refs.current[id] = refs.current[id] || createRef()
+      })
+    }
+
+    useEffect(() => {
+      gridRef.current =
+        gridRef.current ||
+        GridStack.init(
+          {
+            float: true,
+          },
+          '.controlled'
+        )
+      const grid = gridRef.current
+      grid.batchUpdate()
+      grid.removeAll(false)
+      items.forEach(({ id }) => grid.makeWidget(refs.current[id].current))
+      grid.commit()
+    }, [items])
+
+    return (
+      <div>
+        <button onClick={addItem}>Add new widget</button>
+        <div className={`grid-stack controlled`}>
+          {items.map((item, i) => {
+            return (
+              <div ref={refs.current[item.id]} key={item.id} className={'grid-stack-item'}>
+                <div className="grid-stack-item-content">
+                  <Item {...item} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
+  const ControlledExample = () => {
+    const [items, setItems] = useState([{ id: 'item-1' }, { id: 'item-2' }])
+
+    return (
+      <ControlledStack
+        items={items}
+        addItem={() => setItems([...items, { id: `item-${items.length + 1}` }])}
+      />
+    )
+  }
+
+  //
+  // Uncontrolled example
+  //
+
+  const UncontrolledExample = () => {
+    const gridRef = useRef()
+
+    const [state, setState] = useState({
+      count: 0,
+      info: '',
+      items: [
+        { x: 2, y: 1, h: 2 },
+        { x: 2, y: 4, w: 3 },
+        { x: 4, y: 2 },
+        { x: 3, y: 1, h: 2 },
+        { x: 0, y: 6, w: 2, h: 2 },
+      ],
+    })
+
+    useEffect(() => {
+      gridRef.current =
+        gridRef.current ||
+        GridStack.init(
+          {
+            float: true,
+            cellHeight: '70px',
+            minRow: 1,
+          },
+          '.uncontrolled'
+        )
+
+      const grid = gridRef.current
+
+      grid.on('dragstop', (event, element) => {
+        const node = element.gridstackNode
+        setState(prevState => ({
+          ...prevState,
+          info: `you just dragged node #${node.id} to ${node.x},${node.y} – good job!`,
+        }))
+
+        let timerId
+        window.clearTimeout(timerId)
+        timerId = window.setTimeout(() => {
+          setState(prevState => ({
+            ...prevState,
+            info: '',
+          }))
+        }, 2000)
+      })
+    }, [])
+
+    return (
+      <div>
+        <button
+          onClick={() => {
+            const grid = gridRef.current
+            const node = state.items[state.count] || {
+              x: Math.round(12 * Math.random()),
+              y: Math.round(5 * Math.random()),
+              w: Math.round(1 + 3 * Math.random()),
+              h: Math.round(1 + 3 * Math.random()),
+            }
+            node.id = node.content = String(state.count)
+            setState(prevState => ({
+              ...prevState,
+              count: prevState.count + 1,
+            }))
+            grid.addWidget(node)
+          }}
+        >
+          Add Widget
+        </button>
+        <div>{JSON.stringify(state)}</div>
+        <section class="grid-stack uncontrolled"></section>
+      </div>
+    )
+  }
+
+  ReactDOM.render(<ControlledExample />, document.getElementById('controlled-stack'))
+  ReactDOM.render(<UncontrolledExample />, document.getElementById('uncontrolled-stack'))
+
+</script>
+
+</html>
