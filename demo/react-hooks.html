@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gridstack.js React integration example</title>
+  <link rel="stylesheet" href="demo.css" />
+  <script src="../dist/gridstack-h5.js"></script>
+
+  <!-- Scripts to use react inside html -->
+  <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+</body>
+
+<script type="text/babel">
+  const { useState, useEffect, createRef, useRef } = React
+
+  const Item = ({ id }) => <div>I am item: {id}</div>
+
+  const ControlledStack = ({ items, addItem }) => {
+    const refs = useRef({})
+
+    if (Object.keys(refs.current).length !== items.length) {
+      items.forEach(({ id }) => {
+        refs.current[id] = refs.current[id] || createRef()
+      })
+    }
+
+    useEffect(() => {
+      const grid = GridStack.init()
+      grid.removeAll(false)
+      items.forEach(({ id }) => {
+        grid.makeWidget(refs.current[id].current)
+      })
+    }, [items])
+
+    return (
+      <div>
+        <button onClick={addItem}>Add new widget</button>
+        <div className="grid-stack">
+          {items.map((item, i) => {
+            return (
+              <div
+                ref={refs.current[item.id]}
+                key={item.id}
+                className={'grid-stack-item'}
+                gs-w="12"
+              >
+                <div className="grid-stack-item-content">
+                  <Item {...item} />
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
+  const App = props => {
+    const [items, setItems] = useState([
+      { id: 'item-1' },
+      { id: 'item-2' }
+    ])
+
+    return (
+      <div>
+        <h1>Using GridStack.js with controlled React component and hooks</h1>
+        <p>
+          As with any virtualDOM-based framework, you need to check if React
+              has rendered the DOM (or any updates to it){" "}
+          <strong>before</strong> you initialize GridStack or call its
+              methods. This example shows how to make rendered components widgets:
+          </p>
+        <ol>
+          <li>Render items, each with a reference</li>
+          <li>Convert each rendered item to a widget using the reference and the  <a href="https://github.com/gridstack/gridstack.js/tree/develop/doc#makewidgetel">
+            makeWidget</a> function</li>
+        </ol>
+        <ControlledStack items={items} addItem={() => setItems([...items, { id: `item-${items.length + 1}` }])} />
+      </div>
+    )
+  }
+
+  ReactDOM.render(<App />, document.getElementById("root"))
+</script>
+
+</html>
