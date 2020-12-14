@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Out of order</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-h5.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Out of order demo</h1>
+    <div class="grid-stack">
+      <div class="grid-stack-item" gs-x="0" gs-y="2" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">2</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="1" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">1</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">0</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="4" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">4</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="5" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">5</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="6" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">6</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="7" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">7</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="11" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">11</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="8" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">8</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="9" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">9</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="12" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">12</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="10" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">10</span>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="3" gs-w="12" gs-h="1">
+        <div class="grid-stack-item-content">
+          This should be at position <span class="order-number">3</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+  GridStack.init({cellHeight: 70});
+  </script>
+</body>
+</html>

@@ -312,6 +312,7 @@ export class GridStack {
     });
 
     if (this.opts.auto) {
+      this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
       let elements: {el: HTMLElement; i: number}[] = [];
       this.getGridItems().forEach(el => {
         let x = parseInt(el.getAttribute('gs-x'));
@@ -322,7 +323,8 @@ export class GridStack {
           i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * this.opts.column
         });
       });
-      elements.sort(e => e.i).forEach(item => { this._prepareElement(item.el) });
+      elements.sort(e => e.i).forEach(e => this._prepareElement(e.el));
+      this.commit();
     }
     this.engine.saveInitial(); // initial start of items
 
