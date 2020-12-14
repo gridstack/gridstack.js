@@ -40,6 +40,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   private scrollY: number;
   /** @internal */
+  private scrolled: number;
+  /** @internal */
   private startEvent: MouseEvent;
   /** @internal value saved in the same order as _originStyleProp[] */
   private elOriginStyleVal: string[];
@@ -156,7 +158,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   private _resizeStart(event: MouseEvent): DDResizable {
     this.originalRect = this.el.getBoundingClientRect();
     const scrollEl = Utils.getScrollParent(this.el);
-    this.scrollY = scrollEl === null ? 0 : scrollEl.scrollTop;
+    this.scrollY = scrollEl ? scrollEl.scrollTop : 0;
     this.startEvent = event;
     this._setupHelper();
     this._applyChange();
@@ -171,6 +173,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   private _resizing(event: MouseEvent, dir: string): DDResizable {
+    const scrollEl = Utils.getScrollParent(this.el);
+    this.scrolled = scrollEl ? (scrollEl.scrollTop - this.scrollY) : this.scrollY;
     this.temporalRect = this._getChange(event, dir);
     this._applyChange();
     const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
@@ -194,6 +198,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     delete this.originalRect;
     delete this.temporalRect;
     delete this.scrollY;
+    delete this.scrolled;
     return this;
   }
 
@@ -222,13 +227,11 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   private _getChange(event: MouseEvent, dir: string): Rect {
     const oEvent = this.startEvent;
-    const scrollEl = Utils.getScrollParent(this.el);
-    const scrolled = scrollEl === null ? 0 : (scrollEl.scrollTop - this.scrollY);
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
-      height: this.originalRect.height + scrolled,
+      height: this.originalRect.height + this.scrolled,
       left: this.originalRect.left,
-      top: this.originalRect.top - scrolled
+      top: this.originalRect.top - this.scrolled
     };
     
     const offsetH = event.clientX - oEvent.clientX;
@@ -300,14 +303,12 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   private _ui = (): DDUIData => {
-    const scrollEl = Utils.getScrollParent(this.el);
-    const scrolled = scrollEl === null ? 0 : (scrollEl.scrollTop - this.scrollY);
     const containmentRect = this.el.parentElement.getBoundingClientRect();
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
-      height: this.originalRect.height + scrolled,
+      height: this.originalRect.height + this.scrolled,
       left: this.originalRect.left,
-      top: this.originalRect.top - scrolled
+      top: this.originalRect.top - this.scrolled
     };
     const rect = this.temporalRect || newRect;
     return {

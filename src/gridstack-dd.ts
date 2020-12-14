@@ -353,10 +353,8 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       this._gsEventHandler[event.type](event, target);
     }
 
-    // Saving `minRow` and adding new ones for resizing
+    // Saving `minRow`
     minRow = this.opts.minRow;
-    this.opts.minRow = this.getRow() + 100;
-    this._updateContainerHeight();
 
     this.engine.cleanNodes();
     this.engine.beginUpdate(node);
@@ -428,8 +426,17 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       if (node._lastTriedX === x && node._lastTriedY === y) return;
     } else if (event.type === 'resize')  {
       if (x < 0) return;
+      // Addin an extra row if the item it's at the bottom of the layout
+      if (node.y+node.h >= this.getRow()-1) {
+        this.opts.minRow = this.getRow() + 1;
+        this._updateContainerHeight();
+      }
+
       // Scrolling page if needed
       Utils.updateScrollResize(event as MouseEvent, el, cellHeight);
+      // Restore minRow
+      this.opts.minRow = minRow;
+
       w = Math.round(ui.size.width / cellWidth);
       h = Math.round(ui.size.height / cellHeight);
       if (w === node.w && h === node.h) return;
@@ -490,10 +497,6 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     this._triggerChangeEvent();
 
     this.engine.endUpdate();
-
-    // Removing lines rows added on `resizestart`
-    this.opts.minRow = minRow;
-    this._updateContainerHeight();
 
     // if we re-sized a nested grid item, let the children resize as well
     if (event.type === 'resizestop') {
