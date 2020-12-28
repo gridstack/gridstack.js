@@ -1,6 +1,6 @@
 <!-- 
   grid items have no x,y position, just size. Used to come up with wrong size and overlap. https://github.com/gridstack/gridstack.js/issues/1017
-  Now, will have element 5 (autoPosition but small x,y), 1,2,4, then 3 (too big to fit)
+  Now, will have element 5 (position first with small x,y), 1,2,4, then 3 (too big to fit)
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +35,7 @@
     <div class="grid-stack-item" gs-w="3" gs-h="1" gs-id="4">
       <div class="grid-stack-item-content">item 4</div>
     </div>
-    <div class="grid-stack-item" gs-x="1" gs-y="1" gs-w="1" gs-h="1" gs-id="5" gs-auto-position="false">
+    <div class="grid-stack-item" gs-x="1" gs-y="1" gs-w="1" gs-h="1" gs-id="5">
       <div class="grid-stack-item-content">item 5 first</div>
     </div>
   </div>
