@@ -280,15 +280,15 @@ export class Utils {
 
   /** @internal */
   static getScrollParent(el: HTMLElement): HTMLElement {
-    let returnEl;
-    if (el === null) {
-      returnEl = null;
-    } else if (el.scrollHeight > el.clientHeight) {
-      returnEl = el;
+    if (el === null) return document.documentElement;
+    const style = getComputedStyle(el);
+    const overflowRegex = /(auto|scroll)/;
+
+    if (overflowRegex.test(style.overflow + style.overflowY)) {
+      return el;
     } else {
-      returnEl = this.getScrollParent(el.parentElement);
+      return this.getScrollParent(el.parentElement);
     }
-    return returnEl;
   }
 
   /** @internal */
@@ -338,10 +338,7 @@ export class Utils {
    * @param distance Distance to scroll
    */
   static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
-    let scrollEl = this.getScrollParent(el);
-    if (!scrollEl ) return;
-
-    //const width = scrollEl.clientWidth;
+    const scrollEl = this.getScrollParent(el);
     const height = scrollEl.clientHeight;
 
     const top = event.clientY < distance;
