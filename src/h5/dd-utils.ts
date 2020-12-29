@@ -41,7 +41,7 @@ export class DDUtils {
     }
   }
 
-  public static setPositionRelative(el): void {
+  public static setPositionRelative(el: HTMLElement): void {
     if (!(/^(?:r|a|f)/).test(window.getComputedStyle(el).position)) {
       el.style.position = "relative";
     }
@@ -65,8 +65,6 @@ export class DDUtils {
   }
 
   public static initEvent<T>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): T {
-    const kbdProps = 'altKey,ctrlKey,metaKey,shiftKey'.split(',');
-    const ptProps = 'pageX,pageY,clientX,clientY,screenX,screenY'.split(',');
     const evt = { type: info.type };
     const obj = {
       button: 0,
@@ -74,23 +72,14 @@ export class DDUtils {
       buttons: 1,
       bubbles: true,
       cancelable: true,
-      originEvent: e,
       target: info.target ? info.target : e.target
+    };
+    // don't check for `instanceof DragEvent` as Safari use MouseEvent #1540
+    if ((e as DragEvent).dataTransfer) {
+      evt['dataTransfer'] = (e as DragEvent).dataTransfer; // workaround 'readonly' field.
     }
-    if (e instanceof DragEvent) {
-      Object.assign(obj, { dataTransfer: e.dataTransfer });
-    }
-    DDUtils._copyProps(evt, e, kbdProps);
-    DDUtils._copyProps(evt, e, ptProps);
-    DDUtils._copyProps(evt, obj, Object.keys(obj));
-    return evt as unknown as T;
-  }
-
-  /** @internal */
-  private static _copyProps(dst: unknown, src: unknown, props: string[]): void {
-    for (let i = 0; i < props.length; i++) {
-      const p = props[i];
-      dst[p] = src[p];
-    }
+    ['altKey','ctrlKey','metaKey','shiftKey'].forEach(p => evt[p] = e[p]); // keys
+    ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = e[p]); // point info
+    return {...evt, ...obj} as unknown as T;
   }
 }

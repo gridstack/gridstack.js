@@ -45,7 +45,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   private dragFollowTimer: number;
   /** @internal */
-  private mouseDownElement: HTMLElement;
+  private dragEl: HTMLElement;
   /** @internal */
   private dragging = false;
   /** @internal */
@@ -127,12 +127,12 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     let className = this.option.handle.substring(1);
     let el = event.target as HTMLElement;
     while (el && !el.classList.contains(className)) { el = el.parentElement; }
-    this.mouseDownElement = el;
+    this.dragEl = el;
   }
 
   /** @internal */
   private _dragStart(event: DragEvent): void {
-    if (!this.mouseDownElement) { event.preventDefault();  return; }
+    if (!this.dragEl) { event.preventDefault(); return; }
     DDManager.dragElement = this;
     this.helper = this._createHelper(event);
     this._setupHelperContainmentStyle();
@@ -201,20 +201,19 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.triggerEvent('dragstop', ev);
     delete DDManager.dragElement;
     delete this.helper;
-    delete this.mouseDownElement;
+    delete this.dragEl;
   }
 
-  /** @internal */
+  /** @internal create a clone copy (or user defined method) of the original drag item if set */
   private _createHelper(event: DragEvent): HTMLElement {
-    const helperIsFunction = (typeof this.option.helper) === 'function';
-    const helper = (helperIsFunction
-      ? (this.option.helper as ((event: Event) => HTMLElement)).apply(this.el, [event])
-      : (this.option.helper === "clone" ? DDUtils.clone(this.el) : this.el)
-    ) as HTMLElement;
+    let helper = this.el;
+    if (typeof this.option.helper === 'function') {
+      helper = this.option.helper.apply(this.el, event);
+    } else if (this.option.helper === 'clone') {
+      helper = DDUtils.clone(this.el);
+    }
     if (!document.body.contains(helper)) {
-      DDUtils.appendTo(helper, (this.option.appendTo === "parent"
-        ? this.el.parentNode
-        : this.option.appendTo));
+      DDUtils.appendTo(helper, this.option.appendTo === 'parent' ? this.el.parentNode : this.option.appendTo);
     }
     if (helper === this.el) {
       this.dragElementOriginStyle = DDDraggable.originStyleProp.map(prop => this.el.style[prop]);
@@ -227,7 +226,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.helper.style.pointerEvents = 'none';
     this.helper.style.width = this.dragOffset.width + 'px';
     this.helper.style.height = this.dragOffset.height + 'px';
-    this.helper.style['willChange'] = 'left, top';
+    this.helper.style.willChange = 'left, top';
     this.helper.style.transition = 'none'; // show up instantly
     this.helper.style.position = this.option.basePosition || DDDraggable.basePosition;
     this.helper.style.zIndex = '1000';
@@ -282,23 +281,27 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal */
+  /** @internal prevent the default gost image to be created (which has wrongas we move the helper/element instead
+   * (legacy jquery UI code updates the top/left of the item).
+   * TODO: maybe use mouse event instead of HTML5 drag as we have to work around it anyway, or change code to not update
+   * the actual grid-item but move the gost image around (and special case jq version) ?
+   **/
   private _cancelDragGhost(e: DragEvent): DDDraggable {
-    if (e.dataTransfer != null) {
-      e.dataTransfer.setData('text', '');
-    }
-    e.dataTransfer.effectAllowed = 'move';
-    if ('function' === typeof DataTransfer.prototype.setDragImage) {
-      e.dataTransfer.setDragImage(new Image(), 0, 0);
-    } else {
-      // ie
-      (e.target as HTMLElement).style.display = 'none';
-      setTimeout(() => {
-        (e.target as HTMLElement).style.display = '';
-      });
-      e.stopPropagation();
-      return;
-    }
+    /* doesn't seem to do anything...
+    let t = e.dataTransfer;
+    t.effectAllowed = 'none';
+    t.dropEffect = 'none';
+    t.setData('text', '');
+    */
+
+    // NOTE: according to spec (and required by Safari see #1540) the image has to be visible in the browser (in dom and not hidden) so make it a 1px div
+    let img = document.createElement('div');
+    img.style.width = '1px';
+    img.style.height = '1px';
+    document.body.appendChild(img);
+    e.dataTransfer.setDragImage(img, 0, 0);
+    setTimeout(() => document.body.removeChild(img)); // nuke once drag had a chance to grab this 'image'
+
     e.stopPropagation();
     return this;
   }
