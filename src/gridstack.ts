@@ -304,7 +304,7 @@ export class GridStack {
           if (removeDOM && n._id === null) {
             if (el && el.parentNode) { el.parentNode.removeChild(el) }
           } else {
-            this._writeAttrs(el, n.x, n.y, n.w, n.h);
+            this._writePosAttr(el, n.x, n.y, n.w, n.h);
           }
         });
         this._updateStyles(false, maxH); // false = don't recreate, just append if need be
@@ -1283,7 +1283,7 @@ export class GridStack {
   }
 
   /** @internal call to write x,y,w,h attributes back to element */
-  private _writeAttrs(el: HTMLElement, x?: number, y?: number, w?: number, h?: number): GridStack {
+  private _writePosAttr(el: HTMLElement, x?: number, y?: number, w?: number, h?: number): GridStack {
     if (x !== undefined && x !== null) { el.setAttribute('gs-x', String(x)); }
     if (y !== undefined && y !== null) { el.setAttribute('gs-y', String(y)); }
     if (w) { el.setAttribute('gs-w', String(w)); }
@@ -1294,9 +1294,9 @@ export class GridStack {
   /** @internal call to write any default attributes back to element */
   private _writeAttr(el: HTMLElement, node: GridStackWidget): GridStack {
     if (!node) return this;
-    this._writeAttrs(el, node.x, node.y, node.w, node.h);
+    this._writePosAttr(el, node.x, node.y, node.w, node.h);
 
-    let attrs /*: like GridStackWidget but strings */ = { // remaining attributes
+    let attrs /*: GridStackWidget but strings */ = { // remaining attributes
       autoPosition: 'gs-auto-position',
       minW: 'gs-min-w',
       minH: 'gs-min-h',
@@ -1309,7 +1309,7 @@ export class GridStack {
       resizeHandles: 'gs-resize-handles'
     };
     for (const key in attrs) {
-      if (node[key]) { // 0 is valid for x,y only but done above already and not in list
+      if (node[key]) { // 0 is valid for x,y only but done above already and not in list anyway
         el.setAttribute(attrs[key], String(node[key]));
       } else {
         el.removeAttribute(attrs[key]);

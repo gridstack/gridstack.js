@@ -101,7 +101,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       this.engine.beginUpdate(node);
       this.engine.addNode(node);
 
-      this._writeAttrs(this.placeholder, node.x, node.y, node.w, node.h);
+      this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h);
       this.el.appendChild(this.placeholder);
       node.el = this.placeholder; // dom we update while dragging...
       node._beforeDragX = node.x;
@@ -354,13 +354,8 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
 
     this.engine.cleanNodes();
     this.engine.beginUpdate(node);
-    cellWidth = this.cellWidth();
-    cellHeight = this.getCellHeight(true); // force pixels for calculations
 
-    this.placeholder.setAttribute('gs-x', target.getAttribute('gs-x'));
-    this.placeholder.setAttribute('gs-y', target.getAttribute('gs-y'));
-    this.placeholder.setAttribute('gs-w', target.getAttribute('gs-w'));
-    this.placeholder.setAttribute('gs-h', target.getAttribute('gs-h'));
+    this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h)
     this.el.append(this.placeholder);
 
     node.el = this.placeholder;
@@ -368,15 +363,13 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     node._beforeDragY = node.y;
     node._prevYPix = ui.position.top;
 
+    // set the min/max resize info
+    cellWidth = this.cellWidth();
+    cellHeight = this.getCellHeight(true); // force pixels for calculations
     GridStackDD.get().resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1));
     GridStackDD.get().resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
-    // also set max if set #1330
-    if (node.maxW) {
-      GridStackDD.get().resizable(el, 'option', 'maxWidth', cellWidth * node.maxW);
-    }
-    if (node.maxH) {
-      GridStackDD.get().resizable(el, 'option', 'maxHeight', cellHeight * node.maxH);
-    }
+    if (node.maxW) { GridStackDD.get().resizable(el, 'option', 'maxWidth', cellWidth * node.maxW); }
+    if (node.maxH) { GridStackDD.get().resizable(el, 'option', 'maxHeight', cellHeight * node.maxH); }
   }
 
   /** called when item is being dragged/resized */
@@ -413,7 +406,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
 
         if (node._temporaryRemoved) {
           this.engine.addNode(node);
-          this._writeAttrs(this.placeholder, x, y, w, h);
+          this._writePosAttr(this.placeholder, x, y, w, h);
           this.el.appendChild(this.placeholder);
           node.el = this.placeholder;
           delete node._temporaryRemoved;
@@ -464,10 +457,10 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       this._clearRemovingTimeout(el);
       if (!node._temporaryRemoved) {
         Utils.removePositioningStyles(target);
-        this._writeAttrs(target, node.x, node.y, node.w, node.h);
+        this._writePosAttr(target, node.x, node.y, node.w, node.h);
       } else {
         Utils.removePositioningStyles(target);
-        this._writeAttrs(target, node._beforeDragX, node._beforeDragY, node.w, node.h);
+        this._writePosAttr(target, node._beforeDragX, node._beforeDragY, node.w, node.h);
         node.x = node._beforeDragX;
         node.y = node._beforeDragY;
         delete node._temporaryRemoved;

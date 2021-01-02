@@ -43,10 +43,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ## 3.1.2-dev
 
 - fix [1535](https://github.com/gridstack/gridstack.js/issues/1535) use batchUpdate() around grid init to make sure gs-y attributes are respected.
+- fix [1540](https://github.com/gridstack/gridstack.js/issues/1540) Safari H5 drag&drop fixed
 
 ## 3.1.2 (2020-12-7)
 
