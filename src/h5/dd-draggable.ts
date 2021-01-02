@@ -72,11 +72,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this._drag = this._drag.bind(this);
     this._dragEnd = this._dragEnd.bind(this);
     this._dragFollow = this._dragFollow.bind(this);
-
-    this.el.draggable = true;
-    this.el.classList.add('ui-draggable');
-    this.el.addEventListener('mousedown', this._mouseDown);
-    this.el.addEventListener('dragstart', this._dragStart);
+    this.enable();
   }
 
   public on(event: 'drag' | 'dragstart' | 'dragstop', callback: (event: DragEvent) => void): void {
@@ -91,12 +87,18 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     super.enable();
     this.el.draggable = true;
     this.el.classList.remove('ui-draggable-disabled');
+    this.el.classList.add('ui-draggable');
+    this.el.addEventListener('mousedown', this._mouseDown);
+    this.el.addEventListener('dragstart', this._dragStart);
   }
 
-  public disable(): void {
+  public disable(forDestroy = false): void {
     super.disable();
-    this.el.draggable = false;
-    this.el.classList.add('ui-draggable-disabled');
+    this.el.removeAttribute('draggable');
+    this.el.classList.remove('ui-draggable');
+    if (!forDestroy) this.el.classList.add('ui-draggable-disabled');
+    this.el.removeEventListener('mousedown', this._mouseDown);
+    this.el.removeEventListener('dragstart', this._dragStart);
   }
 
   public destroy(): void {
@@ -106,10 +108,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       // destroyed.
       this._dragEnd({} as DragEvent);
     }
-    this.el.draggable = false;
-    this.el.classList.remove('ui-draggable');
-    this.el.removeEventListener('mousedown', this._mouseDown);
-    this.el.removeEventListener('dragstart', this._dragStart);
+    this.disable(true);
     delete this.el;
     delete this.helper;
     delete this.option;
