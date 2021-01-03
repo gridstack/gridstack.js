@@ -362,18 +362,14 @@
     var advGrid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
       resizable: { handles: 'e, se, s, sw, w' },
+      acceptWidgets: true,
+      dragIn: '.newWidget',  // class that can be dragged from outside
+      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
       removable: '#trash',
-      removeTimeout: 100,
-      acceptWidgets: '.newWidget'
+      removeTimeout: 100
     }, '#advanced-grid');
     advGrid.load(advanced);
     
-    $('.newWidget').draggable({
-      revert: 'invalid',
-      scroll: false,
-      appendTo: 'body',
-      helper: 'clone'
-    });
     $('#search').on('submit', function (event) {
       event.preventDefault();
       var searchTerm = $('#searchTerm').val();
