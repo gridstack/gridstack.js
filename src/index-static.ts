@@ -1,4 +1,4 @@
-// index.static.ts 3.1.3 - everything you need for a static Grid (non draggable) @preserve
+// index.static.ts 3.1.3-dev - everything you need for a static Grid (non draggable) @preserve
 
 // import './gridstack-poly.js';
 

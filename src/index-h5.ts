@@ -1,4 +1,4 @@
-// index.html5.ts 3.1.3 - everything you need for a Grid that uses HTML5 native drag&drop (work in progress) @preserve
+// index.html5.ts 3.1.3-dev - everything you need for a Grid that uses HTML5 native drag&drop (work in progress) @preserve
 
 // import './gridstack-poly.js';
 
