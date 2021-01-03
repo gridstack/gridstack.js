@@ -49,6 +49,7 @@ Change log
 - fix [1540](https://github.com/gridstack/gridstack.js/issues/1540) Safari H5 drag&drop fixed
 - fix [1545](https://github.com/gridstack/gridstack.js/issues/1545) `disableMove()` correctly prevents drag later (remove events and draggable attribute)
 - fix [1546](https://github.com/gridstack/gridstack.js/issues/1546) resize no longer delayed, which caused race conditions errors
+- fix [1001](https://github.com/gridstack/gridstack.js/issues/1001) resizing near bottom/top needs to auto-scroll/. thanks [@hbcarlos](https://github.com/hbcarlos)!
 
 ## 3.1.2 (2020-12-7)
 

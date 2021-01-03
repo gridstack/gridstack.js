@@ -328,14 +328,12 @@ export class Utils {
     }
   }
 
-  /** 
-   * @internal
-   * 
-   * Function used to scroll the page.
-   * 
+  /**
+   * @internal Function used to scroll the page.
+   *
    * @param event `MouseEvent` that triggers the resize
    * @param el `HTMLElement` that's being resized
-   * @param distance Distance to scroll
+   * @param distance Distance from the V edges to start scrolling
    */
   static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
     const scrollEl = this.getScrollParent(el);
@@ -348,7 +346,6 @@ export class Utils {
       // This also can be done with a timeout to keep scrolling while the mouse is
       // in the scrolling zone. (will have smoother behavior)
       scrollEl.scrollBy({ behavior: 'smooth', top: event.clientY - distance});
-
     } else if (bottom) {
       scrollEl.scrollBy({ behavior: 'smooth', top: distance - (height - event.clientY)});
     }
