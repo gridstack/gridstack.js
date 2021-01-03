@@ -1,4 +1,4 @@
-// dd-elements.ts 3.1.2-dev @preserve
+// dd-elements.ts 3.1.3 @preserve
 
 /**
  * https://gridstackjs.com/

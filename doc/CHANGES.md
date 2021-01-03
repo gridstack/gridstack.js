@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.1.2-dev](#312-dev)
+- [3.1.3](#313)
 - [3.1.2 (2020-12-7)](#312-2020-12-7)
 - [3.1.0 (2020-12-4)](#310-2020-12-4)
 - [3.0.0 (2020-11-29)](#300-2020-11-29)
@@ -43,12 +43,13 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 3.1.2-dev
+## 3.1.3
 
 - fix [1535](https://github.com/gridstack/gridstack.js/issues/1535) use batchUpdate() around grid init to make sure gs-y attributes are respected.
 - fix [1540](https://github.com/gridstack/gridstack.js/issues/1540) Safari H5 drag&drop fixed
 - fix [1545](https://github.com/gridstack/gridstack.js/issues/1545) `disableMove()` correctly prevents drag later (remove events and draggable attribute)
 - fix [1546](https://github.com/gridstack/gridstack.js/issues/1546) resize no longer delayed, which caused race conditions errors
+- fix [1001](https://github.com/gridstack/gridstack.js/issues/1001) resizing near bottom/top needs to auto-scroll/. thanks [@hbcarlos](https://github.com/hbcarlos)!
 
 ## 3.1.2 (2020-12-7)
 
