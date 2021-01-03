@@ -415,6 +415,8 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       if (node._lastTriedX === x && node._lastTriedY === y) return;
     } else if (event.type === 'resize')  {
       if (x < 0) return;
+      // Scrolling page if needed
+      Utils.updateScrollResize(event as MouseEvent, el, cellHeight);
       w = Math.round(ui.size.width / cellWidth);
       h = Math.round(ui.size.height / cellHeight);
       if (w === node.w && h === node.h) return;

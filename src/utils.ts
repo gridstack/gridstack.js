@@ -280,15 +280,15 @@ export class Utils {
 
   /** @internal */
   static getScrollParent(el: HTMLElement): HTMLElement {
-    let returnEl;
-    if (el === null) {
-      returnEl = null;
-    } else if (el.scrollHeight > el.clientHeight) {
-      returnEl = el;
+    if (el === null) return document.documentElement;
+    const style = getComputedStyle(el);
+    const overflowRegex = /(auto|scroll)/;
+
+    if (overflowRegex.test(style.overflow + style.overflowY)) {
+      return el;
     } else {
-      returnEl = this.getScrollParent(el.parentElement);
+      return this.getScrollParent(el.parentElement);
     }
-    return returnEl;
   }
 
   /** @internal */
@@ -325,6 +325,32 @@ export class Utils {
         // move widget y by amount scrolled
         position.top += scrollEl.scrollTop - prevScroll;
       }
+    }
+  }
+
+  /** 
+   * @internal
+   * 
+   * Function used to scroll the page.
+   * 
+   * @param event `MouseEvent` that triggers the resize
+   * @param el `HTMLElement` that's being resized
+   * @param distance Distance to scroll
+   */
+  static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
+    const scrollEl = this.getScrollParent(el);
+    const height = scrollEl.clientHeight;
+
+    const top = event.clientY < distance;
+    const bottom = event.clientY > height - distance;
+
+    if (top) {
+      // This also can be done with a timeout to keep scrolling while the mouse is
+      // in the scrolling zone. (will have smoother behavior)
+      scrollEl.scrollBy({ behavior: 'smooth', top: event.clientY - distance});
+
+    } else if (bottom) {
+      scrollEl.scrollBy({ behavior: 'smooth', top: distance - (height - event.clientY)});
     }
   }
 }
