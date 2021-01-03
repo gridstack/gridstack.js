@@ -123,7 +123,7 @@ describe('gridstack utils', function() {
       expect(el.style.position).toEqual('');
 
       // bogus test
-      expect(Utils.getScrollParent(el)).toEqual(null);
+      expect(Utils.getScrollParent(el)).not.toBe(null);
       // bogus test
       Utils.updateScrollPosition(el, {top: 20}, 10);
     });
