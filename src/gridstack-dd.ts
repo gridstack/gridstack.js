@@ -77,7 +77,16 @@ export abstract class GridStackDD extends GridStackDDI {
 
 /** @internal called to add drag over support to support widgets */
 GridStack.prototype._setupAcceptWidget = function(): GridStack {
-  if (this.opts.staticGrid || !this.opts.acceptWidgets) return this;
+  if (this.opts.staticGrid) return this;
+
+  // if we don't accept external widgets (default) we still need to accept dragging within our
+  // list of items (else we get a no-drop icon on windows)
+  if (!this.opts.acceptWidgets) {
+    GridStackDD.get().droppable(this.el, {
+      accept: (el: GridItemHTMLElement) => el.gridstackNode && el.gridstackNode.grid === this
+    })
+    return this;
+  }
 
   let onDrag = (event, el: GridItemHTMLElement) => {
     let node = el.gridstackNode;

@@ -46,12 +46,12 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 3.1.3-dev
 
-- TBD
+- fix [1557](https://github.com/gridstack/gridstack.js/pull/1557) fixed no-drop cursor on windows when dragging within a default grid (no external drag in)
 
 ## 3.1.3 (2021-1-2)
 
-- fix [1535](https://github.com/gridstack/gridstack.js/issues/1535) use batchUpdate() around grid init to make sure gs-y attributes are respected.
 - fix [1540](https://github.com/gridstack/gridstack.js/issues/1540) Safari H5 drag&drop fixed
+- fix [1535](https://github.com/gridstack/gridstack.js/issues/1535) use batchUpdate() around grid init to make sure gs-y attributes are respected.
 - fix [1545](https://github.com/gridstack/gridstack.js/issues/1545) `disableMove()` correctly prevents drag later (remove events and draggable attribute)
 - fix [1546](https://github.com/gridstack/gridstack.js/issues/1546) resize no longer delayed, which caused race conditions errors
 - fix [1001](https://github.com/gridstack/gridstack.js/issues/1001) resizing near bottom/top needs to auto-scroll/. thanks [@hbcarlos](https://github.com/hbcarlos)!
