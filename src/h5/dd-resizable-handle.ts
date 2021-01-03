@@ -20,10 +20,8 @@ export class DDResizableHandle {
   private option: DDResizableHandleOpt;
   /** @internal */
   private dir: string;
-  /** @internal */
-  private mouseMoving = false;
-  /** @internal */
-  private started = false;
+  /** @internal true after we've moved enough pixels to start a resize */
+  private moving = false;
   /** @internal */
   private mouseDownEvent: MouseEvent;
   /** @internal */
@@ -38,10 +36,11 @@ export class DDResizableHandle {
     this._mouseMove = this._mouseMove.bind(this);
     this._mouseUp = this._mouseUp.bind(this);
 
-    this.init();
+    this._init();
   }
 
-  public init(): DDResizableHandle {
+  /** @internal */
+  private _init(): DDResizableHandle {
     const el = document.createElement('div');
     el.classList.add('ui-resizable-handle');
     el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
@@ -53,68 +52,49 @@ export class DDResizableHandle {
     return this;
   }
 
+  /** call this when resize handle needs to be removed and cleaned up */
   public destroy(): DDResizableHandle {
+    if (this.moving) this._mouseUp(this.mouseDownEvent);
+    this.el.removeEventListener('mousedown', this._mouseDown);
     this.host.removeChild(this.el);
+    delete this.el;
+    delete this.host;
     return this;
   }
 
-  /** @internal */
-  private _mouseDown(event: MouseEvent): void {
-    this.mouseDownEvent = event;
-    setTimeout(() => {
-      document.addEventListener('mousemove', this._mouseMove, true);
-      document.addEventListener('mouseup', this._mouseUp);
-      setTimeout(() => {
-        if (!this.mouseMoving) {
-          document.removeEventListener('mousemove', this._mouseMove, true);
-          document.removeEventListener('mouseup', this._mouseUp);
-          delete this.mouseDownEvent;
-        }
-      }, 300);
-    }, 100);
+  /** @internal called on mouse down on us: capture move on the entire document (mouse might not stay on us) until we release the mouse */
+  private _mouseDown(e: MouseEvent): void {
+    this.mouseDownEvent = e;
+    document.addEventListener('mousemove', this._mouseMove, true); // capture, not bubble
+    document.addEventListener('mouseup', this._mouseUp);
   }
 
   /** @internal */
-  private _mouseMove(event: MouseEvent): void {
-    if (!this.started && !this.mouseMoving) {
-      if (this._hasMoved(event, this.mouseDownEvent)) {
-        this.mouseMoving = true;
-        this._triggerEvent('start', this.mouseDownEvent);
-        this.started = true;
-      }
-    }
-    if (this.started) {
-      this._triggerEvent('move', event);
+  private _mouseMove(e: MouseEvent): void {
+    let s = this.mouseDownEvent;
+    // don't start unless we've moved at least 3 pixels
+    if (!this.moving && Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 2) {
+      this.moving = true;
+      this._triggerEvent('start', this.mouseDownEvent);
+    } else if (this.moving) {
+      this._triggerEvent('move', e);
     }
   }
 
   /** @internal */
-  private _mouseUp(event: MouseEvent): void {
-    if (this.mouseMoving) {
-      this._triggerEvent('stop', event);
+  private _mouseUp(e: MouseEvent): void {
+    if (this.moving) {
+      this._triggerEvent('stop', e);
     }
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp);
-    this.mouseMoving = false;
-    this.started = false;
+    delete this.moving;
     delete this.mouseDownEvent;
   }
 
   /** @internal */
-  private _hasMoved(event: MouseEvent, oEvent: MouseEvent): boolean {
-    const { clientX, clientY } = event;
-    const { clientX: oClientX, clientY: oClientY } = oEvent;
-    return (
-      Math.abs(clientX - oClientX) > 1
-      || Math.abs(clientY - oClientY) > 1
-    );
-  }
-
-  /** @internal */
   private _triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
-    if (this.option[name]) {
-      this.option[name](event);
-    }
+    if (this.option[name]) this.option[name](event);
     return this;
   }
 }
