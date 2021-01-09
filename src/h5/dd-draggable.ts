@@ -56,8 +56,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   private helperContainment: HTMLElement;
   /** @internal */
   private static basePosition: 'fixed' | 'absolute' = 'absolute';
-  /** @internal */
-  private static dragEventListenerOption = DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
+  /** @internal #1541 can't have {passive: true} on Safari as otherwise it reverts animate back to old location on drop */
+  private static dragEventListenerOption = true; // DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
   /** @internal */
   private static originStyleProp = ['transition', 'pointerEvents', 'position',
     'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange'];
@@ -164,6 +164,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   private _drag(event: DragEvent): void {
+    // Safari: prevent default to allow drop to happen instead of reverting back (with animation) and delaying dragend #1541
+    // https://stackoverflow.com/questions/61760755/how-to-fire-dragend-event-immediately
+    event.preventDefault();
     this._dragFollow(event);
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drag' });
     if (this.option.drag) {
