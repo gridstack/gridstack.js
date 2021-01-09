@@ -46,7 +46,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 3.1.3-dev
 
-- fix [1557](https://github.com/gridstack/gridstack.js/pull/1557) fixed no-drop cursor on windows when dragging within a default grid (no external drag in)
+- fix [1557](https://github.com/gridstack/gridstack.js/pull/1557) fix no-drop cursor on windows when dragging within a default grid (no external drag in)
+- fix [1541](https://github.com/gridstack/gridstack.js/pull/1541) fix Safari H5 elay when dropping items
 
 ## 3.1.3 (2021-1-2)
 
