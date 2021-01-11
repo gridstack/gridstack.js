@@ -427,7 +427,7 @@ export class GridStack {
     // check for HTML content as well
     if (saveContent) {
       list.forEach(n => {
-        if (n.el) {
+        if (n.el && !n.subGrid) { // sub-grid are saved differently, not plain content
           let sub = n.el.querySelector('.grid-stack-item-content');
           n.content = sub ? sub.innerHTML : undefined;
           if (!n.content) delete n.content;
@@ -442,7 +442,7 @@ export class GridStack {
       // check for nested grid
       list.forEach(n => {
         if (n.subGrid) {
-          n.subGrid = (n.subGrid as GridStack).save(saveContent, true) as GridStackOptions;
+          n.subGrid = (n.subGrid as GridStack).save(saveContent, saveGridOpt) as GridStackOptions;
         }
       })
 
