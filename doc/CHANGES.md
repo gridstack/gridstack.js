@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.1.3-dev](#313-dev)
+- [3.1.4-dev](#314-dev)
+- [3.1.4 (2021-1-11)](#314-2021-1-11)
 - [3.1.3 (2021-1-2)](#313-2021-1-2)
 - [3.1.2 (2020-12-7)](#312-2020-12-7)
 - [3.1.0 (2020-12-4)](#310-2020-12-4)
@@ -44,10 +45,13 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 3.1.3-dev
+## 3.1.4-dev
+
+- TBD
+## 3.1.4 (2021-1-11)
 
 - fix [1557](https://github.com/gridstack/gridstack.js/pull/1557) fix no-drop cursor on windows when dragging within a default grid (no external drag in)
-- fix [1541](https://github.com/gridstack/gridstack.js/pull/1541) fix Safari H5 elay when dropping items
+- fix [1541](https://github.com/gridstack/gridstack.js/pull/1541) fix Safari H5 delay when dropping items
 
 ## 3.1.3 (2021-1-2)
 
