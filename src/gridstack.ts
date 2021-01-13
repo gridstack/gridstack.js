@@ -163,7 +163,7 @@ export class GridStack {
    * @param opt grids options used to initialize the grid, and list of children
    */
   public static addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack {
-    if (!parent) { return null; }
+    if (!parent) return null;
 
     // create the grid element
     let doc = document.implementation.createHTMLDocument();
@@ -621,7 +621,7 @@ export class GridStack {
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
   public column(column: number, layout: ColumnOptions = 'moveScale'): GridStack {
-    if (this.opts.column === column) { return this; }
+    if (this.opts.column === column) return this;
     let oldColumn = this.opts.column;
 
     // if we go into 1 column mode (which happens if we're sized less than minW unless disableOneColumnMode is on)
@@ -673,7 +673,7 @@ export class GridStack {
    * @param removeDOM if `false` grid and items HTML elements will not be removed from the DOM (Optional. Default `true`).
    */
   public destroy(removeDOM = true): GridStack {
-    if (!this.el) { return; } // prevent multiple calls
+    if (!this.el) return; // prevent multiple calls
     this._updateWindowResizeEvent(true);
     this.setStatic(true); // permanently removes DD
     if (!removeDOM) {
@@ -702,7 +702,7 @@ export class GridStack {
    *  grid.enableResize(false);
    */
   public disable(): GridStack {
-    if (this.opts.staticGrid) { return; }
+    if (this.opts.staticGrid) return;
     this.enableMove(false);
     this.enableResize(false);
     this._triggerEvent('disable');
@@ -718,7 +718,7 @@ export class GridStack {
    *  grid.enableResize(true);
    */
   public enable(): GridStack {
-    if (this.opts.staticGrid) { return; }
+    if (this.opts.staticGrid) return;
     this.enableMove(true);
     this.enableResize(true);
     this._triggerEvent('enable');
@@ -733,7 +733,7 @@ export class GridStack {
    * doEnable`s value by changing the disableDrag grid option (default: true).
    */
   public enableMove(doEnable: boolean, includeNewWidgets = true): GridStack {
-    if (this.opts.staticGrid) { return this; } // can't move a static grid!
+    if (this.opts.staticGrid) return this; // can't move a static grid!
     this.getGridItems().forEach(el => this.movable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableDrag = !doEnable;
@@ -748,7 +748,7 @@ export class GridStack {
    * doEnable`s value by changing the disableResize grid option (default: true).
    */
   public enableResize(doEnable: boolean, includeNewWidgets = true): GridStack {
-    if (this.opts.staticGrid) { return this; } // can't size a static grid!
+    if (this.opts.staticGrid) return this; // can't size a static grid!
     this.getGridItems().forEach(el => this.resizable(el, doEnable));
     if (includeNewWidgets) {
       this.opts.disableResize = !doEnable;
@@ -978,7 +978,7 @@ export class GridStack {
    * @param val if true the grid become static.
    */
   public setStatic(val: boolean): GridStack {
-    if (this.opts.staticGrid === val) { return this; }
+    if (this.opts.staticGrid === val) return this;
     this.opts.staticGrid = val;
     this.engine.nodes.forEach(n => this._prepareDragDropByNode(n)); // either delete Drag&drop or initialize it
     this._setStaticClass();
@@ -1002,7 +1002,7 @@ export class GridStack {
     }
 
     GridStack.getElements(els).forEach(el => {
-      if (!el || !el.gridstackNode) { return; }
+      if (!el || !el.gridstackNode) return;
       let n = el.gridstackNode;
       let w = {...opt}; // make a copy we can modify in case they re-use it or multiple items
       delete w.autoPosition;
@@ -1111,7 +1111,7 @@ export class GridStack {
 
   /** @internal */
   private _triggerChangeEvent(): GridStack {
-    if (this.engine.batchMode) { return this; }
+    if (this.engine.batchMode) return this;
     let elements = this.engine.getDirtyNodes(true); // verify they really changed
     if (elements && elements.length) {
       if (!this._ignoreLayoutsNodeChange) {
@@ -1125,7 +1125,7 @@ export class GridStack {
 
   /** @internal */
   private _triggerAddEvent(): GridStack {
-    if (this.engine.batchMode) { return this }
+    if (this.engine.batchMode) return this;
     if (this.engine.addedNodes && this.engine.addedNodes.length > 0) {
       if (!this._ignoreLayoutsNodeChange) {
         this.engine.layoutsNodesChange(this.engine.addedNodes);
@@ -1140,7 +1140,7 @@ export class GridStack {
 
   /** @internal */
   public _triggerRemoveEvent(): GridStack {
-    if (this.engine.batchMode) { return this; }
+    if (this.engine.batchMode) return this;
     if (this.engine.removedNodes && this.engine.removedNodes.length > 0) {
       this._triggerEvent('removed', this.engine.removedNodes);
       this.engine.removedNodes = [];
@@ -1189,7 +1189,7 @@ export class GridStack {
       // insert style to parent (instead of 'head' by default) to support WebComponent
       let styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
       this._styles = Utils.createStylesheet(id, styleLocation);
-      if (!this._styles) { return this; }
+      if (!this._styles) return this;
       this._styles._id = id;
       this._styles._max = 0;
 
@@ -1231,7 +1231,7 @@ export class GridStack {
 
   /** @internal */
   private _updateContainerHeight(): GridStack {
-    if (!this.engine || this.engine.batchMode) { return this; }
+    if (!this.engine || this.engine.batchMode) return this;
     let row = this.getRow(); // checks for minRow already
     // check for css min height
     let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
@@ -1248,7 +1248,7 @@ export class GridStack {
     }
     let cellHeight = this.opts.cellHeight as number;
     let unit = this.opts.cellHeightUnit;
-    if (!cellHeight) { return this }
+    if (!cellHeight) return this;
     this.el.style.height = row * cellHeight + unit;
     return this;
   }
@@ -1338,7 +1338,7 @@ export class GridStack {
 
     // remove any key not found (null or false which is default)
     for (const key in node) {
-      if (!node.hasOwnProperty(key)) { return; }
+      if (!node.hasOwnProperty(key)) return;
       if (!node[key] && node[key] !== 0) { // 0 can be valid value (x,y only really)
         delete node[key];
       }
@@ -1379,12 +1379,12 @@ export class GridStack {
     }
 
     if (!this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth) {
-      if (this._oneColumnMode) { return this }
+      if (this._oneColumnMode) return this;
       this._oneColumnMode = true;
       this.column(1);
       this._resizeNestedGrids(this.el);
     } else {
-      if (!this._oneColumnMode) { return this }
+      if (!this._oneColumnMode) return this;
       delete this._oneColumnMode;
       this.column(this._prevColumn);
       this._resizeNestedGrids(this.el);
@@ -1497,25 +1497,25 @@ export class GridStack {
    * @param els widget or selector to modify.
    * @param val if true widget will be draggable.
    */
-  public movable(els: GridStackElement, val: boolean): GridStack { return this; }
+  public movable(els: GridStackElement, val: boolean): GridStack { return this }
   /**
    * Enables/Disables resizing. No-op for static grids.
    * @param els  widget or selector to modify
    * @param val  if true widget will be resizable.
    */
-  public resizable(els: GridStackElement, val: boolean): GridStack { return this; }
+  public resizable(els: GridStackElement, val: boolean): GridStack { return this }
   /** @internal called to add drag over support to support widgets */
-  public _setupAcceptWidget(): GridStack { return this; }
+  public _setupAcceptWidget(): GridStack { return this }
   /** @internal called to setup a trash drop zone if the user specifies it */
-  public _setupRemoveDrop(): GridStack { return this; }
+  public _setupRemoveDrop(): GridStack { return this }
   /** @internal */
-  public _setupRemovingTimeout(el: GridItemHTMLElement): GridStack { return this; }
+  public _setupRemovingTimeout(el: GridItemHTMLElement): GridStack { return this }
   /** @internal */
-  public _clearRemovingTimeout(el: GridItemHTMLElement): GridStack { return this; }
+  public _clearRemovingTimeout(el: GridItemHTMLElement): GridStack { return this }
   /** @internal call to setup dragging in from the outside (say toolbar), with options */
   public _setupDragIn():  GridStack {return this; }
   /** @internal prepares the element for drag&drop **/
-  public _prepareDragDropByNode(node: GridStackNode): GridStack { return this; }
+  public _prepareDragDropByNode(node: GridStackNode): GridStack { return this }
 
   // 2.x API that just calls the new and better update() - keep those around for backward compat only...
   /** @internal */

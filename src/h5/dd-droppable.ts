@@ -50,14 +50,14 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public enable(): void {
-    if (!this.disabled) { return; }
+    if (!this.disabled) return;
     super.enable();
     this.el.classList.remove('ui-droppable-disabled');
     this.el.addEventListener('dragenter', this._dragEnter);
   }
 
   public disable(): void {
-    if (this.disabled) { return; }
+    if (this.disabled) return;
     super.disable();
     this.el.classList.add('ui-droppable-disabled');
     this.el.removeEventListener('dragenter', this._dragEnter);
@@ -107,7 +107,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal called when the item is leaving our area, stop tracking if we had acceptable item */
   private _dragLeave(event: DragEvent): void {
-    if (this.el.contains(event.relatedTarget as HTMLElement)) { return; }
+    if (this.el.contains(event.relatedTarget as HTMLElement)) return;
     this._removeLeaveCallbacks();
     if (this.acceptable) {
       event.preventDefault();
@@ -121,7 +121,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal item is being dropped on us - call the client drop event */
   private _drop(event: DragEvent): void {
-    if (!this.acceptable) { return; } // should not have received event...
+    if (!this.acceptable) return; // should not have received event...
     event.preventDefault();
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drop' });
     if (this.option.drop) {

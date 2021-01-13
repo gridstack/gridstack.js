@@ -9,7 +9,7 @@ describe('gridstack engine', function() {
   let w: any = window;
 
   let findNode = function(engine, id) {
-    return engine.nodes.find(function(i) { return i.id === id; });
+    return engine.nodes.find((i) => i.id === id);
   };
 
   it('should exist setup function.', function() {

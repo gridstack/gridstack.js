@@ -133,7 +133,7 @@ export class GridStackDDNative extends GridStackDD {
   /** @internal returns a list of DD elements, creating them on the fly by default */
   private _getDDElements(els: GridStackElement, create = true): DDElement[] {
     let hosts = Utils.getElements(els) as DDElementHost[];
-    if (!hosts.length) { return []; }
+    if (!hosts.length) return [];
     let list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));
     if (!create) { list.filter(d => d); } // remove nulls
     return list;
