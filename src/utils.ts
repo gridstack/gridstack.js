@@ -72,7 +72,7 @@ export class Utils {
   /** convert a potential selector into actual single element */
   static getElement(els: GridStackElement): HTMLElement {
     if (typeof els === 'string') {
-      if (!els.length) { return null}
+      if (!els.length) return null;
       if (els[0] === '#') {
         return document.getElementById(els.substring(1));
       }
@@ -198,7 +198,7 @@ export class Utils {
 
     sources.forEach(source => {
       for (const key in source) {
-        if (!source.hasOwnProperty(key)) { return; }
+        if (!source.hasOwnProperty(key)) return;
         if (target[key] === null || target[key] === undefined) {
           target[key] = source[key];
         } else if (typeof source[key] === 'object' && typeof target[key] === 'object') {
@@ -213,12 +213,12 @@ export class Utils {
 
   /** given 2 objects return true if they have the same values. Checks for Object {} having same fields and values (just 1 level down) */
   static same(a: unknown, b: unknown): boolean {
-    if (typeof a !== 'object')  { return a == b; }
-    if (typeof a !== typeof b) { return false; }
+    if (typeof a !== 'object')  return a == b;
+    if (typeof a !== typeof b) return false;
     // else we have object, check just 1 level deep for being same things...
-    if (Object.keys(a).length !== Object.keys(b).length) { return false; }
+    if (Object.keys(a).length !== Object.keys(b).length) return false;
     for (const key in a) {
-      if (a[key] !== b[key]) { return false; }
+      if (a[key] !== b[key]) return false;
     }
     return true;
   }

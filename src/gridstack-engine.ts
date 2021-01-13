@@ -82,7 +82,7 @@ export class GridStackEngine {
     }
     while (true) {
       let collisionNode = this.nodes.find( n => n !== node && Utils.isIntercepted(n, nn), {node: node, nn: nn});
-      if (!collisionNode) { return this }
+      if (!collisionNode) return this;
       let moved;
       if (collisionNode.locked) {
         // if colliding with a locked item, move ourself instead
@@ -92,7 +92,7 @@ export class GridStackEngine {
         moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.h,
           collisionNode.w, collisionNode.h, true);
       }
-      if (!moved) { return this } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
+      if (!moved) return this; // break inf loop if we couldn't move after all (ex: maxRow, fixed)
     }
   }
 
@@ -106,7 +106,7 @@ export class GridStackEngine {
 
   /** re-layout grid items to reclaim any empty space */
   public compact(): GridStackEngine {
-    if (this.nodes.length === 0) { return this }
+    if (this.nodes.length === 0) return this;
     this.batchUpdate();
     this._sortNodes();
     let copyNodes = this.nodes;
@@ -124,7 +124,7 @@ export class GridStackEngine {
 
   /** enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html) */
   public set float(val: boolean) {
-    if (this._float === val) { return; }
+    if (this._float === val) return;
     this._float = val || false;
     if (!val) {
       this._packNodes();
@@ -165,7 +165,7 @@ export class GridStackEngine {
       });
     } else {
       this.nodes.forEach((n, i) => {
-        if (n.locked) { return this }
+        if (n.locked) return this;
         while (n.y > 0) {
           let newY = n.y - 1;
           let canBeMoved = i === 0;
@@ -284,7 +284,7 @@ export class GridStackEngine {
 
   /** @internal */
   private _notify(nodes?: GridStackNode | GridStackNode[], removeDOM = true): GridStackEngine {
-    if (this.batchMode) { return this }
+    if (this.batchMode) return this;
     nodes = (nodes === undefined ? [] : (Array.isArray(nodes) ? nodes : [nodes]) );
     let dirtyNodes = nodes.concat(this.getDirtyNodes());
     if (this.onChange) {
@@ -294,7 +294,7 @@ export class GridStackEngine {
   }
 
   public cleanNodes(): GridStackEngine {
-    if (this.batchMode) { return this }
+    if (this.batchMode) return this;
     this.nodes.forEach(n => { delete n._dirty; });
     return this;
   }
@@ -348,7 +348,7 @@ export class GridStackEngine {
 
   public removeAll(removeDOM = true): GridStackEngine {
     delete this._layouts;
-    if (this.nodes.length === 0) { return this }
+    if (this.nodes.length === 0) return this;
     if (removeDOM) {
       this.nodes.forEach(n => { n._id = null; }); // hint that node is being removed
     }
@@ -427,7 +427,7 @@ export class GridStackEngine {
   }
 
   public moveNode(node: GridStackNode, x: number, y: number, w?: number, h?: number, noPack?: boolean): GridStackNode {
-    if (node.locked) { return null; }
+    if (node.locked) return null;
     if (typeof x !== 'number') { x = node.x; }
     if (typeof y !== 'number') { y = node.y; }
     if (typeof w !== 'number') { w = node.w; }
@@ -544,7 +544,7 @@ export class GridStackEngine {
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
   public updateNodeWidths(oldColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
-    if (!this.nodes.length || oldColumn === column) { return this }
+    if (!this.nodes.length || oldColumn === column) return this;
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
     this.cacheLayout(this.nodes, oldColumn);

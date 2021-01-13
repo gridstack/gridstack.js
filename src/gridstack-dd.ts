@@ -170,7 +170,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
     })
     .on(this.el, 'dropout', (event, el: GridItemHTMLElement) => {
       let node = el.gridstackNode;
-      if (!node) { return; }
+      if (!node) return;
 
       // clear any added flag now that we are leaving #1484
       delete node._added;
@@ -195,7 +195,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       let node = el.gridstackNode;
       let wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
       // ignore drop on ourself from ourself - dragend will handle the simple move instead
-      if (node && node.grid === this) { return false; }
+      if (node && node.grid === this) return false;
 
       this.placeholder.remove();
 
@@ -210,7 +210,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         oGrid._triggerRemoveEvent();
       }
 
-      if (!node) { return false; }
+      if (!node) return false;
 
       // use existing placeholder node as it's already in our list with drop location
       if (wasAdded) {
@@ -522,10 +522,10 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
  * @param val if true widget will be draggable.
  */
 GridStack.prototype.movable = function(els: GridStackElement, val: boolean): GridStack {
-  if (this.opts.staticGrid) { return this; } // can't move a static grid!
+  if (this.opts.staticGrid) return this; // can't move a static grid!
   GridStack.getElements(els).forEach(el => {
     let node = el.gridstackNode;
-    if (!node || node.locked) { return }
+    if (!node || node.locked) return;
     node.noMove = !(val || false);
     if (node.noMove) {
       GridStackDD.get().draggable(el, 'disable');
@@ -545,10 +545,10 @@ GridStack.prototype.movable = function(els: GridStackElement, val: boolean): Gri
  * @param val  if true widget will be resizable.
  */
 GridStack.prototype.resizable = function(els: GridStackElement, val: boolean): GridStack {
-  if (this.opts.staticGrid) { return this; } // can't resize a static grid!
+  if (this.opts.staticGrid) return this; // can't resize a static grid!
   GridStack.getElements(els).forEach(el => {
     let node = el.gridstackNode;
-    if (!node || node.locked) { return; }
+    if (!node || node.locked) return;
     node.noResize = !(val || false);
     if (node.noResize) {
       GridStackDD.get().resizable(el, 'disable');
