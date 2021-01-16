@@ -127,14 +127,22 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
     .droppable(this.el, {
       accept: (el: GridItemHTMLElement) => {
         let node: GridStackNode = el.gridstackNode;
-        if (node && node.grid === this) {
-          return true; // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
-        }
+        // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
+        if (node && node.grid === this) return true;
+        // check for accept method or class matching
+        let canAccept = true;
         if (typeof this.opts.acceptWidgets === 'function') {
-          return this.opts.acceptWidgets(el);
+          canAccept = this.opts.acceptWidgets(el);
+        } else {
+          let selector = (this.opts.acceptWidgets === true ? '.grid-stack-item' : this.opts.acceptWidgets as string);
+          canAccept = el.matches(selector);
         }
-        let selector = (this.opts.acceptWidgets === true ? '.grid-stack-item' : this.opts.acceptWidgets as string);
-        return el.matches(selector);
+        // finally check to make sure we actually have space left #1571
+        if (canAccept && node && this.opts.maxRow) {
+          let n = {w: node.w, h: node.h, minW: node.minW, minH: node.minH}; // only width/height matters
+          canAccept = this.engine.willItFit(n);
+        }
+        return canAccept;
       }
     })
     .on(this.el, 'dropover', (event, el: GridItemHTMLElement) => {

@@ -48,6 +48,7 @@ Change log
 ## 3.1.4-dev
 
 - fix [1572](https://github.com/gridstack/gridstack.js/issues/1572) `column: N` option now sets CSS class
+- fix [1571](https://github.com/gridstack/gridstack.js/issues/1571) don't allow drop when grid is full
 
 ## 3.1.4 (2021-1-11)
 
