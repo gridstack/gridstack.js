@@ -247,6 +247,19 @@ describe('gridstack', function() {
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
     }); 
+    it('should set construct CSS class', function() {
+      let grid = GridStack.init({column: 1});
+      expect(grid.el.classList.contains('grid-stack-1')).toBe(true);
+      grid.column(2);
+      expect(grid.el.classList.contains('grid-stack-1')).toBe(false);
+      expect(grid.el.classList.contains('grid-stack-2')).toBe(true);
+    }); 
+    it('should set CSS class', function() {
+      let grid = GridStack.init();
+      expect(grid.el.classList.contains('grid-stack')).toBe(true);
+      grid.column(1);
+      expect(grid.el.classList.contains('grid-stack-1')).toBe(true);
+    }); 
     it('should SMALL change column number, no relayout', function() {
       let options = {
         column: 12
