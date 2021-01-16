@@ -179,7 +179,7 @@ GridStack.init( {column: N} );
 <div class="grid-stack grid-stack-N">...</div>
 ```
 
-Note: we added `.grid-stack-N` and include `gridstack-extra.css` which defines CSS for grids with custom [2-11] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
+Note: class `.grid-stack-N` was added and we include `gridstack-extra.css` which defines CSS for grids with custom [2-11] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
 
 See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html) with 6 columns
 

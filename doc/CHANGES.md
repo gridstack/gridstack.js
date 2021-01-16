@@ -47,11 +47,12 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 3.1.4-dev
 
-- TBD
+- fix [1572](https://github.com/gridstack/gridstack.js/issues/1572) `column: N` option now sets CSS class
+
 ## 3.1.4 (2021-1-11)
 
-- fix [1557](https://github.com/gridstack/gridstack.js/pull/1557) fix no-drop cursor on windows when dragging within a default grid (no external drag in)
-- fix [1541](https://github.com/gridstack/gridstack.js/pull/1541) fix Safari H5 delay when dropping items
+- fix [1557](https://github.com/gridstack/gridstack.js/issues/1557) fix no-drop cursor on windows when dragging within a default grid (no external drag in)
+- fix [1541](https://github.com/gridstack/gridstack.js/issues/1541) fix Safari H5 delay when dropping items
 
 ## 3.1.3 (2021-1-2)
 
