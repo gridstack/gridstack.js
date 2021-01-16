@@ -338,6 +338,9 @@ export class GridStack {
     this.placeholder.appendChild(placeholderChild);
 
     this._updateStyles();
+    if (this.opts.column != 12) {
+      this.el.classList.add('grid-stack-' + this.opts.column);
+    }
 
     this._setupDragIn();
     this._setupRemoveDrop();
