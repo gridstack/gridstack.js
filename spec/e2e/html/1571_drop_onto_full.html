@@ -69,12 +69,12 @@
       <div class="col-md-6">
         <a onClick="toggleFloat(this, 0)" class="btn btn-primary" href="#">float: false</a>
         <a onClick="compact(0)" class="btn btn-primary" href="#">Compact</a>
-        <div class="grid-stack grid-stack-6"></div>
+        <div class="grid-stack"></div>
       </div>
       <div class="col-md-6">
         <a onClick="toggleFloat(this, 1)" class="btn btn-primary" href="#">float: false</a>
         <a onClick="compact(1)" class="btn btn-primary" href="#">Compact</a>
-        <div class="grid-stack grid-stack-6"></div>
+        <div class="grid-stack"></div>
       </div>
     </div>
   </div>
@@ -82,8 +82,7 @@
   <script type="text/javascript">
     let options = {
       column: 6,
-      minRow: 1, // don't collapse when empty
-      maxRow: 3, // make it full
+      row: 1,
       cellHeight: 70,
       disableOneColumnMode: true,
       float: false,
@@ -95,7 +94,7 @@
     };
     let grids = GridStack.initAll(options);
     grids[0].load([{x: 4, y: 0, w: 1, h: 1}])
-    grids[1].load([{x: 0, y: 0, w: 6, h: 3}])
+    grids[1].load([{x: 0, y: 0, w: 6, h: 1}])
 
     grids.forEach(function (grid, i) {
       addEvents(grid, i);
