@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>drop onto full</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../dist/gridstack.min.css"/>
+  <script src="../../../dist/gridstack-h5.js"></script>
+
+  <style type="text/css">
+    *,
+    *::before,
+    *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: inherit;
+    }
+    html {
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+        box-sizing: border-box;
+        font-size: 62.5%;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background-color: rgb(216, 216, 216);
+    }
+    .container {
+        width: 70vw;
+        background-color: rgb(252, 252, 252);
+
+        display: grid;
+        grid-template-rows: 100%;
+        grid-template-columns: 5% 95%;
+        grid-row-gap: 0px;
+        grid-column-gap: 0px;
+    }
+    .side-grid-container {
+        grid-column: 1;
+        height: 100%;
+        width: 100%;
+        background-color: rgb(88, 90, 90);
+    }
+    .main-grid-container {
+        grid-column: 2;
+        height: 100%;
+        width: 100%;
+        background-color: rgb(92, 92, 92);
+    }
+    .grid-stack-item-content{
+        background-color: rgb(206, 214, 167);
+        font-size: large;
+    }
+    .right-grid{
+        background-color: rgb(168, 193, 218);
+    }
+    .left-grid {
+        background-color: rgb(114, 177, 196);
+    }
+    .drag-border {
+        border: solid 5px cyan;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="side-grid-container">
+      <div id='side-grid' class="left-grid grid-stack">
+      </div>
+    </div>
+    <div class="main-grid-container">
+      <div id="main-grid" class="right-grid grid-stack" >
+      </div>
+    </div>
+ </div>
+<script type="text/javascript">
+  let options = {
+    column: 1,
+    margin: 5,
+    disableResize: true
+  }
+
+  let options2 = {
+    disableOneColumnMode: true,
+    minRow: 3,
+    // maxRow: 3, // change this to show issue
+    acceptWidgets: true,
+    removable: true,
+    removeTimeout: 0,
+    float: true
+  }
+
+  let grid1 = GridStack.init(options, '#side-grid');
+  let grid2 = GridStack.init(options2, '#main-grid');
+
+  let items1 = [
+    {x: 0, y: 0, content: "1", id: 1},
+    {x: 0, y: 1, content: "2", id: 2},
+    {x: 0, y: 2, content: "3", id: 3}
+  ]
+  grid1.load(items1);
+  
+  grid2.load([{x: 1, y: 2, content: "4", id: 4}])
+
+  grid2.on('removed', function(e, items) {
+    item = items[0];
+    item.h = item.w = 1;
+    grid1.addWidget(item);
+  })
+
+</script>
+</body>
+</html>
