@@ -392,7 +392,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
   /** called when item is being dragged/resized */
   let dragOrResize = (event: Event, ui: DDUIData): void => {
     let x = Math.round(ui.position.left / cellWidth);
-    let y = Math.floor((ui.position.top + cellHeight / 2) / cellHeight);
+    let y = Math.round(ui.position.top / cellHeight);
     let w: number;
     let h: number;
 
@@ -401,7 +401,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       node._prevYPix = ui.position.top;
       Utils.updateScrollPosition(el, ui.position, distance);
       // if inTrash, outside of the bounds or added to another grid (#393) temporarily remove it from us
-      if (el.dataset.inTrashZone || x < 0 || x >= this.engine.column || y < 0 || (!this.engine.float && y > this.engine.getRow()) || node._added) {
+      if (el.dataset.inTrashZone || node._added || this.engine.isOutside(x, y, node)) {
         if (node._temporaryRemoved) return;
         if (this.opts.removable === true) {
           this._setupRemovingTimeout(el);
