@@ -30,7 +30,7 @@
     let count = 0;
     let items = [{x: 0, y: 0, w: 1, h:1, content: String(count++)}];
 
-    let grid = GridStack.init({column: 1});
+    let grid = GridStack.init({column: 1, minRow: 1});
     grid.load(items);
     addEvents(grid);
 
