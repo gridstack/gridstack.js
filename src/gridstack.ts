@@ -582,7 +582,7 @@ export class GridStack {
     this.opts.cellHeight = data.h;
 
     if (update) {
-      this._updateStyles(true); // true = force re-create
+      this._updateStyles(true, this.getRow()); // true = force re-create, for that # of rows
     }
     this._resizeNestedGrids(this.el);
     return this;

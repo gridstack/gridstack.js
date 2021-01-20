@@ -147,8 +147,7 @@ export class Utils {
   /** removed the given stylesheet id */
   static removeStylesheet(id: string): void {
     let el = document.querySelector('STYLE[gs-style-id=' + id + ']');
-    if (!el || !el.parentNode) return;
-    el.parentNode.removeChild(el);
+    if (el && el.parentNode) el.remove();
   }
 
   /** inserts a CSS rule */
