@@ -14,30 +14,20 @@
     <br/>
     <div class="grid-stack" id="right-grid">
       <div class="grid-stack-item">
-        <div class="grid-stack-item-content" id="button1">button1</div>
+        <div class="grid-stack-item-content" onclick="alert('1')">button1</div>
       </div>
     </div>
      <br/>
     <br/>
     <div class="grid-stack" id="left-grid">
       <div class="grid-stack-item">
-        <div class="grid-stack-item-content" id="button2">button2</div>
+        <div class="grid-stack-item-content" onclick="alert('2')">button2</div>
       </div>
     </div>
   </div>
 
   <script type="text/javascript">
     GridStack.initAll({acceptWidgets: true});
-
-    function pressed1(){
-      $('.container-fluid').append("button 1 pressed ");
-    }
-    
-    function pressed2(){
-      $('.container-fluid').append("button 2 pressed ");
-    }
-    $('#button1').click(pressed1);
-    $('#button2').click(pressed2);
   </script>
 </body>
 </html>

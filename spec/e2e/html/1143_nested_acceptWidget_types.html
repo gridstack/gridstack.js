@@ -23,6 +23,7 @@
   </style>
 </head>
 <body>
+  <h3>show dragging into sub grid</h3>
   <div class="row">
     <div class="col-md-2 d-none d-md-block">
       <div class="newWidget grid-stack-item">
@@ -37,15 +38,7 @@
           <div class="grid-stack-item-content">
             This nested grid accepts new widget with class "newWidget"<br/>
             The parent grid also accepts new widget but with a different class 'otherWidgetType'<br/>&nbsp;
-          <div class="grid-stack nested">
-            <div class="grid-stack-item sub" gs-x="0" gs-y="0" gs-w="3" gs-h="1"><div class="grid-stack-item-content">1</div></div>
-            <div class="grid-stack-item sub" gs-x="3" gs-y="0" gs-w="3" gs-h="1"><div class="grid-stack-item-content">2</div></div>
-            <div class="grid-stack-item sub" gs-x="6" gs-y="0" gs-w="3" gs-h="1"><div class="grid-stack-item-content">3</div></div>
-            <div class="grid-stack-item sub" gs-x="9" gs-y="0" gs-w="3" gs-h="1"><div class="grid-stack-item-content">4</div></div>
-            <div class="grid-stack-item sub" gs-x="0" gs-y="1" gs-w="3" gs-h="1"><div class="grid-stack-item-content">5</div></div>
-            <div class="grid-stack-item sub" gs-x="3" gs-y="1" gs-w="3" gs-h="1"><div class="grid-stack-item-content">6</div></div>
-          </div>
-            
+            <div class="grid-stack nested"></div>
           </div>
         </div>
       </div>
@@ -54,19 +47,25 @@
 
   <script type="text/javascript">
     let grid = GridStack.init({ acceptWidgets: '.otherWidgetType' }, '.grid-stack.outer');
-    let gridNest = GridStack.init({ acceptWidgets: '.newWidget' }, '.grid-stack.nested');
+    let gridNest = GridStack.init({
+      acceptWidgets: '.newWidget',
+      dragIn: '.newWidget', // class that can be dragged from outside
+      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
+      itemClass: 'sub',
+    }, '.grid-stack.nested');
+    gridNest.load([
+      {x:0, y:0, w:3, content:'1'},
+      {x:3, y:0, w:3, content:'2'},
+      {x:6, y:0, w:3, content:'2'},
+      {x:9, y:0, w:3, content:'3'},
+      {x:0, y:1, w:3, content:'4'},
+      {x:3, y:1, w:3, content:'5'},
+    ]);
     
     grid.on('added removed change', function(e, items) {
       let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
-    });
-
-    $('.newWidget').draggable({
-      revert: 'invalid',
-      scroll: false,
-      appendTo: 'body',
-      helper: 'clone'
     });
   </script>
 </body>
