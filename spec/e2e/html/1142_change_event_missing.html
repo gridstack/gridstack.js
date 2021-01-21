@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>1142 demo</title>
   <link rel="stylesheet" href="../../../demo/demo.css"/>
-  <script src="../../../dist/gridstack-h5.js"></script>
+  <script src="../../../dist/gridstack-jq.js"></script>
 </head>
 <body>
+  <h1>JQ test case with click to remove</h1>
   <div class="grid-stack">
     <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="3" gs-h="1"><div class="grid-stack-item-content">1 click to delete</div></div>
     <div class="grid-stack-item" gs-x="0" gs-y="1" gs-w="3" gs-h="1"><div class="grid-stack-item-content">2 missing change event</div></div>
@@ -27,7 +28,7 @@
 
   $('.grid-stack .grid-stack-item').click(function(e) {
     let item = $(e.currentTarget).closest('.grid-stack-item');
-    grid.removeWidget(item);
+    grid.removeWidget(item.get(0));
   });
 </script>
 </body>

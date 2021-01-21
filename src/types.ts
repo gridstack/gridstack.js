@@ -65,7 +65,8 @@ export interface GridStackOptions {
   /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns */
   column?: number;
 
-  /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance */
+  /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance.
+  Note: only used by addGrid(), else your element should have the needed class */
   class?: string;
 
   /** disallows dragging of widgets (default?: false) */
@@ -98,7 +99,7 @@ export interface GridStackOptions {
   /** draggable handle class (e.g. 'grid-stack-item-content'). If set 'handle' is ignored (default?: null) */
   handleClass?: string;
 
-  /** widget class (default?: 'grid-stack-item') */
+  /** additional widget class (default?: 'grid-stack-item') */
   itemClass?: string;
 
   /**
