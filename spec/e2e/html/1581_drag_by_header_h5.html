@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>drag by header</title>
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-h5.js"></script>
+  <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>dragging by header not conflicting with content drag (Sortable.js)</h1>
+    <h3>sortable.js only</h3>
+    <div>
+      <div id="widgetcontent2" class="list-group"> 
+        <div class="list-group-item"> MOVE ME !!!! 11111 11111</div> 
+        <div class="list-group-item"> MOVE ME !!!! 22222 22222</div> 
+        <div class="list-group-item"> MOVE ME !!!! 33333 33333</div> 
+      </div>
+    </div>
+  <br>
+  <div class="grid-stack"></div>
+    
+  </div>
+  <script type="text/javascript">
+//Example Widget HTML Data
+var html = '\
+  <div class="grid-stack-item"> \
+    <div class="grid-stack-item-content" > \
+      <div class="widgetheader">drag me here</div> \
+      <div id="gridstackwidgetcontent" class="list-group"> \
+        <div class="list-group-item"> MOVE ME !!!! 11111 11111</div> \
+        <div class="list-group-item"> MOVE ME !!!! 22222 22222</div> \
+        <div class="list-group-item"> MOVE ME !!!! 33333 33333</div> \
+      </div> \
+    </div> \
+  </div>';
+    
+  var options = {
+    float: true, 
+    draggable: { handle: '.widgetheader' }
+  };
+  let grid = GridStack.init(options);
+  grid.addWidget(html, {w:2, h:1, x:0, y:0});
+  Sortable.create(gridstackwidgetcontent);
+  Sortable.create(widgetcontent2);
+  </script>
+</body>
+</html>
