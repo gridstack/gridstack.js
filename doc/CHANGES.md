@@ -51,6 +51,7 @@ Change log
 - fix [1571](https://github.com/gridstack/gridstack.js/issues/1571) don't allow drop when grid is full
 - fix [1570](https://github.com/gridstack/gridstack.js/issues/1570) easier to drag out/in from below
 - fix [1579](https://github.com/gridstack/gridstack.js/issues/1579) `cellHeight()` not updating CSS correctly
+- fix [1581](https://github.com/gridstack/gridstack.js/issues/1581) H5 draggable by actual div handle rather than entire item (let content respond to drag as well)
 
 ## 3.1.4 (2021-1-11)
 

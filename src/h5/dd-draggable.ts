@@ -66,8 +66,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     super();
     this.el = el;
     this.option = option;
+    // get the element that is actually supposed to be dragged by
+    let className = option.handle.substring(1);
+    this.dragEl = el.classList.contains(className) ? el : el.querySelector(option.handle) || el;
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
-    this._mouseDown = this._mouseDown.bind(this);
     this._dragStart = this._dragStart.bind(this);
     this._drag = this._drag.bind(this);
     this._dragEnd = this._dragEnd.bind(this);
@@ -85,20 +87,18 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   public enable(): void {
     super.enable();
-    this.el.draggable = true;
+    this.dragEl.draggable = true;
+    this.dragEl.addEventListener('dragstart', this._dragStart);
     this.el.classList.remove('ui-draggable-disabled');
     this.el.classList.add('ui-draggable');
-    this.el.addEventListener('mousedown', this._mouseDown);
-    this.el.addEventListener('dragstart', this._dragStart);
   }
 
   public disable(forDestroy = false): void {
     super.disable();
-    this.el.removeAttribute('draggable');
+    this.dragEl.removeAttribute('draggable');
+    this.dragEl.removeEventListener('dragstart', this._dragStart);
     this.el.classList.remove('ui-draggable');
     if (!forDestroy) this.el.classList.add('ui-draggable-disabled');
-    this.el.removeEventListener('mousedown', this._mouseDown);
-    this.el.removeEventListener('dragstart', this._dragStart);
   }
 
   public destroy(): void {
@@ -120,18 +120,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal call when mouse goes down before a dragstart happens */
-  private _mouseDown(event: MouseEvent): void {
-    // make sure we are clicking on a drag handle or child of it...
-    let className = this.option.handle.substring(1);
-    let el = event.target as HTMLElement;
-    while (el && !el.classList.contains(className)) { el = el.parentElement; }
-    this.dragEl = el;
-  }
-
   /** @internal */
   private _dragStart(event: DragEvent): void {
-    if (!this.dragEl) { event.preventDefault(); return; }
     DDManager.dragElement = this;
     this.helper = this._createHelper(event);
     this._setupHelperContainmentStyle();
@@ -152,7 +142,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   private _setupDragFollowNodeNotifyStart(ev: Event): DDDraggable {
     this._setupHelperStyle();
     document.addEventListener('dragover', this._drag, DDDraggable.dragEventListenerOption);
-    this.el.addEventListener('dragend', this._dragEnd);
+    this.dragEl.addEventListener('dragend', this._dragEnd);
     if (this.option.start) {
       this.option.start(ev, this.ui());
     }
@@ -186,7 +176,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
         cancelAnimationFrame(this.paintTimer);
       }
       document.removeEventListener('dragover', this._drag, DDDraggable.dragEventListenerOption);
-      this.el.removeEventListener('dragend', this._dragEnd);
+      this.dragEl.removeEventListener('dragend', this._dragEnd);
     }
     this.dragging = false;
     this.helper.classList.remove('ui-draggable-dragging');
@@ -203,7 +193,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.triggerEvent('dragstop', ev);
     delete DDManager.dragElement;
     delete this.helper;
-    delete this.dragEl;
   }
 
   /** @internal create a clone copy (or user defined method) of the original drag item if set */
