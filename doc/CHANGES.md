@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.1.5](#314-dev)
+- [3.1.5 (2021-1-23)](#315-2021-1-23)
 - [3.1.4 (2021-1-11)](#314-2021-1-11)
 - [3.1.3 (2021-1-2)](#313-2021-1-2)
 - [3.1.2 (2020-12-7)](#312-2020-12-7)
@@ -45,6 +45,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## 3.1.5-dev
+
+- TBD
+
 ## 3.1.5 (2021-1-23)
 
 - fix [1572](https://github.com/gridstack/gridstack.js/issues/1572) `column: N` option now sets CSS class

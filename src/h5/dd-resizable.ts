@@ -1,4 +1,4 @@
-// dd-resizable.ts 3.1.5 @preserve
+// dd-resizable.ts 3.1.5-dev @preserve
 
 /**
  * https://gridstackjs.com/

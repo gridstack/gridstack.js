@@ -1,4 +1,4 @@
-// dd-manager.ts 3.1.5 @preserve
+// dd-manager.ts 3.1.5-dev @preserve
 
 /**
  * https://gridstackjs.com/
