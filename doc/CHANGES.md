@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [3.1.5-dev](#315-dev)
 - [3.1.5 (2021-1-23)](#315-2021-1-23)
 - [3.1.4 (2021-1-11)](#314-2021-1-11)
 - [3.1.3 (2021-1-2)](#313-2021-1-2)

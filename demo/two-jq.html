@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Two grids demo</title>
+  <title>Two grids JQ demo</title>
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="demo.css"/>
@@ -45,21 +45,19 @@
 </head>
 <body>
   <div class="container-fluid">
-    <h1>Two grids demo</h1>
+    <h1>Two grids demo (Jquery version)</h1>
 
     <div class="row">
       <div class="col-md-3">
         <div class="sidebar">
-          
           <!-- will size to match content -->
           <div class="grid-stack-item">
             <div class="grid-stack-item-content">Drag me</div>
           </div>
           <!-- manually force a drop size of 2x1 -->
-          <div class="grid-stack-item" gs-w="2" gs-h="1">
-            <div class="grid-stack-item-content">Drag me 2x1</div>
+          <div class="grid-stack-item" gs-w="2" gs-h="1" gs-max-w="3">
+            <div class="grid-stack-item-content">2x1, max=3</div>
           </div>
-
         </div>
       </div>
       <div class="col-md-9">
@@ -83,19 +81,21 @@
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
+  let grids;
+  $(function () { // testing $ works (delay loading here)
     let options = {
       column: 6,
       minRow: 1, // don't collapse when empty
       cellHeight: 70,
       disableOneColumnMode: true,
       float: false,
-      dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
+      dragIn: '.sidebar .grid-stack-item', // add draggable to class
       dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
       removable: '.trash', // drag-out delete class
       removeTimeout: 100,
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };
-    let grids = GridStack.initAll(options);
+    grids = GridStack.initAll(options);
     grids[1].float(true);
 
     let items = [
@@ -110,15 +110,15 @@
       addEvents(grid, i);
       grid.load(items);
     });
+  });
+  function toggleFloat(button, i) {
+    grids[i].float(! grids[i].getFloat());
+    button.innerHTML = 'float: ' + grids[i].getFloat();
+  }
 
-    function toggleFloat(button, i) {
-      grids[i].float(! grids[i].getFloat());
-      button.innerHTML = 'float: ' + grids[i].getFloat();
-    }
-
-    function compact(i) {
-      grids[i].compact();
-    }
+  function compact(i) {
+    grids[i].compact();
+  }
   </script>
 </body>
 </html>
