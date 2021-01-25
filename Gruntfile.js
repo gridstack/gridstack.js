@@ -56,6 +56,7 @@ module.exports = function(grunt) {
         files: {
           'dist/jq/jquery.js': 'src/jq/jquery.js',
           'dist/jq/jquery-ui.js': 'src/jq/jquery-ui.js',
+          'dist/jq/jquery.ui.touch-punch.js': 'src/jq/jquery.ui.touch-punch.js',
         }
       }
     },

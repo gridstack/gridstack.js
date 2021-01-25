@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simple mobile demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-jq.js"></script>
+
+</head>
+<body>
+  <h1>Simple mobile demo</h1>
+  <p>uses v3.2+ jquery version which now includes jquery.ui.touch-punch by default (small 2k)</p>
+  <div class="grid-stack"></div>
+  <script type="text/javascript">
+    let grid = GridStack.init({
+      // column: 1, // will auto switch on smaller screens
+      cellHeight: 150, // make sure we have a decent height and not width/12 for 1 column
+      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    });
+    grid.load([{x:0, y:0, content: '1'}, {x:0, y:1, h:2, content: '2'}, {x:0, y:3, content: '3'}])
+  </script>
+</body>
+</html>
