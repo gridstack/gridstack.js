@@ -23,6 +23,7 @@ module.exports = {
     alias: {
       'jquery': '/src/jq/jquery.js',
       'jquery-ui': '/src/jq/jquery-ui.js',
+      'jquery.ui': '/src/jq/jquery-ui.js',
     }
   },
   output: {

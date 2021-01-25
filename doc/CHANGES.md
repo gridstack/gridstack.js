@@ -48,7 +48,9 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 3.1.5-dev
 
-- TBD
+- fix [1413](https://github.com/gridstack/gridstack.js/issues/1413) website & lib works on mobile. We now compile the latest v1.0.8 `jquery.ui.touch-punch`
+into the JQ version (only 2k) so mobile devices (android, iphone, ipad, touchpad) are supported out of the box.
+HTML5 version will require re-write to plain `mousemove` & mobile `touchmove` instead of drag events in a future release.
 
 ## 3.1.5 (2021-1-23)
 

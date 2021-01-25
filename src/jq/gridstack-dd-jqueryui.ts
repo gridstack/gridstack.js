@@ -17,6 +17,7 @@ import { GridItemHTMLElement, DDDragInOpt } from '../types';
 import * as $ from './jquery'; // compile this in... having issues TS/ES6 app would include instead
 export { $ };
 import './jquery-ui';
+import './jquery.ui.touch-punch'; // include for touch mobile devices
 
 // export our base class (what user should use) and all associated types
 export * from '../gridstack-dd';

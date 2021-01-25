@@ -67,7 +67,7 @@ gridstack.js API
    * `true` the resizing handles are always shown even if the user is not hovering over the widget
    * advance condition such as this mobile browser agent check:
    `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
-   See [example](http://gridstack.github.io/gridstack.js/demo/advance.html)
+   See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html)
 - `animate` - turns animation on to smooth transitions (default: `true`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight` - one cell height (default: `auto`). Can be:

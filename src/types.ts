@@ -38,7 +38,11 @@ export interface GridStackOptions {
    */
   acceptWidgets?: boolean | string | ((element: Element) => boolean);
 
-  /** if true the resizing handles are shown even if the user is not hovering over the widget (default?: false) */
+  /** possible values (default: `false` only show on hover)
+    * `true` the resizing handles are always shown even if the user is not hovering over the widget
+    * advance condition such as this mobile browser agent check:
+    `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
+    See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html) */
   alwaysShowResizeHandle?: boolean;
 
   /** turns animation on (default?: true) */
