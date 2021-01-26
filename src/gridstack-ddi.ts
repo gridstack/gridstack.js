@@ -1,4 +1,4 @@
-// gridstack-ddi.ts 3.1.5-dev @preserve
+// gridstack-ddi.ts 3.2.0 @preserve
 
 /**
  * https://gridstackjs.com/

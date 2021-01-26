@@ -75,7 +75,7 @@ import 'gridstack/dist/gridstack.min.css';
 import GridStack from 'gridstack';
 // THEN to get HTML5 drag&drop
 import 'gridstack/dist/h5/gridstack-dd-native';
-// OR to get legacy jquery-ui drag&drop
+// OR to get legacy jquery-ui drag&drop (support Mobile touch devices, h5 does not yet)
 import 'gridstack/dist/jq/gridstack-dd-jqueryui';
 // OR nothing to get static grids (API driven, no user drag&drop)
 ```
@@ -83,15 +83,15 @@ Alternatively in html
 
 ```html
 <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
-<!-- HTML5 drag&drop (63k) -->
+<!-- HTML5 drag&drop (64k) -->
 <script src="node_modules/gridstack/dist/gridstack-h5.js"></script>
-<!-- OR jquery-ui drag&drop (186k) -->
+<!-- OR jquery-ui drag&drop (189k) -->
 <script src="node_modules/gridstack/dist/gridstack-jq.js"></script>
-<!-- OR static grid (34k) -->
+<!-- OR static grid (36k) -->
 <script src="node_modules/gridstack/dist/gridstack-static.js"></script>
 ```
 
-Note: the API is the same, regardless of the plugin (or lack thereof) so you can switch at any time. The Jquery version will export $ that it bundles. Read more at [migrating to v3](#migrating-to-v3)
+Note: the API is the same, regardless of the plugin (or lack thereof) so you can switch at any time. The Jquery version will export $ that it bundles and currently the only one to support mobile/touch devices through `jquery.ui.touch-punch` (h5 version is planned). Read more at [migrating to v3](#migrating-to-v3)
 
 ## Basic usage
 
