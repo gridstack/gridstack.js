@@ -140,7 +140,7 @@ see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example
 
 ## Requirements
 
-GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). v3.0.0 is a complete HTML5 re-write which removes all jqeury dependency (still available for legacy apps). All you need to include now is `gridstack-h5.js` and `gridstack.min.css` (layouts are done using CSS column based %).
+GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). v3.0.0 is a complete HTML5 re-write which removes all jquery dependency (still available for legacy apps). All you need to include now is `gridstack-h5.js` and `gridstack.min.css` (layouts are done using CSS column based %).
 
 ## API Documentation
 
