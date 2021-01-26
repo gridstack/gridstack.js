@@ -567,3 +567,68 @@ GridStack.prototype.resizable = function(els: GridStackElement, val: boolean): G
   });
   return this;
 }
+
+
+/**
+  * Temporarily disables widgets moving/resizing.
+  * If you want a more permanent way (which freezes up resources) use `setStatic(true)` instead.
+  * Note: no-op for static grid
+  * This is a shortcut for:
+  * @example
+  *  grid.enableMove(false);
+  *  grid.enableResize(false);
+  */
+GridStack.prototype.disable = function(): GridStack {
+  if (this.opts.staticGrid) return;
+  this.enableMove(false);
+  this.enableResize(false);
+  this._triggerEvent('disable');
+  return this;
+}
+
+/**
+  * Re-enables widgets moving/resizing - see disable().
+  * Note: no-op for static grid.
+  * This is a shortcut for:
+  * @example
+  *  grid.enableMove(true);
+  *  grid.enableResize(true);
+  */
+GridStack.prototype.enable = function(): GridStack {
+  if (this.opts.staticGrid) return;
+  this.enableMove(true);
+  this.enableResize(true);
+  this._triggerEvent('enable');
+  return this;
+}
+
+/**
+  * Enables/disables widget moving. No-op for static grids.
+  *
+  * @param doEnable
+  * @param includeNewWidgets will force new widgets to be draggable as per
+  * doEnable`s value by changing the disableDrag grid option (default: true).
+  */
+GridStack.prototype.enableMove = function(doEnable: boolean, includeNewWidgets = true): GridStack {
+  if (this.opts.staticGrid) return this; // can't move a static grid!
+  this.getGridItems().forEach(el => this.movable(el, doEnable));
+  if (includeNewWidgets) {
+    this.opts.disableDrag = !doEnable;
+  }
+  return this;
+}
+
+/**
+  * Enables/disables widget resizing. No-op for static grids.
+  * @param doEnable
+  * @param includeNewWidgets will force new widgets to be draggable as per
+  * doEnable`s value by changing the disableResize grid option (default: true).
+  */
+GridStack.prototype.enableResize = function(doEnable: boolean, includeNewWidgets = true): GridStack {
+  if (this.opts.staticGrid) return this; // can't size a static grid!
+  this.getGridItems().forEach(el => this.resizable(el, doEnable));
+  if (includeNewWidgets) {
+    this.opts.disableResize = !doEnable;
+  }
+  return this;
+}
