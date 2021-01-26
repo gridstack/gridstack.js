@@ -320,7 +320,6 @@
   <!-- /.container -->
 
   <script src="node_modules/gridstack/dist/gridstack-jq.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
   <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
 
@@ -354,13 +353,11 @@
 
     var simpleGrid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-      resizable: { handles: 'e, se, s, sw, w' }
     }, '#simple-grid');
     simpleGrid.load(simple);
 
     var advGrid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
-      resizable: { handles: 'e, se, s, sw, w' },
       acceptWidgets: true,
       dragIn: '.newWidget',  // class that can be dragged from outside
       dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
