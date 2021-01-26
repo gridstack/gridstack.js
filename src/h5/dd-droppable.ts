@@ -1,4 +1,4 @@
-// dd-droppable.ts 3.2.0 @preserve
+// dd-droppable.ts 3.2.0-dev @preserve
 
 /**
  * https://gridstackjs.com/
