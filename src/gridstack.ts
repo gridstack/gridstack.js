@@ -618,7 +618,6 @@ export class GridStack {
     if (update) {
       this._updateStyles(true, this.getRow()); // true = force re-create, for that # of rows
     }
-    this._resizeNestedGrids(this.el);
     return this;
   }
 
@@ -1222,16 +1221,6 @@ export class GridStack {
     return this;
   }
 
-  /** called to resize children nested grids when we/item resizes */
-  private _resizeNestedGrids(target: HTMLElement): GridStack {
-    target.querySelectorAll('.grid-stack').forEach((el: GridHTMLElement) => {
-      if (el.gridstack) {
-        el.gridstack.onParentResize();
-      }});
-    return this;
-  }
-
-
   /** @internal */
   private _prepareElement(el: GridItemHTMLElement, triggerAddEvent = false, node?: GridStackNode): GridStack {
     if (!node) {
@@ -1337,15 +1326,14 @@ export class GridStack {
    */
   public onParentResize(): GridStack {
     if (!this.el || !this.el.clientWidth) return; // return if we're gone or no size yet (will get called again)
-    let changedOneColumn = false;
     let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth;
+    let changedOneColumn = false;
 
     if (!this._oneColumnMode !== !oneColumn) { // use ! (negate) so we can check undefined == false vs true
       this._oneColumnMode = oneColumn;
       changedOneColumn = true;
       if (this.opts.animate) { this.setAnimation(false); } // 1 <-> 12 is too radical, turn off animation
       this.column(oneColumn ? 1 : this._prevColumn);
-      this._resizeNestedGrids(this.el);
       if (this.opts.animate) { this.setAnimation(true); }
     }
 
@@ -1361,6 +1349,11 @@ export class GridStack {
         this.cellHeight();
       }
     }
+
+    // finally update any nested grids
+    this.engine.nodes.forEach(n => {
+      if (n.subGrid) {(n.subGrid as GridStack).onParentResize()}
+    });
 
     return this;
   }

@@ -54,6 +54,7 @@ Change log
 - new `cellHeight:initial` which makes the cell squares initially, but doesn't change as windows resizes (better performance)
 - new grid option `cellHeightThrottle` (100ms) to control throttle of auto sizing triggers
 - fix [1600](https://github.com/gridstack/gridstack.js/issues/1600) height too small with `cellHeight:auto` loading in 1 column. Now detect we load at 1 column and size accordingly (default 'auto' could make big 700x700 cells, so explicit px might still be wanted)
+- fix [1538](https://github.com/gridstack/gridstack.js/issues/1538) loading nested into small size and sizing back up
 
 ## 3.2.0 (2021-1-25)
 
