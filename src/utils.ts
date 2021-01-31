@@ -245,15 +245,13 @@ export class Utils {
     return null;
   }
 
-  /** delay calling the given function by certain amount of time */
-  static throttle(callback: () => void, delay: number): () => void {
+  /** delay calling the given function for given delay, preventing new calls from happening while waiting */
+  static throttle(func: () => void, delay: number): () => void {
     let isWaiting = false;
-
     return (...args) => {
       if (!isWaiting) {
-        callback.apply(this, args);
         isWaiting = true;
-        setTimeout(() => isWaiting = false, delay);
+        setTimeout(() => { func(...args); isWaiting = false; }, delay);
       }
     }
   }

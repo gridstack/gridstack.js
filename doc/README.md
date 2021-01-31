@@ -70,11 +70,14 @@ gridstack.js API
    See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html)
 - `animate` - turns animation on to smooth transitions (default: `true`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
-- `cellHeight` - one cell height (default: `auto`). Can be:
-  * an integer (px)
-  * a string (ex: '100px', '10em', '10rem', '10%', `10vh')
-  * 0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
-  * `'auto'` - height will be square cells initially.
+- `cellHeight`- one cell height (default?: 'auto'). Can be:
+   *  an integer (px)
+   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see demo/cell-height.html
+   *  0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files.
+   *  `auto` - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle`
+   *  `initial` - similar to 'auto' (start at square cells) but stay that size during window resizing.
+- `cellHeightThrottle`?: number - throttle time delay (in ms) used when cellHeight='auto' to improve performance vs usability (default?: 100).
+   * A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event!
 - `children`?: GridStackWidget[] - list of children item to create when calling load() or addGrid()
 - `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
 - `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
@@ -284,8 +287,7 @@ re-layout grid items to reclaim any empty space.
 
 ### cellHeight(val: number, update = true)
 
-Update current cell height. This method rebuilds an internal CSS stylesheet (unless optional update=false). Note: You can expect performance issues if
-call this method too often.
+Update current cell height (see - `cellHeight` options format). This method rebuilds an internal CSS stylesheet (unless optional update=false). Note: You can expect performance issues if call this method too often.
 
 ```js
 grid.cellHeight(grid.cellWidth() * 1.2);

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cell height demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-h5.js"></script>
+  <style type="text/css">
+  .container {
+    background-color: lightblue;
+    width: 100%;
+    height: 800px;
+  }
+  </style>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Cell Height grid options demo</h1>
+    <p>sample showing the different cellHeight options and what happens when you resize the window</p>
+    <div>
+      <a class="btn btn-primary" onClick="setOpt('auto')" href="#">auto</a>
+      <a class="btn btn-primary" onClick="setOpt('initial')" href="#">initial</a>
+      <a class="btn btn-primary" onClick="setOpt(100)" href="#">100px</a>
+      <a class="btn btn-primary" onClick="setOpt('10vh')" href="#">'10vh'</a>
+      <a class="btn btn-primary" onClick="setOpt('10%')" href="#">'10%' of blue (broken)</a>
+      <span>settings:</span><span id="info"></span>
+    </div>
+    <br>
+    <div class="grid-stack"></div>
+  </div>
+  <script type="text/javascript">
+    let opts = {
+      cellHeight: 'auto', // see other possible values (best to do in here)
+      cellHeightThrottle: 100,
+    }
+    let grid = GridStack.init(opts);
+    let items = [
+      {x:0, y:0, content:'0'},
+      {x:1, y:0, w:2, content:'1'},
+      {x:3, y:0, h:2, content:'2'},
+    ];
+    grid.load(items);
+
+    let info = document.querySelector('#info');
+    info.innerHTML = opts.cellHeight;
+    setOpt = function(val) {
+      grid.cellHeight(val);
+      info.innerHTML = val;
+    }
+  </script>
+</body>
+</html>
