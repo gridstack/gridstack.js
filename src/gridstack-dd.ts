@@ -395,6 +395,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     let y = Math.round(ui.position.top / cellHeight);
     let w: number;
     let h: number;
+    let resizing: boolean;
 
     if (event.type === 'drag') {
       let distance = ui.position.top - node._prevYPix;
@@ -437,6 +438,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       w = Math.round(ui.size.width / cellWidth);
       h = Math.round(ui.size.height / cellHeight);
       if (w === node.w && h === node.h) return;
+      resizing = true;
     }
 
     if (!this.engine.canMoveNode(node, x, y, w, h)) return;
@@ -445,6 +447,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     node._lastTriedW = w;
     node._lastTriedH = h;
     this.engine.moveNode(node, x, y, w, h);
+    if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }
     this._updateContainerHeight();
   }
 
@@ -495,10 +498,12 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
 
     this.engine.endUpdate();
 
+    /* doing it on live resize instead
     // if we re-sized a nested grid item, let the children resize as well
     if (event.type === 'resizestop') {
-      this._resizeNestedGrids(target);
+      if (target.gridstackNode.subGrid) {(target.gridstackNode.subGrid as GridStack).onParentResize()}
     }
+    */
   }
 
   GridStackDD.get()
