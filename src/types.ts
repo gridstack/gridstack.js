@@ -52,13 +52,19 @@ export interface GridStackOptions {
   auto?: boolean;
 
   /**
-   * one cell height (default?: 60). Can be:
+   * one cell height (default?: 'auto'). Can be:
    *  an integer (px)
-   *  a string (ex: '100px', '10em', '10rem', '10%')
-   *  0 or null, in which case the library will not generate styles for rows. Everything must be defined in CSS files.
-   *  'auto' - height will be calculated to match cell width (initial square grid).
+   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see demo/cell-height.html
+   *  0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files.
+   *  'auto' - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle`
+   *  'initial' - similar to 'auto' (start at square cells) but stay that size during window resizing.
    */
   cellHeight?: numberOrString;
+
+  /** throttle time delay (in ms) used when cellHeight='auto' to improve performance vs usability (default?: 100).
+   * A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event!
+   * */
+  cellHeightThrottle?: number;
 
   /** (internal) unit for cellHeight (default? 'px') which is set when a string cellHeight with a unit is passed (ex: '10rem') */
   cellHeightUnit?: string;
