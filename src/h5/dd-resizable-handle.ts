@@ -64,6 +64,7 @@ export class DDResizableHandle {
 
   /** @internal called on mouse down on us: capture move on the entire document (mouse might not stay on us) until we release the mouse */
   private _mouseDown(e: MouseEvent): void {
+    e.preventDefault();
     this.mouseDownEvent = e;
     document.addEventListener('mousemove', this._mouseMove, true); // capture, not bubble
     document.addEventListener('mouseup', this._mouseUp);

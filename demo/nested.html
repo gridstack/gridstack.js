@@ -7,7 +7,7 @@
   <title>Nested grids demo (ES6)</title>
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/>
-  <script src="../dist/gridstack-jq.js"></script>
+  <script src="../dist/gridstack-h5.js"></script>
   <style type="text/css">
     .grid-stack .grid-stack {
       background: rgba(255, 255, 255, 0.3);
@@ -21,7 +21,7 @@
   <div class="container-fluid">
     <h1>Nested grids demo</h1>
     <p>This example uses new v3.1 API to load the entire nested grid from JSON, and shows dragging between nested grid items (pink) vs dragging higher grid items (green)</p>
-    <p>Note: initial v3 HTML5 release doesn't support 'dragOut:false' constrain so this uses JQ version for now, otherwise recommend you use h5 version.</p>
+    <p>Note: initial v3 HTML5 release doesn't support 'dragOut:false' constrain so use jq version if you need that.</p>
     <a class="btn btn-primary" onClick="addNewWidget('.nested1')" href="#">Add Widget Grid1</a>
     <a class="btn btn-primary" onClick="addNewWidget('.nested2')" href="#">Add Widget Grid2</a>
     <br><br>
