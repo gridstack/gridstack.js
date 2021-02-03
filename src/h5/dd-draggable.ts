@@ -1,4 +1,4 @@
-// dd-draggable.ts 3.2.0-dev @preserve
+// dd-draggable.ts 3.3.0 @preserve
 
 /**
  * https://gridstackjs.com/
