@@ -15,7 +15,11 @@
   <script type="text/javascript">
     let grid = GridStack.init({resizable: { handles: 'sw, se, w, e, s' }});
     addEvents(grid);
-    grid.load([{x: 2, y: 0, maxW: 1, content: 'max 1'}, {x: 5, y: 0, maxW: 2, content: 'max 2'}]);
+    grid.load([
+      {x: 2, y: 0, maxW: 1, content: 'max 1'},
+      {x: 5, y: 0, maxW: 2, content: 'max 2'},
+      {x: 7, y: 0, content: 'normal'},
+    ]);
   </script>
 </body>
 </html>
