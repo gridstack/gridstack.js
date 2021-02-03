@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.2.0-dev](#320-dev)
+- [3.3.0 (2021-2-2)](#330-2021-2-2)
 - [3.2.0 (2021-1-25)](#320-2021-1-25)
 - [3.1.5 (2021-1-23)](#315-2021-1-23)
 - [3.1.4 (2021-1-11)](#314-2021-1-11)
@@ -47,7 +47,7 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 3.2.0-dev
+## 3.3.0 (2021-2-2)
 
 - big re-write on how `cellHeight()` works. you can now call it at any time (not just grid init options) including switching to 'auto' or other modes on the fly.
 - fix `cellHeight:auto` now keeps cell square as window resizes (regressing from 2.x TS conversion). `Utils.throttle()` works better too (guaranteed to be called last event)
