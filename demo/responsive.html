@@ -6,6 +6,9 @@
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
   <script src="../dist/gridstack-h5.js"></script>
+  <style type="text/css">
+    body { margin: 8px 0; } /* make grid take entire vw so we have correct square cells */
+  </style>
 </head>
 <body>
   <div>
@@ -29,7 +32,8 @@
 
   <script type="text/javascript">
     let grid = GridStack.init({
-      cellHeight: 70,
+      cellHeight: 'initial', // start square but will set to % of window width later
+      animate: false, // show immediate (animate: true is nice for user dragging though)
       disableOneColumnMode: true, // will manually do 1 column
       float: true });
     let text = document.querySelector('#column-text');
@@ -38,33 +42,33 @@
     function resizeGrid() {
       let width = document.body.clientWidth;
       if (width < 700) {
-        grid.column(1, layout);
+        grid.column(1, layout).cellHeight('100vw');
         text.innerHTML = 1;
       } else if (width < 850) {
-        grid.column(3, layout);
+        grid.column(3, layout).cellHeight('33.3333vw');
         text.innerHTML = 3;
       } else if (width < 950) {
-        grid.column(6, layout);
+        grid.column(6, layout).cellHeight('16.6666vw');
         text.innerHTML = 6;
       } else if (width < 1100) {
-        grid.column(8, layout);
+        grid.column(8, layout).cellHeight('12.25vw');
         text.innerHTML = 8;
       } else {
-        grid.column(12, layout);
+        grid.column(12, layout).cellHeight('8.3333vw');
         text.innerHTML = 12;
       }
     };
     
-    let items = [
-      {x: 0, y: 0, w: 2, h: 2, content: '0'},
-      {x: 2, y: 0, w: 2, content: '1'},
+    let items = [ // our initial 12 column layout loaded first so we can compare
+      {x: 0, y: 0, w: 2, content: '0'},
+      {x: 2, y: 0, w: 2, h: 2, content: '1'},
       {x: 5, y: 0, content: '2'},
       {x: 1, y: 3, w: 4, content: '3'},
       {x: 5, y: 2, w: 2, content: '4'},
       {x: 0, y: 4, w: 12, content: '5'}
     ];
     grid.load(items);
-    resizeGrid();
+    resizeGrid(); // finally size to actual window
 
     window.addEventListener('resize', function() {resizeGrid()});
   </script>
