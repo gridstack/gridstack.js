@@ -398,6 +398,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     let w: number;
     let h: number;
     let resizing: boolean;
+    let target: GridItemHTMLElement = event.target as GridItemHTMLElement;
 
     if (event.type === 'drag') {
       let distance = ui.position.top - node._prevYPix;
@@ -451,6 +452,11 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       delete node._skipDown;
       if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }
       this._updateContainerHeight();
+    }
+    this._writePosAttr(target, node.x, node.y, node.w, node.h);
+
+    if (this._gsEventHandler[event.type]) {
+      this._gsEventHandler[event.type](event, target);
     }
   }
 

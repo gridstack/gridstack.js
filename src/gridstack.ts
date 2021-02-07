@@ -20,8 +20,8 @@ export * from './gridstack-ddi';
 export interface GridHTMLElement extends HTMLElement {
   gridstack?: GridStack; // grid's parent DOM element points back to grid class
 }
-export type GridStackEvent = 'added' | 'change' | 'disable' | 'dragstart' | 'dragstop' | 'dropped' |
-  'enable' | 'removed' | 'resizestart' | 'resizestop';
+export type GridStackEvent = 'added' | 'change' | 'disable' | 'drag' | 'dragstart' | 'dragstop' | 'dropped' |
+  'enable' | 'removed' | 'resize' | 'resizestart' | 'resizestop';
 
 /** Defines the coordinates of an object */
 export interface MousePosition {
@@ -845,7 +845,7 @@ export class GridStack {
         this._gsEventHandler[name] = (event: CustomEvent) => callback(event, event.detail);
       }
       this.el.addEventListener(name, this._gsEventHandler[name]);
-    } else if (name === 'dragstart' || name === 'dragstop' || name === 'resizestart' || name === 'resizestop' || name === 'dropped') {
+    } else if (name === 'drag' || name === 'dragstart' || name === 'dragstop' || name === 'resizestart' || name === 'resize' || name === 'resizestop' || name === 'dropped') {
       // drag&drop stop events NEED to be call them AFTER we update node attributes so handle them ourself.
       // do same for start event to make it easier...
       this._gsEventHandler[name] = callback;

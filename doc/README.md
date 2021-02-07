@@ -14,11 +14,13 @@ gridstack.js API
   - [change(event, items)](#changeevent-items)
   - [disable(event)](#disableevent)
   - [dragstart(event, el)](#dragstartevent-el)
+  - [drag(event, el)](#dragevent-el)
   - [dragstop(event, el)](#dragstopevent-el)
   - [dropped(event, previousWidget, newWidget)](#droppedevent-previouswidget-newwidget)
   - [enable(event)](#enableevent)
   - [removed(event, items)](#removedevent-items)
   - [resizestart(event, el)](#resizestartevent-el)
+  - [resize(event, el)](#resizeevent-el)
   - [resizestop(event, el)](#resizestopevent-el)
 - [API](#api)
   - [addGrid(parent: HTMLElement, opt: GridStackOptions)](#addgridparent-htmlelement-opt-gridstackoptions)
@@ -189,6 +191,15 @@ grid.on('dragstart', function(event: Event, el: GridItemHTMLElement) {
 });
 ```
 
+### drag(event, el)
+
+called when grid item is dragged
+
+```js
+grid.on('dragstart', function(event: Event, el: GridItemHTMLElement) {
+});
+```
+
 ### dragstop(event, el)
 called after the user is done moving the item, with updated DOM attributes.
 
@@ -235,6 +246,15 @@ called before the user starts resizing an item
 
 ```js
 grid.on('resizestart', function(event: Event, el: GridItemHTMLElement) {
+});
+```
+
+### resize(event, el)
+
+called while the user is resizing an item
+
+```js
+grid.on('resize', function(event: Event, el: GridItemHTMLElement) {
 });
 ```
 
