@@ -382,7 +382,8 @@ make sure to read v2 migration first!
 
 v3 has a new HTML5 drag&drop plugging (63k total, all native code), while still allowing you to use the legacy jquery-ui version instead (188k), or a new static grid version (34k, no user drag&drop but full API support). You will need to decide which version to use as `gridstack.all.js` no longer exist (same is now `gridstack-jq.js`) - see [include info](#include).
 
-Note: HTML5 is almost on parity with the old jquery-ui based drag&drop. the `containment` (prevent a child from being dragged outside it's parent) and `revert` (not clear what it for yet) are not yet implemented in initial release of v3.0.0
+**NOTE**: HTML5 version is almost on parity with the old jquery-ui based drag&drop. the `containment` (prevent a child from being dragged outside it's parent) and `revert` (not clear what it is for yet) are not yet implemented in initial release of v3.0.0.<br>
+Also mobile devices don't support h5 `drag` events (will need to handle `touch`) whereas v3.2 jq version now now supports out of the box (see [v3.2 release](https://github.com/gridstack/gridstack.js/releases/tag/v3.2.0))
 
 Breaking changes:
 
@@ -400,7 +401,7 @@ Breaking changes:
 
 We now have a native HTML5 drag'n'drop through the plugin system (default), but the jquery-ui version can be used instead. It will bundle `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) in `gridstack-jq.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306)).
 
-NOTE: v2.x / v3.x does not currently support importing GridStack Drag&Drop without also including our jquery + jquery-ui. Still trying to figure how to make that bundle possible. You will have to use 1.x for now...
+**NOTE**: v2.x / v3.x does not currently support importing GridStack Drag&Drop without also including our jquery + jquery-ui. Still trying to figure how to make that bundle possible. You will have to use 1.x for now...
 
 As for events, you can still use `$(".grid-stack").on(...)` for the version that uses jquery-ui for things we don't support.
 
