@@ -1,13 +1,20 @@
 {
   "name": "gridstack",
   "version": "3.3.0-dev",
-  "description": "TypeScript/Javascript lib for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Ember, knockout...)",
+  "description": "TypeScript/JS lib for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Vue, Ember, knockout...)",
   "main": "./dist/gridstack.js",
   "types": "./dist/gridstack.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gridstack/gridstack.js.git"
   },
+  "funding": [{
+    "type" : "paypal",
+    "url" : "https://www.paypal.me/alaind831"
+  }, {
+    "type" : "venmo",
+    "url" : "https://www.venmo.com/adumesny"
+  }],
   "scripts": {
     "build": "yarn --no-progress && rm -rf dist/* && grunt && webpack && tsc --stripInternal && yarn doc",
     "w": "rm -rf dist/* && grunt && webpack",
@@ -31,6 +38,7 @@
     "widgets",
     "Angular",
     "React",
+    "Vue",
     "JavaScript"
   ],
   "author": "Pavel Reznikov <pashka.reznikov@gmail.com>",
