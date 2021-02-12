@@ -50,7 +50,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 3.3.0-dev
 
-- TBD
+- fix [1617](https://github.com/gridstack/gridstack.js/issues/1617) FireFox DOM order issue. Thanks [@marcel-necker](https://github.com/marcel-necker)
 
 ## 3.3.0 (2021-2-2)
 
