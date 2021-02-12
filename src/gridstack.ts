@@ -344,7 +344,7 @@ export class GridStack {
           i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * this.opts.column
         });
       });
-      elements.sort(e => e.i).forEach(e => this._prepareElement(e.el));
+      elements.sort((a, b) => a.i - b.i).forEach(e => this._prepareElement(e.el));
       this.commit();
     }
     this.engine.saveInitial(); // initial start of items
