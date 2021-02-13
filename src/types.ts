@@ -26,6 +26,8 @@ export interface GridItemHTMLElement extends HTMLElement {
 
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
+export type GridStackEventHandlerCallback = (event: Event, arg2?: GridItemHTMLElement | GridStackNode | GridStackNode[], newNode?: GridStackNode) => void;
+
 /**
  * Defines the options for a Grid
  */
