@@ -347,7 +347,7 @@ export class GridStack {
       elements.sort((a, b) => a.i - b.i).forEach(e => this._prepareElement(e.el));
       this.commit();
     }
-    this.engine.saveInitial(); // initial start of items
+    this.engine.saveInitial(); // initial start of items (reset after we call _triggerChangeEvent)
 
     this.setAnimation(this.opts.animate);
 
@@ -1012,9 +1012,9 @@ export class GridStack {
 
       // finally move the widget
       if (m) {
-        this.engine.cleanNodes();
-        this.engine.beginUpdate(n);
-        this.engine.moveNode(n, m.x, m.y, m.w, m.h);
+        this.engine.cleanNodes()
+          .beginUpdate(n)
+          .moveNode(n, m.x, m.y, m.w, m.h);
         this._updateContainerHeight();
         this._triggerChangeEvent();
         this.engine.endUpdate();
@@ -1240,7 +1240,7 @@ export class GridStack {
     return this;
   }
 
-  /** @internal call to write x,y,w,h attributes back to element */
+  /** @internal call to write position x,y,w,h attributes back to element */
   private _writePosAttr(el: HTMLElement, x?: number, y?: number, w?: number, h?: number): GridStack {
     if (x !== undefined && x !== null) { el.setAttribute('gs-x', String(x)); }
     if (y !== undefined && y !== null) { el.setAttribute('gs-y', String(y)); }
@@ -1501,7 +1501,7 @@ export class GridStack {
    * @param includeNewWidgets will force new widgets to be draggable as per
    * doEnable`s value by changing the disableResize grid option (default: true).
    */
-  public enableResize(doEnable: boolean, includeNewWidgets = true): GridStack {  return this }
+  public enableResize(doEnable: boolean, includeNewWidgets = true): GridStack { return this }
   /** @internal called to add drag over support to support widgets */
   public _setupAcceptWidget(): GridStack { return this }
   /** @internal called to setup a trash drop zone if the user specifies it */
@@ -1521,7 +1521,7 @@ export class GridStack {
   /** @internal */
   public maxWidth(els: GridStackElement, maxW: number): GridStack { return this.update(els, {maxW}) }
   /** @internal */
-  public minWidth(els: GridStackElement, minW: number): GridStack {  return this.update(els, {minW}) }
+  public minWidth(els: GridStackElement, minW: number): GridStack { return this.update(els, {minW}) }
   /** @internal */
   public maxHeight(els: GridStackElement, maxH: number): GridStack { return this.update(els, {maxH}) }
   /** @internal */

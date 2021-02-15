@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>old swap</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridstack@1.0.0/dist/gridstack.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@1.0.0/dist/gridstack.all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Swap collision demo from older 1.x builds</h1>
+    <div>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#"></a>
+      <a class="btn btn-primary" onclick="toggleMax()" id="max" href="#"></a>
+    </div>
+    <br><br>
+    <div class="grid-stack">
+      <div class="grid-stack-item" data-gs-x="0" data-gs-y="0"><div class="grid-stack-item-content">0</div></div>
+      <div class="grid-stack-item" data-gs-x="0" data-gs-y="1"><div class="grid-stack-item-content">1</div></div>
+      <div class="grid-stack-item" data-gs-x="0" data-gs-y="2"><div class="grid-stack-item-content">2</div></div>
+      <div class="grid-stack-item" data-gs-x="1" data-gs-y="0"><div class="grid-stack-item-content">3</div></div>
+      <div class="grid-stack-item" data-gs-x="1" data-gs-y="1"><div class="grid-stack-item-content">4</div></div>
+      <div class="grid-stack-item" data-gs-x="1" data-gs-y="2"><div class="grid-stack-item-content">5</div></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    let floatButton = document.getElementById('float');
+    let maxButton = document.getElementById('max');
+    let count = 6;
+    let grid = GridStack.init({float: false, cellHeight: 70, maxRow: 3});
+
+    addNewWidget = function() {
+      let n = {
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        w: Math.round(1 + 3 * Math.random()),
+        h: Math.round(1 + 3 * Math.random()),
+        content: String(count++)
+      };
+      grid.addWidget(n);
+    };
+
+    toggleFloat = function() {
+      grid.float(! grid.getFloat());
+      floatButton.innerHTML = 'float: ' + grid.float();
+    };
+    floatButton.innerHTML = 'float: ' + grid.float();
+
+    toggleMax = function() {
+      grid.opts.maxRow = grid.engine.maxRow = grid.opts.maxRow ? 0 : 3;
+      maxButton.innerHTML = 'Max: ' + grid.opts.maxRow;
+    };
+    maxButton.innerHTML = 'Max: ' + grid.opts.maxRow;
+
+  </script>
+</body>
+</html>

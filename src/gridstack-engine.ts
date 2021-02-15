@@ -7,7 +7,7 @@
 */
 
 import { Utils, obsolete } from './utils';
-import { GridStackNode, ColumnOptions, GridStackWidget } from './types';
+import { GridStackNode, ColumnOptions } from './types';
 
 export type onChangeCB = (nodes: GridStackNode[], removeDOM?: boolean) => void;
 
@@ -66,39 +66,74 @@ export class GridStackEngine {
     this.batchMode = false;
     this._float = this._prevFloat;
     delete this._prevFloat;
-    this._packNodes();
-    this._notify();
-    return this;
+    return this._packNodes()
+      ._notify();
   }
 
-  /** @internal */
-  private _fixCollisions(node: GridStackNode): GridStackEngine {
-    this._sortNodes(-1);
+  /** @internal fix collision on given 'node', going to given new location 'nn', with optional 'collide' node already found.
+   * return true if we moved. */
+  private _fixCollisions(node: GridStackNode, nn = node, collide?: GridStackNode, disableSwap?: boolean): boolean {
+    // this._sortNodes(-1); collision doesn't care about sorting
+    collide = collide || this.collision(node, nn);
+    if (!collide) return false;
 
-    let nn = node;
-    let hasLocked = Boolean(this.nodes.find(n => n.locked));
-    if (!this.float && !hasLocked) {
-      nn = {x: 0, y: node.y, w: this.column, h: node.h};
+    // swap check: if we're actively moving in gravity mode, see if we collide with an object the same size
+    if (node._moving && !disableSwap && !this.float) {
+      if (this.swap(node, collide)) return true;
     }
-    while (true) {
-      let collisionNode = this.collide(node, nn);
-      if (!collisionNode) return this;
-      let moved;
-      if (collisionNode.locked) {
-        // if colliding with a locked item, move ourself instead
-        moved = this.moveNode(node, node.x, collisionNode.y + collisionNode.h,
-          node.w, node.h, true);
+
+    let didMove = false;
+    while (collide = collide || this.collision(node, nn)) { // we could start colliding more than 1 item... so repeat for each
+      let moved: boolean;
+      // if colliding with locked item, OR moving down to a different sized item (not handle with swap) that could take our place, move ourself past instead
+      if (collide.locked || (node._moving && !node._skipDown && nn.y > node.y &&
+        !this.float && !this.collision(collide, {...collide, y: node.y}, node)) &&
+        Utils.isIntercepted(collide, {x: node.x-0.5, y: node.y-0.5, w: node.w+1, h: node.h+1})) {
+
+        node._skipDown = (node._skipDown || nn.y > node.y);
+        moved = this.moveNode(node, nn.x, collide.y + collide.h, nn.w, nn.h, false, false, true); // pack & sanitize = false, disableSwap = true
+        nn = moved ? {x: node.x, y: node.y, w: node.w, h: node.h} : nn;
+        didMove = didMove || moved;
       } else {
-        moved = this.moveNode(collisionNode, collisionNode.x, node.y + node.h,
-          collisionNode.w, collisionNode.h, true);
+        // move collide down *after* us
+        moved = this.moveNode(collide, collide.x, nn.y + nn.h, collide.w, collide.h, false, false, true); // pack & sanitize = false, disableSwap = true
       }
-      if (!moved) return this; // break inf loop if we couldn't move after all (ex: maxRow, fixed)
+      if (!moved) { return didMove; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
+      collide = undefined;
     }
+    return didMove;
+  }
+
+  /** return the first node that intercept the given node. Optionally a different area can be used, as well as a second node to skip */
+  public collision(skip: GridStackNode, area = skip, skip2?: GridStackNode): GridStackNode {
+    return this.nodes.find(n => n !== skip && n !== skip2 && Utils.isIntercepted(n, area))
   }
 
   /** return any intercepted node with the given area, skipping the passed in node (usually self) */
   public collide(node: GridStackNode, area: GridStackNode = node): GridStackNode {
     return this.nodes.find(n => n !== node && Utils.isIntercepted(n, area));
+  }
+
+  /** called to possibly swap between 2 nodes (same size, not locked, touching), returning true if successful */
+  public swap(a: GridStackNode, b: GridStackNode): boolean {
+    if (!b || b.locked || !a || a.locked) return false;
+
+    function _doSwap(): true {
+      let x = a.x, y = a.y;
+      a.x = b.x; a.y = b.y;
+      b.x = x; b.y = y;
+      a._dirty = b._dirty = true;
+      return true;
+    }
+
+    if (a.w === b.w && a.h === b.h && Utils.isIntercepted(b, {x: a.x-0.5, y:a.y-0.5, w: a.w+1, h: a.h+1})) // same size and touching
+      return _doSwap();
+    /* different X will be weird (expect vertical swap) and different height overlap, so too complex. user regular layout instead
+    // else check if swapping would not collide with anything else (requiring a re-layout)
+    if (!this.collision(a, {x: a.x, y: a.y, w: b.w, h: b.h}, b) &&
+        !this.collision(a, {x: b.x, y: b.y, w: a.w, h: a.h}, b))
+      return _doSwap(); */
+    return false;
   }
 
   public isAreaEmpty(x: number, y: number, w: number, h: number): boolean {
@@ -109,19 +144,18 @@ export class GridStackEngine {
   /** re-layout grid items to reclaim any empty space */
   public compact(): GridStackEngine {
     if (this.nodes.length === 0) return this;
-    this.batchUpdate();
-    this._sortNodes();
+    this.batchUpdate()
+      ._sortNodes();
     let copyNodes = this.nodes;
     this.nodes = []; // pretend we have no nodes to conflict layout to start with...
     copyNodes.forEach(node => {
-      if (!node.noMove && !node.locked) {
+      if (!node.locked) {
         node.autoPosition = true;
       }
       this.addNode(node, false); // 'false' for add event trigger
-      node._dirty = true; // force attr update
+      node._dirty = true; // will force attr update
     });
-    this.commit();
-    return this;
+    return this.commit();
   }
 
   /** enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html) */
@@ -129,8 +163,7 @@ export class GridStackEngine {
     if (this._float === val) return;
     this._float = val || false;
     if (!val) {
-      this._packNodes();
-      this._notify();
+      this._packNodes()._notify();
     }
   }
 
@@ -143,20 +176,17 @@ export class GridStackEngine {
     return this;
   }
 
-  /** @internal */
+  /** @internal called to top gravity pack the items back */
   private _packNodes(): GridStackEngine {
     this._sortNodes();
 
     if (this.float) {
-      this.nodes.forEach((n, i) => {
-        if (n._updating || n._packY === undefined || n.y === n._packY) {
-          return this;
-        }
+      this.nodes.forEach(n => {
+        if (n._updating || n._packY === undefined || n.y === n._packY) return;
         let newY = n.y;
         while (newY >= n._packY) {
-          let box: GridStackWidget = {x: n.x, y: newY, w: n.w, h: n.h};
-          let collisionNode = this.nodes.slice(0, i).find(bn => Utils.isIntercepted(box, bn));
-          if (!collisionNode) {
+          let collide = this.collision(n, {x: n.x, y: newY, w: n.w, h: n.h})
+          if (!collide) {
             n._dirty = true;
             n.y = newY;
           }
@@ -165,17 +195,11 @@ export class GridStackEngine {
       });
     } else {
       this.nodes.forEach((n, i) => {
-        if (n.locked) return this;
+        if (n.locked) return;
         while (n.y > 0) {
-          let newY = n.y - 1;
-          let canBeMoved = i === 0;
-          let box: GridStackWidget = {x: n.x, y: newY, w: n.w, h: n.h};
-          if (i > 0) {
-            let collisionNode = this.nodes.slice(0, i).find(bn => Utils.isIntercepted(box, bn));
-            canBeMoved = !collisionNode;
-          }
-
-          if (!canBeMoved) { break; }
+          let newY = i === 0 ? 0 : n.y - 1;
+          let canBeMoved = i === 0 || !this.collision(n, {x: n.x, y: newY, w: n.w, h: n.h});
+          if (!canBeMoved) break;
           // Note: must be dirty (from last position) for GridStack::OnChange CB to update positions
           // and move items back. The user 'change' CB should detect changes from the original
           // starting position instead.
@@ -262,38 +286,38 @@ export class GridStackEngine {
   }
 
   public getDirtyNodes(verify?: boolean): GridStackNode[] {
-    // compare original X,Y,W,H (or entire node?) instead as _dirty can be a temporary state
+    // compare original x,y,w,h instead as _dirty can be a temporary state
     if (verify) {
-      let dirtNodes: GridStackNode[] = [];
-      this.nodes.forEach(n => {
-        if (n._dirty) {
-          if (n.y === n._origY && n.x === n._origX && n.w === n._origW && n.h === n._origH) {
-            delete n._dirty;
-          } else {
-            dirtNodes.push(n);
-          }
-        }
-      });
-      return dirtNodes;
+      return this.nodes.filter(n => n._dirty && !(n.y === n._orig.y && n.x === n._orig.x && n.w === n._orig.w && n.h === n._orig.h));
     }
-
     return this.nodes.filter(n => n._dirty);
   }
 
-  /** @internal */
+  /** @internal call this to call onChange CB with dirty nodes */
   private _notify(nodes?: GridStackNode | GridStackNode[], removeDOM = true): GridStackEngine {
     if (this.batchMode) return this;
     nodes = (nodes === undefined ? [] : (Array.isArray(nodes) ? nodes : [nodes]) );
     let dirtyNodes = nodes.concat(this.getDirtyNodes());
-    if (this.onChange) {
-      this.onChange(dirtyNodes, removeDOM);
-    }
+    this.onChange && this.onChange(dirtyNodes, removeDOM);
     return this;
   }
 
+  /** @internal remove dirty and last tried info */
   public cleanNodes(): GridStackEngine {
     if (this.batchMode) return this;
-    this.nodes.forEach(n => { delete n._dirty; });
+    this.nodes.forEach(n => {
+      delete n._dirty;
+      delete n._lastTried;
+    });
+    return this;
+  }
+
+  /** @internal called to save initial position/size to track real dirty state. Note: should ONLY be called right after we call change event */
+  public saveInitial(): GridStackEngine {
+    this.nodes.forEach(n => {
+      n._orig = {x: n.x, y: n.y, w: n.w, h: n.h};
+      delete n._dirty;
+    });
     return this;
   }
 
@@ -320,13 +344,11 @@ export class GridStackEngine {
     }
 
     this.nodes.push(node);
-    if (triggerAddEvent) {
-      this.addedNodes.push(node);
-    }
+    triggerAddEvent && this.addedNodes.push(node);
 
     this._fixCollisions(node);
-    this._packNodes();
-    this._notify();
+    this._packNodes()
+      ._notify();
     return node;
   }
 
@@ -337,35 +359,32 @@ export class GridStackEngine {
     node._id = null; // hint that node is being removed
     // don't use 'faster' .splice(findIndex(),1) in case node isn't in our list, or in multiple times.
     this.nodes = this.nodes.filter(n => n !== node);
-    if (!this.float) {
-      this._packNodes();
-    }
-    this._notify(node, removeDOM);
-    return this;
+    !this.float && this._packNodes();
+    return this._notify(node, removeDOM);
   }
 
   public removeAll(removeDOM = true): GridStackEngine {
     delete this._layouts;
     if (this.nodes.length === 0) return this;
-    if (removeDOM) {
-      this.nodes.forEach(n => { n._id = null; }); // hint that node is being removed
-    }
+    removeDOM && this.nodes.forEach(n => n._id = null); // hint that node is being removed
     this.removedNodes = this.nodes;
     this.nodes = [];
-    this._notify(this.removedNodes, removeDOM);
-    return this;
+    return this._notify(this.removedNodes, removeDOM);
   }
 
-  public canMoveNode(node: GridStackNode, x: number, y: number, w?: number, h?: number): boolean {
-    if (!this.isNodeChangedPosition(node, x, y, w, h)) {
-      return false;
-    }
-    let hasLocked = this.nodes.some(n => n.locked);
+  /** checks if item can be moved (layout constrain) vs moveNode(), returning true if was able to move.
+   * In more complicated cases (locked items, or maxRow) it will attempt at moving the item and fixing
+   * others in a clone first, then apply those changes if within specs. */
+  public moveNodeCheck(node: GridStackNode, x: number, y: number, w = node.w, h = node.h): boolean {
+    if (node.locked) return false;
+    if (!this.changedPos(node, x, y, w, h)) return false;
 
-    if (!this.maxRow && !hasLocked) {
-      return true;
+    // simpler case: move item directly...
+    if (!this.maxRow && !this.nodes.some(n => n.locked)) {
+      return this.moveNode(node, x, y, w, h, true, false); // pack=true, sanitize=false
     }
 
+    // complex case: create a clone with NO maxRow (will check for out of bounds at the end)
     let clonedNode: GridStackNode;
     let clone = new GridStackEngine({
       column: this.column,
@@ -378,26 +397,42 @@ export class GridStackEngine {
         return {...n};
       })
     });
+    if (!clonedNode) return false;
 
-    if (!clonedNode) return true;
-
-    clone.moveNode(clonedNode, x, y, w, h);
-
-    let canMove = true;
-    if (hasLocked) {
-      canMove = !clone.nodes.some(n => n.locked && n._dirty && n !== clonedNode);
-    }
+    let canMove = clone.moveNode(clonedNode, x, y, w, h, true, false); // pack=true, sanitize=false
+    // if maxRow make sure we are still valid size
     if (this.maxRow && canMove) {
       canMove = (clone.getRow() <= this.maxRow);
+      // turns out we can't grow, then see if we can swap instead (ex: full grid)
+      if (!canMove) {
+        let collide = this.collision(node, {x, y, w, h});
+        if (collide && this.swap(node, collide)) {
+          this._notify();
+          return true;
+        }
+      }
     }
+    if (!canMove) return false;
 
-    return canMove;
+    // if clone was able to move, copy those mods over to us now instead of caller trying to do this all over!
+    // Note: we can't use the list directly as elements and other parts point to actual node struct, so copy content
+    clone.nodes.filter(n => n._dirty).forEach(c => {
+      let n = this.nodes.find(a => a._id === c._id);
+      if (!n) return;
+      n.x = c.x;
+      n.y = c.y;
+      n.w = c.w;
+      n.h = c.h;
+      n._dirty = true;
+    });
+    this._notify();
+    return true;
   }
 
   /** return true if can fit in grid height constrain only (always true if no maxRow) */
   public willItFit(node: GridStackNode): boolean {
     if (!this.maxRow) return true;
-
+    // create a clone with NO maxRow and check if still within size
     let clone = new GridStackEngine({
       column: this.column,
       float: this.float,
@@ -432,61 +467,71 @@ export class GridStackEngine {
     return node._temporaryRemoved; // if still outside so we don't flicker back & forth
   }
 
-  public isNodeChangedPosition(node: GridStackNode, x: number, y: number, w?: number, h?: number): boolean {
-    if (typeof x !== 'number') { x = node.x; }
-    if (typeof y !== 'number') { y = node.y; }
-    if (typeof w !== 'number') { w = node.w; }
-    if (typeof h !== 'number') { h = node.h; }
-
+  /** true if x,y or w,h are different after clamping to min/max */
+  public changedPos(node: GridStackNode, x: number, y: number, w = node.w, h = node.h): boolean {
+    if (node.x !== x || node.y !== y) return true;
+    // check constrained w,h
     if (node.maxW) { w = Math.min(w, node.maxW); }
     if (node.maxH) { h = Math.min(h, node.maxH); }
     if (node.minW) { w = Math.max(w, node.minW); }
     if (node.minH) { h = Math.max(h, node.minH); }
-
-    if (node.x === x && node.y === y && node.w === w && node.h === h) {
-      return false;
-    }
-    return true;
+    return (node.w !== w || node.h !== h);
   }
 
-  public moveNode(node: GridStackNode, x: number, y: number, w?: number, h?: number, noPack?: boolean): GridStackNode {
-    if (node.locked) return null;
-    if (typeof x !== 'number') { x = node.x; }
-    if (typeof y !== 'number') { y = node.y; }
-    if (typeof w !== 'number') { w = node.w; }
-    if (typeof h !== 'number') { h = node.h; }
+  /** return true if the passed in node was actually moved (checks for no-op and locked) */
+  public moveNode(node: GridStackNode, x: number, y: number, w = node.w, h = node.h, pack = true, sanitize = true, disableSwap = false): boolean {
+    if (!node || node.locked) return false;
+    let nn: GridStackNode;
+    if (sanitize) {
+      if (typeof x !== 'number') { x = node.x; }
+      if (typeof y !== 'number') { y = node.y; }
 
-    // constrain the passed in values and check if we're still changing our node
-    let resizing = (node.w !== w || node.h !== h);
-    let nn: GridStackNode = { x, y, w, h, maxW: node.maxW, maxH: node.maxH, minW: node.minW, minH: node.minH};
-    nn = this.prepareNode(nn, resizing);
-    if (node.x === nn.x && node.y === nn.y && node.w === nn.w && node.h === nn.h) {
-      return null;
+      // constrain the passed in values and check if we're still changing our node
+      let resizing = (node.w !== w || node.h !== h);
+      nn = { x, y, w, h, maxW: node.maxW, maxH: node.maxH, minW: node.minW, minH: node.minH};
+      nn = this.prepareNode(nn, resizing);
+    }
+    nn = nn || {x, y, w, h}
+    if (this._samePos(node, nn)) return false;
+    let prevPos: GridStackNode = {...node};
+
+    // check if we will need to fix collision at our new location
+    let collide = this.collision(node, nn);
+    let moved = false;
+    if (collide) {
+      moved = this._fixCollisions(node, nn, collide, disableSwap);
     }
 
-    node._dirty = true;
-
-    node.x = node._lastTriedX = nn.x;
-    node.y = node._lastTriedY = nn.y;
-    node.w = node._lastTriedW = nn.w;
-    node.h = node._lastTriedH = nn.h;
-
-    this._fixCollisions(node);
-    if (!noPack) {
-      this._packNodes();
-      this._notify();
+    // now move (to the original ask vs the collision version which might differ) and repack things
+    if (!moved) {
+      node._dirty = true;
+      node.x = nn.x;
+      node.y = nn.y;
+      node.w = nn.w;
+      node.h = nn.h;
     }
-    return node;
+    if (pack) {
+      this._packNodes()
+        ._notify();
+    }
+    return !this._samePos(node, prevPos); // pack might have moved things back
+  }
+
+  /* @private true if a and b has same size/position */
+  private _samePos(a: GridStackNode, b: GridStackNode): boolean {
+    return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
   }
 
   public getRow(): number {
-    return this.nodes.reduce((memo, n) => Math.max(memo, n.y + n.h), 0);
+    return this.nodes.reduce((row, n) => Math.max(row, n.y + n.h), 0);
   }
 
   public beginUpdate(node: GridStackNode): GridStackEngine {
     if (node._updating) return this;
     node._updating = true;
-    this.nodes.forEach(n => { n._packY = n.y; });
+    node._beforeDrag = {x: node.x, y: node.y, w: node.w, h: node.h};
+    delete node._skipDown;
+    this.nodes.forEach(n => n._packY = n.y);
     return this;
   }
 
@@ -494,7 +539,9 @@ export class GridStackEngine {
     let n = this.nodes.find(n => n._updating);
     if (n) {
       delete n._updating;
-      this.nodes.forEach(n => { delete n._packY; });
+      delete n._beforeDrag;
+      delete n._skipDown;
+      this.nodes.forEach(n => delete n._packY);
     }
     return this;
   }
@@ -502,7 +549,7 @@ export class GridStackEngine {
   /** saves the current layout returning a list of widgets for serialization */
   public save(saveElement = true): GridStackNode[] {
     let widgets: GridStackNode[] = [];
-    Utils.sort(this.nodes);
+    this._sortNodes();
     this.nodes.forEach(n => {
       let w: GridStackNode = {};
       for (let key in n) { if (key[0] !== '_' && n[key] !== null && n[key] !== undefined ) w[key] = n[key]; }
@@ -537,15 +584,15 @@ export class GridStackEngine {
           let ratio = column / this.column;
           // Y changed, push down same amount
           // TODO: detect doing item 'swaps' will help instead of move (especially in 1 column mode)
-          if (node.y !== node._origY) {
-            n.y += (node.y - node._origY);
+          if (node.y !== node._orig.y) {
+            n.y += (node.y - node._orig.y);
           }
           // X changed, scale from new position
-          if (node.x !== node._origX) {
+          if (node.x !== node._orig.x) {
             n.x = Math.round(node.x * ratio);
           }
           // width changed, scale from new width
-          if (node.w !== node._origW) {
+          if (node.w !== node._orig.w) {
             n.w = Math.round(node.w * ratio);
           }
           // ...height always carries over from cache
@@ -649,18 +696,6 @@ export class GridStackEngine {
     }, this);
     this.commit();
     delete this._ignoreLayoutsNodeChange;
-    return this;
-  }
-
-  /** @internal called to save initial position/size */
-  public saveInitial(): GridStackEngine {
-    this.nodes.forEach(n => {
-      n._origX = n.x;
-      n._origY = n.y;
-      n._origW = n.w;
-      n._origH = n.h;
-      delete n._dirty;
-    });
     return this;
   }
 

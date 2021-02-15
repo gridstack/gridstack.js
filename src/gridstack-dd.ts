@@ -75,7 +75,7 @@ export abstract class GridStackDD extends GridStackDDI {
  * https://www.typescriptlang.org/docs/handbook/mixins.html
  ********************************************************************************/
 
-/** @internal called to add drag over support to support widgets */
+/** @internal called to add drag over to support widgets being added externally */
 GridStack.prototype._setupAcceptWidget = function(): GridStack {
   if (this.opts.staticGrid) return this;
 
@@ -106,19 +106,16 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       node._added = true;
 
       node.el = el;
-      this.engine.cleanNodes();
-      this.engine.beginUpdate(node);
-      this.engine.addNode(node);
+      this.engine.cleanNodes()
+        .beginUpdate(node)
+        .addNode(node);
 
       this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h);
       this.el.appendChild(this.placeholder);
       node.el = this.placeholder; // dom we update while dragging...
-      node._beforeDragX = node.x;
-      node._beforeDragY = node.y;
 
       this._updateContainerHeight();
-    } else if ((x !== node.x || y !== node.y) && this.engine.canMoveNode(node, x, y)) {
-      this.engine.moveNode(node, x, y);
+    } else if (this.engine.moveNodeCheck(node, x, y)) {
       this._updateContainerHeight();
     }
   };
@@ -229,7 +226,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       }
       GridStackDD.get().off(el, 'drag');
       // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
-      // as the helper will be nuked by jqueryui otherwise
+      // as the helper will be nuked by jquery-ui otherwise
       if (helper !== el) {
         helper.remove();
         el.gridstackNode = origNode; // original item (left behind) is re-stored to pre dragging as the node now has drop info
@@ -273,7 +270,7 @@ GridStack.prototype._setupRemoveDrop = function(): GridStack {
   if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
     let trashEl = document.querySelector(this.opts.removable) as HTMLElement;
     if (!trashEl) return this;
-    // only register ONE dropover/dropout callback for the 'trash', and it will
+    // only register ONE drop-over/dropout callback for the 'trash', and it will
     // update the passed in item and parent grid because the 'trash' is a shared resource anyway,
     // and Native DD only has 1 event CB (having a list and technically a per grid removableOptions complicates things greatly)
     if (!GridStackDD.get().isDroppable(trashEl)) {
@@ -369,30 +366,35 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       this._gsEventHandler[event.type](event, target);
     }
 
-    this.engine.cleanNodes();
-    this.engine.beginUpdate(node);
+    this.engine.cleanNodes()
+      .beginUpdate(node);
 
     this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h)
     this.el.append(this.placeholder);
 
     node.el = this.placeholder;
-    node._beforeDragX = node.x;
-    node._beforeDragY = node.y;
+    node._lastUiPosition = ui.position;
     node._prevYPix = ui.position.top;
+    node._moving = (event.type === 'dragstart');
+    delete node._lastTried;
 
     // set the min/max resize info
     cellWidth = this.cellWidth();
     cellHeight = this.getCellHeight(true); // force pixels for calculations
-    GridStackDD.get().resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1));
-    GridStackDD.get().resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
-    if (node.maxW) { GridStackDD.get().resizable(el, 'option', 'maxWidth', cellWidth * node.maxW); }
-    if (node.maxH) { GridStackDD.get().resizable(el, 'option', 'maxHeight', cellHeight * node.maxH); }
+    let dd = GridStackDD.get()
+      .resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1))
+      .resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
+    if (node.maxW) { dd.resizable(el, 'option', 'maxWidth', cellWidth * node.maxW); }
+    if (node.maxH) { dd.resizable(el, 'option', 'maxHeight', cellHeight * node.maxH); }
   }
 
   /** called when item is being dragged/resized */
   let dragOrResize = (event: Event, ui: DDUIData): void => {
-    let x = Math.round(ui.position.left / cellWidth);
-    let y = Math.round(ui.position.top / cellHeight);
+    // calculate the place where we're landing by offsetting margin so actual edge crosses mid point
+    let left = ui.position.left + (ui.position.left > node._lastUiPosition.left  ? -this.opts.marginRight : this.opts.marginLeft);
+    let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
+    let x = Math.round(left / cellWidth);
+    let y = Math.round(top / cellHeight);
     let w: number;
     let h: number;
     let resizing: boolean;
@@ -408,8 +410,8 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
           this._setupRemovingTimeout(el);
         }
 
-        x = node._beforeDragX;
-        y = node._beforeDragY;
+        x = node._beforeDrag.x;
+        y = node._beforeDrag.y;
 
         if (this.placeholder.parentNode === this.el) {
           this.placeholder.remove();
@@ -420,7 +422,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
         node._temporaryRemoved = true;
         delete node._added; // no need for this now
       } else {
-        this._clearRemovingTimeout(el);
+        if (node._removeTimeout) this._clearRemovingTimeout(el);
 
         if (node._temporaryRemoved) {
           this.engine.addNode(node);
@@ -430,25 +432,26 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
           delete node._temporaryRemoved;
         }
       }
-      if (node._lastTriedX === x && node._lastTriedY === y) return;
+      if (node.x === x && node.y === y) return; // skip same
+      if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return; // skip one we tried (but failed)
     } else if (event.type === 'resize')  {
       if (x < 0) return;
       // Scrolling page if needed
       Utils.updateScrollResize(event as MouseEvent, el, cellHeight);
       w = Math.round(ui.size.width / cellWidth);
       h = Math.round(ui.size.height / cellHeight);
-      if (w === node.w && h === node.h) return;
+      if (node.w === w && node.h === h) return;
+      if (node._lastTried && node._lastTried.w === w && node._lastTried.h === h) return; // skip one we tried (but failed)
       resizing = true;
     }
 
-    if (!this.engine.canMoveNode(node, x, y, w, h)) return;
-    node._lastTriedX = x;
-    node._lastTriedY = y;
-    node._lastTriedW = w;
-    node._lastTriedH = h;
-    this.engine.moveNode(node, x, y, w, h);
-    if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }
-    this._updateContainerHeight();
+    node._lastTried = {x, y, w, h}; // set as last tried (will nuke if we go there)
+    if (this.engine.moveNodeCheck(node, x, y, w, h)) {
+      node._lastUiPosition = ui.position;
+      delete node._skipDown;
+      if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }
+      this._updateContainerHeight();
+    }
   }
 
   /** called when the item stops moving/resizing */
@@ -456,6 +459,8 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     if (this.placeholder.parentNode === this.el) {
       this.placeholder.remove();
     }
+    delete node._moving;
+    delete node._lastTried;
 
     // if the item has moved to another grid, we're done here
     let target: GridItemHTMLElement = event.target as GridItemHTMLElement;
@@ -482,9 +487,9 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
         this._writePosAttr(target, node.x, node.y, node.w, node.h);
       } else {
         Utils.removePositioningStyles(target);
-        this._writePosAttr(target, node._beforeDragX, node._beforeDragY, node.w, node.h);
-        node.x = node._beforeDragX;
-        node.y = node._beforeDragY;
+        this._writePosAttr(target, node._beforeDrag.x, node._beforeDrag.y, node.w, node.h);
+        node.x = node._beforeDrag.x;
+        node.y = node._beforeDrag.y;
         delete node._temporaryRemoved;
         this.engine.addNode(node);
       }
