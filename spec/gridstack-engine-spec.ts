@@ -45,10 +45,10 @@ describe('gridstack engine', function() {
   describe('batch update', function() {
 
     it('should set float and batchMode when calling batchUpdate.', function() {
-      // Note: legacy weird call on global window to hold data
-      e.prototype.batchUpdate.call(w);
-      expect(w.float).toBe(undefined);
-      expect(w.batchMode).toBeTrue();
+      engine = new GridStackEngine({float: true});
+      engine.batchUpdate();
+      expect(engine.float).toBe(true);
+      expect(engine.batchMode).toBeTrue();
     });
   });  
 
@@ -327,29 +327,29 @@ describe('gridstack engine', function() {
     });
   });
 
-  describe('test isNodeChangedPosition', function() {
+  describe('test changedPos', function() {
     beforeAll(function() {
       engine = new GridStackEngine();
     });
     it('should return true for changed x', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.isNodeChangedPosition(widget, 2, 2)).toEqual(true);
+      expect(engine.changedPos(widget, 2, 2)).toEqual(true);
     });
     it('should return true for changed y', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.isNodeChangedPosition(widget, 1, 1)).toEqual(true);
+      expect(engine.changedPos(widget, 1, 1)).toEqual(true);
     });
     it('should return true for changed width', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.isNodeChangedPosition(widget, 2, 2, 4, 4)).toEqual(true);
+      expect(engine.changedPos(widget, 2, 2, 4, 4)).toEqual(true);
     });
     it('should return true for changed height', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.isNodeChangedPosition(widget, 1, 2, 3, 3)).toEqual(true);
+      expect(engine.changedPos(widget, 1, 2, 3, 3)).toEqual(true);
     });
     it('should return false for unchanged position', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.isNodeChangedPosition(widget, 1, 2, 3, 4)).toEqual(false);
+      expect(engine.changedPos(widget, 1, 2, 3, 4)).toEqual(false);
     });
   });
 
@@ -371,13 +371,15 @@ describe('gridstack engine', function() {
       expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 1, y: 2}));
       // prevents moving locked item
       let node1 = findNode(engine, 1);
-      expect(engine.moveNode(node1, 6, 6)).toEqual(null);
+      expect(engine.moveNode(node1, 6, 6)).toEqual(false);
       // but moves regular one (gravity ON)
       let node2 = findNode(engine, 2);
-      expect(engine.moveNode(node2, 6, 6)).toEqual(jasmine.objectContaining({x: 6, y: 2, w: 2, h: 3,}));
+      expect(engine.moveNode(node2, 6, 6)).toEqual(true);
+      expect(node2).toEqual(jasmine.objectContaining({x: 6, y: 2, w: 2, h: 3}));
       // but moves regular one (gravity OFF)
       engine.float = true;
-      expect(engine.moveNode(node2, 7, 6)).toEqual(jasmine.objectContaining({x: 7, y: 6, w: 2, h: 3,}));
+      expect(engine.moveNode(node2, 7, 6)).toEqual(true);
+      expect(node2).toEqual(jasmine.objectContaining({x: 7, y: 6, w: 2, h: 3}));
     });
   });
   

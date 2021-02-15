@@ -50,6 +50,9 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 3.3.0-dev
 
+- fix [#149](https://github.com/gridstack/gridstack.js/issues/149) [#1094](https://github.com/gridstack/gridstack.js/issues/1094) [#1605](https://github.com/gridstack/gridstack.js/issues/1605) re-write of the **collision code**! you can now swap items of the same size (vertical/horizontal) when grid is full, and is the default in `float:false` (top gravity) as it feels more natural. Could add Alt key for swap vs push behavior later.<br>
+Dragging up and down now behave the same (used to require push WAY down past to swap/append). Also much more efficient collision code.<br>
+Still TODO: handle mid point of dragged over items rather 50% of row/column and check for the most covered when multiple items collide.
 - fix [1617](https://github.com/gridstack/gridstack.js/issues/1617) FireFox DOM order issue. Thanks [@marcel-necker](https://github.com/marcel-necker)
 
 ## 3.3.0 (2021-2-2)

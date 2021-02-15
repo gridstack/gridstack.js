@@ -196,11 +196,7 @@ export interface GridStackOptions {
   _styleSheetClass?: string;
 }
 
-
-/**
- * GridStack Widget creation options
- */
-export interface GridStackWidget {
+export interface GridStackPosition {
   /** widget position x (default?: 0) */
   x?: number;
   /** widget position y (default?: 0) */
@@ -209,6 +205,12 @@ export interface GridStackWidget {
   w?: number;
   /** widget dimension height (default?: 1) */
   h?: number;
+}
+
+/**
+ * GridStack Widget creation options
+ */
+export interface GridStackWidget extends GridStackPosition {
   /** if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) */
   autoPosition?: boolean;
   /** minimum width allowed during resize/creation (default?: undefined = un-constrained) */
@@ -314,33 +316,25 @@ export interface GridStackNode extends GridStackWidget {
   _temporary?: boolean;
   /** @internal */
   _isOutOfGrid?: boolean;
-  /** @internal */
-  _origX?: number;
-  /** @internal */
-  _origY?: number;
+  /** @internal moving vs resizing */
+  _moving?: boolean;
+  /** @internal true if we jump down past item below (one time jump so we don't have to totally pass it) */
+  _skipDown?: boolean;
+  /** @internal original values before a drag/size */
+  _orig?: GridStackPosition;
+  /** @internal set on the item being dragged/resized to save initial values TODO: vs _orig ? */
+  _beforeDrag?: GridStackPosition;
+  /** @internal top/left pixel location before a drag so we can detect direction of move from last position*/
+  _lastUiPosition?: Position;
+  /** @internal set on the item being dragged/resized remember the last positions we've tried (but failed) so we don't try again during drag/resize */
+  _lastTried?: GridStackPosition;
   /** @internal */
   _packY?: number;
-  /** @internal */
-  _origW?: number;
-  /** @internal */
-  _origH?: number;
-  /** @internal */
-  _lastTriedX?: number;
-  /** @internal */
-  _lastTriedY?: number;
-  /** @internal */
-  _lastTriedW?: number;
-  /** @internal */
-  _lastTriedH?: number;
   /** @internal */
   _isAboutToRemove?: boolean;
   /** @internal */
   _removeTimeout?: number;
-  /** @internal */
-  _beforeDragX?: number;
-  /** @internal */
-  _beforeDragY?: number;
-  /** @internal */
+  /** @internal last drag Y pixel position used to incrementally update V scroll bar */
   _prevYPix?: number;
   /** @internal */
   _temporaryRemoved?: boolean;

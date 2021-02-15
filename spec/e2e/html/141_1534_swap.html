@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>swap demo</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-h5.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Swap collision demo</h1>
+    <div>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#"></a>
+      <a class="btn btn-primary" onclick="toggleMax()" id="max" href="#"></a>
+      <a class="btn btn-primary" onclick="toggleBigger()" id="big" href="#"></a>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="../../../demo/events.js"></script>
+  <script type="text/javascript">
+    let floatButton = document.getElementById('float');
+    let maxButton = document.getElementById('max');
+    let bigButton = document.getElementById('big');
+    let size = 1;
+
+    let grid = GridStack.init({float: false, cellHeight: 70, maxRow: 0});
+    addEvents(grid);
+
+    let count = 0;
+    let items = [
+      {x:0, y:0}, {x:0, y:1}, {x:0, y:2},{x:1, y:0}, {x:1, y:1}, {x:1, y:2},
+      {x:5, y:0}, {x:4, y:1, w:3, locked: false, _content: 'locked'}, {x:5, y:2},
+      {x:7, y:0}, {x:8, y:0}, {x:9, y:0}, {x:7, y:1, w:3}, {x:8, y:2},
+      {x:11, y:0}, {x:11, y:1, h:2},
+    ];
+    items.forEach(n => {n.id = count; n.content = n.content || String(count); count++})
+    grid.load(items);
+
+    addNewWidget = function() {
+      let n = {
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        w: Math.round(1 + 3 * Math.random()),
+        h: Math.round(1 + 3 * Math.random()),
+        content: String(count++)
+      };
+      grid.addWidget(n);
+    };
+
+    toggleFloat = function() {
+      grid.float(! grid.getFloat());
+      floatButton.innerHTML = 'float: ' + grid.getFloat();
+    };
+    floatButton.innerHTML = 'float: ' + grid.getFloat();
+
+    toggleMax = function() {
+      grid.opts.maxRow = grid.engine.maxRow = grid.opts.maxRow ? 0 : 3;
+      maxButton.innerHTML = 'Max: ' + grid.opts.maxRow;
+    };
+    maxButton.innerHTML = 'Max: ' + grid.opts.maxRow;
+
+    toggleBigger = function() {
+      size = size === 1 ? 2 : 1;
+      setSize(size);
+    };
+    setSize = function(size) {
+      items.sort((a,b) => a.id - b.id);
+      items.forEach((n,i) => {
+        if (i<6) {
+          n.w = n.h = size;
+          n.y = i * size;
+          if (n.x) n.x = size;
+        } else {
+          n.h = size;
+        }
+      });
+      grid.opts.maxRow = grid.engine.maxRow = grid.opts.maxRow ? (size === 1 ? 3 : 6) : 0;
+      grid.load(items);
+      bigButton.innerHTML = 'Size: ' + size;
+      maxButton.innerHTML = 'Max: ' + grid.opts.maxRow;
+    }
+    bigButton.innerHTML = 'Size: ' + size;
+    if (size !== 1) setSize(size);
+  </script>
+</body>
+</html>
