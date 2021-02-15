@@ -6,7 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { GridStackElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString } from './types';
+import { GridStackElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, GridStackPosition } from './types';
 
 export interface HeightData {
   h: number;
@@ -216,6 +216,11 @@ export class Utils {
       if (a[key] !== b[key]) return false;
     }
     return true;
+  }
+
+  /* true if a and b has same size & position */
+  static samePos(a: GridStackPosition, b: GridStackPosition): boolean {
+    return a && b && a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
   }
 
   /** removes field from the first object if same as the second objects (like diffing) and internal '_' for saving */
