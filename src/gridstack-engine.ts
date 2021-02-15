@@ -288,7 +288,7 @@ export class GridStackEngine {
   public getDirtyNodes(verify?: boolean): GridStackNode[] {
     // compare original x,y,w,h instead as _dirty can be a temporary state
     if (verify) {
-      return this.nodes.filter(n => n._dirty && !(n.y === n._orig.y && n.x === n._orig.x && n.w === n._orig.w && n.h === n._orig.h));
+      return this.nodes.filter(n => n._dirty && !Utils.samePos(n, n._orig));
     }
     return this.nodes.filter(n => n._dirty);
   }
@@ -492,7 +492,7 @@ export class GridStackEngine {
       nn = this.prepareNode(nn, resizing);
     }
     nn = nn || {x, y, w, h}
-    if (this._samePos(node, nn)) return false;
+    if (Utils.samePos(node, nn)) return false;
     let prevPos: GridStackNode = {...node};
 
     // check if we will need to fix collision at our new location
@@ -514,12 +514,7 @@ export class GridStackEngine {
       this._packNodes()
         ._notify();
     }
-    return !this._samePos(node, prevPos); // pack might have moved things back
-  }
-
-  /* @private true if a and b has same size/position */
-  private _samePos(a: GridStackNode, b: GridStackNode): boolean {
-    return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
+    return !Utils.samePos(node, prevPos); // pack might have moved things back
   }
 
   public getRow(): number {
