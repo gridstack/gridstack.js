@@ -399,9 +399,9 @@ Breaking changes:
 
 # jQuery Application
 
-We now have a native HTML5 drag'n'drop through the plugin system (default), but the jquery-ui version can be used instead. It will bundle `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) in `gridstack-jq.js`. IFF your app needs to bring your own version instead, you should **instead** include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306)).
+We now have a native HTML5 drag'n'drop through the plugin system (default), but the jquery-ui version can be used instead. It will bundle `jquery` (3.5.1) + `jquery-ui` (1.12.1 minimal drag|drop|resize) + `jquery-ui-touch-punch` (1.0.8 for mobile support) in `gridstack-jq.js`. IFF you want to use gridstack-jq instead and your app needs to bring your own JQ version (only possible in 1.x), you should **instead** use v1.x and include `gridstack-poly.min.js` (optional IE support) + `gridstack.min.js` + `gridstack.jQueryUI.min.js` after you import your JQ libs. But note that there are issue with jQuery and ES6 import (see [1306](https://github.com/gridstack/gridstack.js/issues/1306)).
 
-**NOTE**: v2.x / v3.x does not currently support importing GridStack Drag&Drop without also including our jquery + jquery-ui. Still trying to figure how to make that bundle possible. You will have to use 1.x for now...
+**NOTE**: v2.x / v3.x does not currently support importing GridStack Drag&Drop without also including our jquery + jquery-ui. Still trying to figure how to make that bundle possible. You will have to use 1.x for now, or use the HTML5 version (no jq).
 
 As for events, you can still use `$(".grid-stack").on(...)` for the version that uses jquery-ui for things we don't support.
 
