@@ -260,19 +260,12 @@ Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their beh
 
 ## Touch devices support
 
-NOTE: gridstack v3.2+ jq version now compile this in, so it works out of the box, so need for anything.
+gridstack v3.2 jq version compiles touch support (html5 version does not yet support `touchmove` events. This will be added in a future release), so it works out of the box, no need for anything.
+You **used** to need [jQuery UI Touch Punch](https://github.com/RWAP/jquery-ui-touch-punch) to make jQuery UI Draggable/Resizable
+work on touch-based devices (now distributed as `dist/jq/jquery.ui.touch-punch.js` for reference).
 
-NOTE2: HTML5 v3+ does not currently support `touchmove` events. This will be added in a future release.
 
-Use latest RWAP branch of [jQuery UI Touch Punch](https://github.com/RWAP/jquery-ui-touch-punch) to make jQuery UI Draggable/Resizable
-working on touch-based devices (which we now also include in v3.2 as `dist/jq/jquery.ui.touch-punch.js`).
-
-```html
-<script src="gridstack-jq.js"></script>
-<script src="jquery.ui.touch-punch.min.js"></script>
-```
-
-Also `alwaysShowResizeHandle` option may be useful:
+This option will be useful:
 
 ```js
 let options = {
