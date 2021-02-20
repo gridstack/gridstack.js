@@ -193,10 +193,10 @@ grid.on('dragstart', function(event: Event, el: GridItemHTMLElement) {
 
 ### drag(event, el)
 
-called when grid item is dragged
+called while grid item is being dragged, for each new row/column value (not every pixel)
 
 ```js
-grid.on('dragstart', function(event: Event, el: GridItemHTMLElement) {
+grid.on('drag', function(event: Event, el: GridItemHTMLElement) {
 });
 ```
 
@@ -251,7 +251,7 @@ grid.on('resizestart', function(event: Event, el: GridItemHTMLElement) {
 
 ### resize(event, el)
 
-called while the user is resizing an item
+called while grid item is being resized, for each new row/column value (not every pixel)
 
 ```js
 grid.on('resize', function(event: Event, el: GridItemHTMLElement) {

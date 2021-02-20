@@ -54,6 +54,7 @@ Change log
 - Dragging up and down now behave the same (used to require push WAY down past to swap/append). Also much more efficient collision code.
 - handle mid point of dragged over items (>50%) rather than a new row/column and check for the most covered when multiple items collide.
 - fix [1617](https://github.com/gridstack/gridstack.js/issues/1617) FireFox DOM order issue. Thanks [@marcel-necker](https://github.com/marcel-necker)
+- add `drag | resize` events while dragging [1616](https://github.com/gridstack/gridstack.js/pull/1616). Thanks [@MrCorba](https://github.com/MrCorba)
 
 ## 3.3.0 (2021-2-2)
 
