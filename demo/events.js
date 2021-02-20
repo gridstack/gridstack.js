@@ -19,6 +19,13 @@ function addEvents(grid, id) {
     console.log(g + 'dragstart ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') vs (' + x + ',' + y + ')');
   });
 
+  grid.on('drag', function(event, el) {
+    let node = el.gridstackNode;
+    let x = el.getAttribute('gs-x');
+    let y= el.getAttribute('gs-y');
+    console.log(g + 'drag ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') vs (' + x + ',' + y + ')');
+  });
+
   grid.on('dragstop', function(event, el) {
     let node = el.gridstackNode;
     let x = el.getAttribute('gs-x');
@@ -44,6 +51,11 @@ function addEvents(grid, id) {
     let w = el.getAttribute('gs-w');
     let h = el.getAttribute('gs-h');
     console.log(g + 'resizestart ' + el.textContent + ' size: (' + w + ' x ' + h + ')');
+  });
+
+  grid.on('resize', function(event, el) {
+    let node = el.gridstackNode;
+    console.log(g + 'resize ' + el.textContent + ' size: (' + node.w + ' x ' + node.h + ')');
   });
 
   grid.on('resizestop', function(event, el) {
