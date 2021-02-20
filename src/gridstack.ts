@@ -1013,7 +1013,7 @@ export class GridStack {
       if (m) {
         this.engine.cleanNodes()
           .beginUpdate(n)
-          .moveNode(n, m.x, m.y, m.w, m.h);
+          .moveNode(n, m);
         this._updateContainerHeight();
         this._triggerChangeEvent();
         this.engine.endUpdate();

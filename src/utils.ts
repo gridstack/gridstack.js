@@ -6,7 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { GridStackElement, GridStackWidget, GridStackNode, GridStackOptions, numberOrString, GridStackPosition } from './types';
+import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition } from './types';
 
 export interface HeightData {
   h: number;
@@ -95,7 +95,7 @@ export class Utils {
   }
 
   /** returns true if a and b overlap */
-  static isIntercepted(a: GridStackWidget, b: GridStackWidget): boolean {
+  static isIntercepted(a: GridStackPosition, b: GridStackPosition): boolean {
     return !(a.y >= b.y + b.h || a.y + a.h <= b.y || a.x + a.w <= b.x || a.x >= b.x + b.w);
   }
 
@@ -216,6 +216,15 @@ export class Utils {
       if (a[key] !== b[key]) return false;
     }
     return true;
+  }
+
+  /* copies over b size & position */
+  static copyPos(a: GridStackPosition, b: GridStackPosition): GridStackPosition {
+    a.x = b.x;
+    a.y = b.y;
+    a.w = b.w;
+    a.h = b.h;
+    return a;
   }
 
   /* true if a and b has same size & position */

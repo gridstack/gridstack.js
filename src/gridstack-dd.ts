@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { GridStackDDI } from './gridstack-ddi';
-import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt } from './types';
+import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition } from './types';
 import { GridStack } from './gridstack';
 import { Utils } from './utils';
 
@@ -115,7 +115,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       node.el = this.placeholder; // dom we update while dragging...
 
       this._updateContainerHeight();
-    } else if (this.engine.moveNodeCheck(node, x, y)) {
+    } else if (this.engine.moveNodeCheck(node, {x, y})) {
       this._updateContainerHeight();
     }
   };
@@ -381,6 +381,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     // set the min/max resize info
     cellWidth = this.cellWidth();
     cellHeight = this.getCellHeight(true); // force pixels for calculations
+    this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop, this.opts.marginRight, this.opts.marginBottom, this.opts.marginLeft);
     let dd = GridStackDD.get()
       .resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1))
       .resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
@@ -395,8 +396,8 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
     let x = Math.round(left / cellWidth);
     let y = Math.round(top / cellHeight);
-    let w: number;
-    let h: number;
+    let w = node.w;
+    let h = node.h;
     let resizing: boolean;
 
     if (event.type === 'drag') {
@@ -433,7 +434,8 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
         }
       }
       if (node.x === x && node.y === y) return; // skip same
-      if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return; // skip one we tried (but failed)
+      // DON'T skip one we tried as we might have failed because of coverage <50% before
+      // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
     } else if (event.type === 'resize')  {
       if (x < 0) return;
       // Scrolling page if needed
@@ -446,8 +448,15 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     }
 
     node._lastTried = {x, y, w, h}; // set as last tried (will nuke if we go there)
-    if (this.engine.moveNodeCheck(node, x, y, w, h)) {
+    let rect: GridStackPosition = { // screen pix of the dragged box
+      x: ui.position.left + this.opts.marginLeft,
+      y: ui.position.top + this.opts.marginTop,
+      w: (ui.size ? ui.size.width : node.w * cellWidth) - this.opts.marginLeft - this.opts.marginRight,
+      h: (ui.size ? ui.size.height : node.h * cellHeight) - this.opts.marginTop - this.opts.marginBottom
+    };
+    if (this.engine.moveNodeCheck(node, {x, y, w, h, cellWidth, cellHeight, rect})) {
       node._lastUiPosition = ui.position;
+      this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop, this.opts.marginRight, this.opts.marginBottom, this.opts.marginLeft);
       delete node._skipDown;
       if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }
       this._updateContainerHeight();

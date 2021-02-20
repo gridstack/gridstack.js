@@ -333,23 +333,23 @@ describe('gridstack engine', function() {
     });
     it('should return true for changed x', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.changedPos(widget, 2, 2)).toEqual(true);
+      expect(engine.changedPosConstrain(widget, {x:2, y:2})).toEqual(true);
     });
     it('should return true for changed y', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.changedPos(widget, 1, 1)).toEqual(true);
+      expect(engine.changedPosConstrain(widget, {x:1, y:1})).toEqual(true);
     });
     it('should return true for changed width', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.changedPos(widget, 2, 2, 4, 4)).toEqual(true);
+      expect(engine.changedPosConstrain(widget, {x:2, y:2, w:4, h:4})).toEqual(true);
     });
     it('should return true for changed height', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.changedPos(widget, 1, 2, 3, 3)).toEqual(true);
+      expect(engine.changedPosConstrain(widget, {x:1, y:2, w:3, h:3})).toEqual(true);
     });
     it('should return false for unchanged position', function() {
       let widget = { x: 1, y: 2, w: 3, h: 4 };
-      expect(engine.changedPos(widget, 1, 2, 3, 4)).toEqual(false);
+      expect(engine.changedPosConstrain(widget, {x:1, y:2, w:3, h:4})).toEqual(false);
     });
   });
 
@@ -368,17 +368,17 @@ describe('gridstack engine', function() {
       engine.addNode(nodes[1])
       // add item that moves past locked one
       expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
-      expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 1, y: 2}));
+      expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 1, y: 2, h: 3, id: 2}));
       // prevents moving locked item
       let node1 = findNode(engine, 1);
-      expect(engine.moveNode(node1, 6, 6)).toEqual(false);
+      expect(engine.moveNode(node1, {x:6, y:6})).toEqual(false);
       // but moves regular one (gravity ON)
       let node2 = findNode(engine, 2);
-      expect(engine.moveNode(node2, 6, 6)).toEqual(true);
+      expect(engine.moveNode(node2, {x:6, y:6})).toEqual(true);
       expect(node2).toEqual(jasmine.objectContaining({x: 6, y: 2, w: 2, h: 3}));
       // but moves regular one (gravity OFF)
       engine.float = true;
-      expect(engine.moveNode(node2, 7, 6)).toEqual(true);
+      expect(engine.moveNode(node2, {x:7, y:6})).toEqual(true);
       expect(node2).toEqual(jasmine.objectContaining({x: 7, y: 6, w: 2, h: 3}));
     });
   });
