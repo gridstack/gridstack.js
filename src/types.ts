@@ -194,6 +194,27 @@ export interface GridStackOptions {
   _styleSheetClass?: string;
 }
 
+/** options used during GridStackEngine.moveNode() */
+export interface GridStackMoveOpts extends GridStackPosition {
+  /** do we pack (default true) */
+  pack?: boolean;
+  /** do we verify for bad or > max/min values (default true) */
+  sanitize?: boolean;
+  /** true if we just want to push down (skip swapping) - default false*/
+  disableSwap?: boolean;
+  /** true if we just want simple row/column overlap vs checking >50% coverage - default false*/
+  disableCoverage?: boolean;
+  /* vars to calculate other cells coordinates */
+  cellWidth?: number;
+  cellHeight?: number;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
+  /** position in pixels of the currently dragged items (for overlap check) */
+  rect?: GridStackPosition;
+}
+
 export interface GridStackPosition {
   /** widget position x (default?: 0) */
   x?: number;
@@ -322,6 +343,8 @@ export interface GridStackNode extends GridStackWidget {
   _orig?: GridStackPosition;
   /** @internal set on the item being dragged/resized to save initial values TODO: vs _orig ? */
   _beforeDrag?: GridStackPosition;
+  /** @internal position in pixels used during collision check  */
+  _rect?: GridStackPosition;
   /** @internal top/left pixel location before a drag so we can detect direction of move from last position*/
   _lastUiPosition?: Position;
   /** @internal set on the item being dragged/resized remember the last positions we've tried (but failed) so we don't try again during drag/resize */
