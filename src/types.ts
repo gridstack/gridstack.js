@@ -202,10 +202,8 @@ export interface GridStackMoveOpts extends GridStackPosition {
   pack?: boolean;
   /** do we verify for bad or > max/min values (default true) */
   sanitize?: boolean;
-  /** true if we just want to push down (skip swapping) - default false*/
-  disableSwap?: boolean;
-  /** true if we just want simple row/column overlap vs checking >50% coverage - default false*/
-  disableCoverage?: boolean;
+  /** true if we are calling this recursively to prevent simple swap or coverage collision - default false*/
+  nested?: boolean;
   /* vars to calculate other cells coordinates */
   cellWidth?: number;
   cellHeight?: number;
