@@ -72,18 +72,18 @@ export class GridStackEngine {
 
   /** @internal fix collision on given 'node', going to given new location 'nn', with optional 'collide' node already found.
    * return true if we moved. */
-  private _fixCollisions(node: GridStackNode, nn = node, collide?: GridStackNode, disableSwap?: boolean): boolean {
+  private _fixCollisions(node: GridStackNode, nn = node, collide?: GridStackNode, opt: GridStackMoveOpts = {}): boolean {
     // this._sortNodes(-1); collision doesn't care about sorting
     collide = collide || this.collide(node, nn);
     if (!collide) return false;
 
     // swap check: if we're actively moving in gravity mode, see if we collide with an object the same size
-    if (node._moving && !disableSwap && !this.float) {
+    if (node._moving && !opt.nested && !this.float) {
       if (this.swap(node, collide)) return true;
     }
 
     let didMove = false;
-    let opts: GridStackMoveOpts = {disableSwap: true, disableCoverage: true, pack: false, sanitize: false};
+    let newOpt: GridStackMoveOpts = {nested: true, pack: false, sanitize: false};
     while (collide = collide || this.collide(node, nn)) { // we could start colliding more than 1 item... so repeat for each
       let moved: boolean;
       // if colliding with locked item, OR moving down to a different sized item (not handle with swap) that could take our place, move ourself past instead
@@ -92,12 +92,17 @@ export class GridStackEngine {
         Utils.isIntercepted(collide, {x: node.x-0.5, y: node.y-0.5, w: node.w+1, h: node.h+1})) {
 
         node._skipDown = (node._skipDown || nn.y > node.y);
-        moved = this.moveNode(node, {...nn, y: collide.y + collide.h, ...opts});
-        nn = moved ? {x: node.x, y: node.y, w: node.w, h: node.h} : nn;
+        moved = this.moveNode(node, {...nn, y: collide.y + collide.h, ...newOpt});
+        if (collide.locked && moved) {
+          Utils.copyPos(nn, node); // moving after lock become our new desired location
+        } else if (moved && opt.pack && !collide.locked) {
+          // we moved after and are will pack, do it now and keep the original drop location to see what else we might push way
+          this._packNodes();
+        }
         didMove = didMove || moved;
       } else {
         // move collide down *after* us
-        moved = this.moveNode(collide, {...collide, y: nn.y + nn.h, ...opts});
+        moved = this.moveNode(collide, {...collide, y: nn.y + nn.h, ...newOpt});
       }
       if (!moved) { return didMove; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
       collide = undefined;
@@ -185,7 +190,8 @@ export class GridStackEngine {
       return true;
     }
 
-    if (a.w === b.w && a.h === b.h && Utils.isIntercepted(b, {x: a.x-0.5, y:a.y-0.5, w: a.w+1, h: a.h+1})) // same size and touching
+    // same size and same row or column
+    if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y) /*&& Utils.isIntercepted(b, {x: a.x-0.5, y:a.y-0.5, w: a.w+1, h: a.h+1})*/)
       return _doSwap();
     /* different X will be weird (expect vertical swap) and different height overlap, so too complex. user regular layout instead
     // else check if swapping would not collide with anything else (requiring a re-layout)
@@ -380,6 +386,7 @@ export class GridStackEngine {
     return this;
   }
 
+  /** call to add the given node to our list, fixing collision and re-packing */
   public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
     node = this.prepareNode(node);
 
@@ -432,15 +439,16 @@ export class GridStackEngine {
   }
 
   /** checks if item can be moved (layout constrain) vs moveNode(), returning true if was able to move.
-   * In more complicated cases (locked items, or maxRow) it will attempt at moving the item and fixing
-   * others in a clone first, then apply those changes if within specs. */
+   * In more complicated cases (maxRow) it will attempt at moving the item and fixing
+   * others in a clone first, then apply those changes if still within specs. */
   public moveNodeCheck(node: GridStackNode, o: GridStackMoveOpts): boolean {
     if (node.locked) return false;
     if (!this.changedPosConstrain(node, o)) return false;
-    o.pack = true; // no sanitize
+    o.pack = true;
+    o.sanitize = false;
 
     // simpler case: move item directly...
-    if (!this.maxRow && !this.nodes.some(n => n.locked)) {
+    if (!this.maxRow/* && !this.nodes.some(n => n.locked)*/) {
       return this.moveNode(node, o);
     }
 
@@ -539,7 +547,7 @@ export class GridStackEngine {
 
   /** return true if the passed in node was actually moved (checks for no-op and locked) */
   public moveNode(node: GridStackNode, o: GridStackMoveOpts): boolean {
-    if (!node || node.locked) return false;
+    if (!node || node.locked || !o) return false;
     if (o.pack === undefined) o.pack = true;
     if (o.sanitize === undefined) o.sanitize = true;
     let nn: GridStackNode;
@@ -565,9 +573,9 @@ export class GridStackEngine {
     let moved = false;
     if (collides.length) {
       // now check to make sure we actually collided over 50% surface area while dragging
-      let collide = node._moving && !o.disableCoverage ? this.collideCoverage(node, o, collides) : collides[0];
+      let collide = node._moving && !o.nested ? this.collideCoverage(node, o, collides) : collides[0];
       if (collide) {
-        moved = this._fixCollisions(node, nn, collide, o.disableSwap);
+        moved = this._fixCollisions(node, nn, collide, o);
       } else {
         moved = true; // prevent actual moving since we didn't cover >50% for a move
       }
