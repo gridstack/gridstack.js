@@ -8,7 +8,8 @@
 
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteAttr, Utils, HeightData } from './utils';
-import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback, GridStackNode, GridStackOptions, GridStackWidget, numberOrString } from './types';
+import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
+  GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData } from './types';
 import { GridStackDDI } from './gridstack-ddi';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -569,11 +570,12 @@ export class GridStack {
        (!forcePixel || !this.opts.cellHeightUnit || this.opts.cellHeightUnit === 'px')) {
       return this.opts.cellHeight as number;
     }
-    // else get first cell height
-    // or do entire grid and # of rows ? (this.el.getBoundingClientRect().height) / parseInt(this.el.getAttribute('gs-current-row'))
-    let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
-    let height = Utils.toNumber(el.getAttribute('gs-h'));
-    return Math.round(el.offsetHeight / height);
+    // else do entire grid and # of rows
+    // or get first cell height ?
+    // let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
+    // let height = Utils.toNumber(el.getAttribute('gs-h'));
+    // return Math.round(el.offsetHeight / height);
+    return Math.round(this.el.getBoundingClientRect().height) / parseInt(this.el.getAttribute('gs-current-row'));
   }
 
   /**
@@ -1513,6 +1515,10 @@ export class GridStack {
   public _setupDragIn():  GridStack { return this }
   /** @internal prepares the element for drag&drop **/
   public _prepareDragDropByNode(node: GridStackNode): GridStack { return this }
+  /** @internal handles actual drag/resize start **/
+  public _onStartMoving(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
+  /** @internal handles actual drag/resize **/
+  public _dragOrResize(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
 
   // 2.x API that just calls the new and better update() - keep those around for backward compat only...
   /** @internal */

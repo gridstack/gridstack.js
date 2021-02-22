@@ -390,6 +390,7 @@ export class GridStackEngine {
 
   /** call to add the given node to our list, fixing collision and re-packing */
   public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
+    if (this.nodes.find(n => n._id === node._id)) return; // prevent inserting twice!
     node = this.prepareNode(node);
 
     if (node.autoPosition) {
@@ -511,6 +512,7 @@ export class GridStackEngine {
 
   /** return true if the passed in node (x,y) is being dragged outside of the grid, and not added to bottom */
   public isOutside(x: number, y: number, node: GridStackNode): boolean {
+    if (node._isOutOfGrid) return false; // dragging out is handled by 'dropout' event instead
     // simple outside boundaries
     if (x < 0 || x >= this.column || y < 0) return true;
     if (this.maxRow) return (y >= this.maxRow);
