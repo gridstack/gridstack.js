@@ -38,11 +38,8 @@ export abstract class DDBaseImplement {
   }
 
   public triggerEvent(eventName: string, event: Event): boolean|void {
-    if (this.disabled) return;
-    if (!this._eventRegister) {return; } // used when destroy before triggerEvent fire
-    if (this._eventRegister[eventName]) {
+    if (!this.disabled && this._eventRegister && this._eventRegister[eventName])
       return this._eventRegister[eventName](event);
-    }
   }
 }
 

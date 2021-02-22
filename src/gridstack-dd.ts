@@ -9,7 +9,7 @@
 
 import { GridStackDDI } from './gridstack-ddi';
 import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition } from './types';
-import { GridStack } from './gridstack';
+import { GridStack, MousePosition } from './gridstack';
 import { Utils } from './utils';
 
 /** Drag&Drop drop options */
@@ -88,35 +88,40 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
     return this;
   }
 
-  let onDrag = (event, el: GridItemHTMLElement) => {
+  // vars shared across all methods
+  let gridPos: MousePosition;
+  let cellHeight: number, cellWidth: number;
+
+  let onDrag = (event: DragEvent, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
+
     let node = el.gridstackNode;
-    let pos = this.getCellFromPixel({left: event.pageX, top: event.pageY}, true);
-    let x = Math.max(0, pos.x);
-    let y = Math.max(0, pos.y);
+    helper = helper || el;
+    // let left = event.pageX - gridPos.left;
+    // let top = event.pageY - gridPos.top;
+    let rec = helper.getBoundingClientRect();
+    let left = rec.left - gridPos.left;
+    let top = rec.top - gridPos.top;
+    let ui: DDUIData = {position: {top, left}};
+
     if (!node._added) {
-      node.x = x;
-      node.y = y;
+      node.x = Math.max(0, Math.round(left / cellWidth));
+      node.y = Math.max(0, Math.round(top / cellHeight));
       delete node.autoPosition;
 
       // don't accept *initial* location if doesn't fit #1419 (locked drop region, or can't grow), but maybe try if it will go somewhere
       if (!this.engine.willItFit(node)) {
         node.autoPosition = true; // ignore x,y and try for any slot...
-        if (!this.engine.willItFit(node)) return; // full grid or can't grow
+        if (!this.engine.willItFit(node)) {
+          GridStackDD.get().off(el, 'drag'); // stop calling us
+          return; // full grid or can't grow
+        }
       }
-      node._added = true;
 
-      node.el = el;
-      this.engine.cleanNodes()
-        .beginUpdate(node)
-        .addNode(node);
-
-      this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h);
-      this.el.appendChild(this.placeholder);
-      node.el = this.placeholder; // dom we update while dragging...
-
-      this._updateContainerHeight();
-    } else if (this.engine.moveNodeCheck(node, {x, y})) {
-      this._updateContainerHeight();
+      // re-use the existing node dragging method
+      this._onStartMoving(event, ui, node, cellWidth, cellHeight);
+    } else {
+      // re-use the existing node dragging that does so much of the collision detection
+      this._dragOrResize(event, ui, node, cellWidth, cellHeight);
     }
   };
 
@@ -142,13 +147,20 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         return canAccept;
       }
     })
-    .on(this.el, 'dropover', (event, el: GridItemHTMLElement) => {
+    .on(this.el, 'dropover', (event: Event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
+
       // ignore drop enter on ourself, and prevent parent from receiving event
       let node = el.gridstackNode;
       if (node && node.grid === this) {
         delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
         return false;
       }
+
+      // get grid screen coordinates and cell dimensions
+      let box = this.el.getBoundingClientRect();
+      gridPos = {top: box.top + document.documentElement.scrollTop, left: box.left};
+      cellWidth = this.cellWidth();
+      cellHeight = this.getCellHeight(true);
 
       // load any element attributes if we don't have a node
       if (!node) {
@@ -161,14 +173,16 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       }
 
       // if not calculate the grid size based on element outer size
-      let w = node.w || Math.round(el.offsetWidth / this.cellWidth()) || 1;
-      let h = node.h || Math.round(el.offsetHeight / this.getCellHeight(true)) || 1;
+      helper = helper || el;
+      let w = node.w || Math.round(helper.offsetWidth / cellWidth) || 1;
+      let h = node.h || Math.round(helper.offsetHeight / cellHeight) || 1;
 
-      // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
+      // COPY the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
       let newNode = this.engine.prepareNode({...node, ...{w, h, _added: false, _temporary: true, _isOutOfGrid: true}});
       el.gridstackNode = newNode;
       el._gridstackNodeOrig = node;
 
+      onDrag(event as DragEvent, el, helper); // make sure this is called at least once when going fast #1578
       GridStackDD.get().on(el, 'drag', onDrag);
       return false; // prevent parent from receiving msg (which may be grid as well)
     })
@@ -358,114 +372,19 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
 
   /** called when item starts moving/resizing */
   let onStartMoving = (event: Event, ui: DDUIData): void => {
-    let target = event.target as HTMLElement;
-
     // trigger any 'dragstart' / 'resizestart' manually
     if (this._gsEventHandler[event.type]) {
-      this._gsEventHandler[event.type](event, target);
+      this._gsEventHandler[event.type](event, event.target);
     }
-
-    this.engine.cleanNodes()
-      .beginUpdate(node);
-
-    this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h)
-    this.el.append(this.placeholder);
-
-    node.el = this.placeholder;
-    node._lastUiPosition = ui.position;
-    node._prevYPix = ui.position.top;
-    node._moving = (event.type === 'dragstart');
-    delete node._lastTried;
-
-    // set the min/max resize info
     cellWidth = this.cellWidth();
     cellHeight = this.getCellHeight(true); // force pixels for calculations
-    this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop, this.opts.marginRight, this.opts.marginBottom, this.opts.marginLeft);
-    let dd = GridStackDD.get()
-      .resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1))
-      .resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
-    if (node.maxW) { dd.resizable(el, 'option', 'maxWidth', cellWidth * node.maxW); }
-    if (node.maxH) { dd.resizable(el, 'option', 'maxHeight', cellHeight * node.maxH); }
+
+    this._onStartMoving(event, ui, node, cellWidth, cellHeight);
   }
 
   /** called when item is being dragged/resized */
   let dragOrResize = (event: Event, ui: DDUIData): void => {
-    // calculate the place where we're landing by offsetting margin so actual edge crosses mid point
-    let left = ui.position.left + (ui.position.left > node._lastUiPosition.left  ? -this.opts.marginRight : this.opts.marginLeft);
-    let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
-    let x = Math.round(left / cellWidth);
-    let y = Math.round(top / cellHeight);
-    let w = node.w;
-    let h = node.h;
-    let resizing: boolean;
-
-    if (event.type === 'drag') {
-      let distance = ui.position.top - node._prevYPix;
-      node._prevYPix = ui.position.top;
-      Utils.updateScrollPosition(el, ui.position, distance);
-      // if inTrash, outside of the bounds or added to another grid (#393) temporarily remove it from us
-      if (el.dataset.inTrashZone || node._added || this.engine.isOutside(x, y, node)) {
-        if (node._temporaryRemoved) return;
-        if (this.opts.removable === true) {
-          this._setupRemovingTimeout(el);
-        }
-
-        x = node._beforeDrag.x;
-        y = node._beforeDrag.y;
-
-        if (this.placeholder.parentNode === this.el) {
-          this.placeholder.remove();
-        }
-        this.engine.removeNode(node);
-        this._updateContainerHeight();
-
-        node._temporaryRemoved = true;
-        delete node._added; // no need for this now
-      } else {
-        if (node._removeTimeout) this._clearRemovingTimeout(el);
-
-        if (node._temporaryRemoved) {
-          this.engine.addNode(node);
-          this._writePosAttr(this.placeholder, x, y, w, h);
-          this.el.appendChild(this.placeholder);
-          node.el = this.placeholder;
-          delete node._temporaryRemoved;
-        }
-      }
-      if (node.x === x && node.y === y) return; // skip same
-      // DON'T skip one we tried as we might have failed because of coverage <50% before
-      // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
-    } else if (event.type === 'resize')  {
-      if (x < 0) return;
-      // Scrolling page if needed
-      Utils.updateScrollResize(event as MouseEvent, el, cellHeight);
-      w = Math.round(ui.size.width / cellWidth);
-      h = Math.round(ui.size.height / cellHeight);
-      if (node.w === w && node.h === h) return;
-      if (node._lastTried && node._lastTried.w === w && node._lastTried.h === h) return; // skip one we tried (but failed)
-      resizing = true;
-    }
-
-    node._lastTried = {x, y, w, h}; // set as last tried (will nuke if we go there)
-    let rect: GridStackPosition = { // screen pix of the dragged box
-      x: ui.position.left + this.opts.marginLeft,
-      y: ui.position.top + this.opts.marginTop,
-      w: (ui.size ? ui.size.width : node.w * cellWidth) - this.opts.marginLeft - this.opts.marginRight,
-      h: (ui.size ? ui.size.height : node.h * cellHeight) - this.opts.marginTop - this.opts.marginBottom
-    };
-    if (this.engine.moveNodeCheck(node, {x, y, w, h, cellWidth, cellHeight, rect})) {
-      node._lastUiPosition = ui.position;
-      this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop, this.opts.marginRight, this.opts.marginBottom, this.opts.marginLeft);
-      delete node._skipDown;
-      if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }
-      this._updateContainerHeight();
-
-      let target = event.target as GridItemHTMLElement;
-      this._writePosAttr(target, node.x, node.y, node.w, node.h);
-      if (this._gsEventHandler[event.type]) {
-        this._gsEventHandler[event.type](event, target);
-      }
-    }
+    this._dragOrResize(event, ui, node, cellWidth, cellHeight);
   }
 
   /** called when the item stops moving/resizing */
@@ -546,6 +465,125 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
     GridStackDD.get().resizable(el, 'disable');
   }
   return this;
+}
+
+/** @internal called when item is starting a drag/resize */
+GridStack.prototype._onStartMoving = function(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void {
+  this.engine.cleanNodes()
+    .beginUpdate(node);
+
+  this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h)
+  this.el.append(this.placeholder);
+
+  node.el = this.placeholder;
+  node._lastUiPosition = ui.position;
+  node._prevYPix = ui.position.top;
+  node._moving = (event.type === 'dragstart');
+  delete node._lastTried;
+
+  if (event.type === 'dropover' && !node._added) {
+    node._added = true;
+    this.engine.addNode(node);
+    this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h);
+    node._moving = true; // lastly mark as moving object
+  }
+
+  // set the min/max resize info
+  this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop, this.opts.marginRight, this.opts.marginBottom, this.opts.marginLeft);
+  if (event.type === 'resizestart') {
+    let el = node.el;
+    let dd = GridStackDD.get()
+      .resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1))
+      .resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
+    if (node.maxW) { dd.resizable(el, 'option', 'maxWidth', cellWidth * node.maxW); }
+    if (node.maxH) { dd.resizable(el, 'option', 'maxHeight', cellHeight * node.maxH); }
+  }
+}
+
+/** @internal called when item is being dragged/resized */
+GridStack.prototype._dragOrResize = function(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void  {
+  let el = node.el;
+  // calculate the place where we're landing by offsetting margin so actual edge crosses mid point
+  let left = ui.position.left + (ui.position.left > node._lastUiPosition.left  ? -this.opts.marginRight : this.opts.marginLeft);
+  let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
+  let x = Math.round(left / cellWidth);
+  let y = Math.round(top / cellHeight);
+  if (node._isOutOfGrid) {
+    // items coming from outside are handled by 'dragout' event instead, so make coordinates fit
+    x = Math.max(0, x);
+    y = Math.max(0, y);
+  }
+  let w = node.w;
+  let h = node.h;
+  let resizing: boolean;
+
+  if (event.type === 'drag') {
+    let distance = ui.position.top - node._prevYPix;
+    node._prevYPix = ui.position.top;
+    Utils.updateScrollPosition(el, ui.position, distance);
+    // if inTrash, outside of the bounds or added to another grid (#393) temporarily remove it from us
+    if (el.dataset.inTrashZone || (node._added && !node._isOutOfGrid) || this.engine.isOutside(x, y, node)) {
+      if (node._temporaryRemoved) return;
+      if (this.opts.removable === true) {
+        this._setupRemovingTimeout(el);
+      }
+
+      x = node._beforeDrag.x;
+      y = node._beforeDrag.y;
+
+      if (this.placeholder.parentNode === this.el) {
+        this.placeholder.remove();
+      }
+      this.engine.removeNode(node);
+      this._updateContainerHeight();
+
+      node._temporaryRemoved = true;
+      delete node._added; // no need for this now
+    } else {
+      if (node._removeTimeout) this._clearRemovingTimeout(el);
+
+      if (node._temporaryRemoved) {
+        this.engine.addNode(node);
+        this._writePosAttr(this.placeholder, x, y, w, h);
+        this.el.appendChild(this.placeholder);
+        node.el = this.placeholder;
+        delete node._temporaryRemoved;
+      }
+    }
+    if (node.x === x && node.y === y) return; // skip same
+    // DON'T skip one we tried as we might have failed because of coverage <50% before
+    // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
+  } else if (event.type === 'resize')  {
+    if (x < 0) return;
+    // Scrolling page if needed
+    Utils.updateScrollResize(event as MouseEvent, el, cellHeight);
+    w = Math.round(ui.size.width / cellWidth);
+    h = Math.round(ui.size.height / cellHeight);
+    if (node.w === w && node.h === h) return;
+    if (node._lastTried && node._lastTried.w === w && node._lastTried.h === h) return; // skip one we tried (but failed)
+    resizing = true;
+  }
+
+  node._lastTried = {x, y, w, h}; // set as last tried (will nuke if we go there)
+  let rect: GridStackPosition = { // screen pix of the dragged box
+    x: ui.position.left + this.opts.marginLeft,
+    y: ui.position.top + this.opts.marginTop,
+    w: (ui.size ? ui.size.width : node.w * cellWidth) - this.opts.marginLeft - this.opts.marginRight,
+    h: (ui.size ? ui.size.height : node.h * cellHeight) - this.opts.marginTop - this.opts.marginBottom
+  };
+  if (this.engine.moveNodeCheck(node, {x, y, w, h, cellWidth, cellHeight, rect})) {
+    node._lastUiPosition = ui.position;
+    this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop, this.opts.marginRight, this.opts.marginBottom, this.opts.marginLeft);
+    delete node._skipDown;
+    if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }
+    this._updateContainerHeight();
+
+    let target = event.target as GridItemHTMLElement;
+    this._writePosAttr(target, node.x, node.y, node.w, node.h);
+    if (this._gsEventHandler[event.type]) {
+      this._gsEventHandler[event.type](event, target);
+    }
+  }
 }
 
 /**

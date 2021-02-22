@@ -73,7 +73,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this._dragStart = this._dragStart.bind(this);
     this._drag = this._drag.bind(this);
     this._dragEnd = this._dragEnd.bind(this);
-    this._dragFollow = this._dragFollow.bind(this);
     this.enable();
   }
 

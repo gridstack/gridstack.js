@@ -83,9 +83,11 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal called when the cursor enters our area - prepare for a possible drop and track leaving */
   private _dragEnter(event: DragEvent): void {
     if (!this._canDrop()) return;
+    event.preventDefault();
+
+    if (this.moving) return; // ignore multiple 'dragenter' as we go over existing items
     this.moving = true;
 
-    event.preventDefault();
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropover' });
     if (this.option.over) {
       this.option.over(ev, this._ui(DDManager.dragElement))
@@ -115,6 +117,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
       }
       this.triggerEvent('dropout', ev);
     }
+    delete this.moving;
   }
 
   /** @internal item is being dropped on us - call the client drop event */
@@ -127,6 +130,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     this.triggerEvent('drop', ev);
     this._removeLeaveCallbacks();
+    delete this.moving;
   }
 
   /** @internal called to remove callbacks when leaving or dropping */
@@ -137,6 +141,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
       this.el.removeEventListener('dragover', this._dragOver);
       this.el.removeEventListener('drop', this._drop);
     }
+    // Note: this.moving is reset by callee of this routine to control the flow
   }
 
   /** @internal */
