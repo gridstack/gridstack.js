@@ -165,8 +165,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       let h = node.h || Math.round(el.offsetHeight / this.getCellHeight(true)) || 1;
 
       // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
-      let newNode = this.engine.prepareNode({...node, ...{w, h, _added: false, _temporary: true}});
-      newNode._isOutOfGrid = true;
+      let newNode = this.engine.prepareNode({...node, ...{w, h, _added: false, _temporary: true, _isOutOfGrid: true}});
       el.gridstackNode = newNode;
       el._gridstackNodeOrig = node;
 

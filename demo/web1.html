@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>demo1</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="demo.css" />
+
+  <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
+
+  <script src="../dist/gridstack-h5.js"></script>
+</head>
+
+<body>
+  <h1>Web demo 1</h1>
+  <div class="grid-stack"></div>
+
+  <script type="text/javascript">
+    let grid = GridStack.init({
+      cellHeight: 70,
+    });
+
+    let items = [
+      {x: 0, y: 0, w: 4, h: 2, content: '1'},
+      {x: 4, y: 0, w: 4, h: 4, content: '2'},
+      {x: 8, y: 0, w: 2, h: 2, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon><p class="card-text text-center" style="margin-bottom: 0">'},
+      {x: 10, y: 0, w: 2, h: 2, content: '4'},
+      {x: 0, y: 2, w: 2, h: 2, content: '5'},
+      {x: 2, y: 2, w: 2, h: 4, content: '6'},
+      {x: 8, y: 2, w: 4, h: 2, content: '7'},
+      {x: 0, y: 4, w: 2, h: 2, content: '8'},
+      {x: 4, y: 4, w: 4, h: 2, content: '9'},
+      {x: 8, y: 4, w: 2, h: 2, content: '10'},
+      {x: 10, y: 4, w: 2, h: 2, content: '11'},
+    ];
+    grid.load(items);
+    
+    grid.on('added removed change', function(e, items) {
+      let str = '';
+      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+      console.log(e.type + ' ' + items.length + ' items:' + str );
+    });
+  </script>
+</body>
+
+</html>

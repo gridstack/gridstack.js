@@ -84,9 +84,11 @@ export class GridStackEngine {
 
     let didMove = false;
     let newOpt: GridStackMoveOpts = {nested: true, pack: false, sanitize: false};
-    while (collide = collide || this.collide(node, nn)) { // we could start colliding more than 1 item... so repeat for each
+    while (collide = collide || this.collide(node, nn)) { // could collide with more than 1 item... so repeat for each
       let moved: boolean;
-      // if colliding with locked item, OR moving down to a different sized item (not handle with swap) that could take our place, move ourself past instead
+      // if colliding with locked item, OR moving down to a different sized item
+      // (not handled with swap) that could take our place, move ourself past it instead
+      // but remember that skip down so we only do this one (and push others otherwise).
       if (collide.locked || (node._moving && !node._skipDown && nn.y > node.y &&
         !this.float && !this.collide(collide, {...collide, y: node.y}, node)) &&
         Utils.isIntercepted(collide, {x: node.x-0.5, y: node.y-0.5, w: node.w+1, h: node.h+1})) {
@@ -96,7 +98,7 @@ export class GridStackEngine {
         if (collide.locked && moved) {
           Utils.copyPos(nn, node); // moving after lock become our new desired location
         } else if (moved && opt.pack && !collide.locked) {
-          // we moved after and are will pack, do it now and keep the original drop location to see what else we might push way
+          // we moved after and will pack: do it now and keep the original drop location to see what else we might push way
           this._packNodes();
         }
         didMove = didMove || moved;
@@ -534,10 +536,11 @@ export class GridStackEngine {
 
   /** true if x,y or w,h are different after clamping to min/max */
   public changedPosConstrain(node: GridStackNode, p: GridStackPosition): boolean {
-    if (node.x !== p.x || node.y !== p.y) return true;
-    // check constrained w,h
+    // make sure w,h are set
     p.w = p.w || node.w;
     p.h = p.h || node.h;
+    if (node.x !== p.x || node.y !== p.y) return true;
+    // check constrained w,h
     if (node.maxW) { p.w = Math.min(p.w, node.maxW); }
     if (node.maxH) { p.h = Math.min(p.h, node.maxH); }
     if (node.minW) { p.w = Math.max(p.w, node.minW); }
