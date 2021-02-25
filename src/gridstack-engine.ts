@@ -315,6 +315,11 @@ export class GridStackEngine {
     if (node.minW) { node.w = Math.max(node.w, node.minW); }
     if (node.minH) { node.h = Math.max(node.h, node.minH); }
 
+    return this.nodeBoundFix(node, resizing);
+  }
+
+  /** part2 of preparing a node to fit inside our grid - checks  for x,y from grid dimensions */
+  public nodeBoundFix(node: GridStackNode, resizing?: boolean): GridStackNode {
     if (node.w > this.column) {
       node.w = this.column;
     } else if (node.w < 1) {
