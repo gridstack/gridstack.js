@@ -107,6 +107,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       node.x = Math.max(0, Math.round(left / cellWidth));
       node.y = Math.max(0, Math.round(top / cellHeight));
       delete node.autoPosition;
+      this.engine.nodeBoundFix(node);
 
       // don't accept *initial* location if doesn't fit #1419 (locked drop region, or can't grow), but maybe try if it will go somewhere
       if (!this.engine.willItFit(node)) {
@@ -508,13 +509,13 @@ GridStack.prototype._dragOrResize = function(event: Event, ui: DDUIData, node: G
   let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
   let x = Math.round(left / cellWidth);
   let y = Math.round(top / cellHeight);
-  if (node._isOutOfGrid) {
-    // items coming from outside are handled by 'dragout' event instead, so make coordinates fit
-    x = Math.max(0, x);
-    y = Math.max(0, y);
-  }
   let w = node.w;
   let h = node.h;
+  if (node._isOutOfGrid) {
+    // items coming from outside are handled by 'dragout' event instead, so make coordinates fit
+    let fix = this.engine.nodeBoundFix({x, y, w, h});
+    x = fix.x; y = fix.y; w = fix.w; h = fix.h;
+  }
   let resizing: boolean;
 
   if (event.type === 'drag') {
