@@ -406,4 +406,3 @@ View our change log [here](https://github.com/gridstack/gridstack.js/tree/develo
 # The Team
 
 gridstack.js is currently maintained by [Alain Dumesny](https://github.com/adumesny) and [Dylan Weiss](https://github.com/radiolips), originally created by [Pavel Reznikov](https://github.com/troolee). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
-
