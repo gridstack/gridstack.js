@@ -328,15 +328,31 @@ GridStack.prototype._clearRemovingTimeout = function(el: GridItemHTMLElement): G
   return this;
 }
 
-/** @internal call to setup dragging in from the outside (say toolbar), with options */
-GridStack.prototype._setupDragIn = function():  GridStack {
-  if (!this.opts.staticGrid && typeof this.opts.dragIn === 'string') {
-    if (!GridStackDD.get().isDraggable(this.opts.dragIn)) {
-      GridStackDD.get().dragIn(this.opts.dragIn, this.opts.dragInOptions);
-    }
+/**
+ * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
+ * Called during GridStack.init() as options, but can also be called directly (last param are cached) in case the toolbar
+ * is dynamically create and needs to change later.
+ **/
+GridStack.setupDragIn = function(_dragIn?: string, _dragInOptions?: DDDragInOpt) {
+  // cache in the passed in values (form grid init?) so they don't have to resend them each time
+  if (_dragIn) {
+    dragIn = _dragIn;
+    dragInOptions = {...dragInDefaultOptions, ...(_dragInOptions || {})};
   }
-  return this;
+  if (typeof dragIn !== 'string') return;
+  let dd = GridStackDD.get();
+  Utils.getElements(dragIn).forEach(el => {
+    if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
+  });
 }
+let dragIn: string;
+let dragInOptions: DDDragInOpt;
+const dragInDefaultOptions: DDDragInOpt = {
+  revert: 'invalid',
+  handle: '.grid-stack-item-content',
+  scroll: false,
+  appendTo: 'body'
+};
 
 /** @internal prepares the element for drag&drop **/
 GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): GridStack {

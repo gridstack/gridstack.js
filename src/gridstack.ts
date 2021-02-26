@@ -9,7 +9,7 @@
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteAttr, Utils, HeightData } from './utils';
 import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
-  GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData } from './types';
+  GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData, DDDragInOpt } from './types';
 import { GridStackDDI } from './gridstack-ddi';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -66,13 +66,6 @@ const GridDefaults: GridStackOptions = {
     handles: 'se'
   },
   draggable: {
-    handle: '.grid-stack-item-content',
-    scroll: false,
-    appendTo: 'body'
-  },
-  dragIn: undefined,
-  dragInOptions : {
-    revert: 'invalid',
     handle: '.grid-stack-item-content',
     scroll: false,
     appendTo: 'body'
@@ -147,6 +140,7 @@ export class GridStack {
     GridStack.getGridElements(selector).forEach(el => {
       if (!el.gridstack) {
         el.gridstack = new GridStack(el, {...options});
+        delete options.dragIn; delete options.dragInOptions; // only need to be done once (really a static global thing, not per grid)
       }
       grids.push(el.gridstack);
     });
@@ -357,7 +351,11 @@ export class GridStack {
       this.el.classList.add('grid-stack-' + this.opts.column);
     }
 
-    this._setupDragIn();
+    // legacy support to appear 'per grid` options when really global.
+    if (this.opts.dragIn) GridStack.setupDragIn(this.opts.dragIn, this.opts.dragInOptions);
+    delete this.opts.dragIn;
+    delete this.opts.dragInOptions;
+
     this._setupRemoveDrop();
     this._setupAcceptWidget();
     this._updateWindowResizeEvent();
@@ -1458,6 +1456,15 @@ export class GridStack {
   /* eslint-disable @typescript-eslint/no-unused-vars */
 
   /**
+   * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
+   * Called during GridStack.init() as options, but can also be called directly (last param are cached) in case the toolbar
+   * is dynamically create and needs to change later.
+   * @param dragIn string selector (ex: '.sidebar .grid-stack-item')
+   * @param dragInOptions options - see DDDragInOpt. (default: {revert: 'invalid', handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}
+   **/
+  public static setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt): void { /* implemented in gridstack-dd.ts */ }
+
+  /**
    * Enables/Disables moving. No-op for static grids.
    * @param els widget or selector to modify.
    * @param val if true widget will be draggable.
@@ -1503,6 +1510,7 @@ export class GridStack {
    * doEnable`s value by changing the disableResize grid option (default: true).
    */
   public enableResize(doEnable: boolean, includeNewWidgets = true): GridStack { return this }
+
   /** @internal called to add drag over support to support widgets */
   public _setupAcceptWidget(): GridStack { return this }
   /** @internal called to setup a trash drop zone if the user specifies it */
@@ -1511,8 +1519,6 @@ export class GridStack {
   public _setupRemovingTimeout(el: GridItemHTMLElement): GridStack { return this }
   /** @internal */
   public _clearRemovingTimeout(el: GridItemHTMLElement): GridStack { return this }
-  /** @internal call to setup dragging in from the outside (say toolbar), with options */
-  public _setupDragIn():  GridStack { return this }
   /** @internal prepares the element for drag&drop **/
   public _prepareDragDropByNode(node: GridStackNode): GridStack { return this }
   /** @internal handles actual drag/resize start **/

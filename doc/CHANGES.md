@@ -55,6 +55,7 @@ Change log
 - handle mid point of dragged over items (>50%) rather than a new row/column and check for the most covered when multiple items collide.
 - fix [1617](https://github.com/gridstack/gridstack.js/issues/1617) FireFox DOM order issue. Thanks [@marcel-necker](https://github.com/marcel-necker)
 - add `drag | resize` events while dragging [1616](https://github.com/gridstack/gridstack.js/pull/1616). Thanks [@MrCorba](https://github.com/MrCorba)
+- add `GridStack.setupDragIn()` so user can update external draggable after the grid has been created [1637](https://github.com/gridstack/gridstack.js/issues/1637)
 
 ## 3.3.0 (2021-2-2)
 
