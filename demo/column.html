@@ -12,7 +12,7 @@
 </head>
 <body>
   <div class="container-fluid">
-    <h1>column() grid demo</h1>
+    <h1>column() grid demo (fix cellHeight)</h1>
     <div><span>Number of Columns:</span> <span id="column-text">12</span></div>
     <div>
       <label>Choose re-layout:</label>
@@ -41,7 +41,11 @@
   </div>
 
   <script type="text/javascript">
-    let grid = GridStack.init({float: true});
+    let grid = GridStack.init({
+      float: true,
+      disableOneColumnMode: true, // prevent auto column for this manual demo
+      cellHeight: 100 // fixed as default 'auto' (square) makes it hard to test 1-3 column in actual large windows tests
+    });
     let text = document.querySelector('#column-text');
     let layout = 'moveScale';
 
