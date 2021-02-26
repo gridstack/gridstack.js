@@ -87,14 +87,18 @@
       cellHeight: 70,
       disableOneColumnMode: true,
       float: false,
-      dragIn: '.sidebar .grid-stack-item', // add draggable to class
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
+      // dragIn: '.sidebar .grid-stack-item', // add draggable to class
+      // dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
       removable: '.trash', // drag-out delete class
       removeTimeout: 100,
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };
     let grids = GridStack.initAll(options);
     grids[1].float(true);
+
+    // new 4.x static method instead of setting up options on every grid (never been per grid really but old options still work)
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' });
+    // GridStack.setupDragIn(); // will now work as well (cache last values)
 
     let items = [
       {x: 0, y: 0, w: 2, h: 2},

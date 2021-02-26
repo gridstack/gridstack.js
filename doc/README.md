@@ -52,6 +52,7 @@ gridstack.js API
   - [save(saveContent = true): GridStackWidget[]](#savesavecontent--true-gridstackwidget)
   - [setAnimation(doAnimate)](#setanimationdoanimate)
   - [setStatic(staticValue)](#setstaticstaticvalue)
+  - [GridStack.setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt)](#gridstacksetupdragindragin-string-draginoptions-dddraginopt)
   - [update(el: GridStackElement, opts: GridStackWidget)](#updateel-gridstackelement-opts-gridstackwidget)
   - [willItFit(x, y, width, height, autoPosition)](#willitfitx-y-width-height-autoposition)
 - [Utils](#utils)
@@ -86,8 +87,12 @@ gridstack.js API
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minW (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
-- `dragIn` - specify the class of items that can be dragged into the grid (ex: dragIn: '.newWidget'
-- `dragInOptions` - options for items that can be dragged into the grid (ex: dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }
+- `dragIn` - specify the class of items that can be dragged into grids
+  * example: `dragIn: '.newWidget'`.
+  * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
+- `dragInOptions` - options for items that can be dragged into grids
+  * example `dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone', handle: '.grid-stack-item-content' }`
+  * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body', containment: null}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
@@ -493,6 +498,15 @@ Toggle the grid animation state.  Toggles the `grid-stack-animate` class.
 Toggle the grid static state.  Also toggle the `grid-stack-static` class.
 
 - `staticValue` - if `true` the grid becomes static.
+
+### GridStack.setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt)
+
+  * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
+  * Called during `GridStack.init()` as options, but can also be called directly (last param are cached) in case the toolbar
+  * is dynamically create and needs to change later.
+  * `dragIn` string selector (ex: `'.sidebar .grid-stack-item'`)
+  * `dragInOptions` options - see `DDDragInOpt`. (default: `{revert: 'invalid', handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`
+
 
 ### update(el: GridStackElement, opts: GridStackWidget)
 
