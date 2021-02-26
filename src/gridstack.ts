@@ -298,7 +298,7 @@ export class GridStack {
 
     this._isAutoCellHeight = (this.opts.cellHeight === 'auto');
     if (this._isAutoCellHeight || this.opts.cellHeight === 'initial') {
-      // make the cell content square initially (will use resize event to keep it square)
+      // make the cell content square initially (will use resize/column event to keep it square)
       this.cellHeight(undefined, false);
     } else {
       this.cellHeight(this.opts.cellHeight, false);
@@ -685,6 +685,7 @@ export class GridStack {
       if (!domNodes.length) { domNodes = undefined; }
     }
     this.engine.updateNodeWidths(oldColumn, column, domNodes, layout);
+    if (this._isAutoCellHeight) this.cellHeight();
 
     // and trigger our event last...
     this._ignoreLayoutsNodeChange = true; // skip layout update
