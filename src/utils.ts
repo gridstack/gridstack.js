@@ -99,6 +99,10 @@ export class Utils {
     return !(a.y >= b.y + b.h || a.y + a.h <= b.y || a.x + a.w <= b.x || a.x >= b.x + b.w);
   }
 
+  /** returns true if a and b touch edges or corners */
+  static isTouching(a: GridStackPosition, b: GridStackPosition): boolean {
+    return Utils.isIntercepted(a, {x: b.x-0.5, y: b.y-0.5, w: b.w+1, h: b.h+1})
+  }
   /**
    * Sorts array of nodes
    * @param nodes array to sort

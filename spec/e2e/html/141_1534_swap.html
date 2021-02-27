@@ -79,6 +79,7 @@
     };
 
     load = function(i) {
+      layout = i;
       grid.removeAll();
       grid.load(items[i]);
     }
@@ -103,9 +104,9 @@
       setSize(size);
     }
     setSize = function(size) {
-      items.sort((a,b) => a.id - b.id);
-      items.forEach((n,i) => {
-        if (i<6) {
+      items[layout].sort((a,b) => a.id - b.id);
+      items[layout].forEach((n,i) => {
+        if (layout === 0 && i<6) {
           n.w = n.h = size;
           n.y = i * size;
           if (n.x) n.x = size;
@@ -114,7 +115,7 @@
         }
       });
       grid.opts.maxRow = grid.engine.maxRow = grid.opts.maxRow ? (size === 1 ? 3 : 6) : 0;
-      grid.load(items);
+      grid.load(items[layout]);
       bigButton.innerHTML = 'Size: ' + size;
       maxButton.innerHTML = 'Max: ' + grid.opts.maxRow;
     }
