@@ -182,22 +182,38 @@ export class GridStackEngine {
     return this;
   }
 
-  /** called to possibly swap between 2 nodes (same size, not locked, touching), returning true if successful */
+  /** called to possibly swap between 2 nodes (same size or column, not locked, touching), returning true if successful */
   public swap(a: GridStackNode, b: GridStackNode): boolean {
     if (!b || b.locked || !a || a.locked) return false;
 
-    function _doSwap(): true {
-      let x = a.x, y = a.y;
-      a.x = b.x; a.y = b.y;
-      b.x = x; b.y = y;
+    function _doSwap(): true { // assumes a is before b IFF they have different height (put after rather than exact swap)
+      let x = b.x, y = b.y;
+      b.x = a.x; b.y = a.y; // b -> a position
+      if (a.h != b.h) {
+        a.x = x; a.y = b.y + b.h; // a -> goes after b
+      } else {
+        a.x = x; a.y = y; // a -> old b position
+      }
       a._dirty = b._dirty = true;
       return true;
     }
+    // make sure they at least touch (including corners which will skip below as unwanted)
+    function _touching(): boolean {
+      return Utils.isIntercepted(a, {x: b.x-0.5, y:b.y-0.5, w: b.w+1, h: b.h+1})
+    }
+    let touching: boolean; // remember if we called it (vs undefined)
 
-    // same size and same row/column and touching
-    if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y)
-      && Utils.isIntercepted(b, {x: a.x-0.5, y:a.y-0.5, w: a.w+1, h: a.h+1}))
+    // same size and same row or column, and touching
+    if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y) && (touching = _touching()))
       return _doSwap();
+    if (touching === false) return; // ran test and fail, bail out
+
+    // check for taking same columns (but different height) and touching
+    if (a.w === b.w && a.x === b.x && (touching || _touching())) {
+      if (b.y < a.y) { let t = a; a = b; b = t; } // swap a <-> b vars so a is first
+      return _doSwap();
+    }
+
     /* different X will be weird (expect vertical swap) and different height overlap, so too complex. user regular layout instead
     // else check if swapping would not collide with anything else (requiring a re-layout)
     if (!this.collide(a, {x: a.x, y: a.y, w: b.w, h: b.h}, b) &&
