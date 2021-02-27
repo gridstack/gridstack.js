@@ -21,6 +21,8 @@
       with layouts:
       <a class="btn btn-primary" onclick="load(0)" href="#">load 0</a>
       <a class="btn btn-primary" onclick="load(1)" href="#">load 1</a>
+      <a class="btn btn-primary" onclick="load(2)" href="#">load web1</a>
+      <a class="btn btn-primary" onclick="loadAdvanced()" href="#">load web2</a>
     </div>
     <br><br>
     <div class="grid-stack"></div>
@@ -45,6 +47,19 @@
       {x:1, y:0}, {x:1, y:1}, {x:1, y:2, w:2},  {x:0, y:3, w:3}, {x:1, y:4, h:2},
       {x:3, y:0, w:3, h:3}, {x:6, y:0},
       {x:7, y:0, w:3}, {x:8, y:1, w:3},
+    ],[
+      // web1.html demo
+      {x:0, y:0, w:4, h:2},
+      {x:4, y:0, w:4, h:4, id: 'big'},
+      {x:8, y:0, w:2, h:2},
+      {x:10, y:0, w:2, h:2},
+      {x:0, y:2, w:2, h:2},
+      {x:2, y:2, w:2, h:4},
+      {x:8, y:2, w:4, h:2},
+      {x:0, y:4, w:2, h:2},
+      {x:4, y:4, w:4, h:2},
+      {x:8, y:4, w:2, h:2},
+      {x:10, y:4, w:2, h:2}
     ]];
     items.forEach(layout => {
       let count = 0;
@@ -67,23 +82,26 @@
       grid.removeAll();
       grid.load(items[i]);
     }
-
+    loadAdvanced = function() {
+      load(2);
+      grid.update(grid.engine.nodes[1].el, {locked: true, content:'locked'});
+    }
     toggleFloat = function() {
       grid.float(! grid.getFloat());
       floatButton.innerHTML = 'float: ' + grid.getFloat();
-    };
+    }
     floatButton.innerHTML = 'float: ' + grid.getFloat();
 
     toggleMax = function() {
       grid.opts.maxRow = grid.engine.maxRow = grid.opts.maxRow ? 0 : 3;
       maxButton.innerHTML = 'Max: ' + grid.opts.maxRow;
-    };
+    }
     maxButton.innerHTML = 'Max: ' + grid.opts.maxRow;
 
     toggleBigger = function() {
       size = size === 1 ? 2 : 1;
       setSize(size);
-    };
+    }
     setSize = function(size) {
       items.sort((a,b) => a.id - b.id);
       items.forEach((n,i) => {
