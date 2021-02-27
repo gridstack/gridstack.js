@@ -91,16 +91,19 @@ export class GridStackEngine {
       // (not handled with swap) that could take our place, move ourself past it instead
       // but remember that skip down so we only do this one (and push others otherwise).
       if (collide.locked || (node._moving && !node._skipDown && nn.y > node.y &&
-        !this.float && !this.collide(collide, {...collide, y: node.y}, node)) &&
-        Utils.isIntercepted(collide, {x: node.x-0.5, y: node.y-0.5, w: node.w+1, h: node.h+1})) {
+        !this.float && !this.collide(collide, {...collide, y: node.y}, node)) && Utils.isTouching(node, collide)) {
 
         node._skipDown = (node._skipDown || nn.y > node.y);
         moved = this.moveNode(node, {...nn, y: collide.y + collide.h, ...newOpt});
         if (collide.locked && moved) {
           Utils.copyPos(nn, node); // moving after lock become our new desired location
         } else if (moved && opt.pack && !collide.locked) {
-          // we moved after and will pack: do it now and keep the original drop location to see what else we might push way
+          // we moved after and will pack: do it now and keep the original drop location, but past the old collide to see what else we might push way
           this._packNodes();
+          if (moved) {
+            nn.y = collide.y + collide.h;
+            Utils.copyPos(node, nn);
+          }
         }
         didMove = didMove || moved;
       } else {
@@ -197,19 +200,15 @@ export class GridStackEngine {
       a._dirty = b._dirty = true;
       return true;
     }
-    // make sure they at least touch (including corners which will skip below as unwanted)
-    function _touching(): boolean {
-      return Utils.isIntercepted(a, {x: b.x-0.5, y:b.y-0.5, w: b.w+1, h: b.h+1})
-    }
     let touching: boolean; // remember if we called it (vs undefined)
 
     // same size and same row or column, and touching
-    if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y) && (touching = _touching()))
+    if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y) && (touching = Utils.isTouching(a, b)))
       return _doSwap();
     if (touching === false) return; // ran test and fail, bail out
 
     // check for taking same columns (but different height) and touching
-    if (a.w === b.w && a.x === b.x && (touching || _touching())) {
+    if (a.w === b.w && a.x === b.x && (touching || Utils.isTouching(a, b))) {
       if (b.y < a.y) { let t = a; a = b; b = t; } // swap a <-> b vars so a is first
       return _doSwap();
     }
