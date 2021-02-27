@@ -72,9 +72,8 @@
       {x: 0, y: 4, w: 12}
     ];
     let count = 0;
-    grid.batchUpdate();
-    addWidget(); addWidget(); addWidget(); addWidget();
-    grid.commit();
+    items.forEach(n => n.content = '<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>' + count++ + (n.text ? n.text : ''));
+    grid.load(items);
 
     function addWidget() {
       let n = items[count] || {

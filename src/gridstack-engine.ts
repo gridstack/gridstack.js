@@ -83,6 +83,7 @@ export class GridStackEngine {
     }
 
     let didMove = false;
+    let yOffset = 0;
     let newOpt: GridStackMoveOpts = {nested: true, pack: false, sanitize: false};
     while (collide = collide || this.collide(node, nn)) { // could collide with more than 1 item... so repeat for each
       let moved: boolean;
@@ -103,8 +104,9 @@ export class GridStackEngine {
         }
         didMove = didMove || moved;
       } else {
-        // move collide down *after* us
-        moved = this.moveNode(collide, {...collide, y: nn.y + nn.h, ...newOpt});
+        // move collide down *after* where we will be
+        moved = this.moveNode(collide, {...collide, y: nn.y + nn.h + yOffset, ...newOpt});
+        if (moved) yOffset += collide.h; // during while loop put next one after this one
       }
       if (!moved) { return didMove; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
       collide = undefined;
@@ -192,8 +194,9 @@ export class GridStackEngine {
       return true;
     }
 
-    // same size and same row or column
-    if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y) /*&& Utils.isIntercepted(b, {x: a.x-0.5, y:a.y-0.5, w: a.w+1, h: a.h+1})*/)
+    // same size and same row/column and touching
+    if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y)
+      && Utils.isIntercepted(b, {x: a.x-0.5, y:a.y-0.5, w: a.w+1, h: a.h+1}))
       return _doSwap();
     /* different X will be weird (expect vertical swap) and different height overlap, so too complex. user regular layout instead
     // else check if swapping would not collide with anything else (requiring a re-layout)
