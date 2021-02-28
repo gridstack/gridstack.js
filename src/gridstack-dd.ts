@@ -119,6 +119,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       }
 
       // re-use the existing node dragging method
+      delete node._updating; // make sure beginUpdate() is called cleanly on this
       this._onStartMoving(event, ui, node, cellWidth, cellHeight);
     } else {
       // re-use the existing node dragging that does so much of the collision detection
