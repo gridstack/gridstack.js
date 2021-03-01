@@ -28,7 +28,7 @@ function addEvents(grid, id) {
     let node = el.gridstackNode;
     let x = el.getAttribute('gs-x'); // verify node (easiest) and attr are the same
     let y = el.getAttribute('gs-y');
-    console.log(g + 'drag ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') = (' + x + ',' + y + ')');
+    // console.log(g + 'drag ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') = (' + x + ',' + y + ')');
   });
 
   grid.on('dragstop', function(event, el) {
@@ -58,7 +58,7 @@ function addEvents(grid, id) {
     let node = el.gridstackNode;
     let w = el.getAttribute('gs-w');  // verify node (easiest) and attr are the same
     let h = el.getAttribute('gs-h');
-    console.log(g + 'resize ' + el.textContent + ' size: (' + node.w + 'x' + node.h + ') = (' + w + 'x' + h + ')');
+    // console.log(g + 'resize ' + el.textContent + ' size: (' + node.w + 'x' + node.h + ') = (' + w + 'x' + h + ')');
   });
 
   grid.on('resizestop', function(event, el) {

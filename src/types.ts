@@ -200,8 +200,6 @@ export interface GridStackOptions {
 export interface GridStackMoveOpts extends GridStackPosition {
   /** do we pack (default true) */
   pack?: boolean;
-  /** do we verify for bad or > max/min values (default true) */
-  sanitize?: boolean;
   /** true if we are calling this recursively to prevent simple swap or coverage collision - default false*/
   nested?: boolean;
   /* vars to calculate other cells coordinates */

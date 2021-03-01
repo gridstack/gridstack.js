@@ -84,7 +84,7 @@ export class GridStackEngine {
 
     let didMove = false;
     let yOffset = 0;
-    let newOpt: GridStackMoveOpts = {nested: true, pack: false, sanitize: false};
+    let newOpt: GridStackMoveOpts = {nested: true, pack: false};
     while (collide = collide || this.collide(node, nn)) { // could collide with more than 1 item... so repeat for each
       let moved: boolean;
       // if colliding with locked item, OR moving down to a different sized item
@@ -328,16 +328,17 @@ export class GridStackEngine {
     if (isNaN(node.w))  { node.w = defaults.w; }
     if (isNaN(node.h)) { node.h = defaults.h; }
 
-    if (node.maxW) { node.w = Math.min(node.w, node.maxW); }
-    if (node.maxH) { node.h = Math.min(node.h, node.maxH); }
-    if (node.minW) { node.w = Math.max(node.w, node.minW); }
-    if (node.minH) { node.h = Math.max(node.h, node.minH); }
-
     return this.nodeBoundFix(node, resizing);
   }
 
   /** part2 of preparing a node to fit inside our grid - checks  for x,y from grid dimensions */
   public nodeBoundFix(node: GridStackNode, resizing?: boolean): GridStackNode {
+
+    if (node.maxW) { node.w = Math.min(node.w, node.maxW); }
+    if (node.maxH) { node.h = Math.min(node.h, node.maxH); }
+    if (node.minW) { node.w = Math.max(node.w, node.minW); }
+    if (node.minH) { node.h = Math.max(node.h, node.minH); }
+
     if (node.w > this.column) {
       node.w = this.column;
     } else if (node.w < 1) {
@@ -413,7 +414,8 @@ export class GridStackEngine {
 
   /** call to add the given node to our list, fixing collision and re-packing */
   public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
-    if (this.nodes.find(n => n._id === node._id)) return; // prevent inserting twice!
+    let dup: GridStackNode;
+    if (dup = this.nodes.find(n => n._id === node._id)) return dup; // prevent inserting twice! return it instead.
     node = this.prepareNode(node);
 
     if (node.autoPosition) {
@@ -471,7 +473,6 @@ export class GridStackEngine {
     if (node.locked) return false;
     if (!this.changedPosConstrain(node, o)) return false;
     o.pack = true;
-    o.sanitize = false;
 
     // simpler case: move item directly...
     if (!this.maxRow/* && !this.nodes.some(n => n.locked)*/) {
@@ -577,23 +578,19 @@ export class GridStackEngine {
   public moveNode(node: GridStackNode, o: GridStackMoveOpts): boolean {
     if (!node || node.locked || !o) return false;
     if (o.pack === undefined) o.pack = true;
-    if (o.sanitize === undefined) o.sanitize = true;
-    let nn: GridStackNode;
-    if (o.sanitize) {
-      if (typeof o.x !== 'number') { o.x = node.x; }
-      if (typeof o.y !== 'number') { o.y = node.y; }
-      if (typeof o.w !== 'number') { o.w = node.w; }
-      if (typeof o.h !== 'number') { o.h = node.h; }
 
-      // constrain the passed in values and check if we're still changing our node
-      let resizing = (node.w !== o.w || node.h !== o.h);
-      nn = {maxW: node.maxW, maxH: node.maxH, minW: node.minW, minH: node.minH};
-      Utils.copyPos(nn, o);
-      nn = this.prepareNode(nn, resizing);
-      Utils.copyPos(o, nn);
-    }
-    nn = nn || o;
-    if (Utils.samePos(node, nn)) return false;
+    // constrain the passed in values and check if we're still changing our node
+    if (typeof o.x !== 'number') { o.x = node.x; }
+    if (typeof o.y !== 'number') { o.y = node.y; }
+    if (typeof o.w !== 'number') { o.w = node.w; }
+    if (typeof o.h !== 'number') { o.h = node.h; }
+    let resizing = (node.w !== o.w || node.h !== o.h);
+    let nn: GridStackNode = {maxW: node.maxW, maxH: node.maxH, minW: node.minW, minH: node.minH};
+    Utils.copyPos(nn, o);
+    nn = this.nodeBoundFix(nn, resizing);
+    Utils.copyPos(o, nn);
+
+    if (Utils.samePos(node, o)) return false;
     let prevPos: GridStackPosition = Utils.copyPos({}, node);
 
     // check if we will need to fix collision at our new location
@@ -628,7 +625,7 @@ export class GridStackEngine {
   public beginUpdate(node: GridStackNode): GridStackEngine {
     if (node._updating) return this;
     node._updating = true;
-    node._beforeDrag = {x: node.x, y: node.y, w: node.w, h: node.h};
+    node._beforeDrag = Utils.copyPos({}, node);
     delete node._skipDown;
     this.nodes.forEach(n => n._packY = n.y);
     return this;
