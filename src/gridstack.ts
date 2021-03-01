@@ -9,7 +9,7 @@
 import { GridStackEngine } from './gridstack-engine';
 import { obsoleteOpts, obsoleteAttr, Utils, HeightData } from './utils';
 import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
-  GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData, DDDragInOpt } from './types';
+  GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition } from './types';
 import { GridStackDDI } from './gridstack-ddi';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -320,7 +320,7 @@ export class GridStack {
           if (removeDOM && n._id === null) {
             if (el && el.parentNode) { el.parentNode.removeChild(el) }
           } else {
-            this._writePosAttr(el, n.x, n.y, n.w, n.h);
+            this._writePosAttr(el, n);
           }
         });
         this._updateStyles(false, maxH); // false = don't recreate, just append if need be
@@ -1241,18 +1241,18 @@ export class GridStack {
   }
 
   /** @internal call to write position x,y,w,h attributes back to element */
-  private _writePosAttr(el: HTMLElement, x?: number, y?: number, w?: number, h?: number): GridStack {
-    if (x !== undefined && x !== null) { el.setAttribute('gs-x', String(x)); }
-    if (y !== undefined && y !== null) { el.setAttribute('gs-y', String(y)); }
-    if (w) { el.setAttribute('gs-w', String(w)); }
-    if (h) { el.setAttribute('gs-h', String(h)); }
+  private _writePosAttr(el: HTMLElement, n: GridStackPosition): GridStack {
+    if (n.x !== undefined && n.x !== null) { el.setAttribute('gs-x', String(n.x)); }
+    if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
+    if (n.w) { el.setAttribute('gs-w', String(n.w)); }
+    if (n.h) { el.setAttribute('gs-h', String(n.h)); }
     return this;
   }
 
   /** @internal call to write any default attributes back to element */
   private _writeAttr(el: HTMLElement, node: GridStackWidget): GridStack {
     if (!node) return this;
-    this._writePosAttr(el, node.x, node.y, node.w, node.h);
+    this._writePosAttr(el, node);
 
     let attrs /*: GridStackWidget but strings */ = { // remaining attributes
       autoPosition: 'gs-auto-position',

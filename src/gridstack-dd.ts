@@ -149,6 +149,9 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         return canAccept;
       }
     })
+    /**
+     * entering our grid area
+     */
     .on(this.el, 'dropover', (event: Event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
 
       // ignore drop enter on ourself, and prevent parent from receiving event
@@ -188,6 +191,9 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       GridStackDD.get().on(el, 'drag', onDrag);
       return false; // prevent parent from receiving msg (which may be grid as well)
     })
+    /**
+     * Leaving our grid area...
+     */
     .on(this.el, 'dropout', (event, el: GridItemHTMLElement) => {
       let node = el.gridstackNode;
       if (!node) return;
@@ -211,6 +217,9 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       el.gridstackNode = el._gridstackNodeOrig;
       return false; // prevent parent from receiving msg (which may be grid as well)
     })
+    /**
+     * end - releasing the mouse
+     */
     .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
       let wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
@@ -435,10 +444,10 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       this._clearRemovingTimeout(el);
       if (!node._temporaryRemoved) {
         Utils.removePositioningStyles(target);
-        this._writePosAttr(target, node.x, node.y, node.w, node.h);
+        this._writePosAttr(target, node);
       } else {
         Utils.removePositioningStyles(target);
-        this._writePosAttr(target, node._beforeDrag.x, node._beforeDrag.y, node.w, node.h);
+        this._writePosAttr(target, {...node._beforeDrag, w: node.w, h: node.h});
         node.x = node._beforeDrag.x;
         node.y = node._beforeDrag.y;
         delete node._temporaryRemoved;
@@ -490,7 +499,7 @@ GridStack.prototype._onStartMoving = function(event: Event, ui: DDUIData, node: 
   this.engine.cleanNodes()
     .beginUpdate(node);
 
-  this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h)
+  this._writePosAttr(this.placeholder, node)
   this.el.append(this.placeholder);
 
   node.el = this.placeholder;
@@ -502,7 +511,7 @@ GridStack.prototype._onStartMoving = function(event: Event, ui: DDUIData, node: 
   if (event.type === 'dropover' && !node._added) {
     node._added = true;
     this.engine.addNode(node);
-    this._writePosAttr(this.placeholder, node.x, node.y, node.w, node.h);
+    this._writePosAttr(this.placeholder, node);
     node._moving = true; // lastly mark as moving object
   }
 
@@ -520,7 +529,7 @@ GridStack.prototype._onStartMoving = function(event: Event, ui: DDUIData, node: 
 
 /** @internal called when item is being dragged/resized */
 GridStack.prototype._dragOrResize = function(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void  {
-  let el = node.el;
+  let el = node.el || event.target as GridItemHTMLElement;
   // calculate the place where we're landing by offsetting margin so actual edge crosses mid point
   let left = ui.position.left + (ui.position.left > node._lastUiPosition.left  ? -this.opts.marginRight : this.opts.marginLeft);
   let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
@@ -561,10 +570,9 @@ GridStack.prototype._dragOrResize = function(event: Event, ui: DDUIData, node: G
       if (node._removeTimeout) this._clearRemovingTimeout(el);
 
       if (node._temporaryRemoved) {
-        this.engine.addNode(node);
-        this._writePosAttr(this.placeholder, x, y, w, h);
-        this.el.appendChild(this.placeholder);
         node.el = this.placeholder;
+        this.engine.addNode(node);
+        this.el.appendChild(this.placeholder);
         delete node._temporaryRemoved;
       }
     }
@@ -597,7 +605,7 @@ GridStack.prototype._dragOrResize = function(event: Event, ui: DDUIData, node: G
     this._updateContainerHeight();
 
     let target = event.target as GridItemHTMLElement;
-    this._writePosAttr(target, node.x, node.y, node.w, node.h);
+    this._writePosAttr(target, node);
     if (this._gsEventHandler[event.type]) {
       this._gsEventHandler[event.type](event, target);
     }
