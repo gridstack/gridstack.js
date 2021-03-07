@@ -37,7 +37,7 @@ export class DDUtils {
       parentNode = parent as HTMLElement;
     }
     if (parentNode) {
-      parentNode.append(el);
+      parentNode.appendChild(el);
     }
   }
 

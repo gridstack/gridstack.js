@@ -165,11 +165,8 @@ export interface GridStackOptions {
    */
   removable?: boolean | string;
 
-  /** allows to override UI removable options. (default?: { accept: '.' + opts.itemClass }) */
+  /** allows to override UI removable options. (default?: { accept: '.grid-stack-item' }) */
   removableOptions?: DDRemoveOpt;
-
-  /** time in milliseconds before widget is being removed while dragging outside of the grid. (default?: 2000) */
-  removeTimeout?: number;
 
   /** fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain) */
   row?: number;
@@ -321,18 +318,18 @@ export interface GridStackNode extends GridStackWidget {
   el?: GridItemHTMLElement;
   /** pointer back to Grid instance */
   grid?: GridStack;
-  /** @internal */
+  /** @internal internal id used to match when cloning engines or saving column layouts */
   _id?: number;
   /** @internal */
   _dirty?: boolean;
   /** @internal */
   _updating?: boolean;
-  /** @internal */
-  _added?: boolean;
-  /** @internal */
-  _temporary?: boolean;
-  /** @internal */
-  _isOutOfGrid?: boolean;
+  /** @internal true if the cursor is outside of the grid, as we get dropout/dropover vs shape being outside */
+  _isCursorOutside?: boolean;
+  /** @internal true when over trash/another grid so we don't bother removing drag CSS style that would animate back to old position */
+  _isAboutToRemove?: boolean;
+  /** @internal true if item came from outside of the grid -> actual item need to be moved over */
+  _isExternal?: boolean;
   /** @internal moving vs resizing */
   _moving?: boolean;
   /** @internal true if we jump down past item below (one time jump so we don't have to totally pass it) */
@@ -347,16 +344,14 @@ export interface GridStackNode extends GridStackWidget {
   _lastUiPosition?: Position;
   /** @internal set on the item being dragged/resized remember the last positions we've tried (but failed) so we don't try again during drag/resize */
   _lastTried?: GridStackPosition;
-  /** @internal */
+  /** @internal original Y when another item is dragged around a float=true so we can restore back as item is dragged around  */
   _packY?: number;
-  /** @internal */
-  _isAboutToRemove?: boolean;
-  /** @internal */
-  _removeTimeout?: number;
   /** @internal last drag Y pixel position used to incrementally update V scroll bar */
   _prevYPix?: number;
-  /** @internal */
+  /** @internal true if we've remove the item from ourself (dragging out) but might revert it back (release on nothing -> goes back) */
   _temporaryRemoved?: boolean;
+  /** @internal true if we should remove DOM element on _notify() rather than clearing _id (old way) */
+  _removeDOM?: boolean;
   /** @internal */
   _initDD?: boolean;
 }
