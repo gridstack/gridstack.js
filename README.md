@@ -43,6 +43,7 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Migrating to v1](#migrating-to-v1)
   - [Migrating to v2](#migrating-to-v2)
   - [Migrating to v3](#migrating-to-v3)
+  - [Migrating to v4](#migrating-to-v4)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -389,6 +390,30 @@ Breaking changes:
 4. item attribute like `data-gs-min-width` is now `gs-min-w`. We removed 'data-' from all attributes, and shorten 'width|height' to just 'w|h' to require less typing and more efficient (2k saved in .js alone!).
 
 5. `GridStackWidget` used in most API `width|height|minWidth|minHeight|maxWidth|maxHeight` are now shorter `w|h|minW|minH|maxW|maxH` as well
+
+## Migrating to v4
+
+make sure to read v3 migration first!
+
+v4 is a complete re-write of the collision and drag in/out heuristics to fix some very long standing request & bugs. It also greatly improved usability. Read the release notes for more detail.
+
+**Unlikely** Breaking Changes (internal usage):
+
+1. `removeTimeout` was removed (feedback over trash will be immediate - actual removal still on mouse up)
+
+2. the following `GridStackEngine` methods changed (used internally, doesn't affect `GridStack` public API)
+
+```js
+// moved to 3 methods with new option params to support new code and pixel coverage check
+`collision()` -> `collide(), collideAll(), collideCoverage()`
+`moveNodeCheck(node, x, y, w, h)` -> `moveNodeCheck(node, opt: GridStackMoveOpts)`
+`isNodeChangedPosition(node, x, y, w, h)` -> `changedPosConstrain(node, opt: GridStackMoveOpts)`
+`moveNode(node, x, y, w, h, noPack)` -> `moveNode(node, opt: GridStackMoveOpts)`
+```
+
+3. removed old obsolete (v0.6-v1 methods/attrs) `getGridHeight()`, `verticalMargin`, `data-gs-current-height`,
+`locked()`, `maxWidth()`, `minWidth()`, `maxHeight()`, `minHeight()`, `move()`, `resize()`
+
 
 # jQuery Application
 
