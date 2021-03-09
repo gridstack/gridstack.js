@@ -30,56 +30,64 @@
     </main>
     <script type="module">
       import { createApp } from "https://cdn.jsdelivr.net/npm/vue@3.0.0/dist/vue.esm-browser.js";
+      import { ref, onMounted } from "vue";
 
       createApp({
-        data() {
+        setup() {
+          let count = ref(0);
+          let info = ref("");
+          let grid = null;
+          const items = [
+            { x: 2, y: 1, h: 2 },
+            { x: 2, y: 4, w: 3 },
+            { x: 4, y: 2 },
+            { x: 3, y: 1, h: 2 },
+            { x: 0, y: 6, w: 2, h: 2 },
+          ];
+
+          onMounted(() => {
+            grid = GridStack.init({
+              float: true,
+              cellHeight: "70px",
+              minRow: 1,
+            });
+
+            // Use an arrow function so that `this` is bound to the Vue instance. Alternatively, use a custom Vue directive on the `.grid-stack` container element: https://vuejs.org/v2/guide/custom-directive.html
+            grid.on("dragstop", (event, element) => {
+              const node = element.gridstackNode;
+              // `this` will only access your Vue instance if you used an arrow function, otherwise `this` binds to window scope. see https://hacks.mozilla.org/2015/06/es6-in-depth-arrow-functions/
+              info.value = `you just dragged node #${node.id} to ${node.x},${node.y} – good job!`;
+            });
+          });
+
+          function addNewWidget() {
+            const node = items[count.value] || {
+              x: Math.round(12 * Math.random()),
+              y: Math.round(5 * Math.random()),
+              w: Math.round(1 + 3 * Math.random()),
+              h: Math.round(1 + 3 * Math.random()),
+            };
+            node.id = node.content = String(count.value++);
+            grid.addWidget(node);
+          }
+
           return {
-            // grid: undefined, // <-- don't do that. see https://github.com/gridstack/gridstack.js/issues/1635
-            count: 0,
-            info: "",
+            info,
+            addNewWidget,
           };
         },
-        items: [
-          { x: 2, y: 1, h: 2 },
-          { x: 2, y: 4, w: 3},
-          { x: 4, y: 2},
-          { x: 3, y: 1, h: 2 },
-          { x: 0, y: 6, w: 2, h: 2 }
-        ],
+
         watch: {
           /**
            * Clear the info text after a two second timeout. Clears previous timeout first.
            */
-          info: function (newVal, oldVal) {
+          info: function (newVal) {
             if (newVal.length === 0) return;
 
             window.clearTimeout(this.timerId);
             this.timerId = window.setTimeout(() => {
               this.info = "";
             }, 2000);
-          },
-        },
-        mounted: function () {
-          // Provides access to the GridStack instance across the Vue component.
-          this.grid = GridStack.init({ float: true, cellHeight: '70px', minRow: 1 });
-
-          // Use an arrow function so that `this` is bound to the Vue instance. Alternatively, use a custom Vue directive on the `.grid-stack` container element: https://vuejs.org/v2/guide/custom-directive.html
-          this.grid.on("dragstop", (event, element) => {
-            const node = element.gridstackNode;
-            // `this` will only access your Vue instance if you used an arrow function, otherwise `this` binds to window scope. see https://hacks.mozilla.org/2015/06/es6-in-depth-arrow-functions/
-            this.info = `you just dragged node #${node.id} to ${node.x},${node.y} – good job!`;
-          });
-        },
-        methods: {
-          addNewWidget: function () {
-            const node = this.$options.items[this.count] || {
-              x: Math.round(12 * Math.random()),
-              y: Math.round(5 * Math.random()),
-              w: Math.round(1 + 3 * Math.random()),
-              h: Math.round(1 + 3 * Math.random()),
-            };
-            node.id = node.content = String(this.count++);
-            this.grid.addWidget(node);
           },
         },
       }).mount("#app");
