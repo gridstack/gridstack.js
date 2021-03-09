@@ -7,7 +7,7 @@
 */
 
 import { GridStackEngine } from './gridstack-engine';
-import { obsoleteOpts, obsoleteAttr, Utils, HeightData } from './utils';
+import { Utils, HeightData } from './utils';
 import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition } from './types';
 import { GridStackDDI } from './gridstack-ddi';
@@ -77,7 +77,6 @@ const GridDefaults: GridStackOptions = {
   removableOptions: {
     accept: '.grid-stack-item'
   },
-  removeTimeout: 2000,
   marginUnit: 'px',
   cellHeightUnit: 'px',
   disableOneColumnMode: false,
@@ -165,7 +164,7 @@ export class GridStack {
     let doc = document.implementation.createHTMLDocument();
     doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
     let el = doc.body.children[0] as HTMLElement;
-    parent.append(el);
+    parent.appendChild(el);
 
     // create grid class and load any children
     let grid = GridStack.init(opt, el);
@@ -233,10 +232,6 @@ export class GridStack {
   public constructor(el: GridHTMLElement, opts: GridStackOptions = {}) {
     this.el = el; // exposed HTML element to the user
     opts = opts || {}; // handles null/undefined/0
-
-    obsoleteOpts(opts, 'verticalMargin', 'margin', 'v2.0');
-
-    obsoleteAttr(this.el, 'data-gs-current-height', 'gs-current-row', 'v1.0.0');
 
     // if row property exists, replace minRow and maxRow instead
     if (opts.row) {
@@ -317,8 +312,9 @@ export class GridStack {
         this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
         cbNodes.forEach(n => {
           let el = n.el;
-          if (removeDOM && n._id === null) {
-            if (el && el.parentNode) { el.parentNode.removeChild(el) }
+          if (removeDOM && n._removeDOM) { // TODO: do we need to pass 'removeDOM' ?
+            if (el) el.remove();
+            delete n._removeDOM;
           } else {
             this._writePosAttr(el, n);
           }
@@ -1516,30 +1512,12 @@ export class GridStack {
   public _setupAcceptWidget(): GridStack { return this }
   /** @internal called to setup a trash drop zone if the user specifies it */
   public _setupRemoveDrop(): GridStack { return this }
-  /** @internal */
-  public _setupRemovingTimeout(el: GridItemHTMLElement): GridStack { return this }
-  /** @internal */
-  public _clearRemovingTimeout(el: GridItemHTMLElement): GridStack { return this }
   /** @internal prepares the element for drag&drop **/
   public _prepareDragDropByNode(node: GridStackNode): GridStack { return this }
   /** @internal handles actual drag/resize start **/
   public _onStartMoving(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
   /** @internal handles actual drag/resize **/
   public _dragOrResize(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
-
-  // 2.x API that just calls the new and better update() - keep those around for backward compat only...
-  /** @internal */
-  public locked(els: GridStackElement, locked: boolean): GridStack { return this.update(els, {locked}) }
-  /** @internal */
-  public maxWidth(els: GridStackElement, maxW: number): GridStack { return this.update(els, {maxW}) }
-  /** @internal */
-  public minWidth(els: GridStackElement, minW: number): GridStack { return this.update(els, {minW}) }
-  /** @internal */
-  public maxHeight(els: GridStackElement, maxH: number): GridStack { return this.update(els, {maxH}) }
-  /** @internal */
-  public minHeight(els: GridStackElement, minH: number): GridStack { return this.update(els, {minH}) }
-  /** @internal */
-  public move(els: GridStackElement, x?: number, y?: number): GridStack { return this.update(els, {x, y}) }
-  /** @internal */
-  public resize(els: GridStackElement, w?: number, h?: number): GridStack { return this.update(els, {w, h}) }
+  /** @internal called when a node leaves our area (mouse out or shape outside) **/
+  public _leave(node: GridStackNode, el: GridItemHTMLElement, helper?: GridItemHTMLElement, dropoutEvent = false): void { return }
 }

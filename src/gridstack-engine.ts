@@ -6,7 +6,7 @@
  * gridstack.js may be freely distributed under the MIT license.
 */
 
-import { Utils, obsolete } from './utils';
+import { Utils } from './utils';
 import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts } from './types';
 
 export type onChangeCB = (nodes: GridStackNode[], removeDOM?: boolean) => void;
@@ -42,7 +42,7 @@ export class GridStackEngine {
   private _layouts?: Layout[][]; // maps column # to array of values nodes
   /** @internal */
   private _ignoreLayoutsNodeChange: boolean;
-  /** @internal */
+  /** @internal unique global internal _id counter NOT starting at 0 */
   private static _idSeq = 1;
 
   public constructor(opts: GridStackEngineOptions = {}) {
@@ -73,7 +73,8 @@ export class GridStackEngine {
   /** @internal fix collision on given 'node', going to given new location 'nn', with optional 'collide' node already found.
    * return true if we moved. */
   private _fixCollisions(node: GridStackNode, nn = node, collide?: GridStackNode, opt: GridStackMoveOpts = {}): boolean {
-    // this._sortNodes(-1); collision doesn't care about sorting
+    this._sortNodes(-1); // TODO: collision should not care about sorting but it does (behaves differently second time trying to insert same spot)
+
     collide = collide || this.collide(node, nn);
     if (!collide) return false;
 
@@ -261,24 +262,26 @@ export class GridStackEngine {
     return this;
   }
 
-  /** @internal called to top gravity pack the items back */
+  /** @internal called to top gravity pack the items back OR revert back to original Y positions when floating */
   private _packNodes(): GridStackEngine {
     this._sortNodes();
 
     if (this.float) {
+      // restore original Y pos
       this.nodes.forEach(n => {
         if (n._updating || n._packY === undefined || n.y === n._packY) return;
         let newY = n.y;
-        while (newY >= n._packY) {
+        while (newY > n._packY) {
+          --newY;
           let collide = this.collide(n, {x: n.x, y: newY, w: n.w, h: n.h});
           if (!collide) {
             n._dirty = true;
             n.y = newY;
           }
-          --newY;
         }
       });
     } else {
+      // top gravity pack
       this.nodes.forEach((n, i) => {
         if (n.locked) return;
         while (n.y > 0) {
@@ -416,7 +419,10 @@ export class GridStackEngine {
   public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
     let dup: GridStackNode;
     if (dup = this.nodes.find(n => n._id === node._id)) return dup; // prevent inserting twice! return it instead.
+
     node = this.prepareNode(node);
+    delete node._temporaryRemoved;
+    delete node._removeDOM;
 
     if (node.autoPosition) {
       this._sortNodes();
@@ -447,20 +453,21 @@ export class GridStackEngine {
   }
 
   public removeNode(node: GridStackNode, removeDOM = true, triggerEvent = false): GridStackEngine {
+    if (!this.nodes.find(n => n === node)) return; // not in our list
     if (triggerEvent) { // we wait until final drop to manually track removed items (rather than during drag)
       this.removedNodes.push(node);
     }
-    node._id = null; // hint that node is being removed
+    if (removeDOM) node._removeDOM = true; // let CB remove actual HTML (used to set _id to null, but then we loose layout info)
     // don't use 'faster' .splice(findIndex(),1) in case node isn't in our list, or in multiple times.
     this.nodes = this.nodes.filter(n => n !== node);
-    !this.float && this._packNodes();
-    return this._notify(node, removeDOM);
+    return this._packNodes()
+      ._notify(node, removeDOM);
   }
 
   public removeAll(removeDOM = true): GridStackEngine {
     delete this._layouts;
     if (this.nodes.length === 0) return this;
-    removeDOM && this.nodes.forEach(n => n._id = null); // hint that node is being removed
+    removeDOM && this.nodes.forEach(n => n._removeDOM = true); // let CB remove actual HTML (used to set _id to null, but then we loose layout info)
     this.removedNodes = this.nodes;
     this.nodes = [];
     return this._notify(this.removedNodes, removeDOM);
@@ -536,7 +543,7 @@ export class GridStackEngine {
 
   /** return true if the passed in node (x,y) is being dragged outside of the grid, and not added to bottom */
   public isOutside(x: number, y: number, node: GridStackNode): boolean {
-    if (node._isOutOfGrid) return false; // dragging out is handled by 'dropout' event instead
+    if (node._isCursorOutside) return false; // dragging out is handled by 'dropout' event instead
     // simple outside boundaries
     if (x < 0 || x >= this.column || y < 0) return true;
     if (this.maxRow) return (y >= this.maxRow);
@@ -813,16 +820,13 @@ export class GridStackEngine {
   }
 
 
-  /** called to remove all internal values */
+  /** called to remove all internal values but the _id */
   public cleanupNode(node: GridStackNode): GridStackEngine {
     for (let prop in node) {
-      if (prop[0] === '_') delete node[prop];
+      if (prop[0] === '_' && prop !== '_id') delete node[prop];
     }
     return this;
   }
-
-  /** @internal legacy method renames */
-  private getGridHeight = obsolete(this, GridStackEngine.prototype.getRow, 'getGridHeight', 'getRow', 'v1.0.0');
 }
 
 /** @internal class to store per column layout bare minimal info (subset of GridStackWidget) */
