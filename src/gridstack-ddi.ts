@@ -1,12 +1,5 @@
-// gridstack-ddi.ts 3.3.0-dev @preserve
-
-/**
- * https://gridstackjs.com/
- * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
- * gridstack.js may be freely distributed under the MIT license.
-*/
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
+// gridstack-ddi.ts 4.0.0
+// (c) 2021 Alain Dumesny - see root license
 import { GridItemHTMLElement } from './types';
 
 /**

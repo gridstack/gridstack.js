@@ -1,11 +1,7 @@
-// gridstack.ts 3.3.0-dev @preserve
-
-/**
- * https://gridstackjs.com/
- * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
- * gridstack.js may be freely distributed under the MIT license.
-*/
-
+// gridstack.ts 4.0.0
+/*!
+ * (c) 2021 Alain Dumesny - see root license
+ */
 import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData } from './utils';
 import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
@@ -338,7 +334,6 @@ export class GridStack {
       elements.sort((a, b) => a.i - b.i).forEach(e => this._prepareElement(e.el));
       this.commit();
     }
-    this.engine.saveInitial(); // initial start of items (reset after we call _triggerChangeEvent)
 
     this.setAnimation(this.opts.animate);
 

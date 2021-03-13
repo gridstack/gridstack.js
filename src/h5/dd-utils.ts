@@ -1,11 +1,5 @@
-// dd-utils.ts 3.3.0-dev @preserve
-
-/**
- * https://gridstackjs.com/
- * (c) 2020 rhlin, Alain Dumesny
- * gridstack.js may be freely distributed under the MIT license.
-*/
-
+// dd-utils.ts 4.0.0
+// (c) 2021 Alain Dumesny - see root license
 export class DDUtils {
 
   public static isEventSupportPassiveOption = ((() => {

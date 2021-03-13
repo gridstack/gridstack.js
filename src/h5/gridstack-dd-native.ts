@@ -1,10 +1,5 @@
-// gridstack-dd-native.ts 3.3.0-dev @preserve
-
-/**
- * https://gridstackjs.com/
- * (c) 2020 rhlin, Alain Dumesny
- * gridstack.js may be freely distributed under the MIT license.
-*/
+// gridstack-dd-native.ts 4.0.0
+// (c) 2021 Alain Dumesny - see root license
 import { DDManager } from './dd-manager';
 import { DDElement, DDElementHost } from './dd-element';
 

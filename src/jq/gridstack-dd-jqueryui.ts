@@ -1,11 +1,5 @@
-// gridstack-dd-jqueryui.ts 3.1.3-dev @preserve
-
-/** JQuery UI Drag&Drop plugin
- * https://gridstackjs.com/
- * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
- * gridstack.js may be freely distributed under the MIT license.
-*/
-
+// gridstack-dd-jqueryui.ts 4.0.0
+// (c) 2021 Alain Dumesny - see root license
 import { GridStackElement } from '../gridstack';
 import { GridStackDD, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../gridstack-dd';
 import { GridItemHTMLElement, DDDragInOpt } from '../types';
