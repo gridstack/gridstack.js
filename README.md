@@ -145,7 +145,7 @@ GridStack no longer requires external dependencies as of v1.0.0 (lodash was remo
 
 ## API Documentation
 
-Documentation can be found [here](https://github.com/gridstack/gridstack.js/tree/develop/doc).
+Documentation can be found [here](https://github.com/gridstack/gridstack.js/tree/master/doc).
 
 
 ## Extend Library
@@ -232,7 +232,7 @@ Better yet, here is a SASS code snippet which can make life much easier (Thanks 
 }
 ```
 
-you can also use the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/blob/develop/src/gridstack-extra.scss) included in NPM package and modify to add more columns
+you can also use the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/tree/master/src/gridstack-extra.scss) included in NPM package and modify to add more columns
 and also have the `.grid-stack-N` prefix to support letting the user change columns dynamically.
 
 Sample gulp command for 30 columns:
@@ -286,13 +286,13 @@ search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&rank
 - **Ember**: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
 - **knockout**: see [demo](https://gridstackjs.com/demo/knockout.html) using component, but check [custom bindings ticket](https://github.com/gridstack/gridstack.js/issues/465) which is likely better approach.
 - **Rails**: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
-- **React**: see [demo](https://gridstackjs.com/demo/react.html) with [src](https://github.com/gridstack/gridstack.js/blob/develop/demo/react.html), or  [react-gridstack-example](https://github.com/Inder2108/react-gridstack-example/blob/master/src/App.js), or read on what [hooks to use](https://github.com/gridstack/gridstack.js/issues/735#issuecomment-329888796)
-- **Vue**: see [demo](https://gridstackjs.com/demo/vue3js.html) with [v3 src](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue3js.html) or [v2 src](https://github.com/gridstack/gridstack.js/blob/develop/demo/vue2js.html)
+- **React**: see [demo](https://gridstackjs.com/demo/react.html) with [src](https://github.com/gridstack/gridstack.js/tree/master/demo/react.html), or  [react-gridstack-example](https://github.com/Inder2108/react-gridstack-example/tree/master/src/App.js), or read on what [hooks to use](https://github.com/gridstack/gridstack.js/issues/735#issuecomment-329888796)
+- **Vue**: see [demo](https://gridstackjs.com/demo/vue3js.html) with [v3 src](https://github.com/gridstack/gridstack.js/tree/master/demo/vue3js.html) or [v2 src](https://github.com/gridstack/gridstack.js/tree/master/demo/vue2js.html)
 
 # Migrating
 ## Migrating to v0.6
 
-starting in 0.6.x `change` event are no longer sent (for pretty much most nodes!) when an item is just added/deleted unless it also changes other nodes (was incorrect and causing inefficiencies). You may need to track `added|removed` [events](https://github.com/gridstack/gridstack.js/tree/develop/doc#events) if you didn't and relied on the old broken behavior.
+starting in 0.6.x `change` event are no longer sent (for pretty much most nodes!) when an item is just added/deleted unless it also changes other nodes (was incorrect and causing inefficiencies). You may need to track `added|removed` [events](https://github.com/gridstack/gridstack.js/tree/master/doc#events) if you didn't and relied on the old broken behavior.
 
 ## Migrating to v1
 
@@ -425,7 +425,7 @@ As for events, you can still use `$(".grid-stack").on(...)` for the version that
 
 # Changes
 
-View our change log [here](https://github.com/gridstack/gridstack.js/tree/develop/doc/CHANGES.md).
+View our change log [here](https://github.com/gridstack/gridstack.js/tree/master/doc/CHANGES.md).
 
 
 # The Team
