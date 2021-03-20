@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [4.0.0](#400)
+- [4.0.0 (2021-3-19)](#400-2021-3-19)
 - [3.3.0 (2021-2-2)](#330-2021-2-2)
 - [3.2.0 (2021-1-25)](#320-2021-1-25)
 - [3.1.5 (2021-1-23)](#315-2021-1-23)
@@ -48,7 +48,7 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 4.0.0
+## 4.0.0 (2021-3-19)
 
 - fix [#149](https://github.com/gridstack/gridstack.js/issues/149) [#1094](https://github.com/gridstack/gridstack.js/issues/1094) [#1605](https://github.com/gridstack/gridstack.js/issues/1605) [#1534](https://github.com/gridstack/gridstack.js/issues/1534) re-write of the **collision code - fixing 6 years old most requested request**
 1. you can now swap items of the same size (vertical/horizontal) when grid is full, and is the default in `float:false` (top gravity) as it feels more natural. Could add Alt key for swap vs push behavior later.
