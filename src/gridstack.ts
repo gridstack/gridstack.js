@@ -1512,9 +1512,9 @@ export class GridStack {
   /** @internal prepares the element for drag&drop **/
   public _prepareDragDropByNode(node: GridStackNode): GridStack { return this }
   /** @internal handles actual drag/resize start **/
-  public _onStartMoving(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
+  public _onStartMoving(el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
   /** @internal handles actual drag/resize **/
-  public _dragOrResize(event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
+  public _dragOrResize(el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
   /** @internal called when a node leaves our area (mouse out or shape outside) **/
   public _leave(node: GridStackNode, el: GridItemHTMLElement, helper?: GridItemHTMLElement, dropoutEvent = false): void { return }
 }

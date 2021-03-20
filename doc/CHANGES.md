@@ -51,6 +51,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 4.0.0-dev
 
+- fix [#1669](https://github.com/gridstack/gridstack.js/issues/1669) JQ resize broken
 - fix [#1661](https://github.com/gridstack/gridstack.js/issues/1661) serialization of nested grid
 
 ## 4.0.0 (2021-3-19)
