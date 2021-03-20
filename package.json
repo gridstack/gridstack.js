@@ -15,7 +15,7 @@
   },
   "homepage": "http://gridstack.github.io/gridstack.js/",
   "dependencies": {
-    "gridstack": "3.3.0"
+    "gridstack": "4.0.0"
   },
   "devDependencies": {}
 }
