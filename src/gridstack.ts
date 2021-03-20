@@ -1,7 +1,7 @@
 /*!
- * GridStack 4.0.1 
+ * GridStack 4.0.1
  * https://gridstackjs.com/
- * 
+ *
  * Copyright (c) 2021 Alain Dumesny
  * see root license https://github.com/gridstack/gridstack.js/blob/develop/LICENSE
  */
