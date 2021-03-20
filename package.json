@@ -9,13 +9,13 @@
   "scripts": {
     "reset": "rm -rf dist node_modules coverage && yarn"
   },
-  "license": "MIT",
+  "license": "see GridStack root license",
   "bugs": {
     "url": "https://github.com/gridstack/gridstack.js/issues"
   },
   "homepage": "http://gridstack.github.io/gridstack.js/",
   "dependencies": {
-    "gridstack": "4.0.0"
+    "gridstack": "4.0.1"
   },
   "devDependencies": {}
 }

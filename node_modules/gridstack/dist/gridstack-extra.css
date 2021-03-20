@@ -1,3 +1,7 @@
+/**
+ * default to generate [2-11] columns as 1 (oneColumnMode) and 12 (default) are in the main css
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ */
 .grid-stack.grid-stack-2 > .grid-stack-item {
   min-width: 50%; }
   .grid-stack.grid-stack-2 > .grid-stack-item[gs-w='1'] {
