@@ -1,5 +1,8 @@
-// gridstack-poly.js 2.0.0
-// (c) 2021 Alain Dumesny - see root license
+/**
+ * gridstack-poly.ts 4.0.1 - used for older browser support (not currently supported in v2+)
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ */
+
 /* eslint-disable prefer-rest-params */
 /* eslint-disable no-var */
 

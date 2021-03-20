@@ -1,5 +1,8 @@
-// dd-resizable.ts 4.0.0-dev
-// (c) 2021 Alain Dumesny - see root license
+/**
+ * dd-resizable.ts 4.0.1
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ */
+
 import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { DDUtils } from './dd-utils';

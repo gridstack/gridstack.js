@@ -1,5 +1,8 @@
-// dd-base-impl.ts 4.0.0-dev
-// (c) 2021 Alain Dumesny - see root license
+/**
+ * dd-base-impl.ts 4.0.1
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ */
+
 export type EventCallback = (event: Event) => boolean|void;
 export abstract class DDBaseImplement {
   /** returns the enable state, but you have to call enable()/disable() to change (as other things need to happen) */

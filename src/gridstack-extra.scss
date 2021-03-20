@@ -1,5 +1,8 @@
-// (c) 2021 Alain Dumesny - see root license
-// default to generate [2-11] columns as 1 (oneColumnMode) and 12 (default) are in the main css
+/**
+ * default to generate [2-11] columns as 1 (oneColumnMode) and 12 (default) are in the main css
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ */
+
 $gridstack-columns-start: 2 !default;
 $gridstack-columns: 11 !default;
 

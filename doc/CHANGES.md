@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [4.0.0-dev](#400-dev)
+- [4.0.1 (2021-3-20)](#401-2021-3-20)
 - [4.0.0 (2021-3-19)](#400-2021-3-19)
 - [3.3.0 (2021-2-2)](#330-2021-2-2)
 - [3.2.0 (2021-1-25)](#320-2021-1-25)
@@ -49,7 +49,7 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 4.0.0-dev
+## 4.0.1 (2021-3-20)
 
 - fix [#1669](https://github.com/gridstack/gridstack.js/issues/1669) JQ resize broken
 - fix [#1661](https://github.com/gridstack/gridstack.js/issues/1661) serialization of nested grid
