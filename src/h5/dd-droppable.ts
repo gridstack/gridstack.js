@@ -1,4 +1,4 @@
-// dd-droppable.ts 4.0.0
+// dd-droppable.ts 4.0.0-dev
 // (c) 2021 Alain Dumesny - see root license
 import { DDDraggable } from './dd-draggable';
 import { DDManager } from './dd-manager';

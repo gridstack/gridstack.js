@@ -1,4 +1,4 @@
-// index.html5.ts 4.0.0 - everything you need for a Grid that uses HTML5 native drag&drop (work in progress)
+// index.html5.ts 4.0.0-dev - everything you need for a Grid that uses HTML5 native drag&drop (work in progress)
 // (c) 2021 Alain Dumesny - see root license
 export * from './types';
 export * from './utils';

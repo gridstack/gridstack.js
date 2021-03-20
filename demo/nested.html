@@ -24,6 +24,9 @@
     <p>Note: initial v3 HTML5 release doesn't support 'dragOut:false' constrain so use jq version if you need that.</p>
     <a class="btn btn-primary" onClick="addNewWidget('.nested1')" href="#">Add Widget Grid1</a>
     <a class="btn btn-primary" onClick="addNewWidget('.nested2')" href="#">Add Widget Grid2</a>
+    <a class="btn btn-primary" onClick="save()" href="#">Save</a>
+    <a class="btn btn-primary" onClick="destroy()" href="#">Clear</a>
+    <a class="btn btn-primary" onClick="load()" href="#">Load</a>
     <br><br>
     <!-- grid will be added here -->
   </div>
@@ -41,17 +44,16 @@
       minWidth: 300, // min to go 1 column mode
       margin: 1
     };
-    let opts = {cellHeight: 70, children: [
+    let json = {cellHeight: 70, children: [
       {y:0, content: 'regular item'},
       {x:1, w:4, h:4, content: 'nested 1 - can drag items out', subGrid: {children: sub1, dragOut: true, class: 'nested1', ...subOptions}},
       {x:5, w:4, h:4, content: 'nested 2 - constrained to parent (default)', subGrid: {children: sub2, class: 'nested2', ...subOptions}},
     ]};
 
     // create and load it all from JSON above
-    GridStack.addGrid(document.querySelector('.container-fluid'), opts);
+    let grid = GridStack.addGrid(document.querySelector('.container-fluid'), json);
 
     addNewWidget = function(selector) {
-      grid = document.querySelector(selector).gridstack;
       let node = {
         x: Math.round(12 * Math.random()),
         y: Math.round(5 * Math.random()),
@@ -62,6 +64,18 @@
       grid.addWidget(node);
       return false;
     };
+
+    save = function() {
+      json = grid.save(true, true);
+    }
+    destroy = function() {
+      grid.destroy();
+      grid = undefined;
+    }
+    load = function() {
+      grid = GridStack.addGrid(document.querySelector('.container-fluid'), json);
+    }
+
   </script>
 </body>
 </html>

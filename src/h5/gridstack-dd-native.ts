@@ -1,4 +1,4 @@
-// gridstack-dd-native.ts 4.0.0
+// gridstack-dd-native.ts 4.0.0-dev
 // (c) 2021 Alain Dumesny - see root license
 import { DDManager } from './dd-manager';
 import { DDElement, DDElementHost } from './dd-element';

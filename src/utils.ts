@@ -1,4 +1,4 @@
-// utils.ts 4.0.0
+// utils.ts 4.0.0-dev
 // (c) 2021 Alain Dumesny - see root license
 
 import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition } from './types';
@@ -236,7 +236,7 @@ export class Utils {
     if (typeof a !== 'object' || typeof b !== 'object') return;
     for (let key in a) {
       let val = a[key];
-      if (val && typeof val === 'object') {
+      if (val && typeof val === 'object' && b[key] !== undefined) {
         for (let i in val) {
           if (val[i] === b[key][i] || i[0] === '_') { delete val[i] }
         }
