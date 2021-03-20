@@ -1,5 +1,8 @@
-// gridstack-GridStackDD.get().ts 4.0.0-dev
-// (c) 2021 Alain Dumesny - see root license
+/**
+ * gridstack-dd.ts 4.0.1
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ */
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GridStackDDI } from './gridstack-ddi';
 import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition } from './types';

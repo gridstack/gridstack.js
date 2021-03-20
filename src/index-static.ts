@@ -1,5 +1,7 @@
-// index.static.ts 4.0.0-dev - everything you need for a static Grid (non draggable)
-// (c) 2021 Alain Dumesny - see root license
+/**
+ * index-static.ts 4.0.1 - much smaller, everything you need for a static Grid (non draggable, API driven)
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ */
 
 export * from './types';
 export * from './utils';
