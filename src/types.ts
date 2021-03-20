@@ -1,10 +1,5 @@
-// types.ts 3.3.0-dev @preserve
-
-/**
- * https://gridstackjs.com/
- * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
- * gridstack.js may be freely distributed under the MIT license.
-*/
+// types.ts 4.0.0
+// (c) 2021 Alain Dumesny - see root license
 
 import { GridStack } from './gridstack';
 
@@ -195,6 +190,8 @@ export interface GridStackOptions {
 
 /** options used during GridStackEngine.moveNode() */
 export interface GridStackMoveOpts extends GridStackPosition {
+  /** node to skip collision */
+  skip?: GridStackNode;
   /** do we pack (default true) */
   pack?: boolean;
   /** true if we are calling this recursively to prevent simple swap or coverage collision - default false*/
@@ -332,20 +329,16 @@ export interface GridStackNode extends GridStackWidget {
   _isExternal?: boolean;
   /** @internal moving vs resizing */
   _moving?: boolean;
-  /** @internal true if we jump down past item below (one time jump so we don't have to totally pass it) */
+  /** @internal true if we jumped down past item below (one time jump so we don't have to totally pass it) */
   _skipDown?: boolean;
   /** @internal original values before a drag/size */
   _orig?: GridStackPosition;
-  /** @internal set on the item being dragged/resized to save initial values TODO: vs _orig ? */
-  _beforeDrag?: GridStackPosition;
   /** @internal position in pixels used during collision check  */
   _rect?: GridStackPosition;
   /** @internal top/left pixel location before a drag so we can detect direction of move from last position*/
   _lastUiPosition?: Position;
   /** @internal set on the item being dragged/resized remember the last positions we've tried (but failed) so we don't try again during drag/resize */
   _lastTried?: GridStackPosition;
-  /** @internal original Y when another item is dragged around a float=true so we can restore back as item is dragged around  */
-  _packY?: number;
   /** @internal last drag Y pixel position used to incrementally update V scroll bar */
   _prevYPix?: number;
   /** @internal true if we've remove the item from ourself (dragging out) but might revert it back (release on nothing -> goes back) */

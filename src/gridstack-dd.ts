@@ -1,10 +1,5 @@
-// gridstack-GridStackDD.get().ts 3.3.0-dev @preserve
-
-/**
- * https://gridstackjs.com/
- * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
- * gridstack.js may be freely distributed under the MIT license.
-*/
+// gridstack-GridStackDD.get().ts 4.0.0
+// (c) 2021 Alain Dumesny - see root license
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GridStackDDI } from './gridstack-ddi';
 import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition } from './types';
@@ -432,8 +427,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
       } else {
         // got removed - restore item back to before dragging position
         Utils.removePositioningStyles(target);
-        Utils.copyPos(node, node._beforeDrag);
-        delete node._beforeDrag;
+        Utils.copyPos(node, node._orig);
         this._writePosAttr(target, node);
         this.engine.addNode(node);
       }
@@ -483,14 +477,14 @@ GridStack.prototype._onStartMoving = function(event: Event, ui: DDUIData, node: 
   node.el = this.placeholder;
   node._lastUiPosition = ui.position;
   node._prevYPix = ui.position.top;
-  node._moving = (event.type === 'dragstart');
+  node._moving = (event.type === 'dragstart'); // 'dropover' are not initially moving so they can go exactly where they enter (will push stuff out of the way)
   delete node._lastTried;
   delete node._isCursorOutside;
 
   if (event.type === 'dropover' && node._temporaryRemoved) {
     // TEST console.log('engine.addNode x=' + node.x);
-    this.engine.addNode(node); // will add, constrain, update attr and clear _temporaryRemoved
-    node._moving = true; // lastly mark as moving object
+    this.engine.addNode(node); // will add, fix collisions, update attr and clear _temporaryRemoved
+    node._moving = true; // AFTER, mark as moving object (wanted fix location before)
   }
 
   // set the min/max resize info
@@ -533,6 +527,8 @@ GridStack.prototype._leave = function(node: GridStackNode, el: GridItemHTMLEleme
     // item came from outside (like a toolbar) so nuke any node info
     delete node.el;
     delete el.gridstackNode;
+    // and restore all nodes back to original
+    this.engine.restoreInitial();
   }
 }
 

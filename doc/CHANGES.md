@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [3.3.0-dev](#330-dev)
+- [4.0.0](#400)
 - [3.3.0 (2021-2-2)](#330-2021-2-2)
 - [3.2.0 (2021-1-25)](#320-2021-1-25)
 - [3.1.5 (2021-1-23)](#315-2021-1-23)
@@ -48,9 +48,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 3.3.0-dev
+## 4.0.0
 
-- fix [#149](https://github.com/gridstack/gridstack.js/issues/149) [#1094](https://github.com/gridstack/gridstack.js/issues/1094) [#1605](https://github.com/gridstack/gridstack.js/issues/1605) re-write of the **collision code - fixing 6 years old most requested request**
+- fix [#149](https://github.com/gridstack/gridstack.js/issues/149) [#1094](https://github.com/gridstack/gridstack.js/issues/1094) [#1605](https://github.com/gridstack/gridstack.js/issues/1605) [#1534](https://github.com/gridstack/gridstack.js/issues/1534) re-write of the **collision code - fixing 6 years old most requested request**
 1. you can now swap items of the same size (vertical/horizontal) when grid is full, and is the default in `float:false` (top gravity) as it feels more natural. Could add Alt key for swap vs push behavior later.
 2. Dragging up and down now behave the same (used to require push WAY down past to swap/append). Also much more efficient collision code.
 3. handle mid point of dragged over items (>50%) rather than just a new row/column and check for the most covered item when multiple collide.
@@ -59,6 +59,7 @@ Change log
 1. we now remove item when cursor leaves (`acceptWidgets` case using `dropout` event) or shape is outside (re-using same method) and re-insert on cursor enter (since we only get `dropover` event). Should **not be possible to have 2 placeholders** which confuses the grids.
 2. major re-write and cleanup of the drag in/out. Vars have been renamed and fully documented as I couldn't understand the legacy buggy code.
 3. removed any over trash delay feedback as I don't see the point and could introduce race conditions.
+
 - fix [1617](https://github.com/gridstack/gridstack.js/issues/1617) FireFox DOM order issue. Thanks [@marcel-necker](https://github.com/marcel-necker)
 - fix changing column # `column(n)` now resizes `cellHeight:'auto'` to keep square
 - add [1616](https://github.com/gridstack/gridstack.js/pull/1616) `drag | resize` events while dragging. Thanks [@MrCorba](https://github.com/MrCorba)

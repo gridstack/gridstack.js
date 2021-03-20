@@ -1,6 +1,5 @@
-// index.jq.ts 3.3.0-dev - everything you need for a Grid that uses Jquery-ui drag&drop (original, full feature) @preserve
-
-// import './gridstack-poly.js';
+// index.jq.ts 4.0.0 - everything you need for a Grid that uses Jquery-ui drag&drop (original, full feature)
+// (c) 2021 Alain Dumesny - see root license
 
 export * from './types';
 export * from './utils';

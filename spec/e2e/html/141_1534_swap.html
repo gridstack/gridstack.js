@@ -13,6 +13,7 @@
 <body>
   <div class="container-fluid">
     <h1>Swap collision demo</h1>
+    <p>for bugs 141 <b>1094</b> 1534 1605</p>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
       <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#"></a>
@@ -21,8 +22,9 @@
       with layouts:
       <a class="btn btn-primary" onclick="load(0)" href="#">load 0</a>
       <a class="btn btn-primary" onclick="load(1)" href="#">load 1</a>
-      <a class="btn btn-primary" onclick="load(2)" href="#">load web1</a>
-      <a class="btn btn-primary" onclick="loadAdvanced()" href="#">load web2</a>
+      <a class="btn btn-primary" onclick="load(2)" href="#">load 2</a>
+      <a class="btn btn-primary" onclick="load(3)" href="#">load web1</a>
+      <a class="btn btn-primary" onclick="load(3); loadAdvanced()" href="#">load web2</a>
     </div>
     <br><br>
     <div class="grid-stack"></div>
@@ -38,17 +40,19 @@
     let grid = GridStack.init({float: false, cellHeight: 70, maxRow: 0});
     addEvents(grid);
 
-    let items = [[
+    let items = [[ // load 0
       {x:0, y:0}, {x:0, y:1}, {x:0, y:2},{x:1, y:0}, {x:1, y:1}, {x:1, y:2, /*h:2, w:2*/},
       {x:5, y:0}, {x:4, y:1, w:3, locked: false, _content: 'locked'}, {x:5, y:2},
       {x:7, y:0}, {x:8, y:0}, {x:9, y:0}, {x:7, y:1, w:3}, {x:8, y:2},
       {x:11, y:0}, {x:11, y:1, h:2},
-    ], [
-      {x:1, y:0}, {x:1, y:1}, {x:1, y:2, w:2},  {x:0, y:3, w:3}, {x:1, y:4, h:2},
+    ], [ // load 1
+      {x:1, y:0}, {x:1, y:1, w:2}, {x:1, y:2, h:2}, {x:0, y:4, w:3}, 
       {x:3, y:0, w:3, h:3}, {x:6, y:0},
       {x:7, y:0, w:3}, {x:8, y:1, w:3},
-    ],[
-      // web1.html demo
+    ], [ // load 2
+      {x:1, y:0, w:2}, {x:1, y:1, h:2}, {x:2, y:1}, {x:0, y:3, w:3} , {x:0, y:4},
+      // {x:5, y:0, w:2}, {x:6, y:1}, {x:4, y:2, w:3} , {x:5, y:4, h:2}, {x:4, y:4},
+    ],[ // web1.html demo
       {x:0, y:0, w:4, h:2},
       {x:4, y:0, w:4, h:4, id: 'big'},
       {x:8, y:0, w:2, h:2},
@@ -84,7 +88,6 @@
       grid.load(items[i]);
     }
     loadAdvanced = function() {
-      load(2);
       grid.update(grid.engine.nodes[1].el, {locked: true, content:'locked'});
     }
     toggleFloat = function() {

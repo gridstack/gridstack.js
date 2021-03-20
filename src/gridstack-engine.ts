@@ -1,11 +1,5 @@
-// gridstack-engine.ts 3.3.0-dev @preserve
-
-/**
- * https://gridstackjs.com/
- * (c) 2014-2020 Alain Dumesny, Dylan Weiss, Pavel Reznikov
- * gridstack.js may be freely distributed under the MIT license.
-*/
-
+// gridstack-engine.ts 4.0.0
+// (c) 2021 Alain Dumesny - see root license
 import { Utils } from './utils';
 import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts } from './types';
 
@@ -42,6 +36,8 @@ export class GridStackEngine {
   private _layouts?: Layout[][]; // maps column # to array of values nodes
   /** @internal */
   private _ignoreLayoutsNodeChange: boolean;
+  /** @internal true if we have some items locked */
+  private _hasLocked: boolean;
   /** @internal unique global internal _id counter NOT starting at 0 */
   private static _idSeq = 1;
 
@@ -70,12 +66,17 @@ export class GridStackEngine {
       ._notify();
   }
 
+  // use entire row for hitting area (will use bottom reverse sorted first) if we not actively moving DOWN and didn't already skip
+  private _useEntireRowArea(node: GridStackNode, nn: GridStackPosition): boolean {
+    return !this.float && !this._hasLocked && (!node._moving || node._skipDown || nn.y <= node.y);
+  }
+
   /** @internal fix collision on given 'node', going to given new location 'nn', with optional 'collide' node already found.
    * return true if we moved. */
   private _fixCollisions(node: GridStackNode, nn = node, collide?: GridStackNode, opt: GridStackMoveOpts = {}): boolean {
-    this._sortNodes(-1); // TODO: collision should not care about sorting but it does (behaves differently second time trying to insert same spot)
+    this._sortNodes(-1); // from last to first, so recursive collision move items in the right order
 
-    collide = collide || this.collide(node, nn);
+    collide = collide || this.collide(node, nn); // REAL area collide for swap and skip if none...
     if (!collide) return false;
 
     // swap check: if we're actively moving in gravity mode, see if we collide with an object the same size
@@ -83,34 +84,36 @@ export class GridStackEngine {
       if (this.swap(node, collide)) return true;
     }
 
-    let didMove = false;
-    let yOffset = 0;
-    let newOpt: GridStackMoveOpts = {nested: true, pack: false};
-    while (collide = collide || this.collide(node, nn)) { // could collide with more than 1 item... so repeat for each
-      let moved: boolean;
-      // if colliding with locked item, OR moving down to a different sized item
-      // (not handled with swap) that could take our place, move ourself past it instead
-      // but remember that skip down so we only do this one (and push others otherwise).
-      if (collide.locked || (node._moving && !node._skipDown && nn.y > node.y &&
-        !this.float && !this.collide(collide, {...collide, y: node.y}, node)) && Utils.isTouching(node, collide)) {
+    // during while() collisions MAKE SURE to check entire row so larger items don't leap frog small ones (push them all down starting last in grid)
+    let area = nn;
+    if (this._useEntireRowArea(node, nn)) {
+      area = {x: 0, w: this.column, y: nn.y, h: nn.h};
+      collide = this.collide(node, area, opt.skip); // force new hit
+    }
 
+    let didMove = false;
+    let newOpt: GridStackMoveOpts = {nested: true, pack: false};
+    while (collide = collide || this.collide(node, area, opt.skip)) { // could collide with more than 1 item... so repeat for each
+      let moved: boolean;
+      // if colliding with a locked item OR moving down with top gravity (and collide could move up) -> skip past the collide,
+      // but remember that skip down so we only do this once (and push others otherwise).
+      if (collide.locked || node._moving && !node._skipDown && nn.y > node.y && !this.float &&
+        // can take space we had, or before where we're going
+        (!this.collide(collide, {...collide, y: node.y}, node) || !this.collide(collide, {...collide, y: nn.y - collide.h}, node))) {
         node._skipDown = (node._skipDown || nn.y > node.y);
         moved = this.moveNode(node, {...nn, y: collide.y + collide.h, ...newOpt});
         if (collide.locked && moved) {
           Utils.copyPos(nn, node); // moving after lock become our new desired location
-        } else if (moved && opt.pack && !collide.locked) {
+        } else if (!collide.locked && moved && opt.pack) {
           // we moved after and will pack: do it now and keep the original drop location, but past the old collide to see what else we might push way
           this._packNodes();
-          if (moved) {
-            nn.y = collide.y + collide.h;
-            Utils.copyPos(node, nn);
-          }
+          nn.y = collide.y + collide.h;
+          Utils.copyPos(node, nn);
         }
         didMove = didMove || moved;
       } else {
-        // move collide down *after* where we will be
-        moved = this.moveNode(collide, {...collide, y: nn.y + nn.h + yOffset, ...newOpt});
-        if (moved) yOffset += collide.h; // during while loop put next one after this one
+        // move collide down *after* where we will be, ignoring where we are now (don't collide with us)
+        moved = this.moveNode(collide, {...collide, y: nn.y + nn.h, skip: node, ...newOpt});
       }
       if (!moved) { return didMove; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
       collide = undefined;
@@ -122,8 +125,8 @@ export class GridStackEngine {
   public collide(skip: GridStackNode, area = skip, skip2?: GridStackNode): GridStackNode {
     return this.nodes.find(n => n !== skip && n !== skip2 && Utils.isIntercepted(n, area));
   }
-  public collideAll(skip: GridStackNode, area = skip): GridStackNode[] {
-    return this.nodes.filter(n => n !== skip && Utils.isIntercepted(n, area));
+  public collideAll(skip: GridStackNode, area = skip, skip2?: GridStackNode): GridStackNode[] {
+    return this.nodes.filter(n => n !== skip && n !== skip2 && Utils.isIntercepted(n, area));
   }
 
   /** does a pixel coverage collision, returning the node that has the most coverage that is >50% mid line */
@@ -264,14 +267,14 @@ export class GridStackEngine {
 
   /** @internal called to top gravity pack the items back OR revert back to original Y positions when floating */
   private _packNodes(): GridStackEngine {
-    this._sortNodes();
+    this._sortNodes(); // first to last
 
     if (this.float) {
       // restore original Y pos
       this.nodes.forEach(n => {
-        if (n._updating || n._packY === undefined || n.y === n._packY) return;
+        if (n._updating || n._orig === undefined || n.y === n._orig.y) return;
         let newY = n.y;
-        while (newY > n._packY) {
+        while (newY > n._orig.y) {
           --newY;
           let collide = this.collide(n, {x: n.x, y: newY, w: n.w, h: n.h});
           if (!collide) {
@@ -406,12 +409,26 @@ export class GridStackEngine {
     return this;
   }
 
-  /** @internal called to save initial position/size to track real dirty state. Note: should ONLY be called right after we call change event */
+  /** @internal called to save initial position/size to track real dirty state.
+   * Note: should be called right after we call change event (so next API is can detect changes)
+   * as well as right before we start move/resize/enter (so we can restore items to prev values) */
   public saveInitial(): GridStackEngine {
     this.nodes.forEach(n => {
-      n._orig = {x: n.x, y: n.y, w: n.w, h: n.h};
+      n._orig = Utils.copyPos({}, n);
       delete n._dirty;
     });
+    this._hasLocked = this.nodes.some(n => n.locked);
+    return this;
+  }
+
+  /** @internal restore all the nodes back to initial values (called when we leave) */
+  public restoreInitial(): GridStackEngine {
+    this.nodes.forEach(n => {
+      if (Utils.samePos(n, n._orig)) return;
+      Utils.copyPos(n, n._orig);
+      n._dirty = true;
+    });
+    this._notify();
     return this;
   }
 
@@ -482,7 +499,7 @@ export class GridStackEngine {
     o.pack = true;
 
     // simpler case: move item directly...
-    if (!this.maxRow/* && !this.nodes.some(n => n.locked)*/) {
+    if (!this.maxRow/* && !this._hasLocked*/) {
       return this.moveNode(node, o);
     }
 
@@ -600,21 +617,27 @@ export class GridStackEngine {
     if (Utils.samePos(node, o)) return false;
     let prevPos: GridStackPosition = Utils.copyPos({}, node);
 
+    // during while() collisions make sure to check entire row so larger items don't leap frog small ones (push them all down)
+    let area = nn;
+    // if (this._useEntireRowArea(node, nn)) {
+    //   area = {x: 0, w: this.column, y: nn.y, h: nn.h};
+    // }
+
     // check if we will need to fix collision at our new location
-    let collides = this.collideAll(node, nn);
-    let moved = false;
+    let collides = this.collideAll(node, area, o.skip);
+    let needToMove = true;
     if (collides.length) {
       // now check to make sure we actually collided over 50% surface area while dragging
       let collide = node._moving && !o.nested ? this.collideCoverage(node, o, collides) : collides[0];
       if (collide) {
-        moved = this._fixCollisions(node, nn, collide, o);
+        needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
       } else {
-        moved = true; // prevent actual moving since we didn't cover >50% for a move
+        needToMove = false; // we didn't cover >50% for a move, skip...
       }
     }
 
     // now move (to the original ask vs the collision version which might differ) and repack things
-    if (!moved) {
+    if (needToMove) {
       node._dirty = true;
       Utils.copyPos(node, nn);
     }
@@ -630,11 +653,11 @@ export class GridStackEngine {
   }
 
   public beginUpdate(node: GridStackNode): GridStackEngine {
-    if (node._updating) return this;
-    node._updating = true;
-    node._beforeDrag = Utils.copyPos({}, node);
-    delete node._skipDown;
-    this.nodes.forEach(n => n._packY = n.y);
+    if (!node._updating) {
+      node._updating = true;
+      delete node._skipDown;
+      this.saveInitial();
+    }
     return this;
   }
 
@@ -642,9 +665,7 @@ export class GridStackEngine {
     let n = this.nodes.find(n => n._updating);
     if (n) {
       delete n._updating;
-      delete n._beforeDrag;
       delete n._skipDown;
-      this.nodes.forEach(n => delete n._packY);
     }
     return this;
   }
