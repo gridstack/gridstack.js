@@ -125,7 +125,7 @@ HTML5 version will require re-write to plain `mousemove` & mobile `touchmove` in
 ## 3.1.0 (2020-12-4)
 
 - add new `addGrid(parent, opts)` to create a grid and load children instead of `init() + load()`, which is used by `load()` to supports nested grids creation.
-see [nested.html](https://github.com/gridstack/gridstack.js/blob/develop/demo/nested.html) demo.
+see [nested.html](https://github.com/gridstack/gridstack.js/tree/master/demo/nested.html) demo.
 - `save()` will now work on nested grids, recursively saving info. added flag to also allow saving the current grid options + children
 (needed for nested grids) so you can now call new `adddGrid()` to re-create everything from JSON.
 - fix [1505](https://github.com/gridstack/gridstack.js/issues/1505) don't call `movable()`/`resizable()` on locked items error. thanks [@infime](https://github.com/infime)
@@ -227,7 +227,7 @@ You can now have perfect square cells (default) [723](https://github.com/gridsta
 ## v1.0.0 (2020-02-23)
 
 - **breaking**: [(1084)](https://github.com/gridstack/gridstack.js/issues/1084) jquery was removed from the API and dependencies (initialize differently, and methods take/return `GridStack` or `HTMLElement` instead of `JQuery`), so your code will need to change. 
-See [Migrating to v1.0.0](https://github.com/gridstack/gridstack.js/blob/develop/README.md#migrating-to-v100)
+See [Migrating to v1.0.0](https://github.com/gridstack/gridstack.js/tree/master/README.md#migrating-to-v100)
 - `setColumn(N)` is now `column(N)` (matches other set/get methods) and `getColumn()` to get current column number
 - add `grid.on(eventName, callback)` / `grid.off(eventName)` to hide native JQ events mix
 - add `grid.getRow()` to get the current grid row number

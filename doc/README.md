@@ -309,7 +309,7 @@ grids.forEach(...)
 * call to create a grid with the given options, including loading any children from JSON structure. This will call `GridStack.init()`, then `grid.load()` on any passed children (recursively). Great alternative to calling `init()` if you want entire grid to come from JSON serialized data, including options.
 * @param parent HTML element parent to the grid
 * @param opt grids options used to initialize the grid, and list of children
-* see [nested.html](https://github.com/gridstack/gridstack.js/blob/develop/demo/nested.html) demo
+* see [nested.html](https://github.com/gridstack/gridstack.js/tree/master/demo/nested.html) demo
 
 ### `setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt)`
 
