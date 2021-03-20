@@ -1,4 +1,4 @@
-// gridstack-GridStackDD.get().ts 4.0.0
+// gridstack-GridStackDD.get().ts 4.0.0-dev
 // (c) 2021 Alain Dumesny - see root license
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GridStackDDI } from './gridstack-ddi';

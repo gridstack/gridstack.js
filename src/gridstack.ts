@@ -1,4 +1,4 @@
-// gridstack.ts 4.0.0
+// gridstack.ts 4.0.0-dev
 /*!
  * (c) 2021 Alain Dumesny - see root license
  */
@@ -164,8 +164,10 @@ export class GridStack {
 
     // create grid class and load any children
     let grid = GridStack.init(opt, el);
-    if (opt.children) {
-      grid.load(opt.children);
+    if (grid.opts.children) {
+      let children = grid.opts.children;
+      delete grid.opts.children;
+      grid.load(children);
     }
     return grid;
   }

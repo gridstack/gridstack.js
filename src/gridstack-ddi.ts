@@ -1,4 +1,4 @@
-// gridstack-ddi.ts 4.0.0
+// gridstack-ddi.ts 4.0.0-dev
 // (c) 2021 Alain Dumesny - see root license
 import { GridItemHTMLElement } from './types';
 

@@ -1,4 +1,4 @@
-// gridstack-dd-jqueryui.ts 4.0.0
+// gridstack-dd-jqueryui.ts 4.0.0-dev
 // (c) 2021 Alain Dumesny - see root license
 import { GridStackElement } from '../gridstack';
 import { GridStackDD, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../gridstack-dd';
