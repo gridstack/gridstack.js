@@ -328,7 +328,7 @@ export class GridStack {
     if (this.opts.auto) {
       this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
       let elements: {el: HTMLElement; i: number}[] = [];
-      this.getGridItems().forEach(el => {
+      this.getGridItems().forEach(el => { // get dom elements (not nodes yet)
         let x = parseInt(el.getAttribute('gs-x'));
         let y = parseInt(el.getAttribute('gs-y'));
         elements.push({
@@ -676,7 +676,7 @@ export class GridStack {
     let domNodes: GridStackNode[];
     if (column === 1 && this.opts.oneColumnModeDomSort) {
       domNodes = [];
-      this.getGridItems().forEach(el => {
+      this.getGridItems().forEach(el => { // get dom elements in order
         if (el.gridstackNode) { domNodes.push(el.gridstackNode); }
       });
       if (!domNodes.length) { domNodes = undefined; }
@@ -699,7 +699,7 @@ export class GridStack {
     return this.opts.column;
   }
 
-  /** returns an array of grid HTML elements (no placeholder) - used to iterate through our children */
+  /** returns an array of grid HTML elements (no placeholder) - used to iterate through our children in DOM order */
   public getGridItems(): GridItemHTMLElement[] {
     return Array.from(this.el.children)
       .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass) && !el.matches('.' + this.opts.placeholderClass)) as GridItemHTMLElement[];
@@ -1463,13 +1463,13 @@ export class GridStack {
   public static setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt): void { /* implemented in gridstack-dd.ts */ }
 
   /**
-   * Enables/Disables moving. No-op for static grids.
+   * Enables/Disables moving of specific grid elements. If you want all items, and have it stay, use enableMove() instead. No-op for static grids.
    * @param els widget or selector to modify.
    * @param val if true widget will be draggable.
    */
   public movable(els: GridStackElement, val: boolean): GridStack { return this }
   /**
-   * Enables/Disables resizing. No-op for static grids.
+   * Enables/Disables resizing of specific grid elements. If you want all items, and have it stay, use enableResize() instead. No-op for static grids.
    * @param els  widget or selector to modify
    * @param val  if true widget will be resizable.
    */
@@ -1495,19 +1495,12 @@ export class GridStack {
   public enable(): GridStack { return this }
   /**
    * Enables/disables widget moving. No-op for static grids.
-   *
-   * @param doEnable
-   * @param includeNewWidgets will force new widgets to be draggable as per
-   * doEnable`s value by changing the disableDrag grid option (default: true).
    */
-  public enableMove(doEnable: boolean, includeNewWidgets = true): GridStack { return this }
+  public enableMove(doEnable: boolean): GridStack { return this }
   /**
    * Enables/disables widget resizing. No-op for static grids.
-   * @param doEnable
-   * @param includeNewWidgets will force new widgets to be draggable as per
-   * doEnable`s value by changing the disableResize grid option (default: true).
    */
-  public enableResize(doEnable: boolean, includeNewWidgets = true): GridStack { return this }
+  public enableResize(doEnable: boolean): GridStack { return this }
 
   /** @internal called to add drag over support to support widgets */
   public _setupAcceptWidget(): GridStack { return this }

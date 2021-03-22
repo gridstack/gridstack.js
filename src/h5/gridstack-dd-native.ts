@@ -98,17 +98,17 @@ export class GridStackDDNative extends GridStackDD {
 
   /** true if element is droppable */
   public isDroppable(el: DDElementHost): boolean {
-    return el && el.ddElement && el.ddElement.ddDroppable && !el.ddElement.ddDroppable.disabled;
+    return !!(el && el.ddElement && el.ddElement.ddDroppable && !el.ddElement.ddDroppable.disabled);
   }
 
   /** true if element is draggable */
   public isDraggable(el: DDElementHost): boolean {
-    return el && el.ddElement && el.ddElement.ddDraggable && !el.ddElement.ddDraggable.disabled;
+    return !!(el && el.ddElement && el.ddElement.ddDraggable && !el.ddElement.ddDraggable.disabled);
   }
 
   /** true if element is draggable */
   public isResizable(el: DDElementHost): boolean {
-    return el && el.ddElement && el.ddElement.ddResizable && !el.ddElement.ddResizable.disabled;
+    return !!(el && el.ddElement && el.ddElement.ddResizable && !el.ddElement.ddResizable.disabled);
   }
 
   public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDDNative {

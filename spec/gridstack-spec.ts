@@ -1420,7 +1420,7 @@ describe('gridstack', function() {
       }
       expect(grid.opts.disableDrag).toBe(true);
 
-      grid.enableMove(true, true);
+      grid.enableMove(true);
       for (let i = 0; i < items.length; i++) {
         expect(items[i].classList.contains('ui-draggable-disabled')).toBe(false);
       }
@@ -1438,11 +1438,11 @@ describe('gridstack', function() {
       }
       expect(grid.opts.disableDrag).toBe(false);
 
-      grid.enableMove(false, false);
+      grid.enableMove(false);
       for (let i = 0; i < items.length; i++) {
         expect(items[i].classList.contains('ui-draggable-disabled')).toBe(true);
       }
-      expect(grid.opts.disableDrag).toBe(false);
+      expect(grid.opts.disableDrag).toBe(true);
     });
   });
 

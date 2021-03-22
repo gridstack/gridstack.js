@@ -38,8 +38,8 @@ gridstack.js API
   - [`destroy([removeDOM])`](#destroyremovedom)
   - [`disable()`](#disable)
   - [`enable()`](#enable)
-  - [`enableMove(doEnable, includeNewWidgets)`](#enablemovedoenable-includenewwidgets)
-  - [`enableResize(doEnable, includeNewWidgets)`](#enableresizedoenable-includenewwidgets)
+  - [`enableMove(doEnable)`](#enablemovedoenable)
+  - [`enableResize(doEnable)`](#enableresizedoenable)
   - [`float(val?)`](#floatval)
   - [`getCellHeight()`](#getcellheight)
   - [`getCellFromPixel(position[, useOffset])`](#getcellfrompixelposition-useoffset)
@@ -403,22 +403,22 @@ grid.enableMove(true);
 grid.enableResize(true);
 ```
 
-### `enableMove(doEnable, includeNewWidgets)`
+### `enableMove(doEnable)`
 
-Enables/disables widget moving. `includeNewWidgets` will force new widgets to be draggable as per `doEnable`'s value by changing the `disableDrag` grid option (default: true). This is a shortcut for:
+Enables/disables widget moving (default: true), and setting the `disableDrag` grid option. This is a shortcut for:
 
 ```js
-grid.movable('.grid-stack-item', doEnable);
 grid.opts.disableDrag = !doEnable;
+grid.movable('.grid-stack-item', doEnable);
 ```
 
-### `enableResize(doEnable, includeNewWidgets)`
+### `enableResize(doEnable)`
 
-Enables/disables widget resizing. `includeNewWidgets` will force new widgets to be resizable as per `doEnable`'s value by changing the `disableResize` grid option  (default: true). This is a shortcut for:
+Enables/disables widget sizing (default: true), and setting the `disableResize` grid option. This is a shortcut for:
 
 ```js
-grid.resizable('.grid-stack-item', doEnable);
 grid.opts.disableResize = !doEnable;
+grid.resizable('.grid-stack-item', doEnable);
 ```
 
 ### `float(val?)`
@@ -445,7 +445,7 @@ Returns an object with properties `x` and `y` i.e. the column and row in the gri
 
 ### `getGridItems(): GridItemHTMLElement[]`
 
-Return list of GridItem HTML dom elements (excluding temporary placeholder)
+Return list of GridItem HTML elements (excluding temporary placeholder) in DOM order, wether they are node items yet or not (looks by class)
 
 ### `getMargin()`
 
