@@ -196,7 +196,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   private _createHelper(event: DragEvent): HTMLElement {
     let helper = this.el;
     if (typeof this.option.helper === 'function') {
-      helper = this.option.helper.apply(this.el, event);
+      helper = this.option.helper(event);
     } else if (this.option.helper === 'clone') {
       helper = DDUtils.clone(this.el);
     }

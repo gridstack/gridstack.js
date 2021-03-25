@@ -96,7 +96,7 @@
     grids[1].float(true);
 
     // new 4.x static method instead of setting up options on every grid (never been per grid really) but old options still works
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' });
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: myClone });
     // GridStack.setupDragIn(); // second call will now work (cache last values)
 
     let items = [
@@ -111,6 +111,11 @@
       addEvents(grid, i);
       grid.load(items);
     });
+
+    // decide what the dropped item will be - for now just a clone but can be anything
+    function myClone(event) {
+      return event.target.cloneNode(true);
+    }
 
     function toggleFloat(button, i) {
       grids[i].float(! grids[i].getFloat());
