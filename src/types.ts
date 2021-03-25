@@ -93,7 +93,10 @@ export interface GridStackOptions {
   /** allows to drag external items using this selector - see dragInOptions. (default: undefined) */
   dragIn?: string;
 
-  /** allows to drag external items using these options. (default?: { handle: '.grid-stack-item-content', revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }) */
+  /** allows to drag external items using these options. See `GridStack.setupDragIn()` instead (not per grid really).
+   * (default?: { handle: '.grid-stack-item-content', revert: 'invalid', scroll: false, appendTo: 'body' })
+   * helper can be 'clone' or your own function (set what the drag/dropped item will be instead)
+   */
   dragInOptions?: DDDragInOpt;
 
   /** let user drag nested grid items out of a parent or not (default false) */

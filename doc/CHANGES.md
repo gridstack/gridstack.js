@@ -53,6 +53,7 @@ Change log
 ## 4.0.1-dev
 
 - fix [#1658](https://github.com/gridstack/gridstack.js/issues/1658) `enableMove(T/F)` not working correctly
+- fix `helper: myFunction` now working for H5 case for `dragInOptions` & `setupDragIn()`
 ## 4.0.1 (2021-3-20)
 
 - fix [#1669](https://github.com/gridstack/gridstack.js/issues/1669) JQ resize broken

@@ -50,7 +50,7 @@
     let gridNest = GridStack.init({
       acceptWidgets: '.newWidget',
       dragIn: '.newWidget', // class that can be dragged from outside
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
+      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone or can be your function
       itemClass: 'sub',
     }, '.grid-stack.nested');
     gridNest.load([

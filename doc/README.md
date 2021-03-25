@@ -96,6 +96,7 @@ gridstack.js API
 - `dragInOptions` - options for items that can be dragged into grids
   * example `dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone', handle: '.grid-stack-item-content' }`
   * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
+  * **Note2**: instead of 'clone' you can also pass your own function (get passed the event).
 - `draggable` - allows to override jQuery UI draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body', containment: null}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
@@ -317,6 +318,7 @@ grids.forEach(...)
 Called during `GridStack.init()` as options, but can also be called directly (last param are cached) in case the toolbar is dynamically create and needs to change later.
 * @param dragIn string selector (ex: `'.sidebar .grid-stack-item'`)
 * @param dragInOptions options - see `DDDragInOpt`. (default: `{revert: 'invalid', handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`
+but you will probably also want `helper: 'clone'` or your own callback function).
 
 ## API
 
