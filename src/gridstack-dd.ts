@@ -532,13 +532,7 @@ GridStack.prototype._leave = function(node: GridStackNode, el: GridItemHTMLEleme
 
 /** @internal called when item is being dragged/resized */
 GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number)  {
-  // calculate the place where we're landing by offsetting margin so actual edge crosses mid point
-  let left = ui.position.left + (ui.position.left > node._lastUiPosition.left  ? -this.opts.marginRight : this.opts.marginLeft);
-  let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
-  let x = Math.round(left / cellWidth);
-  let y = Math.round(top / cellHeight);
-  let w = node.w;
-  let h = node.h;
+  let p = {...node._orig};
   let resizing: boolean;
 
   if (event.type === 'drag') {
@@ -546,8 +540,15 @@ GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Eve
     let distance = ui.position.top - node._prevYPix;
     node._prevYPix = ui.position.top;
     Utils.updateScrollPosition(el, ui.position, distance);
+
+    // get new position taking into account the margin in the direction we are moving! (need to pass mid point by margin)
+    let left = ui.position.left + (ui.position.left > node._lastUiPosition.left  ? -this.opts.marginRight : this.opts.marginLeft);
+    let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
+    p.x = Math.round(left / cellWidth);
+    p.y = Math.round(top / cellHeight);
+
     // if inTrash or outside of the bounds (but not external which is handled by 'dropout' event), temporarily remove it from us
-    if (node._isAboutToRemove || (!node._isExternal && this.engine.isOutside(x, y, node))) {
+    if (node._isAboutToRemove || (!node._isExternal && this.engine.isOutside(p.x, p.y, node))) {
       this._leave(node, event.target);
     } else {
       if (node._temporaryRemoved) {
@@ -558,28 +559,35 @@ GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Eve
         delete node._temporaryRemoved;
       }
     }
-    if (node.x === x && node.y === y) return; // skip same
+    if (node.x === p.x && node.y === p.y) return; // skip same
     // DON'T skip one we tried as we might have failed because of coverage <50% before
     // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
   } else if (event.type === 'resize')  {
-    if (x < 0) return;
+    if (p.x < 0) return;
     // Scrolling page if needed
     Utils.updateScrollResize(event as MouseEvent, el, cellHeight);
-    w = Math.round(ui.size.width / cellWidth);
-    h = Math.round(ui.size.height / cellHeight);
-    if (node.w === w && node.h === h) return;
-    if (node._lastTried && node._lastTried.w === w && node._lastTried.h === h) return; // skip one we tried (but failed)
+
+    // get new size
+    p.w = Math.round((ui.size.width - this.opts.marginLeft) / cellWidth);
+    p.h = Math.round((ui.size.height - this.opts.marginTop) / cellHeight);
+    if (node.w === p.w && node.h === p.h) return;
+    if (node._lastTried && node._lastTried.w === p.w && node._lastTried.h === p.h) return; // skip one we tried (but failed)
+
+    // if we changed sizing on left side, move the item as well. Note: we don't support TOP resizing
+    if (Math.round(ui.position.left) < Math.round(node._orig.x * cellWidth)) { // use round or we can get slightly off compare
+      p.x = node._orig.x + node._orig.w - p.w;
+    }
     resizing = true;
   }
 
-  node._lastTried = {x, y, w, h}; // set as last tried (will nuke if we go there)
+  node._lastTried = p; // set as last tried (will nuke if we go there)
   let rect: GridStackPosition = { // screen pix of the dragged box
     x: ui.position.left + this.opts.marginLeft,
     y: ui.position.top + this.opts.marginTop,
     w: (ui.size ? ui.size.width : node.w * cellWidth) - this.opts.marginLeft - this.opts.marginRight,
     h: (ui.size ? ui.size.height : node.h * cellHeight) - this.opts.marginTop - this.opts.marginBottom
   };
-  if (this.engine.moveNodeCheck(node, {x, y, w, h, cellWidth, cellHeight, rect})) {
+  if (this.engine.moveNodeCheck(node, {...p, cellWidth, cellHeight, rect})) {
     node._lastUiPosition = ui.position;
     this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop, this.opts.marginRight, this.opts.marginBottom, this.opts.marginLeft);
     delete node._skipDown;
