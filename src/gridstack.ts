@@ -160,11 +160,14 @@ export class GridStack {
   public static addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack {
     if (!parent) return null;
 
-    // create the grid element
-    let doc = document.implementation.createHTMLDocument();
-    doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
-    let el = doc.body.children[0] as HTMLElement;
-    parent.appendChild(el);
+    // create the grid element, but check if the passed 'parent' already has grid styling and should be used instead
+    let el = parent;
+    if (!parent.classList.contains('grid-stack')) {
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
+      el = doc.body.children[0] as HTMLElement;
+      parent.appendChild(el);
+    }
 
     // create grid class and load any children
     let grid = GridStack.init(opt, el);
