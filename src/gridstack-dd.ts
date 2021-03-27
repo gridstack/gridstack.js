@@ -94,8 +94,6 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
     if (!node) return;
 
     helper = helper || el;
-    // let left = event.pageX - gridPos.left;
-    // let top = event.pageY - gridPos.top;
     let rec = helper.getBoundingClientRect();
     let left = rec.left - gridPos.left;
     let top = rec.top - gridPos.top;
@@ -532,7 +530,7 @@ GridStack.prototype._leave = function(node: GridStackNode, el: GridItemHTMLEleme
 
 /** @internal called when item is being dragged/resized */
 GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number)  {
-  let p = {...node._orig};
+  let p = {...node._orig}; // could be undefined (_isExternal) which is ok (drag only set x,y and w,h will default to node value)
   let resizing: boolean;
 
   if (event.type === 'drag') {
