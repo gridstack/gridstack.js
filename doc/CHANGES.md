@@ -52,6 +52,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 4.0.1-dev
 
+- fix [#1679](https://github.com/gridstack/gridstack.js/issues/1679) `Resizable: {handles:'w/sw'}` work again in 4.x
 - fix [#1658](https://github.com/gridstack/gridstack.js/issues/1658) `enableMove(T/F)` not working correctly
 - fix `helper: myFunction` now working for H5 case for `dragInOptions` & `setupDragIn()`
 ## 4.0.1 (2021-3-20)
