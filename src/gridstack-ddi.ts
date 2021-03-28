@@ -24,7 +24,7 @@ export class GridStackDDI {
   }
 
   /** removes any drag&drop present (called during destroy) */
-  public remove(el: GridItemHTMLElement): GridStackDDI {
+  public remove(_el: GridItemHTMLElement): GridStackDDI {
     return this; // no-op for static grids
   }
 }

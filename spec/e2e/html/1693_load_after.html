@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>load after init</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-h5.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>load after init</h1>
+    <div class="grid-stack">
+      <div class="grid-stack-item" gs-id="id1">
+           <div class="grid-stack-item-content">
+               widget 1 
+            </div>
+      </div>
+       <div class="grid-stack-item" gs-id="id2" >
+          <div class="grid-stack-item-content">
+             widget 2 
+          </div>
+      </div>
+  </div>  </div>
+  <script src="../../../demo/events.js"></script>
+  <script type="text/javascript">
+    var data = [{id: "id1",x:0,y:0,w:2,h:1}, {id: "id2",x:3,y:0,w:3,h:2} ];
+    var grid = GridStack.init();
+    grid.load(data);
+   </script>
+</body>
+</html>

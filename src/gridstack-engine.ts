@@ -56,6 +56,7 @@ export class GridStackEngine {
     this.batchMode = true;
     this._prevFloat = this._float;
     this._float = true; // let things go anywhere for now... commit() will restore and possibly reposition
+    this.saveInitial(); // since begin update (which is called multiple times) won't do this
     return this;
   }
 
@@ -658,7 +659,7 @@ export class GridStackEngine {
     if (!node._updating) {
       node._updating = true;
       delete node._skipDown;
-      this.saveInitial();
+      if (!this.batchMode) this.saveInitial();
     }
     return this;
   }

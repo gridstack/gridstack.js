@@ -1770,6 +1770,55 @@ describe('gridstack', function() {
     });
   });
 
+  describe('load', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('after init #1693', function() {
+      let grid = GridStack.init();
+      grid.load([{id:'gsItem1',x:0,y:0,w:5,h:1},{id:'gsItem2',x:6,y:0,w:2,h:2}]);
+
+      let el1 = document.getElementById('item1')
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(5);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(1);
+
+      let el2 = document.getElementById('item2')
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(6);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(2);
+    });
+    it('after init replace nodes', function() {
+      let grid = GridStack.init();
+      expect(document.getElementById('item1')).not.toBe(null);
+      expect(document.getElementById('item2')).not.toBe(null);
+
+      // this will replace with 2 new nodes
+      grid.load([{id:'new1',x:0,y:0,w:5,h:1},{id:'new2',x:6,y:0,w:2,h:2}]);
+      expect(grid.engine.nodes.length).toBe(2);
+
+      expect(document.getElementById('item1')).toBe(null);
+      let el1 = grid.engine.nodes.find(n => n.id === 'new1').el;
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(5);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(1);
+
+      expect(document.getElementById('item2')).toBe(null);
+      let el2 = grid.engine.nodes.find(n => n.id === 'new2').el;
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(6);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(2);
+    });
+
+  });
+
  // ..and finally track log warnings at the end, instead of displaying them....
   describe('obsolete warnings', function() {
     console.warn = jasmine.createSpy('log'); // track warnings instead of displaying them
