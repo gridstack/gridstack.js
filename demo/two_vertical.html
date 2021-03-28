@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Two vertical grids demo</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-h5.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Two vertical grids demo - with maxRow</h1>
+    <p>special care is needed to prevent top grid from growing and causing shifts while you are dragging (which is a know issue).<br>
+    You can either set a fix row, or have enough padding on a parent div to allow for an extra row to be created as needed), or....</p>
+    <div class="grid-stack" id="grid1"></div>
+    <br>
+    <div class="grid-stack" id="grid2"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let opts = {
+      row: 1, // set min and max row to freeze the height
+      dragOut: true,
+      acceptWidgets: true
+    }
+    GridStack.init(opts, document.getElementById('grid1'))
+      .load([{x:0, y:0, content: '0'}, {x:1, y:0, content: '1'}]);
+    GridStack.init(opts, document.getElementById('grid2'))
+      .load([{x:0, y:0, content: '2'}, {x:2, y:0, content: '3'}]);
+  </script>
+</body>
+</html>

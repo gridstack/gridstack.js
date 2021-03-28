@@ -1,4 +1,4 @@
-import { GridStack } from '../src/gridstack';
+import { GridStack, GridStackNode } from '../src/gridstack';
 import { GridStackDD } from '../src/gridstack-dd'; // html5 vs Jquery set when including all file above
 import { Utils } from '../src/utils';
 
@@ -584,6 +584,14 @@ describe('gridstack', function() {
       expect(grid.willItFit({x:0, y:0, w:1, h:4})).toBe(false);
       expect(grid.willItFit({x:0, y:0, w:12, h:1})).toBe(true);
       expect(grid.willItFit({x:0, y:0, w:12, h:2})).toBe(false);
+    });
+    it('willItFit() not modifying node #1687', function() {
+      // default 4x2 and 4x4 so anything pushing more than 1 will fail
+      let grid = GridStack.init({maxRow: 5});
+      let node: GridStackNode = {x:0, y:0, w:1, h:1, _id: 1, _temporaryRemoved: true};
+      expect(grid.willItFit(node)).toBe(true);
+      expect(node._temporaryRemoved).toBe(true);
+      expect(node._id).toBe(1);
     });
 
   });
