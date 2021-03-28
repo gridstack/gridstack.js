@@ -473,7 +473,10 @@ export class GridStackEngine {
   }
 
   public removeNode(node: GridStackNode, removeDOM = true, triggerEvent = false): GridStackEngine {
-    if (!this.nodes.find(n => n === node)) return; // not in our list
+    if (!this.nodes.find(n => n === node)) {
+      // TEST console.log(`Error: GridStackEngine.removeNode() node._id=${node._id} not found!`)
+      return this;
+    }
     if (triggerEvent) { // we wait until final drop to manually track removed items (rather than during drag)
       this.removedNodes.push(node);
     }
@@ -557,7 +560,8 @@ export class GridStackEngine {
       float: this.float,
       nodes: this.nodes.map(n => {return {...n}})
     });
-    clone.addNode(node);
+    let n = Utils.copyPos({}, node, true); // clone node so we don't mod any settings on it! #1687
+    clone.addNode(n);
     return clone.getRow() <= this.maxRow;
   }
 
@@ -612,7 +616,7 @@ export class GridStackEngine {
     if (typeof o.w !== 'number') { o.w = node.w; }
     if (typeof o.h !== 'number') { o.h = node.h; }
     let resizing = (node.w !== o.w || node.h !== o.h);
-    let nn: GridStackNode = {maxW: node.maxW, maxH: node.maxH, minW: node.minW, minH: node.minH};
+    let nn: GridStackNode = Utils.copyPos({}, node, true); // get min/max out first, then opt positions next
     Utils.copyPos(nn, o);
     nn = this.nodeBoundFix(nn, resizing);
     Utils.copyPos(o, nn);

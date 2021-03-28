@@ -193,7 +193,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         // restore some internal fields we need after clearing them all
         node._initDD =
         node._isExternal =  // DOM needs to be re-parented on a drop
-        node._temporaryRemoved = true; // so it can be insert onDrag below
+        node._temporaryRemoved = true; // so it can be inserted onDrag below
       } else {
         node.w = w; node.h = h;
         node._temporaryRemoved = true; // so we can insert it
@@ -512,7 +512,7 @@ GridStack.prototype._leave = function(node: GridStackNode, el: GridItemHTMLEleme
   if (node._temporaryRemoved) return;
   node._temporaryRemoved = true;
 
-  this.engine.removeNode(node); // remove placeholder as well
+  this.engine.removeNode(node); // remove placeholder as well, otherwise it's a sign node is not in our list, which is a bigger issue
   node.el = node._isExternal && helper ? helper : el; // point back to real item being dragged
 
   // finally if item originally came from another grid, but left us, restore things back to prev info
