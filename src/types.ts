@@ -1,5 +1,5 @@
 /**
- * types.ts 4.0.1
+ * types.ts 4.0.2
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
