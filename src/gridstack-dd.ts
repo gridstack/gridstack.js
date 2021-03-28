@@ -193,7 +193,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         // restore some internal fields we need after clearing them all
         node._initDD =
         node._isExternal =  // DOM needs to be re-parented on a drop
-        node._temporaryRemoved = true;
+        node._temporaryRemoved = true; // so it can be insert onDrag below
       } else {
         node.w = w; node.h = h;
         node._temporaryRemoved = true; // so we can insert it
@@ -326,6 +326,15 @@ GridStack.prototype._setupRemoveDrop = function(): GridStack {
  * is dynamically create and needs to change later.
  **/
 GridStack.setupDragIn = function(_dragIn?: string, _dragInOptions?: DDDragInOpt) {
+  let dragIn: string;
+  let dragInOptions: DDDragInOpt;
+  const dragInDefaultOptions: DDDragInOpt = {
+    revert: 'invalid',
+    handle: '.grid-stack-item-content',
+    scroll: false,
+    appendTo: 'body'
+  };
+
   // cache in the passed in values (form grid init?) so they don't have to resend them each time
   if (_dragIn) {
     dragIn = _dragIn;
@@ -337,14 +346,6 @@ GridStack.setupDragIn = function(_dragIn?: string, _dragInOptions?: DDDragInOpt)
     if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
   });
 }
-let dragIn: string;
-let dragInOptions: DDDragInOpt;
-const dragInDefaultOptions: DDDragInOpt = {
-  revert: 'invalid',
-  handle: '.grid-stack-item-content',
-  scroll: false,
-  appendTo: 'body'
-};
 
 /** @internal prepares the element for drag&drop **/
 GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): GridStack {
