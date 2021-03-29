@@ -565,32 +565,6 @@ export class GridStackEngine {
     return clone.getRow() <= this.maxRow;
   }
 
-  /** return true if the passed in node (x,y) is being dragged outside of the grid, and not added to bottom */
-  public isOutside(x: number, y: number, node: GridStackNode): boolean {
-    if (node._isCursorOutside) return false; // dragging out is handled by 'dropout' event instead
-    // simple outside boundaries
-    if (x < 0 || x >= this.column || y < 0) return true;
-    if (this.maxRow) return (y >= this.maxRow);
-    else if (this.float) return false; // infinite grow with no maxRow
-
-    // see if dragging PAST bottom (row+1)
-    let row = this.getRow();
-    if (y < row || y === 0) return false;
-    if (y > row) return true;
-    // else check to see if we can add that item to the bottom... (y == row)
-    if (!node._temporaryRemoved) {
-      let clone = new GridStackEngine({
-        column: this.column,
-        float: this.float,
-        nodes: this.nodes.filter(n => n !== node).map(n => {return {...n}})
-      });
-      let nn = {...node, x, y};
-      clone.addNode(nn);
-      return nn.y === node.y && nn.x === node.x; // didn't actually move, so last row was a drag out and not a new place...
-    }
-    return node._temporaryRemoved; // if still outside so we don't flicker back & forth
-  }
-
   /** true if x,y or w,h are different after clamping to min/max */
   public changedPosConstrain(node: GridStackNode, p: GridStackPosition): boolean {
     // make sure w,h are set

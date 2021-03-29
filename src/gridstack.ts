@@ -760,7 +760,7 @@ export class GridStack {
   public getCellFromPixel(position: MousePosition, useDocRelative = false): CellPosition {
     let box = this.el.getBoundingClientRect();
     // console.log(`getBoundingClientRect left: ${box.left} top: ${box.top} w: ${box.w} h: ${box.h}`)
-    let containerPos;
+    let containerPos: {top: number, left: number};
     if (useDocRelative) {
       containerPos = {top: box.top + document.documentElement.scrollTop, left: box.left};
       // console.log(`getCellFromPixel scrollTop: ${document.documentElement.scrollTop}`)

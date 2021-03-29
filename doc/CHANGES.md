@@ -55,17 +55,18 @@ Change log
 
 - fix [#1693](https://github.com/gridstack/gridstack.js/issues/1693) `load` after `init()` broken in 4.x
 - fix [#1687](https://github.com/gridstack/gridstack.js/issues/1687) drag between 2 grids with `row / maxRow` broken in 4.x
+- fix [#1676](https://github.com/gridstack/gridstack.js/issues/1676) drag edge case in/out single grid without acceptWidgets fix broken in 4.x
 
 ## 4.0.2 (2021-3-27)
 
 - fix [#1679](https://github.com/gridstack/gridstack.js/issues/1679) `Resizable: {handles:'w/sw'}` broken in 4.x
 - fix [#1658](https://github.com/gridstack/gridstack.js/issues/1658) `enableMove(T/F)` not working correctly
-- fix `helper: myFunction` now working for H5 case for `dragInOptions` & `setupDragIn()`
+- fix `helper: myFunction` now working for H5 case for `dragInOptions` & `setupDragIn()` broken in 3.x
 - fix prevent `addGrid()` from creating nested div grid if container already is a '.grid-stack' div
 
 ## 4.0.1 (2021-3-20)
 
-- fix [#1669](https://github.com/gridstack/gridstack.js/issues/1669) JQ resize broken
+- fix [#1669](https://github.com/gridstack/gridstack.js/issues/1669) JQ resize broken in 4.x
 - fix [#1661](https://github.com/gridstack/gridstack.js/issues/1661) serialization of nested grid
 
 ## 4.0.0 (2021-3-19)
