@@ -1,5 +1,5 @@
 /**
- * dd-utils.ts 4.0.2-dev
+ * dd-utils.ts 4.0.3
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 export class DDUtils {
