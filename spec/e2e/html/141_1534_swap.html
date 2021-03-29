@@ -37,7 +37,13 @@
     let size = 1;
     let layout = 0;
 
-    let grid = GridStack.init({float: false, cellHeight: 70, maxRow: 0, resizable: {handles: 'sw,w,e,se'}});
+    let opt = {
+      float: false,
+      cellHeight: 70,
+      maxRow: 0,
+      resizable: {handles: 'sw,w,e,se'}
+    };
+    let grid = GridStack.init(opt);
     addEvents(grid);
 
     let items = [[ // load 0

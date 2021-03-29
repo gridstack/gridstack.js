@@ -326,8 +326,6 @@ export interface GridStackNode extends GridStackWidget {
   _dirty?: boolean;
   /** @internal */
   _updating?: boolean;
-  /** @internal true if the cursor is outside of the grid, as we get dropout/dropover vs shape being outside */
-  _isCursorOutside?: boolean;
   /** @internal true when over trash/another grid so we don't bother removing drag CSS style that would animate back to old position */
   _isAboutToRemove?: boolean;
   /** @internal true if item came from outside of the grid -> actual item need to be moved over */

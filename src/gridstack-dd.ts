@@ -76,15 +76,6 @@ export abstract class GridStackDD extends GridStackDDI {
 GridStack.prototype._setupAcceptWidget = function(): GridStack {
   if (this.opts.staticGrid) return this;
 
-  // if we don't accept external widgets (default) we still need to accept dragging within our
-  // list of items (else we get a no-drop icon on windows)
-  if (!this.opts.acceptWidgets) {
-    GridStackDD.get().droppable(this.el, {
-      accept: (el: GridItemHTMLElement) => el.gridstackNode && el.gridstackNode.grid === this
-    })
-    return this;
-  }
-
   // vars shared across all methods
   let gridPos: MousePosition;
   let cellHeight: number, cellWidth: number;
@@ -128,6 +119,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         let node: GridStackNode = el.gridstackNode;
         // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
         if (node && node.grid === this) return true;
+        if (!this.opts.acceptWidgets) return false;
         // check for accept method or class matching
         let canAccept = true;
         if (typeof this.opts.acceptWidgets === 'function') {
@@ -198,9 +190,6 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         node.w = w; node.h = h;
         node._temporaryRemoved = true; // so we can insert it
       }
-
-      // we're entering this grid (even if we left another)
-      delete node._isCursorOutside;
 
       GridStackDD.get().on(el, 'drag', onDrag);
       // make sure this is called at least once when going fast #1578
@@ -477,7 +466,6 @@ GridStack.prototype._onStartMoving = function(el: GridItemHTMLElement, event: Ev
   node._prevYPix = ui.position.top;
   node._moving = (event.type === 'dragstart'); // 'dropover' are not initially moving so they can go exactly where they enter (will push stuff out of the way)
   delete node._lastTried;
-  delete node._isCursorOutside;
 
   if (event.type === 'dropover' && node._temporaryRemoved) {
     // TEST console.log('engine.addNode x=' + node.x);
@@ -504,7 +492,6 @@ GridStack.prototype._leave = function(node: GridStackNode, el: GridItemHTMLEleme
   if (!node) return;
 
   if (dropoutEvent) {
-    node._isCursorOutside = true;
     GridStackDD.get().off(el, 'drag'); // no need to track while being outside
   }
 
@@ -535,7 +522,7 @@ GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Eve
   let resizing: boolean;
 
   if (event.type === 'drag') {
-    if (node._isCursorOutside) return; // handled by dropover
+    if (node._temporaryRemoved) return; // handled by dropover
     let distance = ui.position.top - node._prevYPix;
     node._prevYPix = ui.position.top;
     Utils.updateScrollPosition(el, ui.position, distance);
@@ -545,19 +532,6 @@ GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Eve
     let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
     p.x = Math.round(left / cellWidth);
     p.y = Math.round(top / cellHeight);
-
-    // if inTrash or outside of the bounds (but not external which is handled by 'dropout' event), temporarily remove it from us
-    if (node._isAboutToRemove || (!node._isExternal && this.engine.isOutside(p.x, p.y, node))) {
-      this._leave(node, event.target);
-    } else {
-      if (node._temporaryRemoved) {
-        node.el = this.placeholder;
-        this.engine.addNode(node);
-        this.el.appendChild(this.placeholder);
-        // TEST console.log('drag placeholder');
-        delete node._temporaryRemoved;
-      }
-    }
     if (node.x === p.x && node.y === p.y) return; // skip same
     // DON'T skip one we tried as we might have failed because of coverage <50% before
     // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;

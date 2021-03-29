@@ -24,7 +24,8 @@ export class GridStackDDI {
   }
 
   /** removes any drag&drop present (called during destroy) */
-  public remove(_el: GridItemHTMLElement): GridStackDDI {
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+  public remove(el: GridItemHTMLElement): GridStackDDI {
     return this; // no-op for static grids
   }
 }
