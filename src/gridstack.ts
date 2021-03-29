@@ -1,5 +1,5 @@
 /*!
- * GridStack 4.0.3
+ * GridStack 4.0.3-dev
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021 Alain Dumesny
