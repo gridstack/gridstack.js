@@ -1,5 +1,5 @@
 /**
- * index-h5.ts 4.0.3 - everything you need for a Grid that uses HTML5 native drag&drop
+ * index-h5.ts 4.0.3-dev - everything you need for a Grid that uses HTML5 native drag&drop
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
