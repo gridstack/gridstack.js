@@ -560,7 +560,9 @@ export class GridStackEngine {
       float: this.float,
       nodes: this.nodes.map(n => {return {...n}})
     });
-    let n = Utils.copyPos({}, node, true); // clone node so we don't mod any settings on it! #1687
+    let n = {...node}; // clone node so we don't mod any settings on it but have full autoPosition and min/max as well! #1687
+    this.cleanupNode(n);
+    delete n.el; delete n._id; delete n.content; delete n.grid;
     clone.addNode(n);
     return clone.getRow() <= this.maxRow;
   }

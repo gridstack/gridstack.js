@@ -130,7 +130,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         }
         // finally check to make sure we actually have space left #1571
         if (canAccept && node && this.opts.maxRow) {
-          let n = {w: node.w, h: node.h, minW: node.minW, minH: node.minH}; // only width/height matters
+          let n = {w: node.w, h: node.h, minW: node.minW, minH: node.minH}; // only width/height matters and autoPosition
           canAccept = this.engine.willItFit(n);
         }
         return canAccept;
