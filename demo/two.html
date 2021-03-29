@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../node_modules/gridstack/dist/gridstack-extra.min.css"/>
-
   <script src="../node_modules/gridstack/dist/gridstack-h5.js"></script>
 
   <style type="text/css">
@@ -96,7 +95,7 @@
     grids[1].float(true);
 
     // new 4.x static method instead of setting up options on every grid (never been per grid really) but old options still works
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' });
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: myClone });
     // GridStack.setupDragIn(); // second call will now work (cache last values)
 
     let items = [
@@ -111,6 +110,11 @@
       addEvents(grid, i);
       grid.load(items);
     });
+
+    // decide what the dropped item will be - for now just a clone but can be anything
+    function myClone(event) {
+      return event.target.cloneNode(true);
+    }
 
     function toggleFloat(button, i) {
       grids[i].float(! grids[i].getFloat());
