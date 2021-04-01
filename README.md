@@ -12,7 +12,7 @@ Inspired by no-longer maintained gridster, built with love.
 
 Check http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/).
 
-If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind831) or [Venmo](https://www.venmo.com/adumesny) (adumesny) and help support it!
+If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind831) (use **“send to a friend”** to avoid 3% fee) or [Venmo](https://www.venmo.com/adumesny) (adumesny) and help support it!
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/alaind831)
 [![Donate](https://img.shields.io/badge/Donate-Venmo-g.svg)](https://www.venmo.com/adumesny)
