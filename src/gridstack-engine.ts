@@ -540,7 +540,7 @@ export class GridStackEngine {
     if (!canMove) return false;
 
     // if clone was able to move, copy those mods over to us now instead of caller trying to do this all over!
-    // Note: we can't use the list directly as elements and other parts point to actual node struct, so copy content
+    // Note: we can't use the list directly as elements and other parts point to actual node, so copy content
     clone.nodes.filter(n => n._dirty).forEach(c => {
       let n = this.nodes.find(a => a._id === c._id);
       if (!n) return;
@@ -553,6 +553,7 @@ export class GridStackEngine {
 
   /** return true if can fit in grid height constrain only (always true if no maxRow) */
   public willItFit(node: GridStackNode): boolean {
+    delete node._willFitPos;
     if (!this.maxRow) return true;
     // create a clone with NO maxRow and check if still within size
     let clone = new GridStackEngine({
@@ -564,7 +565,11 @@ export class GridStackEngine {
     this.cleanupNode(n);
     delete n.el; delete n._id; delete n.content; delete n.grid;
     clone.addNode(n);
-    return clone.getRow() <= this.maxRow;
+    if (clone.getRow() <= this.maxRow) {
+      node._willFitPos = Utils.copyPos({}, n);
+      return true;
+    }
+    return false;
   }
 
   /** true if x,y or w,h are different after clamping to min/max */

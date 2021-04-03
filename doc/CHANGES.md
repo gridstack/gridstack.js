@@ -54,6 +54,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 4.0.3-dev
 
+- fix [#1687](https://github.com/gridstack/gridstack.js/issues/1687) more fix for drag between 2 grids with `row / maxRow` broken in 4.x
+
 ## 4.0.3 (2021-3-28)
 
 - fix [#1693](https://github.com/gridstack/gridstack.js/issues/1693) `load` after `init()` broken in 4.x
