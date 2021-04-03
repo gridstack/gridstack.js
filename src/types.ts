@@ -342,6 +342,8 @@ export interface GridStackNode extends GridStackWidget {
   _lastUiPosition?: Position;
   /** @internal set on the item being dragged/resized remember the last positions we've tried (but failed) so we don't try again during drag/resize */
   _lastTried?: GridStackPosition;
+  /** @internal position willItFit() will use to position the item */
+  _willFitPos?: GridStackPosition;
   /** @internal last drag Y pixel position used to incrementally update V scroll bar */
   _prevYPix?: number;
   /** @internal true if we've remove the item from ourself (dragging out) but might revert it back (release on nothing -> goes back) */

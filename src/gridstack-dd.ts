@@ -103,6 +103,11 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
           GridStackDD.get().off(el, 'drag'); // stop calling us
           return; // full grid or can't grow
         }
+        if (node._willFitPos) {
+          // use the auto position instead #1687
+          Utils.copyPos(node, node._willFitPos);
+          delete node._willFitPos;
+        }
       }
 
       // re-use the existing node dragging method
