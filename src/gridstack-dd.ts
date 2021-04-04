@@ -420,6 +420,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
         }
       }
 
+      this._extraDragRow = 0;
       this._updateContainerHeight();
       this._triggerChangeEvent();
 
@@ -537,6 +538,19 @@ GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Eve
     let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -this.opts.marginBottom : this.opts.marginTop);
     p.x = Math.round(left / cellWidth);
     p.y = Math.round(top / cellHeight);
+
+    // if we're at the bottom hitting something else, grow the grid so cursor doesn't leave when trying to place below others
+    let prev = this._extraDragRow;
+    if (this.engine.collide(node, p)) {
+      let row = this.getRow();
+      let extra = Math.max(0, (p.y + node.h) - row);
+      if (this.opts.maxRow && row + extra > this.opts.maxRow) {
+        extra = Math.max(0, this.opts.maxRow - row);
+      }
+      this._extraDragRow = extra;
+    } else this._extraDragRow = 0;
+    if (this._extraDragRow !== prev) this._updateContainerHeight();
+
     if (node.x === p.x && node.y === p.y) return; // skip same
     // DON'T skip one we tried as we might have failed because of coverage <50% before
     // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
@@ -570,6 +584,7 @@ GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Eve
     this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop, this.opts.marginRight, this.opts.marginBottom, this.opts.marginLeft);
     delete node._skipDown;
     if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }
+    this._extraDragRow = 0;
     this._updateContainerHeight();
 
     let target = event.target as GridItemHTMLElement;

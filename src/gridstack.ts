@@ -228,6 +228,8 @@ export class GridStack {
   private _cellHeightThrottle: () => void;
   /** @internal true when loading items to insert first rather than append */
   private _insertNotAppend: boolean;
+  /** @internal extra row added when dragging at the bottom of the grid */
+  private _extraDragRow = 0;
 
   /**
    * Construct a grid item from the given element and options
@@ -1200,7 +1202,7 @@ export class GridStack {
   /** @internal */
   private _updateContainerHeight(): GridStack {
     if (!this.engine || this.engine.batchMode) return this;
-    let row = this.getRow(); // checks for minRow already
+    let row = this.getRow() + this._extraDragRow; // checks for minRow already
     // check for css min height
     let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
     if (cssMinHeight > 0) {
