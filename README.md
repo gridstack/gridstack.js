@@ -73,7 +73,7 @@ ES6 or Typescript
 
 ```js
 import 'gridstack/dist/gridstack.min.css';
-import GridStack from 'gridstack';
+import { GridStack } from 'gridstack';
 // THEN to get HTML5 drag&drop
 import 'gridstack/dist/h5/gridstack-dd-native';
 // OR to get legacy jquery-ui drag&drop (support Mobile touch devices, h5 does not yet)

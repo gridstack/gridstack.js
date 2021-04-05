@@ -57,6 +57,7 @@ Change log
 - fix [#219](https://github.com/gridstack/gridstack.js/issues/219) **fixing another 6 years old request** we now automatically insert extra rows
 when dragging an item at the bottom below others to make it easier to insert below.
 - fix [#1687](https://github.com/gridstack/gridstack.js/issues/1687) more fix for drag between 2 grids with `row / maxRow` broken in 4.x
+- fix export symbols .d.ts for `gridstack-h5.js | gridstack-jq.js | gridstack-static.js`
 
 ## 4.0.3 (2021-3-28)
 
