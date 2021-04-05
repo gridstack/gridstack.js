@@ -2,9 +2,9 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    'gridstack-h5': './src/index-h5.ts',
-    'gridstack-jq': './src/index-jq.ts',
-    'gridstack-static': './src/index-static.ts'
+    'gridstack-h5': './src/gridstack-h5.ts',
+    'gridstack-jq': './src/gridstack-jq.ts',
+    'gridstack-static': './src/gridstack-static.ts'
   },
   mode: 'production', // production vs development
   devtool: 'source-map',

@@ -33,7 +33,10 @@ module.exports = function(config) {
     ],
     // BUT list of files to exclude
     exclude: [
-      'src/index*.ts',
+      // used for webpack h5/jq/static .js
+      "src/gridstack-h5.ts",
+      "src/gridstack-jq.ts",
+      "src/gridstack-static.ts",
       'src/jq/*', // use h5 version for unit testing
       // 'src/h5/*', // use jq version for unit testing
     ],
