@@ -58,6 +58,7 @@ Change log
 when dragging an item at the bottom below others to make it easier to insert below.
 - fix [#1687](https://github.com/gridstack/gridstack.js/issues/1687) more fix for drag between 2 grids with `row / maxRow` broken in 4.x
 - fix export symbols .d.ts for `gridstack-h5.js | gridstack-jq.js | gridstack-static.js`
+- fix [#1709](https://github.com/gridstack/gridstack.js/issues/1709) correct info for using JQ version and ES6 (tested in Angular app)
 
 ## 4.0.3 (2021-3-28)
 
