@@ -7,11 +7,18 @@ import { GridItemHTMLElement, DDDragInOpt } from '../types';
 // export jq symbols see
 // https://stackoverflow.com/questions/35345760/importing-jqueryui-with-typescript-and-requirejs
 // https://stackoverflow.com/questions/33998262/jquery-ui-and-webpack-how-to-manage-it-into-module
-// TODO: let user bring their own jq or jq-ui version
-import * as $ from './jquery'; // compile this in... having issues TS/ES6 app would include instead
+//
+// Note: user should be able to bring their own by changing their webpack aliases like
+// alias: {
+//   'jquery': 'gridstack/dist/jq/jquery.js',
+//   'jquery-ui': 'gridstack/dist/jq/jquery-ui.js',
+//   'jquery.ui': 'gridstack/dist/jq/jquery-ui.js',
+//   'jquery.ui.touch-punch': 'gridstack/dist/jq/jquery.ui.touch-punch.js',
+// },
+import * as $ from 'jquery'; // compile this in... having issues TS/ES6 app would include instead
 export { $ };
-import './jquery-ui';
-import './jquery.ui.touch-punch'; // include for touch mobile devices
+import 'jquery-ui';
+import 'jquery.ui.touch-punch'; // include for touch mobile devices
 
 // export our base class (what user should use) and all associated types
 export * from '../gridstack-dd';
