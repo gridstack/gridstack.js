@@ -1,5 +1,5 @@
 /**
- * gridstack-poly.ts 4.0.3-dev - used for older browser support (not currently supported in v2+)
+ * gridstack-poly.ts 4.1.0 - used for older browser support (not currently supported in v2+)
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
