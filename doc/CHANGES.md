@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [4.1.0-dev](#410-dev)
 - [4.1.0 (2021-4-7)](#410-2021-4-7)
 - [4.0.3 (2021-3-28)](#403-2021-3-28)
 - [4.0.2 (2021-3-27)](#402-2021-3-27)
@@ -52,6 +53,8 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## 4.1.0-dev
+
 ## 4.1.0 (2021-4-7)
 
 - fix [#219](https://github.com/gridstack/gridstack.js/issues/219) **fixing another 6 years old request** we now automatically insert extra rows
