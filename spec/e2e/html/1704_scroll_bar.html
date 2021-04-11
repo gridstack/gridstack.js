@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"></link>
+  <script src="../../../dist/gridstack-h5.js"></script>
+  <style>
+    #trash {
+      background: rgba(255, 0, 0, 0.4);
+    }
+    .two {
+      background: lavender;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 d-none d-md-block" style="position: relative;">
+        <div style="position: sticky; top: 0;">
+          <div id="trash" style="padding: 5px; margin-bottom: 15px;" class="text-center">remove</div>
+          <div class="newWidget grid-stack-item" gs-min-w="3">
+            <div class="grid-stack-item-content" style="padding: 5px;">add</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-10">
+        <div class="grid-stack"></div>
+        <div class="grid-stack two"></div>
+      </div>
+    </div>
+  <script type="text/javascript">
+    let grids = GridStack.initAll({
+      acceptWidgets: true,
+      dragIn: ".newWidget", // class that can be dragged from outside
+      dragOut: false,
+      dragInOptions: {
+        revert: "invalid",
+        scroll: false,
+        appendTo: "body",
+        helper: "clone"
+      },
+      removable: "#trash", // drag-out delete class
+      removeTimeout: 100,
+      float: true,
+      row: 3,
+    });
+    // let items = [{x: 0, y: 0, content: "0"}];
+    // grids.forEach(grid => grid.load(items));
+  </script>
+</body>
+</html>
