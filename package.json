@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "4.2.0",
+  "version": "4.2.0-dev",
   "description": "TypeScript/JS lib for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Vue, Ember, knockout...)",
   "main": "./dist/gridstack.js",
   "types": "./dist/gridstack.d.ts",
@@ -8,13 +8,16 @@
     "type": "git",
     "url": "git+https://github.com/gridstack/gridstack.js.git"
   },
-  "funding": [{
-    "type" : "paypal",
-    "url" : "https://www.paypal.me/alaind831"
-  }, {
-    "type" : "venmo",
-    "url" : "https://www.venmo.com/adumesny"
-  }],
+  "funding": [
+    {
+      "type": "paypal",
+      "url": "https://www.paypal.me/alaind831"
+    },
+    {
+      "type": "venmo",
+      "url": "https://www.venmo.com/adumesny"
+    }
+  ],
   "scripts": {
     "build": "yarn --no-progress && rm -rf dist/* && grunt && webpack && tsc --stripInternal && yarn doc",
     "w": "rm -rf dist/* && grunt && webpack",
@@ -87,6 +90,6 @@
     "ts-loader": "^8.0.7",
     "typescript": "3.6.5",
     "webpack": "^5.3.2",
-    "webpack-cli": "^4.2.0"
+    "webpack-cli": "^4.6.0"
   }
 }
