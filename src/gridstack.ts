@@ -211,8 +211,6 @@ export class GridStack {
   /** @internal */
   private _placeholder: HTMLElement;
   /** @internal */
-  private _oneColumnMode: boolean;
-  /** @internal */
   private _prevColumn: number;
   /** @internal */
   private _ignoreLayoutsNodeChange: boolean;
@@ -1334,8 +1332,7 @@ export class GridStack {
     let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth;
     let changedOneColumn = false;
 
-    if (!this._oneColumnMode !== !oneColumn) { // use ! (negate) so we can check undefined == false vs true
-      this._oneColumnMode = oneColumn;
+    if ((this.opts.column === 1) !== oneColumn) {
       changedOneColumn = true;
       if (this.opts.animate) { this.setAnimation(false); } // 1 <-> 12 is too radical, turn off animation
       this.column(oneColumn ? 1 : this._prevColumn);
