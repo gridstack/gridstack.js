@@ -55,6 +55,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 4.1.0-dev
 
+- fix [#1704](https://github.com/gridstack/gridstack.js/issues/1704) scrollbar fix broken in 4.x
+
 ## 4.1.0 (2021-4-7)
 
 - fix [#219](https://github.com/gridstack/gridstack.js/issues/219) **fixing another 6 years old request** we now automatically insert extra rows

@@ -161,7 +161,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
 
       // get grid screen coordinates and cell dimensions
       let box = this.el.getBoundingClientRect();
-      gridPos = {top: box.top + document.documentElement.scrollTop, left: box.left};
+      gridPos = {top: box.top, left: box.left};
       cellWidth = this.cellWidth();
       cellHeight = this.getCellHeight(true);
 
