@@ -484,7 +484,7 @@ export class GridStackEngine {
     // don't use 'faster' .splice(findIndex(),1) in case node isn't in our list, or in multiple times.
     this.nodes = this.nodes.filter(n => n !== node);
     return this._packNodes()
-      ._notify(node, removeDOM);
+      ._notify(node);
   }
 
   public removeAll(removeDOM = true): GridStackEngine {
@@ -493,7 +493,7 @@ export class GridStackEngine {
     removeDOM && this.nodes.forEach(n => n._removeDOM = true); // let CB remove actual HTML (used to set _id to null, but then we loose layout info)
     this.removedNodes = this.nodes;
     this.nodes = [];
-    return this._notify(this.removedNodes, removeDOM);
+    return this._notify(this.removedNodes);
   }
 
   /** checks if item can be moved (layout constrain) vs moveNode(), returning true if was able to move.

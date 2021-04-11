@@ -314,12 +314,12 @@ export class GridStack {
       column: this.opts.column,
       float: this.opts.float,
       maxRow: this.opts.maxRow,
-      onChange: (cbNodes, removeDOM = true) => {
+      onChange: (cbNodes) => {
         let maxH = 0;
         this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
         cbNodes.forEach(n => {
           let el = n.el;
-          if (removeDOM && n._removeDOM) { // TODO: do we need to pass 'removeDOM' ?
+          if (n._removeDOM) {
             if (el) el.remove();
             delete n._removeDOM;
           } else {
@@ -498,7 +498,7 @@ export class GridStack {
    * see http://gridstackjs.com/demo/serialization.html
    **/
   public load(layout: GridStackWidget[], addAndRemove: boolean | ((g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement)  = true): GridStack {
-    let items = GridStack.Utils.sort(layout, -1, this._prevColumn || this.opts.column);
+    let items = GridStack.Utils.sort([...layout], -1, this._prevColumn || this.opts.column); // make copy before we mod/sort
     this._insertNotAppend = true; // since create in reverse order...
 
     // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
