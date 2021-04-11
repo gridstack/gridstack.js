@@ -56,6 +56,7 @@ Change log
 ## 4.1.0-dev
 
 - fix [#1704](https://github.com/gridstack/gridstack.js/issues/1704) scrollbar fix broken in 4.x
+- add [#1682](https://github.com/gridstack/gridstack.js/issues/1682) `addWidget()` now supports recursive grids like init/addGrid() does.
 
 ## 4.1.0 (2021-4-7)
 
