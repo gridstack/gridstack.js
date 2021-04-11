@@ -211,8 +211,6 @@ export class GridStack {
   /** @internal */
   private _placeholder: HTMLElement;
   /** @internal */
-  private _oneColumnMode: boolean;
-  /** @internal */
   private _prevColumn: number;
   /** @internal */
   private _ignoreLayoutsNodeChange: boolean;
@@ -314,12 +312,12 @@ export class GridStack {
       column: this.opts.column,
       float: this.opts.float,
       maxRow: this.opts.maxRow,
-      onChange: (cbNodes, removeDOM = true) => {
+      onChange: (cbNodes) => {
         let maxH = 0;
         this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
         cbNodes.forEach(n => {
           let el = n.el;
-          if (removeDOM && n._removeDOM) { // TODO: do we need to pass 'removeDOM' ?
+          if (n._removeDOM) {
             if (el) el.remove();
             delete n._removeDOM;
           } else {
@@ -498,7 +496,7 @@ export class GridStack {
    * see http://gridstackjs.com/demo/serialization.html
    **/
   public load(layout: GridStackWidget[], addAndRemove: boolean | ((g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement)  = true): GridStack {
-    let items = GridStack.Utils.sort(layout, -1, this._prevColumn || this.opts.column);
+    let items = GridStack.Utils.sort([...layout], -1, this._prevColumn || this.opts.column); // make copy before we mod/sort
     this._insertNotAppend = true; // since create in reverse order...
 
     // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
@@ -1334,8 +1332,7 @@ export class GridStack {
     let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth;
     let changedOneColumn = false;
 
-    if (!this._oneColumnMode !== !oneColumn) { // use ! (negate) so we can check undefined == false vs true
-      this._oneColumnMode = oneColumn;
+    if ((this.opts.column === 1) !== oneColumn) {
       changedOneColumn = true;
       if (this.opts.animate) { this.setAnimation(false); } // 1 <-> 12 is too radical, turn off animation
       this.column(oneColumn ? 1 : this._prevColumn);

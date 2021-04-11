@@ -349,6 +349,12 @@ export class GridStackEngine {
     if (node.minH) { node.h = Math.max(node.h, node.minH); }
 
     if (node.w > this.column) {
+      // if user loaded a larger than allowed widget for current # of columns,
+      // remember it's full width so we can restore back (1 -> 12 column) #1655
+      if (this.column < 12) {
+        node.w = Math.min(12, node.w);
+        this.cacheOneLayout(node, 12);
+      }
       node.w = this.column;
     } else if (node.w < 1) {
       node.w = 1;
@@ -484,7 +490,7 @@ export class GridStackEngine {
     // don't use 'faster' .splice(findIndex(),1) in case node isn't in our list, or in multiple times.
     this.nodes = this.nodes.filter(n => n !== node);
     return this._packNodes()
-      ._notify(node, removeDOM);
+      ._notify(node);
   }
 
   public removeAll(removeDOM = true): GridStackEngine {
@@ -493,7 +499,7 @@ export class GridStackEngine {
     removeDOM && this.nodes.forEach(n => n._removeDOM = true); // let CB remove actual HTML (used to set _id to null, but then we loose layout info)
     this.removedNodes = this.nodes;
     this.nodes = [];
-    return this._notify(this.removedNodes, removeDOM);
+    return this._notify(this.removedNodes);
   }
 
   /** checks if item can be moved (layout constrain) vs moveNode(), returning true if was able to move.
@@ -691,8 +697,9 @@ export class GridStackEngine {
         // we save the original x,y,w (h isn't cached) to see what actually changed to propagate better.
         // Note: we don't need to check against out of bound scaling/moving as that will be done when using those cache values.
         nodes.forEach(node => {
+          if (!node._orig) return; // didn't change (newly added ?)
           let n = layout.find(l => l._id === node._id);
-          if (!n) return this; // no cache for new nodes. Will use those values.
+          if (!n) return; // no cache for new nodes. Will use those values.
           let ratio = column / this.column;
           // Y changed, push down same amount
           // TODO: detect doing item 'swaps' will help instead of move (especially in 1 column mode)
@@ -825,6 +832,21 @@ export class GridStackEngine {
     });
     this._layouts = clear ? [] : this._layouts || []; // use array to find larger quick
     this._layouts[column] = copy;
+    return this;
+  }
+
+  /**
+   * call to cache the given node layout internally to the given location so we can restore back when column changes size
+   * @param node single node to cache
+   * @param column corresponding column index to save it under
+   */
+  public cacheOneLayout(n: GridStackNode, column: number): GridStackEngine {
+    n._id = n._id || GridStackEngine._idSeq++;
+    let layout: Layout = {x: n.x, y: n.y, w: n.w, _id: n._id}
+    this._layouts = this._layouts || [];
+    this._layouts[column] = this._layouts[column] || [];
+    let index = this._layouts[column].findIndex(l => l._id === n._id);
+    index === -1 ? this._layouts[column].push(layout) : this._layouts[column][index] = layout;
     return this;
   }
 
