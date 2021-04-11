@@ -415,7 +415,7 @@ export class GridStack {
     let domAttr = this._readAttr(el);
     options = {...(options || {})};  // make a copy before we modify in case caller re-uses it
     Utils.defaults(options, domAttr);
-    this.engine.prepareNode(options);
+    let node = this.engine.prepareNode(options);
     this._writeAttr(el, options);
 
     if (this._insertNotAppend) {
@@ -427,6 +427,13 @@ export class GridStack {
     // similar to makeWidget() that doesn't read attr again and worse re-create a new node and loose any _id
     this._prepareElement(el, true, options);
     this._updateContainerHeight();
+
+    // check if nested grid definition is present
+    if (node.subGrid && !(node.subGrid as GridStack).el) { // see if there is a sub-grid to create too
+      let content = node.el.querySelector('.grid-stack-item-content') as HTMLElement;
+      node.subGrid = GridStack.addGrid(content, node.subGrid as GridStackOptions);
+    }
+
     this._triggerAddEvent();
     this._triggerChangeEvent();
 
@@ -537,10 +544,6 @@ export class GridStack {
           w = addAndRemove(this, w, true).gridstackNode;
         } else {
           w = this.addWidget(w).gridstackNode;
-        }
-        if (w.subGrid) { // see if there is a sub-grid to create too
-          let content = w.el.querySelector('.grid-stack-item-content') as HTMLElement;
-          w.subGrid = GridStack.addGrid(content, w.subGrid as GridStackOptions);
         }
       }
     });
