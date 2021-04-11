@@ -24,6 +24,8 @@
         <option value="scale">scale</option>
         <option value="none">none</option>
       </select>
+      <a onClick="grid.removeAll()" class="btn btn-primary" href="#">Clear</a>
+      <a onClick="addWidget()" class="btn btn-primary" href="#">Add Widget</a>
     </div>
     <br/>
     <div class="grid-stack">
@@ -57,6 +59,10 @@
         grid.column(12, layout).cellHeight('8.3333vw');
         text.innerHTML = 12;
       }
+    };
+
+    function addWidget() {
+      grid.addWidget({x:0, y:0, w:4, content: '4x1'});
     };
     
     let items = [ // our initial 12 column layout loaded first so we can compare
