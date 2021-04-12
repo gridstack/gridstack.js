@@ -57,6 +57,7 @@ Change log
 ## 4.2.0-dev
 
 - fix [#1700](https://github.com/gridstack/gridstack.js/issues/1700) JQ nested grid drag fix broken in 4.0.3 (but much older underlying issue)
+- fix [#1678](https://github.com/gridstack/gridstack.js/issues/1678) item gs-x:0 not animating fix
 
 ## 4.2.0 (2021-4-11)
 

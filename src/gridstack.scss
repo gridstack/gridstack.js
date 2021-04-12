@@ -96,7 +96,7 @@ $animation_speed: .3s !default;
       }
     }
 
-    @for $i from 1 through $gridstack-columns {
+    @for $i from 0 through $gridstack-columns {
       &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
       &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
       &[gs-min-w='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
