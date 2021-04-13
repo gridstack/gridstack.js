@@ -58,12 +58,13 @@ Change log
 
 - fix [#1700](https://github.com/gridstack/gridstack.js/issues/1700) JQ nested grid drag fix broken in 4.0.3 (but much older underlying issue)
 - fix [#1678](https://github.com/gridstack/gridstack.js/issues/1678) item gs-x:0 not animating fix
+- fix [#1678](https://github.com/gridstack/gridstack.js/pull/1678) resize-scroll issue when grid is not at top of page. Thanks [@Manfred-on-github](https://github.com/Manfred-on-github)
 
 ## 4.2.0 (2021-4-11)
 
 - fix [#1704](https://github.com/gridstack/gridstack.js/issues/1704) scrollbar fix broken in 4.x
 - fix [#1655](https://github.com/gridstack/gridstack.js/issues/1655) `addWidget()` while in 1 column now remembers original wanted width
-- add [#1682](https://github.com/gridstack/gridstack.js/issues/1682) `addWidget()` now supports nested grids like init/addGrid() does.
+- add [#1727](https://github.com/gridstack/gridstack.js/issues/1727) `addWidget()` now supports nested grids like init/addGrid() does.
 
 ## 4.1.0 (2021-4-7)
 
