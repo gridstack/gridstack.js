@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [4.2.0-dev](#420-dev)
+- [4.2.1 (2021-4-18)](#421-2021-4-18)
 - [4.2.0 (2021-4-11)](#420-2021-4-11)
 - [4.1.0 (2021-4-7)](#410-2021-4-7)
 - [4.0.3 (2021-3-28)](#403-2021-3-28)
@@ -54,7 +54,7 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 4.2.0-dev
+## 4.2.1 (2021-4-18)
 
 - fix [#1700](https://github.com/gridstack/gridstack.js/issues/1700) JQ nested grid drag fix broken in 4.0.3 (but much older underlying issue)
 - fix [#1678](https://github.com/gridstack/gridstack.js/issues/1678) item gs-x:0 not animating fix
