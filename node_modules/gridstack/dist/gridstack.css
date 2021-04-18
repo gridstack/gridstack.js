@@ -1,5 +1,5 @@
 /**
- * gridstack SASS styles 4.2.0
+ * gridstack SASS styles 4.2.1
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 :root .grid-stack-item > .ui-resizable-handle {
@@ -101,6 +101,14 @@
       bottom: 15px; }
     .grid-stack > .grid-stack-item.ui-draggable-dragging > .ui-resizable-handle {
       display: none !important; }
+    .grid-stack > .grid-stack-item[gs-w='0'] {
+      width: 0%; }
+    .grid-stack > .grid-stack-item[gs-x='0'] {
+      left: 0%; }
+    .grid-stack > .grid-stack-item[gs-min-w='0'] {
+      min-width: 0%; }
+    .grid-stack > .grid-stack-item[gs-max-w='0'] {
+      max-width: 0%; }
     .grid-stack > .grid-stack-item[gs-w='1'] {
       width: 8.3333333333%; }
     .grid-stack > .grid-stack-item[gs-x='1'] {
