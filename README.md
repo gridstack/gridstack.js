@@ -264,12 +264,10 @@ you can init gridstack like:
 ```js
 GridStack.init({
   resizable: {
-    handles: 'e, se, s, sw, w'
+    handles: 'e,se,s,sw,w'
   }
 });
 ```
-
-Note: It's not recommended to enable `nw`, `n`, `ne` resizing handles. Their behavior may be unexpected.
 
 ## Touch devices support
 

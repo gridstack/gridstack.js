@@ -22,7 +22,10 @@
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
-    let grid = GridStack.init({float: true});
+    let grid = GridStack.init({
+      float: true, 
+      resizable: { handles: 'all'} // do all sides for testing
+    });
     addEvents(grid);
 
     let items = [
