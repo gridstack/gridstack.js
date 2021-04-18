@@ -59,6 +59,7 @@ Change log
 - fix [#1700](https://github.com/gridstack/gridstack.js/issues/1700) JQ nested grid drag fix broken in 4.0.3 (but much older underlying issue)
 - fix [#1678](https://github.com/gridstack/gridstack.js/issues/1678) item gs-x:0 not animating fix
 - fix [#1678](https://github.com/gridstack/gridstack.js/pull/1678) resize-scroll issue when grid is not at top of page. Thanks [@Manfred-on-github](https://github.com/Manfred-on-github)
+- fix [#1728](https://github.com/gridstack/gridstack.js/issues/1728) fix sizing from top/left sides
 
 ## 4.2.0 (2021-4-11)
 

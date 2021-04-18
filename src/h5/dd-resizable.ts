@@ -234,37 +234,35 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     const offsetY = event.clientY - oEvent.clientY;
 
     if (dir.indexOf('e') > -1) {
-      newRect.width += event.clientX - oEvent.clientX;
-    }
-    if (dir.indexOf('s') > -1) {
-      newRect.height += event.clientY - oEvent.clientY;
-    }
-    if (dir.indexOf('w') > -1) {
+      newRect.width += offsetX;
+    } else if (dir.indexOf('w') > -1) {
       newRect.width -= offsetX;
       newRect.left += offsetX;
     }
-    if (dir.indexOf('n') > -1) {
+    if (dir.indexOf('s') > -1) {
+      newRect.height += offsetY;
+    } else if (dir.indexOf('n') > -1) {
       newRect.height -= offsetY;
       newRect.top += offsetY
     }
-    const reshape = this._getReShapeSize(newRect.width, newRect.height);
-    if (newRect.width !== reshape.width) {
+    const constrain = this._constrainSize(newRect.width, newRect.height);
+    if (Math.round(newRect.width) !== Math.round(constrain.width)) { // round to ignore slight round-off errors
       if (dir.indexOf('w') > -1) {
-        newRect.left += newRect.width - reshape.width;
+        newRect.left += newRect.width - constrain.width;
       }
-      newRect.width = reshape.width;
+      newRect.width = constrain.width;
     }
-    if (newRect.height !== reshape.height) {
+    if (Math.round(newRect.height) !== Math.round(constrain.height)) {
       if (dir.indexOf('n') > -1) {
-        newRect.top += newRect.height - reshape.height;
+        newRect.top += newRect.height - constrain.height;
       }
-      newRect.height = reshape.height;
+      newRect.height = constrain.height;
     }
     return newRect;
   }
 
-  /** @internal */
-  private _getReShapeSize(oWidth: number, oHeight: number): Size {
+  /** @internal constrain the size to the set min/max values */
+  private _constrainSize(oWidth: number, oHeight: number): Size {
     const maxWidth = this.option.maxWidth || Number.MAX_SAFE_INTEGER;
     const minWidth = this.option.minWidth || oWidth;
     const maxHeight = this.option.maxHeight || Number.MAX_SAFE_INTEGER;

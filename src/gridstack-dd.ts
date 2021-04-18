@@ -565,10 +565,12 @@ GridStack.prototype._dragOrResize = function(el: GridItemHTMLElement, event: Eve
     if (node.w === p.w && node.h === p.h) return;
     if (node._lastTried && node._lastTried.w === p.w && node._lastTried.h === p.h) return; // skip one we tried (but failed)
 
-    // if we changed sizing on left side, move the item as well. Note: we don't support TOP resizing
-    if (Math.round(ui.position.left) < Math.round(node._orig.x * cellWidth)) { // use round or we can get slightly off compare
-      p.x = node._orig.x + node._orig.w - p.w;
-    }
+    // if we size on left/top side this might move us, so get possible new position as well
+    let left = ui.position.left + this.opts.marginLeft;
+    let top = ui.position.top + this.opts.marginTop;
+    p.x = Math.round(left / cellWidth);
+    p.y = Math.round(top / cellHeight);
+
     resizing = true;
   }
 
