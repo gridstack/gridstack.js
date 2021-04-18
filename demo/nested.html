@@ -22,6 +22,7 @@
     <h1>Nested grids demo</h1>
     <p>This example uses new v3.1 API to load the entire nested grid from JSON, and shows dragging between nested grid items (pink) vs dragging higher grid items (green)</p>
     <p>Note: initial v3 HTML5 release doesn't support 'dragOut:false' constrain so use jq version if you need that.</p>
+    <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
     <a class="btn btn-primary" onClick="addNewWidget('.nested1')" href="#">Add Widget Grid1</a>
     <a class="btn btn-primary" onClick="addNewWidget('.nested2')" href="#">Add Widget Grid2</a>
     <a class="btn btn-primary" onClick="save()" href="#">Save</a>
@@ -52,6 +53,10 @@
 
     // create and load it all from JSON above
     let grid = GridStack.addGrid(document.querySelector('.container-fluid'), json);
+
+    addNested = function() {
+      grid.addWidget({x:0, y:0, w:3, h:3, content:"nested add", subGrid: {children: sub1, dragOut: true, class: 'nested1', ...subOptions}});
+    }
 
     addNewWidget = function(selector) {
       let subGrid = document.querySelector(selector).gridstack;
