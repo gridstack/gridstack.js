@@ -491,7 +491,8 @@ gap between grid item and content (default?: 10). This will set all 4 sides and 
 
 ### `movable(el, val)`
 
-Enables/Disables moving.
+Enables/Disables dragging by the user of specific grid element. If you want all items, and have it affect future items, use enableMove() instead. No-op for static grids.
+IF you are looking to prevent an item from moving (due to being pushed around by another during collision) use locked property instead.
 
 - `el` - widget to modify
 - `val` - if `true` widget will be draggable.
@@ -516,7 +517,7 @@ Parameters:
 
 ### `resizable(el, val)`
 
-Enables/Disables resizing.
+Enables/Disables user resizing of specific grid element. If you want all items, and have it affect future items, use enableResize() instead. No-op for static grids.
 
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable.
