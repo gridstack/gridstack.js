@@ -206,6 +206,11 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
      */
     .on(this.el, 'dropout', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
+      // fix #1684 in Safari, dragleave events incorrectly calls dropout event when the node has not dropped from the grid
+      if (!node._temporaryRemoved) {
+        return false;
+      }
+
       // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)
       // so skip this one if we're not the active grid really..
       if (!node.grid || node.grid === this) {
