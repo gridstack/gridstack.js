@@ -293,7 +293,7 @@ export class Utils {
 
   /** @internal */
   static getScrollParent(el: HTMLElement): HTMLElement {
-    if (el === null) return document.documentElement;
+    if (el === null) return document.scrollingElement as HTMLElement;
     const style = getComputedStyle(el);
     const overflowRegex = /(auto|scroll)/;
 
