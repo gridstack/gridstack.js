@@ -105,6 +105,11 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal called when the item is leaving our area, stop tracking if we had moving item */
   private _dragLeave(event: DragEvent): void {
+    // Note: Safari Mac has null relatedTarget which causes #1684 so check if DragEvent is inside the grid instead
+    if (!event.relatedTarget) {
+      const { bottom, left, right, top } = this.el.getBoundingClientRect();
+      if (event.x < right && event.x > left && event.y < bottom && event.y > top) return;
+    }
     if (this.el.contains(event.relatedTarget as HTMLElement)) return;
     this._removeLeaveCallbacks();
     if (this.moving) {
