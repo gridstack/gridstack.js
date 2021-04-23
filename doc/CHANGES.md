@@ -57,7 +57,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 4.2.1-dev
 
-- fix [#1684](https://github.com/gridstack/gridstack.js/issues/1684) mac Safari H5 draggable broken in 4.0.1. Thanks [@wurambo](https://github.com/wurambo)
+- fix [#1684](https://github.com/gridstack/gridstack.js/issues/1684) [#1550](https://github.com/gridstack/gridstack.js/issues/1550) mac Safari H5 draggable broken in 4.0.1. Thanks [@wurambo](https://github.com/wurambo)
+- fix [#1562](https://github.com/gridstack/gridstack.js/issues/1562) mac Safari page scroll fix
 
 ## 4.2.1 (2021-4-18)
 
