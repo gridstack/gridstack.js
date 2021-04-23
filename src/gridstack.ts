@@ -1468,13 +1468,14 @@ export class GridStack {
   public static setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt): void { /* implemented in gridstack-dd.ts */ }
 
   /**
-   * Enables/Disables moving of specific grid elements. If you want all items, and have it stay, use enableMove() instead. No-op for static grids.
+   * Enables/Disables dragging by the user of specific grid element. If you want all items, and have it affect future items, use enableMove() instead. No-op for static grids.
+   * IF you are looking to prevent an item from moving (due to being pushed around by another during collision) use locked property instead.
    * @param els widget or selector to modify.
    * @param val if true widget will be draggable.
    */
   public movable(els: GridStackElement, val: boolean): GridStack { return this }
   /**
-   * Enables/Disables resizing of specific grid elements. If you want all items, and have it stay, use enableResize() instead. No-op for static grids.
+   * Enables/Disables user resizing of specific grid element. If you want all items, and have it affect future items, use enableResize() instead. No-op for static grids.
    * @param els  widget or selector to modify
    * @param val  if true widget will be resizable.
    */
