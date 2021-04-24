@@ -23,8 +23,10 @@
       <a class="btn btn-primary" onclick="load(0)" href="#">load 0</a>
       <a class="btn btn-primary" onclick="load(1)" href="#">load 1</a>
       <a class="btn btn-primary" onclick="load(2)" href="#">load 2</a>
-      <a class="btn btn-primary" onclick="load(3)" href="#">load web1</a>
-      <a class="btn btn-primary" onclick="load(3); loadAdvanced()" href="#">load web2</a>
+      <a class="btn btn-primary" onclick="load(3)" href="#">load 3</a>
+      <a class="btn btn-primary" onclick="load(4)" href="#">load 4</a>
+      <a class="btn btn-primary" onclick="load(5)" href="#">load web1</a>
+      <a class="btn btn-primary" onclick="load(5); loadAdvanced()" href="#">load web2</a>
     </div>
     <br><br>
     <div class="grid-stack"></div>
@@ -58,6 +60,11 @@
     ], [ // load 2
       {x:1, y:0, w:2}, {x:1, y:1, h:2}, {x:2, y:1}, {x:0, y:3, w:3} , {x:0, y:4},
       // {x:5, y:0, w:2}, {x:6, y:1}, {x:4, y:2, w:3} , {x:5, y:4, h:2}, {x:4, y:4},
+    ], [ // load 3
+      {x:0, y:0, w:6, h:3, content:'drag down past 2, flickers'}, {x:6, y:0, w:6, h:3}, {x:0, y:3, w:8, h:2}, {x:0, y:5, w:4, h:2},
+      // {x:0, y:0, w:1, h:1, content:'drag down past 2'}, {x:1, y:0, w:2, h:1}, {x:0, y:3, w:2, h:1}, {x:0, y:5, w:1, h:1}, // BETTER but quick flicker to end
+    ], [ // load 4
+      {x:0, y:0, w:6, h:2, content:'drag down past 2, re-orders 3'}, {x:6, y:0, w:6, h:2}, {x:0, y:3, w:8, h:1}, {x:0, y:5, w:4, h:1},
     ],[ // web1.html demo
       {x:0, y:0, w:4, h:2},
       {x:4, y:0, w:4, h:4, id: 'big'},
