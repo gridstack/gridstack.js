@@ -291,16 +291,16 @@ export class Utils {
     }
   }
 
-  /** @internal */
-  static getScrollParent(el: HTMLElement): HTMLElement {
-    if (el === null) return document.scrollingElement as HTMLElement;
+  /** @internal returns the passed element if scrollable, else the closest parent that will, up to the entire document scrolling element */
+  static getScrollElement(el?: HTMLElement): HTMLElement {
+    if (!el) return document.scrollingElement as HTMLElement;
     const style = getComputedStyle(el);
     const overflowRegex = /(auto|scroll)/;
 
     if (overflowRegex.test(style.overflow + style.overflowY)) {
       return el;
     } else {
-      return this.getScrollParent(el.parentElement);
+      return this.getScrollElement(el.parentElement);
     }
   }
 
@@ -317,7 +317,7 @@ export class Utils {
       // to get entire widget on screen
       let offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
       let offsetDiffUp = rect.top;
-      let scrollEl = this.getScrollParent(el);
+      let scrollEl = this.getScrollElement(el);
       if (scrollEl !== null) {
         let prevScroll = scrollEl.scrollTop;
         if (rect.top < 0 && distance < 0) {
@@ -349,7 +349,7 @@ export class Utils {
    * @param distance Distance from the V edges to start scrolling
    */
   static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
-    const scrollEl = this.getScrollParent(el);
+    const scrollEl = this.getScrollElement(el);
     const height = scrollEl.clientHeight;
     const offsetTop = scrollEl.getBoundingClientRect().top;
     const pointerPosY = event.clientY - offsetTop;

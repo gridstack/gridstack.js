@@ -154,7 +154,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   private _resizeStart(event: MouseEvent): DDResizable {
     this.originalRect = this.el.getBoundingClientRect();
-    this.scrollEl = Utils.getScrollParent(this.el);
+    this.scrollEl = Utils.getScrollElement(this.el);
     this.scrollY = this.scrollEl.scrollTop;
     this.startEvent = event;
     this._setupHelper();
