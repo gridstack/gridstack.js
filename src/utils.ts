@@ -351,18 +351,19 @@ export class Utils {
   static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
     const scrollEl = this.getScrollElement(el);
     const height = scrollEl.clientHeight;
-    //when does pointer move out of visible area, which is then fixed by scrolling that element?
-    //property clientHeight returns height of element, but for 'html', it returns
-    //height of viewport. getBoundingClientRect() returns rect of element in client
-    //coordinates, for normal elements its height equals clientHeight, but for 'html'
-    //getBoundingClientRect() returns the location of the total page, height can be much larger
-    //than viewport height, and when scrolled, top is negative.
-    //So for 'html', we compare pointer position/height against viewport, for which top is 0,
-    //if some inner element is our scrollElement, we must compare it to the client position of that element.
-    let offsetTop = 0;
-    if (scrollEl != document.scrollingElement) {
+    // #1745 #1727 - check if mouse position is leaving scroll element. 
+    // event.clientY is relative to origin of viewport, must compare this against position of scrollEl,
+    // accessible via clientHeight and getBoundingClientRect().top.
+    // Special situation if scroll element is 'html': here browser spec states that 
+    // clientHeight is height of viewport, but getBoundingClientRect() is rectangle of html element;
+    // this discrepancy arises because in reality scrollbar is attached to viewport, not html element itself.
+    let offsetTop : number;
+    if (scrollEl === this.getScrollElement()) {
+      offsetTop = 0;
+    } else {
       offsetTop = scrollEl.getBoundingClientRect().top;
     }
+
     const pointerPosY = event.clientY - offsetTop;
     const top = pointerPosY < distance;
     const bottom = pointerPosY > height - distance;
