@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [4.2.2-dev](#422-dev)
+- [4.2.3 (2021-5-8)](#423-2021-5-8)
 - [4.2.2 (2021-4-23)](#422-2021-4-23)
 - [4.2.1 (2021-4-18)](#421-2021-4-18)
 - [4.2.0 (2021-4-11)](#420-2021-4-11)
@@ -56,7 +56,7 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 4.2.2-dev
+## 4.2.3 (2021-5-8)
 
 - `Utils.getScrollParent()` -> `getScrollElement()` rename
 - fix [#1745](https://github.com/gridstack/gridstack.js/issues/1745) digression on scrolling in v4.2.1. Thanks [@Manfred-on-github](https://github.com/Manfred-on-github) for fixing your prev change.
