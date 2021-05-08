@@ -351,7 +351,19 @@ export class Utils {
   static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
     const scrollEl = this.getScrollElement(el);
     const height = scrollEl.clientHeight;
-    const offsetTop = scrollEl.getBoundingClientRect().top;
+    // #1745 #1727 - check if mouse position is leaving scroll element. 
+    // event.clientY is relative to origin of viewport, must compare this against position of scrollEl,
+    // accessible via clientHeight and getBoundingClientRect().top.
+    // Special situation if scroll element is 'html': here browser spec states that 
+    // clientHeight is height of viewport, but getBoundingClientRect() is rectangle of html element;
+    // this discrepancy arises because in reality scrollbar is attached to viewport, not html element itself.
+    let offsetTop : number;
+    if (scrollEl === this.getScrollElement()) {
+      offsetTop = 0;
+    } else {
+      offsetTop = scrollEl.getBoundingClientRect().top;
+    }
+
     const pointerPosY = event.clientY - offsetTop;
     const top = pointerPosY < distance;
     const bottom = pointerPosY > height - distance;

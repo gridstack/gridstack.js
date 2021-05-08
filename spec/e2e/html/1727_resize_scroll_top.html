@@ -5,7 +5,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="../../../demo/demo.css"/>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/gridstack@3.3.0/dist/gridstack-h5.js"></script> -->
   <script src="../../../dist/gridstack-h5.js"></script>
   <style>
     .topHeader {
@@ -30,16 +29,37 @@
       width: 50px;
       box-sizing: border-box;
     }
+    .outer {
+      display: flex;
+    }
+    .main {
+      flex-grow: 1;
+    }
+    .bodyScroll {
+      height: 2000px;
+      width: 100px;
+      flex: 0 0 auto;
+      border: 3px solid blue;
+    }
   </style>
 
 </head>
 <body>
-  <div class="topHeader">This is the header which brings an offset of 200 px</div>
-  <div class="row">
-    <div class="showDistance"></div>
-    <div class="willScroll">
-      <div class="grid-stack"></div>
-    </div>    
+  <div class="outer">
+    <div class="main">
+      <div class="topHeader">
+        This page allows to test scrolling behavior when scroll element is not whole page (html element),
+        and when the scrolling element is not at the top of the page. Also effects of multiple
+        scrollbars can be tested, as the html element also can be scrolled.<br>
+        This is the header which brings an offset of 200 px</div>
+      <div class="row">
+        <div class="showDistance"></div>
+        <div class="willScroll">
+          <div class="grid-stack"></div>
+        </div>    
+      </div>    
+    </div>
+    <div class="bodyScroll">This causes the scrollbar on html element</div>
   </div>
 
   <script type="text/javascript">
@@ -48,7 +68,7 @@
       {x: 0, y: 0, w: 2, h: 2, content: "resize-me - check scrolling starts only when in height of gray area, and you can scroll back up as well."},
       {x: 3, y: 0, w: 2, h: 2, content: "this is here to have next item positioned way down"},
       {x: 3, y: 2, w: 3, h: 2, content: "resize me - scroll will start immediately, but should not be extremely fast"},
-      {x: 6, y: 0, w: 2, h: 8, content: "this is here to have a scroll bar from the beginning"},
+      {x: 6, y: 0, w: 2, h: 8, content: "this is here to have a scroll bar on .main div from the beginning"},
     ];
     grid.load(items);
   </script>
