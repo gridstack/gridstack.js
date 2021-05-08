@@ -1,5 +1,5 @@
 /**
- * gridstack-engine.ts 4.2.3
+ * gridstack-engine.ts 4.2.3-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
