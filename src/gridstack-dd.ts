@@ -156,7 +156,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       if (node && node.grid && node.grid !== this && !node._temporaryRemoved) {
         // TEST console.log('dropover without leave');
         let otherGrid = node.grid;
-        otherGrid._leave(el.gridstackNode, el, helper, true); // MATCH line 222
+        otherGrid._leave(el, helper);
       }
 
       // get grid screen coordinates and cell dimensions
@@ -196,6 +196,9 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
         node._temporaryRemoved = true; // so we can insert it
       }
 
+      // clear any marked for complete removal (Note: don't check _isAboutToRemove as that is cleared above - just do it)
+      _itemRemoving(node.el, false);
+
       GridStackDD.get().on(el, 'drag', onDrag);
       // make sure this is called at least once when going fast #1578
       onDrag(event as DragEvent, el, helper);
@@ -209,7 +212,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
       // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)
       // so skip this one if we're not the active grid really..
       if (!node.grid || node.grid === this) {
-        this._leave(node, el, helper, true); // MATCH line 166
+        this._leave(el, helper);
       }
       return false; // prevent parent from receiving msg (which may be grid as well)
     })
@@ -287,6 +290,14 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
   return this;
 }
 
+/** @internal mark item for removal */
+function _itemRemoving(el: GridItemHTMLElement, remove: boolean) {
+  let node = el.gridstackNode;
+  if (!node || !node.grid) return;
+  remove ? node._isAboutToRemove = true : delete node._isAboutToRemove;
+  remove ? el.classList.add('grid-stack-item-removing') : el.classList.remove('grid-stack-item-removing');
+}
+
 /** @internal called to setup a trash drop zone if the user specifies it */
 GridStack.prototype._setupRemoveDrop = function(): GridStack {
   if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
@@ -297,18 +308,8 @@ GridStack.prototype._setupRemoveDrop = function(): GridStack {
     // and Native DD only has 1 event CB (having a list and technically a per grid removableOptions complicates things greatly)
     if (!GridStackDD.get().isDroppable(trashEl)) {
       GridStackDD.get().droppable(trashEl, this.opts.removableOptions)
-        .on(trashEl, 'dropover', function(event, el) { // don't use => notation to avoid using 'this' as grid by mistake...
-          let node = el.gridstackNode;
-          if (!node || !node.grid) return;
-          node._isAboutToRemove = true;
-          el.classList.add('grid-stack-item-removing');
-        })
-        .on(trashEl, 'dropout', function(event, el) { // same
-          let node = el.gridstackNode;
-          if (!node || !node.grid) return;
-          delete node._isAboutToRemove;
-          el.classList.remove('grid-stack-item-removing');
-        });
+        .on(trashEl, 'dropover', (event, el) => _itemRemoving(el, true))
+        .on(trashEl, 'dropout',  (event, el) => _itemRemoving(el, false));
     }
   }
   return this;
@@ -494,12 +495,11 @@ GridStack.prototype._onStartMoving = function(el: GridItemHTMLElement, event: Ev
  * or shape is outside our boundaries. remove it from us, and mark temporary if this was
  * our item to start with else restore prev node values from prev grid it came from.
  **/
-GridStack.prototype._leave = function(node: GridStackNode, el: GridItemHTMLElement, helper?: GridItemHTMLElement, dropoutEvent = false)  {
+GridStack.prototype._leave = function(el: GridItemHTMLElement, helper?: GridItemHTMLElement)  {
+  let node = el.gridstackNode;
   if (!node) return;
 
-  if (dropoutEvent) {
-    GridStackDD.get().off(el, 'drag'); // no need to track while being outside
-  }
+  GridStackDD.get().off(el, 'drag'); // no need to track while being outside
 
   // this gets called when cursor leaves and shape is outside, so only do this once
   if (node._temporaryRemoved) return;
@@ -507,6 +507,11 @@ GridStack.prototype._leave = function(node: GridStackNode, el: GridItemHTMLEleme
 
   this.engine.removeNode(node); // remove placeholder as well, otherwise it's a sign node is not in our list, which is a bigger issue
   node.el = node._isExternal && helper ? helper : el; // point back to real item being dragged
+
+  if (this.opts.removable === true) { // boolean vs a class string
+    // item leaving us and we are supposed to remove on leave (no need to drag onto trash) mark it so
+    _itemRemoving(el, true);
+  }
 
   // finally if item originally came from another grid, but left us, restore things back to prev info
   if (el._gridstackNodeOrig) {
