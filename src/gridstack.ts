@@ -1519,5 +1519,5 @@ export class GridStack {
   /** @internal handles actual drag/resize **/
   public _dragOrResize(el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
   /** @internal called when a node leaves our area (mouse out or shape outside) **/
-  public _leave(node: GridStackNode, el: GridItemHTMLElement, helper?: GridItemHTMLElement, dropoutEvent = false): void { return }
+  public _leave(el: GridItemHTMLElement, helper?: GridItemHTMLElement): void { return }
 }

@@ -89,7 +89,7 @@
       float: false,
       // dragIn: '.sidebar .grid-stack-item', // add draggable to class
       // dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
-      removable: '.trash', // drag-out delete class
+      removable: '.trash', // true or drag-out delete class
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };
     let grids = GridStack.initAll(options);

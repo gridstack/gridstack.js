@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [4.2.3-dev](#423-dev)
 - [4.2.3 (2021-5-8)](#423-2021-5-8)
 - [4.2.2 (2021-4-23)](#422-2021-4-23)
 - [4.2.1 (2021-4-18)](#421-2021-4-18)
@@ -56,6 +57,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## 4.2.3-dev
+
+* fix [#1760](https://github.com/gridstack/gridstack.js/issues/1760) `removable:true` working again (broke in 4.x)
+
 ## 4.2.3 (2021-5-8)
 
 - `Utils.getScrollParent()` -> `getScrollElement()` rename
