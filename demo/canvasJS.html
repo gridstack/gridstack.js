@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>CanvasJS grid demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-jq.js"></script>
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+  <style type="text/css">
+    body { margin: 8px 0; } /* make grid take entire vw so we have correct square cells */
+  </style>
+</head>
+<body>
+<div>
+  <h1>CanvasJS grid demo</h1>
+  <br/>
+  <div class="grid-stack">
+  </div>
+</div>
+
+<script type="text/javascript">
+  let grid = GridStack.init({
+    cellHeight: 'initial', // start square but will set to % of window width later
+    animate: false, // show immediate (animate: true is nice for user dragging though)
+    disableOneColumnMode: true, // will manually do 1 column
+    float: true
+  });
+
+  let items = [ // our initial 12 column layout loaded first so we can compare
+    {x: 1, y: 1, w: 7, h:3 , content: '<div id="chartContainer" style="height: 370px; width: 100%;"></div>'},
+  ];
+  grid.load(items);
+
+  var chart = new CanvasJS.Chart("chartContainer", {
+    animationEnabled: true,
+    title:{
+      text: "Company Revenue by Year"
+    },
+    axisY: {
+      title: "Revenue in USD",
+      valueFormatString: "#0,,.",
+      suffix: "mn",
+      prefix: "$"
+    },
+    data: [{
+      type: "splineArea",
+      color: "rgba(54,158,173,.7)",
+      markerSize: 5,
+      xValueFormatString: "YYYY",
+      yValueFormatString: "$#,##0.##",
+      dataPoints: [
+        { x: new Date(2000, 0), y: 3289000 },
+        { x: new Date(2001, 0), y: 3830000 },
+        { x: new Date(2002, 0), y: 2009000 },
+        { x: new Date(2003, 0), y: 2840000 },
+        { x: new Date(2004, 0), y: 2396000 },
+        { x: new Date(2005, 0), y: 1613000 },
+        { x: new Date(2006, 0), y: 2821000 },
+        { x: new Date(2007, 0), y: 2000000 },
+        { x: new Date(2008, 0), y: 1397000 },
+        { x: new Date(2009, 0), y: 2506000 },
+        { x: new Date(2010, 0), y: 2798000 },
+        { x: new Date(2011, 0), y: 3386000 },
+        { x: new Date(2012, 0), y: 6704000},
+        { x: new Date(2013, 0), y: 6026000 },
+        { x: new Date(2014, 0), y: 2394000 },
+        { x: new Date(2015, 0), y: 1872000 },
+        { x: new Date(2016, 0), y: 2140000 }
+      ]
+    }]
+  });
+  chart.render();
+</script>
+</body>
+</html>
