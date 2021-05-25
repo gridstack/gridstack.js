@@ -14,19 +14,32 @@
   <div class="container-fluid">
     <h1>Static vs can move/drag Demo</h1>
     <p>we start with a static grid (no drag&drop initialized) with button to make it editable.</p>
+
+    <div class="sidebar" style="height:50px">
+      <div class="grid-stack-item">
+        <div class="grid-stack-item-content">Drag me</div>
+      </div>
+      <div class="grid-stack-item" gs-w="2" gs-h="1" gs-max-w="3">
+        <div class="grid-stack-item-content">2x1, max=3</div>
+      </div>
+    </div>
     <div>
       <a class="btn btn-primary" onClick="grid.setStatic(true)" href="#">Static</a>
       <a class="btn btn-primary" onclick="grid.setStatic(false)" id="float" href="#">Editable</a>
     </div>
-    <br><br>
-    <div class="grid-stack" gs-static="true"></div>
+    <div class="grid-stack"></div>
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
     let grid = GridStack.init({
       float: true,
       cellHeight: 70,
-      //staticGrid: true // same but testing gs above
+      acceptWidgets: true,
+      removable: true,
+      // old way, use global setupDragIn() instead
+      // dragIn: '.sidebar .grid-stack-item', // add draggable to class
+      // dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
+      staticGrid: true
     });
     addEvents(grid);
 
@@ -38,6 +51,11 @@
       {x: 1, y: 3, id: 'locked', locked: true, content: 'locked'}
     ];
     grid.load(serializedData, true);
+
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' });
+
+    // TEST enable after disabled
+    // grid.setStatic(false);
 
   </script>
 </body>

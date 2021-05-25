@@ -60,6 +60,7 @@ Change log
 ## 4.2.3-dev
 
 * fix [#1760](https://github.com/gridstack/gridstack.js/issues/1760) `removable:true` working again (broke in 4.x)
+* fix [#1761](https://github.com/gridstack/gridstack.js/issues/1761) `staticGrid(false)` will now enable drag in behavior (if set)
 
 ## 4.2.3 (2021-5-8)
 

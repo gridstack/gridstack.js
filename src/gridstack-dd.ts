@@ -74,7 +74,12 @@ export abstract class GridStackDD extends GridStackDDI {
 
 /** @internal called to add drag over to support widgets being added externally */
 GridStack.prototype._setupAcceptWidget = function(): GridStack {
-  if (this.opts.staticGrid) return this;
+
+  // check if we need to disable things
+  if (this.opts.staticGrid || !this.opts.acceptWidgets) {
+    GridStackDD.get().droppable(this.el, 'destroy');
+    return this;
+  }
 
   // vars shared across all methods
   let gridPos: MousePosition;
@@ -292,7 +297,7 @@ GridStack.prototype._setupAcceptWidget = function(): GridStack {
 
 /** @internal mark item for removal */
 function _itemRemoving(el: GridItemHTMLElement, remove: boolean) {
-  let node = el.gridstackNode;
+  let node = el ? el.gridstackNode : undefined;
   if (!node || !node.grid) return;
   remove ? node._isAboutToRemove = true : delete node._isAboutToRemove;
   remove ? el.classList.add('grid-stack-item-removing') : el.classList.remove('grid-stack-item-removing');

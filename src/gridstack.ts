@@ -951,7 +951,9 @@ export class GridStack {
   public setStatic(val: boolean): GridStack {
     if (this.opts.staticGrid === val) return this;
     this.opts.staticGrid = val;
-    this.engine.nodes.forEach(n => this._prepareDragDropByNode(n)); // either delete Drag&drop or initialize it
+    this._setupRemoveDrop();
+    this._setupAcceptWidget();
+    this.engine.nodes.forEach(n => this._prepareDragDropByNode(n)); // either delete or init Drag&drop
     this._setStaticClass();
     return this;
   }
