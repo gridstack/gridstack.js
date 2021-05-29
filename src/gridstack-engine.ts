@@ -506,7 +506,7 @@ export class GridStackEngine {
    * In more complicated cases (maxRow) it will attempt at moving the item and fixing
    * others in a clone first, then apply those changes if still within specs. */
   public moveNodeCheck(node: GridStackNode, o: GridStackMoveOpts): boolean {
-    if (node.locked) return false;
+    // if (node.locked) return false;
     if (!this.changedPosConstrain(node, o)) return false;
     o.pack = true;
 
@@ -594,7 +594,7 @@ export class GridStackEngine {
 
   /** return true if the passed in node was actually moved (checks for no-op and locked) */
   public moveNode(node: GridStackNode, o: GridStackMoveOpts): boolean {
-    if (!node || node.locked || !o) return false;
+    if (!node || /*node.locked ||*/ !o) return false;
     if (o.pack === undefined) o.pack = true;
 
     // constrain the passed in values and check if we're still changing our node
