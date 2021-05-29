@@ -353,8 +353,7 @@ GridStack.prototype._prepareDragDropByNode = function(node: GridStackNode): Grid
   let dd = GridStackDD.get();
 
   // check for disabled grid first
-  if (this.opts.staticGrid || node.locked ||
-    ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
+  if (this.opts.staticGrid || ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
     if (node._initDD) {
       dd.remove(el); // nukes everything instead of just disable, will add some styles back next
       delete node._initDD;
@@ -616,7 +615,7 @@ GridStack.prototype.movable = function(els: GridStackElement, val: boolean): Gri
   if (this.opts.staticGrid) return this; // can't move a static grid!
   GridStack.getElements(els).forEach(el => {
     let node = el.gridstackNode;
-    if (!node || node.locked) return;
+    if (!node) return;
     if (val) delete node.noMove; else node.noMove = true;
     this._prepareDragDropByNode(node); // init DD if need be, and adjust
   });
@@ -632,7 +631,7 @@ GridStack.prototype.resizable = function(els: GridStackElement, val: boolean): G
   if (this.opts.staticGrid) return this; // can't resize a static grid!
   GridStack.getElements(els).forEach(el => {
     let node = el.gridstackNode;
-    if (!node || node.locked) return;
+    if (!node) return;
     if (val) delete node.noResize; else node.noResize = true;
     this._prepareDragDropByNode(node); // init DD if need be, and adjust
   });

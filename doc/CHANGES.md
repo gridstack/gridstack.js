@@ -61,6 +61,7 @@ Change log
 
 * fix [#1760](https://github.com/gridstack/gridstack.js/issues/1760) `removable:true` working again (broke in 4.x)
 * fix [#1761](https://github.com/gridstack/gridstack.js/issues/1761) `staticGrid(false)` will now enable drag in behavior (if set)
+* fix [#1767](https://github.com/gridstack/gridstack.js/issues/1767) `locked` item can be user moved/resized again, just not pushed by other nodes (broke in 1.1.1)
 
 ## 4.2.3 (2021-5-8)
 
