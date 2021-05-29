@@ -1,5 +1,5 @@
 /**
- * dd-base-impl.ts 4.2.3-dev
+ * dd-base-impl.ts 4.2.4
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
