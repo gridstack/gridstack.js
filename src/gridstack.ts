@@ -718,7 +718,8 @@ export class GridStack {
   public destroy(removeDOM = true): GridStack {
     if (!this.el) return; // prevent multiple calls
     this._updateWindowResizeEvent(true);
-    this.setStatic(true); // permanently removes DD
+    this.setStatic(true, false); // permanently removes DD but don't set CSS class (we're going away)
+    this.setAnimation(false);
     if (!removeDOM) {
       this.removeAll(removeDOM);
       this.el.classList.remove(this.opts._styleSheetClass);
@@ -726,6 +727,7 @@ export class GridStack {
       this.el.parentNode.removeChild(this.el);
     }
     this._removeStylesheet();
+    this.el.removeAttribute('gs-current-row');
     delete this.opts._isNested;
     delete this.opts;
     delete this._placeholder;
@@ -948,13 +950,13 @@ export class GridStack {
    * Also toggle the grid-stack-static class.
    * @param val if true the grid become static.
    */
-  public setStatic(val: boolean): GridStack {
+  public setStatic(val: boolean, updateClass = true): GridStack {
     if (this.opts.staticGrid === val) return this;
     this.opts.staticGrid = val;
     this._setupRemoveDrop();
     this._setupAcceptWidget();
     this.engine.nodes.forEach(n => this._prepareDragDropByNode(n)); // either delete or init Drag&drop
-    this._setStaticClass();
+    if (updateClass) { this._setStaticClass(); }
     return this;
   }
 
