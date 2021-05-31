@@ -90,7 +90,13 @@ export class GridStackDDJQueryUI extends GridStackDD {
       opts._accept = opts.accept;
       opts.accept = ($el: JQuery) => opts._accept($el.get(0));
     }
-    $el.droppable(opts, key, value);
+    if (opts === 'disable' || opts === 'destroy') {
+      if ($el.data('ui-droppable')) { // error to call destroy if not there
+        $el.droppable(opts);
+      }
+    } else {
+      $el.droppable(opts, key, value);
+    }
     return this;
   }
 
