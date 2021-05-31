@@ -1,4 +1,4 @@
-// gridstack-dd-jqueryui.ts 4.2.4-dev
+// gridstack-dd-jqueryui.ts 4.2.5
 // Copyright (c) 2021 Alain Dumesny - see root license
 import { GridStackElement } from '../gridstack';
 import { GridStackDD, DDOpts, DDKey, DDDropOpt, DDCallback, DDValue } from '../gridstack-dd';
@@ -90,7 +90,13 @@ export class GridStackDDJQueryUI extends GridStackDD {
       opts._accept = opts.accept;
       opts.accept = ($el: JQuery) => opts._accept($el.get(0));
     }
-    $el.droppable(opts, key, value);
+    if (opts === 'disable' || opts === 'destroy') {
+      if ($el.data('ui-droppable')) { // error to call destroy if not there
+        $el.droppable(opts);
+      }
+    } else {
+      $el.droppable(opts, key, value);
+    }
     return this;
   }
 
