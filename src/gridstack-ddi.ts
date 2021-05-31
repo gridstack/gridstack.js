@@ -1,5 +1,5 @@
 /**
- * gridstack-ddi.ts 4.2.4-dev
+ * gridstack-ddi.ts 4.2.5
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
