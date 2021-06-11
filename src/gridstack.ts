@@ -80,7 +80,8 @@ const GridDefaults: GridStackOptions = {
   marginUnit: 'px',
   cellHeightUnit: 'px',
   disableOneColumnMode: false,
-  oneColumnModeDomSort: false
+  oneColumnModeDomSort: false,
+  keepRatio: false
 };
 
 /**
@@ -1208,6 +1209,7 @@ export class GridStack {
   private _updateContainerHeight(): GridStack {
     if (!this.engine || this.engine.batchMode) return this;
     let row = this.getRow() + this._extraDragRow; // checks for minRow already
+    let column = this.getColumn();
     // check for css min height
     let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
     if (cssMinHeight > 0) {
@@ -1225,6 +1227,8 @@ export class GridStack {
     let unit = this.opts.cellHeightUnit;
     if (!cellHeight) return this;
     this.el.style.height = row * cellHeight + unit;
+    if (this.opts.keepRatio)
+      this.el.style.width = column * cellHeight + unit;
     return this;
   }
 

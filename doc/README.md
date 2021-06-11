@@ -103,6 +103,7 @@ gridstack.js API
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
+- `keepRatio` - if `true` cells will keep the ratio 1:1 between height and width (default: `false`)
 - `margin` - gap size around grid item and content (default: `10`). Can be:
   * an integer (px)
   * a string (ex: '2em', '20px', '2rem')
