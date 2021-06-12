@@ -21,8 +21,9 @@ export * from './gridstack-ddi';
 export interface GridHTMLElement extends HTMLElement {
   gridstack?: GridStack; // grid's parent DOM element points back to grid class
 }
+/** list of possible events, or space separated list of them */
 export type GridStackEvent = 'added' | 'change' | 'disable' | 'drag' | 'dragstart' | 'dragstop' | 'dropped' |
-  'enable' | 'removed' | 'resize' | 'resizestart' | 'resizestop';
+  'enable' | 'removed' | 'resize' | 'resizestart' | 'resizestop' | string;
 
 /** Defines the coordinates of an object */
 export interface MousePosition {
