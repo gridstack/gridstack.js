@@ -72,7 +72,9 @@
     };
 
     save = function() {
-      json = grid.save(true, true);
+      json = grid.save(false, true);
+      console.log(json);
+      // console.log(JSON.stringify(json));
     }
     destroy = function() {
       grid.destroy();
