@@ -15,7 +15,8 @@ module.exports = function(config) {
             'jquery-ui': './src/jq/jquery-ui.js',
           }
         }
-      }
+      },
+      exclude: ["demo"] // ignore dummy demo .ts files
     },
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -34,9 +35,9 @@ module.exports = function(config) {
     // BUT list of files to exclude
     exclude: [
       // used for webpack h5/jq/static .js
-      "src/gridstack-h5.ts",
-      "src/gridstack-jq.ts",
-      "src/gridstack-static.ts",
+      'src/gridstack-h5.ts',
+      'src/gridstack-jq.ts',
+      'src/gridstack-static.ts',
       'src/jq/*', // use h5 version for unit testing
       // 'src/h5/*', // use jq version for unit testing
     ],
@@ -44,7 +45,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      "**/*.ts": ['karma-typescript']
+      '**/*.ts': ['karma-typescript']
     },
 
     // test results reporter to use
