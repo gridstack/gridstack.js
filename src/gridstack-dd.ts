@@ -76,7 +76,7 @@ export abstract class GridStackDD extends GridStackDDI {
 GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
 
   // check if we need to disable things
-  if (this.opts.staticGrid || !this.opts.acceptWidgets) {
+  if (this.opts.staticGrid || (!this.opts.acceptWidgets && !this.opts.removable)) {
     GridStackDD.get().droppable(this.el, 'destroy');
     return this;
   }
