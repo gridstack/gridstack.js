@@ -126,6 +126,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dragstart' });
     if (this.helper !== this.el) {
       this._setupDragFollowNodeNotifyStart(ev);
+      // immediately set external helper initial position to avoid flickering behavior and unnecessary looping in `_packNodes()`
+      this._dragFollow(event);
     } else {
       this.dragFollowTimer = window.setTimeout(() => {
         delete this.dragFollowTimer;
@@ -286,6 +288,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     let img = document.createElement('div');
     img.style.width = '1px';
     img.style.height = '1px';
+    img.style.position = 'fixed'; // prevent unwanted scrollbar
     document.body.appendChild(img);
     e.dataTransfer.setDragImage(img, 0, 0);
     setTimeout(() => document.body.removeChild(img)); // nuke once drag had a chance to grab this 'image'
