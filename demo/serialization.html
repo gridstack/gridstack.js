@@ -24,7 +24,7 @@
   </div>
 
   <script type="text/javascript">
-    let grid = GridStack.init({minRow: 1}); // don't let it collapse when empty
+    let grid = GridStack.init({minRow: 1, cellHeight: 70}); // don't let it collapse when empty
     
     grid.on('added removed change', function(e, items) {
       let str = '';
