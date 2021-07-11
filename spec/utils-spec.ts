@@ -129,4 +129,116 @@ describe('gridstack utils', function() {
     });
   });
 
+  describe('clone', () => {
+    const a: any = {first: 1, second: 'text'};
+    const b: any = {first: 1, second: {third: 3}};
+    const c: any = {first: 1, second: [1, 2, 3], third: { fourth: {fifth: 5}}};
+    it('Should have the same values', () => {
+      const z = Utils.clone(a);
+      expect(z).toEqual({first: 1, second: 'text'});
+    });
+    it('Should have 2 in first key, and original unchanged', () => {
+      const z = Utils.clone(a);
+      z.first = 2;
+      expect(a).toEqual({first: 1, second: 'text'});
+      expect(z).toEqual({first: 2, second: 'text'});
+    });
+    it('Should have new string in second key, and original unchanged', () => {
+      const z = Utils.clone(a);
+      z.second = 2;
+      expect(a).toEqual({first: 1, second: 'text'});
+      expect(z).toEqual({first: 1, second: 2});
+    });
+    it('new string in both cases - use cloneDeep instead', () => {
+      const z = Utils.clone(b);
+      z.second.third = 'share';
+      expect(b).toEqual({first: 1, second: {third: 'share'}});
+      expect(z).toEqual({first: 1, second: {third: 'share'}});
+    });
+    it('Array Should match', () => {
+      const z = Utils.clone(c);
+      expect(c).toEqual({first: 1, second: [1, 2, 3], third: { fourth: {fifth: 5}}});
+      expect(z).toEqual({first: 1, second: [1, 2, 3], third: { fourth: {fifth: 5}}});
+    });
+    it('Array[0] changed in both cases - use cloneDeep instead', () => {
+      const z = Utils.clone(c);
+      z.second[0] = 0;
+      expect(c).toEqual({first: 1, second: [0, 2, 3], third: { fourth: {fifth: 5}}});
+      expect(z).toEqual({first: 1, second: [0, 2, 3], third: { fourth: {fifth: 5}}});
+    });
+    it('fifth changed in both cases - use cloneDeep instead', () => {
+      const z = Utils.clone(c);
+      z.third.fourth.fifth = 'share';
+      expect(c).toEqual({first: 1, second: [0, 2, 3], third: { fourth: {fifth: 'share'}}});
+      expect(z).toEqual({first: 1, second: [0, 2, 3], third: { fourth: {fifth: 'share'}}});
+    });
+  });
+  describe('cloneDeep', () => {
+    // reset our test cases
+    const a: any = {first: 1, second: 'text'};
+    const b: any = {first: 1, second: {third: 3}};
+    const c: any = {first: 1, second: [1, 2, 3], third: { fourth: {fifth: 5}}};
+    const d: any = {first: [1, [2, 3], ['four', 'five', 'six']]};
+    const e: any = {first: 1, __skip: {second: 2}};
+    const f: any = {first: 1, _dontskip: {second: 2}};
+  
+    it('Should have the same values', () => {
+      const z = Utils.cloneDeep(a);
+      expect(z).toEqual({first: 1, second: 'text'});
+    });
+    it('Should have 2 in first key, and original unchanged', () => {
+      const z = Utils.cloneDeep(a);
+      z.first = 2;
+      expect(a).toEqual({first: 1, second: 'text'});
+      expect(z).toEqual({first: 2, second: 'text'});
+    });
+    it('Should have new string in second key, and original unchanged', () => {
+      const z = Utils.cloneDeep(a);
+      z.second = 2;
+      expect(a).toEqual({first: 1, second: 'text'});
+      expect(z).toEqual({first: 1, second: 2});
+    });
+    it('Should have new string nested object, and original unchanged', () => {
+      const z = Utils.cloneDeep(b);
+      z.second.third = 'diff';
+      expect(b).toEqual({first: 1, second: {third: 3}});
+      expect(z).toEqual({first: 1, second: {third: 'diff'}});
+    });
+    it('Array Should match', () => {
+      const z = Utils.cloneDeep(c);
+      expect(c).toEqual({first: 1, second: [1, 2, 3], third: { fourth: {fifth: 5}}});
+      expect(z).toEqual({first: 1, second: [1, 2, 3], third: { fourth: {fifth: 5}}});
+    });
+    it('Array[0] changed in z only', () => {
+      const z = Utils.cloneDeep(c);
+      z.second[0] = 0;
+      expect(c).toEqual({first: 1, second: [1, 2, 3], third: { fourth: {fifth: 5}}});
+      expect(z).toEqual({first: 1, second: [0, 2, 3], third: { fourth: {fifth: 5}}});
+    });
+    it('nested firth element changed only in z', () => {
+      const z = Utils.cloneDeep(c);
+      z.third.fourth.fifth = 'diff';
+      expect(c).toEqual({first: 1, second: [1, 2, 3], third: { fourth: {fifth: 5}}});
+      expect(z).toEqual({first: 1, second: [1, 2, 3], third: { fourth: {fifth: 'diff'}}});
+    });
+    it('nested array only has one item changed', () => {
+      const z = Utils.cloneDeep(d);
+      z.first[1] = 'two';
+      z.first[2][2] = 6;
+      expect(d).toEqual({first: [1, [2, 3], ['four', 'five', 'six']]});
+      expect(z).toEqual({first: [1, 'two',  ['four', 'five', 6]]});
+    });
+    it('skip __ items so it mods both instance', () => {
+      const z = Utils.cloneDeep(e);
+      z.__skip.second = 'two';
+      expect(e).toEqual({first: 1, __skip: {second: 'two'}}); // TODO support clone deep of function workaround
+      expect(z).toEqual({first: 1, __skip: {second: 'two'}});
+    });
+    it('correctly copy _ item', () => {
+      const z = Utils.cloneDeep(f);
+      z._dontskip.second = 'two';
+      expect(f).toEqual({first: 1, _dontskip: {second: 2}});
+      expect(z).toEqual({first: 1, _dontskip: {second: 'two'}});
+    });
+  });  
 });

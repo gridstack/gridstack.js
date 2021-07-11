@@ -121,7 +121,7 @@ export class GridStack {
       return null;
     }
     if (!el.gridstack) {
-      el.gridstack = new GridStack(el, {...options});
+      el.gridstack = new GridStack(el, Utils.cloneDeep(options));
     }
     return el.gridstack
   }
@@ -139,7 +139,7 @@ export class GridStack {
     let grids: GridStack[] = [];
     GridStack.getGridElements(selector).forEach(el => {
       if (!el.gridstack) {
-        el.gridstack = new GridStack(el, {...options});
+        el.gridstack = new GridStack(el, Utils.cloneDeep(options));
         delete options.dragIn; delete options.dragInOptions; // only need to be done once (really a static global thing, not per grid)
       }
       grids.push(el.gridstack);
@@ -247,7 +247,7 @@ export class GridStack {
     let rowAttr = Utils.toNumber(el.getAttribute('gs-row'));
 
     // elements attributes override any passed options (like CSS style) - merge the two together
-    let defaults: GridStackOptions = {...GridDefaults,
+    let defaults: GridStackOptions = {...Utils.cloneDeep(GridDefaults),
       column: Utils.toNumber(el.getAttribute('gs-column')) || 12,
       minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-min-row')) || 0,
       maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-max-row')) || 0,
@@ -412,7 +412,7 @@ export class GridStack {
     // as the actual value are filled in when _prepareElement() calls el.getAttribute('gs-xyz) before adding the node.
     // So make sure we load any DOM attributes that are not specified in passed in options (which override)
     let domAttr = this._readAttr(el);
-    options = {...(options || {})};  // make a copy before we modify in case caller re-uses it
+    options = Utils.cloneDeep(options) || {};  // make a copy before we modify in case caller re-uses it
     Utils.defaults(options, domAttr);
     let node = this.engine.prepareNode(options);
     this._writeAttr(el, options);
@@ -470,7 +470,7 @@ export class GridStack {
 
     // check if save entire grid options (needed for recursive) + children...
     if (saveGridOpt) {
-      let o: GridStackOptions = {...this.opts};
+      let o: GridStackOptions = Utils.cloneDeep(this.opts);
       // delete default values that will be recreated on launch
       if (o.marginBottom === o.marginTop && o.marginRight === o.marginLeft && o.marginTop === o.marginRight) {
         o.margin = o.marginTop;
@@ -980,7 +980,7 @@ export class GridStack {
     GridStack.getElements(els).forEach(el => {
       if (!el || !el.gridstackNode) return;
       let n = el.gridstackNode;
-      let w = {...opt}; // make a copy we can modify in case they re-use it or multiple items
+      let w = Utils.cloneDeep(opt); // make a copy we can modify in case they re-use it or multiple items
       delete w.autoPosition;
 
       // move/resize widget if anything changed
