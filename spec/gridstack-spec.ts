@@ -1744,13 +1744,20 @@ describe('gridstack', function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('save layout', function() {
-      let grid = GridStack.init();
+      let grid = GridStack.init({maxRow: 10});
       let layout = grid.save(false);
       expect(layout).toEqual([{x:0, y:0, w:4, h:2, id:'gsItem1'}, {x:4, y:0, w:4, h:4, id:'gsItem2'}]);
       layout = grid.save();
       expect(layout).toEqual([{x:0, y:0, w:4, h:2, id:'gsItem1', content:'item 1 text'}, {x:4, y:0, w:4, h:4, id:'gsItem2', content:'item 2 text'}]);
       layout = grid.save(true);
       expect(layout).toEqual([{x:0, y:0, w:4, h:2, id:'gsItem1', content:'item 1 text'}, {x:4, y:0, w:4, h:4, id:'gsItem2', content:'item 2 text'}]);
+    });
+    it('save layout full', function() {
+      let grid = GridStack.init({maxRow: 10, _foo: 'bar'} as any); // using bogus 'internal' field (stripped)
+      let layout = grid.save(false, true);
+      expect(layout).toEqual({maxRow: 10, children: [{x:0, y:0, w:4, h:2, id:'gsItem1'}, {x:4, y:0, w:4, h:4, id:'gsItem2'}]});
+      layout = grid.save(true, true);
+      expect(layout).toEqual({maxRow: 10, children: [{x:0, y:0, w:4, h:2, id:'gsItem1', content:'item 1 text'}, {x:4, y:0, w:4, h:4, id:'gsItem2', content:'item 2 text'}]});
     });
     it('load move 1 item, delete others', function() {
       let grid = GridStack.init();

@@ -21,13 +21,19 @@
   <div class="container-fluid">
     <h1>Nested grids demo</h1>
     <p>This example uses new v3.1 API to load the entire nested grid from JSON, and shows dragging between nested grid items (pink) vs dragging higher grid items (green)</p>
-    <p>Note: initial v3 HTML5 release doesn't support 'dragOut:false' constrain so use jq version if you need that.</p>
+    <p>Note: HTML5 release doesn't yet support 'dragOut:false' constrain so use JQ version if you need that.</p>
     <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
     <a class="btn btn-primary" onClick="addNewWidget('.nested1')" href="#">Add Widget Grid1</a>
     <a class="btn btn-primary" onClick="addNewWidget('.nested2')" href="#">Add Widget Grid2</a>
+    <span>entire save/re-create:</span>
     <a class="btn btn-primary" onClick="save()" href="#">Save</a>
-    <a class="btn btn-primary" onClick="destroy()" href="#">Clear</a>
-    <a class="btn btn-primary" onClick="load()" href="#">Load</a>
+    <a class="btn btn-primary" onClick="destroy()" href="#">Destroy</a>
+    <a class="btn btn-primary" onClick="load()" href="#">Create</a>
+    <span>partial save/load:</span>
+    <a class="btn btn-primary" onClick="save(true, false)" href="#">Save list</a>
+    <a class="btn btn-primary" onClick="save(false, false)" href="#">Save no content</a>
+    <a class="btn btn-primary" onClick="destroy(false)" href="#">Clear</a>
+    <a class="btn btn-primary" onClick="load(false)" href="#">Load</a>
     <br><br>
     <!-- grid will be added here -->
   </div>
@@ -45,7 +51,7 @@
       minWidth: 300, // min to go 1 column mode
       margin: 1
     };
-    let json = {cellHeight: 70, children: [
+    let json = {cellHeight: 70, minRow: 2, children: [
       {y:0, content: 'regular item'},
       {x:1, w:4, h:4, content: 'nested 1 - can drag items out', subGrid: {children: sub1, dragOut: true, class: 'nested1', ...subOptions}},
       {x:5, w:4, h:4, content: 'nested 2 - constrained to parent (default)', subGrid: {children: sub2, class: 'nested2', ...subOptions}},
@@ -71,17 +77,25 @@
       return false;
     };
 
-    save = function() {
-      json = grid.save(false, true);
+    save = function(content = true, full = true) {
+      json = grid.save(content, full);
       console.log(json);
       // console.log(JSON.stringify(json));
     }
-    destroy = function() {
-      grid.destroy();
-      grid = undefined;
+    destroy = function(full = true) {
+      if (full) {
+        grid.destroy();
+        grid = undefined;
+      } else {
+        grid.removeAll();
+      }
     }
-    load = function() {
-      grid = GridStack.addGrid(document.querySelector('.container-fluid'), json);
+    load = function(full = true) {
+      if (full) {
+        grid = GridStack.addGrid(document.querySelector('.container-fluid'), json);
+      } else {
+        grid.load(json);
+      }
     }
 
   </script>
