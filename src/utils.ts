@@ -370,5 +370,34 @@ export class Utils {
       scrollEl.scrollBy({ behavior: 'smooth', top: distance - (height - pointerPosY)});
     }
   }
+
+  /** single level clone, returning a new object with same top fields. This will share sub objects and arrays */
+  static clone<T>(obj: T): T {
+    if (obj === null || obj === undefined || typeof(obj) !== 'object') {
+      return obj;
+    }
+    // return Object.assign({}, obj);
+    if (obj instanceof Array) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return [...obj] as any;
+    }
+    return {...obj};
+  }
+
+  /**
+   * Recursive clone version that returns a full copy, checking for nested objects and arrays ONLY.
+   * Note: this will use as-is any key starting with double __ (and not copy inside) some lib have circular dependencies.
+   */
+  static cloneDeep<T>(obj: T): T {
+    // return JSON.parse(JSON.stringify(obj)); // doesn't work with date format ?
+    const ret = Utils.clone(obj);
+    for (const key in ret) {
+      // NOTE: we don't support function/circular dependencies so skip those properties for now...
+      if (ret.hasOwnProperty(key) && typeof(ret[key]) === 'object' && key.substring(0, 2) !== '__') {
+        ret[key] = Utils.cloneDeep(obj[key]);
+      }
+    }
+    return ret;
+  }
 }
 

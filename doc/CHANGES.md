@@ -65,6 +65,7 @@ Change log
 * fix [#1791](https://github.com/gridstack/gridstack.js/pull/1791) removed drag flicker and scroll issue. Thanks [@nelsieborja](https://github.com/nelsieborja)
 * fix [#1795](https://github.com/gridstack/gridstack.js/issues/1795) `save(false)` will no longer have `.content` field (removed existing one if present)
 * fix [#1782](https://github.com/gridstack/gridstack.js/issues/1782) `save(false, false)` now correctly saves nested grids
+* fix [#1793](https://github.com/gridstack/gridstack.js/issues/1793) `save(false, true)` followed by enable() throws error. we now have new `Utils.cloneDeep()`
 
 ## 4.2.5 (2021-5-31)
 
