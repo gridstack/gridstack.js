@@ -440,9 +440,13 @@ export class GridStack {
   }
 
   /**
-   * saves the current layout returning a list of widgets for serialization (with default to save content), which might include any nested grids.
-   * Optionally you can also save the grid with options itself, so you can call the new GridStack.addGrid()
-   * to recreate everything from scratch. GridStackOptions.children would then contain the widget list.
+  /**
+   * saves the current layout returning a list of widgets for serialization which might include any nested grids.
+   * @param saveContent if true (default) the latest html inside .grid-stack-content will be saved to GridStackWidget.content field, else it will
+   * be left unchanged for initial load values.
+   * @param saveGridOpt if true (default false), save the grid options itself, so you can call the new GridStack.addGrid()
+   * to recreate everything from scratch. GridStackOptions.children would then contain the widget list instead.
+   * @returns list of widgets or full grid option, including .children list of widgets
    */
   public save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions {
     // return copied nodes we can modify at will...

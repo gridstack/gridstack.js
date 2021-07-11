@@ -53,7 +53,7 @@ gridstack.js API
   - [`removeWidget(el, removeDOM = true, triggerEvent = true)`](#removewidgetel-removedom--true-triggerevent--true)
   - [`removeAll(removeDOM = true)`](#removeallremovedom--true)
   - [`resizable(el, val)`](#resizableel-val)
-  - [`save(saveContent = true): GridStackWidget[]`](#savesavecontent--true-gridstackwidget)
+  - [`save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions`](#savesavecontent--true-savegridopt--false-gridstackwidget--gridstackoptions)
   - [`setAnimation(doAnimate)`](#setanimationdoanimate)
   - [`setStatic(staticValue)`](#setstaticstaticvalue)
   - [`update(el: GridStackElement, opts: GridStackWidget)`](#updateel-gridstackelement-opts-gridstackwidget)
@@ -522,10 +522,13 @@ Enables/Disables user resizing of specific grid element. If you want all items, 
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable.
 
-### `save(saveContent = true): GridStackWidget[]`
+### `save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions`
 
-- returns the layout of the grid (and optionally the html content as well) that can be serialized (list of item non default attributes, not just w,y,x,y but also min/max and id). See `load()`
-- see [example](http://gridstackjs.com/demo/serialization.html)
+saves the current layout returning a list of widgets for serialization which might include any nested grids.
+- `saveContent` if true (default) the latest html inside `.grid-stack-content` will be saved to `GridStackWidget.content` field, else it will be left unchanged for initial load values.
+- `saveGridOpt` if true (default `false`), save the grid options itself, so you can call the new `GridStack.addGrid()` to recreate everything from scratch. GridStackOptions.children would then contain the widget list instead.
+- returns list of widgets or full grid option, including .children list of widgets
+- see [serialization](http://gridstackjs.com/demo/serialization.html) and [nested](http://gridstackjs.com/demo/nested.html)
 
 ### `setAnimation(doAnimate)`
 
