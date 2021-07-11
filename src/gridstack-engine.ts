@@ -664,24 +664,24 @@ export class GridStackEngine {
     return this;
   }
 
-  /** saves the current layout returning a list of widgets for serialization */
+  /** saves a copy of the current layout returning a list of widgets for serialization */
   public save(saveElement = true): GridStackNode[] {
-    let widgets: GridStackNode[] = [];
+    let list: GridStackNode[] = [];
     this._sortNodes();
     this.nodes.forEach(n => {
       let w: GridStackNode = {};
       for (let key in n) { if (key[0] !== '_' && n[key] !== null && n[key] !== undefined ) w[key] = n[key]; }
       // delete other internals
-      if (!saveElement) delete w.el;
       delete w.grid;
+      if (!saveElement) delete w.el;
       // delete default values (will be re-created on read)
       if (!w.autoPosition) delete w.autoPosition;
       if (!w.noResize) delete w.noResize;
       if (!w.noMove) delete w.noMove;
       if (!w.locked) delete w.locked;
-      widgets.push(w);
+      list.push(w);
     });
-    return widgets;
+    return list;
   }
 
   /** @internal called whenever a node is added or moved - updates the cached layouts */
