@@ -243,12 +243,14 @@ export class Utils {
     if (typeof a !== 'object' || typeof b !== 'object') return;
     for (let key in a) {
       let val = a[key];
-      if (val && typeof val === 'object' && b[key] !== undefined) {
+      if (key[0] === '_' || val === b[key]) {
+        delete a[key]
+      } else if (val && typeof val === 'object' && b[key] !== undefined) {
         for (let i in val) {
           if (val[i] === b[key][i] || i[0] === '_') { delete val[i] }
         }
         if (!Object.keys(val).length) { delete a[key] }
-      } else if (val === b[key] || key[0] === '_') { delete a[key] }
+      }
     }
   }
 

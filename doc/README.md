@@ -525,7 +525,7 @@ Enables/Disables user resizing of specific grid element. If you want all items, 
 ### `save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions`
 
 saves the current layout returning a list of widgets for serialization which might include any nested grids.
-- `saveContent` if true (default) the latest html inside `.grid-stack-content` will be saved to `GridStackWidget.content` field, else it will be left unchanged for initial load values.
+- `saveContent` if true (default) the latest html inside `.grid-stack-content` will be saved to `GridStackWidget.content` field, else it will be removed.
 - `saveGridOpt` if true (default `false`), save the grid options itself, so you can call the new `GridStack.addGrid()` to recreate everything from scratch. GridStackOptions.children would then contain the widget list instead.
 - returns list of widgets or full grid option, including .children list of widgets
 - see [serialization](http://gridstackjs.com/demo/serialization.html) and [nested](http://gridstackjs.com/demo/nested.html)

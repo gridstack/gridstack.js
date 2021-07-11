@@ -443,7 +443,7 @@ export class GridStack {
   /**
    * saves the current layout returning a list of widgets for serialization which might include any nested grids.
    * @param saveContent if true (default) the latest html inside .grid-stack-content will be saved to GridStackWidget.content field, else it will
-   * be left unchanged for initial load values.
+   * be removed.
    * @param saveGridOpt if true (default false), save the grid options itself, so you can call the new GridStack.addGrid()
    * to recreate everything from scratch. GridStackOptions.children would then contain the widget list instead.
    * @returns list of widgets or full grid option, including .children list of widgets
@@ -452,28 +452,24 @@ export class GridStack {
     // return copied nodes we can modify at will...
     let list = this.engine.save(saveContent);
 
-    // check for HTML content as well
-    if (saveContent) {
-      list.forEach(n => {
-        if (n.el && !n.subGrid) { // sub-grid are saved differently, not plain content
-          let sub = n.el.querySelector('.grid-stack-item-content');
-          n.content = sub ? sub.innerHTML : undefined;
-          if (!n.content) delete n.content;
-          delete n.el;
+    // check for HTML content and nested grids
+    list.forEach(n => {
+      if (saveContent && n.el && !n.subGrid) { // sub-grid are saved differently, not plain content
+        let sub = n.el.querySelector('.grid-stack-item-content');
+        n.content = sub ? sub.innerHTML : undefined;
+        if (!n.content) delete n.content;
+      } else {
+        if (!saveContent) { delete n.content; }
+        // check for nested grid
+        if (n.subGrid) {
+          n.subGrid = (n.subGrid as GridStack).save(saveContent, true) as GridStackOptions;
         }
-      });
-    }
+      }
+      delete n.el;
+    });
 
     // check if save entire grid options (needed for recursive) + children...
     if (saveGridOpt) {
-
-      // check for nested grid
-      list.forEach(n => {
-        if (n.subGrid) {
-          n.subGrid = (n.subGrid as GridStack).save(saveContent, saveGridOpt) as GridStackOptions;
-        }
-      })
-
       let o: GridStackOptions = {...this.opts};
       // delete default values that will be recreated on launch
       if (o.marginBottom === o.marginTop && o.marginRight === o.marginLeft && o.marginTop === o.marginRight) {
