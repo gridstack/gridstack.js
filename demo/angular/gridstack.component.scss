@@ -1,0 +1,33 @@
+@use "sass:math";
+
+$gridstack-max-columns: 24;
+
+:host {
+  display: block;
+}
+
+::ng-deep {
+  @mixin gen-grid-stack-item-width($gridstack-columns) {
+    .grid-stack-#{$gridstack-columns} {
+      .grid-stack-item {
+        @for $i from 1 through $gridstack-columns {
+          &[gs-w='#{$i}'] {
+            width: math.div(100% , $gridstack-columns) * $i;
+          }
+          &[gs-x='#{$i}'] {
+            left: math.div(100% , $gridstack-columns) * $i;
+          }
+          &[gs-min-w='#{$i}'] {
+            min-width: math.div(100% , $gridstack-columns) * $i;
+          }
+          &[gs-max-w='#{$i}'] {
+            max-width: math.div(100% ,$gridstack-columns) * $i;
+          }
+        }
+      }
+    }
+  }
+  @for $i from 1 through $gridstack-max-columns {
+    @include gen-grid-stack-item-width($i);
+  }
+}
