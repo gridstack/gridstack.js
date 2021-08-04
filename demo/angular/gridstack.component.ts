@@ -158,7 +158,6 @@ export class GridstackComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
-    this.update$.next();
     this.update$.complete();
     this._grid.destroy();
   }
