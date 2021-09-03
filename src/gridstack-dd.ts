@@ -277,7 +277,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
 
       this.engine.endUpdate();
       if (this._gsEventHandler['dropped']) {
-        this._gsEventHandler['dropped']({type: 'dropped'}, origNode && origNode.grid ? origNode : undefined, node);
+        this._gsEventHandler['dropped']({...event, type: 'dropped'}, origNode && origNode.grid ? origNode : undefined, node);
       }
 
       // wait till we return out of the drag callback to set the new drag&resize handler or they may get messed up
