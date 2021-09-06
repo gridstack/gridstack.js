@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Event DataTransfer Demo</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="demo.css" />
+    <link rel="stylesheet" href="../dist/gridstack-extra.css" />
+
+    <script src="../dist/gridstack-h5.js"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <h1>Event DataTransfer Demo</h1>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="sidebar">
+                    <div class="grid-stack-item">
+                        <div class="grid-stack-item-content">Drag me</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="grid-stack grid-stack-12"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        let options = {
+            column: 12,
+            disableOneColumnMode: true,
+            acceptWidgets: function (el) { return true; }
+        };
+        let items = [
+            { x: 0, y: 0, w: 9, h: 1, content: 'Sample Element' },
+            { x: 9, y: 0, w: 3, h: 2, content: 'Sample Element 2' }
+        ];
+
+        let grid = GridStack.init(options)
+
+        grid.load(items);
+
+        grid.on('dropped', function (event, previousWidget, newWidget) {
+            if (event.dataTransfer) {
+                console.log('gridstack dropped: ', event.dataTransfer.getData('message'));
+            }
+        });
+
+        GridStack.setupDragIn(
+            '.sidebar .grid-stack-item',
+            {
+                revert: 'invalid',
+                scroll: false,
+                appendTo: 'body',
+                helper: clone,
+                start: start
+            }
+        );
+
+        function clone(event) {
+            return event.target.cloneNode(true);
+        }
+
+        function start(event) {
+            if (event.dataTransfer) {
+                event.dataTransfer.setData('message', 'Hello World');
+            }
+        }
+    </script>
+</body>
+
+</html>
