@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [4.2.7 (2021-9-12)](#427-2021-9-12)
 - [4.2.6 (2021-7-11)](#426-2021-7-11)
 - [4.2.5 (2021-5-31)](#425-2021-5-31)
 - [4.2.4 (2021-5-29)](#424-2021-5-29)
@@ -59,6 +60,12 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 4.2.7 (2021-9-12)
+
+* fix [#1817](https://github.com/gridstack/gridstack.js/issues/1817) Enable passing of DragEvent to gridstack dropped event. Thanks [@onepartsam](https://github.com/onepartsam)
+* fix [#1835](https://github.com/gridstack/gridstack.js/issues/1835) Layout incorrectly restored when node has a minimum width. Thanks [@hssm](https://github.com/hssm)
+
 ## 4.2.6 (2021-7-11)
 
 * fix [#1784](https://github.com/gridstack/gridstack.js/issues/1784) `removable:true` working by itself (without needing `acceptWidgets:true`)

@@ -970,7 +970,7 @@ export class GridStack {
 
     // support legacy call for now ?
     if (arguments.length > 2) {
-      console.warn('gridstack.ts: `update(el, x, y, w, h)` is deprecated. Use `update({x, w, content, ...})`. It will be removed soon');
+      console.warn('gridstack.ts: `update(el, x, y, w, h)` is deprecated. Use `update(el, {x, w, content, ...})`. It will be removed soon');
       // eslint-disable-next-line prefer-rest-params
       let a = arguments, i = 1;
       opt = { x:a[i++], y:a[i++], w:a[i++], h:a[i++] };
