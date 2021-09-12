@@ -345,7 +345,7 @@ export class GridStackEngine {
 
     if (node.maxW) { node.w = Math.min(node.w, node.maxW); }
     if (node.maxH) { node.h = Math.min(node.h, node.maxH); }
-    if (node.minW && node.minW < this.column) { node.w = Math.max(node.w, node.minW); }
+    if (node.minW && node.minW <= this.column) { node.w = Math.max(node.w, node.minW); }
     if (node.minH) { node.h = Math.max(node.h, node.minH); }
 
     if (node.w > this.column) {
