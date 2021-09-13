@@ -65,6 +65,7 @@ Change log
 
 * fix [#1817](https://github.com/gridstack/gridstack.js/issues/1817) Enable passing of DragEvent to gridstack dropped event. Thanks [@onepartsam](https://github.com/onepartsam)
 * fix [#1835](https://github.com/gridstack/gridstack.js/issues/1835) Layout incorrectly restored when node has a minimum width. Thanks [@hssm](https://github.com/hssm)
+* fix [#1794](https://github.com/gridstack/gridstack.js/issues/1794) addGrid() does not recognize rem cellHeightUnit
 
 ## 4.2.6 (2021-7-11)
 

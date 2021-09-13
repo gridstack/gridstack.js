@@ -302,6 +302,11 @@ export class GridStack {
       // make the cell content square initially (will use resize/column event to keep it square)
       this.cellHeight(undefined, false);
     } else {
+      // append unit if any are set
+      if (typeof this.opts.cellHeight == 'number' && this.opts.cellHeightUnit && this.opts.cellHeightUnit !== GridDefaults.cellHeightUnit) {
+        this.opts.cellHeight = this.opts.cellHeight + this.opts.cellHeightUnit;
+        delete this.opts.cellHeightUnit;
+      }
       this.cellHeight(this.opts.cellHeight, false);
     }
 
