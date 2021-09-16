@@ -87,7 +87,7 @@ $animation_speed: .3s !default;
     > .ui-resizable-e  { cursor: e-resize;  width: 10px; top: 15px; bottom: 15px; }
     > .ui-resizable-se { cursor: se-resize; width: 20px; height: 20px;}
     > .ui-resizable-s  { cursor: s-resize;  height: 10px; left: 25px; bottom: 0; right: 25px; }
-    > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px; bottom: 0; }
+    > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px;}
     > .ui-resizable-w  { cursor: w-resize;  width: 10px; top: 15px; bottom: 15px; }
 
     &.ui-draggable-dragging {
