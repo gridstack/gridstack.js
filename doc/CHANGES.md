@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [4.2.7-dev (TBD)](#427-dev-tbd)
 - [4.2.7 (2021-9-12)](#427-2021-9-12)
 - [4.2.6 (2021-7-11)](#426-2021-7-11)
 - [4.2.5 (2021-5-31)](#425-2021-5-31)
@@ -60,6 +61,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 4.2.7-dev (TBD)
+* fix [#1860](https://github.com/gridstack/gridstack.js/issues/1860) nested grid save inf loop fix
 
 ## 4.2.7 (2021-9-12)
 
