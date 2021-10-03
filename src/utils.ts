@@ -393,7 +393,7 @@ export class Utils {
     const ret = Utils.clone(obj);
     for (const key in ret) {
       // NOTE: we don't support function/circular dependencies so skip those properties for now...
-      if (ret.hasOwnProperty(key) && typeof(ret[key]) === 'object' && key.substring(0, 2) !== '__') {
+      if (ret.hasOwnProperty(key) && typeof(ret[key]) === 'object' && key.substring(0, 2) !== '__' && !skipFields.find(k => k === key)) {
         ret[key] = Utils.cloneDeep(obj[key]);
       }
     }
@@ -401,3 +401,5 @@ export class Utils {
   }
 }
 
+// list of fields we will skip during cloneDeep (nested objects, other internal)
+const skipFields = ['_isNested', 'el', 'grid', 'subGrid', 'engine'];
