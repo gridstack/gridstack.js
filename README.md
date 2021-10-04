@@ -189,10 +189,10 @@ GridStack.init( {column: N} );
 ```html
 <link href="node_modules/gridstack/dist/gridstack-extra.css" rel="stylesheet"/>
 
-<div class="grid-stack grid-stack-N">...</div>
+<div class="grid-stack">...</div>
 ```
 
-Note: class `.grid-stack-N` was added and we include `gridstack-extra.css` which defines CSS for grids with custom [2-11] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
+Note: class `.grid-stack-N` will automatically be added and we include `gridstack-extra.css` which defines CSS for grids with custom [2-11] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
 
 See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html) with 6 columns
 
@@ -204,11 +204,11 @@ For instance for 3-column grid you need to rewrite CSS to be:
 
 ```css
 .grid-stack-item[gs-w="3"]  { width: 100% }
-.grid-stack-item[gs-w="2"]  { width: 66.66666667% }
-.grid-stack-item[gs-w="1"]  { width: 33.33333333% }
+.grid-stack-item[gs-w="2"]  { width: 66.67% }
+.grid-stack-item[gs-w="1"]  { width: 33.33% }
 
-.grid-stack-item[gs-x="2"]  { left: 66.66666667% }
-.grid-stack-item[gs-x="1"]  { left: 33.33333333% }
+.grid-stack-item[gs-x="2"]  { left: 66.67% }
+.grid-stack-item[gs-x="1"]  { left: 33.33% }
 ```
 
 For 4-column grid it should be:
@@ -229,23 +229,23 @@ and so on.
 Better yet, here is a SASS code snippet which can make life much easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)) and you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
 
 ```sass
+@use "sass;math";
 .grid-stack > .grid-stack-item {
 
   $gridstack-columns: 12;
 
-  min-width: (100% / $gridstack-columns);
+  min-width: math.div(100%, $gridstack-columns);
 
-  @for $i from 1 through $gridstack-columns {
-    &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
-    &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-    &[gs-min-w='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-    &[gs-max-w='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+  @for $i from 0 through $gridstack-columns {
+    &[gs-w='#{$i}'] { width: math.div(100%, $gridstack-columns) * $i; }
+    &[gs-x='#{$i}'] { left: math.div(100%, $gridstack-columns) * $i; }
+    &[gs-min-w='#{$i}'] { min-width: math.div(100%, $gridstack-columns) * $i; }
+    &[gs-max-w='#{$i}'] { max-width: math.div(100%, $gridstack-columns) * $i; }
   }
 }
 ```
 
-you can also use the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/tree/master/src/gridstack-extra.scss) included in NPM package and modify to add more columns
-and also have the `.grid-stack-N` prefix to support letting the user change columns dynamically.
+you can also use the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/tree/master/src/gridstack-extra.scss) included in NPM package and modify to add more columns.
 
 Sample gulp command for 30 columns:
 ```js

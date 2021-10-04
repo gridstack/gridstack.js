@@ -54,7 +54,6 @@
     "url": "https://github.com/gridstack/gridstack.js/issues"
   },
   "homepage": "http://gridstack.github.io/gridstack.js/",
-  "dependencies": {},
   "devDependencies": {
     "@types/jasmine": "^3.5.9",
     "@types/jquery": "^3.5.1",
@@ -83,9 +82,9 @@
     "karma-cli": "^2.0.0",
     "karma-jasmine": "^4.0.1",
     "karma-typescript": "4.1.1",
-    "node-sass": "^5.0.0",
     "protractor": "^7.0.0",
     "puppeteer": "^5.4.1",
+    "sass": "^1.42.1",
     "serve-static": "^1.14.1",
     "ts-loader": "^8.0.7",
     "typescript": "^3.7",
