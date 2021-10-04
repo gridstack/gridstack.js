@@ -3,6 +3,8 @@
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
+@use "sass:math";
+
 $gridstack-columns-start: 2 !default;
 $gridstack-columns: 11 !default;
 
@@ -10,13 +12,13 @@ $gridstack-columns: 11 !default;
   .grid-stack.grid-stack-#{$columns} {
 
     > .grid-stack-item {
-      min-width: 100% / $columns;
+      min-width: math.div(100%, $columns);
 
       @for $i from 1 through $columns {
-        &[gs-w='#{$i}'] { width: (100% / $columns) * $i; }
-        &[gs-x='#{$i}'] { left: (100% / $columns) * $i; }
-        &[gs-min-w='#{$i}'] { min-width: (100% / $columns) * $i; }
-        &[gs-max-w='#{$i}'] { max-width: (100% / $columns) * $i; }
+        &[gs-w='#{$i}'] { width: math.div(100%, $columns) * $i; }
+        &[gs-x='#{$i}'] { left: math.div(100%, $columns) * $i; }
+        &[gs-min-w='#{$i}'] { min-width: math.div(100%, $columns) * $i; }
+        &[gs-max-w='#{$i}'] { max-width: math.div(100%, $columns) * $i; }
       }
     }
   }

@@ -64,6 +64,7 @@ Change log
 
 ## 4.2.7-dev (TBD)
 * fix [#1860](https://github.com/gridstack/gridstack.js/issues/1860) nested grid save inf loop fix
+* use latest `dart-sass`, updated comments
 
 ## 4.2.7 (2021-9-12)
 

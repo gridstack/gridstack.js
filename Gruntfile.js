@@ -9,7 +9,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-protractor-webdriver');
 
-  const sass = require('node-sass');
+  const sass = require('sass');
 
   grunt.initConfig({
     sass: {

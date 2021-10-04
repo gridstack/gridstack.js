@@ -3,6 +3,8 @@
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
+@use "sass:math";
+
 $gridstack-columns: 12 !default;
 $animation_speed: .3s !default;
 
@@ -36,7 +38,7 @@ $animation_speed: .3s !default;
   }
 
   > .grid-stack-item {
-    min-width: 100% / $gridstack-columns;
+    min-width: math.div(100%, $gridstack-columns);
     position: absolute;
     padding: 0;
 
@@ -97,10 +99,10 @@ $animation_speed: .3s !default;
     }
 
     @for $i from 0 through $gridstack-columns {
-      &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
-      &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-      &[gs-min-w='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-      &[gs-max-w='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+      &[gs-w='#{$i}'] { width: math.div(100%, $gridstack-columns) * $i; }
+      &[gs-x='#{$i}'] { left: math.div(100%, $gridstack-columns) * $i; }
+      &[gs-min-w='#{$i}'] { min-width: math.div(100%, $gridstack-columns) * $i; }
+      &[gs-max-w='#{$i}'] { max-width: math.div(100%, $gridstack-columns) * $i; }
     }
   }
 
