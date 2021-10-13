@@ -467,7 +467,7 @@ export class GridStack {
         if (!saveContent) { delete n.content; }
         // check for nested grid
         if (n.subGrid) {
-          n.subGrid = (n.subGrid as GridStack).save(saveContent, true) as GridStackOptions;
+          n.subGrid = (n.subGrid as GridStack).save(saveContent, saveGridOpt) as GridStackOptions;
         }
       }
       delete n.el;
