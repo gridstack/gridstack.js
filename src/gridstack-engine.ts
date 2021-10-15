@@ -201,6 +201,8 @@ export class GridStackEngine {
       b.x = a.x; b.y = a.y; // b -> a position
       if (a.h != b.h) {
         a.x = x; a.y = b.y + b.h; // a -> goes after b
+      } else if (a.w != b.w) {
+        a.x = b.x + b.w; a.y = y; // a -> goes after b
       } else {
         a.x = x; a.y = y; // a -> old b position
       }
@@ -212,19 +214,20 @@ export class GridStackEngine {
     // same size and same row or column, and touching
     if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y) && (touching = Utils.isTouching(a, b)))
       return _doSwap();
-    if (touching === false) return; // ran test and fail, bail out
+    if (touching === false) return; // IFF ran test and fail, bail out
 
     // check for taking same columns (but different height) and touching
-    if (a.w === b.w && a.x === b.x && (touching || Utils.isTouching(a, b))) {
+    if (a.w === b.w && a.x === b.x && (touching || (touching = Utils.isTouching(a, b)))) {
       if (b.y < a.y) { let t = a; a = b; b = t; } // swap a <-> b vars so a is first
       return _doSwap();
     }
+    if (touching === false) return;
 
-    /* different X will be weird (expect vertical swap) and different height overlap, so too complex. user regular layout instead
-    // else check if swapping would not collide with anything else (requiring a re-layout)
-    if (!this.collide(a, {x: a.x, y: a.y, w: b.w, h: b.h}, b) &&
-        !this.collide(a, {x: b.x, y: b.y, w: a.w, h: a.h}, b))
-      return _doSwap(); */
+    // check if taking same row (but different width) and touching
+    if (a.h === b.h && a.y === b.y && (touching || (touching = Utils.isTouching(a, b)))) {
+      if (b.x < a.x) { let t = a; a = b; b = t; } // swap a <-> b vars so a is first
+      return _doSwap();
+    }
     return false;
   }
 
