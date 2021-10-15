@@ -63,6 +63,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 4.2.7-dev (TBD)
+* you can now swap items of different width if they are the same row/height. Thanks to [spektrummedia](http://spektrummedia.com) for sponsoring it.
 * fix [#1860](https://github.com/gridstack/gridstack.js/issues/1860) nested grid save inf loop fix
 * use latest `dart-sass`, updated comments
 
