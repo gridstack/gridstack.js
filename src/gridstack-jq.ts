@@ -1,5 +1,5 @@
 /**
- * index-jq.ts 4.3.0 - everything you need for a Grid that uses Jquery-ui drag&drop (original, full feature)
+ * index-jq.ts 4.3.0-dev - everything you need for a Grid that uses Jquery-ui drag&drop (original, full feature)
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
