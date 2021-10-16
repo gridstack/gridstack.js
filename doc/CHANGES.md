@@ -65,6 +65,7 @@ Change log
 
 ## 4.3.0-dev (TBD)
 * fix [#1868](https://github.com/gridstack/gridstack.js/issues/1868) prevent swap during resize
+* fix [#1849](https://github.com/gridstack/gridstack.js/issues/1849) [#1816](https://github.com/gridstack/gridstack.js/issues/1816) save highest resolution in 1 column mode
 
 ## 4.3.0 (2021-10-15)
 * you can now swap items of different width if they are the same row/height. Thanks to [spektrummedia](http://spektrummedia.com) for sponsoring it.
