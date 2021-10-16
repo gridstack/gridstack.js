@@ -667,14 +667,21 @@ export class GridStackEngine {
     return this;
   }
 
-  /** saves a copy of the current layout returning a list of widgets for serialization */
+  /** saves a copy of the largest column layout (eg 12 even when rendering oneColumnMode, so we don't loose orig layout),
+   * returning a list of widgets for serialization */
   public save(saveElement = true): GridStackNode[] {
+    // use the highest layout for any saved info so we can have full detail on reload #1849
+    let len = this._layouts?.length;
+    let layout = len && this.column !== (len - 1) ? this._layouts[len - 1] : null;
     let list: GridStackNode[] = [];
     this._sortNodes();
     this.nodes.forEach(n => {
-      let w: GridStackNode = {};
-      for (let key in n) { if (key[0] !== '_' && n[key] !== null && n[key] !== undefined ) w[key] = n[key]; }
-      // delete other internals
+      let wl = layout?.find(l => l._id === n._id);
+      let w: GridStackNode = {...n};
+      // use layout info instead if set
+      if (wl) { w.x = wl.x; w.y = wl.y; w.w = wl.w; }
+      // delete internals
+      for (let key in w) { if (key[0] === '_' || w[key] === null || w[key] === undefined ) delete w[key]; }
       delete w.grid;
       if (!saveElement) delete w.el;
       // delete default values (will be re-created on read)
