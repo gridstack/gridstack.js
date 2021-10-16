@@ -210,6 +210,8 @@ export interface GridStackMoveOpts extends GridStackPosition {
   marginRight?: number;
   /** position in pixels of the currently dragged items (for overlap check) */
   rect?: GridStackPosition;
+  /** true if we're live resizing */
+  resizing?: boolean;
 }
 
 export interface GridStackPosition {

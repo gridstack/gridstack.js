@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [4.3.0-dev (TBD)](#430-dev-tbd)
 - [4.3.0 (2021-10-15)](#430-2021-10-15)
 - [4.2.7 (2021-9-12)](#427-2021-9-12)
 - [4.2.6 (2021-7-11)](#426-2021-7-11)
@@ -61,6 +62,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 4.3.0-dev (TBD)
+* fix [#1868](https://github.com/gridstack/gridstack.js/issues/1868) prevent swap during resize
 
 ## 4.3.0 (2021-10-15)
 * you can now swap items of different width if they are the same row/height. Thanks to [spektrummedia](http://spektrummedia.com) for sponsoring it.

@@ -594,7 +594,7 @@ GridStack.prototype._dragOrResize = function(this: GridStack, el: GridItemHTMLEl
     w: (ui.size ? ui.size.width : node.w * cellWidth) - mLeft - mRight,
     h: (ui.size ? ui.size.height : node.h * cellHeight) - mTop - mBottom
   };
-  if (this.engine.moveNodeCheck(node, {...p, cellWidth, cellHeight, rect})) {
+  if (this.engine.moveNodeCheck(node, {...p, cellWidth, cellHeight, rect, resizing})) {
     node._lastUiPosition = ui.position;
     this.engine.cacheRects(cellWidth, cellHeight, mTop, mRight, mBottom, mLeft);
     delete node._skipDown;
