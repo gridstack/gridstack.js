@@ -537,8 +537,8 @@ export class GridStackEngine {
     // if maxRow make sure we are still valid size
     if (this.maxRow && canMove) {
       canMove = (clone.getRow() <= this.maxRow);
-      // turns out we can't grow, then see if we can swap instead (ex: full grid)
-      if (!canMove) {
+      // turns out we can't grow, then see if we can swap instead (ex: full grid) if we're not resizing
+      if (!canMove && !o.resizing) {
         let collide = this.collide(node, o);
         if (collide && this.swap(node, collide)) {
           this._notify();
