@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [4.3.0-dev (TBD)](#430-dev-tbd)
+- [4.3.1 (2021-10-18)](#431-2021-10-18)
 - [4.3.0 (2021-10-15)](#430-2021-10-15)
 - [4.2.7 (2021-9-12)](#427-2021-9-12)
 - [4.2.6 (2021-7-11)](#426-2021-7-11)
@@ -63,7 +63,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 4.3.0-dev (TBD)
+## 4.3.1 (2021-10-18)
 * fix [#1868](https://github.com/gridstack/gridstack.js/issues/1868) prevent swap during resize
 * fix [#1849](https://github.com/gridstack/gridstack.js/issues/1849) [#1816](https://github.com/gridstack/gridstack.js/issues/1816) save highest resolution in 1 column mode
 * fix [#1855](https://github.com/gridstack/gridstack.js/issues/1855) fix resize when padding is large vs cellHeight
