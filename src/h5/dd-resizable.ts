@@ -156,6 +156,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.originalRect = this.el.getBoundingClientRect();
     this.scrollEl = Utils.getScrollElement(this.el);
     this.scrollY = this.scrollEl.scrollTop;
+    this.scrolled = 0;
     this.startEvent = event;
     this._setupHelper();
     this._applyChange();

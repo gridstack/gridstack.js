@@ -535,10 +535,18 @@ GridStack.prototype._leave = function(this: GridStack, el: GridItemHTMLElement, 
 GridStack.prototype._dragOrResize = function(this: GridStack, el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number)  {
   let p = {...node._orig}; // could be undefined (_isExternal) which is ok (drag only set x,y and w,h will default to node value)
   let resizing: boolean;
-  const mLeft = this.opts.marginLeft as number,
+  let mLeft = this.opts.marginLeft as number,
     mRight = this.opts.marginRight as number,
     mTop = this.opts.marginTop as number,
     mBottom = this.opts.marginBottom as number;
+
+  // if margins (which are used to pass mid point by) are large relative to cell height/width, reduce them down #1855
+  let mHeight = Math.round(cellHeight * 0.1),
+    mWidth = Math.round(cellWidth * 0.1);
+  mLeft = Math.min(mLeft, mWidth);
+  mRight = Math.min(mRight, mWidth);
+  mTop = Math.min(mTop, mHeight);
+  mBottom = Math.min(mBottom, mHeight);
 
   if (event.type === 'drag') {
     if (node._temporaryRemoved) return; // handled by dropover
