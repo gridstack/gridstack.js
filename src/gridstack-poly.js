@@ -146,6 +146,23 @@ if (!Array.prototype.findIndex) {
   });
 })([Element.prototype, Document.prototype, DocumentFragment.prototype]);
 
+// from: https://github.com/jserz/js_piece/blob/master/DOM/Element/prepend()/prepend().md
+(function (arr) {
+  arr.forEach(function (item) {
+      item.prepend = item.prepend || function () {
+          var argArr = Array.prototype.slice.call(arguments),
+              docFrag = document.createDocumentFragment();
+
+          argArr.forEach(function (argItem) {
+              var isNode = argItem instanceof Node;
+              docFrag.appendChild(isNode ? argItem : document.createTextNode(String(argItem)));
+          });
+
+          this.insertBefore(docFrag, this.firstChild);
+      };
+  });
+})([Element.prototype, Document.prototype, DocumentFragment.prototype]);
+
 // Production steps of ECMA-262, Edition 5, 15.4.4.18
 // Reference: http://es5.github.io/#x15.4.4.18
 
@@ -203,3 +220,38 @@ if (!Array.prototype['forEach']) {
     // 8. return undefined
   };
 }
+
+// https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent/CustomEvent
+(function () {
+  if (window.navigator.userAgent.indexOf('Chrome') > -1 ) {
+    return false
+  }
+  
+  function CustomEvent ( event, params ) {
+      params = params || { bubbles: false, cancelable: false, detail: undefined };
+      var evt = document.createEvent('CustomEvent');
+      evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+      return evt;
+  }
+
+  CustomEvent.prototype = window.Event.prototype;
+
+  window.CustomEvent = CustomEvent;
+})();
+
+//https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/remove()/remove().md
+(function (arr) {
+  arr.forEach(function (item) {
+   if (item.hasOwnProperty('remove')) {
+     return;
+   }
+   Object.defineProperty(item, 'remove', {
+     configurable: true,
+     enumerable: true,
+     writable: true,
+     value: function remove() {
+       this.parentNode.removeChild(this);
+     }
+   });
+ });
+})([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
