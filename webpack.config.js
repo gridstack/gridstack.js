@@ -7,26 +7,14 @@ module.exports = {
     'gridstack-static': './src/gridstack-static.ts'
   },
   mode: 'production', // production vs development
-  // devtool: 'source-map',
-  devtool: 'eval-source-map', // for best (large .js) debugging. see https://survivejs.com/webpack/building/source-maps/
+  devtool: 'source-map',
+  // devtool: 'eval-source-map', // for best (large .js) debugging. see https://survivejs.com/webpack/building/source-maps/
   target: ['web', 'es5'],
   module: {
     rules: [
       {
         test: /\.ts$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-                babelrc: false,
-                configFile: path.resolve(__dirname, 'babel.config.js'),
-                compact: false,
-                cacheDirectory: true,
-                sourceMaps: false,
-            }
-          },
-          'ts-loader'
-        ],
+        use: 'ts-loader',
         exclude: ['/node_modules/', '/src/h5/', '/src/index-*.ts'], // TODO: doesn't seem to excluded for generating .d.ts !
       },
     ],

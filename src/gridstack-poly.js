@@ -255,3 +255,10 @@ if (!Array.prototype['forEach']) {
    });
  });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
+
+// suport IE
+(function () {
+  if (!document.scrollingElement) {
+    document.scrollingElement = document.documentElement;
+  }
+})();

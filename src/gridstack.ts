@@ -5,7 +5,6 @@
  * Copyright (c) 2021 Alain Dumesny
  * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
  */
-require('@babel/polyfill')
 import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData } from './utils';
 import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
