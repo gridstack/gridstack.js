@@ -221,22 +221,24 @@ if (!Array.prototype['forEach']) {
   };
 }
 
-// https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent/CustomEvent
-(function () {
-  if (window.navigator.userAgent.indexOf('Chrome') > -1 ) {
-    return false
-  }
-  
-  function CustomEvent ( event, params ) {
-      params = params || { bubbles: false, cancelable: false, detail: undefined };
-      var evt = document.createEvent('CustomEvent');
-      evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-      return evt;
-  }
+(function(){
+  try{
+      new window.CustomEvent('T');
+  }catch(e){
+      var CustomEvent = function(event, params){
+          params = params || { bubbles: false, cancelable: false, detail: undefined };
 
-  CustomEvent.prototype = window.Event.prototype;
+          var evt = document.createEvent('CustomEvent');
 
-  window.CustomEvent = CustomEvent;
+          evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+
+          return evt;
+      };
+
+      CustomEvent.prototype = window.Event.prototype;
+
+      window.CustomEvent = CustomEvent;
+  }
 })();
 
 //https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/remove()/remove().md
@@ -255,10 +257,3 @@ if (!Array.prototype['forEach']) {
    });
  });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
-
-// suport IE
-(function () {
-  if (!document.scrollingElement) {
-    document.scrollingElement = document.documentElement;
-  }
-})();
