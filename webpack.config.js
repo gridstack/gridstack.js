@@ -9,7 +9,6 @@ module.exports = {
   mode: 'production', // production vs development
   devtool: 'source-map',
   // devtool: 'eval-source-map', // for best (large .js) debugging. see https://survivejs.com/webpack/building/source-maps/
-  target: ['web', 'es5'],
   module: {
     rules: [
       {
