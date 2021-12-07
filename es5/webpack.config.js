@@ -18,5 +18,5 @@ const config = {...webpackConfig,
     ],
   },
 };
-config.output.path = path.resolve(__dirname, '../dist')
+config.output.path = path.resolve(__dirname, '../dist/es5')
 module.exports = config

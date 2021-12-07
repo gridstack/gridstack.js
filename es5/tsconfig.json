@@ -12,7 +12,7 @@
     "lib": [ "es6", "es2015", "dom" ],
     "module": "CommonJS",
     "noImplicitAny": false,
-    "outDir": "../dist",
+    "outDir": "../dist/es5",
     "sourceMap": true,
     "strict": false,
     "target": "ES5"
