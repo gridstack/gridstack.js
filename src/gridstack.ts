@@ -5,7 +5,6 @@
  * Copyright (c) 2021 Alain Dumesny
  * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
  */
-
 import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData } from './utils';
 import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
@@ -164,7 +163,7 @@ export class GridStack {
     // create the grid element, but check if the passed 'parent' already has grid styling and should be used instead
     let el = parent;
     if (!parent.classList.contains('grid-stack')) {
-      let doc = document.implementation.createHTMLDocument();
+      let doc = document.implementation.createHTMLDocument("");
       doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
       el = doc.body.children[0] as HTMLElement;
       parent.appendChild(el);
@@ -400,13 +399,13 @@ export class GridStack {
 
     let el: HTMLElement;
     if (typeof els === 'string') {
-      let doc = document.implementation.createHTMLDocument();
+      let doc = document.implementation.createHTMLDocument("");
       doc.body.innerHTML = els;
       el = doc.body.children[0] as HTMLElement;
     } else if (arguments.length === 0 || arguments.length === 1 && isGridStackWidget(els)) {
       let content = els ? (els as GridStackWidget).content || '' : '';
       options = els;
-      let doc = document.implementation.createHTMLDocument();
+      let doc = document.implementation.createHTMLDocument("");
       doc.body.innerHTML = `<div class="grid-stack-item ${this.opts.itemClass || ''}"><div class="grid-stack-item-content">${content}</div></div>`;
       el = doc.body.children[0] as HTMLElement;
     } else {

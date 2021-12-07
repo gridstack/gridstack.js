@@ -295,7 +295,7 @@ export class Utils {
 
   /** @internal returns the passed element if scrollable, else the closest parent that will, up to the entire document scrolling element */
   static getScrollElement(el?: HTMLElement): HTMLElement {
-    if (!el) return document.scrollingElement as HTMLElement;
+    if (!el) return document.scrollingElement as HTMLElement || document.documentElement;
     const style = getComputedStyle(el);
     const overflowRegex = /(auto|scroll)/;
 
