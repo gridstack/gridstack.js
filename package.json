@@ -19,7 +19,9 @@
     }
   ],
   "scripts": {
-    "build": "yarn --no-progress && rm -rf dist/* && grunt && webpack && tsc --stripInternal && webpack --config es5/webpack.config.js && tsc --stripInternal --project es5/tsconfig.json && yarn doc",
+    "build": "yarn --no-progress && rm -rf dist/* && grunt && yarn build:es6 && yarn build:es5 && yarn doc",
+    "build:es6": "webpack && tsc --stripInternal",
+    "build:es5": "webpack --config es5/webpack.config.js && tsc --stripInternal --project es5/tsconfig.json",
     "w": "rm -rf dist/* && grunt && webpack",
     "t": "rm -rf dist/* && grunt && tsc --stripInternal",
     "doc": "doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",

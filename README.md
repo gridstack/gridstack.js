@@ -92,19 +92,28 @@ which means you can possibly bring your own version
   },
 ```
 
-Alternatively in html
+Alternatively (single combined file) in html
 
 ```html
 <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
-<!-- HTML5 drag&drop (68k) -->
+<!-- HTML5 drag&drop (70k) -->
 <script src="node_modules/gridstack/dist/gridstack-h5.js"></script>
-<!-- OR jquery-ui drag&drop (193k) -->
+<!-- OR jquery-ui drag&drop (195k) -->
 <script src="node_modules/gridstack/dist/gridstack-jq.js"></script>
-<!-- OR static grid (38k) -->
+<!-- OR static grid (40k) -->
 <script src="node_modules/gridstack/dist/gridstack-static.js"></script>
 ```
 
-Note: the API is the same, regardless of the plugin (or lack thereof) so you can switch at any time. The Jquery version will export $ that it bundles and currently the only one to support mobile/touch devices through `jquery.ui.touch-punch` (h5 version is planned). Read more at [migrating to v3](#migrating-to-v3)
+**Note**: the API is the same, regardless of the plugin (or lack thereof) so you can switch at any time. The Jquery version will export $ that it bundles and currently the only one to support mobile/touch devices through `jquery.ui.touch-punch` (h5 version is planned). Read more at [migrating to v3](#migrating-to-v3)
+
+**Note2**: IE support was dropped in v2, but restored in v4.4 by an external contributor (I have no interest in testing+supporting obsolete browser so this might break in the future).
+You can use the es5 files and polyfill (larger) for older browser instead. For example:
+```html
+<link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
+<script src="node_modules/gridstack/dist/es5/gridstack-poly.js"></script>
+<script src="node_modules/gridstack/dist/es5/gridstack-jq.js"></script>
+```
+
 
 ## Basic usage
 
