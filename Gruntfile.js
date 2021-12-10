@@ -39,7 +39,7 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         files: {
-          'dist/gridstack-poly.js': ['src/gridstack-poly.js'],
+          'dist/es5/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
           'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
         }

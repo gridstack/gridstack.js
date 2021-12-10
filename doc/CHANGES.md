@@ -63,6 +63,9 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 4.3.1-dev TBD
+* add [#1887](https://github.com/gridstack/gridstack.js/pull/1887) support for IE (new es5 folder) by [@SmileLifeIven](https://github.com/SmileLifeIven)
+
 ## 4.3.1 (2021-10-18)
 * fix [#1868](https://github.com/gridstack/gridstack.js/issues/1868) prevent swap during resize
 * fix [#1849](https://github.com/gridstack/gridstack.js/issues/1849) [#1816](https://github.com/gridstack/gridstack.js/issues/1816) save highest resolution in 1 column mode

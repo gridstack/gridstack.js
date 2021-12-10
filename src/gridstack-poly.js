@@ -1,5 +1,5 @@
 /**
- * gridstack-poly.ts 4.3.1-dev - used for older browser support (not currently supported in v2+)
+ * gridstack-poly.ts 4.3.1-dev used for IE and older browser support (not supported in v2-v4.3.1, but again in v4.4)
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
@@ -221,7 +221,7 @@ if (!Array.prototype['forEach']) {
   };
 }
 
-// https://developer.mozilla.org/zh-CN/docs/Web/API/CustomEvent/CustomEvent
+// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent
 (function(){
   try{
       new window.CustomEvent('T');
@@ -259,7 +259,7 @@ if (!Array.prototype['forEach']) {
  });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
 
-// https://developer.mozilla.org/zh-CN/docs/Web/API/Element/matches
+// https://developer.mozilla.org/en-US/docs/Web/API/Element/matches
 if (!Element.prototype.matches) {
   Element.prototype.matches =
       Element.prototype.matchesSelector ||
