@@ -34,10 +34,10 @@ export class GridStackEngine {
   private _float: boolean;
   /** @internal */
   private _prevFloat: boolean;
-  /** @internal */
+  /** @internal cached layouts of difference column count so we can restore ack (eg 12 -> 1 -> 12) */
   private _layouts?: Layout[][]; // maps column # to array of values nodes
-  /** @internal */
-  private _ignoreLayoutsNodeChange: boolean;
+  /** @internal true while we are resizing widgets during column resize to skip certain parts */
+  private _inColumnResize: boolean;
   /** @internal true if we have some items locked */
   private _hasLocked: boolean;
   /** @internal unique global internal _id counter NOT starting at 0 */
@@ -273,6 +273,7 @@ export class GridStackEngine {
 
   /** @internal called to top gravity pack the items back OR revert back to original Y positions when floating */
   private _packNodes(): GridStackEngine {
+    if (this.batchMode) { return; }
     this._sortNodes(); // first to last
 
     if (this.float) {
@@ -346,6 +347,8 @@ export class GridStackEngine {
   /** part2 of preparing a node to fit inside our grid - checks  for x,y from grid dimensions */
   public nodeBoundFix(node: GridStackNode, resizing?: boolean): GridStackNode {
 
+    let before = node._orig || Utils.copyPos({}, node);
+
     if (node.maxW) { node.w = Math.min(node.w, node.maxW); }
     if (node.maxH) { node.h = Math.min(node.h, node.maxH); }
     if (node.minW && node.minW <= this.column) { node.w = Math.max(node.w, node.minW); }
@@ -354,7 +357,8 @@ export class GridStackEngine {
     if (node.w > this.column) {
       // if user loaded a larger than allowed widget for current # of columns,
       // remember it's full width so we can restore back (1 -> 12 column) #1655
-      if (this.column < 12) {
+      // IFF we're not in the middle of column resizing!
+      if (this.column < 12 && !this._inColumnResize) {
         node.w = Math.min(12, node.w);
         this.cacheOneLayout(node, 12);
       }
@@ -389,6 +393,10 @@ export class GridStackEngine {
       } else {
         node.y = this.maxRow - node.h;
       }
+    }
+
+    if (!Utils.samePos(node, before)) {
+      node._dirty = true;
     }
 
     return node;
@@ -446,10 +454,11 @@ export class GridStackEngine {
 
   /** call to add the given node to our list, fixing collision and re-packing */
   public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
-    let dup: GridStackNode;
-    if (dup = this.nodes.find(n => n._id === node._id)) return dup; // prevent inserting twice! return it instead.
+    let dup = this.nodes.find(n => n._id === node._id);
+    if (dup) return dup; // prevent inserting twice! return it instead.
 
-    node = this.prepareNode(node);
+    // skip prepareNode if we're in middle of column resize (not new) but do check for bounds!
+    node = this._inColumnResize ? this.nodeBoundFix(node) : this.prepareNode(node);
     delete node._temporaryRemoved;
     delete node._removeDOM;
 
@@ -473,11 +482,10 @@ export class GridStackEngine {
     }
 
     this.nodes.push(node);
-    triggerAddEvent && this.addedNodes.push(node);
+    if (triggerAddEvent) { this.addedNodes.push(node); }
 
     this._fixCollisions(node);
-    this._packNodes()
-      ._notify();
+    if (!this.batchMode) { this._packNodes()._notify(); }
     return node;
   }
 
@@ -696,7 +704,7 @@ export class GridStackEngine {
 
   /** @internal called whenever a node is added or moved - updates the cached layouts */
   public layoutsNodesChange(nodes: GridStackNode[]): GridStackEngine {
-    if (!this._layouts || this._ignoreLayoutsNodeChange) return this;
+    if (!this._layouts || this._inColumnResize) return this;
     // remove smaller layouts - we will re-generate those on the fly... larger ones need to update
     this._layouts.forEach((layout, column) => {
       if (!layout || column === this.column) return this;
@@ -705,12 +713,12 @@ export class GridStackEngine {
       }
       else {
         // we save the original x,y,w (h isn't cached) to see what actually changed to propagate better.
-        // Note: we don't need to check against out of bound scaling/moving as that will be done when using those cache values.
+        // NOTE: we don't need to check against out of bound scaling/moving as that will be done when using those cache values. #1785
+        let ratio = column / this.column;
         nodes.forEach(node => {
           if (!node._orig) return; // didn't change (newly added ?)
           let n = layout.find(l => l._id === node._id);
           if (!n) return; // no cache for new nodes. Will use those values.
-          let ratio = column / this.column;
           // Y changed, push down same amount
           // TODO: detect doing item 'swaps' will help instead of move (especially in 1 column mode)
           if (node.y !== node._orig.y) {
@@ -736,20 +744,24 @@ export class GridStackEngine {
    * Note we store previous layouts (especially original ones) to make it possible to go
    * from say 12 -> 1 -> 12 and get back to where we were.
    *
-   * @param oldColumn previous number of columns
+   * @param prevColumn previous number of columns
    * @param column  new column number
    * @param nodes different sorted list (ex: DOM order) instead of current list
    * @param layout specify the type of re-layout that will happen (position, size, etc...).
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public updateNodeWidths(oldColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
-    if (!this.nodes.length || oldColumn === column) return this;
+  public updateNodeWidths(prevColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
+    if (!this.nodes.length || !column || prevColumn === column) return this;
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
-    this.cacheLayout(this.nodes, oldColumn);
+    this.cacheLayout(this.nodes, prevColumn);
+    this.batchUpdate(); // do this EARLY as it will call saveInitial() so we can detect where we started for _dirty and collision
+    let newNodes: GridStackNode[] = [];
 
     // if we're going to 1 column and using DOM order rather than default sorting, then generate that layout
-    if (column === 1 && nodes && nodes.length) {
+    let domOrder = false;
+    if (column === 1 && nodes?.length) {
+      domOrder = true;
       let top = 0;
       nodes.forEach(n => {
         n.x = 0;
@@ -757,34 +769,35 @@ export class GridStackEngine {
         n.y = Math.max(n.y, top);
         top = n.y + n.h;
       });
+      newNodes = nodes;
+      nodes = [];
     } else {
-      nodes = Utils.sort(this.nodes, -1, oldColumn); // current column reverse sorting so we can insert last to front (limit collision)
+      nodes = Utils.sort(this.nodes, -1, prevColumn); // current column reverse sorting so we can insert last to front (limit collision)
     }
 
-    // see if we have cached previous layout.
-    let cacheNodes = this._layouts[column] || [];
-    // if not AND we are going up in size start with the largest layout as down-scaling is more accurate
-    let lastIndex = this._layouts.length - 1;
-    if (cacheNodes.length === 0 && column > oldColumn && column < lastIndex) {
-      cacheNodes = this._layouts[lastIndex] || [];
-      if (cacheNodes.length) {
-        // pretend we came from that larger column by assigning those values as starting point
-        oldColumn = lastIndex;
-        cacheNodes.forEach(cacheNode => {
-          let j = nodes.findIndex(n => n._id === cacheNode._id);
-          if (j !== -1) {
+    // see if we have cached previous layout IFF we are going up in size (restore) otherwise always
+    // generate next size down from where we are (looks more natural as you gradually size down).
+    let cacheNodes: Layout[] = [];
+    if (column > prevColumn) {
+      cacheNodes = this._layouts[column] || [];
+      // ...if not, start with the largest layout (if not already there) as down-scaling is more accurate
+      // by pretending we came from that larger column by assigning those values as starting point
+      let lastIndex = this._layouts.length - 1;
+      if (!cacheNodes.length && prevColumn !== lastIndex && this._layouts[lastIndex]?.length) {
+        prevColumn = lastIndex;
+        this._layouts[lastIndex].forEach(cacheNode => {
+          let n = nodes.find(n => n._id === cacheNode._id);
+          if (n) {
             // still current, use cache info positions
-            nodes[j].x = cacheNode.x;
-            nodes[j].y = cacheNode.y;
-            nodes[j].w = cacheNode.w;
+            n.x = cacheNode.x;
+            n.y = cacheNode.y;
+            n.w = cacheNode.w;
           }
         });
-        cacheNodes = []; // we still don't have new column cached data... will generate from larger one.
       }
     }
 
     // if we found cache re-use those nodes that are still current
-    let newNodes: GridStackNode[] = [];
     cacheNodes.forEach(cacheNode => {
       let j = nodes.findIndex(n => n._id === cacheNode._id);
       if (j !== -1) {
@@ -799,14 +812,15 @@ export class GridStackEngine {
     // ...and add any extra non-cached ones
     if (nodes.length) {
       if (typeof layout === 'function') {
-        layout(column, oldColumn, newNodes, nodes);
-      } else {
-        let ratio = column / oldColumn;
+        layout(column, prevColumn, newNodes, nodes);
+      } else if (!domOrder) {
+        let ratio = column / prevColumn;
         let move = (layout === 'move' || layout === 'moveScale');
         let scale = (layout === 'scale' || layout === 'moveScale');
         nodes.forEach(node => {
+          // NOTE: x + w could be outside of the grid, but addNode() below will handle that
           node.x = (column === 1 ? 0 : (move ? Math.round(node.x * ratio) : Math.min(node.x, column - 1)));
-          node.w = ((column === 1 || oldColumn === 1) ? 1 :
+          node.w = ((column === 1 || prevColumn === 1) ? 1 :
             scale ? (Math.round(node.w * ratio) || 1) : (Math.min(node.w, column)));
           newNodes.push(node);
         });
@@ -816,15 +830,14 @@ export class GridStackEngine {
 
     // finally re-layout them in reverse order (to get correct placement)
     newNodes = Utils.sort(newNodes, -1, column);
-    this._ignoreLayoutsNodeChange = true;
-    this.batchUpdate();
-    this.nodes = []; // pretend we have no nodes to start with (we use same structures) to simplify layout
+    this._inColumnResize = true; // prevent cache update
+    this.nodes = []; // pretend we have no nodes to start with (add() will use same structures) to simplify layout
     newNodes.forEach(node => {
       this.addNode(node, false); // 'false' for add event trigger
-      node._dirty = true; // force attr update
-    }, this);
+      delete node._orig; // make sure the commit doesn't try to restore things back to original
+    });
     this.commit();
-    delete this._ignoreLayoutsNodeChange;
+    delete this._inColumnResize;
     return this;
   }
 

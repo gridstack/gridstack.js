@@ -72,8 +72,10 @@
       {x: 0, y: 4, w: 12}
     ];
     let count = 0;
-    items.forEach(n => n.content = '<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>' + count++ + (n.text ? n.text : ''));
-    grid.load(items);
+    items.forEach(n => {
+      n.content = '<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>' + count++ + (n.text ? n.text : '');
+      grid.addWidget(n); // DOM order will be 0,1,2,3,4,5,6 vs column1 = 0,1,4,3,2,5,6
+    });
 
     function addWidget() {
       let n = items[count] || {
@@ -91,6 +93,9 @@
       text.innerHTML = n;
     }
     function setOneColumn(dom) {
+      if (grid.opts.column === 1 && grid.opts.oneColumnModeDomSort !== dom) {
+        column(12); // go ack to 12 before going to new column1 version
+      }
       grid.opts.oneColumnModeDomSort = dom;
       grid.column(1, layout);
       text.innerHTML = dom ? '1 DOM' : '1';
@@ -106,7 +111,7 @@
     function setLayout(name) {
       layout = name === 'custom' ? this.columnLayout : name;
     }
-
+    // setOneColumn(true); // test dom order
   </script>
 </body>
 </html>

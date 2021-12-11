@@ -668,7 +668,7 @@ export class GridStack {
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
   public column(column: number, layout: ColumnOptions = 'moveScale'): GridStack {
-    if (this.opts.column === column) return this;
+    if (column < 1 || this.opts.column === column) return this;
     let oldColumn = this.opts.column;
 
     // if we go into 1 column mode (which happens if we're sized less than minW unless disableOneColumnMode is on)

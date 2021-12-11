@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [4.3.1-dev TBD](#431-dev-tbd)
 - [4.3.1 (2021-10-18)](#431-2021-10-18)
 - [4.3.0 (2021-10-15)](#430-2021-10-15)
 - [4.2.7 (2021-9-12)](#427-2021-9-12)
@@ -64,6 +65,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 4.3.1-dev TBD
+* fix [#1785](https://github.com/gridstack/gridstack.js/issue/1785) overlapping items when switching column() and making edits. Thank you [@radovanobal](https://github.com/radovanobal) for sponsoring it.
 * add [#1887](https://github.com/gridstack/gridstack.js/pull/1887) support for IE (new es5 folder) by [@SmileLifeIven](https://github.com/SmileLifeIven)
 
 ## 4.3.1 (2021-10-18)

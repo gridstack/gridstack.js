@@ -219,7 +219,7 @@ export class Utils {
     return true;
   }
 
-  /* copies over b size & position (GridStackPosition), and possibly min/max as well */
+  /** copies over b size & position (GridStackPosition), and possibly min/max as well */
   static copyPos(a: GridStackWidget, b: GridStackWidget, minMax = false): GridStackWidget {
     a.x = b.x;
     a.y = b.y;
@@ -233,7 +233,7 @@ export class Utils {
     return a;
   }
 
-  /* true if a and b has same size & position */
+  /** true if a and b has same size & position */
   static samePos(a: GridStackPosition, b: GridStackPosition): boolean {
     return a && b && a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
   }
