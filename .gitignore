@@ -17,3 +17,7 @@ node_modules/gridstack/dist/*
 !node_modules/gridstack/dist/gridstack.min.css
 !node_modules/gridstack/dist/gridstack-extra.min.css
 !node_modules/gridstack/dist/gridstack-extra.css
+!node_modules/gridstack/dist/es5/
+node_modules/gridstack/dist/es5/*
+!node_modules/gridstack/dist/es5/gridstack-poly.js
+!node_modules/gridstack/dist/es5/gridstack-jq.js
