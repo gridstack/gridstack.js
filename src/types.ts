@@ -201,7 +201,7 @@ export interface GridStackMoveOpts extends GridStackPosition {
   pack?: boolean;
   /** true if we are calling this recursively to prevent simple swap or coverage collision - default false*/
   nested?: boolean;
-  /* vars to calculate other cells coordinates */
+  /** vars to calculate other cells coordinates */
   cellWidth?: number;
   cellHeight?: number;
   marginTop?: number;
