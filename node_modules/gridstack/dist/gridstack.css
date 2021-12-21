@@ -1,5 +1,5 @@
 /**
- * gridstack SASS styles 4.3.1
+ * gridstack SASS styles 4.4.0
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 :root .grid-stack-item > .ui-resizable-handle {
@@ -111,7 +111,6 @@
   cursor: sw-resize;
   width: 20px;
   height: 20px;
-  bottom: 0;
 }
 .grid-stack > .grid-stack-item > .ui-resizable-w {
   cursor: w-resize;
