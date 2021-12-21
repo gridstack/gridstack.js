@@ -21,3 +21,4 @@ node_modules/gridstack/dist/*
 node_modules/gridstack/dist/es5/*
 !node_modules/gridstack/dist/es5/gridstack-poly.js
 !node_modules/gridstack/dist/es5/gridstack-jq.js
+!node_modules/gridstack/dist/es5/gridstack-jq.js.map
