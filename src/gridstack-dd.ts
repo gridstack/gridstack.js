@@ -128,7 +128,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       accept: (el: GridItemHTMLElement) => {
         let node: GridStackNode = el.gridstackNode;
         // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
-        if (node && node.grid === this) return true;
+        if (node?.grid === this) return true;
         if (!this.opts.acceptWidgets) return false;
         // check for accept method or class matching
         let canAccept = true;
@@ -152,13 +152,13 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
     .on(this.el, 'dropover', (event: Event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
       // ignore drop enter on ourself (unless we temporarily removed) which happens on a simple drag of our item
-      if (node && node.grid === this && !node._temporaryRemoved) {
+      if (node?.grid === this && !node._temporaryRemoved) {
         // delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
         return false; // prevent parent from receiving msg (which may be a grid as well)
       }
 
       // fix #1578 when dragging fast, we may not get a leave on the previous grid so force one now
-      if (node && node.grid && node.grid !== this && !node._temporaryRemoved) {
+      if (node?.grid && node.grid !== this && !node._temporaryRemoved) {
         // TEST console.log('dropover without leave');
         let otherGrid = node.grid;
         otherGrid._leave(el, helper);
@@ -214,6 +214,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
      */
     .on(this.el, 'dropout', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
+      if (!node) return false;
       // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)
       // so skip this one if we're not the active grid really..
       if (!node.grid || node.grid === this) {
@@ -227,7 +228,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
     .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
       // ignore drop on ourself from ourself that didn't come from the outside - dragend will handle the simple move instead
-      if (node && node.grid === this && !node._isExternal) return false;
+      if (node?.grid === this && !node._isExternal) return false;
 
       let wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
       this.placeholder.remove();

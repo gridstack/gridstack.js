@@ -243,7 +243,7 @@ export interface GridStackWidget extends GridStackPosition {
   noResize?: boolean;
   /** prevents moving (default?: undefined = un-constrained) */
   noMove?: boolean;
-  /** prevents moving and resizing (default?: undefined = un-constrained) */
+  /** prevents being moved by others during their (default?: undefined = un-constrained) */
   locked?: boolean;
   /** widgets can have their own custom resize handles. For example 'e,w' will make that particular widget only resize east and west. See `resizable: {handles: string}` option */
   resizeHandles?: string;

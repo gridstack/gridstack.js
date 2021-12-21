@@ -322,6 +322,7 @@ export class GridStack {
         this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
         cbNodes.forEach(n => {
           let el = n.el;
+          if (!el) return;
           if (n._removeDOM) {
             if (el) el.remove();
             delete n._removeDOM;
