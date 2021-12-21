@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>1858</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-h5.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Full grid, drag 0 out and back in - see 1858</h1>
+    <div class="grid-stack"></div>
+  </div>
+  <script type="text/javascript">
+    options = {
+      disableOneColumnMode: true,
+      row: 15,
+      margin: 2,
+      cellHeight: 20,
+      acceptWidgets: true,
+      float: false,
+    };
+
+    GridStack.init(options).load([
+      { x: 0, y: 0, w: 4, h: 6, content:'0' },
+      { x: 0, y: 6, w: 4, h: 2, content:'1' },
+      { x: 0, y: 8, w: 4, h: 2, content:'2' },
+      { x: 0, y: 10, w: 4, h: 2, content:'3' },
+      { x: 0, y: 12, w: 12, h: 3, content:'4' },
+      { x: 4, y: 0, w: 8, h: 12, content:'5' },
+    ])
+  </script>
+</body>
+</html>
