@@ -21,6 +21,15 @@
   <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css"  rel="stylesheet"/>
   <style type="text/css">
+    .grid-container {
+      padding: 15px;
+      border: 1px solid white;
+      max-width: 1000px;
+    }
+    .center {
+      margin-left: auto;
+      margin-right: auto;
+    }
     .grid-stack-item {
       border: 0;
     }
@@ -169,7 +178,7 @@
 
       <div class="row">
         <div class="col-sm-12" style="padding-bottom: 25px;">
-          <div style="padding: 15px; border: 1px solid white">
+          <div class="grid-container center">
             <div class="grid-stack" id="simple-grid"></div>
           </div>
         </div>
@@ -246,7 +255,7 @@
           </div>
         </div>
         <div class="col-sm-12 col-md-10" style="padding-bottom: 25px;">
-          <div style="padding: 15px; border: 1px solid white">
+          <div class="grid-container">
             <div class="grid-stack" id="advanced-grid"></div>
           </div>
         </div>
@@ -356,11 +365,13 @@
 
     var simpleGrid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+      margin: 5,
     }, '#simple-grid');
     simpleGrid.load(simple);
 
     var advGrid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+      margin: 5,
       acceptWidgets: true,
       dragIn: '.newWidget',  // class that can be dragged from outside
       dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
