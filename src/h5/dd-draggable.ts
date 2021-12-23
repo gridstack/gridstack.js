@@ -16,7 +16,6 @@ export interface DDDraggableOpt {
   revert?: string | boolean | unknown; // TODO: not implemented yet
   scroll?: boolean; // nature support by HTML5 drag drop, can't be switch to off actually
   helper?: string | HTMLElement | ((event: Event) => HTMLElement);
-  basePosition?: 'fixed' | 'absolute';
   start?: (event: Event, ui: DDUIData) => void;
   stop?: (event: Event) => void;
   drag?: (event: Event, ui: DDUIData) => void;
@@ -52,13 +51,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   private parentOriginStylePosition: string;
   /** @internal */
   private helperContainment: HTMLElement;
-  /** @internal */
-  private static basePosition: 'fixed' | 'absolute' = 'absolute';
   /** @internal #1541 can't have {passive: true} on Safari as otherwise it reverts animate back to old location on drop */
   private static dragEventListenerOption = true; // DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
   /** @internal */
   private static originStyleProp = ['transition', 'pointerEvents', 'position',
-    'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange'];
+    'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange', 'min-width'];
 
   constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
     super();
@@ -213,13 +210,14 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   private _setupHelperStyle(): DDDraggable {
+    // TODO: set all at once with style.cssText += ... ? https://stackoverflow.com/questions/3968593
     this.helper.style.pointerEvents = 'none';
     this.helper.style.width = this.dragOffset.width + 'px';
     this.helper.style.height = this.dragOffset.height + 'px';
     this.helper.style.willChange = 'left, top';
     this.helper.style.transition = 'none'; // show up instantly
-    this.helper.style.position = this.option.basePosition || DDDraggable.basePosition;
-    this.helper.style.zIndex = '1000';
+    this.helper.style.position = 'fixed'; // let us drag between grids by not clipping as parent .grid-stack is position: 'relative'
+    this.helper.style['min-width'] = 0; // since we no longer relative to our parent and we don't resize anyway (normally 100/#column %)
     setTimeout(() => {
       if (this.helper) {
         this.helper.style.transition = null; // recover animation
@@ -232,10 +230,17 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   private _removeHelperStyle(): DDDraggable {
     // don't bother restoring styles if we're gonna remove anyway...
     let node = this.helper ? (this.helper as GridItemHTMLElement).gridstackNode : undefined;
-    if (!node || !node._isAboutToRemove) {
+    if (this.dragElementOriginStyle && (!node || !node._isAboutToRemove)) {
       DDDraggable.originStyleProp.forEach(prop => {
         this.helper.style[prop] = this.dragElementOriginStyle[prop] || null;
       });
+      // show up instantly otherwise we animate to off the grid when switching back to 'absolute' from 'fixed'
+      this.helper.style.transition = 'none';
+      setTimeout(() => {
+        if (this.helper) {
+          this.helper.style.transition = this.dragElementOriginStyle['transition']; // recover animation
+        }
+      }, 0);
     }
     delete this.dragElementOriginStyle;
     return this;
@@ -262,7 +267,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   private _setupHelperContainmentStyle(): DDDraggable {
     this.helperContainment = this.helper.parentElement;
-    if (this.option.basePosition !== 'fixed') {
+    if (this.helper.style.position !== 'fixed') {
       this.parentOriginStylePosition = this.helperContainment.style.position;
       if (window.getComputedStyle(this.helperContainment).position.match(/static/)) {
         this.helperContainment.style.position = 'relative';
@@ -271,10 +276,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal prevent the default gost image to be created (which has wrongas we move the helper/element instead
+  /** @internal prevent the default ghost image to be created (which has wrong as we move the helper/element instead
    * (legacy jquery UI code updates the top/left of the item).
    * TODO: maybe use mouse event instead of HTML5 drag as we have to work around it anyway, or change code to not update
-   * the actual grid-item but move the gost image around (and special case jq version) ?
+   * the actual grid-item but move the ghost image around (and special case jq version) ?
    **/
   private _cancelDragGhost(e: DragEvent): DDDraggable {
     /* doesn't seem to do anything...
