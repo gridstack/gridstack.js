@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [4.4.0-dev TBD](#440-dev-tbd)
 - [4.4.0 (2021-12-21)](#440-2021-12-21)
 - [4.3.1 (2021-10-18)](#431-2021-10-18)
 - [4.3.0 (2021-10-15)](#430-2021-10-15)
@@ -63,6 +64,8 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 4.4.0-dev TBD
 
 ## 4.4.0 (2021-12-21)
 * add [#1887](https://github.com/gridstack/gridstack.js/pull/1887) support for IE (new es5 folder) by [@SmileLifeIven](https://github.com/SmileLifeIven)
