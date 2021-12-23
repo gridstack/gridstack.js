@@ -1,5 +1,5 @@
 /**
- * gridstack-dd-native.ts 4.4.0
+ * gridstack-dd-native.ts 4.4.0-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
