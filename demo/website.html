@@ -9,17 +9,27 @@
     content="gridstack, typescript, jquery, grid, layout, drag-n-drop, widgets, js, javascript, gridstack.js, dashboard" />
   <title>gridstack.js | Build interactive dashboards in minutes.</title>
 
-  <!-- Bootstrap core CSS -->
-  <link href="https://bootswatch.com/4/yeti/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css"  rel="stylesheet"/>
+  <!-- ES5 support for IE -->
+  <script src="../dist/es5/gridstack-poly.js"></script>
+  <script src="../dist/es5/gridstack-jq.js"></script>
+  
   <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
-  
-  <link href="../dist/gridstack.min.css" rel="stylesheet" />
-  <script src="../dist/gridstack-h5.js"></script>
-  <!-- <script src="https://cdn.jsdelivr.net/npm/gridstack@4.2.1/dist/gridstack-h5.js"></script> -->
 
+  <!-- Bootstrap core CSS -->
+  <link href="https://bootswatch.com/4/yeti/bootstrap.min.css" rel="stylesheet" />
+  <link href="../dist/gridstack.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css"  rel="stylesheet"/>
   <style type="text/css">
+    .grid-container {
+      padding: 15px;
+      border: 1px solid white;
+      max-width: 1000px;
+    }
+    .center {
+      margin-left: auto;
+      margin-right: auto;
+    }
     .grid-stack-item {
       border: 0;
     }
@@ -168,7 +178,7 @@
 
       <div class="row">
         <div class="col-sm-12" style="padding-bottom: 25px;">
-          <div style="padding: 15px; border: 1px solid white">
+          <div class="grid-container center">
             <div class="grid-stack" id="simple-grid"></div>
           </div>
         </div>
@@ -187,8 +197,8 @@
           <pre>
 <code class="html">npm install gridstack</code>
 <p class="text-white">then in html:</p>
-<code class="html">&lt;script src="node_modules/gridstack/dist/gridstack-h5.js"&gt;&lt;/script&gt;
-&lt;link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/&gt;
+<code class="html">&lt;script src="../dist/gridstack-h5.js"&gt;&lt;/script&gt;
+&lt;link href="../dist/gridstack.min.css" rel="stylesheet"/&gt;
 &lt;style type="text/css"&gt;
   .grid-stack { background: #FAFAD2; }
   .grid-stack-item-content { background-color: #18BC9C; }
@@ -245,7 +255,7 @@
           </div>
         </div>
         <div class="col-sm-12 col-md-10" style="padding-bottom: 25px;">
-          <div style="padding: 15px; border: 1px solid white">
+          <div class="grid-container">
             <div class="grid-stack" id="advanced-grid"></div>
           </div>
         </div>
@@ -355,11 +365,13 @@
 
     var simpleGrid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+      margin: 5,
     }, '#simple-grid');
     simpleGrid.load(simple);
 
     var advGrid = GridStack.init({
       alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
+      margin: 5,
       acceptWidgets: true,
       dragIn: '.newWidget',  // class that can be dragged from outside
       dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },

@@ -66,6 +66,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 4.4.0-dev TBD
+* fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error introduced for #1785 when re-loading with fewer objects
 
 ## 4.4.0 (2021-12-21)
 * add [#1887](https://github.com/gridstack/gridstack.js/pull/1887) support for IE (new es5 folder) by [@SmileLifeIven](https://github.com/SmileLifeIven)
