@@ -273,7 +273,7 @@ export class GridStackEngine {
 
   /** @internal called to top gravity pack the items back OR revert back to original Y positions when floating */
   private _packNodes(): GridStackEngine {
-    if (this.batchMode) { return; }
+    if (this.batchMode) { return this; }
     this._sortNodes(); // first to last
 
     if (this.float) {
