@@ -67,6 +67,7 @@ Change log
 
 ## 4.4.0-dev TBD
 * fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error introduced for #1785 when re-loading with fewer objects
+* fix [#1902](https://github.com/gridstack/gridstack.js/pull/1902) nested.html: dragging between sub-grids show items clipped
 
 ## 4.4.0 (2021-12-21)
 * add [#1887](https://github.com/gridstack/gridstack.js/pull/1887) support for IE (new es5 folder) by [@SmileLifeIven](https://github.com/SmileLifeIven)

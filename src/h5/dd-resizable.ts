@@ -17,7 +17,6 @@ export interface DDResizableOpt {
   maxWidth?: number;
   minHeight?: number;
   minWidth?: number;
-  basePosition?: 'fixed' | 'absolute';
   start?: (event: Event, ui: DDUIData) => void;
   stop?: (event: Event) => void;
   resize?: (event: Event, ui: DDUIData) => void;
@@ -206,9 +205,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     if (window.getComputedStyle(this.el.parentElement).position.match(/static/)) {
       this.el.parentElement.style.position = 'relative';
     }
-    this.el.style.position = this.option.basePosition || 'absolute'; // or 'fixed'
+    this.el.style.position = 'absolute';
     this.el.style.opacity = '0.8';
-    this.el.style.zIndex = '1000';
     return this;
   }
 
