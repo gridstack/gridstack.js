@@ -211,16 +211,20 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   private _setupHelperStyle(): DDDraggable {
     // TODO: set all at once with style.cssText += ... ? https://stackoverflow.com/questions/3968593
-    this.helper.style.pointerEvents = 'none';
-    this.helper.style.width = this.dragOffset.width + 'px';
-    this.helper.style.height = this.dragOffset.height + 'px';
-    this.helper.style.willChange = 'left, top';
-    this.helper.style.transition = 'none'; // show up instantly
-    this.helper.style.position = 'fixed'; // let us drag between grids by not clipping as parent .grid-stack is position: 'relative'
-    this.helper.style['min-width'] = 0; // since we no longer relative to our parent and we don't resize anyway (normally 100/#column %)
+    const rec = this.helper.getBoundingClientRect();
+    const style = this.helper.style;
+    style.pointerEvents = 'none';
+    style['min-width'] = 0; // since we no longer relative to our parent and we don't resize anyway (normally 100/#column %)
+    style.width = this.dragOffset.width + 'px';
+    style.height = this.dragOffset.height + 'px';
+    style.willChange = 'left, top';
+    style.position = 'fixed'; // let us drag between grids by not clipping as parent .grid-stack is position: 'relative'
+    style.left = rec.left + 'px';
+    style.top = rec.top + 'px';
+    style.transition = 'none'; // show up instantly
     setTimeout(() => {
       if (this.helper) {
-        this.helper.style.transition = null; // recover animation
+        style.transition = null; // recover animation
       }
     }, 0);
     return this;
