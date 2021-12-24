@@ -1,5 +1,5 @@
 /**
- * gridstack-poly.ts 4.4.0-dev used for IE and older browser support (not supported in v2-v4.3.1, but again in v4.4)
+ * gridstack-poly.ts 4.4.1-dev used for IE and older browser support (not supported in v2-v4.3.1, but again in v4.4)
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
@@ -163,8 +163,8 @@ if (!Array.prototype.findIndex) {
   });
 })([Element.prototype, Document.prototype, DocumentFragment.prototype]);
 
-// Production steps of ECMA-262, Edition 5, 15.4.4.18
-// Reference: http://es5.github.io/#x15.4.4.18
+// Production steps of ECMA-262, Edition 5, 15.4.4.1-dev8
+// Reference: http://es5.github.io/#x15.4.4.1-dev8
 
 if (!Array.prototype['forEach']) {
 

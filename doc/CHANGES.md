@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [4.4.0-dev TBD](#440-dev-tbd)
+- [4.4.1-dev (TBD)](#441-dev-tbd)
+- [4.4.1 (2021-12-24)](#441-2021-12-24)
 - [4.4.0 (2021-12-21)](#440-2021-12-21)
 - [4.3.1 (2021-10-18)](#431-2021-10-18)
 - [4.3.0 (2021-10-15)](#430-2021-10-15)
@@ -65,9 +66,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 4.4.0-dev TBD
-* fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error introduced for #1785 when re-loading with fewer objects
+## 4.4.1-dev (TBD)
 * fix [#1902](https://github.com/gridstack/gridstack.js/pull/1902) nested.html: dragging between sub-grids show items clipped
+
+## 4.4.1 (2021-12-24)
+* fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error introduced for #1785 when re-loading with fewer objects
 
 ## 4.4.0 (2021-12-21)
 * add [#1887](https://github.com/gridstack/gridstack.js/pull/1887) support for IE (new es5 folder) by [@SmileLifeIven](https://github.com/SmileLifeIven)
