@@ -67,7 +67,9 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 4.4.1-dev (TBD)
+* add [#992](https://github.com/gridstack/gridstack.js/issues/992) support dragging into and out of nested grids from parents! Thank you [@arclogos132](https://github.com/arclogos132) for sponsoring it.
 * fix [#1902](https://github.com/gridstack/gridstack.js/pull/1902) nested.html: dragging between sub-grids show items clipped
+* fix [#1558](https://github.com/gridstack/gridstack.js/issues/1558) dragging between vertical grids causes too much growth, not follow mouse.
 
 ## 4.4.1 (2021-12-24)
 * fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error introduced for #1785 when re-loading with fewer objects

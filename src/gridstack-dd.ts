@@ -24,6 +24,8 @@ export type DDValue = number | string;
 /** drag&drop events callbacks */
 export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: GridItemHTMLElement) => void;
 
+// TEST let count = 0;
+
 /**
  * Base class implementing common Grid drag'n'drop functionality, with domain specific subclass (h5 vs jq subclasses)
  */
@@ -67,7 +69,6 @@ export abstract class GridStackDD extends GridStackDDI {
 /********************************************************************************
  * GridStack code that is doing drag&drop extracted here so main class is smaller
  * for static grid that don't do any of this work anyway. Saves about 10k.
- * TODO: no code hint in code below as this is <any> so look at alternatives ?
  * https://www.typescriptlang.org/docs/handbook/declaration-merging.html
  * https://www.typescriptlang.org/docs/handbook/mixins.html
  ********************************************************************************/
@@ -82,7 +83,6 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
   }
 
   // vars shared across all methods
-  let gridPos: MousePosition;
   let cellHeight: number, cellWidth: number;
 
   let onDrag = (event: DragEvent, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
@@ -90,9 +90,10 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
     if (!node) return;
 
     helper = helper || el;
-    let rec = helper.getBoundingClientRect();
-    let left = rec.left - gridPos.left;
-    let top = rec.top - gridPos.top;
+    let parent = this.el.getBoundingClientRect();
+    let {top, left} = helper.getBoundingClientRect();
+    left -= parent.left;
+    top -= parent.top;
     let ui: DDUIData = {position: {top, left}};
 
     if (node._temporaryRemoved) {
@@ -150,6 +151,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
      * entering our grid area
      */
     .on(this.el, 'dropover', (event: Event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
+      // TEST console.log(`over ${this.el.gridstack.opts.id} ${count++}`);
       let node = el.gridstackNode;
       // ignore drop enter on ourself (unless we temporarily removed) which happens on a simple drag of our item
       if (node?.grid === this && !node._temporaryRemoved) {
@@ -164,14 +166,12 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         otherGrid._leave(el, helper);
       }
 
-      // get grid screen coordinates and cell dimensions
-      let box = this.el.getBoundingClientRect();
-      gridPos = {top: box.top, left: box.left};
+      // cache cell dimensions (which don't change), position can animate if we removed an item in otherGrid that affects us...
       cellWidth = this.cellWidth();
       cellHeight = this.getCellHeight(true);
 
       // load any element attributes if we don't have a node
-      if (!node) {// @ts-ignore
+      if (!node) {// @ts-ignore private read only on ourself
         node = this._readAttr(el);
       }
       if (!node.grid) {
@@ -213,6 +213,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
      * Leaving our grid area...
      */
     .on(this.el, 'dropout', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
+      // TEST console.log(`out ${this.el.gridstack.opts.id} ${count++}`);
       let node = el.gridstackNode;
       if (!node) return false;
       // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)

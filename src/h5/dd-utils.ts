@@ -78,4 +78,17 @@ export class DDUtils {
     ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = e[p]); // point info
     return {...evt, ...obj} as unknown as T;
   }
+
+  /** returns true if event is inside the given element rectangle */
+  // Note: Safari Mac has null event.relatedTarget which causes #1684 so check if DragEvent is inside the coordinates instead
+  //    this.el.contains(event.relatedTarget as HTMLElement)
+  public static inside(e: MouseEvent, el: HTMLElement): boolean {
+    // srcElement, toElement, target: all set to placeholder when leaving simple grid, so we can't use that (Chrome)
+    let target: HTMLElement = e.relatedTarget || (e as any).fromElement;
+    if (!target) {
+      const { bottom, left, right, top } = el.getBoundingClientRect();
+      return (e.x < right && e.x > left && e.y < bottom && e.y > top);
+    }
+    return el.contains(target);
+  }
 }

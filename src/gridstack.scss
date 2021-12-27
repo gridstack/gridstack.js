@@ -126,7 +126,8 @@ $animation_speed: .3s !default;
   }
 
   // without this, the html5 drag will flicker between no-drop and drop when dragging over second grid
-  &.ui-droppable.ui-droppable-over > *:not(.ui-droppable) {
-    pointer-events: none;
-  }
+  // Update: removed that as it causes nested grids to no receive dragenter events when parent drags and sets this for #992. not seeing cursor flicker (chrome).
+  // &.ui-droppable.ui-droppable-over > *:not(.ui-droppable) {
+  //   pointer-events: none;
+  // }
 }
