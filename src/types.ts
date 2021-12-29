@@ -111,6 +111,9 @@ export interface GridStackOptions {
   /** draggable handle class (e.g. 'grid-stack-item-content'). If set 'handle' is ignored (default?: null) */
   handleClass?: string;
 
+  /** id used to debug grid instance, not currently stored in DOM attributes */
+  id?: numberOrString;
+
   /** additional widget class (default?: 'grid-stack-item') */
   itemClass?: string;
 

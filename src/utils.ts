@@ -254,11 +254,11 @@ export class Utils {
     }
   }
 
-  /** return the closest parent matching the given class */
+  /** return the closest parent (or itself) matching the given class */
   static closestByClass(el: HTMLElement, name: string): HTMLElement {
-
-    while(el = el.parentElement) {
+    while (el) {
       if (el.classList.contains(name)) return el;
+      el = el.parentElement
     }
     return null;
   }
