@@ -8,6 +8,7 @@ import { DDManager } from './dd-manager';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { DDUtils } from './dd-utils';
 import { GridHTMLElement, GridStack } from '../gridstack';
+import { GridItemHTMLElement } from '../types';
 
 export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);
@@ -121,10 +122,12 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     event.stopPropagation();
 
     // ignore leave events on our children (we get them when starting to drag our items)
-    // but exclude nested grids since we would still be leaving ourself
+    // but exclude nested grids since we would still be leaving ourself, 
+    // but don't handle leave if we're dragging a nested grid around
     if (!forceLeave) {
       let onChild = DDUtils.inside(event, this.el);
-      if (onChild) {
+      let drag: GridItemHTMLElement = DDManager.dragElement.el;
+      if (onChild && !drag.gridstackNode?.subGrid) { // dragging a nested grid ?
         let nestedEl = (this.el as GridHTMLElement).gridstack.engine.nodes.filter(n => n.subGrid).map(n => (n.subGrid as GridStack).el);
         onChild = !nestedEl.some(el => DDUtils.inside(event, el));
       }
