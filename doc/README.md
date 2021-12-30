@@ -34,7 +34,7 @@ gridstack.js API
   - [`cellHeight(val: number, update = true)`](#cellheightval-number-update--true)
   - [`cellWidth()`](#cellwidth)
   - [`commit()`](#commit)
-  - [`column(column: number, layout: ColumnOptions = 'moveScale')`](#columncolumn-number-layout-columnoptions--movescale)
+  - [`column(column: number | 'auto', layout: ColumnOptions = 'moveScale')`](#columncolumn-number--auto-layout-columnoptions--movescale)
   - [`destroy([removeDOM])`](#destroyremovedom)
   - [`disable()`](#disable)
   - [`enable()`](#enable)
@@ -43,6 +43,7 @@ gridstack.js API
   - [`float(val?)`](#floatval)
   - [`getCellHeight()`](#getcellheight)
   - [`getCellFromPixel(position[, useOffset])`](#getcellfrompixelposition-useoffset)
+  - [`getColumn(): number`](#getcolumn-number)
   - [`getGridItems(): GridItemHTMLElement[]`](#getgriditems-griditemhtmlelement)
   - [`getMargin()`](#getmargin)
   - [`isAreaEmpty(x, y, width, height)`](#isareaemptyx-y-width-height)
@@ -365,14 +366,14 @@ Gets current cell width (grid width / # of columns).
 
 Ends batch updates. Updates DOM nodes. You must call it after `batchUpdate()`.
 
-### `column(column: number, layout: ColumnOptions = 'moveScale')`
+### `column(column: number | 'auto', layout: ColumnOptions = 'moveScale')`
 
-set/get the number of columns in the grid. Will update existing widgets to conform to new number of columns,
+set the number of columns in the grid. Will update existing widgets to conform to new number of columns,
 as well as cache the original layout so you can revert back to previous positions without loss.
-Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [2-11],
+Requires `gridstack-extra.css` (or minimized version) for [2-11],
 else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
 
-- `column` - Integer > 0 (default 12), if missing it will return the current count instead.
+- `column` - Integer > 0 (default 12), or 'auto' for nested grids to size themselves to the parent grid container (to make su-items the same size inside and outside)
 - `layout` - specify the type of re-layout that will happen (position, size, etc...).
 Note: items will never be outside of the current column boundaries. default ('moveScale'). Ignored for 1 column.
 Possible values: 'moveScale' | 'move' | 'scale' | 'none' | (column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void.
@@ -444,6 +445,10 @@ Parameters :
 - `useOffset` - if `true`, value will be based on offset vs position (Optional. Default `false`). Useful when grid is within `position: relative` element.
 
 Returns an object with properties `x` and `y` i.e. the column and row in the grid.
+
+### `getColumn(): number`
+
+returns the number of columns in the grid.
 
 ### `getGridItems(): GridItemHTMLElement[]`
 

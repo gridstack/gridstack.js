@@ -228,6 +228,8 @@ export class GridStack {
   private _insertNotAppend: boolean;
   /** @internal extra row added when dragging at the bottom of the grid */
   private _extraDragRow = 0;
+  /** @internal true if nested grid should get column count from our width */
+  private _autoColumn?: boolean;
 
   /**
    * Construct a grid item from the given element and options
@@ -244,6 +246,11 @@ export class GridStack {
       delete opts.row;
     }
     let rowAttr = Utils.toNumber(el.getAttribute('gs-row'));
+
+    // flag only valid in sub-grids (handled by parent, not here)
+    if (opts.column === 'auto') {
+      delete opts.column;
+    }
 
     // elements attributes override any passed options (like CSS style) - merge the two together
     let defaults: GridStackOptions = {...Utils.cloneDeep(GridDefaults),
@@ -276,7 +283,7 @@ export class GridStack {
 
     // Now check if we're loading into 1 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
     if (this.opts.column !== 1 && !this.opts.disableOneColumnMode && this._widthOrContainer() <= this.opts.minWidth) {
-      this._prevColumn = this.opts.column;
+      this._prevColumn = this.getColumn();
       this.opts.column = 1;
     }
 
@@ -315,7 +322,7 @@ export class GridStack {
     this._setStaticClass();
 
     this.engine = new GridStackEngine({
-      column: this.opts.column,
+      column: this.getColumn(),
       float: this.opts.float,
       maxRow: this.opts.maxRow,
       onChange: (cbNodes) => {
@@ -344,7 +351,7 @@ export class GridStack {
         elements.push({
           el,
           // if x,y are missing (autoPosition) add them to end of list - but keep their respective DOM order
-          i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * this.opts.column
+          i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * this.getColumn()
         });
       });
       elements.sort((a, b) => a.i - b.i).forEach(e => this._prepareElement(e.el));
@@ -435,8 +442,17 @@ export class GridStack {
 
     // check if nested grid definition is present
     if (node.subGrid && !(node.subGrid as GridStack).el) { // see if there is a sub-grid to create too
+      // if column special case it set, remember that flag and set default
+      let autoColumn: boolean;
+      let ops = node.subGrid as GridStackOptions;
+      if (ops.column === 'auto') {
+        ops.column = node.w;
+        ops.disableOneColumnMode = true; // driven by parent
+        autoColumn = true;
+      }
       let content = node.el.querySelector('.grid-stack-item-content') as HTMLElement;
       node.subGrid = GridStack.addGrid(content, node.subGrid as GridStackOptions);
+      if (autoColumn) { node.subGrid._autoColumn = true; }
     }
 
     this._triggerAddEvent();
@@ -483,7 +499,13 @@ export class GridStack {
         delete o.marginTop; delete o.marginRight; delete o.marginBottom; delete o.marginLeft;
       }
       if (o.rtl === (this.el.style.direction === 'rtl')) { o.rtl = 'auto' }
-      if (this._isAutoCellHeight) { o.cellHeight = 'auto' }
+      if (this._isAutoCellHeight) {
+        o.cellHeight = 'auto'
+      }
+      if (this._autoColumn) {
+        o.column = 'auto';
+        delete o.disableOneColumnMode;
+      }
       Utils.removeInternalAndSame(o, GridDefaults);
       o.children = list;
       return o;
@@ -503,7 +525,7 @@ export class GridStack {
    * see http://gridstackjs.com/demo/serialization.html
    **/
   public load(layout: GridStackWidget[], addAndRemove: boolean | ((g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement)  = true): GridStack {
-    let items = GridStack.Utils.sort([...layout], -1, this._prevColumn || this.opts.column); // make copy before we mod/sort
+    let items = GridStack.Utils.sort([...layout], -1, this._prevColumn || this.getColumn()); // make copy before we mod/sort
     this._insertNotAppend = true; // since create in reverse order...
 
     // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
@@ -633,7 +655,7 @@ export class GridStack {
 
   /** Gets current cell width. */
   public cellWidth(): number {
-    return this._widthOrContainer() / this.opts.column;
+    return this._widthOrContainer() / this.getColumn();
   }
   /** return our expected width (or parent) for 1 column check */
   private _widthOrContainer(): number {
@@ -671,7 +693,7 @@ export class GridStack {
    */
   public column(column: number, layout: ColumnOptions = 'moveScale'): GridStack {
     if (column < 1 || this.opts.column === column) return this;
-    let oldColumn = this.opts.column;
+    let oldColumn = this.getColumn();
 
     // if we go into 1 column mode (which happens if we're sized less than minW unless disableOneColumnMode is on)
     // then remember the original columns so we can restore.
@@ -709,7 +731,7 @@ export class GridStack {
    * get the number of columns in the grid (default 12)
    */
   public getColumn(): number {
-    return this.opts.column;
+    return this.opts.column as number;
   }
 
   /** returns an array of grid HTML elements (no placeholder) - used to iterate through our children in DOM order */
@@ -783,7 +805,7 @@ export class GridStack {
     let relativeLeft = position.left - containerPos.left;
     let relativeTop = position.top - containerPos.top;
 
-    let columnWidth = (box.width / this.opts.column);
+    let columnWidth = (box.width / this.getColumn());
     let rowHeight = (box.height / parseInt(this.el.getAttribute('gs-current-row')));
 
     return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
@@ -1336,29 +1358,38 @@ export class GridStack {
 
   /**
    * called when we are being resized by the window - check if the one Column Mode needs to be turned on/off
-   * and remember the prev columns we used, as well as check for auto cell height (square)
+   * and remember the prev columns we used, or get our count from parent, as well as check for auto cell height (square)
    */
   public onParentResize(): GridStack {
     if (!this.el || !this.el.clientWidth) return; // return if we're gone or no size yet (will get called again)
-    let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth;
-    let changedOneColumn = false;
+    let changedColumn = false;
 
-    if ((this.opts.column === 1) !== oneColumn) {
-      changedOneColumn = true;
-      if (this.opts.animate) { this.setAnimation(false); } // 1 <-> 12 is too radical, turn off animation
-      this.column(oneColumn ? 1 : this._prevColumn);
-      if (this.opts.animate) { this.setAnimation(true); }
+    // see if we're nested and take our column count from our parent....
+    if (this._autoColumn && this.opts._isNested) {
+      if (this.opts.column !== this.opts._isNested.w) {
+        changedColumn = true;
+        this.column(this.opts._isNested.w, 'none');
+      }
+    } else {
+      // else check for 1 column in/out behavior
+      let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth;
+      if ((this.opts.column === 1) !== oneColumn) {
+        changedColumn = true;
+        if (this.opts.animate) { this.setAnimation(false); } // 1 <-> 12 is too radical, turn off animation
+        this.column(oneColumn ? 1 : this._prevColumn);
+        if (this.opts.animate) { this.setAnimation(true); }
+      }
     }
 
     // make the cells content square again
     if (this._isAutoCellHeight) {
-      if (!changedOneColumn && this.opts.cellHeightThrottle) {
+      if (!changedColumn && this.opts.cellHeightThrottle) {
         if (!this._cellHeightThrottle) {
           this._cellHeightThrottle = Utils.throttle(() => this.cellHeight(), this.opts.cellHeightThrottle);
         }
         this._cellHeightThrottle();
       } else {
-        // immediate update if we've changed to/from oneColumn or have no threshold
+        // immediate update if we've changed column count or have no threshold
         this.cellHeight();
       }
     }

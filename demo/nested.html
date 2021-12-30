@@ -9,11 +9,13 @@
   <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/>
   <script src="../dist/gridstack-h5.js"></script>
   <style type="text/css">
-    .grid-stack .grid-stack {
-      background: rgba(255, 255, 255, 0.3);
+    /* make nested grids have slightly darker bg */
+    .grid-stack.grid-stack-nested {
+      background: #e4e4c1;
     }
-    .grid-stack .grid-stack .grid-stack-item-content {
-      background: lightpink;
+    /* make nested grid take almost all space (need some to tell them apart) so items inside can have similar to external size+margin */
+    .grid-stack > .grid-stack-item.grid-stack-nested > .grid-stack-item-content {
+      inset: 2px;
     }
     /* make nested grid take entire item content */
     .grid-stack-item-content .grid-stack {
@@ -25,11 +27,12 @@
 <body>
   <div class="container-fluid">
     <h1>Nested grids demo</h1>
-    <p>This example uses new v3.1 API to load the entire nested grid from JSON, and shows dragging between nested grid items (pink) vs dragging higher items (green)</p>
-    <p>Note: HTML5 release doesn't yet support 'dragOut:false' constrain so use JQ version if you need that (nested 2 case).</p>
+    <p>This example shows v5.x dragging between nested grids (dark yellow) and parent grid (bright yellow.)<br>
+      Uses v3.1 API to load the entire nested grid from JSON.<br>
+      Nested grids uses new <b>column:'auto'</b> to keep items same size during resize.</p>
     <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
-    <a class="btn btn-primary" onClick="addNewWidget('.nested1')" href="#">Add Widget Grid1</a>
-    <a class="btn btn-primary" onClick="addNewWidget('.nested2')" href="#">Add Widget Grid2</a>
+    <a class="btn btn-primary" onClick="addNewWidget('.sub1')" href="#">Add Widget Grid1</a>
+    <a class="btn btn-primary" onClick="addNewWidget('.sub2')" href="#">Add Widget Grid2</a>
     <span>entire save/re-create:</span>
     <a class="btn btn-primary" onClick="save()" href="#">Save</a>
     <a class="btn btn-primary" onClick="destroy()" href="#">Destroy</a>
@@ -49,21 +52,21 @@
     let count = 0;
     [...sub1, ...sub2].forEach(d => d.content = String(count++));
     let subOptions = {
-      cellHeight: 30,
-      column: 4, // make sure to include gridstack-extra.min.css
+      cellHeight: 50,
+      column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
       acceptWidgets: true, // will accept .grid-stack-item by default
-      minWidth: 300, // min to go 1 column mode (much smaller than default)
-      margin: 2
+      margin: 5,
     };
     let options = { // main grid options
-      cellHeight: 70,
+      cellHeight: 50,
+      margin: 5,
       minRow: 2, // don't collapse when empty
       acceptWidgets: true,
       id: 'main',
       children: [
         {y:0, content: 'regular item'},
-        {x:1, w:4, h:4, subGrid: {children: sub1, dragOut: true, id: 'sub1', ...subOptions}},
-        {x:5, w:4, h:4, subGrid: {children: sub2, id: 'sub2', ...subOptions}},
+        {x:1, w:4, h:4, subGrid: {children: sub1, dragOut: true, class: 'sub1', ...subOptions}},
+        {x:5, w:3, h:4, subGrid: {children: sub2, class: 'sub2', ...subOptions}},
       ]
     };
 
@@ -71,7 +74,7 @@
     let grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
 
     addNested = function() {
-      grid.addWidget({x:0, y:0, content:"new item"});
+      grid.addWidget({x:0, y:100, content:"new item"});
     }
 
     addNewWidget = function(selector) {

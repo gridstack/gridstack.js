@@ -71,8 +71,11 @@ export interface GridStackOptions {
   /** list of children item to create when calling load() or addGrid() */
   children?: GridStackWidget[];
 
-  /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns */
-  column?: number;
+  /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns.
+   * Note: for nested grids, it is recommended to use 'auto' which will always match the container grid-item current width (in column) to keep inside and outside
+   * items always to same. flag is ignored for non nested grids.
+   */
+  column?: number | 'auto';
 
   /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance.
   Note: only used by addGrid(), else your element should have the needed class */
