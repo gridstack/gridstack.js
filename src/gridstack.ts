@@ -293,6 +293,7 @@ export class GridStack {
     if (parentGridItemEl && parentGridItemEl.gridstackNode) {
       this.opts._isNested = parentGridItemEl.gridstackNode;
       this.opts._isNested.subGrid = this;
+      parentGridItemEl.classList.add('grid-stack-nested');
       this.el.classList.add('grid-stack-nested');
     }
 
