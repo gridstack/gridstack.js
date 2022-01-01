@@ -600,12 +600,15 @@ export class GridStack {
        (!forcePixel || !this.opts.cellHeightUnit || this.opts.cellHeightUnit === 'px')) {
       return this.opts.cellHeight as number;
     }
-    // else do entire grid and # of rows
-    // or get first cell height ?
-    // let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
-    // let height = Utils.toNumber(el.getAttribute('gs-h'));
-    // return Math.round(el.offsetHeight / height);
-    return Math.round(this.el.getBoundingClientRect().height) / parseInt(this.el.getAttribute('gs-current-row'));
+    // else get first cell height
+    let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
+    if (el) {
+      let height = Utils.toNumber(el.getAttribute('gs-h'));
+      return Math.round(el.offsetHeight / height);
+    }
+    // else do entire grid and # of rows (but doesn't work if min-height is the actual constrain)
+    let rows = parseInt(this.el.getAttribute('gs-current-row'));
+    return rows ? Math.round(this.el.getBoundingClientRect().height / rows) : this.opts.cellHeight as number;
   }
 
   /**
@@ -1238,13 +1241,15 @@ export class GridStack {
     if (!this.engine || this.engine.batchMode) return this;
     let row = this.getRow() + this._extraDragRow; // checks for minRow already
     // check for css min height
-    let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
-    if (cssMinHeight > 0) {
-      let minRow = Math.round(cssMinHeight / this.getCellHeight(true));
-      if (row < minRow) {
-        row = minRow;
-      }
-    }
+    // Note: we don't handle %,rem correctly so comment out, beside we don't need need to create un-necessary
+    // rows as the CSS will make us bigger than our set height if needed... not sure why we had this.
+    // let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
+    // if (cssMinHeight > 0) {
+    //   let minRow = Math.round(cssMinHeight / this.getCellHeight(true));
+    //   if (row < minRow) {
+    //     row = minRow;
+    //   }
+    // }
     this.el.setAttribute('gs-current-row', String(row));
     if (row === 0) {
       this.el.style.removeProperty('height');
