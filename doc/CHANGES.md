@@ -71,6 +71,7 @@ Change log
 * add [#1910](https://github.com/gridstack/gridstack.js/pull/1910) new `column:'auto'` option to size nested grids to their parent grid item column count, keeping items the same size inside and outside. Thank you [@arclogos132](https://github.com/arclogos132) for also sponsoring it.
 * fix [#1902](https://github.com/gridstack/gridstack.js/pull/1902) nested.html: dragging between sub-grids show items clipped
 * fix [#1558](https://github.com/gridstack/gridstack.js/issues/1558) dragging between vertical grids causes too much growth, not follow mouse.
+* fix [#1912](https://github.com/gridstack/gridstack.js/pull/1912) no longer force rows for min-height
 
 ## 4.4.1 (2021-12-24)
 * fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error introduced for #1785 when re-loading with fewer objects
