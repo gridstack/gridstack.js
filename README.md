@@ -44,6 +44,7 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Migrating to v2](#migrating-to-v2)
   - [Migrating to v3](#migrating-to-v3)
   - [Migrating to v4](#migrating-to-v4)
+  - [Migrating to v5](#migrating-to-v5)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -434,6 +435,13 @@ v4 is a complete re-write of the collision and drag in/out heuristics to fix som
 3. removed old obsolete (v0.6-v1 methods/attrs) `getGridHeight()`, `verticalMargin`, `data-gs-current-height`,
 `locked()`, `maxWidth()`, `minWidth()`, `maxHeight()`, `minHeight()`, `move()`, `resize()`
 
+
+## Migrating to v5
+
+make sure to read v4 migration first!
+
+v5 does not have any breaking changes from v4, but a focus on nested grids in h5 mode:
+You can now drag in/out of parent into nested child, with new API parameters values. See the release notes.
 
 # jQuery Application
 
