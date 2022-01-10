@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [5.0 (2022-01-10)](#50-2022-01-10)
+- [5.0.0-dev (TBD)](#500-dev-tbd)
+- [5.0.0 (2022-01-10)](#500-2022-01-10)
 - [4.4.1 (2021-12-24)](#441-2021-12-24)
 - [4.4.0 (2021-12-21)](#440-2021-12-21)
 - [4.3.1 (2021-10-18)](#431-2021-10-18)
@@ -66,7 +67,10 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 5.0 (2022-01-10)
+
+## 5.0.0-dev (TBD)
+
+## 5.0.0 (2022-01-10)
 * add [#992](https://github.com/gridstack/gridstack.js/issues/992) support dragging into and out of nested grids from parents! Thank you [@arclogos132](https://github.com/arclogos132) for sponsoring it.
 * add [#1910](https://github.com/gridstack/gridstack.js/pull/1910) new `column:'auto'` option to size nested grids to their parent grid item column count, keeping items the same size inside and outside. Thank you [@arclogos132](https://github.com/arclogos132) for also sponsoring it.
 * fix [#1902](https://github.com/gridstack/gridstack.js/pull/1902) nested.html: dragging between sub-grids show items clipped
