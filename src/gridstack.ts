@@ -326,8 +326,8 @@ export class GridStack {
       float: this.opts.float,
       maxRow: this.opts.maxRow,
       onChange: (cbNodes) => {
-        let maxH = 0;
-        this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h,this.opts.minRow) });
+        let maxH = this.opts.minRow || 0;
+        this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
         cbNodes.forEach(n => {
           let el = n.el;
           if (!el) return;
