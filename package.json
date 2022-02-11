@@ -79,7 +79,7 @@
     "grunt-protractor-webdriver": "^0.2.5",
     "grunt-sass": "3.1.0",
     "jasmine-core": "^3.5.0",
-    "karma": "^4",
+    "karma": "^6",
     "karma-chrome-launcher": "^3.1.0",
     "karma-cli": "^2.0.0",
     "karma-jasmine": "^4.0.1",
