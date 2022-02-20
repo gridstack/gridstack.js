@@ -179,6 +179,14 @@ export class GridStack {
     return grid;
   }
 
+  /** call this method to register your engine instead of the default one.
+   * See instead `GridStackOptions.engineClass` if you only need to
+   * replace just one instance.
+   */
+  static registerEngine(engineClass: typeof GridStackEngine) {
+    GridStack.engineClass = engineClass;
+  }
+
   /** scoping so users can call GridStack.Utils.sort() for example */
   public static Utils = Utils;
 
@@ -193,6 +201,8 @@ export class GridStack {
 
   /** grid options - public for classes to access, but use methods to modify! */
   public opts: GridStackOptions;
+
+  protected static engineClass: typeof GridStackEngine;
 
   /** @internal create placeholder DIV as needed */
   public get placeholder(): HTMLElement {
@@ -321,7 +331,8 @@ export class GridStack {
 
     this._setStaticClass();
 
-    this.engine = new GridStackEngine({
+    let engineClass = this.opts.engineClass || GridStack.engineClass || GridStackEngine;
+    this.engine = new engineClass({
       column: this.getColumn(),
       float: this.opts.float,
       maxRow: this.opts.maxRow,

@@ -4,6 +4,7 @@
  */
 
 import { GridStack } from './gridstack';
+import { GridStackEngine } from './gridstack-engine';
 
 
 /** different layout options when changing # of columns,
@@ -104,6 +105,9 @@ export interface GridStackOptions {
 
   /** let user drag nested grid items out of a parent or not (default false) */
   dragOut?: boolean;
+
+  /** the type of engine to create (so you can subclass) default to GridStackEngine */
+  engineClass?: typeof GridStackEngine;
 
   /** enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) */
   float?: boolean;
