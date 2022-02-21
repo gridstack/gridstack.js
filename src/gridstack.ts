@@ -183,7 +183,7 @@ export class GridStack {
    * See instead `GridStackOptions.engineClass` if you only need to
    * replace just one instance.
    */
-  static registerEngine(engineClass: typeof GridStackEngine) {
+  static registerEngine(engineClass: typeof GridStackEngine): void {
     GridStack.engineClass = engineClass;
   }
 
