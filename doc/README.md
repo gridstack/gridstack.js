@@ -27,6 +27,7 @@ gridstack.js API
   - [`initAll(options: GridStackOptions = {}, selector = '.grid-stack'): GridStack[]`](#initalloptions-gridstackoptions---selector--grid-stack-gridstack)
   - [`addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack `](#addgridparent-htmlelement-opt-gridstackoptions---gridstack-)
   - [`setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt)`](#setupdragindragin-string-draginoptions-dddraginopt)
+  - [`GridStack.registerEngine(engineClass: typeof GridStackEngine)`](#gridstackregisterengineengineclass-typeof-gridstackengine)
 - [API](#api)
   - [`addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
   - [`batchUpdate()`](#batchupdate)
@@ -100,6 +101,7 @@ gridstack.js API
   * **Note2**: instead of 'clone' you can also pass your own function (get passed the event).
 - `draggable` - allows to override draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body', containment: null}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
+- `engineClass` - the type of engine to create (so you can subclass) default to GridStackEngine
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
@@ -321,6 +323,10 @@ Called during `GridStack.init()` as options, but can also be called directly (la
 * @param dragInOptions options - see `DDDragInOpt`. (default: `{revert: 'invalid', handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`
 but you will probably also want `helper: 'clone'` or your own callback function).
 
+
+### `GridStack.registerEngine(engineClass: typeof GridStackEngine)`
+
+* call to specify global custom engine subclass - see instead `GridStackOptions.engineClass` if you only need to replace just one instance.
 ## API
 
 ### `addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`

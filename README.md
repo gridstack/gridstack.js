@@ -33,6 +33,7 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Requirements](#requirements)
   - [API Documentation](#api-documentation)
   - [Extend Library](#extend-library)
+  - [Extend Engine](#extend-engine)
   - [Change grid columns](#change-grid-columns)
   - [Custom columns CSS](#custom-columns-css)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
@@ -184,6 +185,27 @@ let grid = GridStack.init();
 
 // you can now call
 grid.printCount();
+```
+
+## Extend Engine
+
+You can now (5.1+) easily create your own layout engine to further customize you usage. Here is a typescript example
+
+```ts
+import { GridStack, GridStackEngine, GridStackNod, GridStackMoveOpts } from 'gridstack';
+
+class CustomEngine extends GridStackEngine {
+
+  /** refined this to move the node to the given new location */
+  public moveNode(node: GridStackNode, o: GridStackMoveOpts): boolean {
+    // keep the same original X and Width and let base do it all...
+    o.x = node.x;
+    o.w = node.w;
+    return super.moveNode(node, o);
+  }
+}
+
+GridStack.registerEngine(CustomEngine); // globally set our custom class
 ```
 
 ## Change grid columns

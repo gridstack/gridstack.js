@@ -69,6 +69,7 @@ Change log
 
 
 ## 5.0.0-dev (TBD)
+* add `GridStack.registerEngine()` to let user use their own custom layout engine subclass. Thank you [Thomas] for sponsoring it.
 
 ## 5.0.0 (2022-01-10)
 * add [#992](https://github.com/gridstack/gridstack.js/issues/992) support dragging into and out of nested grids from parents! Thank you [@arclogos132](https://github.com/arclogos132) for sponsoring it.

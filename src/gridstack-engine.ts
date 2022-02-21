@@ -622,14 +622,8 @@ export class GridStackEngine {
     if (Utils.samePos(node, o)) return false;
     let prevPos: GridStackPosition = Utils.copyPos({}, node);
 
-    // during while() collisions make sure to check entire row so larger items don't leap frog small ones (push them all down)
-    let area = nn;
-    // if (this._useEntireRowArea(node, nn)) {
-    //   area = {x: 0, w: this.column, y: nn.y, h: nn.h};
-    // }
-
     // check if we will need to fix collision at our new location
-    let collides = this.collideAll(node, area, o.skip);
+    let collides = this.collideAll(node, nn, o.skip);
     let needToMove = true;
     if (collides.length) {
       // now check to make sure we actually collided over 50% surface area while dragging
