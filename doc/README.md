@@ -35,7 +35,7 @@ gridstack.js API
   - [`cellHeight(val: number, update = true)`](#cellheightval-number-update--true)
   - [`cellWidth()`](#cellwidth)
   - [`commit()`](#commit)
-  - [`column(column: number | 'auto', layout: ColumnOptions = 'moveScale')`](#columncolumn-number--auto-layout-columnoptions--movescale)
+  - [`column(column: number, layout: ColumnOptions = 'moveScale')`](#columncolumn-number-layout-columnoptions--movescale)
   - [`destroy([removeDOM])`](#destroyremovedom)
   - [`disable()`](#disable)
   - [`enable()`](#enable)
@@ -87,7 +87,7 @@ gridstack.js API
 - `cellHeightThrottle`?: number - throttle time delay (in ms) used when cellHeight='auto' to improve performance vs usability (default?: 100).
    * A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event!
 - `children`?: GridStackWidget[] - list of children item to create when calling load() or addGrid()
-- `column` - number of columns (default: `12`) which can change on the fly with `column(N)` as well. See [example](http://gridstackjs.com/demo/column.html)
+- `column` - Integer > 0 (default 12) which can change on the fly with `column(N)` API, or `'auto'` for nested grids to size themselves to the parent grid container (to make sub-items are the same size). See [column](http://gridstackjs.com/demo/column.html) and [nested](http://gridstackjs.com/demo/nested.html)
 - `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minW (default: 'false')
@@ -372,14 +372,14 @@ Gets current cell width (grid width / # of columns).
 
 Ends batch updates. Updates DOM nodes. You must call it after `batchUpdate()`.
 
-### `column(column: number | 'auto', layout: ColumnOptions = 'moveScale')`
+### `column(column: number, layout: ColumnOptions = 'moveScale')`
 
 set the number of columns in the grid. Will update existing widgets to conform to new number of columns,
 as well as cache the original layout so you can revert back to previous positions without loss.
 Requires `gridstack-extra.css` (or minimized version) for [2-11],
 else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
 
-- `column` - Integer > 0 (default 12), or 'auto' for nested grids to size themselves to the parent grid container (to make su-items the same size inside and outside)
+- `column` - Integer > 0 (default 12)
 - `layout` - specify the type of re-layout that will happen (position, size, etc...).
 Note: items will never be outside of the current column boundaries. default ('moveScale'). Ignored for 1 column.
 Possible values: 'moveScale' | 'move' | 'scale' | 'none' | (column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void.
