@@ -85,7 +85,7 @@ export interface GridStackOptions {
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
 
-  /** disables the onColumnMode when the grid width is less than minWidth (default?: false) */
+  /** disables the onColumnMode when the grid width is less than oneColumnSize (default?: false) */
   disableOneColumnMode?: boolean;
 
   /** disallows resizing of widgets (default?: false). */
@@ -150,8 +150,8 @@ export interface GridStackOptions {
    */
   minRow?: number;
 
-  /** minimal width. If grid width is less, grid will be shown in one column mode (default?: 768) */
-  minWidth?: number;
+  /** minimal width before grid will be shown in one column mode (default?: 768) */
+  oneColumnSize?: number;
 
   /**
    * set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column
