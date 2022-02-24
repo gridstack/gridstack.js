@@ -56,7 +56,7 @@ const GridDefaults: GridStackOptions = {
   cellHeightThrottle: 100,
   margin: 10,
   auto: true,
-  minWidth: 768,
+  oneColumnSize: 768,
   float: false,
   staticGrid: false,
   animate: true,
@@ -261,6 +261,12 @@ export class GridStack {
     if (opts.column === 'auto') {
       delete opts.column;
     }
+    // 'minWidth' legacy support in 5.1
+    let anyOpts = opts as any;
+    if (anyOpts.minWidth !== undefined) {
+      opts.oneColumnSize = opts.oneColumnSize || anyOpts.minWidth;
+      delete anyOpts.minWidth;
+    }
 
     // elements attributes override any passed options (like CSS style) - merge the two together
     let defaults: GridStackOptions = {...Utils.cloneDeep(GridDefaults),
@@ -292,7 +298,7 @@ export class GridStack {
     this.initMargin(); // part of settings defaults...
 
     // Now check if we're loading into 1 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
-    if (this.opts.column !== 1 && !this.opts.disableOneColumnMode && this._widthOrContainer() <= this.opts.minWidth) {
+    if (this.opts.column !== 1 && !this.opts.disableOneColumnMode && this._widthOrContainer() <= this.opts.oneColumnSize) {
       this._prevColumn = this.getColumn();
       this.opts.column = 1;
     }
@@ -1388,7 +1394,7 @@ export class GridStack {
       }
     } else {
       // else check for 1 column in/out behavior
-      let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.minWidth;
+      let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.oneColumnSize;
       if ((this.opts.column === 1) !== oneColumn) {
         changedColumn = true;
         if (this.opts.animate) { this.setAnimation(false); } // 1 <-> 12 is too radical, turn off animation

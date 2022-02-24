@@ -527,11 +527,11 @@ describe('gridstack', function() {
       expect(grid.getColumn()).toBe(1);
     });
     it('should go to 1 column with large minW', function() {
-      let grid = GridStack.init({minWidth: 1000});
+      let grid = GridStack.init({oneColumnSize: 1000});
       expect(grid.getColumn()).toBe(1);
     });
     it('should stay at 12 with minW', function() {
-      let grid = GridStack.init({minWidth: 300});
+      let grid = GridStack.init({oneColumnSize: 300});
       expect(grid.getColumn()).toBe(12);
     });
     it('should stay at 12 column', function() {
