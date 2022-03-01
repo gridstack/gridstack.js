@@ -1,6 +1,6 @@
 /**
  * dd-base-impl.ts 5.0.0-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 export type EventCallback = (event: Event) => boolean|void;
@@ -9,9 +9,9 @@ export abstract class DDBaseImplement {
   public get disabled(): boolean   { return this._disabled; }
 
   /** @internal */
-  private _disabled = false;
+  protected _disabled = false;
   /** @internal */
-  private _eventRegister: {
+  protected _eventRegister: {
     [eventName: string]: EventCallback;
   } = {};
 

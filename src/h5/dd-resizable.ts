@@ -1,6 +1,6 @@
 /**
  * dd-resizable.ts 5.0.0-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { DDResizableHandle } from './dd-resizable-handle';
@@ -29,25 +29,25 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   public option: DDResizableOpt;
 
   /** @internal */
-  private handlers: DDResizableHandle[];
+  protected handlers: DDResizableHandle[];
   /** @internal */
-  private originalRect: Rect;
+  protected originalRect: Rect;
   /** @internal */
-  private temporalRect: Rect;
+  protected temporalRect: Rect;
   /** @internal */
-  private scrollY: number;
+  protected scrollY: number;
   /** @internal */
-  private scrolled: number;
+  protected scrolled: number;
   /** @internal */
-  private scrollEl: HTMLElement;
+  protected scrollEl: HTMLElement;
   /** @internal */
-  private startEvent: MouseEvent;
+  protected startEvent: MouseEvent;
   /** @internal value saved in the same order as _originStyleProp[] */
-  private elOriginStyleVal: string[];
+  protected elOriginStyleVal: string[];
   /** @internal */
-  private parentOriginStylePosition: string;
+  protected parentOriginStylePosition: string;
   /** @internal */
-  private static _originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
+  protected static _originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
 
   constructor(el: HTMLElement, opts: DDResizableOpt = {}) {
     super();
@@ -104,7 +104,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _setupAutoHide(): DDResizable {
+  protected _setupAutoHide(): DDResizable {
     if (this.option.autoHide) {
       this.el.classList.add('ui-resizable-autohide');
       // use mouseover/mouseout instead of mouseenter/mouseleave to get better performance;
@@ -119,17 +119,17 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _showHandlers = () => {
+  protected _showHandlers = () => {
     this.el.classList.remove('ui-resizable-autohide');
   }
 
   /** @internal */
-  private _hideHandlers = () => {
+  protected _hideHandlers = () => {
     this.el.classList.add('ui-resizable-autohide');
   }
 
   /** @internal */
-  private _setupHandlers(): DDResizable {
+  protected _setupHandlers(): DDResizable {
     let handlerDirection = this.option.handles || 'e,s,se';
     if (handlerDirection === 'all') {
       handlerDirection = 'n,e,s,w,se,sw,ne,nw';
@@ -151,7 +151,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _resizeStart(event: MouseEvent): DDResizable {
+  protected _resizeStart(event: MouseEvent): DDResizable {
     this.originalRect = this.el.getBoundingClientRect();
     this.scrollEl = Utils.getScrollElement(this.el);
     this.scrollY = this.scrollEl.scrollTop;
@@ -169,7 +169,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _resizing(event: MouseEvent, dir: string): DDResizable {
+  protected _resizing(event: MouseEvent, dir: string): DDResizable {
     this.scrolled = this.scrollEl.scrollTop - this.scrollY;
     this.temporalRect = this._getChange(event, dir);
     this._applyChange();
@@ -182,7 +182,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _resizeStop(event: MouseEvent): DDResizable {
+  protected _resizeStop(event: MouseEvent): DDResizable {
     const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resizestop', target: this.el });
     if (this.option.stop) {
       this.option.stop(ev); // Note: ui() not used by gridstack so don't pass
@@ -199,7 +199,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _setupHelper(): DDResizable {
+  protected _setupHelper(): DDResizable {
     this.elOriginStyleVal = DDResizable._originStyleProp.map(prop => this.el.style[prop]);
     this.parentOriginStylePosition = this.el.parentElement.style.position;
     if (window.getComputedStyle(this.el.parentElement).position.match(/static/)) {
@@ -211,7 +211,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _cleanHelper(): DDResizable {
+  protected _cleanHelper(): DDResizable {
     DDResizable._originStyleProp.forEach((prop, i) => {
       this.el.style[prop] = this.elOriginStyleVal[i] || null;
     });
@@ -220,7 +220,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _getChange(event: MouseEvent, dir: string): Rect {
+  protected _getChange(event: MouseEvent, dir: string): Rect {
     const oEvent = this.startEvent;
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
@@ -261,7 +261,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal constrain the size to the set min/max values */
-  private _constrainSize(oWidth: number, oHeight: number): Size {
+  protected _constrainSize(oWidth: number, oHeight: number): Size {
     const maxWidth = this.option.maxWidth || Number.MAX_SAFE_INTEGER;
     const minWidth = this.option.minWidth || oWidth;
     const maxHeight = this.option.maxHeight || Number.MAX_SAFE_INTEGER;
@@ -272,7 +272,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _applyChange(): DDResizable {
+  protected _applyChange(): DDResizable {
     let containmentRect = { left: 0, top: 0, width: 0, height: 0 };
     if (this.el.style.position === 'absolute') {
       const containmentEl = this.el.parentElement;
@@ -288,14 +288,14 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _removeHandlers(): DDResizable {
+  protected _removeHandlers(): DDResizable {
     this.handlers.forEach(handle => handle.destroy());
     delete this.handlers;
     return this;
   }
 
   /** @internal */
-  private _ui = (): DDUIData => {
+  protected _ui = (): DDUIData => {
     const containmentEl = this.el.parentElement;
     const containmentRect = containmentEl.getBoundingClientRect();
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
