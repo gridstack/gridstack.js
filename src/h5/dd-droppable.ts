@@ -1,6 +1,6 @@
 /**
  * dd-droppable.ts 5.0.0-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { DDDraggable } from './dd-draggable';
@@ -26,8 +26,8 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   public option: DDDroppableOpt;
 
   /** @internal */
-  private moving: boolean;
-  private static lastActive: DDDroppable;
+  protected moving: boolean;
+  protected static lastActive: DDDroppable;
 
   constructor(el: HTMLElement, opts: DDDroppableOpt = {}) {
     super();
@@ -81,7 +81,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal called when the cursor enters our area - prepare for a possible drop and track leaving */
-  private _dragEnter(event: DragEvent): void {
+  protected _dragEnter(event: DragEvent): void {
     // TEST console.log(`${count++} Enter ${(this.el as GridHTMLElement).gridstack.opts.id}`);
     if (!this._canDrop()) return;
     event.preventDefault();
@@ -110,13 +110,13 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal called when an moving to drop item is being dragged over - do nothing but eat the event */
-  private _dragOver(event: DragEvent): void {
+  protected _dragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
   }
 
   /** @internal called when the item is leaving our area, stop tracking if we had moving item */
-  private _dragLeave(event: DragEvent, forceLeave?: boolean): void {
+  protected _dragLeave(event: DragEvent, forceLeave?: boolean): void {
     // TEST console.log(`${count++} Leave ${(this.el as GridHTMLElement).gridstack.opts.id}`);
     event.preventDefault();
     event.stopPropagation();
@@ -149,7 +149,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal item is being dropped on us - call the client drop event */
-  private _drop(event: DragEvent): void {
+  protected _drop(event: DragEvent): void {
     if (!this.moving) return; // should not have received event...
     event.preventDefault();
     const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drop' });
@@ -161,7 +161,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal called to remove callbacks when leaving or dropping */
-  private _removeLeaveCallbacks() {
+  protected _removeLeaveCallbacks() {
     if (!this.moving) { return; }
     delete this.moving;
     this.el.removeEventListener('dragover', this._dragOver);
@@ -172,12 +172,12 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _canDrop(): boolean {
+  protected _canDrop(): boolean {
     return DDManager.dragElement && (!this.accept || this.accept(DDManager.dragElement.el));
   }
 
   /** @internal */
-  private _setupAccept(): DDDroppable {
+  protected _setupAccept(): DDDroppable {
     if (this.option.accept && typeof this.option.accept === 'string') {
       this.accept = (el: HTMLElement) => {
         return el.matches(this.option.accept as string)
@@ -189,7 +189,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _ui(drag: DDDraggable) {
+  protected _ui(drag: DDDraggable) {
     return {
       draggable: drag.el,
       ...drag.ui()

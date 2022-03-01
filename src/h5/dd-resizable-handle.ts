@@ -1,6 +1,6 @@
 /**
  * dd-resizable-handle.ts 5.0.0-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 export interface DDResizableHandleOpt {
@@ -11,19 +11,19 @@ export interface DDResizableHandleOpt {
 
 export class DDResizableHandle {
   /** @internal */
-  private el: HTMLElement;
+  protected el: HTMLElement;
   /** @internal */
-  private host: HTMLElement;
+  protected host: HTMLElement;
   /** @internal */
-  private option: DDResizableHandleOpt;
+  protected option: DDResizableHandleOpt;
   /** @internal */
-  private dir: string;
+  protected dir: string;
   /** @internal true after we've moved enough pixels to start a resize */
-  private moving = false;
+  protected moving = false;
   /** @internal */
-  private mouseDownEvent: MouseEvent;
+  protected mouseDownEvent: MouseEvent;
   /** @internal */
-  private static prefix = 'ui-resizable-';
+  protected static prefix = 'ui-resizable-';
 
   constructor(host: HTMLElement, direction: string, option: DDResizableHandleOpt) {
     this.host = host;
@@ -38,7 +38,7 @@ export class DDResizableHandle {
   }
 
   /** @internal */
-  private _init(): DDResizableHandle {
+  protected _init(): DDResizableHandle {
     const el = document.createElement('div');
     el.classList.add('ui-resizable-handle');
     el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
@@ -61,7 +61,7 @@ export class DDResizableHandle {
   }
 
   /** @internal called on mouse down on us: capture move on the entire document (mouse might not stay on us) until we release the mouse */
-  private _mouseDown(e: MouseEvent): void {
+  protected _mouseDown(e: MouseEvent): void {
     e.preventDefault();
     this.mouseDownEvent = e;
     document.addEventListener('mousemove', this._mouseMove, true); // capture, not bubble
@@ -69,7 +69,7 @@ export class DDResizableHandle {
   }
 
   /** @internal */
-  private _mouseMove(e: MouseEvent): void {
+  protected _mouseMove(e: MouseEvent): void {
     let s = this.mouseDownEvent;
     // don't start unless we've moved at least 3 pixels
     if (!this.moving && Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 2) {
@@ -81,7 +81,7 @@ export class DDResizableHandle {
   }
 
   /** @internal */
-  private _mouseUp(e: MouseEvent): void {
+  protected _mouseUp(e: MouseEvent): void {
     if (this.moving) {
       this._triggerEvent('stop', e);
     }
@@ -92,7 +92,7 @@ export class DDResizableHandle {
   }
 
   /** @internal */
-  private _triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
+  protected _triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
     if (this.option[name]) this.option[name](event);
     return this;
   }

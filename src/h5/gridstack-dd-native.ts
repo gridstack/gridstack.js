@@ -1,6 +1,6 @@
 /**
  * gridstack-dd-native.ts 5.0.0-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { DDManager } from './dd-manager';
@@ -129,7 +129,7 @@ export class GridStackDDNative extends GridStackDD {
   }
 
   /** @internal returns a list of DD elements, creating them on the fly by default */
-  private _getDDElements(els: GridStackElement, create = true): DDElement[] {
+  protected _getDDElements(els: GridStackElement, create = true): DDElement[] {
     let hosts = Utils.getElements(els) as DDElementHost[];
     if (!hosts.length) return [];
     let list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));

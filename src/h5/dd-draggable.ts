@@ -1,6 +1,6 @@
 /**
  * dd-draggable.ts 5.0.0-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { DDManager } from './dd-manager';
@@ -36,25 +36,25 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   public helper: HTMLElement; // used by GridStackDDNative
 
   /** @internal */
-  private dragOffset: DragOffset;
+  protected dragOffset: DragOffset;
   /** @internal */
-  private dragElementOriginStyle: Array<string>;
+  protected dragElementOriginStyle: Array<string>;
   /** @internal */
-  private dragFollowTimer: number;
+  protected dragFollowTimer: number;
   /** @internal */
-  private dragEl: HTMLElement;
+  protected dragEl: HTMLElement;
   /** @internal */
-  private dragging = false;
+  protected dragging = false;
   /** @internal */
-  private paintTimer: number;
+  protected paintTimer: number;
   /** @internal */
-  private parentOriginStylePosition: string;
+  protected parentOriginStylePosition: string;
   /** @internal */
-  private helperContainment: HTMLElement;
+  protected helperContainment: HTMLElement;
   /** @internal #1541 can't have {passive: true} on Safari as otherwise it reverts animate back to old location on drop */
-  private static dragEventListenerOption = true; // DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
+  protected static dragEventListenerOption = true; // DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
   /** @internal */
-  private static originStyleProp = ['transition', 'pointerEvents', 'position',
+  protected static originStyleProp = ['transition', 'pointerEvents', 'position',
     'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange', 'min-width'];
 
   constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
@@ -115,7 +115,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _dragStart(event: DragEvent): void {
+  protected _dragStart(event: DragEvent): void {
     DDManager.dragElement = this;
     this.helper = this._createHelper(event);
     this._setupHelperContainmentStyle();
@@ -135,7 +135,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _setupDragFollowNodeNotifyStart(ev: Event): DDDraggable {
+  protected _setupDragFollowNodeNotifyStart(ev: Event): DDDraggable {
     this._setupHelperStyle();
     document.addEventListener('dragover', this._drag, DDDraggable.dragEventListenerOption);
     this.dragEl.addEventListener('dragend', this._dragEnd);
@@ -149,7 +149,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _drag(event: DragEvent): void {
+  protected _drag(event: DragEvent): void {
     // Safari: prevent default to allow drop to happen instead of reverting back (with animation) and delaying dragend #1541
     // https://stackoverflow.com/questions/61760755/how-to-fire-dragend-event-immediately
     event.preventDefault();
@@ -162,7 +162,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _dragEnd(event: DragEvent): void {
+  protected _dragEnd(event: DragEvent): void {
     if (this.dragFollowTimer) {
       clearTimeout(this.dragFollowTimer);
       delete this.dragFollowTimer;
@@ -192,7 +192,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal create a clone copy (or user defined method) of the original drag item if set */
-  private _createHelper(event: DragEvent): HTMLElement {
+  protected _createHelper(event: DragEvent): HTMLElement {
     let helper = this.el;
     if (typeof this.option.helper === 'function') {
       helper = this.option.helper(event);
@@ -209,7 +209,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _setupHelperStyle(): DDDraggable {
+  protected _setupHelperStyle(): DDDraggable {
     // TODO: set all at once with style.cssText += ... ? https://stackoverflow.com/questions/3968593
     const rec = this.helper.getBoundingClientRect();
     const style = this.helper.style;
@@ -231,7 +231,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _removeHelperStyle(): DDDraggable {
+  protected _removeHelperStyle(): DDDraggable {
     // don't bother restoring styles if we're gonna remove anyway...
     let node = this.helper ? (this.helper as GridItemHTMLElement).gridstackNode : undefined;
     if (this.dragElementOriginStyle && (!node || !node._isAboutToRemove)) {
@@ -251,7 +251,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _dragFollow(event: DragEvent): void {
+  protected _dragFollow(event: DragEvent): void {
     if (this.paintTimer) {
       cancelAnimationFrame(this.paintTimer);
     }
@@ -269,7 +269,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _setupHelperContainmentStyle(): DDDraggable {
+  protected _setupHelperContainmentStyle(): DDDraggable {
     this.helperContainment = this.helper.parentElement;
     if (this.helper.style.position !== 'fixed') {
       this.parentOriginStylePosition = this.helperContainment.style.position;
@@ -285,7 +285,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
    * TODO: maybe use mouse event instead of HTML5 drag as we have to work around it anyway, or change code to not update
    * the actual grid-item but move the ghost image around (and special case jq version) ?
    **/
-  private _cancelDragGhost(e: DragEvent): DDDraggable {
+  protected _cancelDragGhost(e: DragEvent): DDDraggable {
     /* doesn't seem to do anything...
     let t = e.dataTransfer;
     t.effectAllowed = 'none';
@@ -307,7 +307,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  private _getDragOffset(event: DragEvent, el: HTMLElement, parent: HTMLElement): DragOffset {
+  protected _getDragOffset(event: DragEvent, el: HTMLElement, parent: HTMLElement): DragOffset {
 
     // in case ancestor has transform/perspective css properties that change the viewpoint
     let xformOffsetX = 0;
