@@ -524,7 +524,7 @@ export class GridStackEngine {
     o.pack = true;
 
     // simpler case: move item directly...
-    if (!this.maxRow/* && !this._hasLocked*/) {
+    if (!this.maxRow) {
       return this.moveNode(node, o);
     }
 
@@ -543,17 +543,14 @@ export class GridStackEngine {
     });
     if (!clonedNode) return false;
 
-    let canMove = clone.moveNode(clonedNode, o);
-    // if maxRow make sure we are still valid size
-    if (this.maxRow && canMove) {
-      canMove = (clone.getRow() <= this.maxRow);
-      // turns out we can't grow, then see if we can swap instead (ex: full grid) if we're not resizing
-      if (!canMove && !o.resizing) {
-        let collide = this.collide(node, o);
-        if (collide && this.swap(node, collide)) {
-          this._notify();
-          return true;
-        }
+    // make sure we are still valid size
+    let canMove = clone.moveNode(clonedNode, o) && clone.getRow() <= this.maxRow;
+    // turns out we can't grow, then see if we can swap instead (ex: full grid) if we're not resizing
+    if (!canMove && !o.resizing) {
+      let collide = this.collide(node, o);
+      if (collide && this.swap(node, collide)) {
+        this._notify();
+        return true;
       }
     }
     if (!canMove) return false;
@@ -593,7 +590,7 @@ export class GridStackEngine {
 
   /** true if x,y or w,h are different after clamping to min/max */
   public changedPosConstrain(node: GridStackNode, p: GridStackPosition): boolean {
-    // make sure w,h are set
+    // first make sure w,h are set for caller
     p.w = p.w || node.w;
     p.h = p.h || node.h;
     if (node.x !== p.x || node.y !== p.y) return true;
