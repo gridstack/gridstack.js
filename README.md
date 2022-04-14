@@ -261,7 +261,7 @@ and so on.
 Better yet, here is a SASS code snippet which can make life much easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)) and you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
 
 ```sass
-@use "sass;math";
+@use "sass:math";
 .grid-stack > .grid-stack-item {
 
   $gridstack-columns: 12;
