@@ -1,8 +1,6 @@
 # gridstack.js
 
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
-[![Dependency Status](https://david-dm.org/gridstack/gridstack.js.svg)](https://david-dm.org/gridstack/gridstack.js)
-[![devDependency Status](https://david-dm.org/gridstack/gridstack.js/dev-status.svg)](https://david-dm.org/gridstack/gridstack.js#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
 [![downloads](https://img.shields.io/npm/dm/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
@@ -20,18 +18,16 @@ If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind
 Join us on Slack: https://gridstackjs.troolee.com
 
 [![Slack Status](https://gridstackjs.troolee.com/badge.svg)](https://gridstackjs.troolee.com)
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [Demo and examples](#demo-and-examples)
+- [Demo and API Documentation](#demo-and-api-documentation)
 - [Usage](#usage)
   - [Install](#install)
   - [Include](#include)
   - [Basic usage](#basic-usage)
   - [Requirements](#requirements)
-  - [API Documentation](#api-documentation)
   - [Extend Library](#extend-library)
   - [Extend Engine](#extend-engine)
   - [Change grid columns](#change-grid-columns)
@@ -53,10 +49,9 @@ Join us on Slack: https://gridstackjs.troolee.com
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-# Demo and examples
+# Demo and API Documentation
 
-Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/)
-
+Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/), and complete [API documentation](https://github.com/gridstack/gridstack.js/tree/master/doc)
 
 # Usage
 
@@ -160,16 +155,13 @@ grid.load(serializedData);
 GridStack.init();
 ```
 
+...or see list of all [API and options](https://github.com/gridstack/gridstack.js/tree/master/doc) available.
+
 see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example too.
 
 ## Requirements
 
 GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). v3.0.0 is a complete HTML5 re-write which removes all jquery dependency (still available for legacy apps). All you need to include now is `gridstack-h5.js` and `gridstack.min.css` (layouts are done using CSS column based %).
-
-## API Documentation
-
-Documentation can be found [here](https://github.com/gridstack/gridstack.js/tree/master/doc).
-
 
 ## Extend Library
 
