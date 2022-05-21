@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [5.0.0-dev (TBD)](#500-dev-tbd)
+- [5.1.0 (2022-05-21)](#510-2022-05-21)
 - [5.0.0 (2022-01-10)](#500-2022-01-10)
 - [4.4.1 (2021-12-24)](#441-2021-12-24)
 - [4.4.0 (2021-12-21)](#440-2021-12-21)
@@ -68,7 +68,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 
-## 5.0.0-dev (TBD)
+## 5.1.0 (2022-05-21)
 * add `GridStack.registerEngine()` to let user use their own custom layout engine subclass. Thank you [Thomas] for sponsoring it.
 * grid option `minWidth` is now `oneColumnSize` to make it clearer, but old field will still work (JS only) for a while
 * fix [#1966](https://github.com/gridstack/gridstack.js/issues/1966) restore animation when dragging items

@@ -1,5 +1,5 @@
 /**
- * index-static.ts 5.0.0-dev - much smaller, everything you need for a static Grid (non draggable, API driven)
+ * index-static.ts 5.1.0 - much smaller, everything you need for a static Grid (non draggable, API driven)
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
