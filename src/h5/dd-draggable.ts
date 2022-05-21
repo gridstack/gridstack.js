@@ -53,7 +53,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected helperContainment: HTMLElement;
   /** @internal #1541 can't have {passive: true} on Safari as otherwise it reverts animate back to old location on drop */
   protected static dragEventListenerOption = true; // DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
-  /** @internal */
+  /** @internal properties we change during dragging, and restore back */
   protected static originStyleProp = ['transition', 'pointerEvents', 'position',
     'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange', 'min-width'];
 
@@ -232,19 +232,15 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _removeHelperStyle(): DDDraggable {
+    let node = (this.helper as GridItemHTMLElement)?.gridstackNode;
     // don't bother restoring styles if we're gonna remove anyway...
-    let node = this.helper ? (this.helper as GridItemHTMLElement).gridstackNode : undefined;
     if (this.dragElementOriginStyle && (!node || !node._isAboutToRemove)) {
-      DDDraggable.originStyleProp.forEach(prop => {
-        this.helper.style[prop] = this.dragElementOriginStyle[prop] || null;
-      });
+      let helper = this.helper;
+      DDDraggable.originStyleProp.forEach(prop => helper.style[prop] = this.dragElementOriginStyle[prop] || null);
       // show up instantly otherwise we animate to off the grid when switching back to 'absolute' from 'fixed'
-      this.helper.style.transition = 'none';
-      setTimeout(() => {
-        if (this.helper) {
-          this.helper.style.transition = this.dragElementOriginStyle['transition']; // recover animation
-        }
-      }, 0);
+      helper.style.transition = 'none';
+      let transition = this.dragElementOriginStyle['transition'] || null;
+      setTimeout(() => helper.style.transition = transition, 0); // recover animation from saved vars
     }
     delete this.dragElementOriginStyle;
     return this;
