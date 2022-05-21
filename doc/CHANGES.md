@@ -71,6 +71,7 @@ Change log
 ## 5.0.0-dev (TBD)
 * add `GridStack.registerEngine()` to let user use their own custom layout engine subclass. Thank you [Thomas] for sponsoring it.
 * grid option `minWidth` is now `oneColumnSize` to make it clearer, but old field will still work (JS only) for a while
+* fix [#1966](https://github.com/gridstack/gridstack.js/issues/1966) restore animation when dragging items
 * updated jqueryui to latest v1.13.1
 
 ## 5.0.0 (2022-01-10)
