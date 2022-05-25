@@ -558,7 +558,7 @@ Toggle the grid static state.  Also toggle the `grid-stack-static` class.
 Parameters:
 
 - `el` - widget to move (element or class string)
-- `opts` - updates all the possible item attributes passed in the structure (x,y,width,height, etc..). Only those set will be updated.
+- `opts` - updates all the possible item attributes passed in the structure (x, y, h, w, etc..). Only those set will be updated.
 
 Updates widget position/size and other info. Note: if you need to call this on all nodes, use load() instead which will update what changed and more.
 
