@@ -5,12 +5,13 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
    */
+    "rootDir": "src",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "inlineSources": true,
     "lib": [ "es6", "es2015", "dom" ],
-    "module": "CommonJS",
+    "module": "esnext",
     "noImplicitAny": false,
     "outDir": "./dist",
     "sourceMap": true,
@@ -20,9 +21,9 @@
   "exclude": [
     "./src/**/*.spec.ts",
     // used for webpack h5/jq/static .js
-    "./src/gridstack-h5.ts",
-    "./src/gridstack-jq.ts",
-    "./src/gridstack-static.ts",
+    // "./src/gridstack-h5.ts",
+    // "./src/gridstack-jq.ts",
+    // "./src/gridstack-static.ts",
   ],
   "include": [
     "./src/**/*.ts"
