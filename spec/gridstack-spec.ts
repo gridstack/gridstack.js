@@ -246,20 +246,7 @@ describe('gridstack', function() {
       expect(grid.getColumn()).toBe(12);
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
-    }); 
-    it('should set construct CSS class', function() {
-      let grid = GridStack.init({column: 1});
-      expect(grid.el.classList.contains('grid-stack-1')).toBe(true);
-      grid.column(2);
-      expect(grid.el.classList.contains('grid-stack-1')).toBe(false);
-      expect(grid.el.classList.contains('grid-stack-2')).toBe(true);
-    }); 
-    it('should set CSS class', function() {
-      let grid = GridStack.init();
-      expect(grid.el.classList.contains('grid-stack')).toBe(true);
-      grid.column(1);
-      expect(grid.el.classList.contains('grid-stack-1')).toBe(true);
-    }); 
+    });
     it('should SMALL change column number, no relayout', function() {
       let options = {
         column: 12
@@ -1362,51 +1349,7 @@ describe('gridstack', function() {
       expect(grid.el.classList.contains('grid-stack-rtl')).toBe(false);
     });
   });
-  
-  describe('grid.opts.styleInHead', function() {
-    beforeEach(function() {
-      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
-    });
-    afterEach(function() {
-      document.body.removeChild(document.getElementById('gs-cont'));
-    });
-    it('should add STYLE to parent node as a default', function() {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10,
-        float: false,
-      };
-      var grid = GridStack.init(options);
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV'); // any to access private _styles
-    });
-    it('should add STYLE to HEAD if styleInHead === true', function() {
-      var options = {
-        cellHeight: 80,
-        verticalMargin: 10,
-        float: false,
-        styleInHead: true
-      };
-      var grid = GridStack.init(options);
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD'); // any to access private _styles
-    });
-  });
 
-  describe('grid.opts.styleInHead', function() {
-    beforeEach(function() {
-      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
-    });
-    afterEach(function() {
-      document.body.removeChild(document.getElementById('gs-cont'));
-    });
-    it('should add STYLE to parent node as a default', function() {
-      var grid = GridStack.init();
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV');
-    });
-    it('should add STYLE to HEAD if styleInHead === true', function() {
-      var grid = GridStack.init({styleInHead: true});
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD');
-    });
-  });
 
   describe('grid.enableMove', function() {
     beforeEach(function() {
