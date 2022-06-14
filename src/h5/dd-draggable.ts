@@ -236,11 +236,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // don't bother restoring styles if we're gonna remove anyway...
     if (this.dragElementOriginStyle && (!node || !node._isAboutToRemove)) {
       let helper = this.helper;
-      DDDraggable.originStyleProp.forEach(prop => helper.style[prop] = this.dragElementOriginStyle[prop] || null);
-      // show up instantly otherwise we animate to off the grid when switching back to 'absolute' from 'fixed'
-      helper.style.transition = 'none';
+      // don't animate, otherwise we animate offseted when switching back to 'absolute' from 'fixed' 
       let transition = this.dragElementOriginStyle['transition'] || null;
-      setTimeout(() => helper.style.transition = transition, 0); // recover animation from saved vars
+      helper.style.transition = this.dragElementOriginStyle['transition'] = 'none';
+      DDDraggable.originStyleProp.forEach(prop => helper.style[prop] = this.dragElementOriginStyle[prop] || null);
+      setTimeout(() => helper.style.transition = transition, 50); // recover animation from saved vars after a pause (0 isn't enough #1973)
     }
     delete this.dragElementOriginStyle;
     return this;
