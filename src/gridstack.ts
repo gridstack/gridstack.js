@@ -221,8 +221,8 @@ export class GridStack {
   protected _ignoreLayoutsNodeChange: boolean;
   /** @internal */
   public _gsEventHandler = {};
-  /** @internal max height of the gridstack*/
-  public _max: number;
+  /** @internal max row index of the gridstack*/
+  private _maxRowIndex: number;
   /** @internal flag to keep cells square during resize */
   protected _isAutoCellHeight: boolean;
   /** @internal track event binding to window resize so we can remove */
@@ -236,7 +236,7 @@ export class GridStack {
   /** @internal true if nested grid should get column count from our width */
   protected _autoColumn?: boolean;
   /** @internal calculates height for a given row */
-  private _getHeight: (row: number) => string;
+  private readonly _getHeight = (rows: number) => (rows * (this.opts.cellHeight as number)) + this.opts.cellHeightUnit;
 
   /**
    * Construct a grid item from the given element and options
@@ -334,8 +334,6 @@ export class GridStack {
     this.el.classList.add(this.opts._styleSheetClass);
 
     this._setStaticClass();
-
-    this._getHeight = (rows: number) => (rows * (this.opts.cellHeight as number)) + this.opts.cellHeightUnit;
 
     let engineClass = this.opts.engineClass || GridStack.engineClass || GridStackEngine;
     this.engine = new engineClass({
@@ -775,7 +773,6 @@ export class GridStack {
     } else {
       this.el.parentNode.removeChild(this.el);
     }
-    this._max = undefined;
     this.el.removeAttribute('gs-current-row');
     delete this.opts._isNested;
     delete this.opts;
@@ -1179,11 +1176,11 @@ export class GridStack {
     return this;
   }
 
-  /** @internal updated/create the CSS styles for row based layout and initial margin setting */
+  /** @internal updated/create the CSS styles on elements for row based layout and initial margin setting */
   protected _updateStyles(forceUpdate = false, maxH?: number): GridStack {
     // call to delete existing one if we change cellHeight / margin
     if (forceUpdate) {
-      this._max = undefined;
+      this._maxRowIndex = undefined;
     }
 
     this._updateContainerHeight();
@@ -1198,8 +1195,8 @@ export class GridStack {
     let prefix = `.${this.opts._styleSheetClass} > .${this.opts.itemClass}`;
 
     // create one as needed
-    if (!this._max) {
-      this._max = 0;
+    if (!this._maxRowIndex) {
+      this._maxRowIndex = 0;
 
       // these are done once only
       Utils.updateStyleOnElements(prefix, {"min-height": cellHeight+cellHeightUnit});
@@ -1222,14 +1219,12 @@ export class GridStack {
     }
 
     // apply layout styles on all widgets
-    const widgets: HTMLElement[] = Utils.getElements(prefix);
-    for (const widget of widgets) {
-      Utils.updatePositionStyleOnWidget(widget, this._getHeight);
-    }
+    Utils.getElements(prefix).forEach(w => Utils.updatePositionStyleOnWidget(w, this._getHeight));
+
     // now update the height specific fields
-    maxH = maxH || this._max;
-    if (maxH > this._max) {
-      this._max = maxH;
+    maxH = maxH || this._maxRowIndex;
+    if (maxH > this._maxRowIndex) {
+      this._maxRowIndex = maxH;
     }
     return this;
   }
