@@ -5,8 +5,8 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GridStackDDI } from './gridstack-ddi';
-import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition } from './types';
-import { GridStack, MousePosition } from './gridstack';
+import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions } from './types';
+import { GridStack, GridStackWidget, MousePosition } from './gridstack';
 import { Utils } from './utils';
 
 /** Drag&Drop drop options */
@@ -132,7 +132,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         if (node?.grid === this) return true;
         if (!this.opts.acceptWidgets) return false;
         // prevent deeper nesting until rest of 992 can be fixed
-        if (node?.subGrid) return false;
+        // if (node?.subGrid) return false;
         // check for accept method or class matching
         let canAccept = true;
         if (typeof this.opts.acceptWidgets === 'function') {
@@ -267,6 +267,18 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         GridStackDD.get().remove(el);
       }
       if (!wasAdded) return false;
+
+      if (node.subGrid) {
+        const subgrid = node.subGrid as GridStack;
+        const grid = node.grid as GridStack;
+        const item:GridStackWidget = {
+          ...node._orig,
+          content: node.content,
+          subGrid: subgrid.save(true, true) as GridStackOptions
+        }
+        return grid.load([item]);
+      }
+
       el.gridstackNode = node;
       node.el = el;
       // @ts-ignore
