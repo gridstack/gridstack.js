@@ -6,16 +6,16 @@
 import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
 
 export interface HeightData {
-   h: number;
-   unit: string;
- }
+  h: number;
+  unit: string;
+}
 
 /** checks for obsolete method names */
 // eslint-disable-next-line
- export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
+export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
   let wrapper = (...args) => {
     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
-     'with `' + newName + '`. It will be **completely** removed in v1.0');
+    'with `' + newName + '`. It will be **completely** removed in v1.0');
     return f.apply(self, args);
   }
   wrapper.prototype = f.prototype;
@@ -27,7 +27,7 @@ export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: s
   if (opts[oldName] !== undefined) {
     opts[newName] = opts[oldName];
     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + ' and has been replaced with `' +
-       newName + '`. It will be **completely** removed in v1.0');
+      newName + '`. It will be **completely** removed in v1.0');
   }
 }
 
@@ -49,8 +49,8 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
 }
 
 /**
-  * Utility methods
-  */
+ * Utility methods
+ */
 export class Utils {
 
   /** convert a potential selector into actual list of html elements */
@@ -101,11 +101,11 @@ export class Utils {
     return Utils.isIntercepted(a, {x: b.x-0.5, y: b.y-0.5, w: b.w+1, h: b.h+1})
   }
   /**
-    * Sorts array of nodes
-    * @param nodes array to sort
-    * @param dir 1 for asc, -1 for desc (optional)
-    * @param width width of the grid. If undefined the width will be calculated automatically (optional).
-    **/
+   * Sorts array of nodes
+   * @param nodes array to sort
+   * @param dir 1 for asc, -1 for desc (optional)
+   * @param width width of the grid. If undefined the width will be calculated automatically (optional).
+   **/
   static sort(nodes: GridStackNode[], dir?: -1 | 1, column?: number): GridStackNode[] {
     column = column || nodes.reduce((col, n) => Math.max(n.x + n.w, col), 0) || 12;
     if (dir === -1)
@@ -186,7 +186,7 @@ export class Utils {
 
   /** copies unset fields in target to use the given default sources values */
   // eslint-disable-next-line
-   static defaults(target, ...sources): {} {
+  static defaults(target, ...sources): {} {
 
     sources.forEach(source => {
       for (const key in source) {
@@ -309,7 +309,7 @@ export class Utils {
     let rect = el.getBoundingClientRect();
     let innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
     if (rect.top < 0 ||
-       rect.bottom > innerHeightOrClientHeight
+      rect.bottom > innerHeightOrClientHeight
     ) {
       // set scrollTop of first parent that scrolls
       // if parent is larger than el, set as low as possible
@@ -341,12 +341,12 @@ export class Utils {
   }
 
   /**
-    * @internal Function used to scroll the page.
-    *
-    * @param event `MouseEvent` that triggers the resize
-    * @param el `HTMLElement` that's being resized
-    * @param distance Distance from the V edges to start scrolling
-    */
+   * @internal Function used to scroll the page.
+   *
+   * @param event `MouseEvent` that triggers the resize
+   * @param el `HTMLElement` that's being resized
+   * @param distance Distance from the V edges to start scrolling
+   */
   static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
     const scrollEl = this.getScrollElement(el);
     const height = scrollEl.clientHeight;
@@ -382,9 +382,9 @@ export class Utils {
   }
 
   /**
-    * Recursive clone version that returns a full copy, checking for nested objects and arrays ONLY.
-    * Note: this will use as-is any key starting with double __ (and not copy inside) some lib have circular dependencies.
-    */
+   * Recursive clone version that returns a full copy, checking for nested objects and arrays ONLY.
+   * Note: this will use as-is any key starting with double __ (and not copy inside) some lib have circular dependencies.
+   */
   static cloneDeep<T>(obj: T): T {
     // return JSON.parse(JSON.stringify(obj)); // doesn't work with date format ?
     const ret = Utils.clone(obj);
