@@ -270,7 +270,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         const subgrid = node.subGrid as GridStack;
         const grid = node.grid as GridStack;
         const item:GridStackWidget = {
-          ...node._orig,
+          ...this._readAttr(this.placeholder),
           content: node.content,
           subGrid: subgrid.save(true, true) as GridStackOptions
         }
