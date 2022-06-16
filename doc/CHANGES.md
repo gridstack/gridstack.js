@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [5.1.0-dev (TBD)](#510-dev-tbd)
+- [5.1.1 (2022-06-16)](#511-2022-06-16)
 - [5.1.0 (2022-05-21)](#510-2022-05-21)
 - [5.0.0 (2022-01-10)](#500-2022-01-10)
 - [4.4.1 (2021-12-24)](#441-2021-12-24)
@@ -68,7 +68,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 5.1.0-dev (TBD)
+## 5.1.1 (2022-06-16)
 * fix v5.1.0 regression [#1973](https://github.com/gridstack/gridstack.js/issues/1973) DnD Snap to Animation
 
 ## 5.1.0 (2022-05-21)
