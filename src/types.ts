@@ -1,7 +1,7 @@
 /**
- * types.ts 5.1.0-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
- */
+* types.ts 5.1.0-dev
+* Copyright (c) 2021 Alain Dumesny - see GridStack root license
+*/
 
 import { GridStack } from './gridstack';
 import { GridStackEngine } from './gridstack-engine';
@@ -193,9 +193,6 @@ export interface GridStackOptions {
    * 'grid-stack-static' is also added to the element.
    */
   staticGrid?: boolean;
-
-  /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
-  styleInHead?: boolean;
 
   /** @internal point to a parent grid item if we're nested */
   _isNested?: GridStackNode;

@@ -1,7 +1,7 @@
 /**
- * utils.ts 5.1.0-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
- */
+* utils.ts 5.1.0-dev
+* Copyright (c) 2021 Alain Dumesny - see GridStack root license
+*/
 
 import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
 
@@ -44,7 +44,7 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
   if (oldAttr !== null) {
     el.setAttribute(newName, oldAttr);
     console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
-       newName + '`. It will be **completely** removed in v1.0');
+      newName + '`. It will be **completely** removed in v1.0');
   }
 }
 
@@ -115,41 +115,42 @@ export class Utils {
   }
 
   /** update CSS style on elements with given selector */
-  static updateStyleOnElements(selector: string, styles: {[props: string]: string |  string[] }): void {
-    const elements = Utils.getElements(selector);
+  static updateStyleOnElements(selector: string | HTMLElement[], styles: {[props: string]: string |  string[] }): void {
+    const elements = typeof selector === 'string' ? Utils.getElements(selector) : selector;
     for (const el  of elements) {
-      Utils.addElementStyle(el, styles)
+      Utils.addElementStyle(el, styles);
     }
   }
 
   /** update CSS style on element */
   static addElementStyle(el: HTMLElement, styles: {[props: string]: string |  string[] }): void {
-    if (styles instanceof Object) {
+    if(!el) {
+      return;
+    }
+    if (styles) {
       for (const s in styles) {
         if (styles.hasOwnProperty(s)) {
-          if (Array.isArray(styles[s])) {
-            // support fallback value
-            (styles[s] as string[]).forEach(val => {
-              el.style[s] = val;
-            });
-          } else {
-            el.style[s] = styles[s];
-          }
+          el.style[s] = styles[s];
         }
       }
     }
   }
 
   /** update position style on element */
-  static updatePositionStyleOnWidget(el: HTMLElement, getHeight:(rows: number) => string): void {
+  static updatePositionStyleOnWidget(el: HTMLElement, cellHeight: number, cellHeightUnit: string): void {
     const h = Utils.toNumber(el.getAttribute('gs-h'));
     const minH= Utils.toNumber(el.getAttribute('gs-min-h'));
     const maxH = Utils.toNumber(el.getAttribute('gs-max-h'));
     const y = Utils.toNumber(el.getAttribute('gs-y'));
-    el.style.height = getHeight(h);
-    el.style.minHeight = getHeight(minH);
-    el.style.maxHeight = getHeight(maxH);
-    el.style.top = getHeight(y);
+    el.style.height = Utils.getCSSHeight(h, cellHeight, cellHeightUnit);
+    el.style.minHeight = Utils.getCSSHeight(minH, cellHeight, cellHeightUnit);
+    el.style.maxHeight = Utils.getCSSHeight(maxH, cellHeight, cellHeightUnit);
+    el.style.top = Utils.getCSSHeight(y, cellHeight, cellHeightUnit);
+  }
+
+  /** returns CSS height of a given row */
+  static getCSSHeight(rows: number, cellHeight: number, cellHeightUnit: string): string {
+    return  (rows * cellHeight as number) + cellHeightUnit;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

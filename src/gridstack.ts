@@ -46,7 +46,6 @@ const GridDefaults: GridStackOptions = {
   placeholderText: '',
   handle: '.grid-stack-item-content',
   handleClass: null,
-  styleInHead: false,
   cellHeight: 'auto',
   cellHeightThrottle: 100,
   margin: 10,
@@ -235,8 +234,6 @@ export class GridStack {
   protected _extraDragRow = 0;
   /** @internal true if nested grid should get column count from our width */
   protected _autoColumn?: boolean;
-  /** @internal calculates height for a given row */
-  private readonly _getHeight = (rows: number) => (rows * (this.opts.cellHeight as number)) + this.opts.cellHeightUnit;
 
   /**
    * Construct a grid item from the given element and options
@@ -472,6 +469,7 @@ export class GridStack {
 
     this._triggerAddEvent();
     this._triggerChangeEvent();
+    Utils.updatePositionStyleOnWidget(el, this.opts.cellHeight as number, this.opts.cellHeightUnit);
 
     return el;
   }
@@ -1199,7 +1197,7 @@ export class GridStack {
       this._maxRowIndex = 0;
 
       // these are done once only
-      Utils.updateStyleOnElements(prefix, {"min-height": cellHeight+cellHeightUnit});
+      Utils.updateStyleOnElements(prefix, {'min-height': cellHeight+cellHeightUnit});
       // content margins
       let top: string = this.opts.marginTop + this.opts.marginUnit;
       let bottom: string = this.opts.marginBottom + this.opts.marginUnit;
@@ -1218,8 +1216,12 @@ export class GridStack {
       Utils.updateStyleOnElements(`${prefix} > .ui-resizable-sw`, {left, bottom});
     }
 
-    // apply layout styles on all widgets
-    Utils.getElements(prefix).forEach(w => Utils.updatePositionStyleOnWidget(w, this._getHeight));
+    // apply position styling on all dirty node's elements
+    this.getGridItems().forEach((w: GridItemHTMLElement) => {
+      if (w.gridstackNode._dirty) {
+        Utils.updatePositionStyleOnWidget(w, this.opts.cellHeight as number, this.opts.cellHeightUnit);
+      }
+    });
 
     // now update the height specific fields
     maxH = maxH || this._maxRowIndex;
@@ -1227,6 +1229,25 @@ export class GridStack {
       this._maxRowIndex = maxH;
     }
     return this;
+  }
+
+  /** @internal update Styling  */
+  protected _updateElementChildrenStyling(el: HTMLElement): void {
+    let top: string = this.opts.marginTop + this.opts.marginUnit;
+    let bottom: string = this.opts.marginBottom + this.opts.marginUnit;
+    let right: string = this.opts.marginRight + this.opts.marginUnit;
+    let left: string = this.opts.marginLeft + this.opts.marginUnit;
+    let content = `.grid-stack-item-content`;
+    let placeholder = `.${this.opts._styleSheetClass} > .grid-stack-placeholder > .placeholder-content`;
+    Utils.updateStyleOnElements([el.querySelector(content) as HTMLElement], {top, right, bottom, left});
+    Utils.updateStyleOnElements(placeholder, {top, right, bottom, left});
+    // resize handles offset (to match margin)
+    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-ne`) as HTMLElement], {right});
+    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-e`) as HTMLElement], {right});
+    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-se`) as HTMLElement], {right, bottom});
+    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-nw`) as HTMLElement], {left});
+    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-w`) as HTMLElement], {left});
+    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-sw`) as HTMLElement], {left, bottom});
   }
 
   /** @internal */
@@ -1280,7 +1301,8 @@ export class GridStack {
     if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
     if (n.w) { el.setAttribute('gs-w', String(n.w)); }
     if (n.h) { el.setAttribute('gs-h', String(n.h)); }
-    Utils.updatePositionStyleOnWidget(el, this._getHeight);
+    Utils.updatePositionStyleOnWidget(el, this.opts.cellHeight as number, this.opts.cellHeightUnit);
+    this._updateElementChildrenStyling(el);
     return this;
   }
 
