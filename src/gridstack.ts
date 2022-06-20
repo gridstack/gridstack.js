@@ -1198,22 +1198,7 @@ export class GridStack {
 
       // these are done once only
       Utils.updateStyleOnElements(prefix, {'min-height': cellHeight+cellHeightUnit});
-      // content margins
-      let top: string = this.opts.marginTop + this.opts.marginUnit;
-      let bottom: string = this.opts.marginBottom + this.opts.marginUnit;
-      let right: string = this.opts.marginRight + this.opts.marginUnit;
-      let left: string = this.opts.marginLeft + this.opts.marginUnit;
-      let content = `${prefix} > .grid-stack-item-content`;
-      let placeholder = `.${this.opts._styleSheetClass} > .grid-stack-placeholder > .placeholder-content`;
-      Utils.updateStyleOnElements(content, {top, right, bottom, left});
-      Utils.updateStyleOnElements(placeholder, {top, right, bottom, left});
-      // resize handles offset (to match margin)
-      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-ne`, {right});
-      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-e`, {right});
-      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-se`, {right, bottom});
-      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-nw`, {left});
-      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-w`, {left});
-      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-sw`, {left, bottom});
+      this._updateElementChildrenStyling(undefined, prefix);
     }
 
     // apply position styling on all dirty node's elements
@@ -1232,22 +1217,40 @@ export class GridStack {
   }
 
   /** @internal update Styling  */
-  protected _updateElementChildrenStyling(el: HTMLElement): void {
+  protected _updateElementChildrenStyling(el?: HTMLElement, prefix?: string): void {
     let top: string = this.opts.marginTop + this.opts.marginUnit;
     let bottom: string = this.opts.marginBottom + this.opts.marginUnit;
     let right: string = this.opts.marginRight + this.opts.marginUnit;
     let left: string = this.opts.marginLeft + this.opts.marginUnit;
-    let content = `.grid-stack-item-content`;
+    let content: string;
     let placeholder = `.${this.opts._styleSheetClass} > .grid-stack-placeholder > .placeholder-content`;
-    Utils.updateStyleOnElements([el.querySelector(content) as HTMLElement], {top, right, bottom, left});
-    Utils.updateStyleOnElements(placeholder, {top, right, bottom, left});
-    // resize handles offset (to match margin)
-    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-ne`) as HTMLElement], {right});
-    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-e`) as HTMLElement], {right});
-    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-se`) as HTMLElement], {right, bottom});
-    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-nw`) as HTMLElement], {left});
-    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-w`) as HTMLElement], {left});
-    Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-sw`) as HTMLElement], {left, bottom});
+    if (el!==undefined) {
+      content = `.grid-stack-item-content`
+      // content margins
+      Utils.updateStyleOnElements([el.querySelector(content) as HTMLElement], {top, right, bottom, left});
+      Utils.updateStyleOnElements(placeholder, {top, right, bottom, left});
+      // resize handles offset (to match margin)
+      Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-ne`) as HTMLElement], {right});
+      Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-e`) as HTMLElement], {right});
+      Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-se`) as HTMLElement], {right, bottom});
+      Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-nw`) as HTMLElement], {left});
+      Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-w`) as HTMLElement], {left});
+      Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-sw`) as HTMLElement], {left, bottom});
+    }
+
+    if (prefix!= undefined) {
+      content = `${prefix} > .grid-stack-item-content`;
+      // content margins
+      Utils.updateStyleOnElements(content, {top, right, bottom, left});
+      Utils.updateStyleOnElements(placeholder, {top, right, bottom, left});
+      // resize handles offset (to match margin)
+      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-ne`, {right});
+      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-e`, {right});
+      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-se`, {right, bottom});
+      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-nw`, {left});
+      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-w`, {left});
+      Utils.updateStyleOnElements(`${prefix} > .ui-resizable-sw`, {left, bottom});
+    }
   }
 
   /** @internal */
