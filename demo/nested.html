@@ -12,6 +12,8 @@
     /* make nested grids have slightly darker bg */
     .grid-stack.grid-stack-nested {
       background: #e4e4c1;
+      border: 2px dashed rgba(0, 0, 0, 0.4);
+      box-sizing: border-box;
     }
     /* make nested grid take almost all space (need some to tell them apart) so items inside can have similar to external size+margin */
     .grid-stack > .grid-stack-item.grid-stack-nested > .grid-stack-item-content {
@@ -25,6 +27,9 @@
     .grid-stack-item-content .grid-stack {
       min-height: 100%;
       min-width: 100%;
+    }
+    .grid-stack-item > .grid-stack-item-content {
+      inset: 5px !important;
     }
   </style>
 </head>
@@ -69,8 +74,8 @@
       id: 'main',
       children: [
         {y:0, content: 'regular item'},
-        {x:1, w:4, h:4, subGrid: {children: sub1, dragOut: true, class: 'sub1', ...subOptions}},
-        {x:5, w:3, h:4, subGrid: {children: sub2, class: 'sub2', ...subOptions}},
+        {x:1, w:4, h:8, subGrid: {children: sub1, dragOut: true, class: 'sub1', ...subOptions}},
+        {x:5, w:3, h:3, subGrid: {children: sub2, class: 'sub2', ...subOptions}},
       ]
     };
 

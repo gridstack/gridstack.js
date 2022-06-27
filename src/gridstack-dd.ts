@@ -273,20 +273,21 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
           ...this._readAttr(this.placeholder),
           content: node.content,
           subGrid: subgrid.save(true, true) as GridStackOptions
-        }
-        return grid.load([item]);
+        };
+        grid.load([item]);
+      } else {
+        el.gridstackNode = node;
+        node.el = el;
+        // placeholder values as moving VERY fast can throw things off #1578
+        Utils.copyPos(node, this._readAttr(this.placeholder));
+        Utils.removePositioningStyles(el);
+        this._writeAttr(el, node);
+        this.el.appendChild(el);
+        this._updateContainerHeight();
+        this.engine.addedNodes.push(node);
+        this._triggerAddEvent();
       }
 
-      el.gridstackNode = node;
-      node.el = el;
-      // @ts-ignore
-      Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
-      Utils.removePositioningStyles(el);// @ts-ignore
-      this._writeAttr(el, node);
-      this.el.appendChild(el);// @ts-ignore
-      this._updateContainerHeight();
-      this.engine.addedNodes.push(node);// @ts-ignore
-      this._triggerAddEvent();// @ts-ignore
       this._triggerChangeEvent();
 
       this.engine.endUpdate();
