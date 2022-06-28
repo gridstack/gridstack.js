@@ -80,7 +80,7 @@ gridstack.js API
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight`- one cell height (default?: 'auto'). Can be:
    *  an integer (px)
-   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see demo/cell-height.html
+   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see [CellHeight](http://gridstackjs.com/demo/cell-height.html)
    *  0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files.
    *  `auto` - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle`
    *  `initial` - similar to 'auto' (start at square cells) but stay that size during window resizing.
@@ -115,7 +115,7 @@ gridstack.js API
 - `marginLeft`: numberOrString
 - `maxRow` - maximum rows amount. Default is `0` which means no max.
 - `minRow` - minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
-- `minW` - minimal width. If grid width is less than or equal to, grid will be shown in one-column mode (default: `768`)
+- `oneColumnSize` - minimal width. If grid width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
