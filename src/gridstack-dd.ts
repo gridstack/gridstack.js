@@ -275,6 +275,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       this.el.appendChild(el);
       this._updateContainerHeight();
 
+      // if dropping a subgrid, make sure to update its style #1943
       const subgrid = node.subGrid as GridStack;
       if (subgrid) {
         subgrid._updateStyles(true, subgrid.getRow());
