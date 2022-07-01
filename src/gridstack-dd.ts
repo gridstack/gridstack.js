@@ -266,28 +266,23 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       }
       if (!wasAdded) return false;
 
-      if (node.subGrid) {
-        const subgrid = node.subGrid as GridStack;
-        const grid = node.grid as GridStack;
-        const item:GridStackWidget = {
-          ...this._readAttr(this.placeholder),
-          content: node.content,
-          subGrid: subgrid.save(true, true) as GridStackOptions
-        };
-        grid.load([item]);
-      } else {
-        el.gridstackNode = node;
-        node.el = el;
-        // placeholder values as moving VERY fast can throw things off #1578
-        Utils.copyPos(node, this._readAttr(this.placeholder));
-        Utils.removePositioningStyles(el);
-        this._writeAttr(el, node);
-        this.el.appendChild(el);
-        this._updateContainerHeight();
-        this.engine.addedNodes.push(node);
-        this._triggerAddEvent();
+      el.gridstackNode = node;
+      node.el = el;
+      // placeholder values as moving VERY fast can throw things off #1578
+      Utils.copyPos(node, this._readAttr(this.placeholder));
+      Utils.removePositioningStyles(el);
+      this._writeAttr(el, node);
+      this.el.appendChild(el);
+      this._updateContainerHeight();
+
+      const subgrid = node.subGrid as GridStack;
+      if (subgrid) {
+        subgrid._updateStyles(true, subgrid.getRow());
       }
 
+      this.engine.addedNodes.push(node);
+
+      this._triggerAddEvent();
       this._triggerChangeEvent();
 
       this.engine.endUpdate();
