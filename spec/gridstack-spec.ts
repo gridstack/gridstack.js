@@ -433,8 +433,8 @@ describe('gridstack', function() {
       let el1 = grid.addWidget({w:1, h:1});
       let el2 = grid.addWidget({x:2, y:0, w:2, h:1});
       let el3 = grid.addWidget({x:1, y:0, w:1, h:2});
-      grid.commit();
-      grid.commit();
+      grid.batchUpdate(false);
+      grid.batchUpdate(false);
       
       // items are item1[1x1], item3[1x1], item2[2x1]
       expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
@@ -1848,6 +1848,15 @@ describe('gridstack', function() {
       expect((grid as any).willItFit(0, 0, 1, 3, false)).toBe(true);
       expect((grid as any).willItFit(0, 0, 1, 4, false)).toBe(false);
     });
+    it('warning if OLD commit() is called', function() {
+      let grid = GridStack.init();
+      grid.batchUpdate(true);
+      expect(grid.engine.batchMode).toBe(true);
+      grid.commit(); // old API
+      expect(grid.engine.batchMode).toBe(false);
+      // expect(console.warn).toHaveBeenCalledWith('gridstack.js: Function `setGridWidth` is deprecated in v0.5.3 and has been replaced with `column`. It will be **completely** removed in v1.0');
+    });
+
     /* saving as example
     it('warning if OLD setGridWidth is called', function() {
       let grid: any = GridStack.init();

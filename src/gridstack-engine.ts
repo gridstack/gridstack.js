@@ -54,21 +54,19 @@ export class GridStackEngine {
     this.onChange = opts.onChange;
   }
 
-  public batchUpdate(): GridStackEngine {
-    if (this.batchMode) return this;
-    this.batchMode = true;
-    this._prevFloat = this._float;
-    this._float = true; // let things go anywhere for now... commit() will restore and possibly reposition
-    return this.saveInitial(); // since begin update (which is called multiple times) won't do this
-  }
-
-  public commit(): GridStackEngine {
-    if (!this.batchMode) return this;
-    this.batchMode = false;
-    this._float = this._prevFloat;
-    delete this._prevFloat;
-    return this._packNodes()
-      ._notify();
+  public batchUpdate(flag = true): GridStackEngine {
+    if (!!this.batchMode === flag) return this;
+    this.batchMode = flag;
+    if (flag) {
+      this._prevFloat = this._float;
+      this._float = true; // let things go anywhere for now... will restore and possibly reposition later
+      this.saveInitial(); // since begin update (which is called multiple times) won't do this
+    } else {
+      this._float = this._prevFloat;
+      delete this._prevFloat;
+      this._packNodes()._notify();
+    }
+    return this;
   }
 
   // use entire row for hitting area (will use bottom reverse sorted first) if we not actively moving DOWN and didn't already skip
@@ -252,7 +250,7 @@ export class GridStackEngine {
       this.addNode(node, false); // 'false' for add event trigger
       node._dirty = true; // will force attr update
     });
-    return this.commit();
+    return this.batchUpdate(false);
   }
 
   /** enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html) */
@@ -829,7 +827,7 @@ export class GridStackEngine {
       this.addNode(node, false); // 'false' for add event trigger
       delete node._orig; // make sure the commit doesn't try to restore things back to original
     });
-    this.commit();
+    this.batchUpdate(false);
     delete this._inColumnResize;
     return this;
   }
