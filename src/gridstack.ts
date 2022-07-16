@@ -6,7 +6,7 @@
  * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
  */
 import { GridStackEngine } from './gridstack-engine';
-import { Utils, HeightData } from './utils';
+import { Utils, HeightData, obsolete } from './utils';
 import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition } from './types';
 import { GridStackDDI } from './gridstack-ddi';
@@ -373,7 +373,7 @@ export class GridStack {
         });
       });
       elements.sort((a, b) => a.i - b.i).forEach(e => this._prepareElement(e.el));
-      this.commit();
+      this.batchUpdate(false);
     }
 
     this.setAnimation(this.opts.animate);
@@ -594,7 +594,7 @@ export class GridStack {
     });
 
     this.engine.removedNodes = removed;
-    this.commit();
+    this.batchUpdate(false);
 
     // after commit, clear that flag
     delete this._ignoreLayoutsNodeChange;
@@ -603,10 +603,16 @@ export class GridStack {
   }
 
   /**
-   * Initializes batch updates. You will see no changes until `commit()` method is called.
+   * use before calling a bunch of `addWidget()` to prevent un-necessary relayouts in between (more efficient)
+   * and get a single event callback. You will see no changes until `batchUpdate(false)` is called.
    */
-  public batchUpdate(): GridStack {
-    this.engine.batchUpdate();
+  public batchUpdate(flag = true): GridStack {
+    this.engine.batchUpdate(flag);
+    if (!flag) {
+      this._triggerRemoveEvent();
+      this._triggerAddEvent();
+      this._triggerChangeEvent();
+    }
     return this;
   }
 
@@ -683,17 +689,6 @@ export class GridStack {
     // use `offsetWidth` or `clientWidth` (no scrollbar) ?
     // https://stackoverflow.com/questions/21064101/understanding-offsetwidth-clientwidth-scrollwidth-and-height-respectively
     return (this.el.clientWidth || this.el.parentElement.clientWidth || window.innerWidth);
-  }
-
-  /**
-   * Finishes batch updates. Updates DOM nodes. You must call it after batchUpdate.
-   */
-  public commit(): GridStack {
-    this.engine.commit();
-    this._triggerRemoveEvent();
-    this._triggerAddEvent();
-    this._triggerChangeEvent();
-    return this;
   }
 
   /** re-layout grid items to reclaim any empty space */
@@ -1585,4 +1580,6 @@ export class GridStack {
   public _dragOrResize(el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void { return }
   /** @internal called when a node leaves our area (mouse out or shape outside) **/
   public _leave(el: GridItemHTMLElement, helper?: GridItemHTMLElement): void { return }
+  // legacy method removed
+  public commit(): GridStack { obsolete(this, this.batchUpdate(false), 'commit', 'batchUpdate', '5.2'); return this; }
 }

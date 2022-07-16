@@ -15,7 +15,7 @@ export interface HeightData {
 export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
   let wrapper = (...args) => {
     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
-    'with `' + newName + '`. It will be **completely** removed in v1.0');
+    'with `' + newName + '`. It will be **removed** in a future release');
     return f.apply(self, args);
   }
   wrapper.prototype = f.prototype;
@@ -27,7 +27,7 @@ export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: s
   if (opts[oldName] !== undefined) {
     opts[newName] = opts[oldName];
     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + ' and has been replaced with `' +
-      newName + '`. It will be **completely** removed in v1.0');
+      newName + '`. It will be **removed** in a future release');
   }
 }
 
@@ -44,7 +44,7 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
   if (oldAttr !== null) {
     el.setAttribute(newName, oldAttr);
     console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
-      newName + '`. It will be **completely** removed in v1.0');
+      newName + '`. It will be **removed** in a future release');
   }
 }
 

@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [TBD](#tbd)
 - [5.1.1 (2022-06-16)](#511-2022-06-16)
 - [5.1.0 (2022-05-21)](#510-2022-05-21)
 - [5.0.0 (2022-01-10)](#500-2022-01-10)
@@ -67,6 +68,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## TBD
+* changed `commit()` to be `batchUpdate(false)` to make it easier to turn batch on/off. updated doc. old API remains for now
 
 ## 5.1.1 (2022-06-16)
 * fix v5.1.0 regression [#1973](https://github.com/gridstack/gridstack.js/issues/1973) DnD Snap to Animation
