@@ -57,9 +57,8 @@ export class GridStackDDNative extends GridStackDD {
         dEl.setupDraggable({
           ...grid.opts.draggable,
           ...{
-            containment: (grid.opts._isNested && !grid.opts.dragOut)
-              ? grid.el.parentElement
-              : (grid.opts.draggable.containment || null),
+            containment: (grid.opts._isNested && !grid.opts.dragOut) ?
+              grid.el.parentElement : (grid.opts.draggable.containment || null),
             start: opts.start,
             stop: opts.stop,
             drag: opts.drag
