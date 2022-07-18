@@ -103,7 +103,7 @@ export interface GridStackOptions {
    */
   dragInOptions?: DDDragInOpt;
 
-  /** let user drag nested grid items out of a parent or not (default false) */
+  /** let user drag nested grid items out of a parent or not (default true - not supported by h5 yet) */
   dragOut?: boolean;
 
   /** the type of engine to create (so you can subclass) default to GridStackEngine */

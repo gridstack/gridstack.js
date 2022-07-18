@@ -70,6 +70,7 @@ const GridDefaults: GridStackOptions = {
     scroll: false,
     appendTo: 'body'
   },
+  dragOut: true,
   disableDrag: false,
   disableResize: false,
   rtl: 'auto',
@@ -80,7 +81,7 @@ const GridDefaults: GridStackOptions = {
   marginUnit: 'px',
   cellHeightUnit: 'px',
   disableOneColumnMode: false,
-  oneColumnModeDomSort: false
+  oneColumnModeDomSort: false,
 };
 
 /**
