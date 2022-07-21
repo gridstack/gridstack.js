@@ -36,6 +36,11 @@ export interface CellPosition {
   y: number;
 }
 
+interface GridCSSStyleSheet extends CSSStyleSheet {
+  _id?: string; // random id we will use to style us
+  _max?: number; // internal tracker of the max # of rows we created\
+}
+
 // default values for grid options - used during init and when saving out
 const GridDefaults: GridStackOptions = {
   column: 12,
@@ -46,6 +51,7 @@ const GridDefaults: GridStackOptions = {
   placeholderText: '',
   handle: '.grid-stack-item-content',
   handleClass: null,
+  styleInHead: false,
   cellHeight: 'auto',
   cellHeightThrottle: 100,
   margin: 10,
@@ -220,6 +226,8 @@ export class GridStack {
   protected _ignoreLayoutsNodeChange: boolean;
   /** @internal */
   public _gsEventHandler = {};
+  /** @internal */
+  protected _styles: GridCSSStyleSheet;
   /** @internal max row index of the gridstack*/
   private _maxRowIndex: number;
   /** @internal flag to keep cells square during resize */
@@ -469,7 +477,10 @@ export class GridStack {
 
     this._triggerAddEvent();
     this._triggerChangeEvent();
-    Utils.updatePositionStyleOnWidget(el, this.opts.cellHeight as number, this.opts.cellHeightUnit);
+    if(!Utils.isConstructableStyleSheetSupported()) {
+      Utils.updatePositionStyleOnWidget(el, this.opts.cellHeight as number, this.opts.cellHeightUnit);
+      this._updateElementChildrenStyling(el);
+    }
 
     return el;
   }
@@ -771,6 +782,7 @@ export class GridStack {
     } else {
       this.el.parentNode.removeChild(this.el);
     }
+    this._removeStylesheet();
     this.el.removeAttribute('gs-current-row');
     delete this.opts._isNested;
     delete this.opts;
@@ -1174,11 +1186,23 @@ export class GridStack {
     return this;
   }
 
-  /** @internal updated/create the CSS styles on elements for row based layout and initial margin setting */
+  /** @internal called to delete the current dynamic style sheet used for our layout */
+  protected _removeStylesheet(): GridStack {
+
+    if (this._styles) {
+      Utils.removeStylesheet(this._styles);
+      delete this._styles;
+    }
+    return this;
+  }
+
+  /** @internal updated/create the CSS styles for row based layout and initial margin setting
+    * in case no constructable stylesheet support updated/create the CSS styles on elements for row based layout and initial margin setting */
   protected _updateStyles(forceUpdate = false, maxH?: number): GridStack {
     // call to delete existing one if we change cellHeight / margin
     if (forceUpdate) {
       this._maxRowIndex = undefined;
+      this._removeStylesheet();
     }
 
     this._updateContainerHeight();
@@ -1192,28 +1216,11 @@ export class GridStack {
     let cellHeightUnit = this.opts.cellHeightUnit;
     let prefix = `.${this.opts._styleSheetClass} > .${this.opts.itemClass}`;
 
-    // create one as needed
-    if (!this._maxRowIndex) {
-      this._maxRowIndex = 0;
-
-      // these are done once only
-      Utils.updateStyleOnElements(prefix, {'min-height': cellHeight+cellHeightUnit});
-      this._updateElementChildrenStyling(undefined, prefix);
+    if(Utils.isConstructableStyleSheetSupported()) {
+      return this._updateStyleRules(cellHeight, cellHeightUnit, prefix, maxH);
+    } else {
+      return this._updatedStylesForElements(cellHeight, cellHeightUnit, prefix, maxH);
     }
-
-    // apply position styling on all dirty node's elements
-    this.getGridItems().forEach((w: GridItemHTMLElement) => {
-      if (w.gridstackNode._dirty) {
-        Utils.updatePositionStyleOnWidget(w, this.opts.cellHeight as number, this.opts.cellHeightUnit);
-      }
-    });
-
-    // now update the height specific fields
-    maxH = maxH || this._maxRowIndex;
-    if (maxH > this._maxRowIndex) {
-      this._maxRowIndex = maxH;
-    }
-    return this;
   }
 
   /** @internal update Styling  */
@@ -1236,9 +1243,7 @@ export class GridStack {
       Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-nw`) as HTMLElement], {left});
       Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-w`) as HTMLElement], {left});
       Utils.updateStyleOnElements([el.querySelector(`.ui-resizable-sw`) as HTMLElement], {left, bottom});
-    }
-
-    if (prefix!= undefined) {
+    } else if (prefix!= undefined) {
       content = `${prefix} > .grid-stack-item-content`;
       // content margins
       Utils.updateStyleOnElements(content, {top, right, bottom, left});
@@ -1251,6 +1256,80 @@ export class GridStack {
       Utils.updateStyleOnElements(`${prefix} > .ui-resizable-w`, {left});
       Utils.updateStyleOnElements(`${prefix} > .ui-resizable-sw`, {left, bottom});
     }
+  }
+
+  /**@internal */
+  protected _updateStyleRules(cellHeight:number, cellHeightUnit:string, prefix:string, maxH?: number): GridStack {
+    // create one as needed
+    if (!this._styles) {
+      let id = 'gridstack-style-' + (Math.random() * 100000).toFixed();
+      // insert style to parent (instead of 'head' by default) to support WebComponent
+      let styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
+      this._styles = Utils.createStylesheet(styleLocation);
+      if (!this._styles) return this;
+      this._styles._id = id;
+      this._styles._max = 0;
+
+      // these are done once only
+      Utils.addCSSRule(this._styles, prefix, `min-height: ${cellHeight}${cellHeightUnit}`);
+      // content margins
+      let top: string = this.opts.marginTop + this.opts.marginUnit;
+      let bottom: string = this.opts.marginBottom + this.opts.marginUnit;
+      let right: string = this.opts.marginRight + this.opts.marginUnit;
+      let left: string = this.opts.marginLeft + this.opts.marginUnit;
+      let content = `${prefix} > .grid-stack-item-content`;
+      let placeholder = `.${this.opts._styleSheetClass} > .grid-stack-placeholder > .placeholder-content`;
+      Utils.addCSSRule(this._styles, content, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
+      Utils.addCSSRule(this._styles, placeholder, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
+      // resize handles offset (to match margin)
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-ne`, `right: ${right}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-e`, `right: ${right}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-se`, `right: ${right}; bottom: ${bottom}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-nw`, `left: ${left}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-w`, `left: ${left}`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-sw`, `left: ${left}; bottom: ${bottom}`);
+    }
+
+    // now update the height specific fields
+    maxH = maxH || this._styles._max;
+    if (maxH > this._styles._max) {
+      let getHeight = (rows: number): string => (cellHeight * rows) + cellHeightUnit;
+      for (let i = this._styles._max + 1; i <= maxH; i++) { // start at 1
+        let h: string = getHeight(i);
+        Utils.addCSSRule(this._styles, `${prefix}[gs-y="${i-1}"]`,   `top: ${getHeight(i-1)}`); // start at 0
+        Utils.addCSSRule(this._styles, `${prefix}[gs-h="${i}"]`,     `height: ${h}`);
+        Utils.addCSSRule(this._styles, `${prefix}[gs-min-h="${i}"]`, `min-height: ${h}`);
+        Utils.addCSSRule(this._styles, `${prefix}[gs-max-h="${i}"]`, `max-height: ${h}`);
+      }
+      this._styles._max = maxH;
+    }
+    return this;
+  }
+
+  /**@internal updates styles for dirty nodes */
+  protected _updatedStylesForElements(cellHeight:number, cellHeightUnit:string, prefix:string, maxH?: number): GridStack {
+    // create one as needed
+    if (!this._maxRowIndex) {
+      this._maxRowIndex = 0;
+
+      // these are done once only
+      Utils.updateStyleOnElements(prefix, {'min-height': cellHeight+cellHeightUnit});
+      this._updateElementChildrenStyling(undefined, prefix);
+    }
+
+    // apply position styling on all dirty node's elements
+    this.getGridItems().forEach((w: GridItemHTMLElement) => {
+      if (w.gridstackNode._dirty && !w.classList.contains("ui-resizable-resizing")) {
+        Utils.updatePositionStyleOnWidget(w, this.opts.cellHeight as number, this.opts.cellHeightUnit);
+      }
+    });
+
+    // now update the height specific fields
+    maxH = maxH || this._maxRowIndex;
+    if (maxH > this._maxRowIndex) {
+      this._maxRowIndex = maxH;
+    }
+    return this;
   }
 
   /** @internal */
@@ -1304,8 +1383,10 @@ export class GridStack {
     if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
     if (n.w) { el.setAttribute('gs-w', String(n.w)); }
     if (n.h) { el.setAttribute('gs-h', String(n.h)); }
-    Utils.updatePositionStyleOnWidget(el, this.opts.cellHeight as number, this.opts.cellHeightUnit);
-    this._updateElementChildrenStyling(el);
+    if(!Utils.isConstructableStyleSheetSupported()) {
+      Utils.updatePositionStyleOnWidget(el, this.opts.cellHeight as number, this.opts.cellHeightUnit);
+      this._updateElementChildrenStyling(el);
+    }
     return this;
   }
 

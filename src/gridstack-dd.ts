@@ -292,7 +292,9 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         } else {
           this.engine.removeNode(node);
         }
-        this._updateElementChildrenStyling(node.el);
+        if(!Utils.isConstructableStyleSheetSupported()) {
+          this._updateElementChildrenStyling(node.el);
+        }
       });
 
       return false; // prevent parent from receiving msg (which may be grid as well)
