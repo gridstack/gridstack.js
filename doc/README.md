@@ -30,11 +30,10 @@ gridstack.js API
   - [`GridStack.registerEngine(engineClass: typeof GridStackEngine)`](#gridstackregisterengineengineclass-typeof-gridstackengine)
 - [API](#api)
   - [`addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
-  - [`batchUpdate()`](#batchupdate)
+  - [`batchUpdate(flag = true)`](#batchupdateflag--true)
   - [`compact()`](#compact)
   - [`cellHeight(val: number, update = true)`](#cellheightval-number-update--true)
   - [`cellWidth()`](#cellwidth)
-  - [`commit()`](#commit)
   - [`column(column: number, layout: ColumnOptions = 'moveScale')`](#columncolumn-number-layout-columnoptions--movescale)
   - [`destroy([removeDOM])`](#destroyremovedom)
   - [`disable()`](#disable)
@@ -80,7 +79,7 @@ gridstack.js API
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight`- one cell height (default?: 'auto'). Can be:
    *  an integer (px)
-   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see demo/cell-height.html
+   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see [CellHeight](http://gridstackjs.com/demo/cell-height.html)
    *  0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files.
    *  `auto` - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle`
    *  `initial` - similar to 'auto' (start at square cells) but stay that size during window resizing.
@@ -348,9 +347,9 @@ grid.addWidget({w: 3, content: 'hello'});
 grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {w: 3});
 ```
 
-### `batchUpdate()`
+### `batchUpdate(flag = true)`
 
-starts batch updates. You will see no changes until `commit()` method is called.
+use before calling a bunch of `addWidget()` to prevent un-necessary relayouts in between (more efficient) and get a single event callback. You will see no changes until `batchUpdate(false)` is called.
 
 ### `compact()`
 
@@ -367,10 +366,6 @@ grid.cellHeight(grid.cellWidth() * 1.2);
 ### `cellWidth()`
 
 Gets current cell width (grid width / # of columns).
-
-### `commit()`
-
-Ends batch updates. Updates DOM nodes. You must call it after `batchUpdate()`.
 
 ### `column(column: number, layout: ColumnOptions = 'moveScale')`
 

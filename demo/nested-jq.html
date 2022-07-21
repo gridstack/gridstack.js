@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nested grids demo (ES6)</title>
+  <title>Nested JQuery grids demo (ES6)</title>
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/>
-  <script src="../dist/gridstack-h5.js"></script>
+  <script src="../dist/gridstack-jq.js"></script>
   <style type="text/css">
     /* make nested grids have slightly darker bg */
     .grid-stack.grid-stack-nested {
@@ -30,10 +30,10 @@
 </head>
 <body>
   <div class="container-fluid">
-    <h1>Nested grids demo</h1>
-    <p>This example shows v5.x dragging between nested grids (dark yellow) and parent grid (bright yellow.)<br>
-      Uses v3.1 API to load the entire nested grid from JSON.<br>
-      Nested grids uses new <b>column:'auto'</b> to keep items same size during resize.</p>
+    <h1>Nested JQuery grids demo</h1>
+    <p>This is the same nested grid demo, but for Jquery which has additional work required, and options.<br>
+      1. dragOut is implemented (second subgrid cannot drag outside, only adding item).<br>
+    </p>
     <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
     <a class="btn btn-primary" onClick="addNewWidget('.sub1')" href="#">Add Widget Grid1</a>
     <a class="btn btn-primary" onClick="addNewWidget('.sub2')" href="#">Add Widget Grid2</a>
@@ -60,6 +60,13 @@
       column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
       acceptWidgets: true, // will accept .grid-stack-item by default
       margin: 5,
+      draggable: {
+        scroll: false,
+        appendTo: 'body',
+        helper: myClone,
+        // handle: ".grid-stack-item"
+        // zIndex: true,
+      }
     };
     let options = { // main grid options
       cellHeight: 50,
@@ -69,13 +76,24 @@
       id: 'main',
       children: [
         {x:0, y:0, content: 'regular item'},
-        {x:1, w:4, h:4, subGrid: {children: sub1, class: 'sub1', ...subOptions}},
-        {x:5, w:3, h:4, subGrid: {children: sub2, class: 'sub2', ...subOptions}},
+        {x:1, w:4, h:4, subGrid: {children: sub1, dragOut: true, class: 'sub1', ...subOptions}},
+        {x:5, w:3, h:4, subGrid: {children: sub2, dragOut: false, class: 'sub2', ...subOptions}},
       ]
     };
 
     // create and load it all from JSON above
     let grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
+
+    // WORK-IN_PROGRESS the target is content, but we need to drag the grid-item parent and jquery-ui needs helper
+    // to be different, and re-parented (so it doesn't get clipped by other containers overflow-x:hidden, overflow-y:auto which are needed behavior)
+    // but jq-ui doesn't support position:fixed
+    function myClone(event) {
+      let item = event.target.parentElement;
+      item = item.cloneNode(true);
+      grid.el.append(item)
+      // item.style.position = 'fixed'
+      return item;
+    }
 
     function addNested() {
       grid.addWidget({x:0, y:100, content:"new item"});

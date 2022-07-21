@@ -30,120 +30,91 @@ export type GridStackEventHandlerCallback = (event: Event, arg2?: GridItemHTMLEl
   * Defines the options for a Grid
   */
 export interface GridStackOptions {
-   /**
-    * accept widgets dragged from other grids or from outside (default: `false`). Can be:
-    * `true` (uses `'.grid-stack-item'` class filter) or `false`,
-    * string for explicit class name,
-    * function returning a boolean. See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
-    */
-   acceptWidgets?: boolean | string | ((element: Element) => boolean);
 
-   /** possible values (default: `false` only show on hover)
-     * `true` the resizing handles are always shown even if the user is not hovering over the widget
-     * advance condition such as this mobile browser agent check:
-     `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
-     See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html) */
-   alwaysShowResizeHandle?: boolean;
+  /**
+   * accept widgets dragged from other grids or from outside (default: `false`). Can be:
+   * `true` (uses `'.grid-stack-item'` class filter) or `false`,
+   * string for explicit class name,
+   * function returning a boolean. See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
+   */
+  acceptWidgets?: boolean | string | ((element: Element) => boolean);
 
-   /** turns animation on (default?: true) */
-   animate?: boolean;
+  /** possible values (default: `false` only show on hover)
+    * `true` the resizing handles are always shown even if the user is not hovering over the widget
+    * advance condition such as this mobile browser agent check:
+    `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
+    See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html) */
+  alwaysShowResizeHandle?: boolean;
 
-   /** if false gridstack will not initialize existing items (default?: true) */
-   auto?: boolean;
+  /** turns animation on (default?: true) */
+  animate?: boolean;
 
-   /**
-    * one cell height (default?: 'auto'). Can be:
-    *  an integer (px)
-    *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see demo/cell-height.html
-    *  0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files.
-    *  'auto' - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle`
-    *  'initial' - similar to 'auto' (start at square cells) but stay that size during window resizing.
-    */
-   cellHeight?: numberOrString;
+  /** if false gridstack will not initialize existing items (default?: true) */
+  auto?: boolean;
 
-   /** throttle time delay (in ms) used when cellHeight='auto' to improve performance vs usability (default?: 100).
-    * A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event!
-    * */
-   cellHeightThrottle?: number;
+  /**
+   * one cell height (default?: 'auto'). Can be:
+   *  an integer (px)
+   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see demo/cell-height.html
+   *  0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files.
+   *  'auto' - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle`
+   *  'initial' - similar to 'auto' (start at square cells) but stay that size during window resizing.
+   */
+  cellHeight?: numberOrString;
 
-   /** (internal) unit for cellHeight (default? 'px') which is set when a string cellHeight with a unit is passed (ex: '10rem') */
-   cellHeightUnit?: string;
+  /** throttle time delay (in ms) used when cellHeight='auto' to improve performance vs usability (default?: 100).
+   * A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event!
+   * */
+  cellHeightThrottle?: number;
 
-   /** list of children item to create when calling load() or addGrid() */
-   children?: GridStackWidget[];
+  /** (internal) unit for cellHeight (default? 'px') which is set when a string cellHeight with a unit is passed (ex: '10rem') */
+  cellHeightUnit?: string;
 
-   /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns.
-    * Note: for nested grids, it is recommended to use 'auto' which will always match the container grid-item current width (in column) to keep inside and outside
-    * items always to same. flag is not supported for regular non-nested grids.
-    */
-   column?: number | 'auto';
+  /** list of children item to create when calling load() or addGrid() */
+  children?: GridStackWidget[];
 
-   /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance.
-   Note: only used by addGrid(), else your element should have the needed class */
-   class?: string;
+  /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns.
+   * Note: for nested grids, it is recommended to use 'auto' which will always match the container grid-item current width (in column) to keep inside and outside
+   * items always to same. flag is not supported for regular non-nested grids.
+   */
+  column?: number | 'auto';
 
-   /** disallows dragging of widgets (default?: false) */
-   disableDrag?: boolean;
+  /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance.
+  Note: only used by addGrid(), else your element should have the needed class */
+  class?: string;
 
-   /** disables the onColumnMode when the grid width is less than oneColumnSize (default?: false) */
-   disableOneColumnMode?: boolean;
+  /** disallows dragging of widgets (default?: false) */
+  disableDrag?: boolean;
 
-   /** disallows resizing of widgets (default?: false). */
-   disableResize?: boolean;
+  /** disables the onColumnMode when the grid width is less than oneColumnSize (default?: false) */
+  disableOneColumnMode?: boolean;
 
-   /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null }) */
-   draggable?: DDDragOpt;
+  /** disallows resizing of widgets (default?: false). */
+  disableResize?: boolean;
 
-   /** allows to drag external items using this selector - see dragInOptions. (default: undefined) */
-   dragIn?: string;
+  /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null }) */
+  draggable?: DDDragOpt;
 
-   /** allows to drag external items using these options. See `GridStack.setupDragIn()` instead (not per grid really).
-    * (default?: { handle: '.grid-stack-item-content', revert: 'invalid', scroll: false, appendTo: 'body' })
-    * helper can be 'clone' or your own function (set what the drag/dropped item will be instead)
-    */
-   dragInOptions?: DDDragInOpt;
+  /** allows to drag external items using this selector - see dragInOptions. (default: undefined) */
+  dragIn?: string;
 
-   /** let user drag nested grid items out of a parent or not (default false) */
-   dragOut?: boolean;
+  /** allows to drag external items using these options. See `GridStack.setupDragIn()` instead (not per grid really).
+   * (default?: { handle: '.grid-stack-item-content', revert: 'invalid', scroll: false, appendTo: 'body' })
+   * helper can be 'clone' or your own function (set what the drag/dropped item will be instead)
+   */
+  dragInOptions?: DDDragInOpt;
 
-   /** the type of engine to create (so you can subclass) default to GridStackEngine */
-   engineClass?: typeof GridStackEngine;
+  /** let user drag nested grid items out of a parent or not (default true - not supported by h5 yet) */
+  dragOut?: boolean;
 
-   /** enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) */
-   float?: boolean;
+  /** the type of engine to create (so you can subclass) default to GridStackEngine */
+  engineClass?: typeof GridStackEngine;
 
-   /** draggable handle selector (default?: '.grid-stack-item-content') */
-   handle?: string;
+  /** enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) */
+  float?: boolean;
 
-   /** draggable handle class (e.g. 'grid-stack-item-content'). If set 'handle' is ignored (default?: null) */
-   handleClass?: string;
-
-   /** id used to debug grid instance, not currently stored in DOM attributes */
-   id?: numberOrString;
-
-   /** additional widget class (default?: 'grid-stack-item') */
-   itemClass?: string;
-
-   /**
-    * gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below
-    *  an integer (px)
-    *  a string with possible units (ex: '2em', '20px', '2rem')
-    *  string with space separated values (ex: '5px 10px 0 20px' for all 4 sides, or '5em 10em' for top/bottom and left/right pairs like CSS).
-    * Note: all sides must have same units (last one wins, default px)
-    */
-   margin?: numberOrString;
-
-   /** OLD way to optionally set each side - use margin: '5px 10px 0 20px' instead. Used internally to store each side. */
-   marginTop?: numberOrString;
-   marginRight?: numberOrString;
-   marginBottom?: numberOrString;
-   marginLeft?: numberOrString;
-
-   /** (internal) unit for margin (default? 'px') set when `margin` is set as string with unit (ex: 2rem') */
-   marginUnit?: string;
-
-   /** maximum rows amount. Default? is 0 which means no maximum rows */
-   maxRow?: number;
+  /** draggable handle selector (default?: '.grid-stack-item-content') */
+  handle?: string;
 
    /** minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute
     * on the grid div in pixels, which will round to the closest row.
