@@ -11,12 +11,13 @@
     "experimentalDecorators": true,
     "inlineSources": true,
     "lib": [ "es6", "es2015", "dom" ],
-    "module": "esnext",
+    "module": "CommonJS",
     "noImplicitAny": false,
     "outDir": "./dist",
     "sourceMap": true,
     "strict": false,
-    "target": "ES6"
+    "target": "ES6",
+    "allowSyntheticDefaultImports": true
   }, 
   "exclude": [
     "./src/**/*.spec.ts",

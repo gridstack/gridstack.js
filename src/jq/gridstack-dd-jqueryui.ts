@@ -15,8 +15,11 @@ import { GridItemHTMLElement, DDDragInOpt } from '../types';
 //   'jquery.ui': 'gridstack/dist/jq/jquery-ui.js',
 //   'jquery.ui.touch-punch': 'gridstack/dist/jq/jquery.ui.touch-punch.js',
 // },
-import * as $ from 'jquery'; // compile this in... having issues TS/ES6 app would include instead
-export { $ };
+
+import * as _jQuery from 'jquery';
+
+export { _jQuery as jQuery };
+
 import 'jquery-ui';
 import 'jquery.ui.touch-punch'; // include for touch mobile devices
 
@@ -29,7 +32,7 @@ export * from '../gridstack-dd';
 export class GridStackDDJQueryUI extends GridStackDD {
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {
-    let $el: JQuery = $(el);
+    let $el: JQuery = jQuery(el);
     if (opts === 'enable') {
       $el.resizable().resizable(opts);
     } else if (opts === 'disable' || opts === 'destroy') {
@@ -55,7 +58,7 @@ export class GridStackDDJQueryUI extends GridStackDD {
   }
 
   public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD {
-    let $el: JQuery = $(el);
+    let $el: JQuery = jQuery(el);
     if (opts === 'enable') {
       $el.draggable().draggable('enable');
     } else if (opts === 'disable' || opts === 'destroy') {
@@ -68,7 +71,7 @@ export class GridStackDDJQueryUI extends GridStackDD {
       const grid = el.gridstackNode.grid;
       $el.draggable({...grid.opts.draggable, ...{ // was using $.extend()
         containment: (grid.opts._isNested && !grid.opts.dragOut) ?
-          $(grid.el).parent() : (grid.opts.draggable.containment || null),
+          jQuery(grid.el).parent() : (grid.opts.draggable.containment || null),
         start: opts.start, // || function() {},
         stop: opts.stop, // || function() {},
         drag: opts.drag // || function() {}
@@ -78,13 +81,13 @@ export class GridStackDDJQueryUI extends GridStackDD {
   }
 
   public dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDD {
-    let $el: JQuery = $(el as any); // workaround Type 'string' is not assignable to type 'PlainObject<any>' - see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/29312
+    let $el: JQuery = jQuery(el as any); // workaround Type 'string' is not assignable to type 'PlainObject<any>' - see https://github.com/DefinitelyTyped/DefinitelyTyped/issues/29312
     $el.draggable(opts);
     return this;
   }
 
   public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): GridStackDD {
-    let $el: JQuery = $(el);
+    let $el: JQuery = jQuery(el);
     if (typeof opts.accept === 'function' && !opts._accept) {
       // convert jquery event to generic element
       opts._accept = opts.accept;
@@ -101,28 +104,28 @@ export class GridStackDDJQueryUI extends GridStackDD {
   }
 
   public isDroppable(el: HTMLElement): boolean {
-    let $el: JQuery = $(el);
+    let $el: JQuery = jQuery(el);
     return Boolean($el.data('ui-droppable'));
   }
 
   public isDraggable(el: HTMLElement): boolean {
-    let $el: JQuery = $(el);
+    let $el: JQuery = jQuery(el);
     return Boolean($el.data('ui-draggable'));
   }
 
   public isResizable(el: HTMLElement): boolean {
-    let $el: JQuery = $(el);
+    let $el: JQuery = jQuery(el);
     return Boolean($el.data('ui-resizable'));
   }
 
   public on(el: GridItemHTMLElement, name: string, callback: DDCallback): GridStackDD {
-    let $el: JQuery = $(el);
+    let $el: JQuery = jQuery(el);
     $el.on(name, (event, ui) => { return callback(event as any, ui.draggable ? ui.draggable[0] : event.target, ui.helper ? ui.helper[0] : null) });
     return this;
   }
 
   public off(el: GridItemHTMLElement, name: string): GridStackDD {
-    let $el: JQuery = $(el);
+    let $el: JQuery = jQuery(el);
     $el.off(name);
     return this;
   }

@@ -5,6 +5,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true
    */
+    "rootDir": "../src",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

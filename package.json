@@ -19,9 +19,10 @@
     }
   ],
   "scripts": {
-    "build": "yarn --no-progress && rimraf dist && grunt && yarn build:es6 && yarn build:es5 && yarn doc",
-    "build:es6": "rollup -c rollup.config.js && tsc --stripInternal",
+    "build": "yarn --no-progress && rimraf dist && grunt && yarn build:es6 && yarn build:es5 && yarn build:esm && yarn doc",
+    "build:es6": "webpack && tsc --stripInternal",
     "build:es5": "webpack --config es5/webpack.config.js && tsc --stripInternal --project es5/tsconfig.json",
+    "build:esm": "rollup -c rollup.config.js",
     "w": "rimraf dist/* && grunt && rollup -c rollup.config.js",
     "t": "rimraf dist/* && grunt && tsc --stripInternal",
     "doc": "doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
@@ -59,6 +60,7 @@
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.3.2",
     "@types/jasmine": "^3.5.9",
     "@types/jquery": "^3.5.14",
@@ -93,8 +95,10 @@
     "sass": "^1.42.1",
     "serve-static": "^1.14.1",
     "ts-loader": "^8.0.7",
+    "tslib": "^2.4.0",
     "typescript": "^3.7",
     "webpack": "^5.3.2",
     "webpack-cli": "^4.6.0"
-  }
+  },
+  "dependencies": {}
 }
