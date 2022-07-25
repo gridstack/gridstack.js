@@ -38,7 +38,7 @@
     for (; count <= COLUMNS;) {
       this.addNewWidget(); 
     }
-    grid.commit();
+    grid.batchUpdate(false);
   </script>
 </body>
 </html>

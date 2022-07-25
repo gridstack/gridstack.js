@@ -186,8 +186,8 @@ describe('gridstack engine', function() {
       engine.batchUpdate(); // double for code coverage
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
-      engine.commit();
-      engine.commit();
+      engine.batchUpdate(false);
+      engine.batchUpdate(false);
       expect(engine.batchMode).not.toBeTrue();
       expect(engine.float).not.toBeTrue;
     });
@@ -197,7 +197,7 @@ describe('gridstack engine', function() {
       engine.batchUpdate();
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
-      engine.commit();
+      engine.batchUpdate(false);
       expect(engine.batchMode).not.toBeTrue();
       expect(engine.float).toEqual(true);
     });
@@ -214,7 +214,7 @@ describe('gridstack engine', function() {
       engine.batchUpdate();
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
-      engine.commit();
+      engine.batchUpdate(false);
       expect(engine.batchMode).not.toBeTrue();
       expect(engine.float).toEqual(true);
     });
