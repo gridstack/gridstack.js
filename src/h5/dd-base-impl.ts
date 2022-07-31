@@ -9,7 +9,7 @@ export abstract class DDBaseImplement {
   public get disabled(): boolean   { return this._disabled; }
 
   /** @internal */
-  protected _disabled = false;
+  protected _disabled: boolean; // initial state to differentiate from false
   /** @internal */
   protected _eventRegister: {
     [eventName: string]: EventCallback;

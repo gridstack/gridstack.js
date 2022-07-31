@@ -70,6 +70,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## TBD
+* converted previous HTML5 `draggable=true` based code to simple mouse move/enter/leave events for dragging in preparation of mobile support.
 * changed `commit()` to be `batchUpdate(false)` to make it easier to turn batch on/off. updated doc. old API remains for now
 
 ## 5.1.1 (2022-06-16)
