@@ -7,8 +7,7 @@ import { DDDraggable } from './dd-draggable';
 import { DDManager } from './dd-manager';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { DDUtils } from './dd-utils';
-import { GridHTMLElement, GridStack } from '../gridstack';
-import { GridItemHTMLElement } from '../types';
+import { DDElementHost } from './dd-element';
 
 export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);
@@ -17,7 +16,7 @@ export interface DDDroppableOpt {
   out?: (event: DragEvent, ui) => void;
 }
 
-// TEST let count = 0;
+// let count = 0; // TEST
 
 export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt<DDDroppableOpt> {
 
@@ -25,22 +24,14 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   public el: HTMLElement;
   public option: DDDroppableOpt;
 
-  /** @internal */
-  protected moving: boolean;
-  protected static lastActive: DDDroppable;
-
   constructor(el: HTMLElement, opts: DDDroppableOpt = {}) {
     super();
     this.el = el;
     this.option = opts;
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
-    this._dragEnter = this._dragEnter.bind(this);
-    this._dragOver = this._dragOver.bind(this);
-    this._dragLeave = this._dragLeave.bind(this);
-    this._drop = this._drop.bind(this);
-
-    this.el.classList.add('ui-droppable');
-    this.el.addEventListener('dragenter', this._dragEnter);
+    this._mouseEnter = this._mouseEnter.bind(this);
+    this._mouseLeave = this._mouseLeave.bind(this);
+    this.enable();
     this._setupAccept();
   }
 
@@ -53,21 +44,24 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public enable(): void {
-    if (!this.disabled) return;
+    if (this.disabled === false) return;
     super.enable();
+    this.el.classList.add('ui-droppable');
     this.el.classList.remove('ui-droppable-disabled');
-    this.el.addEventListener('dragenter', this._dragEnter);
+    this.el.addEventListener('mouseenter', this._mouseEnter);
+    this.el.addEventListener('mouseleave', this._mouseLeave);
   }
 
-  public disable(forDestroy=false): void {
-    if (this.disabled) return;
+  public disable(forDestroy = false): void {
+    if (this.disabled === true) return;
     super.disable();
+    this.el.classList.remove('ui-droppable');
     if (!forDestroy) this.el.classList.add('ui-droppable-disabled');
-    this.el.removeEventListener('dragenter', this._dragEnter);
+    this.el.removeEventListener('mouseenter', this._mouseEnter);
+    this.el.removeEventListener('mouseleave', this._mouseLeave);
   }
 
   public destroy(): void {
-    this._removeLeaveCallbacks();
     this.disable(true);
     this.el.classList.remove('ui-droppable');
     this.el.classList.remove('ui-droppable-disabled');
@@ -81,109 +75,80 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal called when the cursor enters our area - prepare for a possible drop and track leaving */
-  protected _dragEnter(event: DragEvent): void {
-    // TEST console.log(`${count++} Enter ${(this.el as GridHTMLElement).gridstack.opts.id}`);
+  protected _mouseEnter(e: MouseEvent): void {
+    // console.log(`${count++} Enter ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
+    if (!DDManager.dragElement /* || DDManager.dropElement === this*/) return;
     if (!this._canDrop()) return;
-    event.preventDefault();
-    event.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
 
-    // ignore multiple 'dragenter' as we go over existing items
-    if (this.moving) return;
-    this.moving = true;
-
-    const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropover' });
+    const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'dropover' });
     if (this.option.over) {
       this.option.over(ev, this._ui(DDManager.dragElement))
     }
     this.triggerEvent('dropover', ev);
-    this.el.addEventListener('dragover', this._dragOver);
-    this.el.addEventListener('drop', this._drop);
-    this.el.addEventListener('dragleave', this._dragLeave);
-    // Update: removed that as it causes nested grids to no receive dragenter events when parent drags and sets this for #992. not seeing cursor flicker (chrome).
-    // this.el.classList.add('ui-droppable-over');
+    this.el.classList.add('ui-droppable-over');
 
     // make sure when we enter this, that the last one gets a leave to correctly cleanup as we don't always do
-    if (DDDroppable.lastActive && DDDroppable.lastActive !== this) {
-      DDDroppable.lastActive._dragLeave(event, true);
+    if (DDManager.dropElement && DDManager.dropElement !== this) {
+      DDManager.dropElement._mouseLeave(e as DragEvent);
     }
-    DDDroppable.lastActive = this;
-  }
-
-  /** @internal called when an moving to drop item is being dragged over - do nothing but eat the event */
-  protected _dragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
+    DDManager.dropElement = this;
+    // console.log('tracking'); // TEST
   }
 
   /** @internal called when the item is leaving our area, stop tracking if we had moving item */
-  protected _dragLeave(event: DragEvent, forceLeave?: boolean): void {
-    // TEST console.log(`${count++} Leave ${(this.el as GridHTMLElement).gridstack.opts.id}`);
+  protected _mouseLeave(event: DragEvent): void {
+    // console.log(`${count++} Leave ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
+    if (!DDManager.dragElement || DDManager.dropElement !== this) return;
     event.preventDefault();
     event.stopPropagation();
 
-    // ignore leave events on our children (we get them when starting to drag our items)
-    // but exclude nested grids since we would still be leaving ourself, 
-    // but don't handle leave if we're dragging a nested grid around
-    if (!forceLeave) {
-      let onChild = DDUtils.inside(event, this.el);
-      let drag: GridItemHTMLElement = DDManager.dragElement.el;
-      if (onChild && !drag.gridstackNode?.subGrid) { // dragging a nested grid ?
-        let nestedEl = (this.el as GridHTMLElement).gridstack.engine.nodes.filter(n => n.subGrid).map(n => (n.subGrid as GridStack).el);
-        onChild = !nestedEl.some(el => DDUtils.inside(event, el));
-      }
-      if (onChild) return;
+    const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropout' });
+    if (this.option.out) {
+      this.option.out(ev, this._ui(DDManager.dragElement))
     }
+    this.triggerEvent('dropout', ev);
 
-    if (this.moving) {
-      const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropout' });
-      if (this.option.out) {
-        this.option.out(ev, this._ui(DDManager.dragElement))
+    if (DDManager.dropElement === this) {
+      delete DDManager.dropElement;
+      // console.log('not tracking'); // TEST
+
+      // if we're still over a parent droppable, send it an enter as we don't get one from leaving nested children
+      let parentDrop: DDDroppable;
+      let parent: DDElementHost = this.el.parentElement;
+      while (!parentDrop && parent) {
+        parentDrop = parent.ddElement?.ddDroppable;
+        parent = parent.parentElement;
       }
-      this.triggerEvent('dropout', ev);
-    }
-    this._removeLeaveCallbacks();
-
-    if (DDDroppable.lastActive === this) {
-      delete DDDroppable.lastActive;
+      if (parentDrop) {
+        parentDrop._mouseEnter(event);
+      }
     }
   }
 
-  /** @internal item is being dropped on us - call the client drop event */
-  protected _drop(event: DragEvent): void {
-    if (!this.moving) return; // should not have received event...
-    event.preventDefault();
-    const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drop' });
+  /** item is being dropped on us - called byt the drag mouseup handler - this calls the client drop event */
+  public drop(e: MouseEvent): void {
+    e.preventDefault();
+    const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'drop' });
     if (this.option.drop) {
       this.option.drop(ev, this._ui(DDManager.dragElement))
     }
     this.triggerEvent('drop', ev);
-    this._removeLeaveCallbacks();
   }
 
-  /** @internal called to remove callbacks when leaving or dropping */
-  protected _removeLeaveCallbacks() {
-    if (!this.moving) { return; }
-    delete this.moving;
-    this.el.removeEventListener('dragover', this._dragOver);
-    this.el.removeEventListener('drop', this._drop);
-    this.el.removeEventListener('dragleave', this._dragLeave);
-    // Update: removed that as it causes nested grids to no receive dragenter events when parent drags and sets this for #992. not seeing cursor flicker (chrome).
-    // this.el.classList.remove('ui-droppable-over');
-  }
-
-  /** @internal */
+  /** @internal true if element matches the string/method accept option */
   protected _canDrop(): boolean {
     return DDManager.dragElement && (!this.accept || this.accept(DDManager.dragElement.el));
   }
 
   /** @internal */
   protected _setupAccept(): DDDroppable {
-    if (this.option.accept && typeof this.option.accept === 'string') {
-      this.accept = (el: HTMLElement) => {
-        return el.matches(this.option.accept as string)
-      }
+    if (!this.option.accept) return this;
+    if (typeof this.option.accept === 'string') {
+      this.accept = (el: HTMLElement) => el.matches(this.option.accept as string);
     } else {
-      this.accept = this.option.accept as ((el: HTMLElement) => boolean);
+      this.accept = this.option.accept;
     }
     return this;
   }

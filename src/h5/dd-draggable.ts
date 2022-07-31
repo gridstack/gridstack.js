@@ -7,6 +7,7 @@ import { DDManager } from './dd-manager';
 import { DDUtils } from './dd-utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { GridItemHTMLElement, DDUIData } from '../types';
+import { DDElementHost } from './dd-element';
 
 // TODO: merge with DDDragOpt ?
 export interface DDDraggableOpt {
@@ -30,32 +31,29 @@ interface DragOffset {
   offsetTop: number;
 }
 
+// let count = 0; // TEST
+
 export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt<DDDraggableOpt> {
   public el: HTMLElement;
   public option: DDDraggableOpt;
   public helper: HTMLElement; // used by GridStackDDNative
 
   /** @internal */
+  protected mouseDownEvent: MouseEvent;
+  /** @internal */
   protected dragOffset: DragOffset;
   /** @internal */
   protected dragElementOriginStyle: Array<string>;
   /** @internal */
-  protected dragFollowTimer: number;
-  /** @internal */
   protected dragEl: HTMLElement;
-  /** @internal */
-  protected dragging = false;
-  /** @internal */
-  protected paintTimer: number;
+  /** @internal true while we are dragging an item around */
+  protected dragging: boolean;
   /** @internal */
   protected parentOriginStylePosition: string;
   /** @internal */
   protected helperContainment: HTMLElement;
-  /** @internal #1541 can't have {passive: true} on Safari as otherwise it reverts animate back to old location on drop */
-  protected static dragEventListenerOption = true; // DDUtils.isEventSupportPassiveOption ? { capture: true, passive: true } : true;
   /** @internal properties we change during dragging, and restore back */
-  protected static originStyleProp = ['transition', 'pointerEvents', 'position',
-    'left', 'top', 'opacity', 'zIndex', 'width', 'height', 'willChange', 'min-width'];
+  protected static originStyleProp = ['transition', 'pointerEvents', 'position', 'left', 'top'];
 
   constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
     super();
@@ -65,9 +63,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     let className = option.handle.substring(1);
     this.dragEl = el.classList.contains(className) ? el : el.querySelector(option.handle) || el;
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
-    this._dragStart = this._dragStart.bind(this);
-    this._drag = this._drag.bind(this);
-    this._dragEnd = this._dragEnd.bind(this);
+    this._mouseDown = this._mouseDown.bind(this);
+    this._mouseMove = this._mouseMove.bind(this);
+    this._mouseUp = this._mouseUp.bind(this);
     this.enable();
   }
 
@@ -80,28 +78,23 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public enable(): void {
+    if (this.disabled === false) return;
     super.enable();
-    this.dragEl.draggable = true;
-    this.dragEl.addEventListener('dragstart', this._dragStart);
+    this.dragEl.addEventListener('mousedown', this._mouseDown);
     this.el.classList.remove('ui-draggable-disabled');
     this.el.classList.add('ui-draggable');
   }
 
   public disable(forDestroy = false): void {
+    if (this.disabled === true) return;
     super.disable();
-    this.dragEl.removeAttribute('draggable');
-    this.dragEl.removeEventListener('dragstart', this._dragStart);
+    this.dragEl.removeEventListener('mousedown', this._mouseDown);
     this.el.classList.remove('ui-draggable');
     if (!forDestroy) this.el.classList.add('ui-draggable-disabled');
   }
 
   public destroy(): void {
-    if (this.dragging) {
-      // Destroy while dragging should remove dragend listener and manually trigger
-      // dragend, otherwise dragEnd can't perform dragstop because eventRegistry is
-      // destroyed.
-      this._dragEnd({} as DragEvent);
-    }
+    if (this.dragging) this._mouseUp(this.mouseDownEvent);
     this.disable(true);
     delete this.el;
     delete this.helper;
@@ -114,81 +107,102 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal */
-  protected _dragStart(event: DragEvent): void {
-    DDManager.dragElement = this;
-    this.helper = this._createHelper(event);
-    this._setupHelperContainmentStyle();
-    this.dragOffset = this._getDragOffset(event, this.el, this.helperContainment);
-    const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dragstart' });
-    if (this.helper !== this.el) {
-      this._setupDragFollowNodeNotifyStart(ev);
-      // immediately set external helper initial position to avoid flickering behavior and unnecessary looping in `_packNodes()`
-      this._dragFollow(event);
-    } else {
-      this.dragFollowTimer = window.setTimeout(() => {
-        delete this.dragFollowTimer;
-        this._setupDragFollowNodeNotifyStart(ev);
-      }, 0);
-    }
-    this._cancelDragGhost(event);
-  }
+  /** @internal call when mouse goes down before a dragstart happens */
+  protected _mouseDown(e: MouseEvent): boolean {
+    // don't let more than one widget handle mouseStart
+    if (DDManager.mouseHandled) return;
+    if (e.button !== 0) return true; // only left click
 
-  /** @internal */
-  protected _setupDragFollowNodeNotifyStart(ev: Event): DDDraggable {
-    this._setupHelperStyle();
-    document.addEventListener('dragover', this._drag, DDDraggable.dragEventListenerOption);
-    this.dragEl.addEventListener('dragend', this._dragEnd);
-    if (this.option.start) {
-      this.option.start(ev, this.ui());
-    }
-    this.dragging = true;
-    this.helper.classList.add('ui-draggable-dragging');
-    this.triggerEvent('dragstart', ev);
-    return this;
-  }
-
-  /** @internal */
-  protected _drag(event: DragEvent): void {
-    // Safari: prevent default to allow drop to happen instead of reverting back (with animation) and delaying dragend #1541
-    // https://stackoverflow.com/questions/61760755/how-to-fire-dragend-event-immediately
-    event.preventDefault();
-    this._dragFollow(event);
-    const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'drag' });
-    if (this.option.drag) {
-      this.option.drag(ev, this.ui());
-    }
-    this.triggerEvent('drag', ev);
-  }
-
-  /** @internal */
-  protected _dragEnd(event: DragEvent): void {
-    if (this.dragFollowTimer) {
-      clearTimeout(this.dragFollowTimer);
-      delete this.dragFollowTimer;
-      return;
-    } else {
-      if (this.paintTimer) {
-        cancelAnimationFrame(this.paintTimer);
-      }
-      document.removeEventListener('dragover', this._drag, DDDraggable.dragEventListenerOption);
-      this.dragEl.removeEventListener('dragend', this._dragEnd);
-    }
-    this.dragging = false;
-    this.helper.classList.remove('ui-draggable-dragging');
-    this.helperContainment.style.position = this.parentOriginStylePosition || null;
-    if (this.helper === this.el) {
-      this._removeHelperStyle();
-    } else {
-      this.helper.remove();
-    }
-    const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dragstop' });
-    if (this.option.stop) {
-      this.option.stop(ev); // Note: ui() not used by gridstack so don't pass
-    }
-    this.triggerEvent('dragstop', ev);
+    // make sure we are clicking on a drag handle or child of it...
+    // Note: we don't need to check that's handle is an immediate child, as mouseHandled will prevent parents from also handling it (lowest wins)
+    let className = this.option.handle.substring(1);
+    let el = e.target as HTMLElement;
+    while (el && !el.classList.contains(className)) { el = el.parentElement; }
+    if (!el) return;
+    this.mouseDownEvent = e;
+    delete this.dragging;
     delete DDManager.dragElement;
+    delete DDManager.dropElement;
+    // document handler so we can continue receiving moves as the item is 'fixed' position, and capture=true so WE get a first crack
+    document.addEventListener('mousemove', this._mouseMove, true); // true=capture, not bubble
+    document.addEventListener('mouseup', this._mouseUp, true);
+
+    e.preventDefault();
+    DDManager.mouseHandled = true;
+    return true;
+  }
+
+  /** @internal called when the main page (after successful mousedown) receives a move event to drag the item around the screen */
+  protected _mouseMove(e: DragEvent): boolean {
+    // console.log(`${count++} move ${e.x},${e.y}`)
+    let s = this.mouseDownEvent;
+
+    if (this.dragging) {
+      this._dragFollow(e);
+      const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'drag' });
+      if (this.option.drag) {
+        this.option.drag(ev, this.ui());
+      }
+      this.triggerEvent('drag', ev);
+    } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 3) {
+      /**
+       * don't start unless we've moved at least 3 pixels
+      */
+      this.dragging = true;
+      DDManager.dragElement = this;
+      // if we're dragging an actual grid item, set the current drop as the grid (to detect enter/leave)
+      let grid = (this.el as GridItemHTMLElement).gridstackNode?.grid;
+      if (grid) {
+        DDManager.dropElement = (grid.el as DDElementHost).ddElement.ddDroppable;
+      } else {
+        delete DDManager.dropElement;
+      }
+      this.helper = this._createHelper(e);
+      this._setupHelperContainmentStyle();
+      this.dragOffset = this._getDragOffset(e, this.el, this.helperContainment);
+      const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
+
+      this._setupHelperStyle(e);
+      this.helper.classList.add('ui-draggable-dragging');
+      if (this.option.start) {
+        this.option.start(ev, this.ui());
+      }
+      this.triggerEvent('dragstart', ev);
+    }
+    e.preventDefault();
+    return true;
+  }
+
+  /** @internal call when the mouse gets released to drop the item at current location */
+  protected _mouseUp(e: MouseEvent): void {
+    document.removeEventListener('mousemove', this._mouseMove, true);
+    document.removeEventListener('mouseup', this._mouseUp, true);
+    if (this.dragging) {
+      delete this.dragging;
+      this.helper.classList.remove('ui-draggable-dragging');
+      this.helperContainment.style.position = this.parentOriginStylePosition || null;
+      if (this.helper === this.el) {
+        this._removeHelperStyle();
+      } else {
+        this.helper.remove();
+      }
+      const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstop' });
+      if (this.option.stop) {
+        this.option.stop(ev); // NOTE: destroy() will be called when removing item, so expect NULL ptr after!
+      }
+      this.triggerEvent('stop', ev);
+
+      // call the droppable method to receive the item
+      if (DDManager.dropElement) {
+        DDManager.dropElement.drop(e);
+      }
+    }
     delete this.helper;
+    delete this.mouseDownEvent;
+    delete DDManager.dragElement;
+    delete DDManager.dropElement;
+    delete DDManager.mouseHandled;
+    e.preventDefault();
   }
 
   /** @internal create a clone copy (or user defined method) of the original drag item if set */
@@ -208,19 +222,18 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return helper;
   }
 
-  /** @internal */
-  protected _setupHelperStyle(): DDDraggable {
+  /** @internal set the fix position of the dragged item */
+  protected _setupHelperStyle(e: DragEvent): DDDraggable {
     // TODO: set all at once with style.cssText += ... ? https://stackoverflow.com/questions/3968593
-    const rec = this.helper.getBoundingClientRect();
     const style = this.helper.style;
-    style.pointerEvents = 'none';
+    style.pointerEvents = 'none'; // needed for over items to get enter/leave
+    // style.cursor = 'move'; //  TODO: can't set with pointerEvents=none !
     style['min-width'] = 0; // since we no longer relative to our parent and we don't resize anyway (normally 100/#column %)
     style.width = this.dragOffset.width + 'px';
     style.height = this.dragOffset.height + 'px';
     style.willChange = 'left, top';
     style.position = 'fixed'; // let us drag between grids by not clipping as parent .grid-stack is position: 'relative'
-    style.left = rec.left + 'px';
-    style.top = rec.top + 'px';
+    this._dragFollow(e); // now position it
     style.transition = 'none'; // show up instantly
     setTimeout(() => {
       if (this.helper) {
@@ -230,7 +243,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal */
+  /** @internal restore back the original style before dragging */
   protected _removeHelperStyle(): DDDraggable {
     let node = (this.helper as GridItemHTMLElement)?.gridstackNode;
     // don't bother restoring styles if we're gonna remove anyway...
@@ -246,22 +259,17 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal */
-  protected _dragFollow(event: DragEvent): void {
-    if (this.paintTimer) {
-      cancelAnimationFrame(this.paintTimer);
-    }
-    this.paintTimer = requestAnimationFrame(() => {
-      delete this.paintTimer;
-      const offset = this.dragOffset;
-      let containmentRect = { left: 0, top: 0 };
-      if (this.helper.style.position === 'absolute') {
-        const { left, top } = this.helperContainment.getBoundingClientRect();
-        containmentRect = { left, top };
-      }
-      this.helper.style.left = event.clientX + offset.offsetLeft - containmentRect.left + 'px';
-      this.helper.style.top = event.clientY + offset.offsetTop - containmentRect.top + 'px';
-    });
+  /** @internal updates the top/left position to follow the mouse */
+  protected _dragFollow(e: DragEvent): void {
+    let containmentRect = { left: 0, top: 0 };
+    // if (this.helper.style.position === 'absolute') { // we use 'fixed'
+    //   const { left, top } = this.helperContainment.getBoundingClientRect();
+    //   containmentRect = { left, top };
+    // }
+    const style = this.helper.style;
+    const offset = this.dragOffset;
+    style.left = e.clientX + offset.offsetLeft - containmentRect.left + 'px';
+    style.top = e.clientY + offset.offsetTop - containmentRect.top + 'px';
   }
 
   /** @internal */
@@ -273,32 +281,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
         this.helperContainment.style.position = 'relative';
       }
     }
-    return this;
-  }
-
-  /** @internal prevent the default ghost image to be created (which has wrong as we move the helper/element instead
-   * (legacy jquery UI code updates the top/left of the item).
-   * TODO: maybe use mouse event instead of HTML5 drag as we have to work around it anyway, or change code to not update
-   * the actual grid-item but move the ghost image around (and special case jq version) ?
-   **/
-  protected _cancelDragGhost(e: DragEvent): DDDraggable {
-    /* doesn't seem to do anything...
-    let t = e.dataTransfer;
-    t.effectAllowed = 'none';
-    t.dropEffect = 'none';
-    t.setData('text', '');
-    */
-
-    // NOTE: according to spec (and required by Safari see #1540) the image has to be visible in the browser (in dom and not hidden) so make it a 1px div
-    let img = document.createElement('div');
-    img.style.width = '1px';
-    img.style.height = '1px';
-    img.style.position = 'fixed'; // prevent unwanted scrollbar
-    document.body.appendChild(img);
-    e.dataTransfer.setDragImage(img, 0, 0);
-    setTimeout(() => document.body.removeChild(img)); // nuke once drag had a chance to grab this 'image'
-
-    e.stopPropagation();
     return this;
   }
 
@@ -339,7 +321,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal TODO: set to public as called by DDDroppable! */
-  public ui = (): DDUIData => {
+  public ui(): DDUIData {
     const containmentEl = this.el.parentElement;
     const containmentRect = containmentEl.getBoundingClientRect();
     const offset = this.helper.getBoundingClientRect();
@@ -355,5 +337,3 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     };
   }
 }
-
-

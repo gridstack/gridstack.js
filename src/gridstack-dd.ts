@@ -24,7 +24,7 @@ export type DDValue = number | string;
 /** drag&drop events callbacks */
 export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: GridItemHTMLElement) => void;
 
-// TEST let count = 0;
+// let count = 0; // TEST
 
 /**
  * Base class implementing common Grid drag'n'drop functionality, with domain specific subclass (h5 vs jq subclasses)
@@ -153,7 +153,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
      * entering our grid area
      */
     .on(this.el, 'dropover', (event: Event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
-      // TEST console.log(`over ${this.el.gridstack.opts.id} ${count++}`);
+      // console.log(`over ${this.el.gridstack.opts.id} ${count++}`); // TEST
       let node = el.gridstackNode;
       // ignore drop enter on ourself (unless we temporarily removed) which happens on a simple drag of our item
       if (node?.grid === this && !node._temporaryRemoved) {
@@ -163,7 +163,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
 
       // fix #1578 when dragging fast, we may not get a leave on the previous grid so force one now
       if (node?.grid && node.grid !== this && !node._temporaryRemoved) {
-        // TEST console.log('dropover without leave');
+        // console.log('dropover without leave'); // TEST
         let otherGrid = node.grid;
         otherGrid._leave(el, helper);
       }
@@ -189,7 +189,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       // if the item came from another grid, make a copy and save the original info in case we go back there
       if (node.grid && node.grid !== this) {
         // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
-        // TEST console.log('dropover cloning node');
+        // console.log('dropover cloning node'); // TEST
         if (!el._gridstackNodeOrig) el._gridstackNodeOrig = node; // shouldn't have multiple nested!
         el.gridstackNode = node = {...node, w, h, grid: this};
         this.engine.cleanupNode(node)
@@ -215,7 +215,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
      * Leaving our grid area...
      */
     .on(this.el, 'dropout', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
-      // TEST console.log(`out ${this.el.gridstack.opts.id} ${count++}`);
+      // console.log(`out ${this.el.gridstack.opts.id} ${count++}`); // TEST
       let node = el.gridstackNode;
       if (!node) return false;
       // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)
@@ -237,7 +237,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       this.placeholder.remove();
 
       // notify previous grid of removal
-      // TEST console.log('drop delete _gridstackNodeOrig')
+      // console.log('drop delete _gridstackNodeOrig') // TEST
       let origNode = el._gridstackNodeOrig;
       delete el._gridstackNodeOrig;
       if (wasAdded && origNode && origNode.grid && origNode.grid !== this) {
@@ -474,7 +474,7 @@ GridStack.prototype._onStartMoving = function(this: GridStack, el: GridItemHTMLE
   // @ts-ignore
   this._writePosAttr(this.placeholder, node)
   this.el.appendChild(this.placeholder);
-  // TEST console.log('_onStartMoving placeholder')
+  // console.log('_onStartMoving placeholder') // TEST
 
   node.el = this.placeholder;
   node._lastUiPosition = ui.position;
@@ -483,7 +483,7 @@ GridStack.prototype._onStartMoving = function(this: GridStack, el: GridItemHTMLE
   delete node._lastTried;
 
   if (event.type === 'dropover' && node._temporaryRemoved) {
-    // TEST console.log('engine.addNode x=' + node.x);
+    // console.log('engine.addNode x=' + node.x); // TEST
     this.engine.addNode(node); // will add, fix collisions, update attr and clear _temporaryRemoved
     node._moving = true; // AFTER, mark as moving object (wanted fix location before)
   }
@@ -523,7 +523,7 @@ GridStack.prototype._leave = function(this: GridStack, el: GridItemHTMLElement, 
 
   // finally if item originally came from another grid, but left us, restore things back to prev info
   if (el._gridstackNodeOrig) {
-    // TEST console.log('leave delete _gridstackNodeOrig')
+    // console.log('leave delete _gridstackNodeOrig') // TEST
     el.gridstackNode = el._gridstackNodeOrig;
     delete el._gridstackNodeOrig;
   } else if (node._isExternal) {
