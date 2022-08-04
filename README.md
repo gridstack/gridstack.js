@@ -258,15 +258,15 @@ Better yet, here is a SASS code snippet which can make life much easier (Thanks 
 
   $gridstack-columns: 12;
 
-  min-width: math.div(100%, $gridstack-columns);
+  min-width: 100%/$gridstack-columns;
 
   @for $i from 0 through $gridstack-columns {
-    &[gs-w='#{$i}'] { width: math.div(100%, $gridstack-columns) * $i; }
-    &[gs-x='#{$i}'] { left: math.div(100%, $gridstack-columns) * $i; }
-    &[gs-min-w='#{$i}'] { min-width: math.div(100%, $gridstack-columns) * $i; }
-    &[gs-max-w='#{$i}'] { max-width: math.div(100%, $gridstack-columns) * $i; }
+    &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
+    &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
+    &[gs-min-w='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
+    &[gs-max-w='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
   }
-}
+} 
 ```
 
 you can also use the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/tree/master/src/gridstack-extra.scss) included in NPM package and modify to add more columns.
