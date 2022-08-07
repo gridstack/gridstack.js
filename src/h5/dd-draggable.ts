@@ -8,6 +8,7 @@ import { DDUtils } from './dd-utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { GridItemHTMLElement, DDUIData } from '../types';
 import { DDElementHost } from './dd-element';
+import { isTouch, touchend, touchmove, touchstart, pointerdown } from './touch';
 
 // TODO: merge with DDDragOpt ?
 export interface DDDraggableOpt {
@@ -30,6 +31,8 @@ interface DragOffset {
   offsetLeft: number;
   offsetTop: number;
 }
+
+type DDDragEvent = 'drag' | 'dragstart' | 'dragstop';
 
 // let count = 0; // TEST
 
@@ -69,11 +72,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.enable();
   }
 
-  public on(event: 'drag' | 'dragstart' | 'dragstop', callback: (event: DragEvent) => void): void {
+  public on(event: DDDragEvent, callback: (event: DragEvent) => void): void {
     super.on(event, callback);
   }
 
-  public off(event: 'drag' | 'dragstart' | 'dragstop'): void {
+  public off(event: DDDragEvent): void {
     super.off(event);
   }
 
@@ -81,6 +84,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (this.disabled === false) return;
     super.enable();
     this.dragEl.addEventListener('mousedown', this._mouseDown);
+    if (isTouch) {
+      this.dragEl.addEventListener('touchstart', touchstart);
+      this.dragEl.addEventListener('pointerdown', pointerdown);
+      // this.dragEl.style.touchAction = 'none'; // not needed unlike pointerdown doc comment
+    }
     this.el.classList.remove('ui-draggable-disabled');
     this.el.classList.add('ui-draggable');
   }
@@ -89,6 +97,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (this.disabled === true) return;
     super.disable();
     this.dragEl.removeEventListener('mousedown', this._mouseDown);
+    if (isTouch) {
+      this.dragEl.removeEventListener('touchstart', touchstart);
+    }
     this.el.classList.remove('ui-draggable');
     if (!forDestroy) this.el.classList.add('ui-draggable-disabled');
   }
@@ -126,6 +137,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // document handler so we can continue receiving moves as the item is 'fixed' position, and capture=true so WE get a first crack
     document.addEventListener('mousemove', this._mouseMove, true); // true=capture, not bubble
     document.addEventListener('mouseup', this._mouseUp, true);
+    if (isTouch) {
+      this.dragEl.addEventListener('touchmove', touchmove);
+      this.dragEl.addEventListener('touchend', touchend);
+    }
 
     e.preventDefault();
     DDManager.mouseHandled = true;
@@ -177,6 +192,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _mouseUp(e: MouseEvent): void {
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp, true);
+    if (isTouch) {
+      this.dragEl.removeEventListener('touchmove', touchmove, true);
+      this.dragEl.removeEventListener('touchend', touchend, true);
+    }
     if (this.dragging) {
       delete this.dragging;
       this.helper.classList.remove('ui-draggable-dragging');
