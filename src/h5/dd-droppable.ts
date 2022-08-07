@@ -8,6 +8,7 @@ import { DDManager } from './dd-manager';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { DDUtils } from './dd-utils';
 import { DDElementHost } from './dd-element';
+import { isTouch, pointerenter, pointerleave } from './touch';
 
 export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);
@@ -50,6 +51,10 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     this.el.classList.remove('ui-droppable-disabled');
     this.el.addEventListener('mouseenter', this._mouseEnter);
     this.el.addEventListener('mouseleave', this._mouseLeave);
+    if (isTouch) {
+      this.el.addEventListener('pointerenter', pointerenter);
+      this.el.addEventListener('pointerleave', pointerleave);
+    }
   }
 
   public disable(forDestroy = false): void {
@@ -59,6 +64,10 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     if (!forDestroy) this.el.classList.add('ui-droppable-disabled');
     this.el.removeEventListener('mouseenter', this._mouseEnter);
     this.el.removeEventListener('mouseleave', this._mouseLeave);
+    if (isTouch) {
+      this.el.removeEventListener('pointerenter', pointerenter);
+      this.el.removeEventListener('pointerleave', pointerleave);
+    }
   }
 
   public destroy(): void {

@@ -10,6 +10,7 @@ import { DDDroppable } from './dd-droppable';
  * globals that are shared across Drag & Drop instances
  */
 export class DDManager {
+  
   /** true if a mouse down event was handled */
   public static mouseHandled: boolean;
 
