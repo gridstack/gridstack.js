@@ -3,6 +3,8 @@
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
+import { isTouch, pointerdown, touchend, touchmove, touchstart } from './touch';
+
 export interface DDResizableHandleOpt {
   start?: (event) => void;
   move?: (event) => void;
@@ -47,6 +49,11 @@ export class DDResizableHandle {
     this.el = el;
     this.host.appendChild(this.el);
     this.el.addEventListener('mousedown', this._mouseDown);
+    if (isTouch) {
+      this.el.addEventListener('touchstart', touchstart);
+      this.el.addEventListener('pointerdown', pointerdown);
+      // this.el.style.touchAction = 'none'; // not needed unlike pointerdown doc comment
+    }
     return this;
   }
 
@@ -54,6 +61,10 @@ export class DDResizableHandle {
   public destroy(): DDResizableHandle {
     if (this.moving) this._mouseUp(this.mouseDownEvent);
     this.el.removeEventListener('mousedown', this._mouseDown);
+    if (isTouch) {
+      this.el.removeEventListener('touchstart', touchstart);
+      this.el.removeEventListener('pointerdown', pointerdown);
+    }
     this.host.removeChild(this.el);
     delete this.el;
     delete this.host;
@@ -66,6 +77,10 @@ export class DDResizableHandle {
     this.mouseDownEvent = e;
     document.addEventListener('mousemove', this._mouseMove, true); // capture, not bubble
     document.addEventListener('mouseup', this._mouseUp);
+    if (isTouch) {
+      this.el.addEventListener('touchmove', touchmove);
+      this.el.addEventListener('touchend', touchend);
+    }
   }
 
   /** @internal */
@@ -87,6 +102,10 @@ export class DDResizableHandle {
     }
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp);
+    if (isTouch) {
+      this.el.removeEventListener('touchmove', touchmove);
+      this.el.removeEventListener('touchend', touchend);
+    }
     delete this.moving;
     delete this.mouseDownEvent;
   }

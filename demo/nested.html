@@ -65,7 +65,9 @@
       cellHeight: 50,
       margin: 5,
       minRow: 2, // don't collapse when empty
+      disableOneColumnMode: true,
       acceptWidgets: true,
+      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
       id: 'main',
       children: [
         {x:0, y:0, content: 'regular item'},
