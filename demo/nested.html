@@ -49,7 +49,7 @@
     <br><br>
     <!-- grid will be added here -->
   </div>
-
+  <script src="events.js"></script>
   <script type="text/javascript">
     let sub1 = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
     let sub2 = [ {x:0, y:0}, {x:0, y:1, w:2}];
@@ -78,6 +78,13 @@
 
     // create and load it all from JSON above
     let grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
+
+    // add debug event handlers to each grid (no global set on parent yet)
+    let gridEls = GridStack.getElements('.grid-stack');
+    gridEls.forEach(gridEl => {
+      let grid = gridEl.gridstack;
+      addEvents(grid, grid.opts.id);
+    })
 
     function addNested() {
       grid.addWidget({x:0, y:100, content:"new item"});
