@@ -10,7 +10,7 @@ import { DDManager } from "./dd-manager";
  */
 export const isTouch: boolean = ( 'ontouchstart' in document
   || 'ontouchstart' in window
-  || !!window.TouchEvent
+  // || !!window.TouchEvent // true on Windows 10 Chrome desktop so don't use this
   || ((window as any).DocumentTouch && document instanceof (window as any).DocumentTouch)
   || navigator.maxTouchPoints > 0
   || (navigator as any).msMaxTouchPoints > 0
