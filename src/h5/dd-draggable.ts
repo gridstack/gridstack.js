@@ -199,6 +199,12 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     if (this.dragging) {
       delete this.dragging;
+
+      // reset the drop target if dragging over ourself (already parented, just moving during stop callback below)
+      if (DDManager.dropElement?.el === this.el.parentElement) {    
+        delete DDManager.dropElement;
+      }
+
       this.helper.classList.remove('ui-draggable-dragging');
       this.helperContainment.style.position = this.parentOriginStylePosition || null;
       if (this.helper === this.el) {
@@ -210,7 +216,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       if (this.option.stop) {
         this.option.stop(ev); // NOTE: destroy() will be called when removing item, so expect NULL ptr after!
       }
-      this.triggerEvent('stop', ev);
+      this.triggerEvent('dragstop', ev);
 
       // call the droppable method to receive the item
       if (DDManager.dropElement) {

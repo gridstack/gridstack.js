@@ -136,7 +136,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     }
   }
 
-  /** item is being dropped on us - called byt the drag mouseup handler - this calls the client drop event */
+  /** item is being dropped on us - called by the drag mouseup handler - this calls the client drop event */
   public drop(e: MouseEvent): void {
     e.preventDefault();
     const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'drop' });

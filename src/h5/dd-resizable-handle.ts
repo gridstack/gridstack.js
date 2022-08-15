@@ -98,7 +98,7 @@ export class DDResizableHandle {
   /** @internal */
   protected _mouseUp(e: MouseEvent): void {
     if (this.moving) {
-      this._triggerEvent('stop', e);
+      this._triggerEvent('resizestop', e);
     }
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp);

@@ -29,7 +29,7 @@ $animation_speed: .3s !default;
   }
 
   .grid-stack-placeholder > .placeholder-content {
-    border: 1px dashed lightgray;
+    background-color: rgba(0,0,0,0.1);
     margin: 0;
     position: absolute;
     width: auto;

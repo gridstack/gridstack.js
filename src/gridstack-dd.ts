@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { GridStackDDI } from './gridstack-ddi';
 import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition } from './types';
-import { GridStack, MousePosition } from './gridstack';
+import { GridStack } from './gridstack';
 import { Utils } from './utils';
 
 /** Drag&Drop drop options */
@@ -273,7 +273,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
       Utils.removePositioningStyles(el);// @ts-ignore
       this._writeAttr(el, node);
-      this.el.appendChild(el);// @ts-ignore
+      this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only) 
       this._updateContainerHeight();
       this.engine.addedNodes.push(node);// @ts-ignore
       this._triggerAddEvent();// @ts-ignore
@@ -413,16 +413,15 @@ GridStack.prototype._prepareDragDropByNode = function(this: GridStack, node: Gri
         delete node.el;
         el.remove();
       } else {
-        if (!node._temporaryRemoved) {
-          // move to new placeholder location
-          Utils.removePositioningStyles(target);// @ts-ignore
-          this._writePosAttr(target, node);
-        } else {
+        Utils.removePositioningStyles(target);
+        if (node._temporaryRemoved) {
           // got removed - restore item back to before dragging position
-          Utils.removePositioningStyles(target);
           Utils.copyPos(node, node._orig);// @ts-ignore
           this._writePosAttr(target, node);
           this.engine.addNode(node);
+        } else {
+          // move to new placeholder location
+          this._writePosAttr(target, node);
         }
         if (this._gsEventHandler[event.type]) {
           this._gsEventHandler[event.type](event, target);
