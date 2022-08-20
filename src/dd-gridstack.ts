@@ -32,20 +32,9 @@ export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: Grid
  */
 export class DDGridStack {
 
-  protected static dd = new DDGridStack;
-
   /** get the global (but static to this code) DD implementation */
   static get(): DDGridStack {
-    return DDGridStack.dd;
-  }
-
-  /** removes any drag&drop present (called during destroy) */
-  public remove(el: GridItemHTMLElement): DDGridStack {
-    this.draggable(el, 'destroy').resizable(el, 'destroy');
-    if (el.gridstackNode) {
-      delete el.gridstackNode._initDD; // reset our DD init flag
-    }
-    return this;
+    return dd;
   }
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): DDGridStack {
@@ -86,8 +75,7 @@ export class DDGridStack {
         dEl.setupDraggable({
           ...grid.opts.draggable,
           ...{
-            containment: (grid.opts._isNested && !grid.opts.dragOut) ?
-              grid.el.parentElement : (grid.opts.draggable.containment || null),
+            // containment: (grid.opts._isNested && !grid.opts.dragOut) ? grid.el.parentElement : (grid.opts.draggable.containment || null),
             start: opts.start,
             stop: opts.stop,
             drag: opts.drag
@@ -166,9 +154,12 @@ export class DDGridStack {
   }
 }
 
+/** global instance */
+const dd = new DDGridStack;
+
 /********************************************************************************
  * GridStack code that is doing drag&drop extracted here so main class is smaller
- * for static grid that don't do any of this work anyway. Saves about 10k.
+ * for static grid that don't do any of this work anyway. Saves about 31k (41k -> 72k)
  * https://www.typescriptlang.org/docs/handbook/declaration-merging.html
  * https://www.typescriptlang.org/docs/handbook/mixins.html
  ********************************************************************************/
@@ -178,7 +169,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
 
   // check if we need to disable things
   if (this.opts.staticGrid || (!this.opts.acceptWidgets && !this.opts.removable)) {
-    DDGridStack.get().droppable(this.el, 'destroy');
+    dd.droppable(this.el, 'destroy');
     return this;
   }
 
@@ -206,7 +197,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       if (!this.engine.willItFit(node)) {
         node.autoPosition = true; // ignore x,y and try for any slot...
         if (!this.engine.willItFit(node)) {
-          DDGridStack.get().off(el, 'drag'); // stop calling us
+          dd.off(el, 'drag'); // stop calling us
           return; // full grid or can't grow
         }
         if (node._willFitPos) {
@@ -224,46 +215,45 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
     }
   }
 
-  DDGridStack.get()
-    .droppable(this.el, {
-      accept: (el: GridItemHTMLElement) => {
-        let node: GridStackNode = el.gridstackNode;
-        // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
-        if (node?.grid === this) return true;
-        if (!this.opts.acceptWidgets) return false;
-        // prevent deeper nesting until rest of 992 can be fixed
-        if (node?.subGrid) return false;
-        // check for accept method or class matching
-        let canAccept = true;
-        if (typeof this.opts.acceptWidgets === 'function') {
-          canAccept = this.opts.acceptWidgets(el);
-        } else {
-          let selector = (this.opts.acceptWidgets === true ? '.grid-stack-item' : this.opts.acceptWidgets as string);
-          canAccept = el.matches(selector);
-        }
-        // finally check to make sure we actually have space left #1571
-        if (canAccept && node && this.opts.maxRow) {
-          let n = {w: node.w, h: node.h, minW: node.minW, minH: node.minH}; // only width/height matters and autoPosition
-          canAccept = this.engine.willItFit(n);
-        }
-        return canAccept;
+  dd.droppable(this.el, {
+    accept: (el: GridItemHTMLElement) => {
+      let node: GridStackNode = el.gridstackNode;
+      // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
+      if (node?.grid === this) return true;
+      if (!this.opts.acceptWidgets) return false;
+      // prevent deeper nesting until rest of 992 can be fixed
+      if (node?.subGrid) return false;
+      // check for accept method or class matching
+      let canAccept = true;
+      if (typeof this.opts.acceptWidgets === 'function') {
+        canAccept = this.opts.acceptWidgets(el);
+      } else {
+        let selector = (this.opts.acceptWidgets === true ? '.grid-stack-item' : this.opts.acceptWidgets as string);
+        canAccept = el.matches(selector);
       }
-    })
-    /**
-     * entering our grid area
-     */
+      // finally check to make sure we actually have space left #1571
+      if (canAccept && node && this.opts.maxRow) {
+        let n = {w: node.w, h: node.h, minW: node.minW, minH: node.minH}; // only width/height matters and autoPosition
+        canAccept = this.engine.willItFit(n);
+      }
+      return canAccept;
+    }
+  })
+  /**
+   * entering our grid area
+   */
     .on(this.el, 'dropover', (event: Event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
-      // console.log(`over ${this.el.gridstack.opts.id} ${count++}`); // TEST
+    // console.log(`over ${this.el.gridstack.opts.id} ${count++}`); // TEST
       let node = el.gridstackNode;
       // ignore drop enter on ourself (unless we temporarily removed) which happens on a simple drag of our item
       if (node?.grid === this && !node._temporaryRemoved) {
-        // delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
+      // delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
         return false; // prevent parent from receiving msg (which may be a grid as well)
       }
 
       // fix #1578 when dragging fast, we may not get a leave on the previous grid so force one now
       if (node?.grid && node.grid !== this && !node._temporaryRemoved) {
-        // console.log('dropover without leave'); // TEST
+      // console.log('dropover without leave'); // TEST
         let otherGrid = node.grid;
         otherGrid._leave(el, helper);
       }
@@ -288,16 +278,16 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
 
       // if the item came from another grid, make a copy and save the original info in case we go back there
       if (node.grid && node.grid !== this) {
-        // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
-        // console.log('dropover cloning node'); // TEST
+      // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
+      // console.log('dropover cloning node'); // TEST
         if (!el._gridstackNodeOrig) el._gridstackNodeOrig = node; // shouldn't have multiple nested!
         el.gridstackNode = node = {...node, w, h, grid: this};
         this.engine.cleanupNode(node)
           .nodeBoundFix(node);
         // restore some internal fields we need after clearing them all
         node._initDD =
-        node._isExternal =  // DOM needs to be re-parented on a drop
-        node._temporaryRemoved = true; // so it can be inserted onDrag below
+      node._isExternal =  // DOM needs to be re-parented on a drop
+      node._temporaryRemoved = true; // so it can be inserted onDrag below
       } else {
         node.w = w; node.h = h;
         node._temporaryRemoved = true; // so we can insert it
@@ -306,16 +296,16 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       // clear any marked for complete removal (Note: don't check _isAboutToRemove as that is cleared above - just do it)
       _itemRemoving(node.el, false);
 
-      DDGridStack.get().on(el, 'drag', onDrag);
+      dd.on(el, 'drag', onDrag);
       // make sure this is called at least once when going fast #1578
       onDrag(event as DragEvent, el, helper);
       return false; // prevent parent from receiving msg (which may be a grid as well)
     })
-    /**
-     * Leaving our grid area...
-     */
+  /**
+   * Leaving our grid area...
+   */
     .on(this.el, 'dropout', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
-      // console.log(`out ${this.el.gridstack.opts.id} ${count++}`); // TEST
+    // console.log(`out ${this.el.gridstack.opts.id} ${count++}`); // TEST
       let node = el.gridstackNode;
       if (!node) return false;
       // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)
@@ -325,9 +315,9 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       }
       return false; // prevent parent from receiving msg (which may be grid as well)
     })
-    /**
-     * end - releasing the mouse
-     */
+  /**
+   * end - releasing the mouse
+   */
     .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
       // ignore drop on ourself from ourself that didn't come from the outside - dragend will handle the simple move instead
@@ -353,7 +343,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         this.engine.cleanupNode(node); // removes all internal _xyz values
         node.grid = this;
       }
-      DDGridStack.get().off(el, 'drag');
+      dd.off(el, 'drag');
       // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
       // as the helper will be nuked by jquery-ui otherwise
       if (helper !== el) {
@@ -364,7 +354,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         }
       } else {
         el.remove(); // reduce flicker as we change depth here, and size further down
-        DDGridStack.get().remove(el);
+        this._removeDD(el);
       }
       if (!wasAdded) return false;
       el.gridstackNode = node;
@@ -386,7 +376,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
 
       // wait till we return out of the drag callback to set the new drag&resize handler or they may get messed up
       window.setTimeout(() => {
-        // IFF we are still there (some application will use as placeholder and insert their real widget instead and better call makeWidget())
+      // IFF we are still there (some application will use as placeholder and insert their real widget instead and better call makeWidget())
         if (node.el && node.el.parentElement) {
           this._prepareDragDropByNode(node);
         } else {
@@ -415,8 +405,8 @@ GridStack.prototype._setupRemoveDrop = function(this: GridStack): GridStack {
     // only register ONE drop-over/dropout callback for the 'trash', and it will
     // update the passed in item and parent grid because the 'trash' is a shared resource anyway,
     // and Native DD only has 1 event CB (having a list and technically a per grid removableOptions complicates things greatly)
-    if (!DDGridStack.get().isDroppable(trashEl)) {
-      DDGridStack.get().droppable(trashEl, this.opts.removableOptions)
+    if (!dd.isDroppable(trashEl)) {
+      dd.droppable(trashEl, this.opts.removableOptions)
         .on(trashEl, 'dropover', (event, el) => _itemRemoving(el, true))
         .on(trashEl, 'dropout',  (event, el) => _itemRemoving(el, false));
     }
@@ -433,10 +423,10 @@ GridStack.setupDragIn = function(this: GridStack, _dragIn?: string, _dragInOptio
   let dragIn: string;
   let dragInOptions: DDDragInOpt;
   const dragInDefaultOptions: DDDragInOpt = {
-    revert: 'invalid',
     handle: '.grid-stack-item-content',
-    scroll: false,
-    appendTo: 'body'
+    appendTo: 'body',
+    // revert: 'invalid',
+    // scroll: false,
   };
 
   // cache in the passed in values (form grid init?) so they don't have to resend them each time
@@ -445,7 +435,6 @@ GridStack.setupDragIn = function(this: GridStack, _dragIn?: string, _dragInOptio
     dragInOptions = {...dragInDefaultOptions, ...(_dragInOptions || {})};
   }
   if (typeof dragIn !== 'string') return;
-  let dd = DDGridStack.get();
   Utils.getElements(dragIn).forEach(el => {
     if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
   });
@@ -454,12 +443,11 @@ GridStack.setupDragIn = function(this: GridStack, _dragIn?: string, _dragInOptio
 /** @internal prepares the element for drag&drop **/
 GridStack.prototype._prepareDragDropByNode = function(this: GridStack, node: GridStackNode): GridStack {
   let el = node.el;
-  let dd = DDGridStack.get();
 
   // check for disabled grid first
   if (this.opts.staticGrid || ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
     if (node._initDD) {
-      dd.remove(el); // nukes everything instead of just disable, will add some styles back next
+      this._removeDD(el); // nukes everything instead of just disable, will add some styles back next
       delete node._initDD;
     }
     el.classList.add('ui-draggable-disabled', 'ui-resizable-disabled'); // add styles one might depend on #1435
@@ -505,7 +493,7 @@ GridStack.prototype._prepareDragDropByNode = function(this: GridStack, node: Gri
         if (gridToNotify._gsEventHandler[event.type]) {
           gridToNotify._gsEventHandler[event.type](event, target);
         }
-        dd.remove(el);
+        this._removeDD(el);
         gridToNotify.engine.removedNodes.push(node);
         gridToNotify._triggerRemoveEvent();
         // break circular links and remove DOM
@@ -590,8 +578,7 @@ GridStack.prototype._onStartMoving = function(this: GridStack, el: GridItemHTMLE
   // set the min/max resize info
   this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop as number, this.opts.marginRight as number, this.opts.marginBottom as number, this.opts.marginLeft as number);
   if (event.type === 'resizestart') {
-    let dd = DDGridStack.get()
-      .resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1))
+    dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1))
       .resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
     if (node.maxW) { dd.resizable(el, 'option', 'maxWidth', cellWidth * node.maxW); }
     if (node.maxH) { dd.resizable(el, 'option', 'maxHeight', cellHeight * node.maxH); }
@@ -606,7 +593,7 @@ GridStack.prototype._leave = function(this: GridStack, el: GridItemHTMLElement, 
   let node = el.gridstackNode;
   if (!node) return;
 
-  DDGridStack.get().off(el, 'drag'); // no need to track while being outside
+  dd.off(el, 'drag'); // no need to track while being outside
 
   // this gets called when cursor leaves and shape is outside, so only do this once
   if (node._temporaryRemoved) return;
@@ -801,3 +788,13 @@ GridStack.prototype.enableResize = function(this: GridStack, doEnable: boolean):
   this.engine.nodes.forEach(n => this.resizable(n.el, doEnable));
   return this;
 }
+
+/** removes any drag&drop present (called during destroy) */
+GridStack.prototype._removeDD = function(this: GridStack, el: GridItemHTMLElement): GridStack {
+  dd.draggable(el, 'destroy').resizable(el, 'destroy');
+  if (el.gridstackNode) {
+    delete el.gridstackNode._initDD; // reset our DD init flag
+  }
+  return this;
+}
+
