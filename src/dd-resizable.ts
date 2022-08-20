@@ -1,13 +1,12 @@
 /**
- * dd-resizable.ts 5.1.1
+ * dd-resizable.ts 6.0.0-beta
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
-import { DDUtils } from './dd-utils';
-import { Utils } from '../utils';
-import { DDUIData, Rect, Size } from '../types';
+import { Utils } from './utils';
+import { DDUIData, Rect, Size } from './types';
 
 // TODO: merge with DDDragOpt
 export interface DDResizableOpt {
@@ -159,7 +158,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.startEvent = event;
     this._setupHelper();
     this._applyChange();
-    const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resizestart', target: this.el });
+    const ev = Utils.initEvent<MouseEvent>(event, { type: 'resizestart', target: this.el });
     if (this.option.start) {
       this.option.start(ev, this._ui());
     }
@@ -173,7 +172,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.scrolled = this.scrollEl.scrollTop - this.scrollY;
     this.temporalRect = this._getChange(event, dir);
     this._applyChange();
-    const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
+    const ev = Utils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
     if (this.option.resize) {
       this.option.resize(ev, this._ui());
     }
@@ -183,7 +182,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _resizeStop(event: MouseEvent): DDResizable {
-    const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resizestop', target: this.el });
+    const ev = Utils.initEvent<MouseEvent>(event, { type: 'resizestop', target: this.el });
     if (this.option.stop) {
       this.option.stop(ev); // Note: ui() not used by gridstack so don't pass
     }
@@ -228,7 +227,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       left: this.originalRect.left,
       top: this.originalRect.top - this.scrolled
     };
-    
+
     const offsetX = event.clientX - oEvent.clientX;
     const offsetY = event.clientY - oEvent.clientY;
 

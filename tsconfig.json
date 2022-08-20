@@ -19,10 +19,6 @@
   }, 
   "exclude": [
     "./src/**/*.spec.ts",
-    // used for webpack h5/jq/static .js
-    "./src/gridstack-h5.ts",
-    "./src/gridstack-jq.ts",
-    "./src/gridstack-static.ts",
   ],
   "include": [
     "./src/**/*.ts"

@@ -1,5 +1,5 @@
 /*!
- * GridStack 5.1.1
+ * GridStack 6.0.0-beta
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2022 Alain Dumesny
@@ -9,13 +9,11 @@ import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
 import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition } from './types';
-import { GridStackDDI } from './gridstack-ddi';
 
 // export all dependent file as well to make it easier for users to just import the main file
 export * from './types';
 export * from './utils';
 export * from './gridstack-engine';
-export * from './gridstack-ddi';
 
 export interface GridHTMLElement extends HTMLElement {
   gridstack?: GridStack; // grid's parent DOM element points back to grid class
@@ -184,7 +182,7 @@ export class GridStack {
    * See instead `GridStackOptions.engineClass` if you only need to
    * replace just one instance.
    */
-  static registerEngine(engineClass: typeof GridStackEngine): void {
+  static registerEngine(engineClass: typeof GridStackEngine) {
     GridStack.engineClass = engineClass;
   }
 
@@ -948,7 +946,7 @@ export class GridStack {
 
       // remove our DOM data (circular link) and drag&drop permanently
       delete el.gridstackNode;
-      GridStackDDI.get().remove(el);
+      DDGridStack.get().remove(el);
 
       this.engine.removeNode(node, removeDOM, triggerEvent);
 
@@ -971,7 +969,7 @@ export class GridStack {
     // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
     this.engine.nodes.forEach(n => {
       delete n.el.gridstackNode;
-      GridStackDDI.get().remove(n.el);
+      DDGridStack.get().remove(n.el);
     });
     this.engine.removeAll(removeDOM);
     this._triggerRemoveEvent();
@@ -1510,8 +1508,10 @@ export class GridStack {
     return this;
   }
 
+  static GDRev = '6.0.0-beta';
+
   /*
-   * drag&drop empty stubs that will be implemented in gridstack-dd.ts for non static grid
+   * drag&drop empty stubs that will be implemented in dd-gridstack.ts for non static grid
    * so we don't incur the load unless needed.
    * NOTE: had to make those methods public in order to define them else as
    *   GridStack.prototype._setupAcceptWidget = function()
@@ -1526,7 +1526,7 @@ export class GridStack {
    * @param dragIn string selector (ex: '.sidebar .grid-stack-item')
    * @param dragInOptions options - see DDDragInOpt. (default: {revert: 'invalid', handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}
    **/
-  public static setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt): void { /* implemented in gridstack-dd.ts */ }
+  public static setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt): void { /* implemented in dd-gridstack.ts */ }
 
   /**
    * Enables/Disables dragging by the user of specific grid element. If you want all items, and have it affect future items, use enableMove() instead. No-op for static grids.
@@ -1584,3 +1584,7 @@ export class GridStack {
   // legacy method removed
   public commit(): GridStack { obsolete(this, this.batchUpdate(false), 'commit', 'batchUpdate', '5.2'); return this; }
 }
+
+// and include D&D by default, which override some methods here
+import { DDGridStack } from './dd-gridstack';
+export * from './dd-gridstack';

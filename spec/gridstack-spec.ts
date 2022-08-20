@@ -1,5 +1,4 @@
-import { GridStack, GridStackNode } from '../src/gridstack';
-import { GridStackDD } from '../src/gridstack-dd'; // html5 vs Jquery set when including all file above
+import { GridStack, GridStackNode, DDGridStack } from '../src/gridstack';
 import { Utils } from '../src/utils';
 
 describe('gridstack', function() {
@@ -1142,7 +1141,7 @@ describe('gridstack', function() {
       let grid = GridStack.init({float: true});
       let items = Utils.getElements('.grid-stack-item');
       let el = items[1];
-      let dd = GridStackDD.get();
+      let dd = DDGridStack.get();
       
       grid.update(el, {noMove: true, noResize: false});
       expect(el.getAttribute('gs-no-move')).toBe('true');
@@ -1470,7 +1469,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       expect(grid.opts.disableResize).toBe(true);
       let items = Utils.getElements('.grid-stack-item');
-      let dd = GridStackDD.get();
+      let dd = DDGridStack.get();
       // expect(dd).toBe(null); // sanity test to verify type
       for (let i = 0; i < items.length; i++) {
         expect(dd.isResizable(items[i])).toBe(false);
@@ -1491,7 +1490,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       expect(grid.opts.disableResize).toBe(false);
       let items = Utils.getElements('.grid-stack-item');
-      let dd = GridStackDD.get();
+      let dd = DDGridStack.get();
       for (let i = 0; i < items.length; i++) {
         expect(dd.isResizable(items[i])).toBe(true);
         expect(dd.isDraggable(items[i])).toBe(true);
@@ -1519,7 +1518,7 @@ describe('gridstack', function() {
       };
       let grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
-      let dd = GridStackDD.get();
+      let dd = DDGridStack.get();
       grid.enableResize(false);
       grid.enableMove(false);
       for (let i = 0; i < items.length; i++) {

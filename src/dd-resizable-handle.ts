@@ -1,9 +1,9 @@
 /**
- * dd-resizable-handle.ts 5.1.1
+ * dd-resizable-handle.ts 6.0.0-beta
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
-import { isTouch, pointerdown, touchend, touchmove, touchstart } from './touch';
+import { isTouch, pointerdown, touchend, touchmove, touchstart } from './dd-touch';
 
 export interface DDResizableHandleOpt {
   start?: (event) => void;

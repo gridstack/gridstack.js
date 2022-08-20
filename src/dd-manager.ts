@@ -1,5 +1,5 @@
 /**
- * dd-manager.ts 5.1.1
+ * dd-manager.ts 6.0.0-beta
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
@@ -10,7 +10,6 @@ import { DDDroppable } from './dd-droppable';
  * globals that are shared across Drag & Drop instances
  */
 export class DDManager {
-  
   /** true if a mouse down event was handled */
   public static mouseHandled: boolean;
 

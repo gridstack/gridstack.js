@@ -1,9 +1,9 @@
 /**
- * touch.ts 5.1.1
+ * touch.ts 6.0.0-beta
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
-import { DDManager } from "./dd-manager";
+import { DDManager } from './dd-manager';
 
 /**
  * Detect touch support - Windows Surface devices and other touch devices
@@ -47,8 +47,7 @@ function simulateMouseEvent(e: TouchEvent, simulatedType: string) {
   // Prevent "Ignored attempt to cancel a touchmove event with cancelable=false" errors
   if (e.cancelable) e.preventDefault();
 
-  const touch = e.changedTouches[0],
-      simulatedEvent = document.createEvent('MouseEvents');
+  const touch = e.changedTouches[0], simulatedEvent = document.createEvent('MouseEvents');
 
   // Initialize the simulated mouse event using the touch event's coordinates
   simulatedEvent.initMouseEvent(
@@ -78,7 +77,7 @@ function simulateMouseEvent(e: TouchEvent, simulatedType: string) {
  * @param {Object} e A pointer event
  * @param {String} simulatedType The corresponding mouse event
  */
- function simulatePointerMouseEvent(e: PointerEvent, simulatedType: string) {
+function simulatePointerMouseEvent(e: PointerEvent, simulatedType: string) {
 
   // Prevent "Ignored attempt to cancel a touchmove event with cancelable=false" errors
   if (e.cancelable) e.preventDefault();
@@ -113,7 +112,7 @@ function simulateMouseEvent(e: TouchEvent, simulatedType: string) {
  * Handle the touchstart events
  * @param {Object} e The widget element's touchstart event
  */
- export function touchstart(e: TouchEvent) {
+export function touchstart(e: TouchEvent) {
   // Ignore the event if another widget is already being handled
   if (DDTouch.touchHandled) return;  DDTouch.touchHandled = true;
 
@@ -121,7 +120,7 @@ function simulateMouseEvent(e: TouchEvent, simulatedType: string) {
   // simulateMouseEvent(e, 'mouseover');
   // simulateMouseEvent(e, 'mousemove');
   simulateMouseEvent(e, 'mousedown');
-};
+}
 
 /**
  * Handle the touchmove events
@@ -132,7 +131,7 @@ export function touchmove(e: TouchEvent) {
   if (!DDTouch.touchHandled)  return;
 
   simulateMouseEvent(e, 'mousemove');
-};
+}
 
 /**
  * Handle the touchend events
@@ -157,12 +156,12 @@ export function touchend(e: TouchEvent) {
 
   // If the touch interaction did not move, it should trigger a click
   if (!wasDragging) {
-     simulateMouseEvent(e, 'click');
+    simulateMouseEvent(e, 'click');
   }
 
   // Unset the flag to allow other widgets to inherit the touch event
   DDTouch.touchHandled = false;
-};
+}
 
 /**
  * Note we don't get touchenter/touchleave (which are deprecated)
