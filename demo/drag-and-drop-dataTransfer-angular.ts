@@ -4,7 +4,6 @@
  import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
  import { GridStack, GridStackWidget, GridStackNode } from 'gridstack';
  import { DDElement } from "gridstack/dist/h5/dd-element";
- import 'gridstack/dist/h5/gridstack-dd-native';
  
  @Component({
      selector: 'grid-stack-test',

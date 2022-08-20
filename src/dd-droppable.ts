@@ -1,14 +1,14 @@
 /**
- * dd-droppable.ts 5.1.1
+ * dd-droppable.ts 6.0.0-beta
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { DDDraggable } from './dd-draggable';
 import { DDManager } from './dd-manager';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
-import { DDUtils } from './dd-utils';
+import { Utils } from './utils';
 import { DDElementHost } from './dd-element';
-import { isTouch, pointerenter, pointerleave } from './touch';
+import { isTouch, pointerenter, pointerleave } from './dd-touch';
 
 export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);
@@ -91,7 +91,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     e.preventDefault();
     e.stopPropagation();
 
-    const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'dropover' });
+    const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dropover' });
     if (this.option.over) {
       this.option.over(ev, this._ui(DDManager.dragElement))
     }
@@ -113,7 +113,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     event.preventDefault();
     event.stopPropagation();
 
-    const ev = DDUtils.initEvent<DragEvent>(event, { target: this.el, type: 'dropout' });
+    const ev = Utils.initEvent<DragEvent>(event, { target: this.el, type: 'dropout' });
     if (this.option.out) {
       this.option.out(ev, this._ui(DDManager.dragElement))
     }
@@ -139,7 +139,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   /** item is being dropped on us - called by the drag mouseup handler - this calls the client drop event */
   public drop(e: MouseEvent): void {
     e.preventDefault();
-    const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'drop' });
+    const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'drop' });
     if (this.option.drop) {
       this.option.drop(ev, this._ui(DDManager.dragElement))
     }

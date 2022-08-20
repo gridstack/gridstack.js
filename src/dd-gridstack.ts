@@ -1,13 +1,14 @@
 /**
- * gridstack-dd.ts 5.1.1
+ * dd-gridstack.ts 6.0.0-beta
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GridStackDDI } from './gridstack-ddi';
 import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition } from './types';
 import { GridStack } from './gridstack';
 import { Utils } from './utils';
+import { DDManager } from './dd-manager';
+import { DDElement, DDElementHost } from './dd-element';
 
 /** Drag&Drop drop options */
 export type DDDropOpt = {
@@ -27,17 +28,19 @@ export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: Grid
 // let count = 0; // TEST
 
 /**
- * Base class implementing common Grid drag'n'drop functionality, with domain specific subclass (h5 vs jq subclasses)
+ * HTML Native Mouse and Touch Events Drag and Drop functionality.
  */
-export abstract class GridStackDD extends GridStackDDI {
+export class DDGridStack {
 
-  /** override to cast to correct type */
-  static get(): GridStackDD {
-    return GridStackDDI.get() as GridStackDD;
+  protected static dd = new DDGridStack;
+
+  /** get the global (but static to this code) DD implementation */
+  static get(): DDGridStack {
+    return DDGridStack.dd;
   }
 
   /** removes any drag&drop present (called during destroy) */
-  public remove(el: GridItemHTMLElement): GridStackDD {
+  public remove(el: GridItemHTMLElement): DDGridStack {
     this.draggable(el, 'destroy').resizable(el, 'destroy');
     if (el.gridstackNode) {
       delete el.gridstackNode._initDD; // reset our DD init flag
@@ -45,25 +48,122 @@ export abstract class GridStackDD extends GridStackDDI {
     return this;
   }
 
-  // APIs that must be implemented by subclasses to do actual darg/drop/resize called by GridStack code below
+  public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): DDGridStack {
+    this._getDDElements(el).forEach(dEl => {
+      if (opts === 'disable' || opts === 'enable') {
+        dEl.ddResizable && dEl.ddResizable[opts](); // can't create DD as it requires options for setupResizable()
+      } else if (opts === 'destroy') {
+        dEl.ddResizable && dEl.cleanResizable();
+      } else if (opts === 'option') {
+        dEl.setupResizable({ [key]: value });
+      } else {
+        const grid = dEl.el.gridstackNode.grid;
+        let handles = dEl.el.getAttribute('gs-resize-handles') ? dEl.el.getAttribute('gs-resize-handles') : grid.opts.resizable.handles;
+        dEl.setupResizable({
+          ...grid.opts.resizable,
+          ...{ handles: handles },
+          ...{
+            start: opts.start,
+            stop: opts.stop,
+            resize: opts.resize
+          }
+        });
+      }
+    });
+    return this;
+  }
 
-  public abstract resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD;
+  public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): DDGridStack {
+    this._getDDElements(el).forEach(dEl => {
+      if (opts === 'disable' || opts === 'enable') {
+        dEl.ddDraggable && dEl.ddDraggable[opts](); // can't create DD as it requires options for setupDraggable()
+      } else if (opts === 'destroy') {
+        dEl.ddDraggable && dEl.cleanDraggable();
+      } else if (opts === 'option') {
+        dEl.setupDraggable({ [key]: value });
+      } else {
+        const grid = dEl.el.gridstackNode.grid;
+        dEl.setupDraggable({
+          ...grid.opts.draggable,
+          ...{
+            containment: (grid.opts._isNested && !grid.opts.dragOut) ?
+              grid.el.parentElement : (grid.opts.draggable.containment || null),
+            start: opts.start,
+            stop: opts.stop,
+            drag: opts.drag
+          }
+        });
+      }
+    });
+    return this;
+  }
 
-  public abstract isResizable(el: HTMLElement): boolean;
+  public dragIn(el: GridStackElement, opts: DDDragInOpt): DDGridStack {
+    this._getDDElements(el).forEach(dEl => dEl.setupDraggable(opts));
+    return this;
+  }
 
-  public abstract draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): GridStackDD;
+  public droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): DDGridStack {
+    if (typeof opts.accept === 'function' && !opts._accept) {
+      opts._accept = opts.accept;
+      opts.accept = (el) => opts._accept(el);
+    }
+    this._getDDElements(el).forEach(dEl => {
+      if (opts === 'disable' || opts === 'enable') {
+        dEl.ddDroppable && dEl.ddDroppable[opts]();
+      } else if (opts === 'destroy') {
+        if (dEl.ddDroppable) { // error to call destroy if not there
+          dEl.cleanDroppable();
+        }
+      } else if (opts === 'option') {
+        dEl.setupDroppable({ [key]: value });
+      } else {
+        dEl.setupDroppable(opts);
+      }
+    });
+    return this;
+  }
 
-  public abstract dragIn(el: GridStackElement, opts: DDDragInOpt): GridStackDD;
+  /** true if element is droppable */
+  public isDroppable(el: DDElementHost): boolean {
+    return !!(el && el.ddElement && el.ddElement.ddDroppable && !el.ddElement.ddDroppable.disabled);
+  }
 
-  public abstract isDraggable(el: HTMLElement): boolean;
+  /** true if element is draggable */
+  public isDraggable(el: DDElementHost): boolean {
+    return !!(el && el.ddElement && el.ddElement.ddDraggable && !el.ddElement.ddDraggable.disabled);
+  }
 
-  public abstract droppable(el: GridItemHTMLElement, opts: DDOpts | DDDropOpt, key?: DDKey, value?: DDValue): GridStackDD;
+  /** true if element is draggable */
+  public isResizable(el: DDElementHost): boolean {
+    return !!(el && el.ddElement && el.ddElement.ddResizable && !el.ddElement.ddResizable.disabled);
+  }
 
-  public abstract isDroppable(el: HTMLElement): boolean;
+  public on(el: GridItemHTMLElement, name: string, callback: DDCallback): DDGridStack {
+    this._getDDElements(el).forEach(dEl =>
+      dEl.on(name, (event: Event) => {
+        callback(
+          event,
+          DDManager.dragElement ? DDManager.dragElement.el : event.target as GridItemHTMLElement,
+          DDManager.dragElement ? DDManager.dragElement.helper : null)
+      })
+    );
+    return this;
+  }
 
-  public abstract on(el: GridItemHTMLElement, eventName: string, callback: DDCallback): GridStackDD;
+  public off(el: GridItemHTMLElement, name: string): DDGridStack {
+    this._getDDElements(el).forEach(dEl => dEl.off(name));
+    return this;
+  }
 
-  public abstract off(el: GridItemHTMLElement, eventName: string): GridStackDD;
+  /** @internal returns a list of DD elements, creating them on the fly by default */
+  protected _getDDElements(els: GridStackElement, create = true): DDElement[] {
+    let hosts = Utils.getElements(els) as DDElementHost[];
+    if (!hosts.length) return [];
+    let list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));
+    if (!create) { list.filter(d => d); } // remove nulls
+    return list;
+  }
 }
 
 /********************************************************************************
@@ -78,7 +178,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
 
   // check if we need to disable things
   if (this.opts.staticGrid || (!this.opts.acceptWidgets && !this.opts.removable)) {
-    GridStackDD.get().droppable(this.el, 'destroy');
+    DDGridStack.get().droppable(this.el, 'destroy');
     return this;
   }
 
@@ -106,7 +206,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       if (!this.engine.willItFit(node)) {
         node.autoPosition = true; // ignore x,y and try for any slot...
         if (!this.engine.willItFit(node)) {
-          GridStackDD.get().off(el, 'drag'); // stop calling us
+          DDGridStack.get().off(el, 'drag'); // stop calling us
           return; // full grid or can't grow
         }
         if (node._willFitPos) {
@@ -124,7 +224,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
     }
   }
 
-  GridStackDD.get()
+  DDGridStack.get()
     .droppable(this.el, {
       accept: (el: GridItemHTMLElement) => {
         let node: GridStackNode = el.gridstackNode;
@@ -206,7 +306,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       // clear any marked for complete removal (Note: don't check _isAboutToRemove as that is cleared above - just do it)
       _itemRemoving(node.el, false);
 
-      GridStackDD.get().on(el, 'drag', onDrag);
+      DDGridStack.get().on(el, 'drag', onDrag);
       // make sure this is called at least once when going fast #1578
       onDrag(event as DragEvent, el, helper);
       return false; // prevent parent from receiving msg (which may be a grid as well)
@@ -253,7 +353,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         this.engine.cleanupNode(node); // removes all internal _xyz values
         node.grid = this;
       }
-      GridStackDD.get().off(el, 'drag');
+      DDGridStack.get().off(el, 'drag');
       // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
       // as the helper will be nuked by jquery-ui otherwise
       if (helper !== el) {
@@ -264,7 +364,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         }
       } else {
         el.remove(); // reduce flicker as we change depth here, and size further down
-        GridStackDD.get().remove(el);
+        DDGridStack.get().remove(el);
       }
       if (!wasAdded) return false;
       el.gridstackNode = node;
@@ -273,7 +373,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
       Utils.removePositioningStyles(el);// @ts-ignore
       this._writeAttr(el, node);
-      this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only) 
+      this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
       this._updateContainerHeight();
       this.engine.addedNodes.push(node);// @ts-ignore
       this._triggerAddEvent();// @ts-ignore
@@ -315,8 +415,8 @@ GridStack.prototype._setupRemoveDrop = function(this: GridStack): GridStack {
     // only register ONE drop-over/dropout callback for the 'trash', and it will
     // update the passed in item and parent grid because the 'trash' is a shared resource anyway,
     // and Native DD only has 1 event CB (having a list and technically a per grid removableOptions complicates things greatly)
-    if (!GridStackDD.get().isDroppable(trashEl)) {
-      GridStackDD.get().droppable(trashEl, this.opts.removableOptions)
+    if (!DDGridStack.get().isDroppable(trashEl)) {
+      DDGridStack.get().droppable(trashEl, this.opts.removableOptions)
         .on(trashEl, 'dropover', (event, el) => _itemRemoving(el, true))
         .on(trashEl, 'dropout',  (event, el) => _itemRemoving(el, false));
     }
@@ -345,7 +445,7 @@ GridStack.setupDragIn = function(this: GridStack, _dragIn?: string, _dragInOptio
     dragInOptions = {...dragInDefaultOptions, ...(_dragInOptions || {})};
   }
   if (typeof dragIn !== 'string') return;
-  let dd = GridStackDD.get();
+  let dd = DDGridStack.get();
   Utils.getElements(dragIn).forEach(el => {
     if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
   });
@@ -354,7 +454,7 @@ GridStack.setupDragIn = function(this: GridStack, _dragIn?: string, _dragInOptio
 /** @internal prepares the element for drag&drop **/
 GridStack.prototype._prepareDragDropByNode = function(this: GridStack, node: GridStackNode): GridStack {
   let el = node.el;
-  let dd = GridStackDD.get();
+  let dd = DDGridStack.get();
 
   // check for disabled grid first
   if (this.opts.staticGrid || ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
@@ -490,7 +590,7 @@ GridStack.prototype._onStartMoving = function(this: GridStack, el: GridItemHTMLE
   // set the min/max resize info
   this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop as number, this.opts.marginRight as number, this.opts.marginBottom as number, this.opts.marginLeft as number);
   if (event.type === 'resizestart') {
-    let dd = GridStackDD.get()
+    let dd = DDGridStack.get()
       .resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1))
       .resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
     if (node.maxW) { dd.resizable(el, 'option', 'maxWidth', cellWidth * node.maxW); }
@@ -506,7 +606,7 @@ GridStack.prototype._leave = function(this: GridStack, el: GridItemHTMLElement, 
   let node = el.gridstackNode;
   if (!node) return;
 
-  GridStackDD.get().off(el, 'drag'); // no need to track while being outside
+  DDGridStack.get().off(el, 'drag'); // no need to track while being outside
 
   // this gets called when cursor leaves and shape is outside, so only do this once
   if (node._temporaryRemoved) return;
@@ -652,7 +752,6 @@ GridStack.prototype.resizable = function(this: GridStack, els: GridStackElement,
   });
   return this;
 }
-
 
 /**
   * Temporarily disables widgets moving/resizing.

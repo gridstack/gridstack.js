@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [TBD](#tbd)
+- [6.0.0-beta (TBD)](#600-beta-tbd)
 - [5.1.1 (2022-06-16)](#511-2022-06-16)
 - [5.1.0 (2022-05-21)](#510-2022-05-21)
 - [5.0.0 (2022-01-10)](#500-2022-01-10)
@@ -69,8 +69,9 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## TBD
-* converted previous HTML5 `draggable=true` based code to simple mouse move/enter/leave events for dragging in preparation of mobile support.
+## 6.0.0-beta (TBD)
+* converted previous HTML5 `draggable=true` based code to simple Mouse Events and Touch mobile support for drag&Drop.
+* removed all jquery-ui related code, and D7D plugging as we only support native events now
 * changed `commit()` to be `batchUpdate(false)` to make it easier to turn batch on/off. updated doc. old API remains for now
 
 ## 5.1.1 (2022-06-16)

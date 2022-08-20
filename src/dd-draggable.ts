@@ -1,14 +1,14 @@
 /**
- * dd-draggable.ts 5.1.1
+ * dd-draggable.ts 6.0.0-beta
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { DDManager } from './dd-manager';
-import { DDUtils } from './dd-utils';
+import { Utils } from './utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
-import { GridItemHTMLElement, DDUIData } from '../types';
+import { GridItemHTMLElement, DDUIData } from './types';
 import { DDElementHost } from './dd-element';
-import { isTouch, touchend, touchmove, touchstart, pointerdown } from './touch';
+import { isTouch, touchend, touchmove, touchstart, pointerdown } from './dd-touch';
 
 // TODO: merge with DDDragOpt ?
 export interface DDDraggableOpt {
@@ -155,7 +155,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
     if (this.dragging) {
       this._dragFollow(e);
-      const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'drag' });
+      const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'drag' });
       if (this.option.drag) {
         this.option.drag(ev, this.ui());
       }
@@ -176,7 +176,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
       this.dragOffset = this._getDragOffset(e, this.el, this.helperContainment);
-      const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
+      const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
 
       this._setupHelperStyle(e);
       this.helper.classList.add('ui-draggable-dragging');
@@ -201,7 +201,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       delete this.dragging;
 
       // reset the drop target if dragging over ourself (already parented, just moving during stop callback below)
-      if (DDManager.dropElement?.el === this.el.parentElement) {    
+      if (DDManager.dropElement?.el === this.el.parentElement) {
         delete DDManager.dropElement;
       }
 
@@ -212,7 +212,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       } else {
         this.helper.remove();
       }
-      const ev = DDUtils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstop' });
+      const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstop' });
       if (this.option.stop) {
         this.option.stop(ev); // NOTE: destroy() will be called when removing item, so expect NULL ptr after!
       }
@@ -237,10 +237,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (typeof this.option.helper === 'function') {
       helper = this.option.helper(event);
     } else if (this.option.helper === 'clone') {
-      helper = DDUtils.clone(this.el);
+      helper = Utils.cloneNode(this.el);
     }
     if (!document.body.contains(helper)) {
-      DDUtils.appendTo(helper, this.option.appendTo === 'parent' ? this.el.parentNode : this.option.appendTo);
+      Utils.appendTo(helper, this.option.appendTo === 'parent' ? this.el.parentNode : this.option.appendTo);
     }
     if (helper === this.el) {
       this.dragElementOriginStyle = DDDraggable.originStyleProp.map(prop => this.el.style[prop]);
@@ -275,7 +275,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // don't bother restoring styles if we're gonna remove anyway...
     if (this.dragElementOriginStyle && (!node || !node._isAboutToRemove)) {
       let helper = this.helper;
-      // don't animate, otherwise we animate offseted when switching back to 'absolute' from 'fixed' 
+      // don't animate, otherwise we animate offseted when switching back to 'absolute' from 'fixed'
       let transition = this.dragElementOriginStyle['transition'] || null;
       helper.style.transition = this.dragElementOriginStyle['transition'] = 'none';
       DDDraggable.originStyleProp.forEach(prop => helper.style[prop] = this.dragElementOriginStyle[prop] || null);
@@ -318,7 +318,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     let xformOffsetY = 0;
     if (parent) {
       const testEl = document.createElement('div');
-      DDUtils.addElStyles(testEl, {
+      Utils.addElStyles(testEl, {
         opacity: '0',
         position: 'fixed',
         top: 0 + 'px',
