@@ -52,8 +52,11 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     super();
     this.el = el;
     this.option = opts;
+    // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
+    this._mouseOver = this._mouseOver.bind(this);
+    this._mouseOut = this._mouseOut.bind(this);
     this.enable();
-    this._setupAutoHide();
+    this._setupAutoHide(this.option.autoHide);
     this._setupHandlers();
   }
 
@@ -79,10 +82,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   public destroy(): void {
     this._removeHandlers();
-    if (this.option.autoHide) {
-      this.el.removeEventListener('mouseover', this._showHandlers);
-      this.el.removeEventListener('mouseout', this._hideHandlers);
-    }
+    this._setupAutoHide(false);
     this.el.classList.remove('ui-resizable');
     delete this.el;
     super.destroy();
@@ -97,34 +97,36 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       this._setupHandlers();
     }
     if (updateAutoHide) {
-      this._setupAutoHide();
+      this._setupAutoHide(this.option.autoHide);
     }
     return this;
   }
 
-  /** @internal */
-  protected _setupAutoHide(): DDResizable {
-    if (this.option.autoHide) {
+  /** @internal turns auto hide on/off */
+  protected _setupAutoHide(auto: boolean): DDResizable {
+    if (auto) {
       this.el.classList.add('ui-resizable-autohide');
       // use mouseover/mouseout instead of mouseenter/mouseleave to get better performance;
-      this.el.addEventListener('mouseover', this._showHandlers);
-      this.el.addEventListener('mouseout', this._hideHandlers);
+      this.el.addEventListener('mouseover', this._mouseOver);
+      this.el.addEventListener('mouseout', this._mouseOut);
     } else {
       this.el.classList.remove('ui-resizable-autohide');
-      this.el.removeEventListener('mouseover', this._showHandlers);
-      this.el.removeEventListener('mouseout', this._hideHandlers);
+      this.el.removeEventListener('mouseover', this._mouseOver);
+      this.el.removeEventListener('mouseout', this._mouseOut);
     }
     return this;
   }
 
   /** @internal */
-  protected _showHandlers = () => {
+  protected _mouseOver(e: Event) {
     this.el.classList.remove('ui-resizable-autohide');
+    e.stopPropagation();
   }
 
   /** @internal */
-  protected _hideHandlers = () => {
+  protected _mouseOut(e: Event) {
     this.el.classList.add('ui-resizable-autohide');
+    e.stopPropagation();
   }
 
   /** @internal */

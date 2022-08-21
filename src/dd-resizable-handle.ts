@@ -72,42 +72,48 @@ export class DDResizableHandle {
   }
 
   /** @internal called on mouse down on us: capture move on the entire document (mouse might not stay on us) until we release the mouse */
-  protected _mouseDown(e: MouseEvent): void {
-    e.preventDefault();
+  protected _mouseDown(e: MouseEvent) {
     this.mouseDownEvent = e;
     document.addEventListener('mousemove', this._mouseMove, true); // capture, not bubble
-    document.addEventListener('mouseup', this._mouseUp);
+    document.addEventListener('mouseup', this._mouseUp, true);
     if (isTouch) {
       this.el.addEventListener('touchmove', touchmove);
       this.el.addEventListener('touchend', touchend);
     }
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   /** @internal */
-  protected _mouseMove(e: MouseEvent): void {
+  protected _mouseMove(e: MouseEvent) {
     let s = this.mouseDownEvent;
-    // don't start unless we've moved at least 3 pixels
-    if (!this.moving && Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 2) {
+    if (this.moving) {
+      this._triggerEvent('move', e);
+    } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 2) {
+      // don't start unless we've moved at least 3 pixels
       this.moving = true;
       this._triggerEvent('start', this.mouseDownEvent);
-    } else if (this.moving) {
       this._triggerEvent('move', e);
     }
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   /** @internal */
-  protected _mouseUp(e: MouseEvent): void {
+  protected _mouseUp(e: MouseEvent) {
     if (this.moving) {
-      this._triggerEvent('resizestop', e);
+      this._triggerEvent('stop', e);
     }
     document.removeEventListener('mousemove', this._mouseMove, true);
-    document.removeEventListener('mouseup', this._mouseUp);
+    document.removeEventListener('mouseup', this._mouseUp, true);
     if (isTouch) {
       this.el.removeEventListener('touchmove', touchmove);
       this.el.removeEventListener('touchend', touchend);
     }
     delete this.moving;
     delete this.mouseDownEvent;
+    e.stopPropagation();
+    e.preventDefault();
   }
 
   /** @internal */
