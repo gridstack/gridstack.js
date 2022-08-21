@@ -13,11 +13,11 @@ import { isTouch, touchend, touchmove, touchstart, pointerdown } from './dd-touc
 // TODO: merge with DDDragOpt ?
 export interface DDDraggableOpt {
   appendTo?: string | HTMLElement;
-  containment?: string | HTMLElement; // TODO: not implemented yet
   handle?: string;
-  revert?: string | boolean | unknown; // TODO: not implemented yet
-  scroll?: boolean; // nature support by HTML5 drag drop, can't be switch to off actually
   helper?: string | HTMLElement | ((event: Event) => HTMLElement);
+  // containment?: string | HTMLElement; // TODO: not implemented yet
+  // revert?: string | boolean | unknown; // TODO: not implemented yet
+  // scroll?: boolean; // native support by HTML5 drag drop, can't be switch to off actually
   start?: (event: Event, ui: DDUIData) => void;
   stop?: (event: Event) => void;
   drag?: (event: Event, ui: DDUIData) => void;

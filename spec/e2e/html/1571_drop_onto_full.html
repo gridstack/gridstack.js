@@ -87,7 +87,7 @@
       disableOneColumnMode: true,
       float: false,
       dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone or can be your function
+      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       removable: '.trash', // drag-out delete class
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };

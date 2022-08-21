@@ -32,8 +32,6 @@
          const _ddElement = DDElement.init(this.dragElement.nativeElement);
          _ddElement.setupDraggable({
              handle: '.sample-drag',
-             revert: 'invalid',
-             scroll: true,
              appendTo: 'body',
              helper: 'clone',
              start: (event: DragEvent) => {

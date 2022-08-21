@@ -91,20 +91,20 @@ export interface GridStackOptions {
   /** disallows resizing of widgets (default?: false). */
   disableResize?: boolean;
 
-  /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null }) */
+  /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', appendTo?: 'body' }) */
   draggable?: DDDragOpt;
 
   /** allows to drag external items using this selector - see dragInOptions. (default: undefined) */
   dragIn?: string;
 
   /** allows to drag external items using these options. See `GridStack.setupDragIn()` instead (not per grid really).
-   * (default?: { handle: '.grid-stack-item-content', revert: 'invalid', scroll: false, appendTo: 'body' })
+   * (default?: { handle: '.grid-stack-item-content', appendTo: 'body' })
    * helper can be 'clone' or your own function (set what the drag/dropped item will be instead)
    */
   dragInOptions?: DDDragInOpt;
 
-  /** let user drag nested grid items out of a parent or not (default true - not supported by h5 yet) */
-  dragOut?: boolean;
+  /** let user drag nested grid items out of a parent or not (default true - not supported yet) */
+  //dragOut?: boolean;
 
   /** the type of engine to create (so you can subclass) default to GridStackEngine */
   engineClass?: typeof GridStackEngine;
@@ -286,16 +286,16 @@ export interface DDRemoveOpt {
 export interface DDDragOpt {
   /** class selector of items that can be dragged. default to '.grid-stack-item-content' */
   handle?: string;
-  /** default to `true` */
-  scroll?: boolean;
   /** default to 'body' */
   appendTo?: string;
+  /** default to `true` */
+  // scroll?: boolean;
   /** parent constraining where item can be dragged out from (default: null = no constrain) */
-  containment?: string;
+  // containment?: string;
 }
 export interface DDDragInOpt extends DDDragOpt {
     /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
-    revert?: string | ((event: Event) => HTMLElement);
+    // revert?: string | ((event: Event) => HTMLElement);
     /** helper function when dropping (ex: 'clone' or your own method) */
     helper?: string | ((event: Event) => HTMLElement);
 }

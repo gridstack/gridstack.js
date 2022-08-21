@@ -62,7 +62,7 @@
       row: 1,
       cellHeight: 120,
       dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone or can be your function
+      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       acceptWidgets: true
     };
     let grid = GridStack.init(options);

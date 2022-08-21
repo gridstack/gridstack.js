@@ -65,10 +65,8 @@ const GridDefaults: GridStackOptions = {
   },
   draggable: {
     handle: '.grid-stack-item-content',
-    scroll: false,
     appendTo: 'body'
   },
-  dragOut: true,
   disableDrag: false,
   disableResize: false,
   rtl: 'auto',
@@ -282,7 +280,6 @@ export class GridStack {
       },
       draggable: {
         handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) || '.grid-stack-item-content',
-        scroll: false,
         appendTo: 'body'
       },
       removableOptions: {
@@ -946,7 +943,7 @@ export class GridStack {
 
       // remove our DOM data (circular link) and drag&drop permanently
       delete el.gridstackNode;
-      DDGridStack.get().remove(el);
+      this._removeDD(el);
 
       this.engine.removeNode(node, removeDOM, triggerEvent);
 
@@ -969,7 +966,7 @@ export class GridStack {
     // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
     this.engine.nodes.forEach(n => {
       delete n.el.gridstackNode;
-      DDGridStack.get().remove(n.el);
+      this._removeDD(n.el);
     });
     this.engine.removeAll(removeDOM);
     this._triggerRemoveEvent();
@@ -1524,7 +1521,7 @@ export class GridStack {
    * Called during GridStack.init() as options, but can also be called directly (last param are cached) in case the toolbar
    * is dynamically create and needs to change later.
    * @param dragIn string selector (ex: '.sidebar .grid-stack-item')
-   * @param dragInOptions options - see DDDragInOpt. (default: {revert: 'invalid', handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}
+   * @param dragInOptions options - see DDDragInOpt. (default: {handle: '.grid-stack-item-content', appendTo: 'body'}
    **/
   public static setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt): void { /* implemented in dd-gridstack.ts */ }
 
@@ -1569,6 +1566,8 @@ export class GridStack {
    */
   public enableResize(doEnable: boolean): GridStack { return this }
 
+  /** @internal removes any drag&drop present (called during destroy) */
+  public _removeDD(el: GridItemHTMLElement): GridStack { return this }
   /** @internal called to add drag over support to support widgets */
   public _setupAcceptWidget(): GridStack { return this }
   /** @internal called to setup a trash drop zone if the user specifies it */
@@ -1585,6 +1584,10 @@ export class GridStack {
   public commit(): GridStack { obsolete(this, this.batchUpdate(false), 'commit', 'batchUpdate', '5.2'); return this; }
 }
 
-// and include D&D by default, which override some methods here
+/*
+ * and include D&D by default, which override some methods here
+ * TODO: while we can generate a gridstack-static.js at smaller size - saves about 31k (41k -> 72k)
+ * I don't know how to generate the DD only code at the remaining 31k to delay load as code depends on Gridstack.ts
+ */
 import { DDGridStack } from './dd-gridstack';
 export * from './dd-gridstack';

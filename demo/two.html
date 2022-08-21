@@ -57,7 +57,7 @@
       disableOneColumnMode: true,
       float: true,
       // dragIn: '.sidebar .grid-stack-item', // add draggable to class
-      // dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
+      // dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone
       removable: '.trash', // true or drag-out delete class
       acceptWidgets: function(el) { return true; } // function example, but can also be: true | false | '.someClass' value
     };
@@ -65,7 +65,7 @@
     grids[1].float(false);
 
     // new 4.x static method instead of setting up options on every grid (never been per grid really) but old options still works
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: myClone });
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: myClone });
     // GridStack.setupDragIn(); // second call will now work (cache last values)
 
     let items = [

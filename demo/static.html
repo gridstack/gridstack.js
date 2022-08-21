@@ -38,7 +38,7 @@
       removable: true,
       // old way, use global setupDragIn() instead
       // dragIn: '.sidebar .grid-stack-item', // add draggable to class
-      // dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
+      // dragInOptions: { appendTo: 'body', helper: 'clone' },
       staticGrid: true
     });
     addEvents(grid);
@@ -52,7 +52,7 @@
     ];
     grid.load(serializedData, true);
 
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' });
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
 
     // grid.setStatic(false); // TEST enable after disabled
 
