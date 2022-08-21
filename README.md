@@ -15,9 +15,9 @@ If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/alaind831)
 [![Donate](https://img.shields.io/badge/Donate-Venmo-g.svg)](https://www.venmo.com/adumesny)
 
-Join us on Slack: https://gridstackjs.troolee.com
+Join us on Slack: https://gridstackjs.slack.com
 
-[![Slack Status](https://gridstackjs.troolee.com/badge.svg)](https://gridstackjs.troolee.com)
+[![Slack Status](https://gridstackjs.troolee.com/badge.svg)](https://gridstackjs.slack.com)
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
@@ -42,6 +42,7 @@ Join us on Slack: https://gridstackjs.troolee.com
   - [Migrating to v3](#migrating-to-v3)
   - [Migrating to v4](#migrating-to-v4)
   - [Migrating to v5](#migrating-to-v5)
+  - [Migrating to v6](#migrating-to-v6)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -71,44 +72,21 @@ ES6 or Typescript
 ```js
 import 'gridstack/dist/gridstack.min.css';
 import { GridStack } from 'gridstack';
-// THEN to get HTML5 drag&drop
-import 'gridstack/dist/h5/gridstack-dd-native';
-// OR to get legacy jquery-ui drag&drop (support Mobile touch devices, h5 does not yet)
-import 'gridstack/dist/jq/gridstack-dd-jqueryui';
-// OR nothing to get static grids (API driven, no user drag&drop)
 ```
 
-**Note**: `jquery` & `jquery-ui` are imported by name, so you will have to specify their location in your webpack (or equivalent) config file, 
-which means you can possibly bring your own version
-```js
-  alias: {
-    'jquery': 'gridstack/dist/jq/jquery.js',
-    'jquery-ui': 'gridstack/dist/jq/jquery-ui.js',
-    'jquery.ui': 'gridstack/dist/jq/jquery-ui.js',
-    'jquery.ui.touch-punch': 'gridstack/dist/jq/jquery.ui.touch-punch.js',
-  },
-```
-
-Alternatively (single combined file) in html
+Alternatively (single combined file, notice the -all.js) in html
 
 ```html
 <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
-<!-- HTML5 drag&drop (70k) -->
-<script src="node_modules/gridstack/dist/gridstack-h5.js"></script>
-<!-- OR jquery-ui drag&drop (195k) -->
-<script src="node_modules/gridstack/dist/gridstack-jq.js"></script>
-<!-- OR static grid (40k) -->
-<script src="node_modules/gridstack/dist/gridstack-static.js"></script>
+<script src="node_modules/gridstack/dist/gridstack-all.js"></script>
 ```
 
-**Note**: the API is the same, regardless of the plugin (or lack thereof) so you can switch at any time. The Jquery version will export $ that it bundles and currently the only one to support mobile/touch devices through `jquery.ui.touch-punch` (h5 version is planned). Read more at [migrating to v3](#migrating-to-v3)
-
-**Note2**: IE support was dropped in v2, but restored in v4.4 by an external contributor (I have no interest in testing+supporting obsolete browser so this might break in the future).
+**Note**: IE support was dropped in v2, but restored in v4.4 by an external contributor (I have no interest in testing+supporting obsolete browser so this likely will break again in the future).
 You can use the es5 files and polyfill (larger) for older browser instead. For example:
 ```html
 <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
 <script src="node_modules/gridstack/dist/es5/gridstack-poly.js"></script>
-<script src="node_modules/gridstack/dist/es5/gridstack-jq.js"></script>
+<script src="node_modules/gridstack/dist/es5/gridstack-all.js"></script>
 ```
 
 
@@ -161,7 +139,7 @@ see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example
 
 ## Requirements
 
-GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). v3.0.0 is a complete HTML5 re-write which removes all jquery dependency (still available for legacy apps). All you need to include now is `gridstack-h5.js` and `gridstack.min.css` (layouts are done using CSS column based %).
+GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). v3 is a complete HTML5 re-write removing need for jquery (still available for legacy apps). v6 is native mouse and touch event for mobile support, and no longer have jquery-ui version. All you need to include now is `gridstack-all.js` and `gridstack.min.css` (layouts are done using CSS column based %).
 
 ## Extend Library
 
@@ -455,9 +433,44 @@ make sure to read v4 migration first!
 v5 does not have any breaking changes from v4, but a focus on nested grids in h5 mode:
 You can now drag in/out of parent into nested child, with new API parameters values. See the release notes.
 
+## Migrating to v6
+
+the API did not really change from v5, but a complete re-write of Drag&Drop to use native mouseevent (instead of HTML draggable=true which is buggy on Mac Safari, and doesn't work on mobile devices) and touchevent (mobile), and we no longer have jquery ui option (wasn't working well for nested grids, didn't want to maintain legacy lib).
+
+The main difference is you only need to include gridstack.js and get D&D (desktop and mobile) out of the box for the same size as h5 version.
+
 # jQuery Application
 
-We now have a native HTML5 drag'n'drop through the plugin system (default), but the jquery-ui version can be used instead. It will bundle `jquery` (3.5.1) + `jquery-ui` (1.13.1 minimal drag|drop|resize) + `jquery-ui-touch-punch` (1.0.8 for mobile support) in `gridstack-jq.js`. 
+This is **old and no longer apply to v6+**. You'll need to use v5.1.1 and before
+
+```js
+import 'gridstack/dist/gridstack.min.css';
+import { GridStack } from 'gridstack';
+import 'gridstack/dist/jq/gridstack-dd-jqueryui';
+```
+**Note**: `jquery` & `jquery-ui` are imported by name, so you will have to specify their location in your webpack (or equivalent) config file, 
+which means you can possibly bring your own version
+```js
+  alias: {
+    'jquery': 'gridstack/dist/jq/jquery.js',
+    'jquery-ui': 'gridstack/dist/jq/jquery-ui.js',
+    'jquery.ui': 'gridstack/dist/jq/jquery-ui.js',
+    'jquery.ui.touch-punch': 'gridstack/dist/jq/jquery.ui.touch-punch.js',
+  },
+```
+Alternatively (single combined file) in html
+
+```html
+<link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
+<!-- HTML5 drag&drop (70k) -->
+<script src="node_modules/gridstack/dist/gridstack-h5.js"></script>
+<!-- OR jquery-ui drag&drop (195k) -->
+<script src="node_modules/gridstack/dist/gridstack-jq.js"></script>
+<!-- OR static grid (40k) -->
+<script src="node_modules/gridstack/dist/gridstack-static.js"></script>
+```
+
+We have a native HTML5 drag'n'drop through the plugin system (default), but the jquery-ui version can be used instead. It will bundle `jquery` (3.5.1) + `jquery-ui` (1.13.1 minimal drag|drop|resize) + `jquery-ui-touch-punch` (1.0.8 for mobile support) in `gridstack-jq.js`. 
 
 **NOTE: in v4, v3**: we ES6 module import jquery & jquery-ui by name, so you need to specify location of those .js files, which means you might be able to bring your own version as well. See the include instructions.
 

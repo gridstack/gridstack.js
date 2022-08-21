@@ -1,5 +1,5 @@
 /**
- * gridstack-engine.ts 6.0.0-beta
+ * gridstack-engine.ts 6.0.0
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
