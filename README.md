@@ -295,21 +295,19 @@ GridStack.init({
 
 ## Touch devices support
 
-gridstack v3.2 jq version compiles touch support (html5 version does not yet support `touchmove` events. This will be added in a future release), so it works out of the box, no need for anything.
-You **used** to need [jQuery UI Touch Punch](https://github.com/RWAP/jquery-ui-touch-punch) to make jQuery UI Draggable/Resizable
-work on touch-based devices (now distributed as `dist/jq/jquery.ui.touch-punch.js` for reference).
+gridstack v6+ now support mobile out of the box, with the addition of native touch event (along with mouse event) for drag&drop and resize.
+Older versions (3.2+) required the jq version with added touch punch, but doesn't work well with nested grids.
 
-
-This option will be useful:
+This option is now the default:
 
 ```js
 let options = {
-  alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  alwaysShowResizeHandle: 'mobile' // which defaults to /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 };
 GridStack.init(options);
 ```
 
-See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html). If you're still experiencing issues on touch devices please check [#444](https://github.com/gridstack/gridstack.js/issues/444)
+See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html).
 
 # gridstack.js for specific frameworks
 

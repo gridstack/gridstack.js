@@ -7,6 +7,8 @@ import { DDManager } from './dd-manager';
 
 /**
  * Detect touch support - Windows Surface devices and other touch devices
+ * should we use this instead ? (what we had for always showing resize handles)
+ * /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
  */
 export const isTouch: boolean = ( 'ontouchstart' in document
   || 'ontouchstart' in window
@@ -15,7 +17,6 @@ export const isTouch: boolean = ( 'ontouchstart' in document
   || navigator.maxTouchPoints > 0
   || (navigator as any).msMaxTouchPoints > 0
 );
-
 
 // interface TouchCoord {x: number, y: number};
 

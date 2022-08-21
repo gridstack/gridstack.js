@@ -58,9 +58,8 @@ const GridDefaults: GridStackOptions = {
   float: false,
   staticGrid: false,
   animate: true,
-  alwaysShowResizeHandle: false,
+  alwaysShowResizeHandle: 'mobile',
   resizable: {
-    autoHide: true,
     handles: 'se'
   },
   draggable: {
@@ -265,25 +264,23 @@ export class GridStack {
       opts.oneColumnSize = opts.oneColumnSize || anyOpts.minWidth;
       delete anyOpts.minWidth;
     }
+    // save original setting so we can restore on save
+    if (opts.alwaysShowResizeHandle !== undefined) {
+      (opts as any)._alwaysShowResizeHandle = opts.alwaysShowResizeHandle;
+    }
 
-    // elements attributes override any passed options (like CSS style) - merge the two together
+    // elements DOM attributes override any passed options (like CSS style) - merge the two together
     let defaults: GridStackOptions = {...Utils.cloneDeep(GridDefaults),
-      column: Utils.toNumber(el.getAttribute('gs-column')) || 12,
-      minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-min-row')) || 0,
-      maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-max-row')) || 0,
-      staticGrid: Utils.toBool(el.getAttribute('gs-static')) || false,
+      column: Utils.toNumber(el.getAttribute('gs-column')) || GridDefaults.column,
+      minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-min-row')) || GridDefaults.minRow,
+      maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-max-row')) || GridDefaults.maxRow,
+      staticGrid: Utils.toBool(el.getAttribute('gs-static')) || GridDefaults.staticGrid,
       _styleSheetClass: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
-      alwaysShowResizeHandle: opts.alwaysShowResizeHandle || false,
-      resizable: {
-        autoHide: !(opts.alwaysShowResizeHandle || false),
-        handles: 'se'
-      },
       draggable: {
-        handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) || '.grid-stack-item-content',
-        appendTo: 'body'
+        handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) || GridDefaults.draggable.handle,
       },
       removableOptions: {
-        accept: '.' + (opts.itemClass || 'grid-stack-item')
+        accept: opts.itemClass ? '.' + opts.itemClass : GridDefaults.removableOptions.accept,
       },
     };
     if (el.getAttribute('gs-animate')) { // default to true, but if set to false use that instead
@@ -303,7 +300,6 @@ export class GridStack {
     if (this.opts.rtl === 'auto') {
       this.opts.rtl = (el.style.direction === 'rtl');
     }
-
     if (this.opts.rtl) {
       this.el.classList.add('grid-stack-rtl');
     }
@@ -328,6 +324,11 @@ export class GridStack {
         delete this.opts.cellHeightUnit;
       }
       this.cellHeight(this.opts.cellHeight, false);
+    }
+
+    // see if we need to adjust auto-hide
+    if (this.opts.alwaysShowResizeHandle === 'mobile') {
+      this.opts.alwaysShowResizeHandle = isTouch;
     }
 
     this.el.classList.add(this.opts._styleSheetClass);
@@ -519,6 +520,13 @@ export class GridStack {
       if (this._autoColumn) {
         o.column = 'auto';
         delete o.disableOneColumnMode;
+      }
+      const origShow = (o as any)._alwaysShowResizeHandle;
+      delete (o as any)._alwaysShowResizeHandle;
+      if (origShow !== undefined) {
+        o.alwaysShowResizeHandle = origShow;
+      } else {
+        delete o.alwaysShowResizeHandle;
       }
       Utils.removeInternalAndSame(o, GridDefaults);
       o.children = list;
@@ -1590,4 +1598,5 @@ export class GridStack {
  * I don't know how to generate the DD only code at the remaining 31k to delay load as code depends on Gridstack.ts
  */
 import { DDGridStack } from './dd-gridstack';
+import { isTouch } from './dd-touch';
 export * from './dd-gridstack';

@@ -364,13 +364,11 @@
     ];
 
     var simpleGrid = GridStack.init({
-      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
       margin: 5,
     }, '#simple-grid');
     simpleGrid.load(simple);
 
     var advGrid = GridStack.init({
-      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
       margin: 5,
       acceptWidgets: true,
       dragIn: '.newWidget',  // class that can be dragged from outside
