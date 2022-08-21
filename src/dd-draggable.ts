@@ -163,7 +163,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 3) {
       /**
        * don't start unless we've moved at least 3 pixels
-      */
+       */
       this.dragging = true;
       DDManager.dragElement = this;
       // if we're dragging an actual grid item, set the current drop as the grid (to detect enter/leave)
@@ -179,7 +179,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
 
       this._setupHelperStyle(e);
-      this.helper.classList.add('ui-draggable-dragging');
       if (this.option.start) {
         this.option.start(ev, this.ui());
       }
@@ -205,7 +204,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
         delete DDManager.dropElement;
       }
 
-      this.helper.classList.remove('ui-draggable-dragging');
       this.helperContainment.style.position = this.parentOriginStylePosition || null;
       if (this.helper === this.el) {
         this._removeHelperStyle();
@@ -250,10 +248,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal set the fix position of the dragged item */
   protected _setupHelperStyle(e: DragEvent): DDDraggable {
+    this.helper.classList.add('ui-draggable-dragging');
     // TODO: set all at once with style.cssText += ... ? https://stackoverflow.com/questions/3968593
     const style = this.helper.style;
     style.pointerEvents = 'none'; // needed for over items to get enter/leave
-    // style.cursor = 'move'; //  TODO: can't set with pointerEvents=none !
+    // style.cursor = 'move'; //  TODO: can't set with pointerEvents=none ! (done in CSS as well)
     style['min-width'] = 0; // since we no longer relative to our parent and we don't resize anyway (normally 100/#column %)
     style.width = this.dragOffset.width + 'px';
     style.height = this.dragOffset.height + 'px';
@@ -271,6 +270,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal restore back the original style before dragging */
   protected _removeHelperStyle(): DDDraggable {
+    this.helper.classList.remove('ui-draggable-dragging');
     let node = (this.helper as GridItemHTMLElement)?.gridstackNode;
     // don't bother restoring styles if we're gonna remove anyway...
     if (this.dragElementOriginStyle && (!node || !node._isAboutToRemove)) {

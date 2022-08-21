@@ -9,6 +9,7 @@ import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
 import { DDElementHost } from './dd-element';
 import { isTouch, pointerenter, pointerleave } from './dd-touch';
+import { GridHTMLElement } from './gridstack';
 
 export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);
@@ -86,10 +87,16 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal called when the cursor enters our area - prepare for a possible drop and track leaving */
   protected _mouseEnter(e: MouseEvent): void {
     // console.log(`${count++} Enter ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
-    if (!DDManager.dragElement /* || DDManager.dropElement === this*/) return;
+    if (!DDManager.dragElement) return;
     if (!this._canDrop()) return;
     e.preventDefault();
     e.stopPropagation();
+
+    // make sure when we enter this, that the last one gets a leave FIRST to correctly cleanup as we don't always do
+    if (DDManager.dropElement && DDManager.dropElement !== this) {
+      DDManager.dropElement._mouseLeave(e as DragEvent);
+    }
+    DDManager.dropElement = this;
 
     const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dropover' });
     if (this.option.over) {
@@ -97,23 +104,17 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     this.triggerEvent('dropover', ev);
     this.el.classList.add('ui-droppable-over');
-
-    // make sure when we enter this, that the last one gets a leave to correctly cleanup as we don't always do
-    if (DDManager.dropElement && DDManager.dropElement !== this) {
-      DDManager.dropElement._mouseLeave(e as DragEvent);
-    }
-    DDManager.dropElement = this;
     // console.log('tracking'); // TEST
   }
 
   /** @internal called when the item is leaving our area, stop tracking if we had moving item */
-  protected _mouseLeave(event: DragEvent): void {
+  protected _mouseLeave(e: MouseEvent): void {
     // console.log(`${count++} Leave ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
     if (!DDManager.dragElement || DDManager.dropElement !== this) return;
-    event.preventDefault();
-    event.stopPropagation();
+    e.preventDefault();
+    e.stopPropagation();
 
-    const ev = Utils.initEvent<DragEvent>(event, { target: this.el, type: 'dropout' });
+    const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dropout' });
     if (this.option.out) {
       this.option.out(ev, this._ui(DDManager.dragElement))
     }
@@ -131,7 +132,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
         parent = parent.parentElement;
       }
       if (parentDrop) {
-        parentDrop._mouseEnter(event);
+        parentDrop._mouseEnter(e);
       }
     }
   }

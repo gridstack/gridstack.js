@@ -133,6 +133,7 @@ $animation_speed: .3s !default;
 }
 .ui-draggable-dragging {
   will-change: left, top;
+  cursor: move;
 }
 .ui-resizable-resizing {
   will-change: width, height;
