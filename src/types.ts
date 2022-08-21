@@ -38,12 +38,14 @@ export interface GridStackOptions {
    */
   acceptWidgets?: boolean | string | ((element: Element) => boolean);
 
-  /** possible values (default: `false` only show on hover)
-    * `true` the resizing handles are always shown even if the user is not hovering over the widget
-    * advance condition such as this mobile browser agent check:
+  /** possible values (default: `mobile`) - does not apply to non-resizable widgets
+    * `false` the resizing handles are only shown while hovering over a widget
+    * `true` the resizing handles are always shown
+    * 'mobile' if running on a mobile device, default to `true` (since there is no hovering per say), else `false`.
+    * this uses this condition on browser agent check:
     `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
     See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html) */
-  alwaysShowResizeHandle?: boolean;
+  alwaysShowResizeHandle?: true | false | 'mobile';
 
   /** turns animation on (default?: true) */
   animate?: boolean;
@@ -165,7 +167,7 @@ export interface GridStackOptions {
   /** placeholder default content (default?: '') */
   placeholderText?: string;
 
-  /** allows to override UI resizable options. (default?: { autoHide: true, handles: 'se' }) */
+  /** allows to override UI resizable options. (default?: { handles: 'se' }) */
   resizable?: DDResizeOpt;
 
   /**
@@ -267,7 +269,7 @@ export interface GridStackWidget extends GridStackPosition {
 
 /** Drag&Drop resize options */
 export interface DDResizeOpt {
-  /** do resize handle hide by default until mouse over ? - default: true */
+  /** do resize handle hide by default until mouse over ? - default: true on desktop, false on mobile*/
   autoHide?: boolean;
   /**
    * sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east)

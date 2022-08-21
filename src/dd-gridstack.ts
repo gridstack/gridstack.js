@@ -48,9 +48,10 @@ export class DDGridStack {
       } else {
         const grid = dEl.el.gridstackNode.grid;
         let handles = dEl.el.getAttribute('gs-resize-handles') ? dEl.el.getAttribute('gs-resize-handles') : grid.opts.resizable.handles;
+        let autoHide = !grid.opts.alwaysShowResizeHandle;
         dEl.setupResizable({
           ...grid.opts.resizable,
-          ...{ handles: handles },
+          ...{ handles, autoHide },
           ...{
             start: opts.start,
             stop: opts.stop,

@@ -72,6 +72,7 @@ Change log
 ## 6.0.0-beta (TBD)
 * converted previous HTML5 `draggable=true` based code to simple Mouse Events and Touch mobile support for drag&Drop.
 * removed all jquery-ui related code, and D7D plugging as we only support native events now
+* `alwaysShowResizeHandle` now support `'mobile'` which is the default, making it much easier (see doc)
 * changed `commit()` to be `batchUpdate(false)` to make it easier to turn batch on/off. updated doc. old API remains for now
 
 ## 5.1.1 (2022-06-16)

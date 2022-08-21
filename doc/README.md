@@ -70,11 +70,15 @@ gridstack.js API
    * `true` (uses `'.grid-stack-item'` class filter) or `false`
    * string for explicit class name
    * `function (i: number, element: Element): boolean` See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
-- `alwaysShowResizeHandle` - possible values (default: `false` only show on hover)
-   * `true` the resizing handles are always shown even if the user is not hovering over the widget
-   * advance condition such as this mobile browser agent check:
-   `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
-   See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html)
+- `alwaysShowResizeHandle` - possible values (default: `mobile`) - does not apply to non-resizable widgets
+  * `false` the resizing handles are only shown while hovering over a widget
+  * `true` the resizing handles are always shown
+  * `'mobile'` if running on a mobile device, default to `true` (since there is no hovering per say), else `false`.
+  this uses this condition on browser agent check:
+  `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
+  See [mobile](http://gridstack.github.io/gridstack.js/demo/mobile.html)
+
+
 - `animate` - turns animation on to smooth transitions (default: `true`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight`- one cell height (default?: 'auto'). Can be:
@@ -118,7 +122,7 @@ gridstack.js API
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
-- `resizable` - allows to override resizable options. (default: `{autoHide: true, handles: 'se'}`). `handles` can be any combo of `n,ne,e,se,s,sw,w,nw` or `all`.
+- `resizable` - allows to override resizable options. (default: `{handles: 'se'}`). `handles` can be any combo of `n,ne,e,se,s,sw,w,nw` or `all`.
 - `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
 - `row` - fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain)
