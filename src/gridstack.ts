@@ -790,8 +790,10 @@ export class GridStack {
    * enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
    */
   public float(val: boolean): GridStack {
-    this.engine.float = val;
-    this._triggerChangeEvent();
+    if (this.opts.float !== val) {
+      this.opts.float = this.engine.float = val;
+      this._triggerChangeEvent();
+    }
     return this;
   }
 
