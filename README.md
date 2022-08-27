@@ -187,14 +187,15 @@ GridStack makes it very easy if you need [1-12] columns out of the box (default 
 GridStack.init( {column: N} );
 ```
 
-2) include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
+2) also include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
-<link href="node_modules/gridstack/dist/gridstack-extra.css" rel="stylesheet"/>
+<link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
+<link href="node_modules/gridstack/dist/gridstack-extra.min.css" rel="stylesheet"/>
 
 <div class="grid-stack">...</div>
 ```
 
-Note: class `.grid-stack-N` will automatically be added and we include `gridstack-extra.css` which defines CSS for grids with custom [2-11] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
+Note: class `.grid-stack-N` will automatically be added and we include `gridstack-extra.min.css` which defines CSS for grids with custom [2-11] columns. Anything more and you'll need to generate the SASS/CSS yourself (see next).
 
 See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html) with 6 columns
 
