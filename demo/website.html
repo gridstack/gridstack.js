@@ -10,15 +10,15 @@
   <title>gridstack.js | Build interactive dashboards in minutes.</title>
 
   <!-- ES5 support for IE -->
-  <script src="node_modules/gridstack/dist/es5/gridstack-poly.js"></script>
-  <script src="node_modules/gridstack/dist/es5/gridstack-all.js"></script>
+  <script src="../node_modules/gridstack/dist/es5/gridstack-poly.js"></script>
+  <script src="../node_modules/gridstack/dist/es5/gridstack-all.js"></script>
   
   <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
 
   <!-- Bootstrap core CSS -->
   <link href="https://bootswatch.com/4/yeti/bootstrap.min.css" rel="stylesheet" />
-  <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet" />
+  <link href="../node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css"  rel="stylesheet"/>
   <style type="text/css">
     .grid-container {
@@ -96,7 +96,7 @@
           <a class="nav-link dropdown-toggle" href="#" id="moreExamples" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">Examples</a>
           <div class="dropdown-menu" aria-labelledby="moreExamples">
-            <a class="dropdown-item" href="demo/web2.html" target="_blank">Advance</a>
+            <a class="dropdown-item" href="demo/advance.html" target="_blank">Advance</a>
             <a class="dropdown-item" href="demo/serialization.html" target="_blank">Save and restore layout</a>
             <a class="dropdown-item" href="demo/two.html" target="_blank">Drag widgets between two grids</a>
             <a class="dropdown-item" href="demo/nested.html" target="_blank">Nested grids</a>
@@ -197,8 +197,8 @@
           <pre>
 <code class="html">npm install gridstack</code>
 <p class="text-white">then in html:</p>
-<code class="html">&lt;script src="node_modules/gridstack/dist/gridstack-h5.js"&gt;&lt;/script&gt;
-&lt;link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/&gt;
+<code class="html">&lt;script src="../node_modules/gridstack/dist/gridstack-all.js"&gt;&lt;/script&gt;
+&lt;link href="../node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/&gt;
 &lt;style type="text/css"&gt;
   .grid-stack { background: #FAFAD2; }
   .grid-stack-item-content { background-color: #18BC9C; }
@@ -364,17 +364,15 @@
     ];
 
     var simpleGrid = GridStack.init({
-      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
       margin: 5,
     }, '#simple-grid');
     simpleGrid.load(simple);
 
     var advGrid = GridStack.init({
-      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent),
       margin: 5,
       acceptWidgets: true,
       dragIn: '.newWidget',  // class that can be dragged from outside
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
+      dragInOptions: { appendTo: 'body', helper: 'clone' },
       removable: '#trash',
       removeTimeout: 100
     }, '#advanced-grid');
