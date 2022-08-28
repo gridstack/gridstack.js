@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [6.0.0-dev (TBD)](#600-dev-tbd)
+- [6.0.1 (2022-08-27)](#601-2022-08-27)
 - [6.0.0 (2022-08-21)](#600-2022-08-21)
 - [5.1.1 (2022-06-16)](#511-2022-06-16)
 - [5.1.0 (2022-05-21)](#510-2022-05-21)
@@ -69,8 +69,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 6.0.0-dev (TBD)
+## 6.0.1 (2022-08-27)
 * fixed `float(val)` to set on grid and engine, so save() will read it.
+* fixed [#2018](https://github.com/gridstack/gridstack.js/issues/2018) mouseover and React different behavior
+* fixed getting nested grid resize handles while dragging child
 
 ## 6.0.0 (2022-08-21)
 * converted previous HTML5 `draggable=true` based code to simple Mouse Events and Touch mobile support for drag&Drop.
