@@ -7,6 +7,9 @@ import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
 import { DDUIData, Rect, Size } from './types';
+import { DDManager } from './dd-manager';
+
+// import { GridItemHTMLElement } from './types'; let count = 0; // TEST
 
 // TODO: merge with DDDragOpt
 export interface DDResizableOpt {
@@ -72,12 +75,14 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     super.enable();
     this.el.classList.add('ui-resizable');
     this.el.classList.remove('ui-resizable-disabled');
+    this._setupAutoHide(this.option.autoHide);
   }
 
   public disable(): void {
     super.disable();
     this.el.classList.add('ui-resizable-disabled');
     this.el.classList.remove('ui-resizable');
+    this._setupAutoHide(false);
   }
 
   public destroy(): void {
@@ -106,7 +111,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _setupAutoHide(auto: boolean): DDResizable {
     if (auto) {
       this.el.classList.add('ui-resizable-autohide');
-      // use mouseover/mouseout instead of mouseenter/mouseleave to get better performance;
+      // use mouseover and not mouseenter to get better performance and track for nested cases
       this.el.addEventListener('mouseover', this._mouseOver);
       this.el.addEventListener('mouseout', this._mouseOut);
     } else {
@@ -119,14 +124,21 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _mouseOver(e: Event) {
+    // console.log(`${count++} pre-enter ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
+    // already over a child, ignore. Ideally we just call e.stopPropagation() but see https://github.com/gridstack/gridstack.js/issues/2018
+    if (DDManager.overResizeElement || DDManager.dragElement) return;
+    DDManager.overResizeElement = this;
+    // console.log(`${count++} enter ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
     this.el.classList.remove('ui-resizable-autohide');
-    e.stopPropagation();
   }
 
   /** @internal */
   protected _mouseOut(e: Event) {
+    // console.log(`${count++} pre-leave ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
+    if (DDManager.overResizeElement !== this) return;
+    delete DDManager.overResizeElement;
+    // console.log(`${count++} leave ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
     this.el.classList.add('ui-resizable-autohide');
-    e.stopPropagation();
   }
 
   /** @internal */

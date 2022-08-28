@@ -444,9 +444,11 @@ GridStack.setupDragIn = function(this: GridStack, _dragIn?: string, _dragInOptio
 /** @internal prepares the element for drag&drop **/
 GridStack.prototype._prepareDragDropByNode = function(this: GridStack, node: GridStackNode): GridStack {
   let el = node.el;
+  const noMove = node.noMove || this.opts.disableDrag;
+  const noResize = node.noResize || this.opts.disableResize;
 
   // check for disabled grid first
-  if (this.opts.staticGrid || ((node.noMove || this.opts.disableDrag) && (node.noResize || this.opts.disableResize))) {
+  if (this.opts.staticGrid || (noMove && noResize)) {
     if (node._initDD) {
       this._removeDD(el); // nukes everything instead of just disable, will add some styles back next
       delete node._initDD;
@@ -537,20 +539,8 @@ GridStack.prototype._prepareDragDropByNode = function(this: GridStack, node: Gri
   }
 
   // finally fine tune move vs resize by disabling any part...
-  if (node.noMove || this.opts.disableDrag) {
-    dd.draggable(el, 'disable');
-    el.classList.add('ui-draggable-disabled');
-  } else {
-    dd.draggable(el, 'enable');
-    el.classList.remove('ui-draggable-disabled');
-  }
-  if (node.noResize || this.opts.disableResize) {
-    dd.resizable(el, 'disable');
-    el.classList.add('ui-resizable-disabled');
-  } else {
-    dd.resizable(el, 'enable');
-    el.classList.remove('ui-resizable-disabled');
-  }
+  dd.draggable(el, noMove ? 'disable' : 'enable')
+    .resizable(el, noResize ? 'disable' : 'enable');
 
   return this;
 }
