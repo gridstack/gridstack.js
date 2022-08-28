@@ -5,6 +5,7 @@
 
 import { DDDraggable } from './dd-draggable';
 import { DDDroppable } from './dd-droppable';
+import { DDResizable } from './dd-resizable';
 
 /**
  * globals that are shared across Drag & Drop instances
@@ -18,4 +19,8 @@ export class DDManager {
 
   /** item we are currently over as drop target */
   public static dropElement: DDDroppable;
+
+  /** current item we're over for resizing purpose (ignore nested grid resize handles) */
+  public static overResizeElement: DDResizable;
+
 }
