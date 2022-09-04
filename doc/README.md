@@ -66,22 +66,10 @@ gridstack.js API
 
 ## Grid Options
 
-- `acceptWidgets` - Accept widgets dragged from other Gridstack grids or from outside (default: `false`). Can be:
-   * `true` (The Gridstack grid accepts HTML elements (A Gridstack Grid item is also a HTML element) having `'.grid-stack-item'` as class attribute) or `false`
-   * Class name. For example, if `acceptWidgets` is set to `'.red-grid-items'`, then the Gridstack grid will only accept HTML elements having `.red-grid-items` as class attribute.
-   * `function (i: number, element: Element): boolean`. This callback function which is assigned to `acceptWidgets` will be invoked when the user drags an HTML element (A Gridstack Grid item is also a HTML element) on to the Gridstack Grid. For example if `acceptWidgets` is set to
-
-   ```js
-	(el) => { const subgridElement = el.getElementsByClassName("grid-stack")
-				  if (subgridElement && subgridElement.length) {
-					return false;
-				  } else {
-					return true;
-				  } 
-	 		  }
-   ```
-
-This call back function will be invoked as soon as the user drags an HTML element onto the Gridstack grid, the function parameter `el` will contain the HTML element which was dragged onto the Gridstack Grid. The callback function written above prevents a Gridstack subgrid from being dropped inside of another Gridstack subgrid (Gridstack Grids have class attribute of `.grid-stack`, the callback function in this case makes sure that the HTML element entering the grid doesn't contain any Gridstack grids). See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
+- `acceptWidgets` - Accept widgets dragged from other grids or from outside (default: `false`). Can be:
+   * `true` will accept HTML element having `'.grid-stack-item'` as class attribute, else `false`
+   * string for explicit class name to accept instead
+   * `function (el: Element): boolean` function called before an item will be accepted when entering a grid. the function will be passed the item being dragged, and should return true | false. See [example](https://github.com/gridstack/gridstack.js/blob/master/demo/two.html#L62)
 - `alwaysShowResizeHandle` - possible values (default: `mobile`) - does not apply to non-resizable widgets
   * `false` the resizing handles are only shown while hovering over a widget
   * `true` the resizing handles are always shown
