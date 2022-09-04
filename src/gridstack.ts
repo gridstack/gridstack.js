@@ -1,5 +1,5 @@
 /*!
- * GridStack 6.0.1
+ * GridStack 6.0.1-dev
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2022 Alain Dumesny
@@ -1515,7 +1515,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '6.0.1';
+  static GDRev = '6.0.1-dev';
 
   /*
    * drag&drop empty stubs that will be implemented in dd-gridstack.ts for non static grid
