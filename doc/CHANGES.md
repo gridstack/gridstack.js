@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [6.0.1-dev (TBD)](#601-dev-tbd)
 - [6.0.1 (2022-08-27)](#601-2022-08-27)
 - [6.0.0 (2022-08-21)](#600-2022-08-21)
 - [5.1.1 (2022-06-16)](#511-2022-06-16)
@@ -69,6 +70,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 6.0.1-dev (TBD)
+* fixed [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback
+
 ## 6.0.1 (2022-08-27)
 * fixed `float(val)` to set on grid and engine, so save() will read it.
 * fixed [#2018](https://github.com/gridstack/gridstack.js/issues/2018) mouseover and React different behavior
