@@ -118,6 +118,9 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       this.el.classList.remove('ui-resizable-autohide');
       this.el.removeEventListener('mouseover', this._mouseOver);
       this.el.removeEventListener('mouseout', this._mouseOut);
+      if (DDManager.overResizeElement === this) {
+        delete DDManager.overResizeElement;
+      }  
     }
     return this;
   }
