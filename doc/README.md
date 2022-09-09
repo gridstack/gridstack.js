@@ -93,7 +93,7 @@ gridstack.js API
 - `column` - Integer > 0 (default 12) which can change on the fly with `column(N)` API, or `'auto'` for nested grids to size themselves to the parent grid container (to make sub-items are the same size). See [column](http://gridstackjs.com/demo/column.html) and [nested](http://gridstackjs.com/demo/nested.html)
 - `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
 - `disableDrag` - disallows dragging of widgets (default: `false`).
-- `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minW (default: 'false')
+- `disableOneColumnMode` - disables the oneColumnMode when the grid width is less than minW (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `dragIn` - specify the class of items that can be dragged into grids
   * example: `dragIn: '.newWidget'`.
