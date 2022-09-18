@@ -20,6 +20,8 @@ export const GridDefaults: GridStackOptions = {
   itemClass: 'grid-stack-item',
   margin: 10,
   marginUnit: 'px',
+  maxRow: 0,
+  minRow: 0,
   oneColumnSize: 768,
   placeholderClass: 'grid-stack-placeholder',
   placeholderText: '',
