@@ -6,6 +6,38 @@
 import { GridStack } from './gridstack';
 import { GridStackEngine } from './gridstack-engine';
 
+// default values for grid options - used during init and when saving out
+export const GridDefaults: GridStackOptions = {
+  alwaysShowResizeHandle: 'mobile',
+  animate: true,
+  auto: true,
+  cellHeight: 'auto',
+  cellHeightThrottle: 100,
+  cellHeightUnit: 'px',
+  column: 12,
+  draggable: { handle: '.grid-stack-item-content', appendTo: 'body' },
+  handle: '.grid-stack-item-content',
+  itemClass: 'grid-stack-item',
+  margin: 10,
+  marginUnit: 'px',
+  oneColumnSize: 768,
+  placeholderClass: 'grid-stack-placeholder',
+  placeholderText: '',
+  removableOptions: { accept: '.grid-stack-item' },
+  resizable: { handles: 'se' },
+  rtl: 'auto',
+
+  // **** same as not being set ****
+  // disableDrag: false,
+  // disableOneColumnMode: false,
+  // disableResize: false,
+  // float: false,
+  // handleClass: null,
+  // oneColumnModeDomSort: false,
+  // removable: false,
+  // staticGrid: false,
+  // styleInHead: false,
+};
 
 /** different layout options when changing # of columns,
  * including a custom function that takes new/old column count, and array of new/old positions
@@ -198,11 +230,6 @@ export interface GridStackOptions {
 
   /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
   styleInHead?: boolean;
-
-  /** @internal point to a parent grid item if we're nested */
-  _isNested?: GridStackNode;
-  /** @internal unique class name for our generated CSS style sheet */
-  _styleSheetClass?: string;
 }
 
 /** options used during GridStackEngine.moveNode() */
