@@ -58,8 +58,6 @@
   "homepage": "http://gridstack.github.io/gridstack.js/",
   "devDependencies": {
     "@types/jasmine": "^3.5.9",
-    "@types/jquery": "^3.5.14",
-    "@types/jqueryui": "^1.12.16",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "connect": "^3.7.0",
