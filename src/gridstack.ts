@@ -7,7 +7,7 @@
  */
 import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
-import { ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
+import { GridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackOptions, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition } from './types';
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -38,46 +38,6 @@ interface GridCSSStyleSheet extends CSSStyleSheet {
   _id?: string; // random id we will use to style us
   _max?: number; // internal tracker of the max # of rows we created\
 }
-
-// default values for grid options - used during init and when saving out
-const GridDefaults: GridStackOptions = {
-  column: 12,
-  minRow: 0,
-  maxRow: 0,
-  itemClass: 'grid-stack-item',
-  placeholderClass: 'grid-stack-placeholder',
-  placeholderText: '',
-  handle: '.grid-stack-item-content',
-  handleClass: null,
-  styleInHead: false,
-  cellHeight: 'auto',
-  cellHeightThrottle: 100,
-  margin: 10,
-  auto: true,
-  oneColumnSize: 768,
-  float: false,
-  staticGrid: false,
-  animate: true,
-  alwaysShowResizeHandle: 'mobile',
-  resizable: {
-    handles: 'se'
-  },
-  draggable: {
-    handle: '.grid-stack-item-content',
-    appendTo: 'body'
-  },
-  disableDrag: false,
-  disableResize: false,
-  rtl: 'auto',
-  removable: false,
-  removableOptions: {
-    accept: '.grid-stack-item'
-  },
-  marginUnit: 'px',
-  cellHeightUnit: 'px',
-  disableOneColumnMode: false,
-  oneColumnModeDomSort: false,
-};
 
 /**
  * Main gridstack class - you will need to call `GridStack.init()` first to initialize your grid.
@@ -200,6 +160,11 @@ export class GridStack {
 
   protected static engineClass: typeof GridStackEngine;
 
+  /** @internal point to a parent grid item if we're nested */
+  protected _isNested?: GridStackNode;
+  /** @internal unique class name for our generated CSS style sheet */
+  protected _styleSheetClass?: string;
+
   /** @internal create placeholder DIV as needed */
   public get placeholder(): HTMLElement {
     if (!this._placeholder) {
@@ -275,7 +240,6 @@ export class GridStack {
       minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-min-row')) || GridDefaults.minRow,
       maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-max-row')) || GridDefaults.maxRow,
       staticGrid: Utils.toBool(el.getAttribute('gs-static')) || GridDefaults.staticGrid,
-      _styleSheetClass: 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0),
       draggable: {
         handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) || GridDefaults.draggable.handle,
       },
@@ -307,8 +271,8 @@ export class GridStack {
     // check if we're been nested, and if so update our style and keep pointer around (used during save)
     let parentGridItemEl = Utils.closestByClass(this.el, GridDefaults.itemClass) as GridItemHTMLElement;
     if (parentGridItemEl && parentGridItemEl.gridstackNode) {
-      this.opts._isNested = parentGridItemEl.gridstackNode;
-      this.opts._isNested.subGrid = this;
+      this._isNested = parentGridItemEl.gridstackNode;
+      this._isNested.subGrid = this;
       parentGridItemEl.classList.add('grid-stack-nested');
       this.el.classList.add('grid-stack-nested');
     }
@@ -331,7 +295,8 @@ export class GridStack {
       this.opts.alwaysShowResizeHandle = isTouch;
     }
 
-    this.el.classList.add(this.opts._styleSheetClass);
+    this._styleSheetClass = 'grid-stack-instance-' + (Math.random() * 10000).toFixed(0)
+    this.el.classList.add(this._styleSheetClass);
 
     this._setStaticClass();
 
@@ -771,13 +736,13 @@ export class GridStack {
     this.setAnimation(false);
     if (!removeDOM) {
       this.removeAll(removeDOM);
-      this.el.classList.remove(this.opts._styleSheetClass);
+      this.el.classList.remove(this._styleSheetClass);
     } else {
       this.el.parentNode.removeChild(this.el);
     }
     this._removeStylesheet();
     this.el.removeAttribute('gs-current-row');
-    delete this.opts._isNested;
+    delete this._isNested;
     delete this.opts;
     delete this._placeholder;
     delete this.engine;
@@ -1207,7 +1172,7 @@ export class GridStack {
 
     let cellHeight = this.opts.cellHeight as number;
     let cellHeightUnit = this.opts.cellHeightUnit;
-    let prefix = `.${this.opts._styleSheetClass} > .${this.opts.itemClass}`;
+    let prefix = `.${this._styleSheetClass} > .${this.opts.itemClass}`;
 
     // create one as needed
     if (!this._styles) {
@@ -1227,7 +1192,7 @@ export class GridStack {
       let right: string = this.opts.marginRight + this.opts.marginUnit;
       let left: string = this.opts.marginLeft + this.opts.marginUnit;
       let content = `${prefix} > .grid-stack-item-content`;
-      let placeholder = `.${this.opts._styleSheetClass} > .grid-stack-placeholder > .placeholder-content`;
+      let placeholder = `.${this._styleSheetClass} > .grid-stack-placeholder > .placeholder-content`;
       Utils.addCSSRule(this._styles, content, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
       Utils.addCSSRule(this._styles, placeholder, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
       // resize handles offset (to match margin)
@@ -1389,10 +1354,10 @@ export class GridStack {
     let changedColumn = false;
 
     // see if we're nested and take our column count from our parent....
-    if (this._autoColumn && this.opts._isNested) {
-      if (this.opts.column !== this.opts._isNested.w) {
+    if (this._autoColumn && this._isNested) {
+      if (this.opts.column !== this._isNested.w) {
         changedColumn = true;
-        this.column(this.opts._isNested.w, 'none');
+        this.column(this._isNested.w, 'none');
       }
     } else {
       // else check for 1 column in/out behavior
@@ -1429,7 +1394,7 @@ export class GridStack {
   /** add or remove the window size event handler */
   protected _updateWindowResizeEvent(forceRemove = false): GridStack {
     // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting oneColumn (i.e. doing work)
-    const workTodo = (this._isAutoCellHeight || !this.opts.disableOneColumnMode) && !this.opts._isNested;
+    const workTodo = (this._isAutoCellHeight || !this.opts.disableOneColumnMode) && !this._isNested;
 
     if (!forceRemove && workTodo && !this._windowResizeBind) {
       this._windowResizeBind = this.onParentResize.bind(this); // so we can properly remove later
