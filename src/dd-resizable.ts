@@ -120,7 +120,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       this.el.removeEventListener('mouseout', this._mouseOut);
       if (DDManager.overResizeElement === this) {
         delete DDManager.overResizeElement;
-      }  
+      }
     }
     return this;
   }
