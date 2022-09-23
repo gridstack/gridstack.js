@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [6.0.1-dev (TBD)](#601-dev-tbd)
+- [6.0.2 (2022-09-23)](#602-2022-09-23)
 - [6.0.1 (2022-08-27)](#601-2022-08-27)
 - [6.0.0 (2022-08-21)](#600-2022-08-21)
 - [5.1.1 (2022-06-16)](#511-2022-06-16)
@@ -71,7 +71,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 6.0.1-dev (TBD)
+## 6.0.2 (2022-09-23)
 * fixed [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback
 * fixed [#2043](https://github.com/gridstack/gridstack.js/issues/2043) when swapping shapes in maxRow grid, make sure we still check for 50% coverage
 
