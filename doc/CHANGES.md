@@ -73,6 +73,7 @@ Change log
 
 ## 6.0.1-dev (TBD)
 * fixed [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback
+* fixed [#2043](https://github.com/gridstack/gridstack.js/issues/2043) when swapping shapes in maxRow grid, make sure we still check for 50% coverage
 
 ## 6.0.1 (2022-08-27)
 * fixed `float(val)` to set on grid and engine, so save() will read it.

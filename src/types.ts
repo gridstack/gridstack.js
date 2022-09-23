@@ -253,6 +253,8 @@ export interface GridStackMoveOpts extends GridStackPosition {
   rect?: GridStackPosition;
   /** true if we're live resizing */
   resizing?: boolean;
+  /** best node (most coverage) we collied with */
+  collide?: GridStackNode;
 }
 
 export interface GridStackPosition {
