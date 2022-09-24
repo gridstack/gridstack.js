@@ -7,7 +7,7 @@ import { GridStack } from './gridstack';
 import { GridStackEngine } from './gridstack-engine';
 
 // default values for grid options - used during init and when saving out
-export const GridDefaults: GridStackOptions = {
+export const gridDefaults: GridStackOptions = {
   alwaysShowResizeHandle: 'mobile',
   animate: true,
   auto: true,
@@ -39,6 +39,14 @@ export const GridDefaults: GridStackOptions = {
   // removable: false,
   // staticGrid: false,
   // styleInHead: false,
+};
+
+/** default dragIn options */
+export const dragInDefaultOptions: DDDragInOpt = {
+  handle: '.grid-stack-item-content',
+  appendTo: 'body',
+  // revert: 'invalid',
+  // scroll: false,
 };
 
 /** different layout options when changing # of columns,
@@ -130,13 +138,10 @@ export interface GridStackOptions {
   /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', appendTo?: 'body' }) */
   draggable?: DDDragOpt;
 
-  /** allows to drag external items using this selector - see dragInOptions. (default: undefined) */
+  /** @internal Use `GridStack.setupDragIn()` instead (global, not per grid). old way to allow external items to be draggable. (default: undefined) */
   dragIn?: string;
 
-  /** allows to drag external items using these options. See `GridStack.setupDragIn()` instead (not per grid really).
-   * (default?: { handle: '.grid-stack-item-content', appendTo: 'body' })
-   * helper can be 'clone' or your own function (set what the drag/dropped item will be instead)
-   */
+  /** @internal Use `GridStack.setupDragIn()` instead (global, not per grid).  old way to allow external items to be draggable. (default: undefined) */
   dragInOptions?: DDDragInOpt;
 
   /** let user drag nested grid items out of a parent or not (default true - not supported yet) */
@@ -232,6 +237,17 @@ export interface GridStackOptions {
 
   /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
   styleInHead?: boolean;
+
+  /** list of differences in options for automatically created sub-grids under us */
+  subGrid?: GridStackSubOptions;
+}
+
+/** additional prop that only apply to sub-grids */
+export interface GridStackSubOptions extends GridStackOptions {
+  /** enable/disable the creation of sub-grids on the fly (drop over other items) */
+  createDynamic?: boolean;
+  /** true if we got created by drag over gesture, so we can removed on drag out (temporary) */
+  isTemp?: boolean;
 }
 
 /** options used during GridStackEngine.moveNode() */
@@ -295,7 +311,7 @@ export interface GridStackWidget extends GridStackPosition {
   /** html to append inside as content */
   content?: string;
   /** optional nested grid options and list of children, which then turns into actual instance at runtime */
-  subGrid?: GridStackOptions | GridStack;
+  subGrid?: GridStackSubOptions | GridStack;
 }
 
 /** Drag&Drop resize options */
@@ -321,16 +337,18 @@ export interface DDDragOpt {
   handle?: string;
   /** default to 'body' */
   appendTo?: string;
+  /** if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global */
+  pause?: boolean | number;
   /** default to `true` */
   // scroll?: boolean;
   /** parent constraining where item can be dragged out from (default: null = no constrain) */
   // containment?: string;
 }
 export interface DDDragInOpt extends DDDragOpt {
-    /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
-    // revert?: string | ((event: Event) => HTMLElement);
-    /** helper function when dropping (ex: 'clone' or your own method) */
-    helper?: string | ((event: Event) => HTMLElement);
+  /** helper function when dropping (ex: 'clone' or your own method) */
+  helper?: string | ((event: Event) => HTMLElement);
+  /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
+  // revert?: string | ((event: Event) => HTMLElement);
 }
 
 export interface Size {
@@ -375,6 +393,8 @@ export interface GridStackNode extends GridStackWidget {
   _isAboutToRemove?: boolean;
   /** @internal true if item came from outside of the grid -> actual item need to be moved over */
   _isExternal?: boolean;
+  /** @internal Mouse event that's causing moving|resizing */
+  _event?: MouseEvent;
   /** @internal moving vs resizing */
   _moving?: boolean;
   /** @internal true if we jumped down past item below (one time jump so we don't have to totally pass it) */

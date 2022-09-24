@@ -100,6 +100,23 @@ export class Utils {
   static isTouching(a: GridStackPosition, b: GridStackPosition): boolean {
     return Utils.isIntercepted(a, {x: b.x-0.5, y: b.y-0.5, w: b.w+1, h: b.h+1})
   }
+
+  /** returns the area a and b overlap */
+  static areaIntercept(a: GridStackPosition, b: GridStackPosition): number {
+    let x0 = (a.x > b.x) ? a.x : b.x;
+    let x1 = (a.x+a.w < b.x+b.w) ? a.x+a.w : b.x+b.w;
+    if (x1 <= x0) return 0; // no overlap
+    let y0 = (a.y > b.y) ? a.y : b.y;
+    let y1 = (a.y+a.h < b.y+b.h) ? a.y+a.h : b.y+b.h;
+    if (y1 <= y0) return 0; // no overlap
+    return (x1-x0) * (y1-y0);
+  }
+
+  /** returns the area */
+  static area(a: GridStackPosition): number {
+    return a.w * a.h;
+  }
+
   /**
    * Sorts array of nodes
    * @param nodes array to sort
@@ -253,6 +270,18 @@ export class Utils {
         if (!Object.keys(val).length) { delete a[key] }
       }
     }
+  }
+
+  /** removes internal fields '_' and default values for saving */
+  static removeInternalForSave(n: GridStackNode, removeEl = true) {
+    for (let key in n) { if (key[0] === '_' || n[key] === null || n[key] === undefined ) delete n[key]; }
+    delete n.grid;
+    if (removeEl) delete n.el;
+    // delete default values (will be re-created on read)
+    if (!n.autoPosition) delete n.autoPosition;
+    if (!n.noResize) delete n.noResize;
+    if (!n.noMove) delete n.noMove;
+    if (!n.locked) delete n.locked;
   }
 
   /** return the closest parent (or itself) matching the given class */
@@ -462,6 +491,29 @@ export class Utils {
     ['altKey','ctrlKey','metaKey','shiftKey'].forEach(p => evt[p] = e[p]); // keys
     ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = e[p]); // point info
     return {...evt, ...obj} as unknown as T;
+  }
+
+  /** copies the MouseEvent properties and sends it as another event to the given target */
+  public static simulateMouseEvent(e: MouseEvent, simulatedType: string, target?: EventTarget) {
+    const simulatedEvent = document.createEvent('MouseEvents');
+    simulatedEvent.initMouseEvent(
+      simulatedType, // type
+      true,         // bubbles
+      true,         // cancelable
+      window,       // view
+      1,            // detail
+      e.screenX,    // screenX
+      e.screenY,    // screenY
+      e.clientX,    // clientX
+      e.clientY,    // clientY
+      e.ctrlKey,    // ctrlKey
+      e.altKey,     // altKey
+      e.shiftKey,   // shiftKey
+      e.metaKey,    // metaKey
+      0,            // button
+      e.target      // relatedTarget
+    );
+    (target || e.target).dispatchEvent(simulatedEvent);
   }
 
   /** returns true if event is inside the given element rectangle */

@@ -4,26 +4,19 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nested grids demo (ES6)</title>
+  <title>Advance Nested grids demo</title>
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/>
   <script src="../dist/gridstack-all.js"></script>
-  <style type="text/css">
-    .grid-stack.grid-stack-nested {
-      background: rgba(255, 255, 255, 0.3);
-    }
-    .grid-stack-item.sub .grid-stack-item-content {
-      background: lightpink;
-    }
-  </style>
 </head>
 <body>
   <div class="container-fluid">
     <h1>Advanced Nested grids demo</h1>
-    <p>This example shows sub-grids only accepting pink items, while parent accept all.</p>
+    <p>Create sub-grids on the fly, by dragging items completely over others (nest) vs partially (push) using
+      the new v7 API <code>GridStackOptions.subGrid.createDynamic=true</code></p>
+    <p>This will use the new delay drag&drop option <code>DDDragOpt.pause</code> to tell the gesture difference</p>
     <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
-    <a class="btn btn-primary" onClick="addNewWidget('.sub1')" href="#">Add Widget Grid1</a>
-    <a class="btn btn-primary" onClick="addNewWidget('.sub2')" href="#">Add Widget Grid2</a>
+    <a class="btn btn-primary" onClick="addNewWidget('sub1_grid')" href="#">Add Widget Grid1</a>
     <span>entire save/re-create:</span>
     <a class="btn btn-primary" onClick="save()" href="#">Save</a>
     <a class="btn btn-primary" onClick="destroy()" href="#">Destroy</a>
@@ -38,17 +31,16 @@
   </div>
 
   <script type="text/javascript">
-    let sub1 = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
-    let sub2 = [ {x:0, y:0}, {x:0, y:1, w:2}];
+    let main = [{x:0, y:0}, {x:1, y:0}, {x:0, y:1}]
+    let sub1 = [{x:0, y:0}, {x:1, y:0}];
     let count = 0;
-    [...sub1, ...sub2].forEach(d => d.content = String(count++));
+    [...main, ...sub1].forEach(d => d.content = String(count++));
     let subOptions = {
-      cellHeight: 50,
+      cellHeight: 50, // should be 50 - top/bottom
       column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
-      itemClass: 'sub', // style sub items differently and use to prevent dragging in/out
-      acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted
-      margin: 2,
-      minRow: 1, // don't collapse when empty
+      acceptWidgets: true, // will accept .grid-stack-item by default
+      createDynamic: true, // NEW v7 api to create sub-grids on the fly
+      margin: 5,
     };
     let options = { // main grid options
       cellHeight: 50,
@@ -56,10 +48,10 @@
       minRow: 2, // don't collapse when empty
       acceptWidgets: true,
       id: 'main',
+      subGrid: subOptions,
       children: [
-        {y:0, content: 'regular item'},
-        {x:1, w:4, h:4, content: 'nested 1 - can drag items out', subGrid: {children: sub1, dragOut: true, class: 'sub1', ...subOptions}},
-        {x:5, w:4, h:4, content: 'nested 2 - constrained to parent (JQ only)', subGrid: {children: sub2, class: 'sub2', ...subOptions}},
+        ...main,
+        {x:2, y:0, w:2, h:3, subGrid: {children: sub1, id:'sub1_grid', ...subOptions}/*,content: "<div>nested grid here</div>"*/},
       ]
     };
 

@@ -11,6 +11,9 @@ import { DDResizable } from './dd-resizable';
  * globals that are shared across Drag & Drop instances
  */
 export class DDManager {
+  /** if set (true | in msec), dragging placement (collision) will only happen after a pause by the user*/
+  public static pauseDrag: boolean | number;
+
   /** true if a mouse down event was handled */
   public static mouseHandled: boolean;
 
