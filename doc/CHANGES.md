@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7-dev (TBD)](#7-dev-tbd)
 - [6.0.2 (2022-09-23)](#602-2022-09-23)
 - [6.0.1 (2022-08-27)](#601-2022-08-27)
 - [6.0.0 (2022-08-21)](#600-2022-08-21)
@@ -70,6 +71,13 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 7-dev (TBD)
+* add [#1009](https://github.com/gridstack/gridstack.js/issues/1009) Create sub-grids on the fly,
+by dragging items completely over others (nest) vs partially (push) using new flag `GridStackOptions.subGrid.createDynamic=true`.
+Thank you [StephanP] for sponsoring it.<br>
+See [advance Nested](https://github.com/gridstack/gridstack.js/blob/master/demo/nested_advanced.html)
+* add - ability to pause drag&drop collision until the user stops moving - see `DDDragOpt.pause` (used for creating nested grids on the fly based on gesture).
 
 ## 6.0.2 (2022-09-23)
 * fixed [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback

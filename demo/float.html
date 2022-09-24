@@ -23,20 +23,21 @@
   <script src="events.js"></script>
   <script type="text/javascript">
     let grid = GridStack.init({
-      float: true, 
+      // float: false, 
       // disableResize: true, // TEST no resizing, but dragging
-      resizable: { handles: 'all'} // do all sides for testing
+      // resizable: { handles: 'all'} // do all sides for testing
+      // draggable: { pause: true },
+      subGrid: { createDynamic: true, column: 'auto' },
     });
     addEvents(grid);
 
-    let items = [
-      {x: 1, y: 1}, //, locked:true, content:"locked"},
-      {x: 2, y: 2, w: 3},
-      {x: 4, y: 2},
-      {x: 3, y: 1, h: 2},
-      {x: 0, y: 6, w: 2, h: 2}
-    ];
     let count = 0;
+    let items = [
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 2, y: 0, w: 2},
+    ];
+    items.forEach(e => e.content = String(count++));
 
     addNewWidget = function() {
       let n = items[count] || {
@@ -45,16 +46,15 @@
         w: Math.round(1 + 3 * Math.random()),
         h: Math.round(1 + 3 * Math.random())
       };
-      n.content = n.content || String(count);
+      n.content = n.content || String(count++);
       grid.addWidget(n);
-      count++;
     };
 
     toggleFloat = function() {
       grid.float(! grid.getFloat());
       document.querySelector('#float').innerHTML = 'float: ' + grid.getFloat();
     };
-    addNewWidget();
+    grid.load(items);
   </script>
 </body>
 </html>

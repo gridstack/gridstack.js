@@ -132,8 +132,8 @@ export class GridStackEngine {
     return this.nodes.filter(n => n !== skip && n !== skip2 && Utils.isIntercepted(n, area));
   }
 
-  /** does a pixel coverage collision, returning the node that has the most coverage that is >50% mid line */
-  public collideCoverage(node: GridStackNode, o: GridStackMoveOpts, collides: GridStackNode[]): GridStackNode {
+  /** does a pixel coverage collision based on where we started, returning the node that has the most coverage that is >50% mid line */
+  protected directionCollideCoverage(node: GridStackNode, o: GridStackMoveOpts, collides: GridStackNode[]): GridStackNode {
     if (!o.rect || !node._rect) return;
     let r0 = node._rect; // where started
     let r = {...o.rect}; // where we are
@@ -178,6 +178,23 @@ export class GridStackEngine {
     o.collide = collide; // save it so we don't have to find it again
     return collide;
   }
+
+  /** does a pixel coverage returning the node that has the most coverage by area */
+  /*
+  protected collideCoverage(r: GridStackPosition, collides: GridStackNode[]): {collide: GridStackNode, over: number} {
+    let collide: GridStackNode;
+    let overMax = 0;
+    collides.forEach(n => {
+      if (n.locked || !n._rect) return;
+      let over = Utils.areaIntercept(r, n._rect);
+      if (over > overMax) {
+        overMax = over;
+        collide = n;
+      }
+    });
+    return {collide, over: overMax};
+  }
+  */
 
   /** called to cache the nodes pixel rectangles used for collision detection during drag */
   public cacheRects(w: number, h: number, top: number, right: number, bottom: number, left: number): GridStackEngine
@@ -604,7 +621,10 @@ export class GridStackEngine {
   /** return true if the passed in node was actually moved (checks for no-op and locked) */
   public moveNode(node: GridStackNode, o: GridStackMoveOpts): boolean {
     if (!node || /*node.locked ||*/ !o) return false;
-    if (o.pack === undefined) o.pack = true;
+    let wasUndefinedPack: boolean;
+    if (o.pack === undefined) {
+      wasUndefinedPack = o.pack = true;
+    }
 
     // constrain the passed in values and check if we're still changing our node
     if (typeof o.x !== 'number') { o.x = node.x; }
@@ -624,12 +644,27 @@ export class GridStackEngine {
     let collides = this.collideAll(node, nn, o.skip);
     let needToMove = true;
     if (collides.length) {
-      // now check to make sure we actually collided over 50% surface area while dragging
-      let collide = node._moving && !o.nested ? this.collideCoverage(node, o, collides) : collides[0];
+      let activeDrag = node._moving && !o.nested;
+      // check to make sure we actually collided over 50% surface area while dragging
+      let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
+      // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
+      let subOpt = node.grid.opts.subGrid;
+      if (activeDrag && collide && subOpt?.createDynamic && !subOpt.isTemp) {
+        let over = Utils.areaIntercept(o.rect, collide._rect);
+        let a1 = Utils.area(o.rect);
+        let a2 = Utils.area(collide._rect);
+        let perc = over / (a1 < a2 ? a1 : a2);
+        if (perc > .8) {
+          collide.grid.makeSubGrid(collide.el, undefined, node);
+          collide = undefined;
+        }
+      }
+
       if (collide) {
         needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
       } else {
         needToMove = false; // we didn't cover >50% for a move, skip...
+        if (wasUndefinedPack) delete o.pack;
       }
     }
 
@@ -680,15 +715,7 @@ export class GridStackEngine {
       let w: GridStackNode = {...n};
       // use layout info instead if set
       if (wl) { w.x = wl.x; w.y = wl.y; w.w = wl.w; }
-      // delete internals
-      for (let key in w) { if (key[0] === '_' || w[key] === null || w[key] === undefined ) delete w[key]; }
-      delete w.grid;
-      if (!saveElement) delete w.el;
-      // delete default values (will be re-created on read)
-      if (!w.autoPosition) delete w.autoPosition;
-      if (!w.noResize) delete w.noResize;
-      if (!w.noMove) delete w.noMove;
-      if (!w.locked) delete w.locked;
+      Utils.removeInternalForSave(w, !saveElement);
       list.push(w);
     });
     return list;

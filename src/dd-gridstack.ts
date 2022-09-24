@@ -4,7 +4,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition } from './types';
+import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition, dragInDefaultOptions } from './types';
 import { GridStack } from './gridstack';
 import { Utils } from './utils';
 import { DDManager } from './dd-manager';
@@ -417,28 +417,20 @@ GridStack.prototype._setupRemoveDrop = function(this: GridStack): GridStack {
 
 /**
  * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
- * Called during GridStack.init() as options, but can also be called directly (last param are cached) in case the toolbar
+ * Called during GridStack.init() as options, but can also be called directly (last param are used) in case the toolbar
  * is dynamically create and needs to change later.
  **/
-GridStack.setupDragIn = function(this: GridStack, _dragIn?: string, _dragInOptions?: DDDragInOpt) {
-  let dragIn: string;
-  let dragInOptions: DDDragInOpt;
-  const dragInDefaultOptions: DDDragInOpt = {
-    handle: '.grid-stack-item-content',
-    appendTo: 'body',
-    // revert: 'invalid',
-    // scroll: false,
-  };
-
-  // cache in the passed in values (form grid init?) so they don't have to resend them each time
-  if (_dragIn) {
-    dragIn = _dragIn;
-    dragInOptions = {...dragInDefaultOptions, ...(_dragInOptions || {})};
+GridStack.setupDragIn = function(this: GridStack, dragIn?: string, dragInOptions?: DDDragInOpt) {
+  if (dragInOptions?.pause !== undefined) {
+    DDManager.pauseDrag = dragInOptions.pause;
   }
-  if (typeof dragIn !== 'string') return;
-  Utils.getElements(dragIn).forEach(el => {
-    if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
-  });
+
+  if (typeof dragIn === 'string') {
+    dragInOptions = {...dragInDefaultOptions, ...(dragInOptions || {})};
+    Utils.getElements(dragIn).forEach(el => {
+      if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
+    });
+  }
 }
 
 /** @internal prepares the element for drag&drop **/
@@ -483,6 +475,7 @@ GridStack.prototype._prepareDragDropByNode = function(this: GridStack, node: Gri
     let onEndMoving = (event: Event) => {
       this.placeholder.remove();
       delete node._moving;
+      delete node._event;
       delete node._lastTried;
 
       // if the item has moved to another grid, we're done here
@@ -613,7 +606,8 @@ GridStack.prototype._leave = function(this: GridStack, el: GridItemHTMLElement, 
 }
 
 /** @internal called when item is being dragged/resized */
-GridStack.prototype._dragOrResize = function(this: GridStack, el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number)  {
+GridStack.prototype._dragOrResize = function(this: GridStack, el: GridItemHTMLElement, event: MouseEvent, ui: DDUIData,
+  node: GridStackNode, cellWidth: number, cellHeight: number)  {
   let p = {...node._orig}; // could be undefined (_isExternal) which is ok (drag only set x,y and w,h will default to node value)
   let resizing: boolean;
   let mLeft = this.opts.marginLeft as number,
@@ -659,7 +653,7 @@ GridStack.prototype._dragOrResize = function(this: GridStack, el: GridItemHTMLEl
   } else if (event.type === 'resize')  {
     if (p.x < 0) return;
     // Scrolling page if needed
-    Utils.updateScrollResize(event as MouseEvent, el, cellHeight);
+    Utils.updateScrollResize(event, el, cellHeight);
 
     // get new size
     p.w = Math.round((ui.size.width - mLeft) / cellWidth);
@@ -676,6 +670,7 @@ GridStack.prototype._dragOrResize = function(this: GridStack, el: GridItemHTMLEl
     resizing = true;
   }
 
+  node._event = event;
   node._lastTried = p; // set as last tried (will nuke if we go there)
   let rect: GridStackPosition = { // screen pix of the dragged box
     x: ui.position.left + mLeft,
@@ -781,11 +776,12 @@ GridStack.prototype.enableResize = function(this: GridStack, doEnable: boolean):
 }
 
 /** removes any drag&drop present (called during destroy) */
-GridStack.prototype._removeDD = function(this: GridStack, el: GridItemHTMLElement): GridStack {
+GridStack.prototype._removeDD = function(this: GridStack, el: DDElementHost): GridStack {
   dd.draggable(el, 'destroy').resizable(el, 'destroy');
   if (el.gridstackNode) {
     delete el.gridstackNode._initDD; // reset our DD init flag
   }
+  delete el.ddElement;
   return this;
 }
 

@@ -57,6 +57,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected helperContainment: HTMLElement;
   /** @internal properties we change during dragging, and restore back */
   protected static originStyleProp = ['transition', 'pointerEvents', 'position', 'left', 'top'];
+  /** @internal pause before we call the actual drag hit collision code */
+  protected dragTimeout: number;
 
   constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
     super();
@@ -106,6 +108,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public destroy(): void {
+    if (this.dragTimeout) window.clearTimeout(this.dragTimeout);
+    delete this.dragTimeout;
     if (this.dragging) this._mouseUp(this.mouseDownEvent);
     this.disable(true);
     delete this.el;
@@ -148,6 +152,16 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return true;
   }
 
+  /** @internal method to call actual drag event */
+  protected _callDrag(e: DragEvent) {
+    if (!this.dragging) return;
+    const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'drag' });
+    if (this.option.drag) {
+      this.option.drag(ev, this.ui());
+    }
+    this.triggerEvent('drag', ev);
+  }
+
   /** @internal called when the main page (after successful mousedown) receives a move event to drag the item around the screen */
   protected _mouseMove(e: DragEvent): boolean {
     // console.log(`${count++} move ${e.x},${e.y}`)
@@ -155,11 +169,14 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
     if (this.dragging) {
       this._dragFollow(e);
-      const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'drag' });
-      if (this.option.drag) {
-        this.option.drag(ev, this.ui());
+      // delay actual grid handling drag until we pause for a while if set
+      if (DDManager.pauseDrag) {
+        const pause = Number.isInteger(DDManager.pauseDrag) ? DDManager.pauseDrag as number : 100;
+        if (this.dragTimeout) window.clearTimeout(this.dragTimeout);
+        this.dragTimeout = window.setTimeout(() => this._callDrag(e), pause);
+      } else {
+        this._callDrag(e);
       }
-      this.triggerEvent('drag', ev);
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 3) {
       /**
        * don't start unless we've moved at least 3 pixels
