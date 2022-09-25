@@ -4,7 +4,7 @@
  */
 
 import { Utils } from './utils';
-import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts } from './types';
+import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts, GridStackOptions } from './types';
 
 /** callback to update the DOM attributes since this class is generic (no HTML or other info) for items that changed - see _notify() */
 type OnChangeCB = (nodes: GridStackNode[]) => void;
@@ -44,7 +44,7 @@ export class GridStackEngine {
   /** @internal true if we have some items locked */
   protected _hasLocked: boolean;
   /** @internal unique global internal _id counter NOT starting at 0 */
-  protected static _idSeq = 1;
+  public static _idSeq = 1;
 
   public constructor(opts: GridStackEngineOptions = {}) {
     this.column = opts.column || 12;
@@ -648,8 +648,8 @@ export class GridStackEngine {
       // check to make sure we actually collided over 50% surface area while dragging
       let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
       // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
-      let subOpt = node.grid.opts.subGrid;
-      if (activeDrag && collide && subOpt?.createDynamic && !subOpt.isTemp) {
+      let opts = node.grid.opts;
+      if (activeDrag && collide && opts.subGridDynamic && !node.grid._isTemp) {
         let over = Utils.areaIntercept(o.rect, collide._rect);
         let a1 = Utils.area(o.rect);
         let a2 = Utils.area(collide._rect);
