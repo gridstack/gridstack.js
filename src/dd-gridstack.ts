@@ -222,8 +222,6 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
       if (node?.grid === this) return true;
       if (!this.opts.acceptWidgets) return false;
-      // prevent deeper nesting until rest of 992 can be fixed
-      if (node?.subGrid) return false;
       // check for accept method or class matching
       let canAccept = true;
       if (typeof this.opts.acceptWidgets === 'function') {
@@ -365,6 +363,8 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       Utils.removePositioningStyles(el);// @ts-ignore
       this._writeAttr(el, node);
       this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
+      let subGrid: GridStack = node.subGrid;
+      if (subGrid?.el && !subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
       this._updateContainerHeight();
       this.engine.addedNodes.push(node);// @ts-ignore
       this._triggerAddEvent();// @ts-ignore

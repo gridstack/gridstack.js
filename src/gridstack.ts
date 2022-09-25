@@ -464,7 +464,7 @@ export class GridStack {
     let newItem: HTMLElement;
     let newItemOpt: GridStackNode;
     if (saveContent) {
-      this._removeDD(el); // remove any (content) D7D
+      this._removeDD(node.el); // remove D&D since it's set on content div
       let doc = document.implementation.createHTMLDocument(''); // IE needs a param
       doc.body.innerHTML = `<div class="grid-stack-item"></div>`;
       newItem = doc.body.children[0] as HTMLElement;
@@ -482,7 +482,10 @@ export class GridStack {
     if (nodeToAdd) {
       let w = autoColumn ? ops.column : node.w;
       let h = node.h + nodeToAdd.h;
+      let style = node.el.style;
+      style.transition = 'none'; // show up instantly so we don't see scrollbar with nodeToAdd
       this.update(node.el, {w, h});
+      setTimeout(() =>  style.transition = null); // recover animation
       ops.isTemp = true; // prevent re-nesting as we add over
     }
 

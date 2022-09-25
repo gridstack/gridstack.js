@@ -88,7 +88,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _mouseEnter(e: MouseEvent): void {
     // console.log(`${count++} Enter ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
     if (!DDManager.dragElement) return;
-    if (!this._canDrop()) return;
+    if (!this._canDrop(DDManager.dragElement.el)) return;
     e.preventDefault();
     e.stopPropagation();
 
@@ -148,8 +148,8 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal true if element matches the string/method accept option */
-  protected _canDrop(): boolean {
-    return DDManager.dragElement && (!this.accept || this.accept(DDManager.dragElement.el));
+  protected _canDrop(el: HTMLElement): boolean {
+    return el && (!this.accept || this.accept(el));
   }
 
   /** @internal */
