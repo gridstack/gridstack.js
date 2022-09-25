@@ -6,17 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Advance Nested grids demo</title>
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/>
+  <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/> <!-- required for [2-11] column of sub-grids -->
   <script src="../dist/gridstack-all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
     <h1>Advanced Nested grids demo</h1>
-    <p>Create sub-grids on the fly, by dragging items completely over others (nest) vs partially (push) using
+    <p>Create sub-grids (darker background) on the fly, by dragging items completely over others (nest) vs partially (push) using
       the new v7 API <code>GridStackOptions.subGrid.createDynamic=true</code></p>
     <p>This will use the new delay drag&drop option <code>DDDragOpt.pause</code> to tell the gesture difference</p>
+    <p>Note: <code>gridstack-extra.min.css</code> is required for [2-11] column of sub-grids</p>
     <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
-    <a class="btn btn-primary" onClick="addNewWidget('sub1_grid')" href="#">Add Widget Grid1</a>
+    <a class="btn btn-primary" onClick="addNewWidget(0)" href="#">Add W Grid0</a>
+    <a class="btn btn-primary" onClick="addNewWidget(1)" href="#">Add W Grid1</a>
+    <a class="btn btn-primary" onClick="addNewWidget(2)" href="#">Add W Grid2</a>
     <span>entire save/re-create:</span>
     <a class="btn btn-primary" onClick="save()" href="#">Save</a>
     <a class="btn btn-primary" onClick="destroy()" href="#">Destroy</a>
@@ -31,10 +34,11 @@
   </div>
 
   <script type="text/javascript">
-    let main = [{x:0, y:0}, {x:1, y:0}, {x:0, y:1}]
+    let main = [{x:0, y:0}, {x:0, y:1}, {x:0, y:2}]
+    let sub0 = [{x:0, y:0}];
     let sub1 = [{x:0, y:0}, {x:1, y:0}];
     let count = 0;
-    [...main, ...sub1].forEach(d => d.content = String(count++));
+    [...main, ...sub0, ...sub1].forEach(d => d.content = String(count++));
     let subOptions = {
       cellHeight: 50, // should be 50 - top/bottom
       column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
@@ -51,36 +55,38 @@
       subGrid: subOptions,
       children: [
         ...main,
-        {x:2, y:0, w:2, h:3, subGrid: {children: sub1, id:'sub1_grid', ...subOptions}/*,content: "<div>nested grid here</div>"*/},
+        {x:1, y:2, h:2, subGrid: {children: sub0, ...subOptions}},
+        {x:2, y:0, w:2, h:3, subGrid: {children: sub1, ...subOptions}},
+        // {x:2, y:0, w:2, h:3, subGrid: {children: [...sub1, {x:0, y:1, subGrid: subOptions}], ...subOptions}/*,content: "<div>nested grid here</div>"*/},
       ]
     };
 
     // create and load it all from JSON above
     let grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
 
-    addNested = function() {
+    function addNested() {
       grid.addWidget({x:0, y:100, content:"new item"});
     }
 
-    addNewWidget = function(selector) {
-      let subGrid = document.querySelector(selector).gridstack;
+    function addNewWidget(i) {
+      let subGrid = document.querySelectorAll('.grid-stack-nested')[i].gridstack;
       let node = {
-        x: Math.round(6 * Math.random()),
-        y: Math.round(5 * Math.random()),
-        w: Math.round(1 + 1 * Math.random()),
-        h: Math.round(1 + 1 * Math.random()),
+        // x: Math.round(6 * Math.random()),
+        // y: Math.round(5 * Math.random()),
+        // w: Math.round(1 + 1 * Math.random()),
+        // h: Math.round(1 + 1 * Math.random()),
         content: String(count++)
       };
       subGrid.addWidget(node);
       return false;
     };
 
-    save = function(content = true, full = true) {
+    function save(content = true, full = true) {
       options = grid.save(content, full);
       console.log(options);
       // console.log(JSON.stringify(options));
     }
-    destroy = function(full = true) {
+    function destroy(full = true) {
       if (full) {
         grid.destroy();
         grid = undefined;
@@ -88,7 +94,7 @@
         grid.removeAll();
       }
     }
-    load = function(full = true) {
+    function load(full = true) {
       if (full) {
         grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
       } else {
