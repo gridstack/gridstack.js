@@ -9,7 +9,6 @@ import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
 import { DDElementHost } from './dd-element';
 import { isTouch, pointerenter, pointerleave } from './dd-touch';
-import { GridHTMLElement } from './gridstack';
 
 export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);

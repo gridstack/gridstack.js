@@ -1,6 +1,6 @@
 /**
  * types.ts 6.0.2-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { GridStack } from './gridstack';
@@ -239,15 +239,10 @@ export interface GridStackOptions {
   styleInHead?: boolean;
 
   /** list of differences in options for automatically created sub-grids under us */
-  subGrid?: GridStackSubOptions;
-}
+  subGrid?: GridStackOptions;
 
-/** additional prop that only apply to sub-grids */
-export interface GridStackSubOptions extends GridStackOptions {
   /** enable/disable the creation of sub-grids on the fly (drop over other items) */
-  createDynamic?: boolean;
-  /** true if we got created by drag over gesture, so we can removed on drag out (temporary) */
-  isTemp?: boolean;
+  subGridDynamic?: boolean;
 }
 
 /** options used during GridStackEngine.moveNode() */
@@ -311,7 +306,7 @@ export interface GridStackWidget extends GridStackPosition {
   /** html to append inside as content */
   content?: string;
   /** optional nested grid options and list of children, which then turns into actual instance at runtime */
-  subGrid?: GridStackSubOptions | GridStack;
+  subGrid?: GridStackOptions | GridStack;
 }
 
 /** Drag&Drop resize options */

@@ -1,10 +1,10 @@
 /**
  * dd-gridstack.ts 6.0.2-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition, dragInDefaultOptions } from './types';
+import { GridItemHTMLElement, GridStackNode, GridStackElement, DDUIData, DDDragInOpt, GridStackPosition, dragInDefaultOptions, GridStackOptions } from './types';
 import { GridStack } from './gridstack';
 import { Utils } from './utils';
 import { DDManager } from './dd-manager';
@@ -311,6 +311,10 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       // so skip this one if we're not the active grid really..
       if (!node.grid || node.grid === this) {
         this._leave(el, helper);
+        // if we were created as temporary nested grid, go back to before state
+        if (this._isTemp) {
+          this.removeAsSubGrid(node);
+        }
       }
       return false; // prevent parent from receiving msg (which may be grid as well)
     })
@@ -333,6 +337,10 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         let oGrid = origNode.grid;
         oGrid.engine.removedNodes.push(origNode);
         oGrid._triggerRemoveEvent();
+        // if it's an empty sub-grid, nuke it
+        if (oGrid._isNested && !oGrid.engine.nodes.length) {
+          oGrid.removeAsSubGrid();
+        }
       }
 
       if (!node) return false;
@@ -358,13 +366,13 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       if (!wasAdded) return false;
       el.gridstackNode = node;
       node.el = el;
+      let subGrid = (node.subGrid as GridStack)?.el?.gridstack; // set when actual sub-grid present
       // @ts-ignore
       Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
       Utils.removePositioningStyles(el);// @ts-ignore
       this._writeAttr(el, node);
       this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
-      let subGrid: GridStack = node.subGrid;
-      if (subGrid?.el && !subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
+      if (subGrid && !subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
       this._updateContainerHeight();
       this.engine.addedNodes.push(node);// @ts-ignore
       this._triggerAddEvent();// @ts-ignore
@@ -383,6 +391,7 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         } else {
           this.engine.removeNode(node);
         }
+        delete node.grid._isTemp;
       });
 
       return false; // prevent parent from receiving msg (which may be grid as well)

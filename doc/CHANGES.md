@@ -74,7 +74,7 @@ Change log
 
 ## 7-dev (TBD)
 * add [#1009](https://github.com/gridstack/gridstack.js/issues/1009) Create sub-grids on the fly,
-by dragging items completely over others (nest) vs partially (push) using new flag `GridStackOptions.subGrid.createDynamic=true`.
+by dragging items completely over others (nest) vs partially (push) using new flag `GridStackOptions.subGridDynamic=true`.
 Thank you [StephanP] for sponsoring it.<br>
 See [advance Nested](https://github.com/gridstack/gridstack.js/blob/master/demo/nested_advanced.html)
 * add - ability to pause drag&drop collision until the user stops moving - see `DDDragOpt.pause` (used for creating nested grids on the fly based on gesture).

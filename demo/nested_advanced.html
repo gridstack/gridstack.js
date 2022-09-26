@@ -13,7 +13,7 @@
   <div class="container-fluid">
     <h1>Advanced Nested grids demo</h1>
     <p>Create sub-grids (darker background) on the fly, by dragging items completely over others (nest) vs partially (push) using
-      the new v7 API <code>GridStackOptions.subGrid.createDynamic=true</code></p>
+      the new v7 API <code>GridStackOptions.subGridDynamic=true</code></p>
     <p>This will use the new delay drag&drop option <code>DDDragOpt.pause</code> to tell the gesture difference</p>
     <p>Note: <code>gridstack-extra.min.css</code> is required for [2-11] column of sub-grids</p>
     <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
@@ -34,28 +34,28 @@
   </div>
 
   <script type="text/javascript">
-    let main = [{x:0, y:0}, {x:0, y:1}, {x:0, y:2}]
-    let sub0 = [{x:0, y:0}];
+    let main = [{x:0, y:0}, {x:0, y:1}, {x:1, y:0}]
+    // let sub0 = [{x:0, y:0}];
     let sub1 = [{x:0, y:0}, {x:1, y:0}];
     let count = 0;
-    [...main, ...sub0, ...sub1].forEach(d => d.content = String(count++));
+    [...main, ...sub1].forEach(d => d.content = String(count++));
     let subOptions = {
       cellHeight: 50, // should be 50 - top/bottom
       column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
       acceptWidgets: true, // will accept .grid-stack-item by default
-      createDynamic: true, // NEW v7 api to create sub-grids on the fly
       margin: 5,
+      subGridDynamic: true, // make it recursive for all future sub-grids
     };
     let options = { // main grid options
       cellHeight: 50,
       margin: 5,
       minRow: 2, // don't collapse when empty
       acceptWidgets: true,
-      id: 'main',
       subGrid: subOptions,
+      subGridDynamic: true, // NEW v7 api to create sub-grids on the fly
       children: [
         ...main,
-        {x:1, y:2, h:2, subGrid: {children: sub0, ...subOptions}},
+        // {x:1, y:0, h:2, subGrid: {children: sub0, ...subOptions}},
         {x:2, y:0, w:2, h:3, subGrid: {children: sub1, ...subOptions}},
         // {x:2, y:0, w:2, h:3, subGrid: {children: [...sub1, {x:0, y:1, subGrid: subOptions}], ...subOptions}/*,content: "<div>nested grid here</div>"*/},
       ]
