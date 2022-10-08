@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [6.0.2-dev (TBD)](#602-dev-tbd)
 - [6.0.2 (2022-09-23)](#602-2022-09-23)
 - [6.0.1 (2022-08-27)](#601-2022-08-27)
 - [6.0.0 (2022-08-21)](#600-2022-08-21)
@@ -70,6 +71,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 6.0.2-dev (TBD)
+* fixed [#2055](https://github.com/gridstack/gridstack.js/issues/2055) maxRow=1 resize outside
 
 ## 6.0.2 (2022-09-23)
 * fixed [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback
