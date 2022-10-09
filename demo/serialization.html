@@ -30,6 +30,7 @@
     });
     
     grid.on('added removed change', function(e, items) {
+      if (!items) return;
       let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
@@ -37,7 +38,7 @@
 
     let serializedData = [
       {x: 0, y: 0, w: 2, h: 2, id: '0'},
-      {x: 3, y: 1, h: 2, id: '1', content: "<button onclick=\"alert('clicked!')\">Press me</button>"},
+      {x: 3, y: 1, h: 2, id: '1', content: "<button onclick=\"alert('clicked!')\">Press me</button><div>text area</div><div><textarea></textarea></div><div>Input Field</div><input type='text'>"},
       {x: 4, y: 1, id: '2'},
       {x: 2, y: 3, w: 3, id: '3'},
       {x: 1, y: 3, id: '4'}

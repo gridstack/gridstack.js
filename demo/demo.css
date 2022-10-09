@@ -60,3 +60,16 @@ h1 {
 .sidebar .grid-stack-item .grid-stack-item-content {
   background: none;
 }
+
+/* make nested grid have slightly darker bg take almost all space (need some to tell them apart) so items inside can have similar to external size+margin */
+.grid-stack > .grid-stack-item.grid-stack-sub-grid > .grid-stack-item-content {
+  background: rgba(0,0,0,0.1);
+  inset: 0 2px;
+}
+.grid-stack.grid-stack-nested {
+  background: none;
+  /* background-color: red; */
+  /* take entire space */
+  position: absolute;
+  inset: 0; /* TODO change top: if you have content in nested grid */
+}
