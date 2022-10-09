@@ -282,10 +282,12 @@ export class Utils {
     if (!n.noResize) delete n.noResize;
     if (!n.noMove) delete n.noMove;
     if (!n.locked) delete n.locked;
+    if (n.w === 1 || n.w === n.minW) delete n.w;
+    if (n.h === 1 || n.h === n.minH) delete n.h;
   }
 
   /** return the closest parent (or itself) matching the given class */
-  static closestByClass(el: HTMLElement, name: string): HTMLElement {
+  static closestUpByClass(el: HTMLElement, name: string): HTMLElement {
     while (el) {
       if (el.classList.contains(name)) return el;
       el = el.parentElement
@@ -420,7 +422,7 @@ export class Utils {
    */
   static cloneDeep<T>(obj: T): T {
     // list of fields we will skip during cloneDeep (nested objects, other internal)
-    const skipFields = ['_isNested', 'el', 'grid', 'subGrid', 'engine'];
+    const skipFields = ['parentGrid', 'el', 'grid', 'subGrid', 'engine'];
     // return JSON.parse(JSON.stringify(obj)); // doesn't work with date format ?
     const ret = Utils.clone(obj);
     for (const key in ret) {

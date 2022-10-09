@@ -76,7 +76,7 @@ export class DDGridStack {
         dEl.setupDraggable({
           ...grid.opts.draggable,
           ...{
-            // containment: (grid._isNested && !grid.opts.dragOut) ? grid.el.parentElement : (grid.opts.draggable.containment || null),
+            // containment: (grid.parentGridItem && !grid.opts.dragOut) ? grid.el.parentElement : (grid.opts.draggable.containment || null),
             start: opts.start,
             stop: opts.stop,
             drag: opts.drag
@@ -333,12 +333,12 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       // console.log('drop delete _gridstackNodeOrig') // TEST
       let origNode = el._gridstackNodeOrig;
       delete el._gridstackNodeOrig;
-      if (wasAdded && origNode && origNode.grid && origNode.grid !== this) {
+      if (wasAdded && origNode?.grid && origNode.grid !== this) {
         let oGrid = origNode.grid;
         oGrid.engine.removedNodes.push(origNode);
         oGrid._triggerRemoveEvent();
         // if it's an empty sub-grid, nuke it
-        if (oGrid._isNested && !oGrid.engine.nodes.length) {
+        if (oGrid.parentGridItem && !oGrid.engine.nodes.length) {
           oGrid.removeAsSubGrid();
         }
       }
@@ -372,7 +372,10 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
       Utils.removePositioningStyles(el);// @ts-ignore
       this._writeAttr(el, node);
       this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
-      if (subGrid && !subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
+      if (subGrid) {
+        subGrid.parentGridItem = node;
+        if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
+      }
       this._updateContainerHeight();
       this.engine.addedNodes.push(node);// @ts-ignore
       this._triggerAddEvent();// @ts-ignore
