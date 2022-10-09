@@ -5,8 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [7.0.0-dev (TBD)](#700-dev-tbd)
-- [6.0.3-dev (2022-10-08)](#603-dev-2022-10-08)
+- [7.0.0 (2022-10-09)](#700-2022-10-09)
+- [6.0.3 (2022-10-08)](#603-2022-10-08)
 - [6.0.2 (2022-09-23)](#602-2022-09-23)
 - [6.0.1 (2022-08-27)](#601-2022-08-27)
 - [6.0.0 (2022-08-21)](#600-2022-08-21)
@@ -73,15 +73,15 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 7.0.0-dev (TBD)
+## 7.0.0 (2022-10-09)
 * add [#1009](https://github.com/gridstack/gridstack.js/issues/1009) Create sub-grids on the fly,
 by dragging items completely over others (nest) vs partially (push) using new flag `GridStackOptions.subGridDynamic=true`.
 Thank you [StephanP] for sponsoring it.<br>
 See [advance Nested](https://github.com/gridstack/gridstack.js/blob/master/demo/nested_advanced.html)
 * add - ability to pause drag&drop collision until the user stops moving - see `DDDragOpt.pause` (used for creating nested grids on the fly based on gesture).
-* add [#1943](https://github.com/gridstack/gridstack.js/issues/1943) you cna now drag sub-grids into other sub-grids
+* add [#1943](https://github.com/gridstack/gridstack.js/issues/1943) you can now drag sub-grids into other sub-grids
 
-## 6.0.3-dev (2022-10-08)
+## 6.0.3 (2022-10-08)
 * fixed [#2055](https://github.com/gridstack/gridstack.js/issues/2055) maxRow=1 resize outside (broke in 6.0.1)
 * fixed [#2054](https://github.com/gridstack/gridstack.js/issues/2054) Can't enter text in textarea/input (broke in v6)
 
