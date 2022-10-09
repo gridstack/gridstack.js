@@ -153,7 +153,8 @@ You need to add `noResize` and `noMove` attributes to completely lock the widget
 - `resizeHandles` - widgets can have their own custom resize handles. For example 'e,w' will make that particular widget only resize east and west. See `resizable: {handles: string}` option
 - `id`- (number | string) good for quick identification (for example in change event)
 - `content` - (string) html content to be added when calling `grid.load()/addWidget()` as content inside the item
-- `subGrid`: GridStackOptions - optional nested grid options and list of children
+- `subGrid`?: GridStackOptions - optional nested grid options and list of children
+- `subGridDynamic`?: boolean - enable/disable the creation of sub-grids on the fly by dragging items completely over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that.
 
 ## Item attributes
 
