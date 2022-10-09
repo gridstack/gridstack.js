@@ -17,7 +17,7 @@ If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind
 
 Join us on Slack: https://gridstackjs.slack.com
 
-[![Slack Status](https://gridstackjs.troolee.com/badge.svg)](https://gridstackjs.slack.com)
+<!-- [![Slack Status](https://gridstackjs.com/badge.svg)](https://gridstackjs.slack.com) -->
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
