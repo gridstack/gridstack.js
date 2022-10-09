@@ -6,6 +6,7 @@ Change log
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [7-dev (TBD)](#7-dev-tbd)
+- [6.0.3-dev (2022-10-08)](#603-2022-10-08)
 - [6.0.2 (2022-09-23)](#602-2022-09-23)
 - [6.0.1 (2022-08-27)](#601-2022-08-27)
 - [6.0.0 (2022-08-21)](#600-2022-08-21)
@@ -78,6 +79,10 @@ by dragging items completely over others (nest) vs partially (push) using new fl
 Thank you [StephanP] for sponsoring it.<br>
 See [advance Nested](https://github.com/gridstack/gridstack.js/blob/master/demo/nested_advanced.html)
 * add - ability to pause drag&drop collision until the user stops moving - see `DDDragOpt.pause` (used for creating nested grids on the fly based on gesture).
+
+## 6.0.3-dev (2022-10-08)
+* fixed [#2055](https://github.com/gridstack/gridstack.js/issues/2055) maxRow=1 resize outside (broke in 6.0.1)
+* fixed [#2054](https://github.com/gridstack/gridstack.js/issues/2054) Can't enter text in textarea/input (broke in v6)
 
 ## 6.0.2 (2022-09-23)
 * fixed [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback

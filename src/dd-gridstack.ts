@@ -1,6 +1,6 @@
 /**
- * dd-gridstack.ts 6.0.2-dev
- * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
+ * dd-gridstack.ts 6.0.3-dev
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
