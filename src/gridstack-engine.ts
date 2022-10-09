@@ -648,8 +648,7 @@ export class GridStackEngine {
       // check to make sure we actually collided over 50% surface area while dragging
       let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
       // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
-      let opts = node.grid.opts;
-      if (activeDrag && collide && opts.subGridDynamic && !node.grid._isTemp) {
+      if (activeDrag && collide && node.grid?.opts?.subGridDynamic && !node.grid._isTemp) {
         let over = Utils.areaIntercept(o.rect, collide._rect);
         let a1 = Utils.area(o.rect);
         let a2 = Utils.area(collide._rect);

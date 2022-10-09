@@ -157,10 +157,11 @@ export class GridStack {
   /** grid options - public for classes to access, but use methods to modify! */
   public opts: GridStackOptions;
 
+  /** point to a parent grid item if we're nested (inside a grid-item in between 2 Grids) */
+  public parentGridItem?: GridStackNode;
+
   protected static engineClass: typeof GridStackEngine;
 
-  /** @internal point to a parent grid item if we're nested */
-  protected _isNested?: GridStackNode;
   /** @internal unique class name for our generated CSS style sheet */
   protected _styleSheetClass?: string;
   /** @internal true if we got created by drag over gesture, so we can removed on drag out (temporary) */
@@ -271,12 +272,12 @@ export class GridStack {
     }
 
     // check if we're been nested, and if so update our style and keep pointer around (used during save)
-    let parentGridItemEl = Utils.closestByClass(this.el, gridDefaults.itemClass) as GridItemHTMLElement;
-    if (parentGridItemEl && parentGridItemEl.gridstackNode) {
-      this._isNested = parentGridItemEl.gridstackNode;
-      this._isNested.subGrid = this;
+    let parentGridItem = (Utils.closestUpByClass(this.el, gridDefaults.itemClass) as GridItemHTMLElement)?.gridstackNode;
+    if (parentGridItem) {
+      parentGridItem.subGrid = this;
+      this.parentGridItem = parentGridItem;
       this.el.classList.add('grid-stack-nested');
-      parentGridItemEl.classList.add('grid-stack-sub-grid');
+      parentGridItem.el.classList.add('grid-stack-sub-grid');
     }
 
     this._isAutoCellHeight = (this.opts.cellHeight === 'auto');
@@ -476,6 +477,10 @@ export class GridStack {
       newItemOpt = {...node, x:0, y:0};
       Utils.removeInternalForSave(newItemOpt);
       delete newItemOpt.subGrid;
+      if (node.content) {
+        newItemOpt.content = node.content;
+        delete node.content;
+      }
       doc.body.innerHTML = `<div class="grid-stack-item-content"></div>`;
       content = doc.body.children[0] as HTMLElement;
       node.el.appendChild(content);
@@ -518,22 +523,23 @@ export class GridStack {
    * to the original grid-item. Also called to remove empty sub-grids when last item is dragged out (since re-creating is simple)
    */
   public removeAsSubGrid(nodeThatRemoved?: GridStackNode): void {
-    let parentGrid = this._isNested?.grid;
-    if (!parentGrid) return;
+    let pGrid = this.parentGridItem?.grid;
+    if (!pGrid) return;
 
-    parentGrid.batchUpdate();
-    parentGrid.removeWidget(this._isNested.el, true, true);
+    pGrid.batchUpdate();
+    pGrid.removeWidget(this.parentGridItem.el, true, true);
     this.engine.nodes.forEach(n => {
       // migrate any children over and offsetting by our location
-      n.x += this._isNested.x;
-      n.y += this._isNested.y;
-      parentGrid.addWidget(n.el, n);
+      n.x += this.parentGridItem.x;
+      n.y += this.parentGridItem.y;
+      pGrid.addWidget(n.el, n);
     });
-    parentGrid.batchUpdate(false);
+    pGrid.batchUpdate(false);
+    delete this.parentGridItem;
 
     // create an artificial event for the original grid now that this one is gone (got a leave, but won't get enter)
     if (nodeThatRemoved) {
-      window.setTimeout(() => Utils.simulateMouseEvent(nodeThatRemoved._event, 'mouseenter', parentGrid.el), 0);
+      window.setTimeout(() => Utils.simulateMouseEvent(nodeThatRemoved._event, 'mouseenter', pGrid.el), 0);
     }
   }
 
@@ -838,7 +844,7 @@ export class GridStack {
     }
     this._removeStylesheet();
     this.el.removeAttribute('gs-current-row');
-    delete this._isNested;
+    delete this.parentGridItem;
     delete this.opts;
     delete this._placeholder;
     delete this.engine;
@@ -1449,10 +1455,10 @@ export class GridStack {
     let changedColumn = false;
 
     // see if we're nested and take our column count from our parent....
-    if (this._autoColumn && this._isNested) {
-      if (this.opts.column !== this._isNested.w) {
+    if (this._autoColumn && this.parentGridItem) {
+      if (this.opts.column !== this.parentGridItem.w) {
         changedColumn = true;
-        this.column(this._isNested.w, 'none');
+        this.column(this.parentGridItem.w, 'none');
       }
     } else {
       // else check for 1 column in/out behavior
@@ -1489,7 +1495,7 @@ export class GridStack {
   /** add or remove the window size event handler */
   protected _updateWindowResizeEvent(forceRemove = false): GridStack {
     // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting oneColumn (i.e. doing work)
-    const workTodo = (this._isAutoCellHeight || !this.opts.disableOneColumnMode) && !this._isNested;
+    const workTodo = (this._isAutoCellHeight || !this.opts.disableOneColumnMode) && !this.parentGridItem;
 
     if (!forceRemove && workTodo && !this._windowResizeBind) {
       this._windowResizeBind = this.onParentResize.bind(this); // so we can properly remove later
