@@ -1,5 +1,5 @@
 /**
- * dd-draggable.ts 6.0.2-dev
+ * dd-draggable.ts 6.0.3-dev
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
@@ -129,12 +129,19 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (DDManager.mouseHandled) return;
     if (e.button !== 0) return true; // only left click
 
+    // make sure we are not clicking on known object that handles mouseDown (TODO: make this extensible ?) #2054
+    const skipMouseDown = ['input', 'textarea', 'button', 'select', 'option'];
+    const name = (e.target as HTMLElement).nodeName.toLowerCase();
+    if (skipMouseDown.find(skip => skip === name)) return true;
+
     // make sure we are clicking on a drag handle or child of it...
     // Note: we don't need to check that's handle is an immediate child, as mouseHandled will prevent parents from also handling it (lowest wins)
-    let className = this.option.handle.substring(1);
-    let el = e.target as HTMLElement;
-    while (el && !el.classList.contains(className)) { el = el.parentElement; }
-    if (!el) return;
+    //
+    // REMOVE: why would we get the event if it wasn't for us or child ?
+    // let className = this.option.handle.substring(1);
+    // let el = e.target as HTMLElement;
+    // while (el && !el.classList.contains(className)) { el = el.parentElement; }
+    // if (!el) return;
     this.mouseDownEvent = e;
     delete this.dragging;
     delete DDManager.dragElement;
@@ -201,7 +208,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       }
       this.triggerEvent('dragstart', ev);
     }
-    e.preventDefault();
+    e.preventDefault(); // needed otherwise we get text sweep text selection as we drag around
     return true;
   }
 
