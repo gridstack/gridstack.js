@@ -241,7 +241,8 @@ export interface GridStackOptions {
   /** list of differences in options for automatically created sub-grids under us */
   subGrid?: GridStackOptions;
 
-  /** enable/disable the creation of sub-grids on the fly (drop over other items) */
+  /** enable/disable the creation of sub-grids on the fly by dragging items completely
+   * over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that. */
   subGridDynamic?: boolean;
 }
 
