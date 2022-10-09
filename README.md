@@ -43,6 +43,7 @@ Join us on Slack: https://gridstackjs.slack.com
   - [Migrating to v4](#migrating-to-v4)
   - [Migrating to v5](#migrating-to-v5)
   - [Migrating to v6](#migrating-to-v6)
+  - [Migrating to v7](#migrating-to-v7)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -436,9 +437,13 @@ You can now drag in/out of parent into nested child, with new API parameters val
 
 ## Migrating to v6
 
-the API did not really change from v5, but a complete re-write of Drag&Drop to use native mouseevent (instead of HTML draggable=true which is buggy on Mac Safari, and doesn't work on mobile devices) and touchevent (mobile), and we no longer have jquery ui option (wasn't working well for nested grids, didn't want to maintain legacy lib).
+the API did not really change from v5, but a complete re-write of Drag&Drop to use native `mouseevent` (instead of HTML draggable=true which is buggy on Mac Safari, and doesn't work on mobile devices) and `touchevent` (mobile), and we no longer have jquery ui option (wasn't working well for nested grids, didn't want to maintain legacy lib).
 
 The main difference is you only need to include gridstack.js and get D&D (desktop and mobile) out of the box for the same size as h5 version.
+
+## Migrating to v7
+
+New addition, no API breakage per say. See release notes about creating sub-grids on the fly.
 
 # jQuery Application
 
