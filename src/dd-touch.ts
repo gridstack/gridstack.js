@@ -10,7 +10,7 @@ import { DDManager } from './dd-manager';
  * should we use this instead ? (what we had for always showing resize handles)
  * /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
  */
-export const isTouch: boolean = ( 'ontouchstart' in document
+export const isTouch: boolean = typeof window !== 'undefined' && ( 'ontouchstart' in document
   || 'ontouchstart' in window
   // || !!window.TouchEvent // true on Windows 10 Chrome desktop so don't use this
   || ((window as any).DocumentTouch && document instanceof (window as any).DocumentTouch)
