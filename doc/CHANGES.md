@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7.0.2 (TBD)](#702-tbd)
 - [7.0.1 (2022-10-14)](#701-2022-10-14)
 - [7.0.0 (2022-10-09)](#700-2022-10-09)
 - [6.0.3 (2022-10-08)](#603-2022-10-08)
@@ -73,6 +74,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 7.0.2 (TBD)
+* fixed [#2081](https://github.com/gridstack/gridstack.js/issues/2081) removeWidget() after it's gone from DOM
 
 ## 7.0.1 (2022-10-14)
 * fixed [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (introduced in v6)
