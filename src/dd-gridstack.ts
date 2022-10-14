@@ -337,8 +337,8 @@ GridStack.prototype._setupAcceptWidget = function(this: GridStack): GridStack {
         let oGrid = origNode.grid;
         oGrid.engine.removedNodes.push(origNode);
         oGrid._triggerRemoveEvent();
-        // if it's an empty sub-grid, nuke it
-        if (oGrid.parentGridItem && !oGrid.engine.nodes.length) {
+        // if it's an empty sub-grid, to get auto-created, nuke it
+        if (oGrid.parentGridItem && !oGrid.engine.nodes.length && oGrid.opts.subGridDynamic) {
           oGrid.removeAsSubGrid();
         }
       }
