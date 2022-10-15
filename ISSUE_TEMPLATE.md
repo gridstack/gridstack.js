@@ -1,6 +1,6 @@
 ## Subject of the issue
 Describe your issue here.
-If unsure if library bug, or questions use slack channel instead: https://gridstackjs.troolee.com/
+If unsure if library bug, or questions use slack channel instead: https://gridstackjs.slack.com/
 
 ## Your environment
 * version of gridstack.js AND if using HTML5 vs Jquery plugin (v3+) - DON'T SAY LATEST as that doesn't mean anything a month/year from now.

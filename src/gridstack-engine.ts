@@ -1,10 +1,10 @@
 /**
- * gridstack-engine.ts 5.0.0-dev
+ * gridstack-engine.ts 7.0.1-dev
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { Utils } from './utils';
-import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts } from './types';
+import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts, GridStackOptions } from './types';
 
 /** callback to update the DOM attributes since this class is generic (no HTML or other info) for items that changed - see _notify() */
 type OnChangeCB = (nodes: GridStackNode[]) => void;
@@ -44,7 +44,7 @@ export class GridStackEngine {
   /** @internal true if we have some items locked */
   protected _hasLocked: boolean;
   /** @internal unique global internal _id counter NOT starting at 0 */
-  protected static _idSeq = 1;
+  public static _idSeq = 1;
 
   public constructor(opts: GridStackEngineOptions = {}) {
     this.column = opts.column || 12;
@@ -54,21 +54,19 @@ export class GridStackEngine {
     this.onChange = opts.onChange;
   }
 
-  public batchUpdate(): GridStackEngine {
-    if (this.batchMode) return this;
-    this.batchMode = true;
-    this._prevFloat = this._float;
-    this._float = true; // let things go anywhere for now... commit() will restore and possibly reposition
-    return this.saveInitial(); // since begin update (which is called multiple times) won't do this
-  }
-
-  public commit(): GridStackEngine {
-    if (!this.batchMode) return this;
-    this.batchMode = false;
-    this._float = this._prevFloat;
-    delete this._prevFloat;
-    return this._packNodes()
-      ._notify();
+  public batchUpdate(flag = true): GridStackEngine {
+    if (!!this.batchMode === flag) return this;
+    this.batchMode = flag;
+    if (flag) {
+      this._prevFloat = this._float;
+      this._float = true; // let things go anywhere for now... will restore and possibly reposition later
+      this.saveInitial(); // since begin update (which is called multiple times) won't do this
+    } else {
+      this._float = this._prevFloat;
+      delete this._prevFloat;
+      this._packNodes()._notify();
+    }
+    return this;
   }
 
   // use entire row for hitting area (will use bottom reverse sorted first) if we not actively moving DOWN and didn't already skip
@@ -134,8 +132,8 @@ export class GridStackEngine {
     return this.nodes.filter(n => n !== skip && n !== skip2 && Utils.isIntercepted(n, area));
   }
 
-  /** does a pixel coverage collision, returning the node that has the most coverage that is >50% mid line */
-  public collideCoverage(node: GridStackNode, o: GridStackMoveOpts, collides: GridStackNode[]): GridStackNode {
+  /** does a pixel coverage collision based on where we started, returning the node that has the most coverage that is >50% mid line */
+  protected directionCollideCoverage(node: GridStackNode, o: GridStackMoveOpts, collides: GridStackNode[]): GridStackNode {
     if (!o.rect || !node._rect) return;
     let r0 = node._rect; // where started
     let r = {...o.rect}; // where we are
@@ -177,8 +175,26 @@ export class GridStackEngine {
         collide = n;
       }
     });
+    o.collide = collide; // save it so we don't have to find it again
     return collide;
   }
+
+  /** does a pixel coverage returning the node that has the most coverage by area */
+  /*
+  protected collideCoverage(r: GridStackPosition, collides: GridStackNode[]): {collide: GridStackNode, over: number} {
+    let collide: GridStackNode;
+    let overMax = 0;
+    collides.forEach(n => {
+      if (n.locked || !n._rect) return;
+      let over = Utils.areaIntercept(r, n._rect);
+      if (over > overMax) {
+        overMax = over;
+        collide = n;
+      }
+    });
+    return {collide, over: overMax};
+  }
+  */
 
   /** called to cache the nodes pixel rectangles used for collision detection during drag */
   public cacheRects(w: number, h: number, top: number, right: number, bottom: number, left: number): GridStackEngine
@@ -252,7 +268,7 @@ export class GridStackEngine {
       this.addNode(node, false); // 'false' for add event trigger
       node._dirty = true; // will force attr update
     });
-    return this.commit();
+    return this.batchUpdate(false);
   }
 
   /** enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html) */
@@ -543,12 +559,12 @@ export class GridStackEngine {
     });
     if (!clonedNode) return false;
 
-    // make sure we are still valid size
+    // check if we're covering 50% collision and could move
     let canMove = clone.moveNode(clonedNode, o) && clone.getRow() <= this.maxRow;
-    // turns out we can't grow, then see if we can swap instead (ex: full grid) if we're not resizing
-    if (!canMove && !o.resizing) {
-      let collide = this.collide(node, o);
-      if (collide && this.swap(node, collide)) {
+    // else check if we can force a swap (float=true, or different shapes) on non-resize
+    if (!canMove && !o.resizing && o.collide) {
+      let collide = o.collide.el.gridstackNode; // find the source node the clone collided with at 50%
+      if (this.swap(node, collide)) { // swaps and mark dirty
         this._notify();
         return true;
       }
@@ -605,7 +621,10 @@ export class GridStackEngine {
   /** return true if the passed in node was actually moved (checks for no-op and locked) */
   public moveNode(node: GridStackNode, o: GridStackMoveOpts): boolean {
     if (!node || /*node.locked ||*/ !o) return false;
-    if (o.pack === undefined) o.pack = true;
+    let wasUndefinedPack: boolean;
+    if (o.pack === undefined) {
+      wasUndefinedPack = o.pack = true;
+    }
 
     // constrain the passed in values and check if we're still changing our node
     if (typeof o.x !== 'number') { o.x = node.x; }
@@ -625,12 +644,26 @@ export class GridStackEngine {
     let collides = this.collideAll(node, nn, o.skip);
     let needToMove = true;
     if (collides.length) {
-      // now check to make sure we actually collided over 50% surface area while dragging
-      let collide = node._moving && !o.nested ? this.collideCoverage(node, o, collides) : collides[0];
+      let activeDrag = node._moving && !o.nested;
+      // check to make sure we actually collided over 50% surface area while dragging
+      let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
+      // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
+      if (activeDrag && collide && node.grid?.opts?.subGridDynamic && !node.grid._isTemp) {
+        let over = Utils.areaIntercept(o.rect, collide._rect);
+        let a1 = Utils.area(o.rect);
+        let a2 = Utils.area(collide._rect);
+        let perc = over / (a1 < a2 ? a1 : a2);
+        if (perc > .8) {
+          collide.grid.makeSubGrid(collide.el, undefined, node);
+          collide = undefined;
+        }
+      }
+
       if (collide) {
         needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
       } else {
         needToMove = false; // we didn't cover >50% for a move, skip...
+        if (wasUndefinedPack) delete o.pack;
       }
     }
 
@@ -681,15 +714,7 @@ export class GridStackEngine {
       let w: GridStackNode = {...n};
       // use layout info instead if set
       if (wl) { w.x = wl.x; w.y = wl.y; w.w = wl.w; }
-      // delete internals
-      for (let key in w) { if (key[0] === '_' || w[key] === null || w[key] === undefined ) delete w[key]; }
-      delete w.grid;
-      if (!saveElement) delete w.el;
-      // delete default values (will be re-created on read)
-      if (!w.autoPosition) delete w.autoPosition;
-      if (!w.noResize) delete w.noResize;
-      if (!w.noMove) delete w.noMove;
-      if (!w.locked) delete w.locked;
+      Utils.removeInternalForSave(w, !saveElement);
       list.push(w);
     });
     return list;
@@ -829,7 +854,7 @@ export class GridStackEngine {
       this.addNode(node, false); // 'false' for add event trigger
       delete node._orig; // make sure the commit doesn't try to restore things back to original
     });
-    this.commit();
+    this.batchUpdate(false);
     delete this._inColumnResize;
     return this;
   }

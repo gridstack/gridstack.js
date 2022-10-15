@@ -4,7 +4,6 @@
  import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
  import { GridStack, GridStackWidget, GridStackNode } from 'gridstack';
  import { DDElement } from "gridstack/dist/h5/dd-element";
- import 'gridstack/dist/h5/gridstack-dd-native';
  
  @Component({
      selector: 'grid-stack-test',
@@ -33,8 +32,6 @@
          const _ddElement = DDElement.init(this.dragElement.nativeElement);
          _ddElement.setupDraggable({
              handle: '.sample-drag',
-             revert: 'invalid',
-             scroll: true,
              appendTo: 'body',
              helper: 'clone',
              start: (event: DragEvent) => {

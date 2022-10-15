@@ -4,30 +4,26 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nested grids demo (ES6)</title>
+  <title>Advance Nested grids demo</title>
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/>
-  <script src="../dist/gridstack-h5.js"></script>
-  <style type="text/css">
-    .grid-stack.grid-stack-nested {
-      background: rgba(255, 255, 255, 0.3);
-    }
-    .grid-stack-item.sub .grid-stack-item-content {
-      background: lightpink;
-    }
-  </style>
+  <link rel="stylesheet" href="../dist/gridstack-extra.min.css"/> <!-- required for [2-11] column of sub-grids -->
+  <script src="../dist/gridstack-all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
     <h1>Advanced Nested grids demo</h1>
-    <p>This example shows sub-grids only accepting pink items, while parent accept all.</p>
-    <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
-    <a class="btn btn-primary" onClick="addNewWidget('.sub1')" href="#">Add Widget Grid1</a>
-    <a class="btn btn-primary" onClick="addNewWidget('.sub2')" href="#">Add Widget Grid2</a>
+    <p>Create sub-grids (darker background) on the fly, by dragging items completely over others (nest) vs partially (push) using
+      the new v7 API <code>GridStackOptions.subGridDynamic=true</code></p>
+    <p>This will use the new delay drag&drop option <code>DDDragOpt.pause</code> to tell the gesture difference</p>
+    <p>Note: <code>gridstack-extra.min.css</code> is required for [2-11] column of sub-grids</p>
+    <a class="btn btn-primary" onClick="addMainWidget()" href="#">Add Widget</a>
+    <a class="btn btn-primary" onClick="addNewWidget(0)" href="#">Add W Grid0</a>
+    <a class="btn btn-primary" onClick="addNewWidget(1)" href="#">Add W Grid1</a>
+    <a class="btn btn-primary" onClick="addNewWidget(2)" href="#">Add W Grid2</a>
     <span>entire save/re-create:</span>
     <a class="btn btn-primary" onClick="save()" href="#">Save</a>
     <a class="btn btn-primary" onClick="destroy()" href="#">Destroy</a>
-    <a class="btn btn-primary" onClick="load()" href="#">Create</a>
+    <a class="btn btn-primary" onClick="load()" href="#">Load</a>
     <span>partial save/load:</span>
     <a class="btn btn-primary" onClick="save(true, false)" href="#">Save list</a>
     <a class="btn btn-primary" onClick="save(false, false)" href="#">Save no content</a>
@@ -38,57 +34,61 @@
   </div>
 
   <script type="text/javascript">
-    let sub1 = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
-    let sub2 = [ {x:0, y:0}, {x:0, y:1, w:2}];
-    let count = 0;
-    [...sub1, ...sub2].forEach(d => d.content = String(count++));
     let subOptions = {
-      cellHeight: 50,
+      cellHeight: 50, // should be 50 - top/bottom
       column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
-      itemClass: 'sub', // style sub items differently and use to prevent dragging in/out
-      acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted
-      margin: 2,
-      minRow: 1, // don't collapse when empty
+      acceptWidgets: true, // will accept .grid-stack-item by default
+      margin: 5,
+      subGridDynamic: true, // make it recursive for all future sub-grids
     };
+    let main = [{x:0, y:0}, {x:0, y:1}, {x:1, y:0}]
+    let sub1 = [{x:0, y:0}];
+    let sub0 = [{x:0, y:0}, {x:1, y:0}];
+    // let sub0 = [{x:0, y:0}, {x:1, y:0}, {x:1, y:1, h:2, subGrid: {children: sub1, ...subOptions}}];
     let options = { // main grid options
       cellHeight: 50,
       margin: 5,
       minRow: 2, // don't collapse when empty
       acceptWidgets: true,
-      id: 'main',
+      subGrid: subOptions,
+      subGridDynamic: true, // v7 api to create sub-grids on the fly
       children: [
-        {y:0, content: 'regular item'},
-        {x:1, w:4, h:4, content: 'nested 1 - can drag items out', subGrid: {children: sub1, dragOut: true, class: 'sub1', ...subOptions}},
-        {x:5, w:4, h:4, content: 'nested 2 - constrained to parent (JQ only)', subGrid: {children: sub2, class: 'sub2', ...subOptions}},
+        ...main,
+        {x:2, y:0, w:2, h:3, subGrid: {children: sub0, ...subOptions}},
+        {x:4, y:0, h:2, subGrid: {children: sub1, ...subOptions}},
+        // {x:2, y:0, w:2, h:3, subGrid: {children: [...sub1, {x:0, y:1, subGrid: subOptions}], ...subOptions}/*,content: "<div>nested grid here</div>"*/},
       ]
     };
+    let count = 0;
+    [...main, ...sub0, ...sub1].forEach(d => {if (!d.subGrid) d.content = String(count++)});
 
     // create and load it all from JSON above
     let grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
 
-    addNested = function() {
+    function addMainWidget() {
       grid.addWidget({x:0, y:100, content:"new item"});
     }
 
-    addNewWidget = function(selector) {
-      let subGrid = document.querySelector(selector).gridstack;
+    function addNewWidget(i) {
+      let subGrid = document.querySelectorAll('.grid-stack-nested')[i]?.gridstack;
+      if (!subGrid) return;
       let node = {
-        x: Math.round(6 * Math.random()),
-        y: Math.round(5 * Math.random()),
-        w: Math.round(1 + 1 * Math.random()),
-        h: Math.round(1 + 1 * Math.random()),
+        // x: Math.round(6 * Math.random()),
+        // y: Math.round(5 * Math.random()),
+        // w: Math.round(1 + 1 * Math.random()),
+        // h: Math.round(1 + 1 * Math.random()),
         content: String(count++)
       };
       subGrid.addWidget(node);
       return false;
     };
 
-    save = function(content = true, full = true) {
+    function save(content = true, full = true) {
       options = grid.save(content, full);
       console.log(options);
       // console.log(JSON.stringify(options));
     }
-    destroy = function(full = true) {
+    function destroy(full = true) {
       if (full) {
         grid.destroy();
         grid = undefined;
@@ -96,7 +96,7 @@
         grid.removeAll();
       }
     }
-    load = function(full = true) {
+    function load(full = true) {
       if (full) {
         grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
       } else {

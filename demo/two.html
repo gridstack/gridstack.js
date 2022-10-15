@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
 
-  <script src="../dist/gridstack-h5.js"></script>
+  <script src="../dist/gridstack-all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -30,21 +30,21 @@
         </div>
       </div>
       <div class="col-md-9">
-        <div class="trash">
+        <div class="trash" id="trash">
         </div>
       </div>
     </div>
 
     <div class="row" style="margin-top: 20px">
       <div class="col-md-6">
-        <a onClick="toggleFloat(this, 0)" class="btn btn-primary" href="#">float: false</a>
+        <a onClick="toggleFloat(this, 0)" class="btn btn-primary" href="#">float: true</a>
         <a onClick="compact(0)" class="btn btn-primary" href="#">Compact</a>
-        <div class="grid-stack"></div>
+        <div class="grid-stack" id="left_grid"></div>
       </div>
       <div class="col-md-6">
-        <a onClick="toggleFloat(this, 1)" class="btn btn-primary" href="#">float: true</a>
+        <a onClick="toggleFloat(this, 1)" class="btn btn-primary" href="#">float: false</a>
         <a onClick="compact(1)" class="btn btn-primary" href="#">Compact</a>
-        <div class="grid-stack"></div>
+        <div class="grid-stack" id="right_grid"></div>
       </div>
     </div>
   </div>
@@ -55,17 +55,17 @@
       minRow: 1, // don't collapse when empty
       cellHeight: 70,
       disableOneColumnMode: true,
-      float: false,
+      float: true,
       // dragIn: '.sidebar .grid-stack-item', // add draggable to class
-      // dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone
+      // dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone
       removable: '.trash', // true or drag-out delete class
       acceptWidgets: function(el) { return true; } // function example, but can also be: true | false | '.someClass' value
     };
     let grids = GridStack.initAll(options);
-    grids[1].float(true);
+    grids[1].float(false);
 
     // new 4.x static method instead of setting up options on every grid (never been per grid really) but old options still works
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: myClone });
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: myClone });
     // GridStack.setupDragIn(); // second call will now work (cache last values)
 
     let items = [

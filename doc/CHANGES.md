@@ -5,7 +5,15 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [5.0.0-dev (TBD)](#500-dev-tbd)
+- [7.0.2 (TBD)](#702-tbd)
+- [7.0.1 (2022-10-14)](#701-2022-10-14)
+- [7.0.0 (2022-10-09)](#700-2022-10-09)
+- [6.0.3 (2022-10-08)](#603-2022-10-08)
+- [6.0.2 (2022-09-23)](#602-2022-09-23)
+- [6.0.1 (2022-08-27)](#601-2022-08-27)
+- [6.0.0 (2022-08-21)](#600-2022-08-21)
+- [5.1.1 (2022-06-16)](#511-2022-06-16)
+- [5.1.0 (2022-05-21)](#510-2022-05-21)
 - [5.0.0 (2022-01-10)](#500-2022-01-10)
 - [4.4.1 (2021-12-24)](#441-2021-12-24)
 - [4.4.0 (2021-12-21)](#440-2021-12-21)
@@ -67,10 +75,47 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 7.0.2 (TBD)
+* fixed [#2081](https://github.com/gridstack/gridstack.js/issues/2081) removeWidget() after it's gone from DOM
 
-## 5.0.0-dev (TBD)
+## 7.0.1 (2022-10-14)
+* fixed [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (introduced in v6)
+* fixed - removing last item delete sub-grid that are not auto-generated (nested.html vs nested_advanced.html)
+
+## 7.0.0 (2022-10-09)
+* add [#1009](https://github.com/gridstack/gridstack.js/issues/1009) Create sub-grids on the fly,
+by dragging items completely over others (nest) vs partially (push) using new flag `GridStackOptions.subGridDynamic=true`.
+Thank you [StephanP] for sponsoring it.<br>
+See [advance Nested](https://github.com/gridstack/gridstack.js/blob/master/demo/nested_advanced.html)
+* add - ability to pause drag&drop collision until the user stops moving - see `DDDragOpt.pause` (used for creating nested grids on the fly based on gesture).
+* add [#1943](https://github.com/gridstack/gridstack.js/issues/1943) you can now drag sub-grids into other sub-grids
+
+## 6.0.3 (2022-10-08)
+* fixed [#2055](https://github.com/gridstack/gridstack.js/issues/2055) maxRow=1 resize outside (broke in 6.0.1)
+* fixed [#2054](https://github.com/gridstack/gridstack.js/issues/2054) Can't enter text in textarea/input (broke in v6)
+
+## 6.0.2 (2022-09-23)
+* fixed [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback
+* fixed [#2043](https://github.com/gridstack/gridstack.js/issues/2043) when swapping shapes in maxRow grid, make sure we still check for 50% coverage
+
+## 6.0.1 (2022-08-27)
+* fixed `float(val)` to set on grid and engine, so save() will read it.
+* fixed [#2018](https://github.com/gridstack/gridstack.js/issues/2018) mouseover and React different behavior
+* fixed getting nested grid resize handles while dragging child
+
+## 6.0.0 (2022-08-21)
+* converted previous HTML5 `draggable=true` based code to simple Mouse Events and Touch mobile support for drag&Drop.
+* removed all jquery-ui related code, and D&D plugging as we only support native events now
+* `alwaysShowResizeHandle` now support `'mobile'` which is the default, making it much easier (see doc)
+* changed `commit()` to be `batchUpdate(false)` to make it easier to turn batch on/off. updated doc. old API remains for now
+
+## 5.1.1 (2022-06-16)
+* fix v5.1.0 regression [#1973](https://github.com/gridstack/gridstack.js/issues/1973) DnD Snap to Animation
+
+## 5.1.0 (2022-05-21)
 * add `GridStack.registerEngine()` to let user use their own custom layout engine subclass. Thank you [Thomas] for sponsoring it.
 * grid option `minWidth` is now `oneColumnSize` to make it clearer, but old field will still work (JS only) for a while
+* fix [#1966](https://github.com/gridstack/gridstack.js/issues/1966) restore animation when dragging items
 * updated jqueryui to latest v1.13.1
 
 ## 5.0.0 (2022-01-10)

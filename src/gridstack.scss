@@ -1,5 +1,5 @@
 /**
- * gridstack SASS styles 5.0.0-dev
+ * gridstack SASS styles 7.0.1-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
@@ -29,7 +29,7 @@ $animation_speed: .3s !default;
   }
 
   .grid-stack-placeholder > .placeholder-content {
-    border: 1px dashed lightgray;
+    background-color: rgba(0,0,0,0.1);
     margin: 0;
     position: absolute;
     width: auto;
@@ -60,16 +60,6 @@ $animation_speed: .3s !default;
 
     &.ui-resizable-disabled > .ui-resizable-handle,
     &.ui-resizable-autohide > .ui-resizable-handle { display: none; }
-
-    &.ui-draggable-dragging,
-    &.ui-resizable-resizing {
-      z-index: 100;
-
-      > .grid-stack-item-content {
-        box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
-        opacity: 0.8;
-      }
-    }
 
     > .ui-resizable-se,
     > .ui-resizable-sw {
@@ -122,7 +112,7 @@ $animation_speed: .3s !default;
   &.grid-stack-animate .grid-stack-item.ui-draggable-dragging,
   &.grid-stack-animate .grid-stack-item.ui-resizable-resizing,
   &.grid-stack-animate .grid-stack-item.grid-stack-placeholder{
-    @include vendor(transition, left .0s, top .0s, height .0s, width .0s);
+    @include vendor(transition, left 0s, top 0s, height 0s, width 0s);
   }
 
   // without this, the html5 drag will flicker between no-drop and drop when dragging over second grid
@@ -130,4 +120,21 @@ $animation_speed: .3s !default;
   // &.ui-droppable.ui-droppable-over > *:not(.ui-droppable) {
   //   pointer-events: none;
   // }
+}
+
+.ui-draggable-dragging,
+.ui-resizable-resizing {
+  z-index: 100;
+
+  > .grid-stack-item-content {
+    box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
+  }
+}
+.ui-draggable-dragging {
+  will-change: left, top;
+  cursor: move;
+}
+.ui-resizable-resizing {
+  will-change: width, height;
 }

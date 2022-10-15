@@ -1,13 +1,15 @@
 /**
- * dd-resizable.ts 5.0.0-dev
+ * dd-resizable.ts 7.0.1-dev
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
-import { DDUtils } from './dd-utils';
-import { Utils } from '../utils';
-import { DDUIData, Rect, Size } from '../types';
+import { Utils } from './utils';
+import { DDUIData, Rect, Size } from './types';
+import { DDManager } from './dd-manager';
+
+// import { GridItemHTMLElement } from './types'; let count = 0; // TEST
 
 // TODO: merge with DDDragOpt
 export interface DDResizableOpt {
@@ -53,8 +55,11 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     super();
     this.el = el;
     this.option = opts;
+    // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
+    this._mouseOver = this._mouseOver.bind(this);
+    this._mouseOut = this._mouseOut.bind(this);
     this.enable();
-    this._setupAutoHide();
+    this._setupAutoHide(this.option.autoHide);
     this._setupHandlers();
   }
 
@@ -70,20 +75,19 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     super.enable();
     this.el.classList.add('ui-resizable');
     this.el.classList.remove('ui-resizable-disabled');
+    this._setupAutoHide(this.option.autoHide);
   }
 
   public disable(): void {
     super.disable();
     this.el.classList.add('ui-resizable-disabled');
     this.el.classList.remove('ui-resizable');
+    this._setupAutoHide(false);
   }
 
   public destroy(): void {
     this._removeHandlers();
-    if (this.option.autoHide) {
-      this.el.removeEventListener('mouseover', this._showHandlers);
-      this.el.removeEventListener('mouseout', this._hideHandlers);
-    }
+    this._setupAutoHide(false);
     this.el.classList.remove('ui-resizable');
     delete this.el;
     super.destroy();
@@ -98,33 +102,45 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       this._setupHandlers();
     }
     if (updateAutoHide) {
-      this._setupAutoHide();
+      this._setupAutoHide(this.option.autoHide);
     }
     return this;
   }
 
-  /** @internal */
-  protected _setupAutoHide(): DDResizable {
-    if (this.option.autoHide) {
+  /** @internal turns auto hide on/off */
+  protected _setupAutoHide(auto: boolean): DDResizable {
+    if (auto) {
       this.el.classList.add('ui-resizable-autohide');
-      // use mouseover/mouseout instead of mouseenter/mouseleave to get better performance;
-      this.el.addEventListener('mouseover', this._showHandlers);
-      this.el.addEventListener('mouseout', this._hideHandlers);
+      // use mouseover and not mouseenter to get better performance and track for nested cases
+      this.el.addEventListener('mouseover', this._mouseOver);
+      this.el.addEventListener('mouseout', this._mouseOut);
     } else {
       this.el.classList.remove('ui-resizable-autohide');
-      this.el.removeEventListener('mouseover', this._showHandlers);
-      this.el.removeEventListener('mouseout', this._hideHandlers);
+      this.el.removeEventListener('mouseover', this._mouseOver);
+      this.el.removeEventListener('mouseout', this._mouseOut);
+      if (DDManager.overResizeElement === this) {
+        delete DDManager.overResizeElement;
+      }
     }
     return this;
   }
 
   /** @internal */
-  protected _showHandlers = () => {
+  protected _mouseOver(e: Event) {
+    // console.log(`${count++} pre-enter ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
+    // already over a child, ignore. Ideally we just call e.stopPropagation() but see https://github.com/gridstack/gridstack.js/issues/2018
+    if (DDManager.overResizeElement || DDManager.dragElement) return;
+    DDManager.overResizeElement = this;
+    // console.log(`${count++} enter ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
     this.el.classList.remove('ui-resizable-autohide');
   }
 
   /** @internal */
-  protected _hideHandlers = () => {
+  protected _mouseOut(e: Event) {
+    // console.log(`${count++} pre-leave ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
+    if (DDManager.overResizeElement !== this) return;
+    delete DDManager.overResizeElement;
+    // console.log(`${count++} leave ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
     this.el.classList.add('ui-resizable-autohide');
   }
 
@@ -159,7 +175,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.startEvent = event;
     this._setupHelper();
     this._applyChange();
-    const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resizestart', target: this.el });
+    const ev = Utils.initEvent<MouseEvent>(event, { type: 'resizestart', target: this.el });
     if (this.option.start) {
       this.option.start(ev, this._ui());
     }
@@ -173,7 +189,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.scrolled = this.scrollEl.scrollTop - this.scrollY;
     this.temporalRect = this._getChange(event, dir);
     this._applyChange();
-    const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
+    const ev = Utils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
     if (this.option.resize) {
       this.option.resize(ev, this._ui());
     }
@@ -183,7 +199,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _resizeStop(event: MouseEvent): DDResizable {
-    const ev = DDUtils.initEvent<MouseEvent>(event, { type: 'resizestop', target: this.el });
+    const ev = Utils.initEvent<MouseEvent>(event, { type: 'resizestop', target: this.el });
     if (this.option.stop) {
       this.option.stop(ev); // Note: ui() not used by gridstack so don't pass
     }
@@ -228,7 +244,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       left: this.originalRect.left,
       top: this.originalRect.top - this.scrolled
     };
-    
+
     const offsetX = event.clientX - oEvent.clientX;
     const offsetY = event.clientY - oEvent.clientY;
 

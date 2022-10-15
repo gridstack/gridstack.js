@@ -1,24 +1,18 @@
 /**
  * Example using Angular ngFor to loop through items and create DOM items
  */
-import {
-  Component,
-  AfterViewInit,
-  Input,
-  ViewChildren,
-  QueryList,
-} from "@angular/core";
 
-import { GridStack, GridStackWidget } from "gridstack";
-import "gridstack/dist/h5/gridstack-dd-native";
+import { Component, AfterViewInit, Input, ViewChildren, QueryList } from "@angular/core";
 import { Subject, zip } from "rxjs";
+
+import { GridStack, GridStackWidget } from 'gridstack';
 
 @Component({
   selector: "app-angular-ng-for-test",
   template: `
-    <button (click)="add()">add item</button
-    ><button (click)="delete()">remove item</button
-    ><button (click)="change()">modify item</button>
+    <button (click)="add()">add item</button>
+    <button (click)="delete()">remove item</button>
+    <button (click)="change()">modify item</button>
     <div class="grid-stack">
       <!-- using angular templating to create DOM, otherwise an easier way is to simply call grid.load(items) -->
       <div
@@ -40,17 +34,8 @@ import { Subject, zip } from "rxjs";
       // !!!IMPORTANT!!! Import this through your styles.scss or angular.json! This is just for demo purposes
       :host {
         ::ng-deep {
-          @import "gridstack/dist/gridstack.min";
+          @import "demo";
         }
-      }
-      .grid-stack {
-        margin: 15px;
-        background-color: #d66666;
-        min-height: calc(100vh - 50px);
-      }
-
-      .grid-stack-item {
-        border: 1px solid #d1d1d1;
       }
     `,
   ],

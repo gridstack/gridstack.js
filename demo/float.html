@@ -7,7 +7,7 @@
   <title>Float grid demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <script src="../dist/gridstack-h5.js"></script>
+  <script src="../dist/gridstack-all.js"></script>
 
 </head>
 <body>
@@ -24,6 +24,7 @@
   <script type="text/javascript">
     let grid = GridStack.init({
       float: true, 
+      // disableResize: true, // TEST no resizing, but dragging
       resizable: { handles: 'all'} // do all sides for testing
     });
     addEvents(grid);

@@ -8,7 +8,7 @@
 
   <link rel="stylesheet" href="../../../demo/demo.css"/>
   <link rel="stylesheet" href="810-many-columns.css"/>
-  <script src="../../../dist/gridstack-h5.js"></script>
+  <script src="../../../dist/gridstack-all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -38,7 +38,7 @@
     for (; count <= COLUMNS;) {
       this.addNewWidget(); 
     }
-    grid.commit();
+    grid.batchUpdate(false);
   </script>
 </body>
 </html>

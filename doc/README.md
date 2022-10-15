@@ -30,11 +30,10 @@ gridstack.js API
   - [`GridStack.registerEngine(engineClass: typeof GridStackEngine)`](#gridstackregisterengineengineclass-typeof-gridstackengine)
 - [API](#api)
   - [`addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
-  - [`batchUpdate()`](#batchupdate)
+  - [`batchUpdate(flag = true)`](#batchupdateflag--true)
   - [`compact()`](#compact)
   - [`cellHeight(val: number, update = true)`](#cellheightval-number-update--true)
   - [`cellWidth()`](#cellwidth)
-  - [`commit()`](#commit)
   - [`column(column: number, layout: ColumnOptions = 'moveScale')`](#columncolumn-number-layout-columnoptions--movescale)
   - [`destroy([removeDOM])`](#destroyremovedom)
   - [`disable()`](#disable)
@@ -67,20 +66,24 @@ gridstack.js API
 
 ## Grid Options
 
-- `acceptWidgets` - accept widgets dragged from other grids or from outside (default: `false`). Can be:
-   * `true` (uses `'.grid-stack-item'` class filter) or `false`
-   * string for explicit class name
-   * `function (i: number, element: Element): boolean` See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
-- `alwaysShowResizeHandle` - possible values (default: `false` only show on hover)
-   * `true` the resizing handles are always shown even if the user is not hovering over the widget
-   * advance condition such as this mobile browser agent check:
-   `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
-   See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html)
+- `acceptWidgets` - Accept widgets dragged from other grids or from outside (default: `false`). Can be:
+   * `true` will accept HTML element having `'.grid-stack-item'` as class attribute, else `false`
+   * string for explicit class name to accept instead
+   * `function (el: Element): boolean` function called before an item will be accepted when entering a grid. the function will be passed the item being dragged, and should return true | false. See [example](https://github.com/gridstack/gridstack.js/blob/master/demo/two.html#L62)
+- `alwaysShowResizeHandle` - possible values (default: `mobile`) - does not apply to non-resizable widgets
+  * `false` the resizing handles are only shown while hovering over a widget
+  * `true` the resizing handles are always shown
+  * `'mobile'` if running on a mobile device, default to `true` (since there is no hovering per say), else `false`.
+  this uses this condition on browser agent check:
+  `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
+  See [mobile](http://gridstack.github.io/gridstack.js/demo/mobile.html)
+
+
 - `animate` - turns animation on to smooth transitions (default: `true`)
 - `auto` - if `false` gridstack will not initialize existing items (default: `true`)
 - `cellHeight`- one cell height (default?: 'auto'). Can be:
    *  an integer (px)
-   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see demo/cell-height.html
+   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't right - see [CellHeight](http://gridstackjs.com/demo/cell-height.html)
    *  0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files.
    *  `auto` - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle`
    *  `initial` - similar to 'auto' (start at square cells) but stay that size during window resizing.
@@ -90,16 +93,16 @@ gridstack.js API
 - `column` - Integer > 0 (default 12) which can change on the fly with `column(N)` API, or `'auto'` for nested grids to size themselves to the parent grid container (to make sub-items are the same size). See [column](http://gridstackjs.com/demo/column.html) and [nested](http://gridstackjs.com/demo/nested.html)
 - `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
 - `disableDrag` - disallows dragging of widgets (default: `false`).
-- `disableOneColumnMode` - disables the onColumnMode when the grid width is less than minW (default: 'false')
+- `disableOneColumnMode` - disables the oneColumnMode when the grid width is less than minW (default: 'false')
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `dragIn` - specify the class of items that can be dragged into grids
   * example: `dragIn: '.newWidget'`.
   * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
 - `dragInOptions` - options for items that can be dragged into grids
-  * example `dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone', handle: '.grid-stack-item-content' }`
+  * example `dragInOptions: { appendTo: 'body', helper: 'clone', handle: '.grid-stack-item-content' }`
   * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
   * **Note2**: instead of 'clone' you can also pass your own function (get passed the event).
-- `draggable` - allows to override draggable options. (default: `{handle: '.grid-stack-item-content', scroll: false, appendTo: 'body', containment: null}`)
+- `draggable` - allows to override draggable options. (default: `{handle: '.grid-stack-item-content', appendTo: 'body'}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `engineClass` - the type of engine to create (so you can subclass) default to GridStackEngine
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
@@ -115,11 +118,11 @@ gridstack.js API
 - `marginLeft`: numberOrString
 - `maxRow` - maximum rows amount. Default is `0` which means no max.
 - `minRow` - minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
-- `minW` - minimal width. If grid width is less than or equal to, grid will be shown in one-column mode (default: `768`)
+- `oneColumnSize` - minimal width. If grid width is less than or equal to, grid will be shown in one-column mode (default: `768`)
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
-- `resizable` - allows to override resizable options. (default: `{autoHide: true, handles: 'se'}`). `handles` can be any combo of `n,ne,e,se,s,sw,w,nw` or `all`.
+- `resizable` - allows to override resizable options. (default: `{handles: 'se'}`). `handles` can be any combo of `n,ne,e,se,s,sw,w,nw` or `all`.
 - `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
 - `row` - fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain)
@@ -150,7 +153,8 @@ You need to add `noResize` and `noMove` attributes to completely lock the widget
 - `resizeHandles` - widgets can have their own custom resize handles. For example 'e,w' will make that particular widget only resize east and west. See `resizable: {handles: string}` option
 - `id`- (number | string) good for quick identification (for example in change event)
 - `content` - (string) html content to be added when calling `grid.load()/addWidget()` as content inside the item
-- `subGrid`: GridStackOptions - optional nested grid options and list of children
+- `subGrid`?: GridStackOptions - optional nested grid options and list of children
+- `subGridDynamic`?: boolean - enable/disable the creation of sub-grids on the fly by dragging items completely over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that.
 
 ## Item attributes
 
@@ -320,7 +324,7 @@ grids.forEach(...)
 * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
 Called during `GridStack.init()` as options, but can also be called directly (last param are cached) in case the toolbar is dynamically create and needs to change later.
 * @param dragIn string selector (ex: `'.sidebar .grid-stack-item'`)
-* @param dragInOptions options - see `DDDragInOpt`. (default: `{revert: 'invalid', handle: '.grid-stack-item-content', scroll: false, appendTo: 'body'}`
+* @param dragInOptions options - see `DDDragInOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body'}`
 but you will probably also want `helper: 'clone'` or your own callback function).
 
 
@@ -348,9 +352,9 @@ grid.addWidget({w: 3, content: 'hello'});
 grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {w: 3});
 ```
 
-### `batchUpdate()`
+### `batchUpdate(flag = true)`
 
-starts batch updates. You will see no changes until `commit()` method is called.
+use before calling a bunch of `addWidget()` to prevent un-necessary relayouts in between (more efficient) and get a single event callback. You will see no changes until `batchUpdate(false)` is called.
 
 ### `compact()`
 
@@ -367,10 +371,6 @@ grid.cellHeight(grid.cellWidth() * 1.2);
 ### `cellWidth()`
 
 Gets current cell width (grid width / # of columns).
-
-### `commit()`
-
-Ends batch updates. Updates DOM nodes. You must call it after `batchUpdate()`.
 
 ### `column(column: number, layout: ColumnOptions = 'moveScale')`
 
@@ -558,7 +558,7 @@ Toggle the grid static state.  Also toggle the `grid-stack-static` class.
 Parameters:
 
 - `el` - widget to move (element or class string)
-- `opts` - updates all the possible item attributes passed in the structure (x,y,width,height, etc..). Only those set will be updated.
+- `opts` - updates all the possible item attributes passed in the structure (x, y, h, w, etc..). Only those set will be updated.
 
 Updates widget position/size and other info. Note: if you need to call this on all nodes, use load() instead which will update what changed and more.
 

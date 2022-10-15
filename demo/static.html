@@ -7,7 +7,7 @@
   <title>Static Grid</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <script src="../dist/gridstack-h5.js"></script>
+  <script src="../dist/gridstack-all.js"></script>
 
 </head>
 <body>
@@ -38,7 +38,7 @@
       removable: true,
       // old way, use global setupDragIn() instead
       // dragIn: '.sidebar .grid-stack-item', // add draggable to class
-      // dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' },
+      // dragInOptions: { appendTo: 'body', helper: 'clone' },
       staticGrid: true
     });
     addEvents(grid);
@@ -52,10 +52,9 @@
     ];
     grid.load(serializedData, true);
 
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' });
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
 
-    // TEST enable after disabled
-    // grid.setStatic(false);
+    // grid.setStatic(false); // TEST enable after disabled
 
   </script>
 </body>
