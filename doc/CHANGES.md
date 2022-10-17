@@ -77,7 +77,7 @@ Change log
 
 ## 7.0.2 (TBD)
 * fixed [#2081](https://github.com/gridstack/gridstack.js/issues/2081) removeWidget() after it's gone from DOM
-
+* add GridStackEngine.findEmptyPosition()
 ## 7.0.1 (2022-10-14)
 * fixed [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (introduced in v6)
 * fixed - removing last item delete sub-grid that are not auto-generated (nested.html vs nested_advanced.html)
