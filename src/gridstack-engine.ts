@@ -470,6 +470,26 @@ export class GridStackEngine {
     return this;
   }
 
+  /** find the first available empty spot for the given node width/height, updating the x,y attributes. return true if found */
+  public findEmptyPosition(node: GridStackNode): boolean {
+    this.sortNodes();
+    let found = false;
+    for (let i = 0; !found; ++i) {
+      let x = i % this.column;
+      let y = Math.floor(i / this.column);
+      if (x + node.w > this.column) {
+        continue;
+      }
+      let box = {x, y, w: node.w, h: node.h};
+      if (!this.nodes.find(n => Utils.isIntercepted(box, n))) {
+        node.x = x;
+        node.y = y;
+        found = true;
+      }
+    }
+    return found;
+  }
+
   /** call to add the given node to our list, fixing collision and re-packing */
   public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
     let dup = this.nodes.find(n => n._id === node._id);
@@ -480,23 +500,8 @@ export class GridStackEngine {
     delete node._temporaryRemoved;
     delete node._removeDOM;
 
-    if (node.autoPosition) {
-      this.sortNodes();
-
-      for (let i = 0;; ++i) {
-        let x = i % this.column;
-        let y = Math.floor(i / this.column);
-        if (x + node.w > this.column) {
-          continue;
-        }
-        let box = {x, y, w: node.w, h: node.h};
-        if (!this.nodes.find(n => Utils.isIntercepted(box, n))) {
-          node.x = x;
-          node.y = y;
-          delete node.autoPosition; // found our slot
-          break;
-        }
-      }
+    if (node.autoPosition && this.findEmptyPosition(node)) {
+      delete node.autoPosition; // found our slot
     }
 
     this.nodes.push(node);
