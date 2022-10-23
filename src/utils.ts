@@ -236,7 +236,7 @@ export class Utils {
     return true;
   }
 
-  /** copies over b size & position (GridStackPosition), and possibly min/max as well */
+  /** copies over b size & position (GridStackPosition), and optionally min/max as well */
   static copyPos(a: GridStackWidget, b: GridStackWidget, doMinMax = false): GridStackWidget {
     a.x = b.x;
     a.y = b.y;
