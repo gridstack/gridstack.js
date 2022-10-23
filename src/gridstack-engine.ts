@@ -37,7 +37,7 @@ export class GridStackEngine {
   protected _float: boolean;
   /** @internal */
   protected _prevFloat: boolean;
-  /** @internal cached layouts of difference column count so we can restore ack (eg 12 -> 1 -> 12) */
+  /** @internal cached layouts of difference column count so we can restore back (eg 12 -> 1 -> 12) */
   protected _layouts?: GridStackNode[][]; // maps column # to array of values nodes
   /** @internal true while we are resizing widgets during column resize to skip certain parts */
   protected _inColumnResize: boolean;
@@ -362,7 +362,7 @@ export class GridStackEngine {
     return this.nodeBoundFix(node, resizing);
   }
 
-  /** part2 of preparing a node to fit inside our grid - checks  for x,y from grid dimensions */
+  /** part2 of preparing a node to fit inside our grid - checks for x,y,w from grid dimensions */
   public nodeBoundFix(node: GridStackNode, resizing?: boolean): GridStackNode {
 
     let before = node._orig || Utils.copyPos({}, node);
@@ -372,14 +372,18 @@ export class GridStackEngine {
     if (node.minW && node.minW <= this.column) { node.w = Math.max(node.w, node.minW); }
     if (node.minH) { node.h = Math.max(node.h, node.minH); }
 
+    // if user loaded a larger than allowed widget for current # of columns (or force 1 column mode),
+    // remember it's position & width so we can restore back (1 -> 12 column) #1655 #1985
+    // IFF we're not in the middle of column resizing!
+    const saveOrig = this.column === 1 || node.x + node.w > this.column;
+    if (saveOrig && this.column < 12 && !this._inColumnResize && !node.autoPosition && node._id && this.findCacheLayout(node, 12) === -1) {
+      let copy = {...node}; // need _id + positions
+      copy.x = Math.min(11, copy.x);
+      copy.w = Math.min(12, copy.w);
+      this.cacheOneLayout(copy, 12);
+    }
+
     if (node.w > this.column) {
-      // if user loaded a larger than allowed widget for current # of columns,
-      // remember it's full width so we can restore back (1 -> 12 column) #1655
-      // IFF we're not in the middle of column resizing!
-      if (this.column < 12 && !this._inColumnResize) {
-        node.w = Math.min(12, node.w);
-        this.cacheOneLayout(node, 12);
-      }
       node.w = this.column;
     } else if (node.w < 1) {
       node.w = 1;
@@ -706,7 +710,7 @@ export class GridStackEngine {
     return this;
   }
 
-  /** saves a copy of the largest column layout (eg 12 even when rendering oneColumnMode, so we don't loose orig layout),
+  /** saves a copy of the largest column layout (eg 12 even when rendering oneColumnMode) so we don't loose orig layout,
    * returning a list of widgets for serialization */
   public save(saveElement = true): GridStackNode[] {
     // use the highest layout for any saved info so we can have full detail on reload #1849
@@ -852,7 +856,7 @@ export class GridStackEngine {
     }
 
     // finally re-layout them in reverse order (to get correct placement)
-    newNodes = Utils.sort(newNodes, -1, column);
+    if (!domOrder) newNodes = Utils.sort(newNodes, -1, column);
     this._inColumnResize = true; // prevent cache update
     this.nodes = []; // pretend we have no nodes to start with (add() will use same structures) to simplify layout
     newNodes.forEach(node => {
@@ -891,9 +895,16 @@ export class GridStackEngine {
     let layout: GridStackNode = {x: n.x, y: n.y, w: n.w, _id: n._id}
     this._layouts = this._layouts || [];
     this._layouts[column] = this._layouts[column] || [];
-    let index = this._layouts[column].findIndex(l => l._id === n._id);
-    index === -1 ? this._layouts[column].push(layout) : this._layouts[column][index] = layout;
+    let index = this.findCacheLayout(n, column);
+    if (index === -1)
+      this._layouts[column].push(layout);
+    else
+      this._layouts[column][index] = layout;
     return this;
+  }
+
+  protected findCacheLayout(n: GridStackNode, column: number): number {
+    return this._layouts?.[column]?.findIndex(l => l._id === n._id) ?? -1;
   }
 
 

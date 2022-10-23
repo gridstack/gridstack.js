@@ -34,6 +34,9 @@ export interface CellPosition {
   y: number;
 }
 
+/** optional function called during load() to callback the user on new added/remove items */
+export type AddRemoveFcn = (g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement;
+
 interface GridCSSStyleSheet extends CSSStyleSheet {
   _max?: number; // internal tracker of the max # of rows we created
 }
@@ -186,7 +189,7 @@ export class GridStack {
   protected _placeholder: HTMLElement;
   /** @internal */
   protected _prevColumn: number;
-  /** @internal */
+  /** @internal prevent cached layouts from being updated when loading into small column layouts */
   protected _ignoreLayoutsNodeChange: boolean;
   /** @internal */
   public _gsEventHandler = {};
@@ -328,16 +331,18 @@ export class GridStack {
     if (this.opts.auto) {
       this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
       let elements: {el: HTMLElement; i: number}[] = [];
+      let column = this.getColumn();
+      if (column === 1 && this._prevColumn) column = this._prevColumn; // do 12 column when reading into 1 column mode
       this.getGridItems().forEach(el => { // get dom elements (not nodes yet)
         let x = parseInt(el.getAttribute('gs-x'));
         let y = parseInt(el.getAttribute('gs-y'));
         elements.push({
           el,
           // if x,y are missing (autoPosition) add them to end of list - but keep their respective DOM order
-          i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * this.getColumn()
+          i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * column
         });
       });
-      elements.sort((a, b) => a.i - b.i).forEach(e => this._prepareElement(e.el));
+      elements.sort((a, b) => b.i - a.i).forEach(e => this._prepareElement(e.el)); // revert sort so lowest item wins
       this.batchUpdate(false);
     }
 
@@ -421,8 +426,14 @@ export class GridStack {
       this.makeSubGrid(node.el, undefined, undefined, false);
     }
 
+    // if we're adding an item into 1 column (_prevColumn is set only when going to 1) make sure
+    // we don't override the larger 12 column layout that was already saved. #1985
+    if (this._prevColumn && this.opts.column === 1) {
+      this._ignoreLayoutsNodeChange = true;
+    }
     this._triggerAddEvent();
     this._triggerChangeEvent();
+    delete this._ignoreLayoutsNodeChange;
 
     return el;
   }
@@ -603,11 +614,11 @@ export class GridStack {
    * @example
    * see http://gridstackjs.com/demo/serialization.html
    **/
-  public load(layout: GridStackWidget[], addAndRemove: boolean | ((g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement)  = true): GridStack {
+  public load(layout: GridStackWidget[], addAndRemove: boolean | AddRemoveFcn = true): GridStack {
     let items = GridStack.Utils.sort([...layout], -1, this._prevColumn || this.getColumn()); // make copy before we mod/sort
     this._insertNotAppend = true; // since create in reverse order...
 
-    // if we're loading a layout into 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
+    // if we're loading a layout into for example 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
     if (this._prevColumn && this._prevColumn !== this.opts.column && items.some(n => (n.x + n.w) > this.opts.column)) {
       this._ignoreLayoutsNodeChange = true; // skip layout update

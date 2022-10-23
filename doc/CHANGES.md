@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [7.0.2 (TBD)](#702-tbd)
+- [7.0.1-dev (TBD)](#701-dev-tbd)
 - [7.0.1 (2022-10-14)](#701-2022-10-14)
 - [7.0.0 (2022-10-09)](#700-2022-10-09)
 - [6.0.3 (2022-10-08)](#603-2022-10-08)
@@ -75,9 +75,12 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 7.0.2 (TBD)
+## 7.0.1-dev (TBD)
+* add `GridStackEngine.findEmptyPosition()`
 * fixed [#2081](https://github.com/gridstack/gridstack.js/issues/2081) removeWidget() after it's gone from DOM
-* add GridStackEngine.findEmptyPosition()
+* fixed [#1985](https://github.com/gridstack/gridstack.js/issues/1985) addWidget() or DOM read in single column mode will not adjust to multi column mode
+* fixed [#1975](https://github.com/gridstack/gridstack.js/issues/1975) oneColumnModeDomSort not respected when loading in 1 column
+
 ## 7.0.1 (2022-10-14)
 * fixed [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (introduced in v6)
 * fixed - removing last item delete sub-grid that are not auto-generated (nested.html vs nested_advanced.html)
