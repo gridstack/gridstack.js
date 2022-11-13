@@ -134,6 +134,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const name = (e.target as HTMLElement).nodeName.toLowerCase();
     if (skipMouseDown.find(skip => skip === name)) return true;
 
+    //for contenteditable
+    if((e.target as HTMLElement).closest('[contenteditable="true"]')) return true;
+
     // make sure we are clicking on a drag handle or child of it...
     // Note: we don't need to check that's handle is an immediate child, as mouseHandled will prevent parents from also handling it (lowest wins)
     //
@@ -153,8 +156,13 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.dragEl.addEventListener('touchmove', touchmove);
       this.dragEl.addEventListener('touchend', touchend);
     }
-
+    
     e.preventDefault();
+
+    //e.preventDefault() prevents blur event which occurs just after mousedown event.
+    //if an editable content has focus, then blur must be call 
+    if(document.activeElement) (document.activeElement  as HTMLElement).blur();
+
     DDManager.mouseHandled = true;
     return true;
   }
