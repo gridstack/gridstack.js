@@ -1,5 +1,5 @@
 /**
- * dd-draggable.ts 7.1.0-dev
+ * dd-draggable.ts 7.1.1
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
@@ -133,9 +133,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const skipMouseDown = ['input', 'textarea', 'button', 'select', 'option'];
     const name = (e.target as HTMLElement).nodeName.toLowerCase();
     if (skipMouseDown.find(skip => skip === name)) return true;
-
-    //for contenteditable
-    if((e.target as HTMLElement).closest('[contenteditable="true"]')) return true;
+    // also check for content editable
+    if ((e.target as HTMLElement).closest('[contenteditable="true"]')) return true;
 
     // make sure we are clicking on a drag handle or child of it...
     // Note: we don't need to check that's handle is an immediate child, as mouseHandled will prevent parents from also handling it (lowest wins)
@@ -158,9 +157,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     
     e.preventDefault();
-
-    //e.preventDefault() prevents blur event which occurs just after mousedown event.
-    //if an editable content has focus, then blur must be call 
+    // preventDefault() prevents blur event which occurs just after mousedown event.
+    // if an editable content has focus, then blur must be call 
     if(document.activeElement) (document.activeElement  as HTMLElement).blur();
 
     DDManager.mouseHandled = true;

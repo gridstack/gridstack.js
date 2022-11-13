@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7.1.1 (2022-11-13)](#711-2022-11-13)
 - [7.1.0 (2022-10-23)](#710-2022-10-23)
 - [7.0.1 (2022-10-14)](#701-2022-10-14)
 - [7.0.0 (2022-10-09)](#700-2022-10-09)
@@ -75,16 +76,19 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 7.1.1 (2022-11-13)
+* fix [#939](https://github.com/gridstack/gridstack.js/issues/939) editable elements focus (introduced in v6)
+
 ## 7.1.0 (2022-10-23)
 * back to MIT license in package.json
 * add `GridStackEngine.findEmptyPosition()`
-* fixed [#2081](https://github.com/gridstack/gridstack.js/issues/2081) removeWidget() after it's gone from DOM
-* fixed [#1985](https://github.com/gridstack/gridstack.js/issues/1985) addWidget() or DOM read in single column mode will not adjust to multi column mode
-* fixed [#1975](https://github.com/gridstack/gridstack.js/issues/1975) oneColumnModeDomSort not respected when loading in 1 column
+* fix [#2081](https://github.com/gridstack/gridstack.js/issues/2081) removeWidget() after it's gone from DOM
+* fix [#1985](https://github.com/gridstack/gridstack.js/issues/1985) addWidget() or DOM read in single column mode will not adjust to multi column mode
+* fix [#1975](https://github.com/gridstack/gridstack.js/issues/1975) oneColumnModeDomSort not respected when loading in 1 column
 
 ## 7.0.1 (2022-10-14)
-* fixed [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (introduced in v6)
-* fixed - removing last item delete sub-grid that are not auto-generated (nested.html vs nested_advanced.html)
+* fix [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (introduced in v6)
+* fix - removing last item delete sub-grid that are not auto-generated (nested.html vs nested_advanced.html)
 
 ## 7.0.0 (2022-10-09)
 * add [#1009](https://github.com/gridstack/gridstack.js/issues/1009) Create sub-grids on the fly,
@@ -95,17 +99,17 @@ See [advance Nested](https://github.com/gridstack/gridstack.js/blob/master/demo/
 * add [#1943](https://github.com/gridstack/gridstack.js/issues/1943) you can now drag sub-grids into other sub-grids
 
 ## 6.0.3 (2022-10-08)
-* fixed [#2055](https://github.com/gridstack/gridstack.js/issues/2055) maxRow=1 resize outside (broke in 6.0.1)
-* fixed [#2054](https://github.com/gridstack/gridstack.js/issues/2054) Can't enter text in textarea/input (broke in v6)
+* fix [#2055](https://github.com/gridstack/gridstack.js/issues/2055) maxRow=1 resize outside (broke in 6.0.1)
+* fix [#2054](https://github.com/gridstack/gridstack.js/issues/2054) Can't enter text in textarea/input (broke in v6)
 
 ## 6.0.2 (2022-09-23)
-* fixed [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback
-* fixed [#2043](https://github.com/gridstack/gridstack.js/issues/2043) when swapping shapes in maxRow grid, make sure we still check for 50% coverage
+* fix [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback
+* fix [#2043](https://github.com/gridstack/gridstack.js/issues/2043) when swapping shapes in maxRow grid, make sure we still check for 50% coverage
 
 ## 6.0.1 (2022-08-27)
-* fixed `float(val)` to set on grid and engine, so save() will read it.
-* fixed [#2018](https://github.com/gridstack/gridstack.js/issues/2018) mouseover and React different behavior
-* fixed getting nested grid resize handles while dragging child
+* fix `float(val)` to set on grid and engine, so save() will read it.
+* fix [#2018](https://github.com/gridstack/gridstack.js/issues/2018) mouseover and React different behavior
+* fix getting nested grid resize handles while dragging child
 
 ## 6.0.0 (2022-08-21)
 * converted previous HTML5 `draggable=true` based code to simple Mouse Events and Touch mobile support for drag&Drop.
@@ -272,7 +276,7 @@ HTML5 version will require re-write to plain `mousemove` & mobile `touchmove` in
 
 ## 3.1.3 (2021-1-2)
 
-- fix [1540](https://github.com/gridstack/gridstack.js/issues/1540) Safari H5 drag&drop fixed
+- fix [1540](https://github.com/gridstack/gridstack.js/issues/1540) Safari H5 drag&drop fix
 - fix [1535](https://github.com/gridstack/gridstack.js/issues/1535) use batchUpdate() around grid init to make sure gs-y attributes are respected.
 - fix [1545](https://github.com/gridstack/gridstack.js/issues/1545) `disableMove()` correctly prevents drag later (remove events and draggable attribute)
 - fix [1546](https://github.com/gridstack/gridstack.js/issues/1546) resize no longer delayed, which caused race conditions errors
