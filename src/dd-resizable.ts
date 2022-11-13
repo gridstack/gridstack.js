@@ -126,7 +126,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  protected _mouseOver(e: Event) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected _mouseOver(e: Event): void {
     // console.log(`${count++} pre-enter ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
     // already over a child, ignore. Ideally we just call e.stopPropagation() but see https://github.com/gridstack/gridstack.js/issues/2018
     if (DDManager.overResizeElement || DDManager.dragElement) return;
@@ -136,7 +137,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  protected _mouseOut(e: Event) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  protected _mouseOut(e: Event): void {
     // console.log(`${count++} pre-leave ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
     if (DDManager.overResizeElement !== this) return;
     delete DDManager.overResizeElement;
