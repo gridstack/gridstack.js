@@ -77,7 +77,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 7.1.1 (2022-11-13)
-* fix [#939](https://github.com/gridstack/gridstack.js/issues/939) editable elements focus (introduced in v6)
+* fix [#939](https://github.com/gridstack/gridstack.js/issues/939) editable elements focus (regression in v6). Thank you [@Gezdy](https://github.com/Gezdy)
 
 ## 7.1.0 (2022-10-23)
 * back to MIT license in package.json
@@ -87,7 +87,7 @@ Change log
 * fix [#1975](https://github.com/gridstack/gridstack.js/issues/1975) oneColumnModeDomSort not respected when loading in 1 column
 
 ## 7.0.1 (2022-10-14)
-* fix [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (introduced in v6)
+* fix [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (regression in v6)
 * fix - removing last item delete sub-grid that are not auto-generated (nested.html vs nested_advanced.html)
 
 ## 7.0.0 (2022-10-09)
@@ -135,7 +135,7 @@ See [advance Nested](https://github.com/gridstack/gridstack.js/blob/master/demo/
 * fix [#1888](https://github.com/gridstack/gridstack.js/issues/1888) locks up with nested grid when 'column' is set to 1
 
 ## 4.4.1 (2021-12-24)
-* fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error introduced for #1785 when re-loading with fewer objects
+* fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error regression for #1785 when re-loading with fewer objects
 
 ## 4.4.0 (2021-12-21)
 * add [#1887](https://github.com/gridstack/gridstack.js/pull/1887) support for IE (new es5 folder) by [@SmileLifeIven](https://github.com/SmileLifeIven)
@@ -459,8 +459,8 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 
 ## v0.5.4 (2019-11-26)
 
-- fix for griditems with x=0 placement wrong order (introduced by [#1017](https://github.com/gridstack/gridstack.js/issues/10510174)) ([#1054](https://github.com/gridstack/gridstack.js/issues/1054)).
-- fix `cellHeight(val)` not working due to style change (introduced by [#937](https://github.com/gridstack/gridstack.js/issues/937)) ([#1068](https://github.com/gridstack/gridstack.js/issues/1068)).
+- fix for griditems with x=0 placement wrong order (regression by [#1017](https://github.com/gridstack/gridstack.js/issues/10510174)) ([#1054](https://github.com/gridstack/gridstack.js/issues/1054)).
+- fix `cellHeight(val)` not working due to style change (regression by [#937](https://github.com/gridstack/gridstack.js/issues/937)) ([#1068](https://github.com/gridstack/gridstack.js/issues/1068)).
 - add `gridstack-poly.js` for IE and older browsers, removed `core-js` lib from samples (<1k vs 85k), and all IE8 mentions ([#1061](https://github.com/gridstack/gridstack.js/pull/1061)).
 - add `jquery-ui.js` (and min.js) as minimal subset we need (55k vs 248k), which is now part of `gridstack-h5.js`. Include individual parts if you need your own lib instead of all.js
 ([#1064](https://github.com/gridstack/gridstack.js/pull/1064)).
