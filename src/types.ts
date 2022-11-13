@@ -361,6 +361,7 @@ export interface Rect extends Size, Position {}
 export interface DDUIData {
   position?: Position;
   size?: Size;
+  draggable?: HTMLElement;
   /* fields not used by GridStack but sent by jq ? leave in case we go back to them...
   originalPosition? : Position;
   offset?: Position;

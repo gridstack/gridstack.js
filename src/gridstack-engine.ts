@@ -4,7 +4,7 @@
  */
 
 import { Utils } from './utils';
-import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts, GridStackOptions } from './types';
+import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts } from './types';
 
 /** callback to update the DOM attributes since this class is generic (no HTML or other info) for items that changed - see _notify() */
 type OnChangeCB = (nodes: GridStackNode[]) => void;

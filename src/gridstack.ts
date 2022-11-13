@@ -41,6 +41,11 @@ interface GridCSSStyleSheet extends CSSStyleSheet {
   _max?: number; // internal tracker of the max # of rows we created
 }
 
+// extend with internal fields we need - TODO: move other items in here
+interface InternalGridStackOptions extends GridStackOptions {
+  _alwaysShowResizeHandle?: true | false | 'mobile'; // so we can restore for save
+}
+
 /**
  * Main gridstack class - you will need to call `GridStack.init()` first to initialize your grid.
  * Note: your grid elements MUST have the following classes for the CSS layout to work:
@@ -141,7 +146,7 @@ export class GridStack {
    * See instead `GridStackOptions.engineClass` if you only need to
    * replace just one instance.
    */
-  static registerEngine(engineClass: typeof GridStackEngine) {
+  static registerEngine(engineClass: typeof GridStackEngine): void {
     GridStack.engineClass = engineClass;
   }
 
@@ -237,7 +242,7 @@ export class GridStack {
     }
     // save original setting so we can restore on save
     if (opts.alwaysShowResizeHandle !== undefined) {
-      (opts as any)._alwaysShowResizeHandle = opts.alwaysShowResizeHandle;
+      (opts as InternalGridStackOptions)._alwaysShowResizeHandle = opts.alwaysShowResizeHandle;
     }
 
     // elements DOM attributes override any passed options (like CSS style) - merge the two together
@@ -575,7 +580,7 @@ export class GridStack {
 
     // check if save entire grid options (needed for recursive) + children...
     if (saveGridOpt) {
-      let o: GridStackOptions = Utils.cloneDeep(this.opts);
+      let o: InternalGridStackOptions = Utils.cloneDeep(this.opts);
       // delete default values that will be recreated on launch
       if (o.marginBottom === o.marginTop && o.marginRight === o.marginLeft && o.marginTop === o.marginRight) {
         o.margin = o.marginTop;
@@ -589,8 +594,8 @@ export class GridStack {
         o.column = 'auto';
         delete o.disableOneColumnMode;
       }
-      const origShow = (o as any)._alwaysShowResizeHandle;
-      delete (o as any)._alwaysShowResizeHandle;
+      const origShow = o._alwaysShowResizeHandle;
+      delete o._alwaysShowResizeHandle;
       if (origShow !== undefined) {
         o.alwaysShowResizeHandle = origShow;
       } else {

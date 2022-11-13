@@ -273,7 +273,7 @@ export class Utils {
   }
 
   /** removes internal fields '_' and default values for saving */
-  static removeInternalForSave(n: GridStackNode, removeEl = true) {
+  static removeInternalForSave(n: GridStackNode, removeEl = true): void {
     for (let key in n) { if (key[0] === '_' || n[key] === null || n[key] === undefined ) delete n[key]; }
     delete n.grid;
     if (removeEl) delete n.el;
@@ -496,7 +496,7 @@ export class Utils {
   }
 
   /** copies the MouseEvent properties and sends it as another event to the given target */
-  public static simulateMouseEvent(e: MouseEvent, simulatedType: string, target?: EventTarget) {
+  public static simulateMouseEvent(e: MouseEvent, simulatedType: string, target?: EventTarget): void {
     const simulatedEvent = document.createEvent('MouseEvents');
     simulatedEvent.initMouseEvent(
       simulatedType, // type

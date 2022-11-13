@@ -155,10 +155,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.dragEl.addEventListener('touchmove', touchmove);
       this.dragEl.addEventListener('touchend', touchend);
     }
-    
+
     e.preventDefault();
     // preventDefault() prevents blur event which occurs just after mousedown event.
-    // if an editable content has focus, then blur must be call 
+    // if an editable content has focus, then blur must be call
     if(document.activeElement) (document.activeElement  as HTMLElement).blur();
 
     DDManager.mouseHandled = true;
@@ -166,7 +166,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal method to call actual drag event */
-  protected _callDrag(e: DragEvent) {
+  protected _callDrag(e: DragEvent): void {
     if (!this.dragging) return;
     const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'drag' });
     if (this.option.drag) {

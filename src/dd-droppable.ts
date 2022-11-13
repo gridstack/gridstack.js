@@ -9,12 +9,13 @@ import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
 import { DDElementHost } from './dd-element';
 import { isTouch, pointerenter, pointerleave } from './dd-touch';
+import { DDUIData } from './types';
 
 export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);
-  drop?: (event: DragEvent, ui) => void;
-  over?: (event: DragEvent, ui) => void;
-  out?: (event: DragEvent, ui) => void;
+  drop?: (event: DragEvent, ui: DDUIData) => void;
+  over?: (event: DragEvent, ui: DDUIData) => void;
+  out?: (event: DragEvent, ui: DDUIData) => void;
 }
 
 // let count = 0; // TEST
@@ -163,7 +164,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  protected _ui(drag: DDDraggable) {
+  protected _ui(drag: DDDraggable): DDUIData {
     return {
       draggable: drag.el,
       ...drag.ui()
