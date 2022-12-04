@@ -13,7 +13,7 @@
   "bugs": {
     "url": "https://github.com/gridstack/gridstack.js/issues"
   },
-  "homepage": "http://gridstack.github.io/gridstack.js/",
+  "homepage": "http://gridstackjs.com",
   "dependencies": {
     "gridstack": "7.1.1"
   },
