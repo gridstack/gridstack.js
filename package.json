@@ -55,7 +55,7 @@
   "bugs": {
     "url": "https://github.com/gridstack/gridstack.js/issues"
   },
-  "homepage": "http://gridstack.js/",
+  "homepage": "http://gridstackjs.com/",
   "devDependencies": {
     "@types/jasmine": "^3.5.9",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
