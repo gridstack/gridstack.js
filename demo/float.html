@@ -15,6 +15,7 @@
     <h1>Float grid demo</h1>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <a class="btn btn-primary" onClick="makeNewWidget()" href="#">Make Widget</a>
       <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#">float: true</a>
     </div>
     <br><br>
@@ -38,7 +39,7 @@
     ];
     let count = 0;
 
-    addNewWidget = function() {
+    getNode = function() {
       let n = items[count] || {
         x: Math.round(12 * Math.random()),
         y: Math.round(5 * Math.random()),
@@ -46,8 +47,22 @@
         h: Math.round(1 + 3 * Math.random())
       };
       n.content = n.content || String(count);
-      grid.addWidget(n);
       count++;
+      return n;
+    };
+
+    addNewWidget = function() {
+      let w = grid.addWidget(getNode());
+    };
+
+    makeNewWidget = function() {
+      let n = getNode();
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = `<div class="item" gs-x="${n.x}" gs-y="${n.y}" gs-w="${n.w || 1}" gs-h="${n.h || 1}"><div class="grid-stack-item-content">${n.content}</div></div>`;
+      let el = doc.body.children[0];
+      grid.el.appendChild(el);
+      // example showing when DOM is created elsewhere (eg Angular/Vue/React) and GS is used to convert to a widget
+      let w = grid.makeWidget(el);
     };
 
     toggleFloat = function() {
