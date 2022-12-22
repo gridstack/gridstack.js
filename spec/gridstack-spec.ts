@@ -975,6 +975,15 @@ describe('gridstack', function() {
       let widget = grid.makeWidget(el);
       expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
     });
+    it('passing element float=true', function() {
+      let grid = GridStack.init({float: true});
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = '<div><div class="grid-stack-item-content"></div></div>';
+      let el = doc.body.children[0] as HTMLElement;
+      grid.el.appendChild(el);
+      let widget = grid.makeWidget(el);
+      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
+    });
     it('passing class', function() {
       let grid = GridStack.init();
       let doc = document.implementation.createHTMLDocument();
