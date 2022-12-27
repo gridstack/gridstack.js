@@ -59,10 +59,6 @@ export class AngularNgForTestComponent implements AfterViewInit {
   // wait until after DOM is ready to init gridstack - can't be ngOnInit() as angular ngFor needs to run first!
   public ngAfterViewInit() {
     this.grid = GridStack.init({
-      alwaysShowResizeHandle:
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          navigator.userAgent
-        ),
       margin: 5,
       float: true,
     });
