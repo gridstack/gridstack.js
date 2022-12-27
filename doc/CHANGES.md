@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7.1.1-dev (TBD)](#711-dev-tbd)
 - [7.1.1 (2022-11-13)](#711-2022-11-13)
 - [7.1.0 (2022-10-23)](#710-2022-10-23)
 - [7.0.1 (2022-10-14)](#701-2022-10-14)
@@ -75,6 +76,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 7.1.1-dev (TBD)
+* fix [#939](https://github.com/gridstack/gridstack.js/issues/2039) 'prototype' undefined error for dd-gridstack.js
 
 ## 7.1.1 (2022-11-13)
 * fix [#939](https://github.com/gridstack/gridstack.js/issues/939) editable elements focus (regression in v6). Thank you [@Gezdy](https://github.com/Gezdy)
