@@ -1150,7 +1150,7 @@ describe('gridstack', function() {
       let grid = GridStack.init({float: true});
       let items = Utils.getElements('.grid-stack-item');
       let el = items[1];
-      let dd = DDGridStack.get();
+      let dd = GridStack.getDD();
       
       grid.update(el, {noMove: true, noResize: false});
       expect(el.getAttribute('gs-no-move')).toBe('true');
@@ -1478,7 +1478,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       expect(grid.opts.disableResize).toBe(true);
       let items = Utils.getElements('.grid-stack-item');
-      let dd = DDGridStack.get();
+      let dd = GridStack.getDD();
       // expect(dd).toBe(null); // sanity test to verify type
       for (let i = 0; i < items.length; i++) {
         expect(dd.isResizable(items[i])).toBe(false);
@@ -1499,7 +1499,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       expect(grid.opts.disableResize).toBeFalsy();
       let items = Utils.getElements('.grid-stack-item');
-      let dd = DDGridStack.get();
+      let dd = GridStack.getDD();
       for (let i = 0; i < items.length; i++) {
         expect(dd.isResizable(items[i])).toBe(true);
         expect(dd.isDraggable(items[i])).toBe(true);
@@ -1527,7 +1527,7 @@ describe('gridstack', function() {
       };
       let grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
-      let dd = DDGridStack.get();
+      let dd = GridStack.getDD();
       grid.enableResize(false);
       grid.enableMove(false);
       for (let i = 0; i < items.length; i++) {
