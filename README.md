@@ -282,7 +282,7 @@ This option is now the default:
 
 ```js
 let options = {
-  alwaysShowResizeHandle: 'mobile' // which defaults to /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  alwaysShowResizeHandle: 'mobile' // true if we're on mobile devices
 };
 GridStack.init(options);
 ```

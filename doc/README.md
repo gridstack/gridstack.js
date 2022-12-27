@@ -74,8 +74,6 @@ gridstack.js API
   * `false` the resizing handles are only shown while hovering over a widget
   * `true` the resizing handles are always shown
   * `'mobile'` if running on a mobile device, default to `true` (since there is no hovering per say), else `false`.
-  this uses this condition on browser agent check:
-  `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
   See [mobile](http://gridstack.github.io/gridstack.js/demo/mobile.html)
 
 
