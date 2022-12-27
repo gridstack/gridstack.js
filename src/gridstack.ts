@@ -1087,13 +1087,18 @@ export class GridStack {
    * Toggle the grid static state, which permanently removes/add Drag&Drop support, unlike disable()/enable() that just turns it off/on.
    * Also toggle the grid-stack-static class.
    * @param val if true the grid become static.
+   * @param updateClass true (default) if css class gets updated
+   * @param recurse true (default) if sub-grids also get updated
    */
-  public setStatic(val: boolean, updateClass = true): GridStack {
+  public setStatic(val: boolean, updateClass = true, recurse = true): GridStack {
     if (this.opts.staticGrid === val) return this;
     this.opts.staticGrid = val;
     this._setupRemoveDrop();
     this._setupAcceptWidget();
-    this.engine.nodes.forEach(n => this._prepareDragDropByNode(n)); // either delete or init Drag&drop
+    this.engine.nodes.forEach(n => {
+      this._prepareDragDropByNode(n); // either delete or init Drag&drop
+      if (n.subGrid && recurse) (n.subGrid as GridStack).setStatic(val, updateClass, recurse);
+    });
     if (updateClass) { this._setStaticClass(); }
     return this;
   }
@@ -1675,11 +1680,12 @@ export class GridStack {
    * @example
    *  grid.enableMove(false);
    *  grid.enableResize(false);
+   * @param recurse true (default) if sub-grids also get updated
    */
-  public disable(): GridStack {
+  public disable(recurse = true): GridStack {
     if (this.opts.staticGrid) return;
-    this.enableMove(false);
-    this.enableResize(false);// @ts-ignore
+    this.enableMove(false, recurse);
+    this.enableResize(false, recurse);// @ts-ignore
     this._triggerEvent('disable');
     return this;
   }
@@ -1690,32 +1696,41 @@ export class GridStack {
    * @example
    *  grid.enableMove(true);
    *  grid.enableResize(true);
+   * @param recurse true (default) if sub-grids also get updated
    */
-  public enable(): GridStack {
+  public enable(recurse = true): GridStack {
     if (this.opts.staticGrid) return;
-    this.enableMove(true);
-    this.enableResize(true);// @ts-ignore
+    this.enableMove(true, recurse);
+    this.enableResize(true, recurse);// @ts-ignore
     this._triggerEvent('enable');
     return this;
   }
 
   /**
    * Enables/disables widget moving. No-op for static grids.
+   * @param recurse true (default) if sub-grids also get updated
    */
-  public enableMove(doEnable: boolean): GridStack {
+  public enableMove(doEnable: boolean, recurse = true): GridStack {
     if (this.opts.staticGrid) return this; // can't move a static grid!
     this.opts.disableDrag = !doEnable; // FIRST before we update children as grid overrides #1658
-    this.engine.nodes.forEach(n => this.movable(n.el, doEnable));
+    this.engine.nodes.forEach(n => {
+      this.movable(n.el, doEnable);
+      if (n.subGrid && recurse) (n.subGrid as GridStack).enableMove(doEnable, recurse);
+    });
     return this;
   }
 
   /**
    * Enables/disables widget resizing. No-op for static grids.
+   * @param recurse true (default) if sub-grids also get updated
    */
-  public enableResize(doEnable: boolean): GridStack {
+  public enableResize(doEnable: boolean, recurse = true): GridStack {
     if (this.opts.staticGrid) return this; // can't size a static grid!
     this.opts.disableResize = !doEnable; // FIRST before we update children as grid overrides #1658
-    this.engine.nodes.forEach(n => this.resizable(n.el, doEnable));
+    this.engine.nodes.forEach(n => {
+      this.resizable(n.el, doEnable);
+      if (n.subGrid && recurse) (n.subGrid as GridStack).enableResize(doEnable, recurse);
+    });
     return this;
   }
 
