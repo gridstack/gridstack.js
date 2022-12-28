@@ -1,7 +1,7 @@
 {
   "name": "gridstack",
-  "version": "4.2.6-dev",
-  "description": "TypeScript/JS lib for dashboard layout and creation, no external dependencies, with many wrappers (React, Angular, Vue, Ember, knockout...)",
+  "version": "7.1.1-dev",
+  "description": "TypeScript/JS lib for dashboard layout and creation, responsive, mobile support, no external dependencies, with many wrappers (React, Angular, Vue, Ember, knockout...)",
   "main": "./dist/gridstack.js",
   "types": "./dist/gridstack.d.ts",
   "repository": {
@@ -19,8 +19,10 @@
     }
   ],
   "scripts": {
-    "build": "yarn --no-progress && rm -rf dist/* && grunt && webpack && tsc --stripInternal && yarn doc",
-    "w": "rm -rf dist/* && grunt && webpack",
+    "build": "yarn --no-progress && rm -rf dist/* && grunt && yarn build:es6 && yarn build:es5 && yarn doc",
+    "build:es6": "webpack && tsc --stripInternal",
+    "build:es5": "webpack --config es5/webpack.config.js && tsc --stripInternal --project es5/tsconfig.json",
+    "w": "webpack",
     "t": "rm -rf dist/* && grunt && tsc --stripInternal",
     "doc": "doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
     "test": "yarn lint && karma start karma.conf.js",
@@ -44,21 +46,18 @@
     "Vue",
     "JavaScript"
   ],
-  "author": "Pavel Reznikov <pashka.reznikov@gmail.com>",
+  "author": "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)",
   "contributors": [
-    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)",
-    "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)"
+    "Pavel Reznikov <pashka.reznikov@gmail.com>",
+    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"    
   ],
-  "license": "see GridStack root license",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/gridstack/gridstack.js/issues"
   },
-  "homepage": "http://gridstack.github.io/gridstack.js/",
-  "dependencies": {},
+  "homepage": "http://gridstackjs.com/",
   "devDependencies": {
     "@types/jasmine": "^3.5.9",
-    "@types/jquery": "^3.5.1",
-    "@types/jqueryui": "^1.12.13",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "connect": "^3.7.0",
@@ -78,14 +77,14 @@
     "grunt-protractor-webdriver": "^0.2.5",
     "grunt-sass": "3.1.0",
     "jasmine-core": "^3.5.0",
-    "karma": "^4",
+    "karma": "^6",
     "karma-chrome-launcher": "^3.1.0",
     "karma-cli": "^2.0.0",
     "karma-jasmine": "^4.0.1",
     "karma-typescript": "4.1.1",
-    "node-sass": "^5.0.0",
     "protractor": "^7.0.0",
     "puppeteer": "^5.4.1",
+    "sass": "^1.42.1",
     "serve-static": "^1.14.1",
     "ts-loader": "^8.0.7",
     "typescript": "^3.7",

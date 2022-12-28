@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Custom Engine</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <!-- <script src="../dist/gridstack-all.js"></script> -->
+  <script src="events.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Custom Engine</h1>
+    <p>shows a custom engine subclass in Typescript that only allows objects to move vertically.</p>
+    <div>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#">float: true</a>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+
+  <script type="module" > // so we can use import
+    // get CORS error in Chrome...need to have http://localhost/ URL - see https://stackoverflow.com/questions/50197495/javascript-modules-and-cors
+    import { GridStack, GridStackEngine } from '../dist/gridstack-all.js';
+
+    /**
+     * Custom engine class that only allows vertical movement and resizing
+     */
+    class CustomEngine extends GridStackEngine {
+      /** refined this to move the node to the given new location */
+      moveNode(node, o) {
+        // keep the same original X and Width and let base do it all...
+        o.x = node.x;
+        o.w = node.w;
+        return super.moveNode(node, o);
+      }
+    }
+    GridStack.registerEngine(CustomEngine); // globally set our custom class
+
+    let count = 0;
+    let items = [
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+      {x: 1, y: 2, w: 3},
+    ];
+    items.forEach(n => n.content = String(count++));
+
+    let grid = GridStack.init({
+      float: true, 
+      disableOneColumnMode: true,
+      cellHeight: 70
+    }).load(items);
+    addEvents(grid);
+
+    let addNewWidget = function() {
+      let n = items[count] || {
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        w: Math.round(1 + 3 * Math.random()),
+        h: Math.round(1 + 3 * Math.random())
+      };
+      n.content = n.content || String(count++);
+      grid.addWidget(n);
+    };
+
+    let toggleFloat = function() {
+      grid.float(! grid.getFloat());
+      document.querySelector('#float').innerHTML = 'float: ' + grid.getFloat();
+    };
+  </script>
+</body>
+</html>

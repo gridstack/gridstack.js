@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>disable move after</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>#1558 items moves too much</h1>
+    <div class="grid-stack">
+      <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="2" gs-h="1">
+        <div class="grid-stack-item-content">item1 </div>
+      </div>
+      <div class="grid-stack-item" gs-x="3" gs-y="1" gs-w="2" gs-h="1">
+        <div class="grid-stack-item-content">item2</div>
+      </div>
+    </div>
+    <br>
+    <div class="grid-stack">
+      <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="2" gs-h="1">
+        <div class="grid-stack-item-content">item1 </div>
+      </div>
+      <div class="grid-stack-item" gs-x="0" gs-y="1" gs-w="2" gs-h="1">
+        <div class="grid-stack-item-content">item2</div>
+      </div>
+    </div>
+      </div>
+  <script src="../../../demo/events.js"></script>
+  <script type="text/javascript">
+    var options = {
+      float: true,
+      acceptWidgets: true,
+      cellHeight: 80
+    };
+    GridStack.initAll(options);
+  </script>
+</body>
+</html>

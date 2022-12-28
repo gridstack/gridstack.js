@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    /*
+    "allowJs": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+   */
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "inlineSources": true,
+    "lib": [ "es6", "es2015", "dom" ],
+    "module": "CommonJS",
+    "noImplicitAny": false,
+    "outDir": "../dist/es5",
+    "sourceMap": true,
+    "strict": false,
+    "target": "ES5"
+  }, 
+  "exclude": [
+    "../src/**/*.spec.ts",
+  ],
+  "include": [
+    "../src/**/*.ts"
+  ],
+  "typeroots": [
+    "../node_modules/@types"
+  ]
+}

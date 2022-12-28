@@ -8,7 +8,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../../demo/demo.css"/>
-  <script src="../../../dist/gridstack-h5.js"></script>
+  <script src="../../../dist/gridstack-all.js"></script>
   <link rel="stylesheet" href="../../../dist/gridstack-extra.css"/>
 
   <style type="text/css">
@@ -87,7 +87,7 @@
       disableOneColumnMode: true,
       float: false,
       dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone or can be your function
+      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       removable: '.trash', // drag-out delete class
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };

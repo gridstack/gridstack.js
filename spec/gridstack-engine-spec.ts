@@ -25,8 +25,8 @@ describe('gridstack engine', function() {
       expect(engine.float).toEqual(false);
       expect(engine.maxRow).toEqual(undefined);
       expect(engine.nodes).toEqual([]);
-      expect(engine.onChange).toEqual(undefined);
       expect(engine.batchMode).toEqual(undefined);
+      expect((engine as any).onChange).toEqual(undefined);
     });
 
     it('should set params correctly.', function() {
@@ -37,8 +37,8 @@ describe('gridstack engine', function() {
       expect(engine.float).toBe(true);
       expect(engine.maxRow).toEqual(2);
       expect(engine.nodes).toEqual(arr);
-      expect(engine.onChange).toEqual(fkt);
       expect(engine.batchMode).toEqual(undefined);
+      expect((engine as any).onChange).toEqual(fkt);
     });
   });
 
@@ -80,42 +80,42 @@ describe('gridstack engine', function() {
     it('should sort ascending with 12 columns.', function() {
       w.column = 12;
       w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
-      e.prototype._sortNodes.call(w, 1);
+      engine.sortNodes.call(w, 1);
       expect(w.nodes).toEqual([{x: 7, y: 0}, {x: 9, y: 0}, {x: 0, y: 1}, {x: 4, y: 4}]);
     });
   
     it('should sort descending with 12 columns.', function() {
       w.column = 12;
       w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
-      e.prototype._sortNodes.call(w, -1);
+      engine.sortNodes.call(w, -1);
       expect(w.nodes).toEqual([{x: 4, y: 4}, {x: 0, y: 1}, {x: 9, y: 0}, {x: 7, y: 0}]);
     });
   
     it('should sort ascending with 1 columns.', function() {
       w.column = 1;
       w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
-      e.prototype._sortNodes.call(w, 1);
+      engine.sortNodes.call(w, 1);
       expect(w.nodes).toEqual([{x: 0, y: 1}, {x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}]);
     });
   
     it('should sort descending with 1 columns.', function() {
       w.column = 1;
       w.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
-      e.prototype._sortNodes.call(w, -1);
+      engine.sortNodes.call(w, -1);
       expect(w.nodes).toEqual([{x: 9, y: 0}, {x: 4, y: 4}, {x: 7, y: 0}, {x: 0, y: 1}]);
     });
   
     it('should sort ascending without columns.', function() {
       w.column = undefined;
       w.nodes = [{x: 7, y: 0, w: 1}, {x: 4, y: 4, w: 1}, {x: 9, y: 0, w: 1}, {x: 0, y: 1, w: 1}];
-      e.prototype._sortNodes.call(w, 1);
+      engine.sortNodes.call(w, 1);
       expect(w.nodes).toEqual([{x: 7, y: 0, w: 1}, {x: 9, y: 0, w: 1}, {x: 0, y: 1, w: 1}, {x: 4, y: 4, w: 1}]);
     });
   
     it('should sort descending without columns.', function() {
       w.column = undefined;
       w.nodes = [{x: 7, y: 0, w: 1}, {x: 4, y: 4, w: 1}, {x: 9, y: 0, w: 1}, {x: 0, y: 1, w: 1}];
-      e.prototype._sortNodes.call(w, -1);
+      engine.sortNodes.call(w, -1);
       expect(w.nodes).toEqual([{x: 4, y: 4, w: 1}, {x: 0, y: 1, w: 1}, {x: 9, y: 0, w: 1}, {x: 7, y: 0, w: 1}]);
     });
   
@@ -186,8 +186,8 @@ describe('gridstack engine', function() {
       engine.batchUpdate(); // double for code coverage
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
-      engine.commit();
-      engine.commit();
+      engine.batchUpdate(false);
+      engine.batchUpdate(false);
       expect(engine.batchMode).not.toBeTrue();
       expect(engine.float).not.toBeTrue;
     });
@@ -197,7 +197,7 @@ describe('gridstack engine', function() {
       engine.batchUpdate();
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
-      engine.commit();
+      engine.batchUpdate(false);
       expect(engine.batchMode).not.toBeTrue();
       expect(engine.float).toEqual(true);
     });
@@ -214,7 +214,7 @@ describe('gridstack engine', function() {
       engine.batchUpdate();
       expect(engine.batchMode).toBeTrue();
       expect(engine.float).toEqual(true);
-      engine.commit();
+      engine.batchUpdate(false);
       expect(engine.batchMode).not.toBeTrue();
       expect(engine.float).toEqual(true);
     });
@@ -244,30 +244,13 @@ describe('gridstack engine', function() {
 
     it('should by called with dirty nodes', function() {
       (engine as any)._notify();
-      expect(spy.callback).toHaveBeenCalledWith([
-        engine.nodes[0],
-        engine.nodes[1]
-      ], true);
+      expect(spy.callback).toHaveBeenCalledWith([engine.nodes[0], engine.nodes[1]]);
     });
 
     it('should by called with extra passed node to be removed', function() {
       let n1 = {id: -1};
-      (engine as any)._notify(n1);
-      expect(spy.callback).toHaveBeenCalledWith([
-        n1,
-        engine.nodes[0],
-        engine.nodes[1]
-      ], true);
-    });
-
-    it('should by called with extra passed node to be removed and should maintain false parameter', function() {
-      let n1 = {id: -1};
-      (engine as any)._notify(n1, false);
-      expect(spy.callback).toHaveBeenCalledWith([
-        n1,
-        engine.nodes[0],
-        engine.nodes[1]
-      ], false);
+      (engine as any)._notify([n1]);
+      expect(spy.callback).toHaveBeenCalledWith([n1, engine.nodes[0], engine.nodes[1]]);
     });
   });
 

@@ -13,7 +13,9 @@
   <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
 
-  <script src="../dist/gridstack-jq.js"></script>
+  <!-- support for IE -->
+  <script src="../dist/es5/gridstack-poly.js"></script>
+  <script src="../dist/es5/gridstack.js"></script>
 
   <style type="text/css">
     .grid-stack-item-removing {
@@ -60,7 +62,7 @@
       cellHeight: 70,
       acceptWidgets: true,
       dragIn: '.newWidget',  // class that can be dragged from outside
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone or can be your function
+      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       removable: '#trash', // drag-out delete class
     });
 

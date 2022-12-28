@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Many items</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Many items speed test</h1>
+    <div>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#">float: true</a>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let items = [];
+    for (i=0; i<200; i++) {
+      items[i] = {w: Math.round(1 + 3 * Math.random()), h: Math.round(1 + 3 * Math.random()), content: String(i)};
+      // items[i] = {w:1, h:1, content: String(i)};
+    }
+
+    let grid = GridStack.init({
+      cellHeight: 50,
+      margin: 5,
+      float: true, 
+      // animate: false,
+    }).load(items);
+
+    addNewWidget = function() {
+      let n = {
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        w: Math.round(1 + 3 * Math.random()),
+        h: Math.round(1 + 3 * Math.random()),
+        content: 'new'
+      };
+      grid.addWidget(n);
+    };
+
+    toggleFloat = function() {
+      grid.float(! grid.getFloat());
+      document.querySelector('#float').innerHTML = 'float: ' + grid.getFloat();
+    };
+  </script>
+</body>
+</html>

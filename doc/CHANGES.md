@@ -5,6 +5,23 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7.1.1-dev (TBD)](#711-dev-tbd)
+- [7.1.1 (2022-11-13)](#711-2022-11-13)
+- [7.1.0 (2022-10-23)](#710-2022-10-23)
+- [7.0.1 (2022-10-14)](#701-2022-10-14)
+- [7.0.0 (2022-10-09)](#700-2022-10-09)
+- [6.0.3 (2022-10-08)](#603-2022-10-08)
+- [6.0.2 (2022-09-23)](#602-2022-09-23)
+- [6.0.1 (2022-08-27)](#601-2022-08-27)
+- [6.0.0 (2022-08-21)](#600-2022-08-21)
+- [5.1.1 (2022-06-16)](#511-2022-06-16)
+- [5.1.0 (2022-05-21)](#510-2022-05-21)
+- [5.0.0 (2022-01-10)](#500-2022-01-10)
+- [4.4.1 (2021-12-24)](#441-2021-12-24)
+- [4.4.0 (2021-12-21)](#440-2021-12-21)
+- [4.3.1 (2021-10-18)](#431-2021-10-18)
+- [4.3.0 (2021-10-15)](#430-2021-10-15)
+- [4.2.7 (2021-9-12)](#427-2021-9-12)
 - [4.2.6 (2021-7-11)](#426-2021-7-11)
 - [4.2.5 (2021-5-31)](#425-2021-5-31)
 - [4.2.4 (2021-5-29)](#424-2021-5-29)
@@ -59,6 +76,93 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 7.1.1-dev (TBD)
+* fix [#939](https://github.com/gridstack/gridstack.js/issues/2039) 'prototype' undefined error for dd-gridstack.js
+* add [#939](https://github.com/gridstack/gridstack.js/issues/2105) disable/enable are methods now recursive by default
+
+## 7.1.1 (2022-11-13)
+* fix [#939](https://github.com/gridstack/gridstack.js/issues/939) editable elements focus (regression in v6). Thank you [@Gezdy](https://github.com/Gezdy)
+
+## 7.1.0 (2022-10-23)
+* back to MIT license in package.json
+* add `GridStackEngine.findEmptyPosition()`
+* fix [#2081](https://github.com/gridstack/gridstack.js/issues/2081) removeWidget() after it's gone from DOM
+* fix [#1985](https://github.com/gridstack/gridstack.js/issues/1985) addWidget() or DOM read in single column mode will not adjust to multi column mode
+* fix [#1975](https://github.com/gridstack/gridstack.js/issues/1975) oneColumnModeDomSort not respected when loading in 1 column
+
+## 7.0.1 (2022-10-14)
+* fix [#2073](https://github.com/gridstack/gridstack.js/issues/2073) SSR (server side rendering) isTouch issue (regression in v6)
+* fix - removing last item delete sub-grid that are not auto-generated (nested.html vs nested_advanced.html)
+
+## 7.0.0 (2022-10-09)
+* add [#1009](https://github.com/gridstack/gridstack.js/issues/1009) Create sub-grids on the fly,
+by dragging items completely over others (nest) vs partially (push) using new flag `GridStackOptions.subGridDynamic=true`.
+Thank you [StephanP] for sponsoring it.<br>
+See [advance Nested](https://github.com/gridstack/gridstack.js/blob/master/demo/nested_advanced.html)
+* add - ability to pause drag&drop collision until the user stops moving - see `DDDragOpt.pause` (used for creating nested grids on the fly based on gesture).
+* add [#1943](https://github.com/gridstack/gridstack.js/issues/1943) you can now drag sub-grids into other sub-grids
+
+## 6.0.3 (2022-10-08)
+* fix [#2055](https://github.com/gridstack/gridstack.js/issues/2055) maxRow=1 resize outside (broke in 6.0.1)
+* fix [#2054](https://github.com/gridstack/gridstack.js/issues/2054) Can't enter text in textarea/input (broke in v6)
+
+## 6.0.2 (2022-09-23)
+* fix [#2034](https://github.com/gridstack/gridstack.js/issues/2034) `removeWidget()` breaking resize handle feedback
+* fix [#2043](https://github.com/gridstack/gridstack.js/issues/2043) when swapping shapes in maxRow grid, make sure we still check for 50% coverage
+
+## 6.0.1 (2022-08-27)
+* fix `float(val)` to set on grid and engine, so save() will read it.
+* fix [#2018](https://github.com/gridstack/gridstack.js/issues/2018) mouseover and React different behavior
+* fix getting nested grid resize handles while dragging child
+
+## 6.0.0 (2022-08-21)
+* converted previous HTML5 `draggable=true` based code to simple Mouse Events and Touch mobile support for drag&Drop.
+* removed all jquery-ui related code, and D&D plugging as we only support native events now
+* `alwaysShowResizeHandle` now support `'mobile'` which is the default, making it much easier (see doc)
+* changed `commit()` to be `batchUpdate(false)` to make it easier to turn batch on/off. updated doc. old API remains for now
+
+## 5.1.1 (2022-06-16)
+* fix v5.1.0 regression [#1973](https://github.com/gridstack/gridstack.js/issues/1973) DnD Snap to Animation
+
+## 5.1.0 (2022-05-21)
+* add `GridStack.registerEngine()` to let user use their own custom layout engine subclass. Thank you [Thomas] for sponsoring it.
+* grid option `minWidth` is now `oneColumnSize` to make it clearer, but old field will still work (JS only) for a while
+* fix [#1966](https://github.com/gridstack/gridstack.js/issues/1966) restore animation when dragging items
+* updated jqueryui to latest v1.13.1
+
+## 5.0.0 (2022-01-10)
+* add [#992](https://github.com/gridstack/gridstack.js/issues/992) support dragging into and out of nested grids from parents! Thank you [@arclogos132](https://github.com/arclogos132) for sponsoring it.
+* add [#1910](https://github.com/gridstack/gridstack.js/pull/1910) new `column:'auto'` option to size nested grids to their parent grid item column count, keeping items the same size inside and outside. Thank you [@arclogos132](https://github.com/arclogos132) for also sponsoring it.
+* fix [#1902](https://github.com/gridstack/gridstack.js/pull/1902) nested.html: dragging between sub-grids show items clipped
+* fix [#1558](https://github.com/gridstack/gridstack.js/issues/1558) dragging between vertical grids causes too much growth, not follow mouse.
+* fix [#1912](https://github.com/gridstack/gridstack.js/pull/1912) no longer force rows for min-height
+* fix [#1888](https://github.com/gridstack/gridstack.js/issues/1888) locks up with nested grid when 'column' is set to 1
+
+## 4.4.1 (2021-12-24)
+* fix [#1901](https://github.com/gridstack/gridstack.js/pull/1901) error regression for #1785 when re-loading with fewer objects
+
+## 4.4.0 (2021-12-21)
+* add [#1887](https://github.com/gridstack/gridstack.js/pull/1887) support for IE (new es5 folder) by [@SmileLifeIven](https://github.com/SmileLifeIven)
+* fix [#1785](https://github.com/gridstack/gridstack.js/issue/1785) overlapping items when switching column() and making edits. Thank you [@radovanobal](https://github.com/radovanobal) for sponsoring it.
+* fix [#1890](https://github.com/gridstack/gridstack.js/issue/1890) unhandled exception when dragging fast between grids.
+
+## 4.3.1 (2021-10-18)
+* fix [#1868](https://github.com/gridstack/gridstack.js/issues/1868) prevent swap during resize
+* fix [#1849](https://github.com/gridstack/gridstack.js/issues/1849) [#1816](https://github.com/gridstack/gridstack.js/issues/1816) save highest resolution in 1 column mode
+* fix [#1855](https://github.com/gridstack/gridstack.js/issues/1855) resize when padding is large vs cellHeight
+
+## 4.3.0 (2021-10-15)
+* you can now swap items of different width if they are the same row/height. Thanks to [spektrummedia](http://spektrummedia.com) for sponsoring it.
+* fix [#1860](https://github.com/gridstack/gridstack.js/issues/1860) nested grid save inf loop fix
+* use latest `dart-sass`, updated comments
+
+## 4.2.7 (2021-9-12)
+
+* fix [#1817](https://github.com/gridstack/gridstack.js/issues/1817) Enable passing of DragEvent to gridstack dropped event. Thanks [@onepartsam](https://github.com/onepartsam)
+* fix [#1835](https://github.com/gridstack/gridstack.js/issues/1835) Layout incorrectly restored when node has a minimum width. Thanks [@hssm](https://github.com/hssm)
+* fix [#1794](https://github.com/gridstack/gridstack.js/issues/1794) addGrid() does not recognize rem cellHeightUnit
+
 ## 4.2.6 (2021-7-11)
 
 * fix [#1784](https://github.com/gridstack/gridstack.js/issues/1784) `removable:true` working by itself (without needing `acceptWidgets:true`)
@@ -177,7 +281,7 @@ HTML5 version will require re-write to plain `mousemove` & mobile `touchmove` in
 
 ## 3.1.3 (2021-1-2)
 
-- fix [1540](https://github.com/gridstack/gridstack.js/issues/1540) Safari H5 drag&drop fixed
+- fix [1540](https://github.com/gridstack/gridstack.js/issues/1540) Safari H5 drag&drop fix
 - fix [1535](https://github.com/gridstack/gridstack.js/issues/1535) use batchUpdate() around grid init to make sure gs-y attributes are respected.
 - fix [1545](https://github.com/gridstack/gridstack.js/issues/1545) `disableMove()` correctly prevents drag later (remove events and draggable attribute)
 - fix [1546](https://github.com/gridstack/gridstack.js/issues/1546) resize no longer delayed, which caused race conditions errors
@@ -360,8 +464,8 @@ thanks [@ermcgrat](https://github.com/ermcgrat) and others for pointing out code
 
 ## v0.5.4 (2019-11-26)
 
-- fix for griditems with x=0 placement wrong order (introduced by [#1017](https://github.com/gridstack/gridstack.js/issues/10510174)) ([#1054](https://github.com/gridstack/gridstack.js/issues/1054)).
-- fix `cellHeight(val)` not working due to style change (introduced by [#937](https://github.com/gridstack/gridstack.js/issues/937)) ([#1068](https://github.com/gridstack/gridstack.js/issues/1068)).
+- fix for griditems with x=0 placement wrong order (regression by [#1017](https://github.com/gridstack/gridstack.js/issues/10510174)) ([#1054](https://github.com/gridstack/gridstack.js/issues/1054)).
+- fix `cellHeight(val)` not working due to style change (regression by [#937](https://github.com/gridstack/gridstack.js/issues/937)) ([#1068](https://github.com/gridstack/gridstack.js/issues/1068)).
 - add `gridstack-poly.js` for IE and older browsers, removed `core-js` lib from samples (<1k vs 85k), and all IE8 mentions ([#1061](https://github.com/gridstack/gridstack.js/pull/1061)).
 - add `jquery-ui.js` (and min.js) as minimal subset we need (55k vs 248k), which is now part of `gridstack-h5.js`. Include individual parts if you need your own lib instead of all.js
 ([#1064](https://github.com/gridstack/gridstack.js/pull/1064)).

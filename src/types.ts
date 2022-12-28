@@ -1,10 +1,53 @@
 /**
- * types.ts 4.2.6-dev
+ * types.ts 7.1.1-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
 import { GridStack } from './gridstack';
+import { GridStackEngine } from './gridstack-engine';
 
+// default values for grid options - used during init and when saving out
+export const gridDefaults: GridStackOptions = {
+  alwaysShowResizeHandle: 'mobile',
+  animate: true,
+  auto: true,
+  cellHeight: 'auto',
+  cellHeightThrottle: 100,
+  cellHeightUnit: 'px',
+  column: 12,
+  draggable: { handle: '.grid-stack-item-content', appendTo: 'body' },
+  handle: '.grid-stack-item-content',
+  itemClass: 'grid-stack-item',
+  margin: 10,
+  marginUnit: 'px',
+  maxRow: 0,
+  minRow: 0,
+  oneColumnSize: 768,
+  placeholderClass: 'grid-stack-placeholder',
+  placeholderText: '',
+  removableOptions: { accept: '.grid-stack-item' },
+  resizable: { handles: 'se' },
+  rtl: 'auto',
+
+  // **** same as not being set ****
+  // disableDrag: false,
+  // disableOneColumnMode: false,
+  // disableResize: false,
+  // float: false,
+  // handleClass: null,
+  // oneColumnModeDomSort: false,
+  // removable: false,
+  // staticGrid: false,
+  // styleInHead: false,
+};
+
+/** default dragIn options */
+export const dragInDefaultOptions: DDDragInOpt = {
+  handle: '.grid-stack-item-content',
+  appendTo: 'body',
+  // revert: 'invalid',
+  // scroll: false,
+};
 
 /** different layout options when changing # of columns,
  * including a custom function that takes new/old column count, and array of new/old positions
@@ -37,12 +80,12 @@ export interface GridStackOptions {
    */
   acceptWidgets?: boolean | string | ((element: Element) => boolean);
 
-  /** possible values (default: `false` only show on hover)
-    * `true` the resizing handles are always shown even if the user is not hovering over the widget
-    * advance condition such as this mobile browser agent check:
-    `alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test( navigator.userAgent )`
+  /** possible values (default: `mobile`) - does not apply to non-resizable widgets
+    * `false` the resizing handles are only shown while hovering over a widget
+    * `true` the resizing handles are always shown
+    * 'mobile' if running on a mobile device, default to `true` (since there is no hovering per say), else `false`.
     See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html) */
-  alwaysShowResizeHandle?: boolean;
+  alwaysShowResizeHandle?: true | false | 'mobile';
 
   /** turns animation on (default?: true) */
   animate?: boolean;
@@ -71,8 +114,11 @@ export interface GridStackOptions {
   /** list of children item to create when calling load() or addGrid() */
   children?: GridStackWidget[];
 
-  /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns */
-  column?: number;
+  /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns.
+   * Note: for nested grids, it is recommended to use 'auto' which will always match the container grid-item current width (in column) to keep inside and outside
+   * items always to same. flag is not supported for regular non-nested grids.
+   */
+  column?: number | 'auto';
 
   /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance.
   Note: only used by addGrid(), else your element should have the needed class */
@@ -81,26 +127,26 @@ export interface GridStackOptions {
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
 
-  /** disables the onColumnMode when the grid width is less than minWidth (default?: false) */
+  /** disables the onColumnMode when the grid width is less than oneColumnSize (default?: false) */
   disableOneColumnMode?: boolean;
 
   /** disallows resizing of widgets (default?: false). */
   disableResize?: boolean;
 
-  /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', scroll?: true, appendTo?: 'body', containment: null }) */
+  /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', appendTo?: 'body' }) */
   draggable?: DDDragOpt;
 
-  /** allows to drag external items using this selector - see dragInOptions. (default: undefined) */
+  /** @internal Use `GridStack.setupDragIn()` instead (global, not per grid). old way to allow external items to be draggable. (default: undefined) */
   dragIn?: string;
 
-  /** allows to drag external items using these options. See `GridStack.setupDragIn()` instead (not per grid really).
-   * (default?: { handle: '.grid-stack-item-content', revert: 'invalid', scroll: false, appendTo: 'body' })
-   * helper can be 'clone' or your own function (set what the drag/dropped item will be instead)
-   */
+  /** @internal Use `GridStack.setupDragIn()` instead (global, not per grid).  old way to allow external items to be draggable. (default: undefined) */
   dragInOptions?: DDDragInOpt;
 
-  /** let user drag nested grid items out of a parent or not (default false) */
-  dragOut?: boolean;
+  /** let user drag nested grid items out of a parent or not (default true - not supported yet) */
+  //dragOut?: boolean;
+
+  /** the type of engine to create (so you can subclass) default to GridStackEngine */
+  engineClass?: typeof GridStackEngine;
 
   /** enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) */
   float?: boolean;
@@ -110,6 +156,9 @@ export interface GridStackOptions {
 
   /** draggable handle class (e.g. 'grid-stack-item-content'). If set 'handle' is ignored (default?: null) */
   handleClass?: string;
+
+  /** id used to debug grid instance, not currently stored in DOM attributes */
+  id?: numberOrString;
 
   /** additional widget class (default?: 'grid-stack-item') */
   itemClass?: string;
@@ -140,8 +189,8 @@ export interface GridStackOptions {
    */
   minRow?: number;
 
-  /** minimal width. If grid width is less, grid will be shown in one column mode (default?: 768) */
-  minWidth?: number;
+  /** minimal width before grid will be shown in one column mode (default?: 768) */
+  oneColumnSize?: number;
 
   /**
    * set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column
@@ -155,7 +204,7 @@ export interface GridStackOptions {
   /** placeholder default content (default?: '') */
   placeholderText?: string;
 
-  /** allows to override UI resizable options. (default?: { autoHide: true, handles: 'se' }) */
+  /** allows to override UI resizable options. (default?: { handles: 'se' }) */
   resizable?: DDResizeOpt;
 
   /**
@@ -187,10 +236,12 @@ export interface GridStackOptions {
   /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
   styleInHead?: boolean;
 
-  /** @internal point to a parent grid item if we're nested */
-  _isNested?: GridStackNode;
-  /** @internal unique class name for our generated CSS style sheet */
-  _styleSheetClass?: string;
+  /** list of differences in options for automatically created sub-grids under us */
+  subGrid?: GridStackOptions;
+
+  /** enable/disable the creation of sub-grids on the fly by dragging items completely
+   * over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that. */
+  subGridDynamic?: boolean;
 }
 
 /** options used during GridStackEngine.moveNode() */
@@ -201,7 +252,7 @@ export interface GridStackMoveOpts extends GridStackPosition {
   pack?: boolean;
   /** true if we are calling this recursively to prevent simple swap or coverage collision - default false*/
   nested?: boolean;
-  /* vars to calculate other cells coordinates */
+  /** vars to calculate other cells coordinates */
   cellWidth?: number;
   cellHeight?: number;
   marginTop?: number;
@@ -210,6 +261,10 @@ export interface GridStackMoveOpts extends GridStackPosition {
   marginRight?: number;
   /** position in pixels of the currently dragged items (for overlap check) */
   rect?: GridStackPosition;
+  /** true if we're live resizing */
+  resizing?: boolean;
+  /** best node (most coverage) we collied with */
+  collide?: GridStackNode;
 }
 
 export interface GridStackPosition {
@@ -241,7 +296,7 @@ export interface GridStackWidget extends GridStackPosition {
   noResize?: boolean;
   /** prevents moving (default?: undefined = un-constrained) */
   noMove?: boolean;
-  /** prevents moving and resizing (default?: undefined = un-constrained) */
+  /** prevents being moved by others during their (default?: undefined = un-constrained) */
   locked?: boolean;
   /** widgets can have their own custom resize handles. For example 'e,w' will make that particular widget only resize east and west. See `resizable: {handles: string}` option */
   resizeHandles?: string;
@@ -255,7 +310,7 @@ export interface GridStackWidget extends GridStackPosition {
 
 /** Drag&Drop resize options */
 export interface DDResizeOpt {
-  /** do resize handle hide by default until mouse over ? - default: true */
+  /** do resize handle hide by default until mouse over ? - default: true on desktop, false on mobile*/
   autoHide?: boolean;
   /**
    * sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east)
@@ -274,18 +329,20 @@ export interface DDRemoveOpt {
 export interface DDDragOpt {
   /** class selector of items that can be dragged. default to '.grid-stack-item-content' */
   handle?: string;
-  /** default to `true` */
-  scroll?: boolean;
   /** default to 'body' */
   appendTo?: string;
+  /** if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global */
+  pause?: boolean | number;
+  /** default to `true` */
+  // scroll?: boolean;
   /** parent constraining where item can be dragged out from (default: null = no constrain) */
-  containment?: string;
+  // containment?: string;
 }
 export interface DDDragInOpt extends DDDragOpt {
-    /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
-    revert?: string | ((event: Event) => HTMLElement);
-    /** helper function when dropping (ex: 'clone' or your own method) */
-    helper?: string | ((event: Event) => HTMLElement);
+  /** helper function when dropping (ex: 'clone' or your own method) */
+  helper?: string | ((event: Event) => HTMLElement);
+  /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
+  // revert?: string | ((event: Event) => HTMLElement);
 }
 
 export interface Size {
@@ -302,6 +359,7 @@ export interface Rect extends Size, Position {}
 export interface DDUIData {
   position?: Position;
   size?: Size;
+  draggable?: HTMLElement;
   /* fields not used by GridStack but sent by jq ? leave in case we go back to them...
   originalPosition? : Position;
   offset?: Position;
@@ -330,6 +388,8 @@ export interface GridStackNode extends GridStackWidget {
   _isAboutToRemove?: boolean;
   /** @internal true if item came from outside of the grid -> actual item need to be moved over */
   _isExternal?: boolean;
+  /** @internal Mouse event that's causing moving|resizing */
+  _event?: MouseEvent;
   /** @internal moving vs resizing */
   _moving?: boolean;
   /** @internal true if we jumped down past item below (one time jump so we don't have to totally pass it) */

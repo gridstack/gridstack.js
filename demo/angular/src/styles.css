@@ -1,0 +1,2 @@
+/* re-use existing demo css file we already use for the plain demos - that include gridstack.css which is required */
+@import "../../demo.css";

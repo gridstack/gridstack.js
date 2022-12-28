@@ -1,7 +1,9 @@
 /**
- * gridstack SASS styles 4.2.6-dev
+ * gridstack SASS styles 7.1.1-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
+
+@use "sass:math";
 
 $gridstack-columns: 12 !default;
 $animation_speed: .3s !default;
@@ -27,7 +29,7 @@ $animation_speed: .3s !default;
   }
 
   .grid-stack-placeholder > .placeholder-content {
-    border: 1px dashed lightgray;
+    background-color: rgba(0,0,0,0.1);
     margin: 0;
     position: absolute;
     width: auto;
@@ -36,7 +38,7 @@ $animation_speed: .3s !default;
   }
 
   > .grid-stack-item {
-    min-width: 100% / $gridstack-columns;
+    min-width: math.div(100%, $gridstack-columns);
     position: absolute;
     padding: 0;
 
@@ -59,16 +61,6 @@ $animation_speed: .3s !default;
     &.ui-resizable-disabled > .ui-resizable-handle,
     &.ui-resizable-autohide > .ui-resizable-handle { display: none; }
 
-    &.ui-draggable-dragging,
-    &.ui-resizable-resizing {
-      z-index: 100;
-
-      > .grid-stack-item-content {
-        box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
-        opacity: 0.8;
-      }
-    }
-
     > .ui-resizable-se,
     > .ui-resizable-sw {
       background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pgo8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMTYuMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogNi4wMCBCdWlsZCAwKSAgLS0+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjE2cHgiIGhlaWdodD0iMTZweCIgdmlld0JveD0iMCAwIDUxMS42MjYgNTExLjYyNyIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTExLjYyNiA1MTEuNjI3OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxnPgoJPHBhdGggZD0iTTMyOC45MDYsNDAxLjk5NGgtMzYuNTUzVjEwOS42MzZoMzYuNTUzYzQuOTQ4LDAsOS4yMzYtMS44MDksMTIuODQ3LTUuNDI2YzMuNjEzLTMuNjE1LDUuNDIxLTcuODk4LDUuNDIxLTEyLjg0NSAgIGMwLTQuOTQ5LTEuODAxLTkuMjMxLTUuNDI4LTEyLjg1MWwtNzMuMDg3LTczLjA5QzI2NS4wNDQsMS44MDksMjYwLjc2LDAsMjU1LjgxMywwYy00Ljk0OCwwLTkuMjI5LDEuODA5LTEyLjg0Nyw1LjQyNCAgIGwtNzMuMDg4LDczLjA5Yy0zLjYxOCwzLjYxOS01LjQyNCw3LjkwMi01LjQyNCwxMi44NTFjMCw0Ljk0NiwxLjgwNyw5LjIyOSw1LjQyNCwxMi44NDVjMy42MTksMy42MTcsNy45MDEsNS40MjYsMTIuODUsNS40MjYgICBoMzYuNTQ1djI5Mi4zNThoLTM2LjU0MmMtNC45NTIsMC05LjIzNSwxLjgwOC0xMi44NSw1LjQyMWMtMy42MTcsMy42MjEtNS40MjQsNy45MDUtNS40MjQsMTIuODU0ICAgYzAsNC45NDUsMS44MDcsOS4yMjcsNS40MjQsMTIuODQ3bDczLjA4OSw3My4wODhjMy42MTcsMy42MTcsNy44OTgsNS40MjQsMTIuODQ3LDUuNDI0YzQuOTUsMCw5LjIzNC0xLjgwNywxMi44NDktNS40MjQgICBsNzMuMDg3LTczLjA4OGMzLjYxMy0zLjYyLDUuNDIxLTcuOTAxLDUuNDIxLTEyLjg0N2MwLTQuOTQ4LTEuODA4LTkuMjMyLTUuNDIxLTEyLjg1NCAgIEMzMzguMTQyLDQwMy44MDIsMzMzLjg1Nyw0MDEuOTk0LDMyOC45MDYsNDAxLjk5NHoiIGZpbGw9IiM2NjY2NjYiLz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8Zz4KPC9nPgo8L3N2Zz4K);
@@ -87,7 +79,7 @@ $animation_speed: .3s !default;
     > .ui-resizable-e  { cursor: e-resize;  width: 10px; top: 15px; bottom: 15px; }
     > .ui-resizable-se { cursor: se-resize; width: 20px; height: 20px;}
     > .ui-resizable-s  { cursor: s-resize;  height: 10px; left: 25px; bottom: 0; right: 25px; }
-    > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px; bottom: 0; }
+    > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px;}
     > .ui-resizable-w  { cursor: w-resize;  width: 10px; top: 15px; bottom: 15px; }
 
     &.ui-draggable-dragging {
@@ -97,10 +89,10 @@ $animation_speed: .3s !default;
     }
 
     @for $i from 0 through $gridstack-columns {
-      &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
-      &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-      &[gs-min-w='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-      &[gs-max-w='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
+      &[gs-w='#{$i}'] { width: math.div(100%, $gridstack-columns) * $i; }
+      &[gs-x='#{$i}'] { left: math.div(100%, $gridstack-columns) * $i; }
+      &[gs-min-w='#{$i}'] { min-width: math.div(100%, $gridstack-columns) * $i; }
+      &[gs-max-w='#{$i}'] { max-width: math.div(100%, $gridstack-columns) * $i; }
     }
   }
 
@@ -120,11 +112,29 @@ $animation_speed: .3s !default;
   &.grid-stack-animate .grid-stack-item.ui-draggable-dragging,
   &.grid-stack-animate .grid-stack-item.ui-resizable-resizing,
   &.grid-stack-animate .grid-stack-item.grid-stack-placeholder{
-    @include vendor(transition, left .0s, top .0s, height .0s, width .0s);
+    @include vendor(transition, left 0s, top 0s, height 0s, width 0s);
   }
 
   // without this, the html5 drag will flicker between no-drop and drop when dragging over second grid
-  &.ui-droppable.ui-droppable-over > *:not(.ui-droppable) {
-    pointer-events: none;
+  // Update: removed that as it causes nested grids to no receive dragenter events when parent drags and sets this for #992. not seeing cursor flicker (chrome).
+  // &.ui-droppable.ui-droppable-over > *:not(.ui-droppable) {
+  //   pointer-events: none;
+  // }
+}
+
+.ui-draggable-dragging,
+.ui-resizable-resizing {
+  z-index: 100;
+
+  > .grid-stack-item-content {
+    box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
   }
+}
+.ui-draggable-dragging {
+  will-change: left, top;
+  cursor: move;
+}
+.ui-resizable-resizing {
+  will-change: width, height;
 }

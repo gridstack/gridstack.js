@@ -1,19 +1,21 @@
 /**
- * gridstack-engine.ts 4.2.6-dev
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * gridstack-engine.ts 7.1.1-dev
+ * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
 import { Utils } from './utils';
 import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts } from './types';
 
-export type onChangeCB = (nodes: GridStackNode[], removeDOM?: boolean) => void;
-/** options used for creations - similar to GridStackOptions */
+/** callback to update the DOM attributes since this class is generic (no HTML or other info) for items that changed - see _notify() */
+type OnChangeCB = (nodes: GridStackNode[]) => void;
+
+/** options used during creation - similar to GridStackOptions */
 export interface GridStackEngineOptions {
   column?: number;
   maxRow?: number;
   float?: boolean;
   nodes?: GridStackNode[];
-  onChange?: onChangeCB;
+  onChange?: OnChangeCB;
 }
 
 /**
@@ -26,58 +28,56 @@ export class GridStackEngine {
   public column: number;
   public maxRow: number;
   public nodes: GridStackNode[];
-  public onChange: onChangeCB;
   public addedNodes: GridStackNode[] = [];
   public removedNodes: GridStackNode[] = [];
   public batchMode: boolean;
+  /** @internal callback to update the DOM attributes */
+  protected onChange: OnChangeCB;
   /** @internal */
-  private _float: boolean;
+  protected _float: boolean;
   /** @internal */
-  private _prevFloat: boolean;
-  /** @internal */
-  private _layouts?: Layout[][]; // maps column # to array of values nodes
-  /** @internal */
-  private _ignoreLayoutsNodeChange: boolean;
+  protected _prevFloat: boolean;
+  /** @internal cached layouts of difference column count so we can restore back (eg 12 -> 1 -> 12) */
+  protected _layouts?: GridStackNode[][]; // maps column # to array of values nodes
+  /** @internal true while we are resizing widgets during column resize to skip certain parts */
+  protected _inColumnResize: boolean;
   /** @internal true if we have some items locked */
-  private _hasLocked: boolean;
+  protected _hasLocked: boolean;
   /** @internal unique global internal _id counter NOT starting at 0 */
-  private static _idSeq = 1;
+  public static _idSeq = 1;
 
   public constructor(opts: GridStackEngineOptions = {}) {
     this.column = opts.column || 12;
-    this.onChange = opts.onChange;
-    this._float = opts.float;
     this.maxRow = opts.maxRow;
+    this._float = opts.float;
     this.nodes = opts.nodes || [];
+    this.onChange = opts.onChange;
   }
 
-  public batchUpdate(): GridStackEngine {
-    if (this.batchMode) return this;
-    this.batchMode = true;
-    this._prevFloat = this._float;
-    this._float = true; // let things go anywhere for now... commit() will restore and possibly reposition
-    this.saveInitial(); // since begin update (which is called multiple times) won't do this
+  public batchUpdate(flag = true): GridStackEngine {
+    if (!!this.batchMode === flag) return this;
+    this.batchMode = flag;
+    if (flag) {
+      this._prevFloat = this._float;
+      this._float = true; // let things go anywhere for now... will restore and possibly reposition later
+      this.saveInitial(); // since begin update (which is called multiple times) won't do this
+    } else {
+      this._float = this._prevFloat;
+      delete this._prevFloat;
+      this._packNodes()._notify();
+    }
     return this;
   }
 
-  public commit(): GridStackEngine {
-    if (!this.batchMode) return this;
-    this.batchMode = false;
-    this._float = this._prevFloat;
-    delete this._prevFloat;
-    return this._packNodes()
-      ._notify();
-  }
-
   // use entire row for hitting area (will use bottom reverse sorted first) if we not actively moving DOWN and didn't already skip
-  private _useEntireRowArea(node: GridStackNode, nn: GridStackPosition): boolean {
+  protected _useEntireRowArea(node: GridStackNode, nn: GridStackPosition): boolean {
     return !this.float && !this._hasLocked && (!node._moving || node._skipDown || nn.y <= node.y);
   }
 
   /** @internal fix collision on given 'node', going to given new location 'nn', with optional 'collide' node already found.
    * return true if we moved. */
-  private _fixCollisions(node: GridStackNode, nn = node, collide?: GridStackNode, opt: GridStackMoveOpts = {}): boolean {
-    this._sortNodes(-1); // from last to first, so recursive collision move items in the right order
+  protected _fixCollisions(node: GridStackNode, nn = node, collide?: GridStackNode, opt: GridStackMoveOpts = {}): boolean {
+    this.sortNodes(-1); // from last to first, so recursive collision move items in the right order
 
     collide = collide || this.collide(node, nn); // REAL area collide for swap and skip if none...
     if (!collide) return false;
@@ -132,8 +132,8 @@ export class GridStackEngine {
     return this.nodes.filter(n => n !== skip && n !== skip2 && Utils.isIntercepted(n, area));
   }
 
-  /** does a pixel coverage collision, returning the node that has the most coverage that is >50% mid line */
-  public collideCoverage(node: GridStackNode, o: GridStackMoveOpts, collides: GridStackNode[]): GridStackNode {
+  /** does a pixel coverage collision based on where we started, returning the node that has the most coverage that is >50% mid line */
+  protected directionCollideCoverage(node: GridStackNode, o: GridStackMoveOpts, collides: GridStackNode[]): GridStackNode {
     if (!o.rect || !node._rect) return;
     let r0 = node._rect; // where started
     let r = {...o.rect}; // where we are
@@ -175,8 +175,26 @@ export class GridStackEngine {
         collide = n;
       }
     });
+    o.collide = collide; // save it so we don't have to find it again
     return collide;
   }
+
+  /** does a pixel coverage returning the node that has the most coverage by area */
+  /*
+  protected collideCoverage(r: GridStackPosition, collides: GridStackNode[]): {collide: GridStackNode, over: number} {
+    let collide: GridStackNode;
+    let overMax = 0;
+    collides.forEach(n => {
+      if (n.locked || !n._rect) return;
+      let over = Utils.areaIntercept(r, n._rect);
+      if (over > overMax) {
+        overMax = over;
+        collide = n;
+      }
+    });
+    return {collide, over: overMax};
+  }
+  */
 
   /** called to cache the nodes pixel rectangles used for collision detection during drag */
   public cacheRects(w: number, h: number, top: number, right: number, bottom: number, left: number): GridStackEngine
@@ -201,6 +219,8 @@ export class GridStackEngine {
       b.x = a.x; b.y = a.y; // b -> a position
       if (a.h != b.h) {
         a.x = x; a.y = b.y + b.h; // a -> goes after b
+      } else if (a.w != b.w) {
+        a.x = b.x + b.w; a.y = y; // a -> goes after b
       } else {
         a.x = x; a.y = y; // a -> old b position
       }
@@ -212,19 +232,20 @@ export class GridStackEngine {
     // same size and same row or column, and touching
     if (a.w === b.w && a.h === b.h && (a.x === b.x || a.y === b.y) && (touching = Utils.isTouching(a, b)))
       return _doSwap();
-    if (touching === false) return; // ran test and fail, bail out
+    if (touching === false) return; // IFF ran test and fail, bail out
 
     // check for taking same columns (but different height) and touching
-    if (a.w === b.w && a.x === b.x && (touching || Utils.isTouching(a, b))) {
+    if (a.w === b.w && a.x === b.x && (touching || (touching = Utils.isTouching(a, b)))) {
       if (b.y < a.y) { let t = a; a = b; b = t; } // swap a <-> b vars so a is first
       return _doSwap();
     }
+    if (touching === false) return;
 
-    /* different X will be weird (expect vertical swap) and different height overlap, so too complex. user regular layout instead
-    // else check if swapping would not collide with anything else (requiring a re-layout)
-    if (!this.collide(a, {x: a.x, y: a.y, w: b.w, h: b.h}, b) &&
-        !this.collide(a, {x: b.x, y: b.y, w: a.w, h: a.h}, b))
-      return _doSwap(); */
+    // check if taking same row (but different width) and touching
+    if (a.h === b.h && a.y === b.y && (touching || (touching = Utils.isTouching(a, b)))) {
+      if (b.x < a.x) { let t = a; a = b; b = t; } // swap a <-> b vars so a is first
+      return _doSwap();
+    }
     return false;
   }
 
@@ -237,7 +258,7 @@ export class GridStackEngine {
   public compact(): GridStackEngine {
     if (this.nodes.length === 0) return this;
     this.batchUpdate()
-      ._sortNodes();
+      .sortNodes();
     let copyNodes = this.nodes;
     this.nodes = []; // pretend we have no nodes to conflict layout to start with...
     copyNodes.forEach(node => {
@@ -247,7 +268,7 @@ export class GridStackEngine {
       this.addNode(node, false); // 'false' for add event trigger
       node._dirty = true; // will force attr update
     });
-    return this.commit();
+    return this.batchUpdate(false);
   }
 
   /** enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html) */
@@ -262,15 +283,16 @@ export class GridStackEngine {
   /** float getter method */
   public get float(): boolean { return this._float || false; }
 
-  /** @internal */
-  private _sortNodes(dir?: -1 | 1): GridStackEngine {
+  /** sort the nodes array from first to last, or reverse. Called during collision/placement to force an order */
+  public sortNodes(dir?: -1 | 1): GridStackEngine {
     this.nodes = Utils.sort(this.nodes, dir, this.column);
     return this;
   }
 
   /** @internal called to top gravity pack the items back OR revert back to original Y positions when floating */
-  private _packNodes(): GridStackEngine {
-    this._sortNodes(); // first to last
+  protected _packNodes(): GridStackEngine {
+    if (this.batchMode) { return this; }
+    this.sortNodes(); // first to last
 
     if (this.float) {
       // restore original Y pos
@@ -340,21 +362,28 @@ export class GridStackEngine {
     return this.nodeBoundFix(node, resizing);
   }
 
-  /** part2 of preparing a node to fit inside our grid - checks  for x,y from grid dimensions */
+  /** part2 of preparing a node to fit inside our grid - checks for x,y,w from grid dimensions */
   public nodeBoundFix(node: GridStackNode, resizing?: boolean): GridStackNode {
+
+    let before = node._orig || Utils.copyPos({}, node);
 
     if (node.maxW) { node.w = Math.min(node.w, node.maxW); }
     if (node.maxH) { node.h = Math.min(node.h, node.maxH); }
-    if (node.minW) { node.w = Math.max(node.w, node.minW); }
+    if (node.minW && node.minW <= this.column) { node.w = Math.max(node.w, node.minW); }
     if (node.minH) { node.h = Math.max(node.h, node.minH); }
 
+    // if user loaded a larger than allowed widget for current # of columns (or force 1 column mode),
+    // remember it's position & width so we can restore back (1 -> 12 column) #1655 #1985
+    // IFF we're not in the middle of column resizing!
+    const saveOrig = this.column === 1 || node.x + node.w > this.column;
+    if (saveOrig && this.column < 12 && !this._inColumnResize && !node.autoPosition && node._id && this.findCacheLayout(node, 12) === -1) {
+      let copy = {...node}; // need _id + positions
+      copy.x = Math.min(11, copy.x);
+      copy.w = Math.min(12, copy.w);
+      this.cacheOneLayout(copy, 12);
+    }
+
     if (node.w > this.column) {
-      // if user loaded a larger than allowed widget for current # of columns,
-      // remember it's full width so we can restore back (1 -> 12 column) #1655
-      if (this.column < 12) {
-        node.w = Math.min(12, node.w);
-        this.cacheOneLayout(node, 12);
-      }
       node.w = this.column;
     } else if (node.w < 1) {
       node.w = 1;
@@ -388,9 +417,14 @@ export class GridStackEngine {
       }
     }
 
+    if (!Utils.samePos(node, before)) {
+      node._dirty = true;
+    }
+
     return node;
   }
 
+  /** returns a list of modified nodes from their original values */
   public getDirtyNodes(verify?: boolean): GridStackNode[] {
     // compare original x,y,w,h instead as _dirty can be a temporary state
     if (verify) {
@@ -399,12 +433,11 @@ export class GridStackEngine {
     return this.nodes.filter(n => n._dirty);
   }
 
-  /** @internal call this to call onChange CB with dirty nodes */
-  private _notify(nodes?: GridStackNode | GridStackNode[], removeDOM = true): GridStackEngine {
-    if (this.batchMode) return this;
-    nodes = (nodes === undefined ? [] : (Array.isArray(nodes) ? nodes : [nodes]) );
-    let dirtyNodes = nodes.concat(this.getDirtyNodes());
-    this.onChange && this.onChange(dirtyNodes, removeDOM);
+  /** @internal call this to call onChange callback with dirty nodes so DOM can be updated */
+  protected _notify(removedNodes?: GridStackNode[]): GridStackEngine {
+    if (this.batchMode || !this.onChange) return this;
+    let dirtyNodes = (removedNodes || []).concat(this.getDirtyNodes());
+    this.onChange(dirtyNodes);
     return this;
   }
 
@@ -441,40 +474,45 @@ export class GridStackEngine {
     return this;
   }
 
+  /** find the first available empty spot for the given node width/height, updating the x,y attributes. return true if found */
+  public findEmptyPosition(node: GridStackNode): boolean {
+    this.sortNodes();
+    let found = false;
+    for (let i = 0; !found; ++i) {
+      let x = i % this.column;
+      let y = Math.floor(i / this.column);
+      if (x + node.w > this.column) {
+        continue;
+      }
+      let box = {x, y, w: node.w, h: node.h};
+      if (!this.nodes.find(n => Utils.isIntercepted(box, n))) {
+        node.x = x;
+        node.y = y;
+        found = true;
+      }
+    }
+    return found;
+  }
+
   /** call to add the given node to our list, fixing collision and re-packing */
   public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
-    let dup: GridStackNode;
-    if (dup = this.nodes.find(n => n._id === node._id)) return dup; // prevent inserting twice! return it instead.
+    let dup = this.nodes.find(n => n._id === node._id);
+    if (dup) return dup; // prevent inserting twice! return it instead.
 
-    node = this.prepareNode(node);
+    // skip prepareNode if we're in middle of column resize (not new) but do check for bounds!
+    node = this._inColumnResize ? this.nodeBoundFix(node) : this.prepareNode(node);
     delete node._temporaryRemoved;
     delete node._removeDOM;
 
-    if (node.autoPosition) {
-      this._sortNodes();
-
-      for (let i = 0;; ++i) {
-        let x = i % this.column;
-        let y = Math.floor(i / this.column);
-        if (x + node.w > this.column) {
-          continue;
-        }
-        let box = {x, y, w: node.w, h: node.h};
-        if (!this.nodes.find(n => Utils.isIntercepted(box, n))) {
-          node.x = x;
-          node.y = y;
-          delete node.autoPosition; // found our slot
-          break;
-        }
-      }
+    if (node.autoPosition && this.findEmptyPosition(node)) {
+      delete node.autoPosition; // found our slot
     }
 
     this.nodes.push(node);
-    triggerAddEvent && this.addedNodes.push(node);
+    if (triggerAddEvent) { this.addedNodes.push(node); }
 
     this._fixCollisions(node);
-    this._packNodes()
-      ._notify();
+    if (!this.batchMode) { this._packNodes()._notify(); }
     return node;
   }
 
@@ -490,7 +528,7 @@ export class GridStackEngine {
     // don't use 'faster' .splice(findIndex(),1) in case node isn't in our list, or in multiple times.
     this.nodes = this.nodes.filter(n => n !== node);
     return this._packNodes()
-      ._notify(node);
+      ._notify([node]);
   }
 
   public removeAll(removeDOM = true): GridStackEngine {
@@ -511,7 +549,7 @@ export class GridStackEngine {
     o.pack = true;
 
     // simpler case: move item directly...
-    if (!this.maxRow/* && !this._hasLocked*/) {
+    if (!this.maxRow) {
       return this.moveNode(node, o);
     }
 
@@ -530,17 +568,14 @@ export class GridStackEngine {
     });
     if (!clonedNode) return false;
 
-    let canMove = clone.moveNode(clonedNode, o);
-    // if maxRow make sure we are still valid size
-    if (this.maxRow && canMove) {
-      canMove = (clone.getRow() <= this.maxRow);
-      // turns out we can't grow, then see if we can swap instead (ex: full grid)
-      if (!canMove) {
-        let collide = this.collide(node, o);
-        if (collide && this.swap(node, collide)) {
-          this._notify();
-          return true;
-        }
+    // check if we're covering 50% collision and could move
+    let canMove = clone.moveNode(clonedNode, o) && clone.getRow() <= this.maxRow;
+    // else check if we can force a swap (float=true, or different shapes) on non-resize
+    if (!canMove && !o.resizing && o.collide) {
+      let collide = o.collide.el.gridstackNode; // find the source node the clone collided with at 50%
+      if (this.swap(node, collide)) { // swaps and mark dirty
+        this._notify();
+        return true;
       }
     }
     if (!canMove) return false;
@@ -580,7 +615,7 @@ export class GridStackEngine {
 
   /** true if x,y or w,h are different after clamping to min/max */
   public changedPosConstrain(node: GridStackNode, p: GridStackPosition): boolean {
-    // make sure w,h are set
+    // first make sure w,h are set for caller
     p.w = p.w || node.w;
     p.h = p.h || node.h;
     if (node.x !== p.x || node.y !== p.y) return true;
@@ -595,7 +630,10 @@ export class GridStackEngine {
   /** return true if the passed in node was actually moved (checks for no-op and locked) */
   public moveNode(node: GridStackNode, o: GridStackMoveOpts): boolean {
     if (!node || /*node.locked ||*/ !o) return false;
-    if (o.pack === undefined) o.pack = true;
+    let wasUndefinedPack: boolean;
+    if (o.pack === undefined) {
+      wasUndefinedPack = o.pack = true;
+    }
 
     // constrain the passed in values and check if we're still changing our node
     if (typeof o.x !== 'number') { o.x = node.x; }
@@ -611,22 +649,30 @@ export class GridStackEngine {
     if (Utils.samePos(node, o)) return false;
     let prevPos: GridStackPosition = Utils.copyPos({}, node);
 
-    // during while() collisions make sure to check entire row so larger items don't leap frog small ones (push them all down)
-    let area = nn;
-    // if (this._useEntireRowArea(node, nn)) {
-    //   area = {x: 0, w: this.column, y: nn.y, h: nn.h};
-    // }
-
     // check if we will need to fix collision at our new location
-    let collides = this.collideAll(node, area, o.skip);
+    let collides = this.collideAll(node, nn, o.skip);
     let needToMove = true;
     if (collides.length) {
-      // now check to make sure we actually collided over 50% surface area while dragging
-      let collide = node._moving && !o.nested ? this.collideCoverage(node, o, collides) : collides[0];
+      let activeDrag = node._moving && !o.nested;
+      // check to make sure we actually collided over 50% surface area while dragging
+      let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
+      // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
+      if (activeDrag && collide && node.grid?.opts?.subGridDynamic && !node.grid._isTemp) {
+        let over = Utils.areaIntercept(o.rect, collide._rect);
+        let a1 = Utils.area(o.rect);
+        let a2 = Utils.area(collide._rect);
+        let perc = over / (a1 < a2 ? a1 : a2);
+        if (perc > .8) {
+          collide.grid.makeSubGrid(collide.el, undefined, node);
+          collide = undefined;
+        }
+      }
+
       if (collide) {
         needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
       } else {
         needToMove = false; // we didn't cover >50% for a move, skip...
+        if (wasUndefinedPack) delete o.pack;
       }
     }
 
@@ -664,21 +710,20 @@ export class GridStackEngine {
     return this;
   }
 
-  /** saves a copy of the current layout returning a list of widgets for serialization */
+  /** saves a copy of the largest column layout (eg 12 even when rendering oneColumnMode) so we don't loose orig layout,
+   * returning a list of widgets for serialization */
   public save(saveElement = true): GridStackNode[] {
+    // use the highest layout for any saved info so we can have full detail on reload #1849
+    let len = this._layouts?.length;
+    let layout = len && this.column !== (len - 1) ? this._layouts[len - 1] : null;
     let list: GridStackNode[] = [];
-    this._sortNodes();
+    this.sortNodes();
     this.nodes.forEach(n => {
-      let w: GridStackNode = {};
-      for (let key in n) { if (key[0] !== '_' && n[key] !== null && n[key] !== undefined ) w[key] = n[key]; }
-      // delete other internals
-      delete w.grid;
-      if (!saveElement) delete w.el;
-      // delete default values (will be re-created on read)
-      if (!w.autoPosition) delete w.autoPosition;
-      if (!w.noResize) delete w.noResize;
-      if (!w.noMove) delete w.noMove;
-      if (!w.locked) delete w.locked;
+      let wl = layout?.find(l => l._id === n._id);
+      let w: GridStackNode = {...n};
+      // use layout info instead if set
+      if (wl) { w.x = wl.x; w.y = wl.y; w.w = wl.w; }
+      Utils.removeInternalForSave(w, !saveElement);
       list.push(w);
     });
     return list;
@@ -686,7 +731,7 @@ export class GridStackEngine {
 
   /** @internal called whenever a node is added or moved - updates the cached layouts */
   public layoutsNodesChange(nodes: GridStackNode[]): GridStackEngine {
-    if (!this._layouts || this._ignoreLayoutsNodeChange) return this;
+    if (!this._layouts || this._inColumnResize) return this;
     // remove smaller layouts - we will re-generate those on the fly... larger ones need to update
     this._layouts.forEach((layout, column) => {
       if (!layout || column === this.column) return this;
@@ -695,12 +740,12 @@ export class GridStackEngine {
       }
       else {
         // we save the original x,y,w (h isn't cached) to see what actually changed to propagate better.
-        // Note: we don't need to check against out of bound scaling/moving as that will be done when using those cache values.
+        // NOTE: we don't need to check against out of bound scaling/moving as that will be done when using those cache values. #1785
+        let ratio = column / this.column;
         nodes.forEach(node => {
           if (!node._orig) return; // didn't change (newly added ?)
           let n = layout.find(l => l._id === node._id);
           if (!n) return; // no cache for new nodes. Will use those values.
-          let ratio = column / this.column;
           // Y changed, push down same amount
           // TODO: detect doing item 'swaps' will help instead of move (especially in 1 column mode)
           if (node.y !== node._orig.y) {
@@ -726,20 +771,24 @@ export class GridStackEngine {
    * Note we store previous layouts (especially original ones) to make it possible to go
    * from say 12 -> 1 -> 12 and get back to where we were.
    *
-   * @param oldColumn previous number of columns
+   * @param prevColumn previous number of columns
    * @param column  new column number
    * @param nodes different sorted list (ex: DOM order) instead of current list
    * @param layout specify the type of re-layout that will happen (position, size, etc...).
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public updateNodeWidths(oldColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
-    if (!this.nodes.length || oldColumn === column) return this;
+  public updateNodeWidths(prevColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
+    if (!this.nodes.length || !column || prevColumn === column) return this;
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
-    this.cacheLayout(this.nodes, oldColumn);
+    this.cacheLayout(this.nodes, prevColumn);
+    this.batchUpdate(); // do this EARLY as it will call saveInitial() so we can detect where we started for _dirty and collision
+    let newNodes: GridStackNode[] = [];
 
     // if we're going to 1 column and using DOM order rather than default sorting, then generate that layout
-    if (column === 1 && nodes && nodes.length) {
+    let domOrder = false;
+    if (column === 1 && nodes?.length) {
+      domOrder = true;
       let top = 0;
       nodes.forEach(n => {
         n.x = 0;
@@ -747,34 +796,35 @@ export class GridStackEngine {
         n.y = Math.max(n.y, top);
         top = n.y + n.h;
       });
+      newNodes = nodes;
+      nodes = [];
     } else {
-      nodes = Utils.sort(this.nodes, -1, oldColumn); // current column reverse sorting so we can insert last to front (limit collision)
+      nodes = Utils.sort(this.nodes, -1, prevColumn); // current column reverse sorting so we can insert last to front (limit collision)
     }
 
-    // see if we have cached previous layout.
-    let cacheNodes = this._layouts[column] || [];
-    // if not AND we are going up in size start with the largest layout as down-scaling is more accurate
-    let lastIndex = this._layouts.length - 1;
-    if (cacheNodes.length === 0 && column > oldColumn && column < lastIndex) {
-      cacheNodes = this._layouts[lastIndex] || [];
-      if (cacheNodes.length) {
-        // pretend we came from that larger column by assigning those values as starting point
-        oldColumn = lastIndex;
-        cacheNodes.forEach(cacheNode => {
-          let j = nodes.findIndex(n => n._id === cacheNode._id);
-          if (j !== -1) {
+    // see if we have cached previous layout IFF we are going up in size (restore) otherwise always
+    // generate next size down from where we are (looks more natural as you gradually size down).
+    let cacheNodes: GridStackNode[] = [];
+    if (column > prevColumn) {
+      cacheNodes = this._layouts[column] || [];
+      // ...if not, start with the largest layout (if not already there) as down-scaling is more accurate
+      // by pretending we came from that larger column by assigning those values as starting point
+      let lastIndex = this._layouts.length - 1;
+      if (!cacheNodes.length && prevColumn !== lastIndex && this._layouts[lastIndex]?.length) {
+        prevColumn = lastIndex;
+        this._layouts[lastIndex].forEach(cacheNode => {
+          let n = nodes.find(n => n._id === cacheNode._id);
+          if (n) {
             // still current, use cache info positions
-            nodes[j].x = cacheNode.x;
-            nodes[j].y = cacheNode.y;
-            nodes[j].w = cacheNode.w;
+            n.x = cacheNode.x;
+            n.y = cacheNode.y;
+            n.w = cacheNode.w;
           }
         });
-        cacheNodes = []; // we still don't have new column cached data... will generate from larger one.
       }
     }
 
     // if we found cache re-use those nodes that are still current
-    let newNodes: GridStackNode[] = [];
     cacheNodes.forEach(cacheNode => {
       let j = nodes.findIndex(n => n._id === cacheNode._id);
       if (j !== -1) {
@@ -789,14 +839,15 @@ export class GridStackEngine {
     // ...and add any extra non-cached ones
     if (nodes.length) {
       if (typeof layout === 'function') {
-        layout(column, oldColumn, newNodes, nodes);
-      } else {
-        let ratio = column / oldColumn;
+        layout(column, prevColumn, newNodes, nodes);
+      } else if (!domOrder) {
+        let ratio = column / prevColumn;
         let move = (layout === 'move' || layout === 'moveScale');
         let scale = (layout === 'scale' || layout === 'moveScale');
         nodes.forEach(node => {
+          // NOTE: x + w could be outside of the grid, but addNode() below will handle that
           node.x = (column === 1 ? 0 : (move ? Math.round(node.x * ratio) : Math.min(node.x, column - 1)));
-          node.w = ((column === 1 || oldColumn === 1) ? 1 :
+          node.w = ((column === 1 || prevColumn === 1) ? 1 :
             scale ? (Math.round(node.w * ratio) || 1) : (Math.min(node.w, column)));
           newNodes.push(node);
         });
@@ -805,16 +856,15 @@ export class GridStackEngine {
     }
 
     // finally re-layout them in reverse order (to get correct placement)
-    newNodes = Utils.sort(newNodes, -1, column);
-    this._ignoreLayoutsNodeChange = true;
-    this.batchUpdate();
-    this.nodes = []; // pretend we have no nodes to start with (we use same structures) to simplify layout
+    if (!domOrder) newNodes = Utils.sort(newNodes, -1, column);
+    this._inColumnResize = true; // prevent cache update
+    this.nodes = []; // pretend we have no nodes to start with (add() will use same structures) to simplify layout
     newNodes.forEach(node => {
       this.addNode(node, false); // 'false' for add event trigger
-      node._dirty = true; // force attr update
-    }, this);
-    this.commit();
-    delete this._ignoreLayoutsNodeChange;
+      delete node._orig; // make sure the commit doesn't try to restore things back to original
+    });
+    this.batchUpdate(false);
+    delete this._inColumnResize;
     return this;
   }
 
@@ -825,7 +875,7 @@ export class GridStackEngine {
    * @param clear if true, will force other caches to be removed (default false)
    */
   public cacheLayout(nodes: GridStackNode[], column: number, clear = false): GridStackEngine {
-    let copy: Layout[] = [];
+    let copy: GridStackNode[] = [];
     nodes.forEach((n, i) => {
       n._id = n._id || GridStackEngine._idSeq++; // make sure we have an id in case this is new layout, else re-use id already set
       copy[i] = {x: n.x, y: n.y, w: n.w, _id: n._id} // only thing we change is x,y,w and id to find it back
@@ -842,12 +892,19 @@ export class GridStackEngine {
    */
   public cacheOneLayout(n: GridStackNode, column: number): GridStackEngine {
     n._id = n._id || GridStackEngine._idSeq++;
-    let layout: Layout = {x: n.x, y: n.y, w: n.w, _id: n._id}
+    let layout: GridStackNode = {x: n.x, y: n.y, w: n.w, _id: n._id}
     this._layouts = this._layouts || [];
     this._layouts[column] = this._layouts[column] || [];
-    let index = this._layouts[column].findIndex(l => l._id === n._id);
-    index === -1 ? this._layouts[column].push(layout) : this._layouts[column][index] = layout;
+    let index = this.findCacheLayout(n, column);
+    if (index === -1)
+      this._layouts[column].push(layout);
+    else
+      this._layouts[column][index] = layout;
     return this;
+  }
+
+  protected findCacheLayout(n: GridStackNode, column: number): number {
+    return this._layouts?.[column]?.findIndex(l => l._id === n._id) ?? -1;
   }
 
 
@@ -858,12 +915,4 @@ export class GridStackEngine {
     }
     return this;
   }
-}
-
-/** @internal class to store per column layout bare minimal info (subset of GridStackWidget) */
-interface Layout {
-  x: number;
-  y: number;
-  w: number;
-  _id: number; // so we can find full node back
 }
