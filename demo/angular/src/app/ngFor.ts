@@ -60,19 +60,14 @@ export class AngularNgForTestComponent implements AfterViewInit {
       margin: 5,
       float: true,
     })
-    // Optional: called when widgets are changed (moved/resized/added) - update our list to match ?
-    .on('change added', (event, list) => {
-      setTimeout(() => { // prevent added items from ExpressionChangedAfterItHasBeenCheckedError
-        (list as GridStackNode[]).forEach(n => {
-          const item = this._items.find(i => i.id === n.id);
-          if (item) Utils.copyPos(item, n);
-        })
-      }, 0);
-    });
+    .on('change added', (event, list) => this.onChange(list as GridStackNode[]));
+
+    // sync initial actual valued rendered (in case init() had to merge conflicts)
+    this.onChange();
 
     /**
      * this is called when the list of items changes - get a list of nodes and
-     * update the layout accordingly (which will take care of adding/removing/updating items to match DOM done by Angular)
+     * update the layout accordingly (which will take care of adding/removing items changed by Angular)
      */
     this.gridstackItems.changes.subscribe(() => {
       const layout: GridStackWidget[] = [];
@@ -84,10 +79,24 @@ export class AngularNgForTestComponent implements AfterViewInit {
     })
   }
 
+  /** Optional: called when given widgets are changed (moved/resized/added) - update our list to match.
+   * Note this is not strictly necessary as demo works without this
+   */
+  public onChange(list = this.grid.engine.nodes) {
+    setTimeout(() => // prevent new 'added' items from ExpressionChangedAfterItHasBeenCheckedError. TODO: find cleaner way to sync outside Angular change detection ?
+      list.forEach(n => {
+        const item = this._items.find(i => i.id === n.id);
+        if (item) Utils.copyPos(item, n);
+      })
+    , 0);
+  }
+
   /**
    * CRUD operations
    */
   public add() {
+    // new array doesn't seem required. Angular seem to detect changes to content...
+    // this.items = [...this.items, { x: 3, y: 0, w: 3, id: String(ids++) }];
     this.items.push({ x: 3, y: 0, w: 3, id: String(ids++) });
   }
 
@@ -96,13 +105,13 @@ export class AngularNgForTestComponent implements AfterViewInit {
   }
 
   public change() {
-    // this.items[0].w = 2; // this will not update GS internal data, only DOM values even thought array doesn't grow/shrink, so call GS update()
+    // this.items[0]?.w = 2; // this will not update GS internal data, only DOM values even thought array doesn't grow/shrink. Need to call GS update()
     const n = this.grid.engine.nodes[0];
     if (n) this.grid.update(n.el!, { w: 2 });
   }
 
   // ngFor unique node id to have correct match between our items used and GS
-  identify(i: number, w: GridStackWidget) {
+  identify(index: number, w: GridStackWidget) {
     return w.id;
   }
 }

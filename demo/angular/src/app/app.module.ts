@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { AngularNgForTestComponent } from './ngFor';
+import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
 
 @NgModule({
@@ -10,6 +11,7 @@ import { AngularSimpleComponent } from './simple';
     AppComponent,
     AngularSimpleComponent,
     AngularNgForTestComponent,
+    AngularNgForCmdTestComponent,
   ],
   imports: [
     BrowserModule
