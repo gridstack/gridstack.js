@@ -42,7 +42,7 @@ import { GridStack, GridStackWidget } from 'gridstack';
     `,
   ],
 })
-export class AngularNgForTestComponent implements AfterViewInit {
+export class AngularNgForCmdTestComponent implements AfterViewInit {
   @ViewChildren("gridStackItem") gridstackItems!: QueryList<any>;
   @Input() public items: GridStackWidget[] = [
     { x: 0, y: 0, w: 1, h: 1 },
@@ -71,13 +71,17 @@ export class AngularNgForTestComponent implements AfterViewInit {
         if (widgetToMake.action === "add") {
           this.grid.makeWidget(`#${widgetToMake.id}`);
         } else if (widgetToMake.action === "remove") {
-          const removeEl = this.grid
-            .getGridItems()
-            .find((el) => el.id === `${widgetToMake.id}`);
-          this.grid.removeWidget(removeEl!);
+          const id = String(widgetToMake.id);
+          // Note: DOM element has been removed by Angular already so look for it through the engine node list
+          const removeEl = this.grid.engine.nodes.find((n) => n.el?.id === id)?.el;
+          if (removeEl) this.grid.removeWidget(removeEl);
         }
       }
     );
+
+    // TODO: the problem with this code is that our items list does NOT reflect changes made by GS (user directly changing, or conflict)
+    // and believe the other ngFor example (which does track changes) is also cleaner as it doesn't require special action commands
+    // and track both changes to happen using zip().
   }
 
   /**
