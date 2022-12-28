@@ -38,12 +38,12 @@ function addEvents(grid, id) {
     console.log(g + 'dragstop ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') = (' + x + ',' + y + ')');
   });
 
-  grid.on('dropped', function(event, previousWidget, newWidget) {
-    if (previousWidget) {
-      console.log(g + 'dropped - Removed widget from grid:', previousWidget);
+  grid.on('dropped', function(event, previousNode, newNode) {
+    if (previousNode) {
+      console.log(g + 'dropped - Removed widget from grid:', previousNode);
     }
-    if (newWidget) {
-      console.log(g + 'dropped - Added widget in grid:', newWidget);
+    if (newNode) {
+      console.log(g + 'dropped - Added widget in grid:', newNode);
     }
   });
 
