@@ -8,7 +8,8 @@
 import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
-  GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions, dragInDefaultOptions } from './types';
+  GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler } from './types';
 
 /*
  * and include D&D by default
@@ -984,9 +985,9 @@ export class GridStack {
       // native CustomEvent handlers - cash the generic handlers so we can easily remove
       let noData = (name === 'enable' || name === 'disable');
       if (noData) {
-        this._gsEventHandler[name] = (event: Event) => callback(event);
+        this._gsEventHandler[name] = (event: Event) => (callback as GridStackEventHandler)(event);
       } else {
-        this._gsEventHandler[name] = (event: CustomEvent) => callback(event, event.detail);
+        this._gsEventHandler[name] = (event: CustomEvent) => (callback as GridStackNodesHandler)(event, event.detail);
       }
       this.el.addEventListener(name, this._gsEventHandler[name]);
     } else if (name === 'drag' || name === 'dragstart' || name === 'dragstop' || name === 'resizestart' || name === 'resize' || name === 'resizestop' || name === 'dropped') {

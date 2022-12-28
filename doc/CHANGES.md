@@ -80,6 +80,7 @@ Change log
 ## 7.1.1-dev (TBD)
 * fix [#939](https://github.com/gridstack/gridstack.js/issues/2039) 'prototype' undefined error for dd-gridstack.js
 * add [#939](https://github.com/gridstack/gridstack.js/issues/2105) disable/enable are methods now recursive by default
+* add better GridStackEventHandlerCallback spelled out types
 
 ## 7.1.1 (2022-11-13)
 * fix [#939](https://github.com/gridstack/gridstack.js/issues/939) editable elements focus (regression in v6). Thank you [@Gezdy](https://github.com/Gezdy)
