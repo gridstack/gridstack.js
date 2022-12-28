@@ -1,5 +1,6 @@
 /**
- * Example using Angular ngFor to loop through items and create DOM items
+ * Example using Angular ngFor to loop through items and create DOM items - this uses a custom command.
+ * NOTE: see the simpler and better (tracks all changes) angular-ng-for-test
  */
 
 import { Component, AfterViewInit, Input, ViewChildren, QueryList } from "@angular/core";
@@ -8,8 +9,9 @@ import { Subject, zip } from "rxjs";
 import { GridStack, GridStackWidget } from 'gridstack';
 
 @Component({
-  selector: "app-angular-ng-for-test",
+  selector: "angular-ng-for-cmd-test",
   template: `
+    <p>Example using Angular ngFor to loop through items, but uses an explicity command to let us update GS (see automatic better way)</p>
     <button (click)="add()">add item</button>
     <button (click)="delete()">remove item</button>
     <button (click)="change()">modify item</button>
@@ -19,10 +21,10 @@ import { GridStack, GridStackWidget } from 'gridstack';
         *ngFor="let n of items; let i = index; trackBy: identify"
         [id]="i"
         class="grid-stack-item"
-        [attr.gs-w]="n.w"
-        [attr.gs-h]="n.h"
         [attr.gs-x]="n.x"
         [attr.gs-y]="n.y"
+        [attr.gs-w]="n.w"
+        [attr.gs-h]="n.h"
         #gridStackItem
       >
         <div class="grid-stack-item-content">item {{ i }}</div>
@@ -41,14 +43,14 @@ import { GridStack, GridStackWidget } from 'gridstack';
   ],
 })
 export class AngularNgForTestComponent implements AfterViewInit {
-  @ViewChildren("gridStackItem") gridstackItems: QueryList<any>;
+  @ViewChildren("gridStackItem") gridstackItems!: QueryList<any>;
   @Input() public items: GridStackWidget[] = [
     { x: 0, y: 0, w: 1, h: 1 },
     { x: 1, y: 1, w: 1, h: 1 },
     { x: 2, y: 2, w: 1, h: 1 },
   ];
 
-  private grid: GridStack;
+  private grid!: GridStack;
   private widgetToMake: Subject<{
     action: "add" | "remove" | "update";
     id: number;
@@ -72,7 +74,7 @@ export class AngularNgForTestComponent implements AfterViewInit {
           const removeEl = this.grid
             .getGridItems()
             .find((el) => el.id === `${widgetToMake.id}`);
-          this.grid.removeWidget(removeEl);
+          this.grid.removeWidget(removeEl!);
         }
       }
     );
@@ -94,7 +96,7 @@ export class AngularNgForTestComponent implements AfterViewInit {
   // a change of a widget doesn´t change to amount of items in ngFor therefore we don´t need to do it through the zip function above
   public change() {
     const updateEl = this.grid.getGridItems().find((el) => el.id === `${0}`);
-    this.grid.update(updateEl, { w: 2 });
+    this.grid.update(updateEl!, { w: 2 });
   }
 
   identify(index: number) {
