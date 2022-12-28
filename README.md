@@ -293,7 +293,8 @@ See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html).
 
 search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
 
-- **Angular9**: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for concept ONLY. You can do component or directive. Working on exposing the Angular component wrapper we use internally.
+- **Angular**: see our <a href="https://github.com/gridstack/gridstack.js/tree/master/demo/angular" target="_blank">Angular Demo</a>. Working on exposing the Angular component wrapper we use internally, or use directive (TBD), or use ngFor example, etc... There are many way to do this.
+- **Angular9**: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for **concept ONLY**.
 - **AngularJS**: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
 - **Ember**: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
 - **knockout**: see [demo](https://gridstackjs.com/demo/knockout.html) using component, but check [custom bindings ticket](https://github.com/gridstack/gridstack.js/issues/465) which is likely better approach.
