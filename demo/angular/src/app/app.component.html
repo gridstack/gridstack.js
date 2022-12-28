@@ -4,10 +4,18 @@
   <button (click)="show=0">Simple</button>
   <button (click)="show=1">ngFor case</button>
   <button (click)="show=2">ngFor custom command</button>
+  <button (click)="show=3">component</button>
 </div>
 
 <div class="test-container">
 <angular-simple-test *ngIf="show===0"></angular-simple-test>
 <angular-ng-for-test *ngIf="show===1"></angular-ng-for-test>
 <angular-ng-for-cmd-test *ngIf="show===2"></angular-ng-for-cmd-test>
+
+<gridstack *ngIf="show===3" [options]="gridstackConfig" (changeCB)="onChange($event)" (resizestopCB)="onResizeStop($event)">
+  <gridstack-item [id]="'a'" [x]="0" [y]="0" [w]="6" [h]="4" [minH]="2" [minW]="3">
+    HELLO
+  </gridstack-item>
+</gridstack>
+
 </div>
