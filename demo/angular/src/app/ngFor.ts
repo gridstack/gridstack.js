@@ -15,6 +15,7 @@ let ids = 1;
     <button (click)="add()">add item</button>
     <button (click)="delete()">remove item</button>
     <button (click)="change()">modify item</button>
+    <button (click)="newLayout()">new layout</button>
     <div class="grid-stack">
       <!-- using angular templating to create DOM, otherwise an easier way is to simply call grid.load(items) -->
       <div *ngFor="let n of items; trackBy: identify"
@@ -30,7 +31,7 @@ let ids = 1;
       </div>
     </div>
   `,
-  // gridstack.min.css and other custom styles should be included in global styles.scss
+  // gridstack.min.css and other custom styles should be included in global styles.scss or here
 })
 export class AngularNgForTestComponent implements AfterViewInit {
   /** list of HTML items that we track to know when the DOM has been updated to make/remove GS widgets */
@@ -75,7 +76,7 @@ export class AngularNgForTestComponent implements AfterViewInit {
         const n = ref.nativeElement.gridstackNode || this.grid.makeWidget(ref.nativeElement).gridstackNode;
         if (n) layout.push(n);
       });
-      this.grid.load(layout);
+      this.grid.load(layout); // efficient that does diffs only
     })
   }
 
@@ -95,7 +96,7 @@ export class AngularNgForTestComponent implements AfterViewInit {
    * CRUD operations
    */
   public add() {
-    // new array doesn't seem required. Angular seem to detect changes to content...
+    // new array isn't required as Angular seem to detect changes to content
     // this.items = [...this.items, { x: 3, y: 0, w: 3, id: String(ids++) }];
     this.items.push({ x: 3, y: 0, w: 3, id: String(ids++) });
   }
@@ -105,9 +106,18 @@ export class AngularNgForTestComponent implements AfterViewInit {
   }
 
   public change() {
-    // this.items[0]?.w = 2; // this will not update GS internal data, only DOM values even thought array doesn't grow/shrink. Need to call GS update()
+    // this.items[0]?.w = 2; // this will not trigger gridstackItems.changes.subscribe, only DOM values are update, so call GS update() instead
     const n = this.grid.engine.nodes[0];
     if (n) this.grid.update(n.el!, { w: 2 });
+  }
+
+  public newLayout() {
+    this.items = [ // test updating existing and creating new one
+      {x: 0, y: 1, id: 1},
+      {x: 1, y: 1, id: 2},
+      // {x: 2, y: 1, id: 3}, // delete item
+      {x: 3, y: 0, w: 3}, // new item
+    ];
   }
 
   // ngFor unique node id to have correct match between our items used and GS

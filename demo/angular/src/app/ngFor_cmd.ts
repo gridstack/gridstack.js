@@ -3,10 +3,10 @@
  * NOTE: see the simpler and better (tracks all changes) angular-ng-for-test
  */
 
-import { Component, AfterViewInit, Input, ViewChildren, QueryList } from "@angular/core";
+import { Component, AfterViewInit, Input, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { Subject, zip } from "rxjs";
 
-import { GridStack, GridStackWidget } from 'gridstack';
+import { GridItemHTMLElement, GridStack, GridStackWidget } from 'gridstack';
 
 @Component({
   selector: "angular-ng-for-cmd-test",
@@ -31,30 +31,24 @@ import { GridStack, GridStackWidget } from 'gridstack';
       </div>
     </div>
   `,
-  styles: [
-    `
-      // !!!IMPORTANT!!! Import this through your styles.scss or angular.json! This is just for demo purposes
-      :host {
-        ::ng-deep {
-          @import "demo";
-        }
-      }
-    `,
-  ],
+  // gridstack.min.css and other custom styles should be included in global styles.scss or here
 })
 export class AngularNgForCmdTestComponent implements AfterViewInit {
-  @ViewChildren("gridStackItem") gridstackItems!: QueryList<any>;
+  /** list of HTML items that we track to know when the DOM has been updated to make/remove GS widgets */
+  @ViewChildren("gridStackItem") gridstackItems!: QueryList<ElementRef<GridItemHTMLElement>>;
+
+  /** set the items to display. */
   @Input() public items: GridStackWidget[] = [
-    { x: 0, y: 0, w: 1, h: 1 },
-    { x: 1, y: 1, w: 1, h: 1 },
-    { x: 2, y: 2, w: 1, h: 1 },
+    {x: 0, y: 0},
+    {x: 1, y: 1},
+    {x: 2, y: 2},
   ];
 
   private grid!: GridStack;
   private widgetToMake: Subject<{
     action: "add" | "remove" | "update";
     id: number;
-  }> = new Subject(); // consider to use a statemanagement like ngrx component store to do this
+  }> = new Subject(); // consider to use a state management like ngrx component store to do this
 
   constructor() {}
 
@@ -79,9 +73,11 @@ export class AngularNgForCmdTestComponent implements AfterViewInit {
       }
     );
 
-    // TODO: the problem with this code is that our items list does NOT reflect changes made by GS (user directly changing, or conflict)
-    // and believe the other ngFor example (which does track changes) is also cleaner as it doesn't require special action commands
-    // and track both changes to happen using zip().
+    // TODO: the problem with this code is that our items list does NOT reflect changes made by GS (user directly changing,
+    // or conflict during initial layout) and believe the other ngFor example (which does track changes) is also cleaner
+    // as it doesn't require user creating special action commands nor track 'both' changes using zip().
+    // TODO: identify() uses index which is not guaranteed to match between invocations (insert/delete in
+    // middle of list instead of end as demo does)
   }
 
   /**
@@ -103,6 +99,7 @@ export class AngularNgForCmdTestComponent implements AfterViewInit {
     this.grid.update(updateEl!, { w: 2 });
   }
 
+  // ngFor lookup indexing
   identify(index: number) {
     return index;
   }
