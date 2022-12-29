@@ -237,6 +237,10 @@ export class GridStack {
     this.el = el; // exposed HTML element to the user
     opts = opts || {}; // handles null/undefined/0
 
+    if (!el.classList.contains('grid-stack')) {
+      this.el.classList.add('grid-stack');
+    }
+
     // if row property exists, replace minRow and maxRow instead
     if (opts.row) {
       opts.minRow = opts.maxRow = opts.row;
@@ -408,27 +412,32 @@ export class GridStack {
     }
 
     let el: HTMLElement;
+    let node: GridStackNode;
     if (typeof els === 'string') {
       let doc = document.implementation.createHTMLDocument(''); // IE needs a param
       doc.body.innerHTML = els;
       el = doc.body.children[0] as HTMLElement;
     } else if (arguments.length === 0 || arguments.length === 1 && isGridStackWidget(els)) {
-      let content = els ? (els as GridStackWidget).content || '' : '';
-      options = els;
-      let doc = document.implementation.createHTMLDocument(''); // IE needs a param
-      doc.body.innerHTML = `<div class="grid-stack-item ${this.opts.itemClass || ''}"><div class="grid-stack-item-content">${content}</div></div>`;
-      el = doc.body.children[0] as HTMLElement;
+      node = options = els;
+      if (node?.el) {
+        el = node.el; // re-use element stored in the node
+      } else {
+        let content = options?.content || '';
+        let doc = document.implementation.createHTMLDocument(''); // IE needs a param
+        doc.body.innerHTML = `<div class="grid-stack-item ${this.opts.itemClass || ''}"><div class="grid-stack-item-content">${content}</div></div>`;
+        el = doc.body.children[0] as HTMLElement;
+      }
     } else {
       el = els as HTMLElement;
     }
 
     // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
-    // as the actual value are filled in when _prepareElement() calls el.getAttribute('gs-xyz) before adding the node.
+    // as the actual value are filled in when _prepareElement() calls el.getAttribute('gs-xyz') before adding the node.
     // So make sure we load any DOM attributes that are not specified in passed in options (which override)
     let domAttr = this._readAttr(el);
     options = Utils.cloneDeep(options) || {};  // make a copy before we modify in case caller re-uses it
     Utils.defaults(options, domAttr);
-    let node = this.engine.prepareNode(options);
+    node = this.engine.prepareNode(options);
     this._writeAttr(el, options);
 
     if (this._insertNotAppend) {
@@ -680,7 +689,7 @@ export class GridStack {
         if (typeof(addAndRemove) === 'function') {
           w = addAndRemove(this, w, true).gridstackNode;
         } else {
-          w = this.addWidget(w).gridstackNode;
+          w = (w.el ? this.addWidget(w.el, w) : this.addWidget(w)).gridstackNode;
         }
       }
     });
@@ -1375,10 +1384,8 @@ export class GridStack {
 
   /** @internal */
   protected _prepareElement(el: GridItemHTMLElement, triggerAddEvent = false, node?: GridStackNode): GridStack {
-    if (!node) {
-      el.classList.add(this.opts.itemClass);
-      node = this._readAttr(el);
-    }
+    el.classList.add(this.opts.itemClass);
+    node = node || this._readAttr(el);
     el.gridstackNode = node;
     node.el = el;
     node.grid = this;
