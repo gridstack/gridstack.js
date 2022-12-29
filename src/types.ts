@@ -69,7 +69,7 @@ export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 /** specific and general event handlers for the .on() method */
 export type GridStackEventHandler = (event: Event) => void;
 export type GridStackElementHandler = (event: Event, el: GridItemHTMLElement) => void;
-export type GridStackNodesHandler = (event: Event, node: GridStackNode[]) => void;
+export type GridStackNodesHandler = (event: Event, nodes: GridStackNode[]) => void;
 export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => void;
 export type GridStackEventHandlerCallback = GridStackEventHandler | GridStackElementHandler | GridStackNodesHandler | GridStackDroppedHandler;
 
