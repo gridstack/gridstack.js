@@ -14,7 +14,7 @@ let ids = 1;
     <p><b>ngFor</b>: Example using Angular ngFor to loop through items and create DOM items. This track changes made to the array of items, waits for DOM rendering, then update GS</p>
     <button (click)="add()">add item</button>
     <button (click)="delete()">remove item</button>
-    <button (click)="change()">modify item</button>
+    <button (click)="modify()">modify item</button>
     <button (click)="newLayout()">new layout</button>
     <div class="grid-stack">
       <!-- using angular templating to create DOM, otherwise an easier way is to simply call grid.load(items)
@@ -107,7 +107,7 @@ export class AngularNgForTestComponent implements AfterViewInit {
     this.items.pop();
   }
 
-  public change() {
+  public modify() {
     // this will only update the DOM attr (from the ngFor loop in our template above)
     // but not trigger gridstackItems.changes for GS to auto-update, so call GS update() instead
     // this.items[0].w = 2;

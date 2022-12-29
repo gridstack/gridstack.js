@@ -16,7 +16,7 @@
   <p><b>COMPONENT</b>: Most complete example that uses Component wrapper for grid and gridItem</p>
   <button (click)="add(grid)">add item</button>
   <button (click)="delete(grid)">remove item</button>
-  <button (click)="change(grid)">modify item</button>
+  <button (click)="modify(grid)">modify item</button>
   <button (click)="newLayout(grid)">new layout</button>
   <gridstack #grid [options]="gridOptions" (changeCB)="onChange($event)" (resizestopCB)="onResizeStop($event)">
     <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n">

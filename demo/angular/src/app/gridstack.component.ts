@@ -1,3 +1,8 @@
+/**
+ * gridstack.component.ts 7.1.2
+ * Copyright (c) 2022 Alain Dumesny - see GridStack root license
+ */
+
 import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
   NgZone, OnDestroy, OnInit, Output, QueryList } from '@angular/core';
 import { Subject } from 'rxjs';

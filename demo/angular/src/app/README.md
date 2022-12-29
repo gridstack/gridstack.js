@@ -16,9 +16,9 @@ public gridOptions: GridStackOptions = {
   float: true,
 }
 public items: GridStackWidget[] = [
-  {x:0, y:0, minW:2},
-  {x:1, y:1},
-  {x:2, y:2},
+  {x:0, y:0, minW:2, id:'1'},
+  {x:1, y:1, id:'2'},
+  {x:2, y:2, id:'3'},
 ];
 
 // called whenever items change size/position/etc..
@@ -28,7 +28,7 @@ public onChange(data: nodesCB) {
 
 // ngFor unique node id to have correct match between our items used and GS
 public identify(index: number, w: GridStackWidget) {
-  return w.id;
+  return w.id; // or use index if no id is set and you only modify at the end...
 }
 ```
 HTML 
@@ -50,3 +50,8 @@ to build the demo, go to demo/angular and run `yarn` + `yarn start` and Navigate
  - This wrapper needs v7.1.2+ to run as it needs the latest changes
  - This wrapper handles well ngFor loops, but if you're using a trackBy function (as I would recommend) and no element id change after an update, you must manually call the `Gridstack.update()` method directly.
  - The original client list of items is not updated to match **content** changes made by gridstack (TBD later), but adding new item or removing (as shown in demo) will update those new items. Client could use change/added/removed events to sync that list if they wish to do so now.
+ - Code isn't compiled into a side lib to use right now - you need to copy those files for now. Let me know (slack) if you are using it...
+
+ thank you!
+ Would appreciate getting help doing the same for React and Vue (2 other popular frameworks)
+ - Alain

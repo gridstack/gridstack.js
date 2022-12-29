@@ -45,26 +45,25 @@ export class AppComponent {
   /**
    * CRUD TEST operations
    */
-  public add(comp: GridstackComponent) {
-    // new array isn't required as Angular seem to detect changes to content
+  public add(gridComp: GridstackComponent) {
+    // new array isn't required as Angular detects changes to content with trackBy:identify()
     // this.items = [...this.items, { x:3, y:0, w:3, content:`item ${ids}`, id:String(ids++) }];
-    this.items.push({ x:3, y:0, w:3, content:`item ${ids}`, id:String(ids++)});
+    this.items.push({x:3, y:0, w:3, content:`item ${ids}`, id:String(ids++)});
   }
 
-  public delete(comp: GridstackComponent) {
+  public delete(gridComp: GridstackComponent) {
     this.items.pop();
   }
 
-  public change(comp: GridstackComponent) {
-    // this will not update the DOM nor trigger gridstackItems.changes for GS to auto-update, so call GS update() instead
+  public modify(gridComp: GridstackComponent) {
+    // this will not update the DOM nor trigger gridstackItems.changes for GS to auto-update, so set new option of the gridItem instead
     // this.items[0].w = 3;
-    // comp.updateAll();
-    const n = comp.grid?.engine.nodes[0];
-    if (n?.el) comp.grid?.update(n.el, {w:3});
+    const gridItem = gridComp.gridstackItems?.get(0);
+    if (gridItem) gridItem.options = {w:3};
   }
 
   /** test updating existing and creating new one */
-  public newLayout(comp: GridstackComponent) {
+  public newLayout(gridComp: GridstackComponent) {
     this.items = [
       {x:0, y:1, id:'1', minW:1, w:1}, // new size/constrain
       {x:1, y:1, id:'2'},
@@ -75,6 +74,6 @@ export class AppComponent {
 
   // ngFor unique node id to have correct match between our items used and GS
   public identify(index: number, w: GridStackWidget) {
-    return w.id;
+    return w.id; // or use index if no id is set and you only modify at the end...
   }
 }
