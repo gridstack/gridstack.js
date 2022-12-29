@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [7.1.1-dev (TBD)](#711-dev-tbd)
+- [7.1.2 (2022-12-29)](#712-2022-12-29)
 - [7.1.1 (2022-11-13)](#711-2022-11-13)
 - [7.1.0 (2022-10-23)](#710-2022-10-23)
 - [7.0.1 (2022-10-14)](#701-2022-10-14)
@@ -77,7 +77,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 7.1.1-dev (TBD)
+## 7.1.2 (2022-12-29)
 * fix [#939](https://github.com/gridstack/gridstack.js/issues/2039) 'prototype' undefined error for dd-gridstack.js
 * add [#939](https://github.com/gridstack/gridstack.js/issues/2105) disable/enable are methods now recursive by default
 * add better `GridStackEventHandlerCallback` spelled out types

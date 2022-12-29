@@ -14,7 +14,7 @@ import { GridItemHTMLElement, GridStack, GridStackWidget } from 'gridstack';
     <p><b>ngFor CMD</b>: Example using Angular ngFor to loop through items, but uses an explicity command to let us update GS (see automatic better way)</p>
     <button (click)="add()">add item</button>
     <button (click)="delete()">remove item</button>
-    <button (click)="change()">modify item</button>
+    <button (click)="modify()">modify item</button>
     <div class="grid-stack">
       <!-- using angular templating to create DOM, otherwise an easier way is to simply call grid.load(items) -->
       <div
@@ -94,7 +94,7 @@ export class AngularNgForCmdTestComponent implements AfterViewInit {
   }
 
   // a change of a widget doesn´t change to amount of items in ngFor therefore we don´t need to do it through the zip function above
-  public change() {
+  public modify() {
     const updateEl = this.grid.getGridItems().find((el) => el.id === `${0}`);
     this.grid.update(updateEl!, { w: 2 });
   }

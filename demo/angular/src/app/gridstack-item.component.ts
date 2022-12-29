@@ -1,6 +1,14 @@
+/**
+ * gridstack-item.component.ts 7.1.2
+ * Copyright (c) 2022 Alain Dumesny - see GridStack root license
+ */
+
 import { ChangeDetectionStrategy, Component, ElementRef, Input } from '@angular/core';
 import { GridItemHTMLElement, GridStackNode } from 'gridstack';
 
+/**
+ * HTML Component Wrapper for gridstack items, in combination with GridstackComponent for parent grid
+ */
 @Component({
   selector: 'gridstack-item',
   template: `
@@ -14,13 +22,15 @@ import { GridItemHTMLElement, GridStackNode } from 'gridstack';
 })
 export class GridstackItemComponent {
 
-  /** list of options for creating this item */
+  /** list of options for creating/updating this item */
   @Input() public set options(val: GridStackNode) {
-    val.el = this.element; // connect this element to options so we can convert to widget later
     if (this.element.gridstackNode?.grid) {
+      // already built, do an update...
       this.element.gridstackNode.grid.update(this.element, val);
     } else {
-      this._options = val; // store initial values (before we're built)
+      // store our custom element in options so we can update it and not re-create a generic div!
+      val.el = this.element;
+      this._options = val;
     }
   }
   /** return the latest grid options (from GS once built, otherwise initial values) */
