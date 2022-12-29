@@ -10,10 +10,10 @@ import { AngularSimpleComponent } from './simple';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    AngularSimpleComponent,
-    AngularNgForTestComponent,
     AngularNgForCmdTestComponent,
+    AngularNgForTestComponent,
+    AngularSimpleComponent,
+    AppComponent,
     GridstackComponent,
     GridstackItemComponent,
   ],

@@ -1,10 +1,10 @@
 
 <div>
-  <p>Pick a sample test case to load:</p>
+  <p>Pick a demo to load:</p>
   <button (click)="show=0">Simple</button>
   <button (click)="show=1">ngFor case</button>
   <button (click)="show=2">ngFor custom command</button>
-  <button (click)="show=3">component</button>
+  <button (click)="show=3">Component</button>
 </div>
 
 <div class="test-container">
@@ -12,10 +12,17 @@
 <angular-ng-for-test *ngIf="show===1"></angular-ng-for-test>
 <angular-ng-for-cmd-test *ngIf="show===2"></angular-ng-for-cmd-test>
 
-<gridstack *ngIf="show===3" [options]="gridstackConfig" (changeCB)="onChange($event)" (resizestopCB)="onResizeStop($event)">
-  <gridstack-item [id]="'a'" [x]="0" [y]="0" [w]="6" [h]="4" [minH]="2" [minW]="3">
-    HELLO
-  </gridstack-item>
-</gridstack>
+<div *ngIf="show===3" >
+  <p><b>COMPONENT</b>: Most complete example that uses Component wrapper for grid and gridItem</p>
+  <button (click)="add(grid)">add item</button>
+  <button (click)="delete(grid)">remove item</button>
+  <button (click)="change(grid)">modify item</button>
+  <button (click)="newLayout(grid)">new layout</button>
+  <gridstack #grid [options]="gridOptions" (changeCB)="onChange($event)" (resizestopCB)="onResizeStop($event)">
+    <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n">
+      {{n.content}}
+    </gridstack-item>
+  </gridstack>
+</div>
 
 </div>

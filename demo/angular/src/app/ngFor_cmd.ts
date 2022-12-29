@@ -11,7 +11,7 @@ import { GridItemHTMLElement, GridStack, GridStackWidget } from 'gridstack';
 @Component({
   selector: "angular-ng-for-cmd-test",
   template: `
-    <p>Example using Angular ngFor to loop through items, but uses an explicity command to let us update GS (see automatic better way)</p>
+    <p><b>ngFor CMD</b>: Example using Angular ngFor to loop through items, but uses an explicity command to let us update GS (see automatic better way)</p>
     <button (click)="add()">add item</button>
     <button (click)="delete()">remove item</button>
     <button (click)="change()">modify item</button>

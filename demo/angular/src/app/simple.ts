@@ -8,7 +8,7 @@
  @Component({
    selector: 'angular-simple-test',
    template: `
-    <p>Simplest angular example using GridStack API directly, so not really using any angular construct per say other than waiting for DOM rendering</p>
+    <p><b>SIMPLEST</b>: angular example using GridStack API directly, so not really using any angular construct per say other than waiting for DOM rendering</p>
      <button (click)="add()">add item</button>
      <button (click)="delete()">remove item</button>
      <button (click)="change()">modify item</button>

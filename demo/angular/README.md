@@ -1,3 +1,6 @@
+
+see [**Angular wrapper doc**](./src/app/README.md) for actual usage. this is generic ng project info...
+
 # Angular
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.13.

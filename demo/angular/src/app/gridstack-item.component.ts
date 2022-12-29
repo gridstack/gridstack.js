@@ -1,5 +1,5 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, Renderer2} from '@angular/core';
-import { GridItemHTMLElement, numberOrString } from 'gridstack';
+import { ChangeDetectionStrategy, Component, ElementRef, Input } from '@angular/core';
+import { GridItemHTMLElement, GridStackNode } from 'gridstack';
 
 @Component({
   selector: 'gridstack-item',
@@ -12,29 +12,40 @@ import { GridItemHTMLElement, numberOrString } from 'gridstack';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GridstackItemComponent implements OnInit {
+export class GridstackItemComponent {
 
-  @Input() public x: number;
-  @Input() public y: number;
-  @Input() public w: number;
-  @Input() public h: number;
-  @Input() public minW: number;
-  @Input() public minH: number;
-  @Input() public maxW: number;
-  @Input() public maxH: number;
-  @Input() public id: numberOrString;
-
-  constructor(
-    private readonly _elementRef: ElementRef<GridItemHTMLElement>,
-    private readonly renderer2: Renderer2,
-  ) {
+  /** list of options for creating this item */
+  @Input() public set options(val: GridStackNode) {
+    val.el = this.element; // connect this element to options so we can convert to widget later
+    if (this.element.gridstackNode?.grid) {
+      this.element.gridstackNode.grid.update(this.element, val);
+    } else {
+      this._options = val; // store initial values (before we're built)
+    }
+  }
+  /** return the latest grid options (from GS once built, otherwise initial values) */
+  public get options(): GridStackNode {
+    return this.element.gridstackNode || this._options || {};
   }
 
-  get elementRef(): ElementRef<GridItemHTMLElement> {
-    return this._elementRef;
+  private _options?: GridStackNode;
+
+  /** return the native element that contains grid specific fields as well */
+  public get element(): GridItemHTMLElement { return this.elementRef.nativeElement; }
+
+  /** clears the initial options now that we've built */
+  public clearOptions() {
+    delete this._options;
   }
 
-  public ngOnInit(): void {
-    this.renderer2.addClass(this._elementRef.nativeElement, 'grid-stack-item');
+  constructor(private readonly elementRef: ElementRef<GridItemHTMLElement>) {
   }
+
+  // none of those have parentElement set from which we could get the grid to auto-init ourself!
+  // so we will let the parent track us instead...
+  // ngOnInit() {
+  //   this.element.parentElement
+  // }
+  // ngAfterContentInit() {
+  // }
 }
