@@ -11,13 +11,15 @@ let ids = 1;
 @Component({
   selector: "angular-ng-for-test",
   template: `
-    <p>Example using Angular ngFor to loop through items and create DOM items. This track changes made to the array of items, waits for DOM rendering, then update GS</p>
+    <p><b>ngFor</b>: Example using Angular ngFor to loop through items and create DOM items. This track changes made to the array of items, waits for DOM rendering, then update GS</p>
     <button (click)="add()">add item</button>
     <button (click)="delete()">remove item</button>
     <button (click)="change()">modify item</button>
     <button (click)="newLayout()">new layout</button>
     <div class="grid-stack">
-      <!-- using angular templating to create DOM, otherwise an easier way is to simply call grid.load(items) -->
+      <!-- using angular templating to create DOM, otherwise an easier way is to simply call grid.load(items)
+      NOTE: this example is NOT complete as there are many more properties than listed (minW, maxW, etc....)
+      -->
       <div *ngFor="let n of items; trackBy: identify"
         class="grid-stack-item"
         [attr.gs-id]="n.id"
@@ -61,7 +63,7 @@ export class AngularNgForTestComponent implements AfterViewInit {
       margin: 5,
       float: true,
     })
-    .on('change added', (event, list) => this.onChange(list as GridStackNode[]));
+    .on('change added', (event: Event, nodes: GridStackNode[]) => this.onChange(nodes));
 
     // sync initial actual valued rendered (in case init() had to merge conflicts)
     this.onChange();
@@ -97,8 +99,8 @@ export class AngularNgForTestComponent implements AfterViewInit {
    */
   public add() {
     // new array isn't required as Angular seem to detect changes to content
-    // this.items = [...this.items, { x: 3, y: 0, w: 3, id: String(ids++) }];
-    this.items.push({ x: 3, y: 0, w: 3, id: String(ids++) });
+    // this.items = [...this.items, { x:3, y:0, w:3, id:String(ids++) }];
+    this.items.push({ x:3, y:0, w:3, id:String(ids++) });
   }
 
   public delete() {
@@ -106,17 +108,19 @@ export class AngularNgForTestComponent implements AfterViewInit {
   }
 
   public change() {
-    // this.items[0]?.w = 2; // this will not trigger gridstackItems.changes.subscribe, only DOM values are update, so call GS update() instead
+    // this will only update the DOM attr (from the ngFor loop in our template above)
+    // but not trigger gridstackItems.changes for GS to auto-update, so call GS update() instead
+    // this.items[0].w = 2;
     const n = this.grid.engine.nodes[0];
-    if (n) this.grid.update(n.el!, { w: 2 });
+    if (n?.el) this.grid.update(n.el, {w:3});
   }
 
   public newLayout() {
     this.items = [ // test updating existing and creating new one
-      {x: 0, y: 1, id: 1},
-      {x: 1, y: 1, id: 2},
-      // {x: 2, y: 1, id: 3}, // delete item
-      {x: 3, y: 0, w: 3}, // new item
+      {x:0, y:1, id:'1'},
+      {x:1, y:1, id:'2'},
+      // {x:2, y:1, id:3}, // delete item
+      {x:3, y:0, w:3}, // new item
     ];
   }
 
