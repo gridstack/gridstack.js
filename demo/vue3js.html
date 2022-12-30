@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gridstack.js Vue integration example</title>
+    <title>Vue3 Gridstack</title>
     <link rel="stylesheet" href="demo.css"/>
     <script src="../dist/gridstack-all.js"></script>
   </head>
@@ -26,7 +26,7 @@
         to let Vue deal with DOM rendering.
       </p>
       <button type="button" @click="addNewWidget()">Add Widget</button> {{ info }}
-      <section class="grid-stack"></section>
+      <div class="grid-stack"></div>
     </main>
     <script type="module">
       import { createApp, ref, onMounted } from "https://cdn.jsdelivr.net/npm/vue@3.0.11/dist/vue.esm-browser.js";
@@ -51,10 +51,8 @@
               minRow: 1,
             });
 
-            // Use an arrow function so that `this` is bound to the Vue instance. Alternatively, use a custom Vue directive on the `.grid-stack` container element: https://vuejs.org/v2/guide/custom-directive.html
-            grid.on("dragstop", (event, element) => {
+            grid.on("dragstop", function (event, element) {
               const node = element.gridstackNode;
-              // `this` will only access your Vue instance if you used an arrow function, otherwise `this` binds to window scope. see https://hacks.mozilla.org/2015/06/es6-in-depth-arrow-functions/
               info.value = `you just dragged node #${node.id} to ${node.x},${node.y} – good job!`;
             });
           });
