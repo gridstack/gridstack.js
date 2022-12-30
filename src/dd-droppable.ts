@@ -1,5 +1,5 @@
 /**
- * dd-droppable.ts 7.1.2
+ * dd-droppable.ts 7.1.2-dev
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
