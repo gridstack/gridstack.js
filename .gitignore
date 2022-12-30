@@ -2,6 +2,7 @@ coverage
 dist
 *.tgz
 *.zip
+demo/angular/node_modules/*
 
 !node_modules/
 node_modules/*
