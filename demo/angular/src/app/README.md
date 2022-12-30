@@ -41,14 +41,15 @@ HTML
 ```
 
 ## Demo
-You can see a fuller example at [app.component](https://github.com/gridstack/gridstack.js/blob/master/demo/angular/src/app/app.component.ts).
+You can see a fuller example at [app.component.ts](https://github.com/gridstack/gridstack.js/blob/master/demo/angular/src/app/app.component.ts)
 
 to build the demo, go to demo/angular and run `yarn` + `yarn start` and Navigate to `http://localhost:4200/` 
 
 ### Caveats 
 
  - This wrapper needs v7.1.2+ to run as it needs the latest changes
- - This wrapper handles well ngFor loops, but if you're using a trackBy function (as I would recommend) and no element id change after an update, you must manually call the `Gridstack.update()` method directly.
+ - This wrapper handles well ngFor loops, but if you're using a trackBy function (as I would recommend) and no element id change after an update,
+ you must manually update the `GridstackItemComponent.option` directly - see [modify()](./app.component.ts#L58) example.
  - The original client list of items is not updated to match **content** changes made by gridstack (TBD later), but adding new item or removing (as shown in demo) will update those new items. Client could use change/added/removed events to sync that list if they wish to do so now.
  - Code isn't compiled into a side lib to use right now - you need to copy those files for now. Let me know (slack) if you are using it...
 
