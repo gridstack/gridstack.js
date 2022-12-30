@@ -1423,7 +1423,6 @@ export class GridStack {
       noMove: 'gs-no-move',
       locked: 'gs-locked',
       id: 'gs-id',
-      resizeHandles: 'gs-resize-handles'
     };
     for (const key in attrs) {
       if (node[key]) { // 0 is valid for x,y only but done above already and not in list anyway
@@ -1450,7 +1449,6 @@ export class GridStack {
     node.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
     node.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
     node.locked = Utils.toBool(el.getAttribute('gs-locked'));
-    node.resizeHandles = el.getAttribute('gs-resize-handles');
     node.id = el.getAttribute('gs-id');
 
     // remove any key not found (null or false which is default)

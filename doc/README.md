@@ -148,7 +148,6 @@ The widget can still be dragged or resized by the user.
 You need to add `noResize` and `noMove` attributes to completely lock the widget.
 - `noResize` - disable element resizing
 - `noMove` - disable element moving
-- `resizeHandles` - widgets can have their own custom resize handles. For example 'e,w' will make that particular widget only resize east and west. See `resizable: {handles: string}` option
 - `id`- (number | string) good for quick identification (for example in change event)
 - `content` - (string) html content to be added when calling `grid.load()/addWidget()` as content inside the item
 - `subGrid`?: GridStackOptions - optional nested grid options and list of children
