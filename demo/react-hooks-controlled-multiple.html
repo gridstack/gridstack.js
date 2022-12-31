@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gridstack.js React integration example</title>
+    <link rel="stylesheet" href="demo.css" />
+    <script src="../dist/gridstack-all.js"></script>
+
+    <!-- Scripts to use react inside html -->
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+
+<body>
+
+    <div>
+        <h2>Controlled stack</h2>
+        <div id="controlled-stack"></div>
+    </div>
+
+</body>
+
+<script type="text/babel">
+    const { useState, useEffect, useLayoutEffect, createRef, useRef } = React
+
+    const Item = ({ id }) => <div>I am item: {id}</div>
+
+    //
+    // Controlled example
+    //
+    const ControlledStack = ({ items, addItem, removeItem, id }) => {
+        const refs = useRef({})
+        const gridRef = useRef()
+        refs.current = {}
+
+        if (Object.keys(refs.current).length !== items.length) {
+            items.forEach(({ id }) => {
+                refs.current[id] = refs.current[id] || createRef()
+            })
+        }
+
+
+        useLayoutEffect(() => {
+
+            gridRef.current =
+                // gridRef.current ||
+                GridStack.init(
+                    {
+                        float: true,
+                        acceptWidgets: true,
+                    },
+                    `.controlled-${id}`
+                )
+
+            const grid = gridRef.current
+
+            grid.on('removed', (e, el) => {
+                const elId = Array.isArray(el) ? el[el.length - 1].id : el.id;
+                removeItem(elId.split(':')[1])
+            })
+
+            grid.on('dropped', (e, p, n) => {
+                console.log('dropped', p, n)
+
+                // Remove "placeholder" item
+                // Gridstack creates a DOM element for dropped items, those need to be removed
+                // as they are rendered by React
+                grid.getGridItems().forEach((item) => {
+                    const ids = item.getAttribute('gs-id').split(':')
+                    if (ids[0] !== id) {
+                        grid.removeWidget(item, true, false);
+                    }
+                });
+                addItem({ id: n.id.split(':')[1], x: n.x, y: n.y, w: n.w, h: n.h })
+            })
+
+            grid.batchUpdate()
+
+
+            items.forEach((a) => {
+                // remove existing widgets
+                if (refs.current[a.id] && refs.current[a.id].current) {
+                    grid.removeWidget(refs.current[a.id].current, false, false)
+                }
+
+                grid.makeWidget(refs.current[a.id].current)
+            })
+            grid.batchUpdate(false)
+
+
+
+        }, [items])
+
+        useEffect(() => {
+            return () => {
+                // console.log('cleanup', id)
+                // gridRef.current.destroy(false, false)
+                // gridRef.current = null
+            }
+        })
+
+
+
+
+        return (
+            <div style={{ width: '100%' }}>
+                <div className={`grid-stack controlled-${id}`}>
+                    {items.map((item, i) => {
+                        // console.log('render', id, item.id)
+                        return (
+                            <div ref={refs.current[item.id]} key={`${id}-${item.id}`} className={'grid-stack-item'} gs-id={`${id}:${item.id}`} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
+                                <div className="grid-stack-item-content">
+                                    <Item {...item} />
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+                <code>
+                    <pre>{JSON.stringify(items, null, 2)}</pre>
+                </code>
+            </div>
+        )
+    }
+
+    const ControlledExample = () => {
+        const [items1, setItems1] = useState([{ id: 'item-1-1', x: 0, y: 0, w: 2, h: 2 }, { id: 'item-1-2', x: 2, y: 0, w: 2, h: 2 }])
+        const [items2, setItems2] = useState([{ id: 'item-2-1', x: 0, y: 0, w: 1, h: 1 }, { id: 'item-2-2', x: 0, y: 1, w: 1, h: 1 }, { id: 'item-2-3', x: 1, y: 0, w: 1, h: 1 }])
+
+        return (
+            <div style={{
+                display: 'flex'
+            }}>
+                <div style={{ display: 'flex', width: '50%' }}>
+                    <ControlledStack
+                        id='gs1'
+                        items={items1}
+                        addItem={(item) => {
+                            setItems1([...items1, item])
+                        }}
+                        removeItem={(id) => {
+                            setItems1(items1.filter(i => i.id !== id))
+                        }}
+                    />
+                </div >
+                <div style={{ display: 'flex', width: '50%' }}>
+                    <ControlledStack
+                        id='gs2'
+                        items={items2}
+                        addItem={(item) => {
+                            setItems2([...items2, item])
+                        }}
+                        removeItem={(id) => {
+                            setItems2(items2.filter(i => i.id !== id))
+                        }}
+                    />
+
+                </div>
+
+            </div >
+        )
+    }
+
+
+
+    ReactDOM.render(<ControlledExample />, document.getElementById('controlled-stack'))
+
+</script>
+
+</html>
