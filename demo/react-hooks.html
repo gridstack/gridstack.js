@@ -18,7 +18,7 @@
   <div>
     <h1>Using GridStack.js with React hooks</h1>
     <p>
-      As with any virtualDOM-based framework, you need to check if Reacthas rendered the DOM (or any updates to it)
+      As with any virtual DOM based framework, you need to check if Reacthas rendered the DOM (or any updates to it)
       <strong>before</strong> you initialize GridStack or call its methods. This example shows how to make rendered
       components widgets:
     </p>
@@ -41,13 +41,11 @@
 
 <script type="text/babel">
   const { useState, useEffect, createRef, useRef } = React
-
   const Item = ({ id }) => <div>I am item: {id}</div>
 
   //
   // Controlled example
   //
-
   const ControlledStack = ({ items, addItem }) => {
     const refs = useRef({})
     const gridRef = useRef()
@@ -59,14 +57,8 @@
     }
 
     useEffect(() => {
-      gridRef.current =
-        gridRef.current ||
-        GridStack.init(
-          {
-            float: true,
-          },
-          '.controlled'
-        )
+      gridRef.current = gridRef.current ||
+        GridStack.init({float: true}, '.controlled')
       const grid = gridRef.current
       grid.batchUpdate()
       grid.removeAll(false)
@@ -94,7 +86,6 @@
 
   const ControlledExample = () => {
     const [items, setItems] = useState([{ id: 'item-1' }, { id: 'item-2' }])
-
     return (
       <ControlledStack
         items={items}
@@ -106,10 +97,8 @@
   //
   // Uncontrolled example
   //
-
   const UncontrolledExample = () => {
     const gridRef = useRef()
-
     const [state, setState] = useState({
       count: 0,
       info: '',
@@ -123,8 +112,7 @@
     })
 
     useEffect(() => {
-      gridRef.current =
-        gridRef.current ||
+      gridRef.current = gridRef.current ||
         GridStack.init(
           {
             float: true,
@@ -133,7 +121,6 @@
           },
           '.uncontrolled'
         )
-
       const grid = gridRef.current
 
       grid.on('dragstop', (event, element) => {
@@ -183,7 +170,5 @@
 
   ReactDOM.render(<ControlledExample />, document.getElementById('controlled-stack'))
   ReactDOM.render(<UncontrolledExample />, document.getElementById('uncontrolled-stack'))
-
 </script>
-
 </html>

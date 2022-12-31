@@ -80,7 +80,8 @@ Change log
 
 ## 7.1.2-dev (TBD)
 * fix [#1936](https://github.com/gridstack/gridstack.js/issues/1936) some styles left behind after a drag
-* fix [#1842](https://github.com/gridstack/gridstack.js/issues/1842) incorrect doc/partial code on widget resizeHandles
+* remove [#1842](https://github.com/gridstack/gridstack.js/issues/1842) incorrect doc/partial code on widget resizeHandles
+* doc [#2033](https://github.com/gridstack/gridstack.js/issues/2033) `resizestop` is actually correct as we don't animate resize today
 
 ## 7.1.2 (2022-12-29)
 * fix [#939](https://github.com/gridstack/gridstack.js/issues/2039) 'prototype' undefined error for dd-gridstack.js
