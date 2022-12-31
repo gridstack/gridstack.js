@@ -48,23 +48,27 @@ function addEvents(grid, id) {
   });
 
   grid.on('resizestart', function(event, el) {
-    let node = el.gridstackNode;
-    let w = el.getAttribute('gs-w');  // verify node (easiest) and attr are the same
-    let h = el.getAttribute('gs-h');
-    console.log(g + 'resizestart ' + el.textContent + ' size: (' + node.w + 'x' + node.h + ') = (' + w + 'x' + h + ')');
+    let n = el.gridstackNode;
+    let w = parseInt(el.getAttribute('gs-w')); // verify node (easiest) and attr are the same
+    let h = parseInt(el.getAttribute('gs-h'));
+    if (w !== n.w || h !== n.h) alert('resizestart missmatch');
+    let rec = el.getBoundingClientRect();
+    console.log(`${g} resizestart ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
+
   });
 
   grid.on('resize', function(event, el) {
-    let node = el.gridstackNode;
-    let w = el.getAttribute('gs-w');  // verify node (easiest) and attr are the same
-    let h = el.getAttribute('gs-h');
-    // console.log(g + 'resize ' + el.textContent + ' size: (' + node.w + 'x' + node.h + ') = (' + w + 'x' + h + ')');
+    let n = el.gridstackNode;
+    let rec = el.getBoundingClientRect();
+    console.log(`${g} resize ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
   });
 
   grid.on('resizestop', function(event, el) {
-    let node = el.gridstackNode;
-    let w = el.getAttribute('gs-w'); // verify node (easiest) and attr are the same
-    let h = el.getAttribute('gs-h');
-    console.log(g + 'resizestop ' + el.textContent + ' size: (' + node.w + 'x' + node.h + ') = (' + w + 'x' + h + ')');
+    let n = el.gridstackNode;
+    let w = parseInt(el.getAttribute('gs-w')); // verify node (easiest) and attr are the same
+    let h = parseInt(el.getAttribute('gs-h'));
+    if (w !== n.w || h !== n.h) alert('resizestop missmatch');
+    let rec = el.getBoundingClientRect();
+    console.log(`${g} resizestop ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
   });
 }

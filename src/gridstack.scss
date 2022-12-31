@@ -114,12 +114,6 @@ $animation_speed: .3s !default;
   &.grid-stack-animate .grid-stack-item.grid-stack-placeholder{
     @include vendor(transition, left 0s, top 0s, height 0s, width 0s);
   }
-
-  // without this, the html5 drag will flicker between no-drop and drop when dragging over second grid
-  // Update: removed that as it causes nested grids to no receive dragenter events when parent drags and sets this for #992. not seeing cursor flicker (chrome).
-  // &.ui-droppable.ui-droppable-over > *:not(.ui-droppable) {
-  //   pointer-events: none;
-  // }
 }
 
 .ui-draggable-dragging,
