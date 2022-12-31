@@ -303,11 +303,14 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.helper.classList.remove('ui-draggable-dragging');
     let node = (this.helper as GridItemHTMLElement)?.gridstackNode;
     // don't bother restoring styles if we're gonna remove anyway...
-    if (this.dragElementOriginStyle && (!node || !node._isAboutToRemove)) {
+    if (!node?._isAboutToRemove && this.dragElementOriginStyle) {
       let helper = this.helper;
-      // don't animate, otherwise we animate offseted when switching back to 'absolute' from 'fixed'
+      // don't animate, otherwise we animate offseted when switching back to 'absolute' from 'fixed'.
+      // TODO: this also removes resizing animation which doesn't have this issue, but others.
+      // Ideally both would animate ('move' would immediately restore 'absolute' and adjust coordinate to match, then trigger a delay (repaint) to restore to final dest with animate)
+      // but then we need to make sure 'resizestop' is called AFTER 'transitionend' event is received (see https://github.com/gridstack/gridstack.js/issues/2033)
       let transition = this.dragElementOriginStyle['transition'] || null;
-      helper.style.transition = this.dragElementOriginStyle['transition'] = 'none';
+      helper.style.transition = this.dragElementOriginStyle['transition'] = 'none'; // can't be NULL #1973
       DDDraggable.originStyleProp.forEach(prop => helper.style[prop] = this.dragElementOriginStyle[prop] || null);
       setTimeout(() => helper.style.transition = transition, 50); // recover animation from saved vars after a pause (0 isn't enough #1973)
     }
