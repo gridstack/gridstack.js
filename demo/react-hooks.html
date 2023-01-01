@@ -18,7 +18,7 @@
   <div>
     <h1>Using GridStack.js with React hooks</h1>
     <p>
-      As with any virtual DOM based framework, you need to check if Reacthas rendered the DOM (or any updates to it)
+      As with any virtual DOM based framework, you need to check if React has rendered the DOM (or any updates to it)
       <strong>before</strong> you initialize GridStack or call its methods. This example shows how to make rendered
       components widgets:
     </p>
@@ -26,7 +26,7 @@
       <li>Render items, each with a reference</li>
       <li>Convert each rendered item to a widget using the reference and the <a
           href="https://github.com/gridstack/gridstack.js/tree/master/doc#makewidgetel">
-          makeWidget</a> function</li>
+          makeWidget()</a> function</li>
     </ol>
   </div>
   <div>
@@ -41,7 +41,7 @@
 
 <script type="text/babel">
   const { useState, useEffect, createRef, useRef } = React
-  const Item = ({ id }) => <div>I am item: {id}</div>
+  const Item = ({ id }) => <div>{id}</div>
 
   //
   // Controlled example
