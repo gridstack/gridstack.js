@@ -6,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gridstack.js React integration example</title>
   <link rel="stylesheet" href="demo.css" />
+  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
   <script src="../dist/gridstack-all.js"></script>
 
-  <!-- Scripts to use react inside html -->
-  <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <!-- Scripts to use react inside html - DEVELOPMENT FILES -->
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.js"></script>
 </head>
 
 <body>
@@ -22,8 +23,12 @@
 </body>
 
 <script type="text/babel">
+  /***********************************************************************************************************/
+  /********************************* NOT IDEAL - see comments below line 111) ********************************/
+  /***********************************************************************************************************/
+
   const { useState, useEffect, useLayoutEffect, createRef, useRef } = React
-  const Item = ({ id }) => <div>I am item: {id}</div>
+  const Item = ({ id }) => <div>{id}</div>
 
   //
   // Controlled example
@@ -40,45 +45,57 @@
     }
 
     useLayoutEffect(() => {
-      gridRef.current =
-        // gridRef.current ||
-        GridStack.init(
+      if (!gridRef.current) {
+        // no need to init twice (would will return same grid) or register dup events
+        const grid = gridRef.current = GridStack.init(
           {
             float: true,
             acceptWidgets: true,
+            disableOneColumnMode: true, // side-by-side and fever columns to fit smaller screens
+            column: 6,
+            minRow: 1,
           },
           `.controlled-${id}`
         )
-      const grid = gridRef.current
+        .on('added', (ev, gsItems) => {
+          if (grid._ignoreCB) return;
+          // remove the new element as React will re-create it again (dup) once we add to the list or we get 2 of them with same ids but different DOM el!
+          // TODO: this is really not ideal - we shouldn't mix React templating with GS making it own edits as those get out of sync! see comment below @111.
+          gsItems.forEach(n => {
+            grid.removeWidget(n.el, true, false); // true=remove DOM, false=don't call use back!
+            // can't pass n directly even though similar structs as it has n.el.gridstackNode which gives JSON error for circular write.
+            addItem({id:n.id, x:n.x, y:n.y, w:n.w, h:n.h});
+          });
+        })
+        .on('removed', (ev, gsItems) => {
+          if (grid._ignoreCB) return;
+          gsItems.forEach(n => removeItem(n.id));
+        })
 
-      grid.on('removed', (e, el) => {
-        const elId = Array.isArray(el) ? el[el.length - 1].id : el.id;
-        removeItem(elId.split(':')[1])
-      })
+      } else {
+        //
+        // update existing grid layout, which is optimized to updates only diffs (will add new/delete items for examples)
+        //
+        const grid = gridRef.current;
+        const layout = [];
+        items.forEach((a) => layout.push(
+          refs.current[a.id].current.gridstackNode || {...a, el: refs.current[a.id].current}
+        ));
+        grid._ignoreCB = true; // hack: ignore added/removed since we're the one doing the update
+        grid.load(layout);
+        delete grid._ignoreCB;
+      }
 
-      grid.on('dropped', (e, p, n) => {
-        console.log('dropped', p, n)
-        // Remove "placeholder" item
-        // Gridstack creates a DOM element for dropped items, those need to be removed
-        // as they are rendered by React
-        grid.getGridItems().forEach((item) => {
-          const ids = item.getAttribute('gs-id').split(':')
-          if (ids[0] !== id) {
-            grid.removeWidget(item, true, false);
-          }
-        });
-        addItem({ id: n.id.split(':')[1], x: n.x, y: n.y, w: n.w, h: n.h })
-      })
-
-      grid.batchUpdate()
-      items.forEach((a) => {
-        // remove existing widgets
-        if (refs.current[a.id] && refs.current[a.id].current) {
-          grid.removeWidget(refs.current[a.id].current, false, false)
-        }
-        grid.makeWidget(refs.current[a.id].current)
-      })
-      grid.batchUpdate(false)
+      // NOTE: old code is incorrect as it re-does the GS binding, but dragged item is left behind so you get dup DOM elements with same ids
+      // grid.batchUpdate()
+      // items.forEach((a) => {
+      //   // remove existing widgets
+      //   if (refs.current[a.id] && refs.current[a.id].current) {
+      //     grid.removeWidget(refs.current[a.id].current, false, false)
+      //   }
+      //   grid.makeWidget(refs.current[a.id].current)
+      // })
+      // grid.batchUpdate(false)
 
     }, [items])
 
@@ -91,12 +108,21 @@
     })
 
     return (
-      <div style={{ width: '100%' }}>
+      // ********************
+      // NOTE: constructing DOM grid items in template when gridstack is also allowed editing (dragging between grids, or adding/removing from say a toolbar)
+      // is NOT A GOOD IDEA as you end up fighting between gridstack users' edits and your template items structure which are not in sync.
+      // At best, you end up re-creating widgets DOM (from React template) and all their content & state after a widget was inserted/re-parented by the user.
+      // a MUCH better way is to let GS create React components using it's API/user interactions, with only initial load() of a stored layout.
+      // see the upcoming Angular component wrapper that does that instead (lib author uses Angular). TBD creating React equivalent...
+      //
+      // Also templating forces you to spell out the 12+ attributes GS supports (only x,w,w,h done below) instead of passing a option structure that supports everything
+      // is not robust as things get added, and pollutes the DOM attr for default/missing entries, vs optimized code in GS.
+      // ********************
+      <div style={{ width: '100%', marginRight: '10px' }}>
         <div className={`grid-stack controlled-${id}`}>
           {items.map((item, i) => {
-            // console.log('render', id, item.id)
             return (
-              <div ref={refs.current[item.id]} key={`${id}-${item.id}`} className={'grid-stack-item'} gs-id={`${id}:${item.id}`} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
+              <div ref={refs.current[item.id]} key={`${id}-${item.id}`} className={'grid-stack-item'} gs-id={item.id} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
                 <div className="grid-stack-item-content">
                   <Item {...item} />
                 </div>
@@ -122,10 +148,10 @@
             id='gs1'
             items={items1}
             addItem={(item) => {
-              setItems1([...items1, item])
+              setItems1(items => [...items, item])
             }}
             removeItem={(id) => {
-              setItems1(items1.filter(i => i.id !== id))
+              setItems1(items => items.filter(i => i.id !== id))
             }}
           />
         </div >
@@ -134,10 +160,10 @@
             id='gs2'
             items={items2}
             addItem={(item) => {
-              setItems2([...items2, item])
+              setItems2(items => [...items, item])
             }}
             removeItem={(id) => {
-              setItems2(items2.filter(i => i.id !== id))
+              setItems2(items => items.filter(i => i.id !== id))
             }}
           />
         </div>
