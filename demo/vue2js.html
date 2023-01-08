@@ -11,7 +11,7 @@
     <main id="app">
       <h1>How to integrate GridStack.js with Vue.js</h1>
       <p>
-        As with any virtualDOM-based framework, you need to check if Vue has
+        As with any virtual DOM based framework, you need to check if Vue has
         rendered the DOM (or any updates to it) <strong>before</strong> you
         initialize GridStack or call its methods. As a basic example, check this
         component's <code>mounted</code> hook.
@@ -26,7 +26,7 @@
         to let Vue deal with DOM rendering.
       </p>
       <button type="button" @click="addNewWidget()">Add Widget</button> {{ info }}
-      <section class="grid-stack"></section>
+      <div class="grid-stack"></div>
     </main>
     <script type="module">
       import Vue from "https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.esm.browser.js";

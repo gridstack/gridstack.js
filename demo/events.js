@@ -38,33 +38,37 @@ function addEvents(grid, id) {
     console.log(g + 'dragstop ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') = (' + x + ',' + y + ')');
   });
 
-  grid.on('dropped', function(event, previousWidget, newWidget) {
-    if (previousWidget) {
-      console.log(g + 'dropped - Removed widget from grid:', previousWidget);
+  grid.on('dropped', function(event, previousNode, newNode) {
+    if (previousNode) {
+      console.log(g + 'dropped - Removed widget from grid:', previousNode);
     }
-    if (newWidget) {
-      console.log(g + 'dropped - Added widget in grid:', newWidget);
+    if (newNode) {
+      console.log(g + 'dropped - Added widget in grid:', newNode);
     }
   });
 
   grid.on('resizestart', function(event, el) {
-    let node = el.gridstackNode;
-    let w = el.getAttribute('gs-w');  // verify node (easiest) and attr are the same
-    let h = el.getAttribute('gs-h');
-    console.log(g + 'resizestart ' + el.textContent + ' size: (' + node.w + 'x' + node.h + ') = (' + w + 'x' + h + ')');
+    let n = el.gridstackNode;
+    let w = parseInt(el.getAttribute('gs-w')); // verify node (easiest) and attr are the same
+    let h = parseInt(el.getAttribute('gs-h'));
+    if (w !== n.w || h !== n.h) alert('resizestart missmatch');
+    let rec = el.getBoundingClientRect();
+    console.log(`${g} resizestart ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
+
   });
 
   grid.on('resize', function(event, el) {
-    let node = el.gridstackNode;
-    let w = el.getAttribute('gs-w');  // verify node (easiest) and attr are the same
-    let h = el.getAttribute('gs-h');
-    // console.log(g + 'resize ' + el.textContent + ' size: (' + node.w + 'x' + node.h + ') = (' + w + 'x' + h + ')');
+    let n = el.gridstackNode;
+    let rec = el.getBoundingClientRect();
+    console.log(`${g} resize ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
   });
 
   grid.on('resizestop', function(event, el) {
-    let node = el.gridstackNode;
-    let w = el.getAttribute('gs-w'); // verify node (easiest) and attr are the same
-    let h = el.getAttribute('gs-h');
-    console.log(g + 'resizestop ' + el.textContent + ' size: (' + node.w + 'x' + node.h + ') = (' + w + 'x' + h + ')');
+    let n = el.gridstackNode;
+    let w = parseInt(el.getAttribute('gs-w')); // verify node (easiest) and attr are the same
+    let h = parseInt(el.getAttribute('gs-h'));
+    if (w !== n.w || h !== n.h) alert('resizestop missmatch');
+    let rec = el.getBoundingClientRect();
+    console.log(`${g} resizestop ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
   });
 }

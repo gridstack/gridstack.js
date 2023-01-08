@@ -20,6 +20,14 @@ import { AngularSimpleComponent } from './simple';
   imports: [
     BrowserModule
   ],
+  exports: [
+    GridstackComponent,
+    GridstackItemComponent,
+  ],
+  entryComponents: [  // entry list needed to dynamically create those
+    GridstackComponent,
+    GridstackItemComponent,
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
