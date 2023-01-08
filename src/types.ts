@@ -73,6 +73,9 @@ export type GridStackNodesHandler = (event: Event, nodes: GridStackNode[]) => vo
 export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => void;
 export type GridStackEventHandlerCallback = GridStackEventHandler | GridStackElementHandler | GridStackNodesHandler | GridStackDroppedHandler;
 
+/** optional function called during load() to callback the user on new added/remove items */
+export type AddRemoveFcn = (g: GridStack, w: GridStackWidget, add: boolean) => HTMLElement | undefined;
+
 /**
  * Defines the options for a Grid
  */
@@ -84,6 +87,14 @@ export interface GridStackOptions {
    * function returning a boolean. See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
    */
   acceptWidgets?: boolean | string | ((element: Element) => boolean);
+
+  /**
+   * callback method use when new items needs to be created or deleted, instead of the default
+   * <div class="grid-stack-item"><div class="grid-stack-item-content">w.content</div></div>
+   * Create: the returned DOM element will then be converted to a GridItemHTMLElement using makeWidget().
+   * Delete: the item will be removed from DOM (if not already done)
+   */
+  addRemoveCB?: AddRemoveFcn;
 
   /** possible values (default: `mobile`) - does not apply to non-resizable widgets
     * `false` the resizing handles are only shown while hovering over a widget

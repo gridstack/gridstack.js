@@ -9,7 +9,7 @@ import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler } from './types';
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn } from './types';
 
 /*
  * and include D&D by default
@@ -48,9 +48,6 @@ export interface CellPosition {
   x: number;
   y: number;
 }
-
-/** optional function called during load() to callback the user on new added/remove items */
-export type AddRemoveFcn = (g: GridStack, w: GridStackWidget, add: boolean) => GridItemHTMLElement;
 
 interface GridCSSStyleSheet extends CSSStyleSheet {
   _max?: number; // internal tracker of the max # of rows we created
@@ -149,11 +146,6 @@ export class GridStack {
 
     // create grid class and load any children
     let grid = GridStack.init(opt, el);
-    if (grid.opts.children) {
-      let children = grid.opts.children;
-      delete grid.opts.children;
-      grid.load(children);
-    }
     return grid;
   }
 
@@ -370,6 +362,13 @@ export class GridStack {
       this.batchUpdate(false);
     }
 
+    // load any passed in children as well, which overrides any DOM layout done above
+    if (this.opts.children) {
+      let children = this.opts.children;
+      delete this.opts.children;
+      if (children.length) this.load(children); // don't load empty
+    }
+
     this.setAnimation(this.opts.animate);
 
     this._updateStyles();
@@ -421,6 +420,8 @@ export class GridStack {
       node = options = els;
       if (node?.el) {
         el = node.el; // re-use element stored in the node
+      } else if (this.opts.addRemoveCB) {
+        el = this.opts.addRemoveCB(this, options, true);
       } else {
         let content = options?.content || '';
         let doc = document.implementation.createHTMLDocument(''); // IE needs a param
@@ -430,6 +431,8 @@ export class GridStack {
     } else {
       el = els as HTMLElement;
     }
+
+    if (!el) return;
 
     // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
     // as the actual value are filled in when _prepareElement() calls el.getAttribute('gs-xyz') before adding the node.
@@ -495,6 +498,7 @@ export class GridStack {
     }
 
     // if we're converting an existing full item, move over the content to be the first sub item in the new grid
+    // TODO: support this.opts.addRemoveCB for frameworks
     let content = node.el.querySelector('.grid-stack-item-content') as HTMLElement;
     let newItem: HTMLElement;
     let newItemOpt: GridStackNode;
@@ -643,7 +647,7 @@ export class GridStack {
    * @example
    * see http://gridstackjs.com/demo/serialization.html
    **/
-  public load(layout: GridStackWidget[], addAndRemove: boolean | AddRemoveFcn = true): GridStack {
+  public load(layout: GridStackWidget[], addRemove: boolean | AddRemoveFcn = this.opts.addRemoveCB || true): GridStack {
     let items = GridStack.Utils.sort([...layout], -1, this._prevColumn || this.getColumn()); // make copy before we mod/sort
     this._insertNotAppend = true; // since create in reverse order...
 
@@ -654,21 +658,23 @@ export class GridStack {
       this.engine.cacheLayout(items, this._prevColumn, true);
     }
 
+    // if given a different callback, temporally set it as global option to creating will use it
+    const prevCB = this.opts.addRemoveCB;
+    if (typeof(addRemove) === 'function') this.opts.addRemoveCB = addRemove as AddRemoveFcn;
+
     let removed: GridStackNode[] = [];
     this.batchUpdate();
 
     // see if any items are missing from new layout and need to be removed first
-    if (addAndRemove) {
+    if (addRemove) {
       let copyNodes = [...this.engine.nodes]; // don't loop through array you modify
       copyNodes.forEach(n => {
         let item = items.find(w => n.id === w.id);
         if (!item) {
-          if (typeof(addAndRemove) === 'function') {
-            addAndRemove(this, n, false);
-          } else {
-            removed.push(n); // batch keep track
-            this.removeWidget(n.el, true, false);
-          }
+          if (this.opts.addRemoveCB)
+            this.opts.addRemoveCB(this, n, false);
+          removed.push(n); // batch keep track
+          this.removeWidget(n.el, true, false);
         }
       });
     }
@@ -685,12 +691,8 @@ export class GridStack {
             this._insertNotAppend = true; // got reset by above call
           }
         }
-      } else if (addAndRemove) {
-        if (typeof(addAndRemove) === 'function') {
-          w = addAndRemove(this, w, true).gridstackNode;
-        } else {
-          w = (w.el ? this.addWidget(w.el, w) : this.addWidget(w)).gridstackNode;
-        }
+      } else if (addRemove) {
+        this.addWidget(w);
       }
     });
 
@@ -700,6 +702,7 @@ export class GridStack {
     // after commit, clear that flag
     delete this._ignoreLayoutsNodeChange;
     delete this._insertNotAppend;
+    prevCB ? this.opts.addRemoveCB = prevCB : delete this.opts.addRemoveCB;
     return this;
   }
 
