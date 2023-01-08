@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [7.1.2-dev (TBD)](#712-dev-tbd)
+- [7.2.0 (2023-01-07)](#720-2023-01-07)
 - [7.1.2 (2022-12-29)](#712-2022-12-29)
 - [7.1.1 (2022-11-13)](#711-2022-11-13)
 - [7.1.0 (2022-10-23)](#710-2022-10-23)
@@ -78,12 +78,12 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 7.1.2-dev (TBD)
+## 7.2.0 (2023-01-07)
 * fix [#1936](https://github.com/gridstack/gridstack.js/issues/1936) some styles left behind after a drag
 * remove [#1842](https://github.com/gridstack/gridstack.js/issues/1842) incorrect doc/partial code on widget resizeHandles
 * doc [#2033](https://github.com/gridstack/gridstack.js/issues/2033) `resizestop` is actually correct as we don't animate resize today
 * add - `init()`|`initAll()` will now load any listed children (what `addGrid()` already did)
-* add -  `GridStackOptions.addRemoveCB` which is use by frameworks (eg Angular) to dynamically create their gridItem components instead of regular div with class
+* add - `GridStackOptions.addRemoveCB` which is use by frameworks (eg Angular) to dynamically create their gridItem components instead of regular div with class
 
 ## 7.1.2 (2022-12-29)
 * fix [#939](https://github.com/gridstack/gridstack.js/issues/2039) 'prototype' undefined error for dd-gridstack.js

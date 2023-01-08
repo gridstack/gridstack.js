@@ -36,7 +36,7 @@ HTML
 ```
 
 ## ngFor with wrapper
-For simple case where you control the children creation (gridstack doesn't do create.re-parenting)
+For simple case where you control the children creation (gridstack doesn't do create or re-parenting)
 
 Code
 
