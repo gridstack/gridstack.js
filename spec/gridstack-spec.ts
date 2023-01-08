@@ -1789,7 +1789,7 @@ describe('gridstack', function() {
       let grid = GridStack.init();
       grid.load([{h:3, id:'gsItem1'}], () => null);
       let layout = grid.save(false);
-      expect(layout).toEqual([{x:0, y:0, w:4, h:3, id:'gsItem1'}, {x:4, y:0, w:4, h:4, id:'gsItem2'}]);
+      expect(layout).toEqual([{x:0, y:0, w:4, h:3, id:'gsItem1'}]);
     });
   });
 
