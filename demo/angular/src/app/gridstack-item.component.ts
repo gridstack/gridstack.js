@@ -13,6 +13,7 @@ import { GridItemHTMLElement, GridStackNode } from 'gridstack';
   selector: 'gridstack-item',
   template: `
     <div class="grid-stack-item-content">
+      {{options.content}}
       <ng-content></ng-content>
     </div>`,
   styles: [`
@@ -24,24 +25,24 @@ export class GridstackItemComponent {
 
   /** list of options for creating/updating this item */
   @Input() public set options(val: GridStackNode) {
-    if (this.element.gridstackNode?.grid) {
+    if (this.el.gridstackNode?.grid) {
       // already built, do an update...
-      this.element.gridstackNode.grid.update(this.element, val);
+      this.el.gridstackNode.grid.update(this.el, val);
     } else {
       // store our custom element in options so we can update it and not re-create a generic div!
-      val.el = this.element;
+      val.el = this.el;
       this._options = val;
     }
   }
   /** return the latest grid options (from GS once built, otherwise initial values) */
   public get options(): GridStackNode {
-    return this.element.gridstackNode || this._options || {};
+    return this.el.gridstackNode || this._options || {};
   }
 
   private _options?: GridStackNode;
 
   /** return the native element that contains grid specific fields as well */
-  public get element(): GridItemHTMLElement { return this.elementRef.nativeElement; }
+  public get el(): GridItemHTMLElement { return this.elementRef.nativeElement; }
 
   /** clears the initial options now that we've built */
   public clearOptions() {
@@ -50,12 +51,4 @@ export class GridstackItemComponent {
 
   constructor(private readonly elementRef: ElementRef<GridItemHTMLElement>) {
   }
-
-  // none of those have parentElement set from which we could get the grid to auto-init ourself!
-  // so we will let the parent track us instead...
-  // ngOnInit() {
-  //   this.element.parentElement
-  // }
-  // ngAfterContentInit() {
-  // }
 }
