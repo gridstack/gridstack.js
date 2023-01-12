@@ -273,6 +273,30 @@ GridStack.init({
 });
 ```
 
+### Resizable options
+| Option      | Description |
+| ----------- | ----------- |
+| autoHide      | do resize handle hide by default until mouse over ? - default: true on desktop, false on mobile       |
+| handles   | sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east) Note: it is not recommended to resize from the top sides as weird side effect may occur.        |
+
+Similarly, you can make the update the widgets so they will only drag when selecting classes with the name "drag-target"
+
+```js
+GridStack.init({
+  draggable: {
+    handle: '.drag-target'
+  }
+});
+```
+
+### Draggable options
+| Option      | Description |
+| ----------- | ----------- |
+| handle      | class selector of items that can be dragged. default to '.grid-stack-item-content'       |
+| appendTo   | default to 'body'        |
+| pause   | if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global        |
+
+
 ## Touch devices support
 
 gridstack v6+ now support mobile out of the box, with the addition of native touch event (along with mouse event) for drag&drop and resize.
