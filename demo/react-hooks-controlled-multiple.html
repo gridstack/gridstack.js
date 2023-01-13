@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gridstack.js React integration example</title>
   <link rel="stylesheet" href="demo.css" />
-  <link rel="stylesheet" href="../dist/gridstack-extra.css" />
+  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
   <script src="../dist/gridstack-all.js"></script>
 
   <!-- Scripts to use react inside html - DEVELOPMENT FILES -->
@@ -58,32 +58,31 @@
           },
           gridContainerRef.current
         )
-          .on('added', (ev, gsItems) => {
-            if (grid._ignoreCB) return;
-            // remove the new element as React will re-create it again (dup) once we add to the list or we get 2 of them with same ids but different DOM el!
-            // TODO: this is really not ideal - we shouldn't mix React templating with GS making it own edits as those get out of sync! see comment below @111.
-            gsItems.forEach(n => {
-              grid.removeWidget(n.el, true, false); // true=remove DOM, false=don't call use back!
-              // can't pass n directly even though similar structs as it has n.el.gridstackNode which gives JSON error for circular write.
-              addItem && addItem({ id: n.id, x: n.x, y: n.y, w: n.w, h: n.h });
-            });
-          })
-          .on('removed', (ev, gsItems) => {
-            /* Looks like a bug in GridStack */
-            const dirtyNodes = grid.engine.getDirtyNodes();
-            if (dirtyNodes !== undefined && dirtyNodes.length !== 0) {
-              const newItems = grid.save(false);
-              changeItems && changeItems(newItems);
-            }
-
-            if (grid._ignoreCB) return;
-            gsItems.forEach(n => removeItem && removeItem(n.id));
-
-          })
-          .on('change', (ev, gsItems) => {
+        .on('added', (ev, gsItems) => {
+          if (grid._ignoreCB) return;
+          // remove the new element as React will re-create it again (dup) once we add to the list or we get 2 of them with same ids but different DOM el!
+          // TODO: this is really not ideal - we shouldn't mix React templating with GS making it own edits as those get out of sync! see comment below @111.
+          gsItems.forEach(n => {
+            grid.removeWidget(n.el, true, false); // true=remove DOM, false=don't call use back!
+            // can't pass n directly even though similar structs as it has n.el.gridstackNode which gives JSON error for circular write.
+            addItem({ id: n.id, x: n.x, y: n.y, w: n.w, h: n.h });
+          });
+        })
+        .on('removed', (ev, gsItems) => {
+          /* Looks like a bug in GridStack */
+          const dirtyNodes = grid.engine.getDirtyNodes();
+          if (dirtyNodes !== undefined && dirtyNodes.length !== 0) {
             const newItems = grid.save(false);
-            changeItems && changeItems(newItems);
-          })
+            changeItems(newItems);
+          }
+
+          if (grid._ignoreCB) return;
+          gsItems.forEach(n => removeItem(n.id));
+        })
+        .on('change', (ev, gsItems) => {
+          const newItems = grid.save(false);
+          changeItems(newItems);
+        })
       } else {
         //
         // update existing grid layout, which is optimized to updates only diffs (will add new/delete items for examples)
@@ -91,7 +90,7 @@
         const grid = gridRef.current;
         const layout = [];
         items.forEach((a) => layout.push(
-          refs.current[a.id].current.gridstackNode || { ...a, el: refs.current[a.id].current }
+          refs.current[a.id].current.gridstackNode || {...a, el: refs.current[a.id].current}
         ));
         grid._ignoreCB = true; // hack: ignore added/removed since we're the one doing the update
         grid.load(layout);
@@ -137,6 +136,10 @@
     return (
       <div>
         <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+          <div></div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
           <button onClick={() => setItems1(items => [...items, { id: `item-1-${items.length + 1}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 1 grid</button>
           <button onClick={() => setItems2(items => [...items, { id: `item-2-${items.length + 1}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 2 grid</button>
         </div>
@@ -172,5 +175,4 @@
 
   ReactDOM.render(<ControlledExample />, document.getElementById('controlled-stack'))
 </script>
-
 </html>
