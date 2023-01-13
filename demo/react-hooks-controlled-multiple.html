@@ -65,7 +65,7 @@
           gsItems.forEach(n => {
             grid.removeWidget(n.el, true, false); // true=remove DOM, false=don't call use back!
             // can't pass n directly even though similar structs as it has n.el.gridstackNode which gives JSON error for circular write.
-            addItem({ id: n.id, x: n.x, y: n.y, w: n.w, h: n.h });
+            addItem({id:n.id, x:n.x, y:n.y, w:n.w, h:n.h});
           });
         })
         .on('removed', (ev, gsItems) => {
@@ -110,11 +110,11 @@
       // Also templating forces you to spell out the 12+ attributes GS supports (only x,w,w,h done below) instead of passing a option structure that supports everything
       // is not robust as things get added, and pollutes the DOM attr for default/missing entries, vs optimized code in GS.
       // ********************
-      <div style={{ width: '100%', marginRight: '10px' }}>
+      <div style={{width: '100%', marginRight: '10px'}}>
         <div className="grid-stack" ref={gridContainerRef}>
           {items.map((item, i) => {
             return (
-              <div ref={refs.current[item.id]} key={item.id} className={'grid-stack-item'} gs-id={item.id} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
+              <div ref={refs.current[item.id]} key={item.id} className="grid-stack-item" gs-id={item.id} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
                 <div className="grid-stack-item-content">
                   <Item {...item} />
                 </div>
@@ -135,7 +135,7 @@
 
     return (
       <div>
-        <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+        <div style={{display: 'flex', gap: '16px', marginBottom: '16px'}}>
           <div></div>
         </div>
 
@@ -143,7 +143,7 @@
           <button onClick={() => setItems1(items => [...items, { id: `item-1-${items.length + 1}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 1 grid</button>
           <button onClick={() => setItems2(items => [...items, { id: `item-2-${items.length + 1}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 2 grid</button>
         </div>
-        <div style={{ display: 'flex' }}>
+        <div style={{display: 'flex'}}>
           <div style={{ display: 'flex', width: '50%' }}>
             <ControlledStack
               items={items1}
