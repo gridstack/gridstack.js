@@ -33,9 +33,10 @@
   //
   // Controlled example
   //
-  const ControlledStack = ({ items, addItem, removeItem, id, changeItems }) => {
+  const ControlledStack = ({ items, addItem, removeItem, changeItems }) => {
     const refs = useRef({})
     const gridRef = useRef()
+    const gridContainerRef = useRef(null)
     refs.current = {}
 
     if (Object.keys(refs.current).length !== items.length) {
@@ -55,7 +56,7 @@
             column: 6,
             minRow: 1,
           },
-          `.controlled-${id}`
+          gridContainerRef.current
         )
           .on('added', (ev, gsItems) => {
             if (grid._ignoreCB) return;
@@ -111,10 +112,10 @@
       // is not robust as things get added, and pollutes the DOM attr for default/missing entries, vs optimized code in GS.
       // ********************
       <div style={{ width: '100%', marginRight: '10px' }}>
-        <div className={`grid-stack controlled-${id}`}>
+        <div className="grid-stack" ref={gridContainerRef}>
           {items.map((item, i) => {
             return (
-              <div ref={refs.current[item.id]} key={`${id}-${item.id}`} className={'grid-stack-item'} gs-id={item.id} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
+              <div ref={refs.current[item.id]} key={item.id} className={'grid-stack-item'} gs-id={item.id} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
                 <div className="grid-stack-item-content">
                   <Item {...item} />
                 </div>
