@@ -88,10 +88,9 @@
         // update existing grid layout, which is optimized to updates only diffs (will add new/delete items for examples)
         //
         const grid = gridRef.current;
-        const layout = [];
-        items.forEach((a) => layout.push(
+        const layout = items.map((a) => 
           refs.current[a.id].current.gridstackNode || {...a, el: refs.current[a.id].current}
-        ));
+        );
         grid._ignoreCB = true; // hack: ignore added/removed since we're the one doing the update
         grid.load(layout);
         delete grid._ignoreCB;
@@ -140,8 +139,8 @@
         </div>
 
         <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-          <button onClick={() => setItems1(items => [...items, { id: `item-1-${items.length + 1}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 1 grid</button>
-          <button onClick={() => setItems2(items => [...items, { id: `item-2-${items.length + 1}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 2 grid</button>
+          <button onClick={() => setItems1(items => [...items, { id: `item-1-${Date.now()}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 1 grid</button>
+          <button onClick={() => setItems2(items => [...items, { id: `item-2-${Date.now()}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 2 grid</button>
         </div>
         <div style={{display: 'flex'}}>
           <div style={{ display: 'flex', width: '50%' }}>
