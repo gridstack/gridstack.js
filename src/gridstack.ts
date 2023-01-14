@@ -1940,7 +1940,7 @@ export class GridStack {
         }
         dd.off(el, 'drag');
         // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
-        // as the helper will be nuked by jquery-ui otherwise
+        // as the helper will be nuked by jquery-ui otherwise. TODO: update old code path
         if (helper !== el) {
           helper.remove();
           el.gridstackNode = origNode; // original item (left behind) is re-stored to pre dragging as the node now has drop info
@@ -1959,6 +1959,8 @@ export class GridStack {
         Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
         Utils.removePositioningStyles(el);// @ts-ignore
         this._writeAttr(el, node);
+        el.className = '';
+        el.classList.add(gridDefaults.itemClass, this.opts.itemClass);
         this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
         if (subGrid) {
           subGrid.parentGridItem = node;
@@ -1976,7 +1978,7 @@ export class GridStack {
 
         // wait till we return out of the drag callback to set the new drag&resize handler or they may get messed up
         window.setTimeout(() => {
-        // IFF we are still there (some application will use as placeholder and insert their real widget instead and better call makeWidget())
+          // IFF we are still there (some application will use as placeholder and insert their real widget instead and better call makeWidget())
           if (node.el && node.el.parentElement) {
             this._prepareDragDropByNode(node);
           } else {

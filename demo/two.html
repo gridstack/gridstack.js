@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
+  <style type="text/css">
+    .with-lines { border: 1px dotted #777}
+  </style>
 
   <script src="../dist/gridstack-all.js"></script>
 </head>
@@ -59,7 +62,8 @@
       // dragIn: '.sidebar .grid-stack-item', // add draggable to class
       // dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone
       removable: '.trash', // true or drag-out delete class
-      acceptWidgets: function(el) { return true; } // function example, but can also be: true | false | '.someClass' value
+      // itemClass: 'with-lines', // test a custom additional class #2110
+      acceptWidgets: function(el) { return true } // function example, but can also be: true | false | '.someClass' value
     };
     let grids = GridStack.initAll(options);
     grids[1].float(false);
