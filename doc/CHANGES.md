@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7.2.0-dev (TBD)](#720-dev-tbd)
 - [7.2.0 (2023-01-07)](#720-2023-01-07)
 - [7.1.2 (2022-12-29)](#712-2022-12-29)
 - [7.1.1 (2022-11-13)](#711-2022-11-13)
@@ -77,6 +78,8 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## 7.2.0-dev (TBD)
+* fix [#2162](https://github.com/gridstack/gridstack.js/pull/2162) removing item from a grid (into another) will now call `change` if anything was also modified during the remove
 
 ## 7.2.0 (2023-01-07)
 * fix [#1936](https://github.com/gridstack/gridstack.js/issues/1936) some styles left behind after a drag

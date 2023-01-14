@@ -1924,8 +1924,8 @@ export class GridStack {
         if (wasAdded && origNode?.grid && origNode.grid !== this) {
           let oGrid = origNode.grid;
           oGrid.engine.removedNodes.push(origNode);
-          oGrid._triggerRemoveEvent();
-          // if it's an empty sub-grid, to get auto-created, nuke it
+          oGrid._triggerRemoveEvent()._triggerChangeEvent();
+          // if it's an empty sub-grid that got auto-created, nuke it
           if (oGrid.parentGridItem && !oGrid.engine.nodes.length && oGrid.opts.subGridDynamic) {
             oGrid.removeAsSubGrid();
           }
