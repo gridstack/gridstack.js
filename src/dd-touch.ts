@@ -1,5 +1,5 @@
 /**
- * touch.ts 7.2.0-dev
+ * touch.ts 7.2.1
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
