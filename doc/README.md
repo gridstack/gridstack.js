@@ -6,7 +6,7 @@ gridstack.js API
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [Grid Options](#grid-options)
-  - [DDDragInOpt](#dddraginopt)
+  - [DDDragOpt](#dddragopt)
   - [DDDragInOpt extends DDDragOpt](#dddraginopt-extends-dddragopt)
 - [Grid attributes](#grid-attributes)
 - [Item Options](#item-options)
@@ -130,7 +130,7 @@ gridstack.js API
 - `staticGrid` - removes drag|drop|resize (default `false`). If `true` widgets are not movable/resizable by the user, but code can still move and oneColumnMode will still work. You can use the smaller gridstack-static.js lib. A CSS class `grid-stack-static` is also added to the container.
 - `styleInHead` - if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`).
 
-### DDDragInOpt
+### DDDragOpt
 - `handle`?: string - class selector of items that can be dragged. default to '.grid-stack-item-content'
 - `appendTo`?: string - default to 'body' (TODO: is this even used anymore ?)
 - `pause`?: boolean | number - if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global
