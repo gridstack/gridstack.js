@@ -33,9 +33,10 @@
   //
   // Controlled example
   //
-  const ControlledStack = ({ items, addItem, removeItem, id }) => {
+  const ControlledStack = ({ items, addItem, removeItem, changeItems }) => {
     const refs = useRef({})
     const gridRef = useRef()
+    const gridContainerRef = useRef(null)
     refs.current = {}
 
     if (Object.keys(refs.current).length !== items.length) {
@@ -49,13 +50,13 @@
         // no need to init twice (would will return same grid) or register dup events
         const grid = gridRef.current = GridStack.init(
           {
-            float: true,
+            float: false,
             acceptWidgets: true,
             disableOneColumnMode: true, // side-by-side and fever columns to fit smaller screens
             column: 6,
             minRow: 1,
           },
-          `.controlled-${id}`
+          gridContainerRef.current
         )
         .on('added', (ev, gsItems) => {
           if (grid._ignoreCB) return;
@@ -68,44 +69,34 @@
           });
         })
         .on('removed', (ev, gsItems) => {
+          /* Looks like a bug in GridStack */
+          const dirtyNodes = grid.engine.getDirtyNodes();
+          if (dirtyNodes !== undefined && dirtyNodes.length !== 0) {
+            const newItems = grid.save(false);
+            changeItems(newItems);
+          }
+
           if (grid._ignoreCB) return;
           gsItems.forEach(n => removeItem(n.id));
         })
-
+        .on('change', (ev, gsItems) => {
+          const newItems = grid.save(false);
+          changeItems(newItems);
+        })
       } else {
         //
         // update existing grid layout, which is optimized to updates only diffs (will add new/delete items for examples)
         //
         const grid = gridRef.current;
-        const layout = [];
-        items.forEach((a) => layout.push(
+        const layout = items.map((a) => 
           refs.current[a.id].current.gridstackNode || {...a, el: refs.current[a.id].current}
-        ));
+        );
         grid._ignoreCB = true; // hack: ignore added/removed since we're the one doing the update
         grid.load(layout);
         delete grid._ignoreCB;
       }
 
-      // NOTE: old code is incorrect as it re-does the GS binding, but dragged item is left behind so you get dup DOM elements with same ids
-      // grid.batchUpdate()
-      // items.forEach((a) => {
-      //   // remove existing widgets
-      //   if (refs.current[a.id] && refs.current[a.id].current) {
-      //     grid.removeWidget(refs.current[a.id].current, false, false)
-      //   }
-      //   grid.makeWidget(refs.current[a.id].current)
-      // })
-      // grid.batchUpdate(false)
-
     }, [items])
-
-    useEffect(() => {
-      return () => {
-        // console.log('cleanup', id)
-        // gridRef.current.destroy(false, false)
-        // gridRef.current = null
-      }
-    })
 
     return (
       // ********************
@@ -119,10 +110,10 @@
       // is not robust as things get added, and pollutes the DOM attr for default/missing entries, vs optimized code in GS.
       // ********************
       <div style={{ width: '100%', marginRight: '10px' }}>
-        <div className={`grid-stack controlled-${id}`}>
+        <div className="grid-stack" ref={gridContainerRef}>
           {items.map((item, i) => {
             return (
-              <div ref={refs.current[item.id]} key={`${id}-${item.id}`} className={'grid-stack-item'} gs-id={item.id} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
+              <div ref={refs.current[item.id]} key={item.id} className="grid-stack-item" gs-id={item.id} gs-w={item.w} gs-h={item.h} gs-x={item.x} gs-y={item.y}>
                 <div className="grid-stack-item-content">
                   <Item {...item} />
                 </div>
@@ -142,32 +133,42 @@
     const [items2, setItems2] = useState([{ id: 'item-2-1', x: 0, y: 0, w: 1, h: 1 }, { id: 'item-2-2', x: 0, y: 1, w: 1, h: 1 }, { id: 'item-2-3', x: 1, y: 0, w: 1, h: 1 }])
 
     return (
-      <div style={{display: 'flex'}}>
-        <div style={{ display: 'flex', width: '50%' }}>
-          <ControlledStack
-            id='gs1'
-            items={items1}
-            addItem={(item) => {
-              setItems1(items => [...items, item])
-            }}
-            removeItem={(id) => {
-              setItems1(items => items.filter(i => i.id !== id))
-            }}
-          />
-        </div >
-        <div style={{ display: 'flex', width: '50%' }}>
-          <ControlledStack
-            id='gs2'
-            items={items2}
-            addItem={(item) => {
-              setItems2(items => [...items, item])
-            }}
-            removeItem={(id) => {
-              setItems2(items => items.filter(i => i.id !== id))
-            }}
-          />
+      <div>
+        <div style={{display: 'flex', gap: '16px', marginBottom: '16px'}}>
+          <div></div>
         </div>
-      </div >
+
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+          <button onClick={() => setItems1(items => [...items, { id: `item-1-${Date.now()}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 1 grid</button>
+          <button onClick={() => setItems2(items => [...items, { id: `item-2-${Date.now()}`, x: 2, y: 0, w: 2, h: 2 }])}>Add Item to 2 grid</button>
+        </div>
+        <div style={{display: 'flex'}}>
+          <div style={{ display: 'flex', width: '50%' }}>
+            <ControlledStack
+              items={items1}
+              addItem={(item) => {
+                setItems1(items => [...items, item])
+              }}
+              removeItem={(id) => {
+                setItems1(items => items.filter(i => i.id !== id))
+              }}
+              changeItems={(items) => setItems1(items)}
+            />
+          </div >
+          <div style={{ display: 'flex', width: '50%' }}>
+            <ControlledStack
+              items={items2}
+              addItem={(item) => {
+                setItems2(items => [...items, item])
+              }}
+              removeItem={(id) => {
+                setItems2(items => items.filter(i => i.id !== id))
+              }}
+              changeItems={(items) => setItems2(items)}
+            />
+          </div>
+        </div >
+      </div>
     )
   }
 
