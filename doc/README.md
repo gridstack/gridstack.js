@@ -6,6 +6,8 @@ gridstack.js API
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [Grid Options](#grid-options)
+  - [DDDragInOpt](#dddraginopt)
+  - [DDDragInOpt extends DDDragOpt](#dddraginopt-extends-dddragopt)
 - [Grid attributes](#grid-attributes)
 - [Item Options](#item-options)
 - [Item attributes](#item-attributes)
@@ -96,11 +98,11 @@ gridstack.js API
 - `dragIn` - specify the class of items that can be dragged into grids
   * example: `dragIn: '.newWidget'`.
   * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
-- `dragInOptions` - options for items that can be dragged into grids
+- `dragInOptions` - options for items that can be dragged into grids - see `DDDragInOpt`
   * example `dragInOptions: { appendTo: 'body', helper: 'clone', handle: '.grid-stack-item-content' }`
   * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
   * **Note2**: instead of 'clone' you can also pass your own function (get passed the event).
-- `draggable` - allows to override draggable options. (default: `{handle: '.grid-stack-item-content', appendTo: 'body'}`)
+- `draggable` - allows to override draggable options - see `DDDragOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body'}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `engineClass` - the type of engine to create (so you can subclass) default to GridStackEngine
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
@@ -127,6 +129,14 @@ gridstack.js API
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](https://gridstackjs.com/demo/right-to-left(rtl).html)
 - `staticGrid` - removes drag|drop|resize (default `false`). If `true` widgets are not movable/resizable by the user, but code can still move and oneColumnMode will still work. You can use the smaller gridstack-static.js lib. A CSS class `grid-stack-static` is also added to the container.
 - `styleInHead` - if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`).
+
+### DDDragInOpt
+- `handle`?: string - class selector of items that can be dragged. default to '.grid-stack-item-content'
+- `appendTo`?: string - default to 'body' (TODO: is this even used anymore ?)
+- `pause`?: boolean | number - if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global
+
+### DDDragInOpt extends DDDragOpt
+- `helper`?: string | ((event: Event) => HTMLElement) - helper function when dropping (ex: 'clone' or your own method) 
 
 ## Grid attributes
 
