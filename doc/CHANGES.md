@@ -80,6 +80,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 7.2.0-dev (TBD)
 * fix [#2162](https://github.com/gridstack/gridstack.js/pull/2162) removing item from a grid (into another) will now call `change` if anything was also modified during the remove
+* fix [#2110](https://github.com/gridstack/gridstack.js/issues/2110) custom `GridStackOptions.itemClass` now works when dragging from outside
 
 ## 7.2.0 (2023-01-07)
 * fix [#1936](https://github.com/gridstack/gridstack.js/issues/1936) some styles left behind after a drag
