@@ -20,19 +20,20 @@
     <a class="btn btn-primary" onClick="addNewWidget(0)" href="#">Add W Grid0</a>
     <a class="btn btn-primary" onClick="addNewWidget(1)" href="#">Add W Grid1</a>
     <a class="btn btn-primary" onClick="addNewWidget(2)" href="#">Add W Grid2</a>
-    <span>entire save/re-create:</span>
-    <a class="btn btn-primary" onClick="save()" href="#">Save</a>
+    <span>entire option+layout:</span>
+    <a class="btn btn-primary" onClick="save()" href="#">Save Full</a>
     <a class="btn btn-primary" onClick="destroy()" href="#">Destroy</a>
-    <a class="btn btn-primary" onClick="load()" href="#">Load</a>
-    <span>partial save/load:</span>
-    <a class="btn btn-primary" onClick="save(true, false)" href="#">Save list</a>
-    <a class="btn btn-primary" onClick="save(false, false)" href="#">Save no content</a>
+    <a class="btn btn-primary" onClick="load()" href="#">Re-create</a>
+    <span>layout list:</span>
+    <a class="btn btn-primary" onClick="save(true, false)" href="#">Save layout</a>
+    <a class="btn btn-primary" onClick="save(false, false)" href="#">Save layout no content</a>
     <a class="btn btn-primary" onClick="destroy(false)" href="#">Clear</a>
     <a class="btn btn-primary" onClick="load(false)" href="#">Load</a>
     <br><br>
     <!-- grid will be added here -->
   </div>
-
+  <p>Output</p>
+  <textarea id="saved" style="width:100%; height:200px;"></textarea>
   <script type="text/javascript">
     let subOptions = {
       cellHeight: 50, // should be 50 - top/bottom
@@ -54,15 +55,17 @@
       subGridDynamic: true, // v7 api to create sub-grids on the fly
       children: [
         ...main,
-        {x:2, y:0, w:2, h:3, subGrid: {children: sub0, ...subOptions}},
-        {x:4, y:0, h:2, subGrid: {children: sub1, ...subOptions}},
+        {x:2, y:0, w:2, h:3, id: 'sub0', subGrid: {children: sub0, ...subOptions}},
+        {x:4, y:0, h:2, id: 'sub1', subGrid: {children: sub1, ...subOptions}},
         // {x:2, y:0, w:2, h:3, subGrid: {children: [...sub1, {x:0, y:1, subGrid: subOptions}], ...subOptions}/*,content: "<div>nested grid here</div>"*/},
       ]
     };
     let count = 0;
-    [...main, ...sub0, ...sub1].forEach(d => {if (!d.subGrid) d.content = String(count++)});
+    // create unique ids+content so we can incrementally load() and not re-create anything (updates)
+    [...main, ...sub0, ...sub1].forEach(d => d.id = d.content = String(count++));
 
     // create and load it all from JSON above
+    document.querySelector('#saved').value = JSON.stringify(options);
     let grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
 
     function addMainWidget() {
@@ -84,11 +87,12 @@
     };
 
     function save(content = true, full = true) {
-      options = grid.save(content, full);
+      options = grid?.save(content, full);
       console.log(options);
-      // console.log(JSON.stringify(options));
+      document.querySelector('#saved').value = JSON.stringify(options);
     }
     function destroy(full = true) {
+      if (!grid) return;
       if (full) {
         grid.destroy();
         grid = undefined;
@@ -97,13 +101,15 @@
       }
     }
     function load(full = true) {
-      if (full) {
+      // destroy(full); // in case user didn't call
+      if (full || !grid) {
         grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
       } else {
         grid.load(options);
       }
     }
 
+    // save(true, false); load(false); // TESTing
   </script>
 </body>
 </html>
