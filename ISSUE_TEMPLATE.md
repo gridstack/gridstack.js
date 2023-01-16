@@ -10,5 +10,5 @@ If unsure if lib bug, use slack channel instead: https://join.slack.com/t/gridst
 You **MUST** provide a working demo - keep it simple and avoid frameworks as that could have issues - you can use 
 https://jsfiddle.net/adumesny/jqhkry7g
 
-## Actual behavior
-Tell us what happens instead of what's expected. If hard to describe, attach a video as well.
+## Expected behavior
+Tell us what should happen. If hard to describe, attach a video as well.
