@@ -1967,7 +1967,6 @@ export class GridStack {
         Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
         Utils.removePositioningStyles(el);// @ts-ignore
         this._writeAttr(el, node);
-        el.className = '';
         el.classList.add(gridDefaults.itemClass, this.opts.itemClass);
         this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
         if (subGrid) {

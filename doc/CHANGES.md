@@ -82,6 +82,7 @@ Change log
 
 ## 7.2.1-dev (TBD)
 * fix [#2171](https://github.com/gridstack/gridstack.js/issues/2171) `save()` nested grid has extra nested children & options
+* regression for fix #2110: nested grids lost their styles causing wrong rendering when dragging to create sub nesting
 
 ## 7.2.1 (2023-01-14)
 * fix [#2162](https://github.com/gridstack/gridstack.js/pull/2162) removing item from a grid (into another) will now call `change` if anything was also modified during the remove
