@@ -1,5 +1,5 @@
 /*!
- * GridStack 7.2.1-dev
+ * GridStack 7.2.2
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2022 Alain Dumesny
@@ -1623,7 +1623,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '7.2.1-dev';
+  static GDRev = '7.2.2';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
@@ -1967,7 +1967,6 @@ export class GridStack {
         Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
         Utils.removePositioningStyles(el);// @ts-ignore
         this._writeAttr(el, node);
-        el.className = '';
         el.classList.add(gridDefaults.itemClass, this.opts.itemClass);
         this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
         if (subGrid) {
