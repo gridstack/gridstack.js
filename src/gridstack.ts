@@ -453,7 +453,7 @@ export class GridStack {
     this._prepareElement(el, true, options);
     this._updateContainerHeight();
 
-    // see if there is a sub-grid to create too
+    // see if there is a sub-grid to create
     if (node.subGrid) {
       this.makeSubGrid(node.el, undefined, undefined, false);
     }
@@ -472,7 +472,7 @@ export class GridStack {
 
   /**
    * Convert an existing gridItem element into a sub-grid with the given (optional) options, else inherit them
-   * from the parent subGrid options.
+   * from the parent's subGrid options.
    * @param el gridItem element to convert
    * @param ops (optional) sub-grid options, else default to node, then parent settings, else defaults
    * @param nodeToAdd (optional) node to add to the newly created sub grid (used when dragging over existing regular item)
@@ -485,8 +485,15 @@ export class GridStack {
     }
     if ((node.subGrid as GridStack)?.el) return node.subGrid as GridStack; // already done
 
-    ops = Utils.cloneDeep(ops || node.subGrid as GridStackOptions || {...this.opts.subGrid, children: undefined});
-    ops.subGrid = Utils.cloneDeep(ops); // carry nesting settings to next one down
+    // find the template subGrid stored on a parent as fallback...
+    let subGridTemplate: GridStackOptions; // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let grid: GridStack = this;
+    while (grid && !subGridTemplate) {
+      subGridTemplate = grid.opts?.subGrid;
+      grid = grid.parentGridItem?.grid;
+    }
+    //... and set the create options
+    ops = Utils.cloneDeep({...(subGridTemplate || {}), children: undefined, ...(ops || node.subGrid as GridStackOptions)});
     node.subGrid = ops;
 
     // if column special case it set, remember that flag and set default
@@ -599,8 +606,9 @@ export class GridStack {
       } else {
         if (!saveContent) { delete n.content; }
         // check for nested grid
-        if (n.subGrid) {
-          n.subGrid = (n.subGrid as GridStack).save(saveContent, true) as GridStackOptions;
+        if ((n.subGrid as GridStack)?.el) {
+          const listOrOpt = (n.subGrid as GridStack).save(saveContent, saveGridOpt);
+          n.subGrid = (saveGridOpt ? listOrOpt : {children: listOrOpt}) as GridStackOptions;
         }
       }
       delete n.el;
