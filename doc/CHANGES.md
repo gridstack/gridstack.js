@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [7.2.1-dev (TBD)](#721-dev-tbd)
+- [7.2.2 (2023-01-16)](#722-2023-01-16)
 - [7.2.1 (2023-01-14)](#721-2023-01-14)
 - [7.2.0 (2023-01-07)](#720-2023-01-07)
 - [7.1.2 (2022-12-29)](#712-2022-12-29)
@@ -80,7 +80,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 7.2.1-dev (TBD)
+## 7.2.2 (2023-01-16)
 * fix [#2171](https://github.com/gridstack/gridstack.js/issues/2171) `save()` nested grid has extra nested children & options
 * regression for fix #2110: nested grids lost their styles causing wrong rendering when dragging to create sub nesting
 
