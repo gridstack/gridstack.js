@@ -140,6 +140,9 @@ export interface GridStackOptions {
   Note: only used by addGrid(), else your element should have the needed class */
   class?: string;
 
+  /** disallows the scroll when dragging or resizing a widget (default?: false) */
+  disableAutoScroll?: boolean;
+
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
 

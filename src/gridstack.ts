@@ -2181,7 +2181,9 @@ export class GridStack {
       if (node._temporaryRemoved) return; // handled by dropover
       let distance = ui.position.top - node._prevYPix;
       node._prevYPix = ui.position.top;
-      Utils.updateScrollPosition(el, ui.position, distance);
+      if (!this.opts.disableAutoScroll) {
+        Utils.updateScrollPosition(el, ui.position, distance);
+      }
 
       // get new position taking into account the margin in the direction we are moving! (need to pass mid point by margin)
       let left = ui.position.left + (ui.position.left > node._lastUiPosition.left  ? -mRight : mLeft);
