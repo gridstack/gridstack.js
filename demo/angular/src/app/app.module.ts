@@ -9,26 +9,22 @@ import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
 
 @NgModule({
-  declarations: [
-    AngularNgForCmdTestComponent,
-    AngularNgForTestComponent,
-    AngularSimpleComponent,
-    AppComponent,
-    GridstackComponent,
-    GridstackItemComponent,
-  ],
-  imports: [
-    BrowserModule
-  ],
-  exports: [
-    GridstackComponent,
-    GridstackItemComponent,
-  ],
-  entryComponents: [  // entry list needed to dynamically create those
-    GridstackComponent,
-    GridstackItemComponent,
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AngularNgForCmdTestComponent,
+        AngularNgForTestComponent,
+        AngularSimpleComponent,
+        AppComponent,
+        GridstackComponent,
+        GridstackItemComponent,
+    ],
+    imports: [
+        BrowserModule
+    ],
+    exports: [
+        GridstackComponent,
+        GridstackItemComponent,
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
