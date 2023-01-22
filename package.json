@@ -49,7 +49,7 @@
   "author": "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)",
   "contributors": [
     "Pavel Reznikov <pashka.reznikov@gmail.com>",
-    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"    
+    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"
   ],
   "license": "MIT",
   "bugs": {
@@ -83,7 +83,6 @@
     "karma-jasmine": "^4.0.1",
     "karma-typescript": "4.1.1",
     "protractor": "^7.0.0",
-    "puppeteer": "^5.4.1",
     "sass": "^1.42.1",
     "serve-static": "^1.14.1",
     "ts-loader": "^8.0.7",
