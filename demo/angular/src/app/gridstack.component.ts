@@ -3,7 +3,7 @@
  * Copyright (c) 2022 Alain Dumesny - see GridStack root license
  */
 
-import { AfterContentInit, ChangeDetectionStrategy, Component, ComponentFactoryResolver, ContentChildren, ElementRef, EventEmitter, Input,
+import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, ElementRef, EventEmitter, Input,
   NgZone, OnDestroy, OnInit, Output, QueryList, ViewChild, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export type droppedCB = {event: Event, previousNode: GridStackNode, newNode: Gri
   selector: 'gridstack',
   template: `
     <!-- content to show when when grid is empty, like instructions on how to add widgets -->
-    <ng-content select="[no-item-content]" *ngIf="showEmpty"></ng-content>
+    <ng-content select="[empty-content]" *ngIf="isEmpty"></ng-content>
     <!-- where dynamic items go -->
     <ng-template #container></ng-template>
     <!-- where template items go -->
@@ -48,7 +48,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   public get options(): GridStackOptions { return this._grid?.opts || this._options || {}; }
 
   /** true while ng-content with 'no-item-content' should be shown when last item is removed from a grid */
-  @Input() public showEmpty?: boolean;
+  @Input() public isEmpty?: boolean;
 
   /** individual list of GridStackEvent callbacks handlers as output
    * otherwise use this.grid.on('name1 name2 name3', callback) to handle multiple at once
@@ -82,7 +82,6 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   constructor(
     private readonly ngZone: NgZone,
     private readonly elementRef: ElementRef<GridHTMLElement>,
-    private readonly resolver: ComponentFactoryResolver,
   ) {
   }
 
@@ -135,14 +134,14 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /** check if the grid is empty, if so show alternative content */
   public checkEmpty() {
     if (!this.grid) return;
-    this.showEmpty = !this.grid.engine.nodes.length;
+    this.isEmpty = !this.grid.engine.nodes.length;
   }
 
   /** get all known events as easy to use Outputs for convenience */
   private hookEvents(grid?: GridStack) {
     if (!grid) return;
     grid
-    .on('added', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => {this.added.emit({event, nodes}); this.checkEmpty(); }))
+    .on('added', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => { this.checkEmpty(); this.added.emit({event, nodes}); }))
     .on('change', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => this.changeGS.emit({event, nodes})))
     .on('disable', (event: Event) => this.ngZone.run(() => this.disable.emit({event})))
     .on('drag', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.drag.emit({event, el})))
@@ -150,7 +149,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
     .on('dragstop', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.dragstop.emit({event, el})))
     .on('dropped', (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => this.ngZone.run(() => this.dropped.emit({event, previousNode, newNode})))
     .on('enable', (event: Event) => this.ngZone.run(() => this.enable.emit({event})))
-    .on('removed', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => {this.removed.emit({event, nodes}); this.checkEmpty(); }))
+    .on('removed', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => { this.checkEmpty(); this.removed.emit({event, nodes}); }))
     .on('resize', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resize.emit({event, el})))
     .on('resizestart', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resizestart.emit({event, el})))
     .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resizestop.emit({event, el})))
@@ -161,12 +160,10 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
     if (add) {
       if (!this.container) return;
       // create the grid item dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
-      // and https://netbasal.com/dynamically-creating-components-with-angular-a7346f4a982d#.irxd1nulp
-      const factory = this.resolver.resolveComponentFactory(GridstackItemComponent);
-      const gridItem = this.container.createComponent(factory).instance;
-      return gridItem.el;
+      const gridItem = this.container.createComponent(GridstackItemComponent)?.instance;
+      return gridItem?.el;
     }
-    // if (this.outsideAddRemove) this.outsideAddRemove(g, w, add);
+    // if (this.outsideAddRemove) this.outsideAddRemove(g, w, add); // TODO: ?
     return;
   }
 }

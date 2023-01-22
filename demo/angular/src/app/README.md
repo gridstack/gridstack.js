@@ -83,6 +83,7 @@ to build the demo, go to demo/angular and run `yarn` + `yarn start` and Navigate
 
  - This wrapper needs v7.2+ to run as it needs the latest changes
  - Code isn't compiled into a lib YET. You'll need to copy those files. Let me know (slack) if you are using it...
+ - BUG: content doesn't appear on new widget until widget is moved around (or another created that pushes it). Need to force angular detection changes...
 
  ## ngFor Caveats
  - This wrapper handles well ngFor loops, but if you're using a trackBy function (as I would recommend) and no element id change after an update,
