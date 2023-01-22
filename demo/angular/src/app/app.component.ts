@@ -52,6 +52,8 @@ export class AppComponent {
    * TEST dynamic grid operations - uses grid API directly (since we don't track structure that gets out of sync)
    */
   public add(gridComp: GridstackComponent) {
+    // TODO: BUG the content doesn't appear until widget is moved around (or another created). Need to force
+    // angular detection changes...
     gridComp.grid?.addWidget({x:3, y:0, w:2, content:`item ${ids}`, id:String(ids++)});
   }
   public delete(gridComp: GridstackComponent) {
