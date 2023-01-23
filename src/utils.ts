@@ -3,7 +3,7 @@
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
-import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
+import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget, GridStackTriggerEvent } from './types';
 
 export interface HeightData {
   h: number;
@@ -476,7 +476,7 @@ export class Utils {
     }
   }
 
-  public static initEvent<T>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): T {
+  public static initEvent<T extends Event>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): GridStackTriggerEvent<T> {
     const evt = { type: info.type };
     const obj = {
       button: 0,
@@ -484,7 +484,8 @@ export class Utils {
       buttons: 1,
       bubbles: true,
       cancelable: true,
-      target: info.target ? info.target : e.target
+      target: info.target ? info.target : e.target,
+      originalEvent: e,
     };
     // don't check for `instanceof DragEvent` as Safari use MouseEvent #1540
     if ((e as DragEvent).dataTransfer) {
@@ -492,7 +493,7 @@ export class Utils {
     }
     ['altKey','ctrlKey','metaKey','shiftKey'].forEach(p => evt[p] = e[p]); // keys
     ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = e[p]); // point info
-    return {...evt, ...obj} as unknown as T;
+    return {...evt, ...obj} as unknown as GridStackTriggerEvent<T>;
   }
 
   /** copies the MouseEvent properties and sends it as another event to the given target */

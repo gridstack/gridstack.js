@@ -67,12 +67,12 @@ export interface GridItemHTMLElement extends HTMLElement {
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
 /** specific and general event handlers for the .on() method */
-export type GridStackEventHandler = (event: Event) => void;
-export type GridStackElementHandler = (event: Event, el: GridItemHTMLElement) => void;
-export type GridStackNodesHandler = (event: Event, nodes: GridStackNode[]) => void;
-export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => void;
+export type GridStackEventHandler = (event: GridStackTriggerEvent) => void;
+export type GridStackElementHandler = (event: GridStackTriggerEvent, el: GridItemHTMLElement) => void;
+export type GridStackNodesHandler = (event: GridStackTriggerEvent, nodes: GridStackNode[]) => void;
+export type GridStackDroppedHandler = (event: GridStackTriggerEvent, previousNode: GridStackNode, newNode: GridStackNode) => void;
 export type GridStackEventHandlerCallback = GridStackEventHandler | GridStackElementHandler | GridStackNodesHandler | GridStackDroppedHandler;
-
+export type GridStackTriggerEvent<T extends Event = Event> = T & { originalEvent: Event };
 /** optional function called during load() to callback the user on new added/remove items */
 export type AddRemoveFcn = (g: GridStack, w: GridStackWidget, add: boolean) => HTMLElement | undefined;
 
