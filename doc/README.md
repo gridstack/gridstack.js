@@ -210,7 +210,7 @@ grid.on('disable', function(event: Event) {
 called when grid item is starting to be dragged
 
 ```js
-grid.on('dragstart', function(event: Event, el: GridItemHTMLElement) {
+grid.on('dragstart', function(event: GridStackTriggerEvent, el: GridItemHTMLElement) {
 });
 ```
 
@@ -219,7 +219,7 @@ grid.on('dragstart', function(event: Event, el: GridItemHTMLElement) {
 called while grid item is being dragged, for each new row/column value (not every pixel)
 
 ```js
-grid.on('drag', function(event: Event, el: GridItemHTMLElement) {
+grid.on('drag', function(event: GridStackTriggerEvent, el: GridItemHTMLElement) {
 });
 ```
 
@@ -227,7 +227,7 @@ grid.on('drag', function(event: Event, el: GridItemHTMLElement) {
 called after the user is done moving the item, with updated DOM attributes.
 
 ```js
-grid.on('dragstop', function(event: Event, el: GridItemHTMLElement) {
+grid.on('dragstop', function(event: GridStackTriggerEvent, el: GridItemHTMLElement) {
   let x = parseInt(el.getAttribute('gs-x')) || 0;
   // or all values...
   let node: GridStackNode = el.gridstackNode; // {x, y, width, height, id, ....}
@@ -239,7 +239,7 @@ grid.on('dragstop', function(event: Event, el: GridItemHTMLElement) {
 called when an item has been dropped and accepted over a grid. If the item came from another grid, the previous widget node info will also be sent (but dom item long gone).
 
 ```js
-grid.on('dropped', function(event: Event, previousWidget: GridStackNode, newWidget: GridStackNode) {
+grid.on('dropped', function(event: GridStackTriggerEvent, previousWidget: GridStackNode, newWidget: GridStackNode) {
   console.log('Removed widget that was dragged out of grid:', previousWidget);
   console.log('Added widget in dropped grid:', newWidget);
 });
@@ -268,7 +268,7 @@ grid.on('removed', function(event: Event, items: GridStackNode[]) {
 called before the user starts resizing an item
 
 ```js
-grid.on('resizestart', function(event: Event, el: GridItemHTMLElement) {
+grid.on('resizestart', function(event: GridStackTriggerEvent, el: GridItemHTMLElement) {
 });
 ```
 
@@ -277,7 +277,7 @@ grid.on('resizestart', function(event: Event, el: GridItemHTMLElement) {
 called while grid item is being resized, for each new row/column value (not every pixel)
 
 ```js
-grid.on('resize', function(event: Event, el: GridItemHTMLElement) {
+grid.on('resize', function(event: GridStackTriggerEvent, el: GridItemHTMLElement) {
 });
 ```
 
@@ -286,7 +286,7 @@ grid.on('resize', function(event: Event, el: GridItemHTMLElement) {
 called after the user is done resizing the item, with updated DOM attributes.
 
 ```js
-grid.on('resizestop', function(event: Event, el: GridItemHTMLElement) {
+grid.on('resizestop', function(event: GridStackTriggerEvent, el: GridItemHTMLElement) {
   let width = parseInt(el.getAttribute('gs-w')) || 0;
   // or all values...
   let node: GridStackNode = el.gridstackNode; // {x, y, width, height, id, ....}
