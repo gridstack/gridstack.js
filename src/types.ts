@@ -73,6 +73,11 @@ export type GridStackNodesHandler = (event: Event, nodes: GridStackNode[]) => vo
 export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => void;
 export type GridStackEventHandlerCallback = GridStackEventHandler | GridStackElementHandler | GridStackNodesHandler | GridStackDroppedHandler;
 
+interface GridStakDMEvent<T> {
+    originalEvent: T
+}
+export type GridStackDragMouseEvent<T extends DragEvent | MouseEvent> = T extends DragEvent ? T & GridStakDMEvent<T> : T & GridStakDMEvent<T>;
+
 /** optional function called during load() to callback the user on new added/remove items */
 export type AddRemoveFcn = (g: GridStack, w: GridStackWidget, add: boolean) => HTMLElement | undefined;
 

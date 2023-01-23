@@ -3,7 +3,15 @@
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
-import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
+import {
+    GridStackElement,
+    GridStackNode,
+    GridStackOptions,
+    numberOrString,
+    GridStackPosition,
+    GridStackWidget,
+    GridStackDragMouseEvent
+} from './types';
 
 export interface HeightData {
   h: number;
@@ -476,7 +484,7 @@ export class Utils {
     }
   }
 
-    public static initEvent<T extends DragEvent | MouseEvent>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): T {
+    public static initEvent<T extends DragEvent | MouseEvent>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): GridStackDragMouseEvent<T> {
         return {
             type: info.type,
             button: 0,
@@ -499,7 +507,8 @@ export class Utils {
             clientY: e.clientY,
             screenX: e.screenX,
             screenY: e.screenY,
-        } as T;
+            originalEvent: e,
+        };
     }
 
   /** copies the MouseEvent properties and sends it as another event to the given target */
