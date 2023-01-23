@@ -476,24 +476,31 @@ export class Utils {
     }
   }
 
-  public static initEvent<T>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): T {
-    const evt = { type: info.type };
-    const obj = {
-      button: 0,
-      which: 0,
-      buttons: 1,
-      bubbles: true,
-      cancelable: true,
-      target: info.target ? info.target : e.target
-    };
-    // don't check for `instanceof DragEvent` as Safari use MouseEvent #1540
-    if ((e as DragEvent).dataTransfer) {
-      evt['dataTransfer'] = (e as DragEvent).dataTransfer; // workaround 'readonly' field.
+    public static initEvent<T extends DragEvent | MouseEvent>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): T {
+        return {
+            type: info.type,
+            button: 0,
+            buttons: 1,
+            bubbles: true,
+            cancelable: true,
+            target: info?.target || e.target,
+            ...((e as DragEvent).dataTransfer && {
+                dataTransfer: (e as DragEvent).dataTransfer
+            } as any),
+            // keys
+            altKey: e.altKey,
+            ctrlKey: e.ctrlKey,
+            metaKey: e.metaKey,
+            shiftKey: e.shiftKey,
+            // point info
+            pageX: e.pageX,
+            pageY: e.pageY,
+            clientX: e.clientX,
+            clientY: e.clientY,
+            screenX: e.screenX,
+            screenY: e.screenY,
+        } as T;
     }
-    ['altKey','ctrlKey','metaKey','shiftKey'].forEach(p => evt[p] = e[p]); // keys
-    ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = e[p]); // point info
-    return {...evt, ...obj} as unknown as T;
-  }
 
   /** copies the MouseEvent properties and sends it as another event to the given target */
   public static simulateMouseEvent(e: MouseEvent, simulatedType: string, target?: EventTarget): void {
