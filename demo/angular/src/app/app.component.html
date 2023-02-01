@@ -4,8 +4,9 @@
   <button (click)="show=0">Simple</button>
   <button (click)="show=1">ngFor case</button>
   <button (click)="show=2">ngFor custom command</button>
-  <button (click)="show=3">Component ngFor</button>
-  <button (click)="show=4">Component Dynamic</button>
+  <button (click)="show=3">Component HTML template</button>
+  <button (click)="show=4">Component ngFor</button>
+  <button (click)="show=5">Component Dynamic</button>
 </div>
 
 <div class="test-container">
@@ -14,6 +15,18 @@
 <angular-ng-for-cmd-test *ngIf="show===2"></angular-ng-for-cmd-test>
 
 <div *ngIf="show===3" >
+  <p><b>COMPONENT template</b>: using DOM template to use components statically</p>
+  <button (click)="add(gridComp)">add item</button>
+  <button (click)="delete(gridComp)">remove item</button>
+  <button (click)="modify(gridComp)">modify item</button>
+  <button (click)="newLayout(gridComp)">new layout</button>
+  <gridstack #gridComp [options]="gridOptions" (changeGS)="onChange($event)" (resizestop)="onResizeStop($event)">
+    <gridstack-item gs-x="1" gs-y="0">item 1</gridstack-item>
+    <gridstack-item gs-x="3" gs-y="0" gs-w="2">item 2 wide</gridstack-item>
+  </gridstack>
+</div>
+
+<div *ngIf="show===4" >
   <p><b>COMPONENT ngFor</b>: Most complete example that uses Component wrapper for grid and gridItem</p>
   <button (click)="addNgFor()">add item</button>
   <button (click)="deleteNgFor()">remove item</button>
@@ -26,7 +39,7 @@
   </gridstack>
 </div>
 
-<div *ngIf="show===4" >
+<div *ngIf="show===5" >
   <p><b>COMPONENT dynamic</b>: Best example that uses Component wrapper and dynamic grid creation (drag between grids, from toolbar, etc...)</p>
   <button (click)="add(gridComp)">add item</button>
   <button (click)="delete(gridComp)">remove item</button>
