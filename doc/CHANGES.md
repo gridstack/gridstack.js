@@ -80,6 +80,9 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 7.2.2-dev (TBD)
+* fix `addWidget()` to handle passing just {el} which was needed for Angular HMTL template demo
+
 ## 7.2.2 (2023-01-16)
 * fix [#2171](https://github.com/gridstack/gridstack.js/issues/2171) `save()` nested grid has extra nested children & options
 * regression for fix #2110: nested grids lost their styles causing wrong rendering when dragging to create sub nesting

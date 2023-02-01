@@ -36,7 +36,7 @@ export class GridstackItemComponent {
   }
   /** return the latest grid options (from GS once built, otherwise initial values) */
   public get options(): GridStackNode {
-    return this.el.gridstackNode || this._options || {};
+    return this.el.gridstackNode || this._options || {el: this.el};
   }
 
   private _options?: GridStackNode;

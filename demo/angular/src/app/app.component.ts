@@ -11,7 +11,7 @@ let ids = 1;
 })
 export class AppComponent {
   // which sample to show
-  public show = 4;
+  public show = 5;
 
   /** sample grid options and items to load... */
   public items: GridStackWidget[] = [
