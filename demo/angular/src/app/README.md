@@ -9,7 +9,7 @@ I.E. don't use Angular templating to create children as that is harder to sync.
 
 Code
 
-```typescript
+```javascript
 import { GridStackOptions, GridStackWidget } from 'gridstack';
 import { GridstackComponent, nodesCB } from './gridstack.component';
 
@@ -30,7 +30,7 @@ public onChange(data: nodesCB) {
 }
 ```
 HTML 
-```angular2html
+```html
 <gridstack [options]="gridOptions" (changeGS)="onChange($event)">
 </gridstack>
 ```
@@ -40,7 +40,7 @@ For simple case where you control the children creation (gridstack doesn't do cr
 
 Code
 
-```typescript
+```javascript
 import { GridStackOptions, GridStackWidget } from 'gridstack';
 import { GridstackComponent, nodesCB } from './gridstack.component';
 
@@ -66,7 +66,7 @@ public identify(index: number, w: GridStackWidget) {
 }
 ```
 HTML 
-```angular2html
+```html
 <gridstack [options]="gridOptions" (changeCB)="onChange($event)">
   <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n">
     Item {{n.id}}
