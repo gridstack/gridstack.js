@@ -53,19 +53,22 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /** individual list of GridStackEvent callbacks handlers as output
    * otherwise use this.grid.on('name1 name2 name3', callback) to handle multiple at once
    * see https://github.com/gridstack/gridstack.js/blob/master/demo/events.js#L4
+   *
+   * Note: camel casing and 'CB' added at the end to prevent @angular-eslint/no-output-native
+   * eg: 'change' would trigger the raw CustomEvent so use different name.
    */
-  @Output() public added = new EventEmitter<nodesCB>();
-  @Output() public changeGS = new EventEmitter<nodesCB>(); // 'change' would trigger the raw CustomEvent so use different name
-  @Output() public disable = new EventEmitter<eventCB>();
-  @Output() public drag = new EventEmitter<elementCB>();
-  @Output() public dragstart = new EventEmitter<elementCB>();
-  @Output() public dragstop = new EventEmitter<elementCB>();
-  @Output() public dropped = new EventEmitter<droppedCB>();
-  @Output() public enable = new EventEmitter<eventCB>();
-  @Output() public removed = new EventEmitter<nodesCB>();
-  @Output() public resize = new EventEmitter<elementCB>();
-  @Output() public resizestart = new EventEmitter<elementCB>();
-  @Output() public resizestop = new EventEmitter<elementCB>();
+  @Output() public addedCB = new EventEmitter<nodesCB>();
+  @Output() public changeCB = new EventEmitter<nodesCB>();
+  @Output() public disableCB = new EventEmitter<eventCB>();
+  @Output() public dragCB = new EventEmitter<elementCB>();
+  @Output() public dragStartCB = new EventEmitter<elementCB>();
+  @Output() public dragStopCB = new EventEmitter<elementCB>();
+  @Output() public droppedCB = new EventEmitter<droppedCB>();
+  @Output() public enableCB = new EventEmitter<eventCB>();
+  @Output() public removedCB = new EventEmitter<nodesCB>();
+  @Output() public resizeCB = new EventEmitter<elementCB>();
+  @Output() public resizeStartCB = new EventEmitter<elementCB>();
+  @Output() public resizeStopCB = new EventEmitter<elementCB>();
 
   /** return the native element that contains grid specific fields as well */
   public get el(): GridHTMLElement { return this.elementRef.nativeElement; }
@@ -141,18 +144,18 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   private hookEvents(grid?: GridStack) {
     if (!grid) return;
     grid
-    .on('added', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => { this.checkEmpty(); this.added.emit({event, nodes}); }))
-    .on('change', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => this.changeGS.emit({event, nodes})))
-    .on('disable', (event: Event) => this.ngZone.run(() => this.disable.emit({event})))
-    .on('drag', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.drag.emit({event, el})))
-    .on('dragstart', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.dragstart.emit({event, el})))
-    .on('dragstop', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.dragstop.emit({event, el})))
-    .on('dropped', (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => this.ngZone.run(() => this.dropped.emit({event, previousNode, newNode})))
-    .on('enable', (event: Event) => this.ngZone.run(() => this.enable.emit({event})))
-    .on('removed', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => { this.checkEmpty(); this.removed.emit({event, nodes}); }))
-    .on('resize', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resize.emit({event, el})))
-    .on('resizestart', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resizestart.emit({event, el})))
-    .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resizestop.emit({event, el})))
+    .on('added', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => { this.checkEmpty(); this.addedCB.emit({event, nodes}); }))
+    .on('change', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => this.changeCB.emit({event, nodes})))
+    .on('disable', (event: Event) => this.ngZone.run(() => this.disableCB.emit({event})))
+    .on('drag', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.dragCB.emit({event, el})))
+    .on('dragstart', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.dragStartCB.emit({event, el})))
+    .on('dragstop', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.dragStopCB.emit({event, el})))
+    .on('dropped', (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => this.ngZone.run(() => this.droppedCB.emit({event, previousNode, newNode})))
+    .on('enable', (event: Event) => this.ngZone.run(() => this.enableCB.emit({event})))
+    .on('removed', (event: Event, nodes: GridStackNode[]) => this.ngZone.run(() => { this.checkEmpty(); this.removedCB.emit({event, nodes}); }))
+    .on('resize', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resizeCB.emit({event, el})))
+    .on('resizestart', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resizeStartCB.emit({event, el})))
+    .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.ngZone.run(() => this.resizeStopCB.emit({event, el})))
   }
 
   /** called by GS when a new item needs to be created, which we do as a Angular component, or deleted (skip) */

@@ -20,7 +20,7 @@
   <button (click)="delete(gridComp)">remove item</button>
   <button (click)="modify(gridComp)">modify item</button>
   <button (click)="newLayout(gridComp)">new layout</button>
-  <gridstack #gridComp [options]="gridOptions" (changeGS)="onChange($event)" (resizestop)="onResizeStop($event)">
+  <gridstack #gridComp [options]="gridOptions" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">
     <gridstack-item gs-x="1" gs-y="0">item 1</gridstack-item>
     <gridstack-item gs-x="3" gs-y="0" gs-w="2">item 2 wide</gridstack-item>
   </gridstack>
@@ -32,7 +32,7 @@
   <button (click)="deleteNgFor()">remove item</button>
   <button (click)="modifyNgFor(gridComp)">modify item</button>
   <button (click)="newLayoutNgFor()">new layout</button>
-  <gridstack #gridComp [options]="gridOptions" (changeGS)="onChange($event)" (resizestop)="onResizeStop($event)">
+  <gridstack #gridComp [options]="gridOptions" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">
     <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n">
       {{n.content}}
     </gridstack-item>
@@ -45,7 +45,7 @@
   <button (click)="delete(gridComp)">remove item</button>
   <button (click)="modify(gridComp)">modify item</button>
   <button (click)="newLayout(gridComp)">new layout</button>
-  <gridstack #gridComp [options]="gridOptionsFull" (changeGS)="onChange($event)" (resizestop)="onResizeStop($event)">
+  <gridstack #gridComp [options]="gridOptionsFull" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">
   </gridstack>
 </div>
 

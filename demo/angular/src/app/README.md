@@ -31,7 +31,7 @@ public onChange(data: nodesCB) {
 ```
 HTML 
 ```html
-<gridstack [options]="gridOptions" (changeGS)="onChange($event)">
+<gridstack [options]="gridOptions" (changeCB)="onChange($event)">
 </gridstack>
 ```
 
