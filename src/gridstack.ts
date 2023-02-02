@@ -2181,7 +2181,7 @@ export class GridStack {
       if (node._temporaryRemoved) return; // handled by dropover
       let distance = ui.position.top - node._prevYPix;
       node._prevYPix = ui.position.top;
-      if (!this.opts.disableAutoScroll) {
+      if (this.opts.draggable.scroll) {
         Utils.updateScrollPosition(el, ui.position, distance);
       }
 

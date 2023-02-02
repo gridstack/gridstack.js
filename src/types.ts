@@ -15,7 +15,7 @@ export const gridDefaults: GridStackOptions = {
   cellHeightThrottle: 100,
   cellHeightUnit: 'px',
   column: 12,
-  draggable: { handle: '.grid-stack-item-content', appendTo: 'body' },
+  draggable: { handle: '.grid-stack-item-content', appendTo: 'body', scroll: true },
   handle: '.grid-stack-item-content',
   itemClass: 'grid-stack-item',
   margin: 10,
@@ -139,9 +139,6 @@ export interface GridStackOptions {
   /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance.
   Note: only used by addGrid(), else your element should have the needed class */
   class?: string;
-
-  /** disallows the scroll when dragging or resizing a widget (default?: false) */
-  disableAutoScroll?: boolean;
 
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
@@ -351,7 +348,7 @@ export interface DDDragOpt {
   /** if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global */
   pause?: boolean | number;
   /** default to `true` */
-  // scroll?: boolean;
+  scroll?: boolean;
   /** parent constraining where item can be dragged out from (default: null = no constrain) */
   // containment?: string;
 }
