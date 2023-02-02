@@ -1,5 +1,5 @@
 /*!
- * GridStack 7.2.2-dev
+ * GridStack 7.2.3
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2022 Alain Dumesny
@@ -1623,7 +1623,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '7.2.2-dev';
+  static GDRev = '7.2.3';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
@@ -2181,7 +2181,7 @@ export class GridStack {
       if (node._temporaryRemoved) return; // handled by dropover
       let distance = ui.position.top - node._prevYPix;
       node._prevYPix = ui.position.top;
-      if (this.opts.draggable.scroll) {
+      if (this.opts.draggable.scroll !== false) {
         Utils.updateScrollPosition(el, ui.position, distance);
       }
 
