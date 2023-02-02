@@ -15,7 +15,7 @@ export const gridDefaults: GridStackOptions = {
   cellHeightThrottle: 100,
   cellHeightUnit: 'px',
   column: 12,
-  draggable: { handle: '.grid-stack-item-content', appendTo: 'body' },
+  draggable: { handle: '.grid-stack-item-content', appendTo: 'body', scroll: true },
   handle: '.grid-stack-item-content',
   itemClass: 'grid-stack-item',
   margin: 10,

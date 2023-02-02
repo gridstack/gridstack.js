@@ -102,7 +102,7 @@ gridstack.js API
   * example `dragInOptions: { appendTo: 'body', helper: 'clone', handle: '.grid-stack-item-content' }`
   * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
   * **Note2**: instead of 'clone' you can also pass your own function (get passed the event).
-- `draggable` - allows to override draggable options - see `DDDragOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body'}`)
+- `draggable` - allows to override draggable options - see `DDDragOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body', scroll: true}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `engineClass` - the type of engine to create (so you can subclass) default to GridStackEngine
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
@@ -134,6 +134,7 @@ gridstack.js API
 - `handle`?: string - class selector of items that can be dragged. default to '.grid-stack-item-content'
 - `appendTo`?: string - default to 'body' (TODO: is this even used anymore ?)
 - `pause`?: boolean | number - if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global
+- `scroll`?: boolean - default to 'true', enable or disable the scroll when an element is dragged on bottom or top of the grid.
 
 ### DDDragInOpt extends DDDragOpt
 - `helper`?: string | ((event: Event) => HTMLElement) - helper function when dropping (ex: 'clone' or your own method) 
