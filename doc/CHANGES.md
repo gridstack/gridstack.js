@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7.2.2-dev (TBD)](#722-dev-tbd)
 - [7.2.2 (2023-01-16)](#722-2023-01-16)
 - [7.2.1 (2023-01-14)](#721-2023-01-14)
 - [7.2.0 (2023-01-07)](#720-2023-01-07)

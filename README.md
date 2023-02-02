@@ -28,13 +28,13 @@ Join us on Slack: https://gridstackjs.slack.com
   - [Include](#include)
   - [Basic usage](#basic-usage)
   - [Requirements](#requirements)
+  - [Specific frameworks](#specific-frameworks)
   - [Extend Library](#extend-library)
   - [Extend Engine](#extend-engine)
   - [Change grid columns](#change-grid-columns)
   - [Custom columns CSS](#custom-columns-css)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [Touch devices support](#touch-devices-support)
-- [gridstack.js for specific frameworks](#gridstackjs-for-specific-frameworks)
 - [Migrating](#migrating)
   - [Migrating to v0.6](#migrating-to-v06)
   - [Migrating to v1](#migrating-to-v1)
@@ -141,6 +141,20 @@ see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example
 ## Requirements
 
 GridStack no longer requires external dependencies as of v1.0.0 (lodash was removed in v0.5.0 and jquery API in v1.0.0). v3 is a complete HTML5 re-write removing need for jquery (still available for legacy apps). v6 is native mouse and touch event for mobile support, and no longer have jquery-ui version. All you need to include now is `gridstack-all.js` and `gridstack.min.css` (layouts are done using CSS column based %).
+
+## Specific frameworks
+
+search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
+
+- **Angular**: we now ship out of the box with Angular wrapper components - see <a href="https://github.com/gridstack/gridstack.js/tree/master/demo/angular/src/app" target="_blank">Angular Demo</a>.
+- **Angular9**: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for **concept ONLY if you wish to use directive instead**.
+- **AngularJS**: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
+- **Ember**: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
+- **knockout**: see [demo](https://gridstackjs.com/demo/knockout.html) using component, but check [custom bindings ticket](https://github.com/gridstack/gridstack.js/issues/465) which is likely better approach.
+- **Rails**: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
+- **React**: see [demo](https://gridstackjs.com/demo/react.html) with [src](https://github.com/gridstack/gridstack.js/tree/master/demo/react.html), or  [react-gridstack-example](https://github.com/Inder2108/react-gridstack-example/tree/master/src/App.js), or read on what [hooks to use](https://github.com/gridstack/gridstack.js/issues/735#issuecomment-329888796)
+- **Vue**: see [demo](https://gridstackjs.com/demo/vue3js.html) with [v3 src](https://github.com/gridstack/gridstack.js/tree/master/demo/vue3js.html) or [v2 src](https://github.com/gridstack/gridstack.js/tree/master/demo/vue2js.html)
+- **Aurelia**: [aurelia-gridstack](https://github.com/aurelia-ui-toolkits/aurelia-gridstack), see [demo](https://aurelia-ui-toolkits.github.io/aurelia-gridstack/)
 
 ## Extend Library
 
@@ -288,20 +302,6 @@ GridStack.init(options);
 ```
 
 See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html).
-
-# gridstack.js for specific frameworks
-
-search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
-
-- **Angular**: we now ship out of the box with Angular wrapper components - see <a href="https://github.com/gridstack/gridstack.js/tree/master/demo/angular/src/app" target="_blank">Angular Demo</a>.
-- **Angular9**: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for **concept ONLY if you wish to use directive instead**.
-- **AngularJS**: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
-- **Ember**: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
-- **knockout**: see [demo](https://gridstackjs.com/demo/knockout.html) using component, but check [custom bindings ticket](https://github.com/gridstack/gridstack.js/issues/465) which is likely better approach.
-- **Rails**: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
-- **React**: see [demo](https://gridstackjs.com/demo/react.html) with [src](https://github.com/gridstack/gridstack.js/tree/master/demo/react.html), or  [react-gridstack-example](https://github.com/Inder2108/react-gridstack-example/tree/master/src/App.js), or read on what [hooks to use](https://github.com/gridstack/gridstack.js/issues/735#issuecomment-329888796)
-- **Vue**: see [demo](https://gridstackjs.com/demo/vue3js.html) with [v3 src](https://github.com/gridstack/gridstack.js/tree/master/demo/vue3js.html) or [v2 src](https://github.com/gridstack/gridstack.js/tree/master/demo/vue2js.html)
-- **Aurelia**: [aurelia-gridstack](https://github.com/aurelia-ui-toolkits/aurelia-gridstack), see [demo](https://aurelia-ui-toolkits.github.io/aurelia-gridstack/)
 
 # Migrating
 ## Migrating to v0.6
