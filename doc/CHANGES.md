@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [7.2.2-dev (TBD)](#722-dev-tbd)
+- [7.2.3 (2023-02-02)](#723-2023-02-02)
 - [7.2.2 (2023-01-16)](#722-2023-01-16)
 - [7.2.1 (2023-01-14)](#721-2023-01-14)
 - [7.2.0 (2023-01-07)](#720-2023-01-07)
@@ -81,8 +81,9 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 7.2.2-dev (TBD)
+## 7.2.3 (2023-02-02)
 * fix `addWidget()` to handle passing just {el} which was needed for Angular HMTL template demo
+* add `opts.draggable.scroll` back to disable scrolling. Thank you [@VincentMolinie](https://github.com/VincentMolinie)
 
 ## 7.2.2 (2023-01-16)
 * fix [#2171](https://github.com/gridstack/gridstack.js/issues/2171) `save()` nested grid has extra nested children & options
