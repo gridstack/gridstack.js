@@ -1,6 +1,12 @@
 {
   "name": "gridstack",
   "version": "7.2.2-dev",
+  "license": "MIT",
+  "author": "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)",
+  "contributors": [
+    "Pavel Reznikov <pashka.reznikov@gmail.com>",
+    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"
+  ],
   "description": "TypeScript/JS lib for dashboard layout and creation, responsive, mobile support, no external dependencies, with many wrappers (React, Angular, Vue, Ember, knockout...)",
   "main": "./dist/gridstack.js",
   "types": "./dist/gridstack.d.ts",
@@ -46,16 +52,11 @@
     "Vue",
     "JavaScript"
   ],
-  "author": "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)",
-  "contributors": [
-    "Pavel Reznikov <pashka.reznikov@gmail.com>",
-    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"
-  ],
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/gridstack/gridstack.js/issues"
   },
   "homepage": "http://gridstackjs.com/",
+  "dependencies": {},
   "devDependencies": {
     "@types/jasmine": "^3.5.9",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
