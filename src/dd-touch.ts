@@ -118,7 +118,8 @@ function simulatePointerMouseEvent(e: PointerEvent, simulatedType: string) {
  */
 export function touchstart(e: TouchEvent): void {
   // Ignore the event if another widget is already being handled
-  if (DDTouch.touchHandled) return;  DDTouch.touchHandled = true;
+  if (DDTouch.touchHandled) return;
+  DDTouch.touchHandled = true;
 
   // Simulate the mouse events
   // simulateMouseEvent(e, 'mouseover');
@@ -132,7 +133,7 @@ export function touchstart(e: TouchEvent): void {
  */
 export function touchmove(e: TouchEvent): void {
   // Ignore event if not handled by us
-  if (!DDTouch.touchHandled)  return;
+  if (!DDTouch.touchHandled) return;
 
   simulateMouseEvent(e, 'mousemove');
 }
@@ -173,6 +174,7 @@ export function touchend(e: TouchEvent): void {
  * so instead of PointerEvent to still get enter/leave and send the matching mouse event.
  */
 export function pointerdown(e: PointerEvent): void {
+  // console.log("pointer down")
   (e.target as HTMLElement).releasePointerCapture(e.pointerId) // <- Important!
 }
 

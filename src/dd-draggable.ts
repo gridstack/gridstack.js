@@ -158,7 +158,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     e.preventDefault();
     // preventDefault() prevents blur event which occurs just after mousedown event.
     // if an editable content has focus, then blur must be call
-    if(document.activeElement) (document.activeElement  as HTMLElement).blur();
+    if (document.activeElement) (document.activeElement as HTMLElement).blur();
 
     DDManager.mouseHandled = true;
     return true;
