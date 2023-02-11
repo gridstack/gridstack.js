@@ -84,6 +84,7 @@ Change log
 
 ## 7.2.3-dev (TBD)
 * fix [#2206](https://github.com/gridstack/gridstack.js/issues/2206) `load()` with collision fix
+* fix [#2210](https://github.com/gridstack/gridstack.js/pull/2210) restored checking for grid option.handle draggable area
 
 ## 7.2.3 (2023-02-02)
 * fix `addWidget()` to handle passing just {el} which was needed for Angular HMTL template demo
