@@ -65,8 +65,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.el = el;
     this.option = option;
     // get the element that is actually supposed to be dragged by
-    let className = option.handle.substring(1);
-    this.dragEl = el.classList.contains(className) ? el : el.querySelector(option.handle) || el;
+    let handleName = option.handle.substring(1);
+    this.dragEl = el.classList.contains(handleName) ? el : el.querySelector(option.handle) || el;
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
@@ -138,12 +138,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
     // make sure we are clicking on a drag handle or child of it...
     // Note: we don't need to check that's handle is an immediate child, as mouseHandled will prevent parents from also handling it (lowest wins)
-    //
-    // REMOVE: why would we get the event if it wasn't for us or child ?
-    // let className = this.option.handle.substring(1);
-    // let el = e.target as HTMLElement;
-    // while (el && !el.classList.contains(className)) { el = el.parentElement; }
-    // if (!el) return;
+    let className = this.option.handle.substring(1);
+    let el = e.target as HTMLElement;
+    while (el && !el.classList.contains(className)) { el = el.parentElement; }
+    if (!el) return;
+
     this.mouseDownEvent = e;
     delete this.dragging;
     delete DDManager.dragElement;
