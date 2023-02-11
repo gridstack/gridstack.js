@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7.2.3-dev (TBD)](#723-dev-tbd)
 - [7.2.3 (2023-02-02)](#723-2023-02-02)
 - [7.2.2 (2023-01-16)](#722-2023-01-16)
 - [7.2.1 (2023-01-14)](#721-2023-01-14)
@@ -80,6 +81,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 7.2.3-dev (TBD)
+* fix [#2206](https://github.com/gridstack/gridstack.js/issues/2206) `load()` with collision fix
 
 ## 7.2.3 (2023-02-02)
 * fix `addWidget()` to handle passing just {el} which was needed for Angular HMTL template demo

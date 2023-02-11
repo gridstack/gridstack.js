@@ -71,7 +71,7 @@ export class GridStackEngine {
 
   // use entire row for hitting area (will use bottom reverse sorted first) if we not actively moving DOWN and didn't already skip
   protected _useEntireRowArea(node: GridStackNode, nn: GridStackPosition): boolean {
-    return !this.float && !this._hasLocked && (!node._moving || node._skipDown || nn.y <= node.y);
+    return (!this.float || this.batchMode && !this._prevFloat) && !this._hasLocked && (!node._moving || node._skipDown || nn.y <= node.y);
   }
 
   /** @internal fix collision on given 'node', going to given new location 'nn', with optional 'collide' node already found.
