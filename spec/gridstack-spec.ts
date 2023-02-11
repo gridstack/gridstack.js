@@ -1,4 +1,4 @@
-import { GridStack, GridStackNode, DDGridStack } from '../src/gridstack';
+import { GridStack, GridStackNode, GridStackWidget } from '../src/gridstack';
 import { Utils } from '../src/utils';
 import '../dist/gridstack.css';
 
@@ -1839,7 +1839,75 @@ describe('gridstack', function() {
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(2);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(2);
     });
+  });
 
+  describe('load empty', function() {
+    let items: GridStackWidget[] = [
+      {id: '0', x: 0, y: 0},
+      {id: '1', x: 0, y: 1},
+      {id: '2', x: 0, y: 2},
+      {id: '3', x: 0, y: 3},
+    ];
+    let grid: GridStack;
+    const test = () => {
+      items.forEach(i => {
+        const n = grid.engine.nodes.find(n => n.id === i.id);
+        expect(parseInt(n.el.getAttribute('gs-y'))).toBe(i.y);
+      });
+    }
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('update collision', function() {
+      grid = GridStack.init({children: items});
+      const n = grid.engine.nodes[0];
+      test();
+
+      grid.update(n.el!, {h:5});
+      items[1].y = 5; items[2].y = 6; items[3].y = 7;
+      test();
+
+      grid.update(n.el!, {h:1});
+      items[1].y = 1; items[2].y = 2; items[3].y = 3;
+      test();
+    });
+    it('load collision 2208', function() {
+      grid = GridStack.init({children: items});
+      test();
+
+      items[0].h = 5;
+      grid.load(items);
+      items[1].y = 5; items[2].y = 6; items[3].y = 7;
+      test();
+
+      items[0].h = 1;
+      grid.load(items);
+      items[1].y = 1; items[2].y = 2; items[3].y = 3;
+      test();
+    });
+    it('load full collision 2208', function() {
+      grid = GridStack.init({children: items});
+      test();
+
+      items[0].h = 5;
+      grid.load(grid.engine.nodes.map((n, index) => {
+        if (index === 0) return {...n, h: 5}
+        return n;
+      }));
+      items[1].y = 5; items[2].y = 6; items[3].y = 7;
+      test();
+
+      items[0].h = 1;
+      grid.load(grid.engine.nodes.map((n, index) => {
+        if (index === 0) return {...n, h: 1}
+        return n;
+      }));
+      items[1].y = 1; items[2].y = 2; items[3].y = 3;
+      test();
+    });
   });
 
  // ..and finally track log warnings at the end, instead of displaying them....
