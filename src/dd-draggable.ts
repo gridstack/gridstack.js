@@ -136,12 +136,13 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // also check for content editable
     if ((e.target as HTMLElement).closest('[contenteditable="true"]')) return true;
 
+    // REMOVE: why would we get the event if it wasn't for us or child ?
     // make sure we are clicking on a drag handle or child of it...
     // Note: we don't need to check that's handle is an immediate child, as mouseHandled will prevent parents from also handling it (lowest wins)
-    let className = this.option.handle.substring(1);
-    let el = e.target as HTMLElement;
-    while (el && !el.classList.contains(className)) { el = el.parentElement; }
-    if (!el) return;
+    // let className = this.option.handle.substring(1);
+    // let el = e.target as HTMLElement;
+    // while (el && !el.classList.contains(className)) { el = el.parentElement; }
+    // if (!el) return;
 
     this.mouseDownEvent = e;
     delete this.dragging;

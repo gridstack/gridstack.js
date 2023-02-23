@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Title area drag</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+  <style type="text/css">
+    .card-header {
+      cursor: move;
+      min-height: 25px;
+    }
+    .card-header:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
+    .card {
+      text-align: left;
+    }
+  </style>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Title area drag</h1>
+    <br><br>
+    <div class="grid-stack">
+      <div class="grid-stack-item" gs-w="3" gs-h="3"><div class="grid-stack-item-content">
+        <div class="card-header">- Drag here -</div>
+        <div class="card">the rest of the panel content doesn't drag</div>
+      </div></div>
+    </div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let grid = GridStack.init({ handle: '.card-header' }); // drag by the header only
+    addEvents(grid);
+  </script>
+</body>
+</html>
