@@ -37,7 +37,7 @@
 
     <div class="grid-stack">
       <div v-for="(w, indexs) in items" class="grid-stack-item" :gs-x="w.x" :gs-y="w.y" :gs-w="w.w" :gs-h="w.h"
-        :gs-id="w.id" :id="w.id">
+        :gs-id="w.id" :id="w.id" :key="w.id">
         <div class="grid-stack-item-content">
           <button @click="remove(w)">remove</button>
           {{w}}
