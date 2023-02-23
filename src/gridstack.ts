@@ -1943,6 +1943,7 @@ export class GridStack {
 
         // use existing placeholder node as it's already in our list with drop location
         if (wasAdded) {
+          node.origGrid = origNode?.grid;
           this.engine.cleanupNode(node); // removes all internal _xyz values
           node.grid = this;
         }

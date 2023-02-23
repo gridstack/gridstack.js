@@ -392,6 +392,8 @@ export interface GridStackNode extends GridStackWidget {
   el?: GridItemHTMLElement;
   /** pointer back to Grid instance */
   grid?: GridStack;
+  /** pointer back to original Grid instance. useful in case of drag between nested grids */
+  origGrid?: GridStack;
   /** @internal internal id used to match when cloning engines or saving column layouts */
   _id?: number;
   /** @internal */
