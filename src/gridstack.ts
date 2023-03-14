@@ -1327,7 +1327,9 @@ export class GridStack {
     if (!this._styles) {
       // insert style to parent (instead of 'head' by default) to support WebComponent
       let styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
-      this._styles = Utils.createStylesheet(this._styleSheetClass, styleLocation);
+      this._styles = Utils.createStylesheet(this._styleSheetClass, styleLocation, {
+        nonce: this.opts.nonce,
+      });
       if (!this._styles) return this;
       this._styles._max = 0;
 
