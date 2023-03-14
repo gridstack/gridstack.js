@@ -137,8 +137,10 @@ export class Utils {
    * @param parent to insert the stylesheet as first child,
    * if none supplied it will be appended to the document head instead.
    */
-  static createStylesheet(id: string, parent?: HTMLElement): CSSStyleSheet {
+  static createStylesheet(id: string, parent?: HTMLElement, options?: { nonce?: string }): CSSStyleSheet {
     let style: HTMLStyleElement = document.createElement('style');
+    const nonce = options?.nonce
+    if (nonce) style.nonce = nonce
     style.setAttribute('type', 'text/css');
     style.setAttribute('gs-style-id', id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
