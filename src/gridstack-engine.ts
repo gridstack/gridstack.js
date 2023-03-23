@@ -670,6 +670,10 @@ export class GridStackEngine {
 
       if (collide) {
         needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
+      } else if (activeDrag && !collide) {
+        // need new position with new x but old y
+        nn.y = node.y;
+        needToMove = !this._fixCollisions(node, nn, collide, o);
       } else {
         needToMove = false; // we didn't cover >50% for a move, skip...
         if (wasUndefinedPack) delete o.pack;
