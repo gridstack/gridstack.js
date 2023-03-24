@@ -7,7 +7,7 @@
   <title>Serialization demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <script src="../dist/gridstack-h5.js"></script>
+  <script src="../dist/gridstack-all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -18,6 +18,7 @@
     <a onClick="loadFullGrid()" class="btn btn-primary" href="#">Load Full</a>
     <a onClick="clearGrid()" class="btn btn-primary" href="#">Clear</a>
     <br/><br/>
+    <div contentEditable="true">Editable Div</div>
     <div id="gridCont"><div class="grid-stack"></div></div>
     <hr/>
     <textarea id="saved-data" cols="100" rows="20" readonly="readonly"></textarea>
@@ -30,6 +31,7 @@
     });
     
     grid.on('added removed change', function(e, items) {
+      if (!items) return;
       let str = '';
       items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str );
@@ -37,43 +39,50 @@
 
     let serializedData = [
       {x: 0, y: 0, w: 2, h: 2, id: '0'},
-      {x: 3, y: 1, h: 2, id: '1', content: "<button onclick=\"alert('clicked!')\">Press me</button>"},
+      {x: 3, y: 1, h: 2, id: '1', 
+      content: "<button onclick=\"alert('clicked!')\">Press me</button><div>text area</div><div><textarea></textarea></div><div>Input Field</div><input type='text'><div contentEditable=\"true\">Editable Div</div>"},
       {x: 4, y: 1, id: '2'},
       {x: 2, y: 3, w: 3, id: '3'},
       {x: 1, y: 3, id: '4'}
     ];
     serializedData.forEach((n, i) =>
-      n.content = `<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br> ${i}<br> ${n.content ? n.content : ''}`);
+      n.content = `<button onClick="removeWidget(this.parentElement.parentElement)">X</button><br> ${i}<br> ${n.content ? n.content : ''}`);
     let serializedFull;
 
     // 2.x method - just saving list of widgets with content (default)
-    loadGrid = function() {
+    function loadGrid() {
       grid.load(serializedData, true); // update things
     }
 
     // 2.x method
-    saveGrid = function() {
+    function saveGrid() {
       delete serializedFull;
       serializedData = grid.save();
       document.querySelector('#saved-data').value = JSON.stringify(serializedData, null, '  ');
     }
 
     // 3.1 full method saving the grid options + children (which is recursive for nested grids)
-    saveFullGrid = function() {
+    function saveFullGrid() {
       serializedFull = grid.save(true, true);
       serializedData = serializedFull.children;
       document.querySelector('#saved-data').value = JSON.stringify(serializedFull, null, '  ');
     }
 
     // 3.1 full method to reload from scratch - delete the grid and add it back from JSON
-    loadFullGrid = function() {
+    function loadFullGrid() {
       if (!serializedFull) return;
       grid.destroy(true); // nuke everything
       grid = GridStack.addGrid(document.querySelector('#gridCont'), serializedFull)
     }
 
-    clearGrid = function() {
+    function clearGrid() {
       grid.removeAll();
+    }
+
+    function removeWidget(el) {
+      // TEST removing from DOM first like Angular/React/Vue would do
+      el.remove();
+      grid.removeWidget(el, false);
     }
 
     loadGrid();

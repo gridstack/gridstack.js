@@ -7,20 +7,20 @@
   <title>Simple mobile demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <script src="../dist/gridstack-jq.js"></script>
+  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
+  <script src="../dist/gridstack-all.js"></script>
 
 </head>
 <body>
   <h1>Simple mobile demo</h1>
-  <p>uses gridstack-jq.js which includes jquery.ui.touch-punch by default (minimum v3.2+, small 2k)</p>
+  <p>shows resize handle on mobile and support native touch events</p>
   <div class="grid-stack"></div>
   <script type="text/javascript">
     let grid = GridStack.init({
-      // column: 1, // will auto switch on smaller screens
-      cellHeight: 150, // make sure we have a decent height and not width/12 for 1 column
-      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+      column: 3,
+      disableOneColumnMode: true,
     });
-    grid.load([{x:0, y:0, content: '1'}, {x:0, y:1, h:2, content: '2'}, {x:0, y:3, content: '3'}])
+    grid.load([{x:0, y:0, content: '1'}, {x:1, y:0, h:2, content: '2'}, {x:2, y:0, content: '3'}])
   </script>
 </body>
 </html>

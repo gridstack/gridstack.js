@@ -1,18 +1,5 @@
-import alias from '@rollup/plugin-alias';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
-
-/**
- * @type {import('@rollup/plugin-alias').RollupAliasOptions }
- */
-const aliasOptions = {
-  entries: {
-    'jquery': './src/jq/jquery.js',
-    'jquery-ui': './src/jq/jquery-ui.js',
-    'jquery.ui': './src/jq/jquery-ui.js',
-    'jquery.ui.touch-punch' : './src/jq/jquery.ui.touch-punch.js',
-  }
-}
 
 // rollup.config.js
 /**
@@ -21,9 +8,7 @@ const aliasOptions = {
 export default [
   {
     input: {
-      'gridstack-h5': './src/gridstack-h5.ts',
-      'gridstack-jq': './src/gridstack-jq.ts',
-      'gridstack-static': './src/gridstack-static.ts'
+      'gridstack': './src/gridstack.ts'
     },
     output: {
       format: 'esm',
@@ -44,8 +29,7 @@ export default [
       }),
       nodeResolve({
         browser: true,
-      }),
-      alias(aliasOptions)
+      })
     ]
   }
 ]

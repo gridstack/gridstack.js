@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>read 1 column</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>read from dom into 1 column has wrong order and 12 column layout</h1>
+    <div class="grid-stack">
+      <div class="grid-stack-item" gs-x="4" gs-y="0"><div class="grid-stack-item-content">1</div></div>
+      <div class="grid-stack-item" gs-x="0" gs-y="0"><div class="grid-stack-item-content">0</div></div>
+      <div class="grid-stack-item" gs-x="1" gs-y="1"><div class="grid-stack-item-content">2</div></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    let grid = GridStack.init({
+      cellHeight: 70,
+      float: true, 
+    });
+
+    var items = [
+      {x: 0, y: 0, content: '0'},
+      {x: 2, y: 0, content: '1'},
+    ];
+    // grid.addWidget(items[1]); // need to be reverse sort-order to be correct (otherwise DOM above is wrong)
+    // grid.addWidget(items[0]);
+    // grid.load(items); // or this work (code reverse sort)
+
+  </script>
+</body>
+</html>

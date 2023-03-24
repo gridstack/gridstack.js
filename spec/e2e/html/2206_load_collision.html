@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Float grid demo</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>2208 layout</h1>
+    <div>
+      <a class="btn btn-primary" onClick="update()" href="#">Update 0</a>
+      <a class="btn btn-primary" onClick="load()" href="#">load 0</a>
+      <a class="btn btn-primary" onClick="loadFull()" href="#">load full 0</a>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="../../../demo/events.js"></script>
+  <script type="text/javascript">
+    let items = [
+      {id: '0', x: 0, y: 0, w: 12, content: '0'},
+      {id: '1', x: 0, y: 1, w: 12, content: '1'},
+      {id: '2', x: 0, y: 2, w: 12, content: '2'},
+      {id: '3', x: 0, y: 3, w: 12, content: '3'},
+    ];
+
+    let grid = GridStack.init({
+      cellHeight: 70,
+      children: items,
+    });
+    addEvents(grid);
+
+    // this is much better way, but testing original #2206 bug below too
+    update = function() {
+      const n = grid.engine.nodes[0];
+	    grid.update(n.el, {h: n.h === 5 ? 1 : 5});
+    }
+
+    load = function() {
+      items[0].h = items[0].h === 5 ? 1 : 5
+      grid.load(items);
+    }
+
+    loadFull = function() {
+      grid.load(grid.engine.nodes.map((n, index) => {
+        if (index === 0) return {...n, h: n.h === 5 ? 1 : 5}
+        return n;
+      }));
+    }
+
+  </script>
+</body>
+</html>

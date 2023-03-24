@@ -2,7 +2,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
+  // grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-protractor-runner');
@@ -42,24 +42,24 @@ module.exports = function(grunt) {
           'dist/es5/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
           'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
+          'dist/angular/README.md': ['demo/angular/src/app/README.md'],
+          'dist/angular/gridstack.component.ts': ['demo/angular/src/app/gridstack.component.ts'],
+          'dist/angular/gridstack-item.component.ts': ['demo/angular/src/app/gridstack-item.component.ts'],
         }
       }
     },
-    uglify: {
-      options: {
-        sourceMap: true,
-        output: {
-          comments: 'some'
-        }
-      },
-      dist: {
-        files: {
-          'dist/jq/jquery.js': 'src/jq/jquery.js',
-          'dist/jq/jquery-ui.js': 'src/jq/jquery-ui.js',
-          'dist/jq/jquery.ui.touch-punch.js': 'src/jq/jquery.ui.touch-punch.js',
-        }
-      }
-    },
+    // uglify: {
+    //   options: {
+    //     sourceMap: true,
+    //     output: {
+    //       comments: 'some'
+    //     }
+    //   },
+    //   dist: {
+    //     files: {
+    //     }
+    //   }
+    // },
     eslint: {
       target: ['*.js', 'src/*.js']
     },
@@ -107,6 +107,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('lint', ['eslint']);
-  grunt.registerTask('default', ['sass', 'cssmin', /*'eslint',*/ 'copy', 'uglify']);
+  grunt.registerTask('default', ['sass', 'cssmin', /*'eslint',*/ 'copy', /*'uglify'*/]);
   grunt.registerTask('e2e-test', ['connect', 'protractor_webdriver', 'protractor']);
 };

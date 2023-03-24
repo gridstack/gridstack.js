@@ -8,7 +8,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../../demo/demo.css"/>
-  <script src="../../../dist/gridstack-h5.js"></script>
+  <script src="../../../dist/gridstack-all.js"></script>
   <style type="text/css">
     .grid-stack-item-removing {
       opacity: 0.8;
@@ -50,7 +50,7 @@
     let gridNest = GridStack.init({
       acceptWidgets: '.newWidget',
       dragIn: '.newWidget', // class that can be dragged from outside
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone or can be your function
+      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       itemClass: 'sub',
     }, '.grid-stack.nested');
     gridNest.load([

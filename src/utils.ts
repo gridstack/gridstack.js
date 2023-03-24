@@ -1,5 +1,5 @@
 /**
- * utils.ts 5.1.1
+ * utils.ts 7.2.3-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
@@ -100,6 +100,23 @@ export class Utils {
   static isTouching(a: GridStackPosition, b: GridStackPosition): boolean {
     return Utils.isIntercepted(a, {x: b.x-0.5, y: b.y-0.5, w: b.w+1, h: b.h+1})
   }
+
+  /** returns the area a and b overlap */
+  static areaIntercept(a: GridStackPosition, b: GridStackPosition): number {
+    let x0 = (a.x > b.x) ? a.x : b.x;
+    let x1 = (a.x+a.w < b.x+b.w) ? a.x+a.w : b.x+b.w;
+    if (x1 <= x0) return 0; // no overlap
+    let y0 = (a.y > b.y) ? a.y : b.y;
+    let y1 = (a.y+a.h < b.y+b.h) ? a.y+a.h : b.y+b.h;
+    if (y1 <= y0) return 0; // no overlap
+    return (x1-x0) * (y1-y0);
+  }
+
+  /** returns the area */
+  static area(a: GridStackPosition): number {
+    return a.w * a.h;
+  }
+
   /**
    * Sorts array of nodes
    * @param nodes array to sort
@@ -120,8 +137,10 @@ export class Utils {
    * @param parent to insert the stylesheet as first child,
    * if none supplied it will be appended to the document head instead.
    */
-  static createStylesheet(id: string, parent?: HTMLElement): CSSStyleSheet {
+  static createStylesheet(id: string, parent?: HTMLElement, options?: { nonce?: string }): CSSStyleSheet {
     let style: HTMLStyleElement = document.createElement('style');
+    const nonce = options?.nonce
+    if (nonce) style.nonce = nonce
     style.setAttribute('type', 'text/css');
     style.setAttribute('gs-style-id', id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -219,7 +238,7 @@ export class Utils {
     return true;
   }
 
-  /** copies over b size & position (GridStackPosition), and possibly min/max as well */
+  /** copies over b size & position (GridStackPosition), and optionally min/max as well */
   static copyPos(a: GridStackWidget, b: GridStackWidget, doMinMax = false): GridStackWidget {
     a.x = b.x;
     a.y = b.y;
@@ -255,8 +274,22 @@ export class Utils {
     }
   }
 
+  /** removes internal fields '_' and default values for saving */
+  static removeInternalForSave(n: GridStackNode, removeEl = true): void {
+    for (let key in n) { if (key[0] === '_' || n[key] === null || n[key] === undefined ) delete n[key]; }
+    delete n.grid;
+    if (removeEl) delete n.el;
+    // delete default values (will be re-created on read)
+    if (!n.autoPosition) delete n.autoPosition;
+    if (!n.noResize) delete n.noResize;
+    if (!n.noMove) delete n.noMove;
+    if (!n.locked) delete n.locked;
+    if (n.w === 1 || n.w === n.minW) delete n.w;
+    if (n.h === 1 || n.h === n.minH) delete n.h;
+  }
+
   /** return the closest parent (or itself) matching the given class */
-  static closestByClass(el: HTMLElement, name: string): HTMLElement {
+  static closestUpByClass(el: HTMLElement, name: string): HTMLElement {
     while (el) {
       if (el.classList.contains(name)) return el;
       el = el.parentElement
@@ -390,6 +423,8 @@ export class Utils {
    * Note: this will use as-is any key starting with double __ (and not copy inside) some lib have circular dependencies.
    */
   static cloneDeep<T>(obj: T): T {
+    // list of fields we will skip during cloneDeep (nested objects, other internal)
+    const skipFields = ['parentGrid', 'el', 'grid', 'subGrid', 'engine'];
     // return JSON.parse(JSON.stringify(obj)); // doesn't work with date format ?
     const ret = Utils.clone(obj);
     for (const key in ret) {
@@ -400,7 +435,101 @@ export class Utils {
     }
     return ret;
   }
-}
 
-// list of fields we will skip during cloneDeep (nested objects, other internal)
-const skipFields = ['_isNested', 'el', 'grid', 'subGrid', 'engine'];
+  /** deep clone the given HTML node, removing teh unique id field */
+  public static cloneNode(el: HTMLElement): HTMLElement {
+    const node = el.cloneNode(true) as HTMLElement;
+    node.removeAttribute('id');
+    return node;
+  }
+
+  public static appendTo(el: HTMLElement, parent: string | HTMLElement | Node): void {
+    let parentNode: HTMLElement;
+    if (typeof parent === 'string') {
+      parentNode = document.querySelector(parent as string);
+    } else {
+      parentNode = parent as HTMLElement;
+    }
+    if (parentNode) {
+      parentNode.appendChild(el);
+    }
+  }
+
+  // public static setPositionRelative(el: HTMLElement): void {
+  //   if (!(/^(?:r|a|f)/).test(window.getComputedStyle(el).position)) {
+  //     el.style.position = "relative";
+  //   }
+  // }
+
+  public static addElStyles(el: HTMLElement, styles: { [prop: string]: string | string[] }): void {
+    if (styles instanceof Object) {
+      for (const s in styles) {
+        if (styles.hasOwnProperty(s)) {
+          if (Array.isArray(styles[s])) {
+            // support fallback value
+            (styles[s] as string[]).forEach(val => {
+              el.style[s] = val;
+            });
+          } else {
+            el.style[s] = styles[s];
+          }
+        }
+      }
+    }
+  }
+
+  public static initEvent<T>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): T {
+    const evt = { type: info.type };
+    const obj = {
+      button: 0,
+      which: 0,
+      buttons: 1,
+      bubbles: true,
+      cancelable: true,
+      target: info.target ? info.target : e.target
+    };
+    // don't check for `instanceof DragEvent` as Safari use MouseEvent #1540
+    if ((e as DragEvent).dataTransfer) {
+      evt['dataTransfer'] = (e as DragEvent).dataTransfer; // workaround 'readonly' field.
+    }
+    ['altKey','ctrlKey','metaKey','shiftKey'].forEach(p => evt[p] = e[p]); // keys
+    ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = e[p]); // point info
+    return {...evt, ...obj} as unknown as T;
+  }
+
+  /** copies the MouseEvent properties and sends it as another event to the given target */
+  public static simulateMouseEvent(e: MouseEvent, simulatedType: string, target?: EventTarget): void {
+    const simulatedEvent = document.createEvent('MouseEvents');
+    simulatedEvent.initMouseEvent(
+      simulatedType, // type
+      true,         // bubbles
+      true,         // cancelable
+      window,       // view
+      1,            // detail
+      e.screenX,    // screenX
+      e.screenY,    // screenY
+      e.clientX,    // clientX
+      e.clientY,    // clientY
+      e.ctrlKey,    // ctrlKey
+      e.altKey,     // altKey
+      e.shiftKey,   // shiftKey
+      e.metaKey,    // metaKey
+      0,            // button
+      e.target      // relatedTarget
+    );
+    (target || e.target).dispatchEvent(simulatedEvent);
+  }
+
+  /** returns true if event is inside the given element rectangle */
+  // Note: Safari Mac has null event.relatedTarget which causes #1684 so check if DragEvent is inside the coordinates instead
+  //    this.el.contains(event.relatedTarget as HTMLElement)
+  // public static inside(e: MouseEvent, el: HTMLElement): boolean {
+  //   // srcElement, toElement, target: all set to placeholder when leaving simple grid, so we can't use that (Chrome)
+  //   let target: HTMLElement = e.relatedTarget || (e as any).fromElement;
+  //   if (!target) {
+  //     const { bottom, left, right, top } = el.getBoundingClientRect();
+  //     return (e.x < right && e.x > left && e.y < bottom && e.y > top);
+  //   }
+  //   return el.contains(target);
+  // }
+}

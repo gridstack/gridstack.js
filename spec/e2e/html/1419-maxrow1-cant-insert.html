@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../../demo/demo.css"/>
 
-  <script src="../../../dist/gridstack-h5.js"></script>
+  <script src="../../../dist/gridstack-all.js"></script>
 
   <style type="text/css">
     .sidebar {
@@ -62,7 +62,7 @@
       row: 1,
       cellHeight: 120,
       dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
-      dragInOptions: { revert: 'invalid', scroll: false, appendTo: 'body', helper: 'clone' }, // clone or can be your function
+      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       acceptWidgets: true
     };
     let grid = GridStack.init(options);

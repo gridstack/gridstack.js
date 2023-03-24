@@ -8,14 +8,12 @@ module.exports = function(config) {
       compilerOptions: {
         lib: ['dom', 'es6'],
       },
-      bundlerOptions: {
-        resolve: {
-          alias: {
-            'jquery': './src/jq/jquery.js',
-            'jquery-ui': './src/jq/jquery-ui.js',
-          }
-        }
-      },
+      // bundlerOptions: {
+      //   resolve: {
+      //     alias: {
+      //     }
+      //   }
+      // },
       exclude: ["demo"] // ignore dummy demo .ts files
     },
 
@@ -33,14 +31,8 @@ module.exports = function(config) {
       // 'spec/e2e/*-spec.js' issues with ReferenceError: `browser` & `element` is not defined
     ],
     // BUT list of files to exclude
-    exclude: [
-      // used for webpack h5/jq/static .js
-      'src/gridstack-h5.ts',
-      'src/gridstack-jq.ts',
-      'src/gridstack-static.ts',
-      'src/jq/*', // use h5 version for unit testing
-      // 'src/h5/*', // use jq version for unit testing
-    ],
+    // exclude: [
+    // ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
