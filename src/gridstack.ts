@@ -374,6 +374,7 @@ export class GridStack {
     this._updateStyles();
     if (this.opts.column != 12) {
       this.el.classList.add('grid-stack-' + this.opts.column);
+      this.el.style.setProperty("--grid-column", `${this.opts.column}`);
     }
 
     // legacy support to appear 'per grid` options when really global.
@@ -833,6 +834,7 @@ export class GridStack {
 
     this.el.classList.remove('grid-stack-' + oldColumn);
     this.el.classList.add('grid-stack-' + column);
+    this.el.style.setProperty("--grid-column", `${column}`);
     this.opts.column = this.engine.column = column;
 
     // update the items now - see if the dom order nodes should be passed instead (else default to current list)
@@ -1414,9 +1416,9 @@ export class GridStack {
 
   /** @internal call to write position x,y,w,h attributes back to element */
   protected _writePosAttr(el: HTMLElement, n: GridStackPosition): GridStack {
-    if (n.x !== undefined && n.x !== null) { el.setAttribute('gs-x', String(n.x)); }
+    if (n.x !== undefined && n.x !== null) { el.setAttribute('gs-x', String(n.x)); el.style.setProperty("--gs-x", String(n.x))}
     if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
-    if (n.w) { el.setAttribute('gs-w', String(n.w)); }
+    if (n.w) { el.setAttribute('gs-w', String(n.w));  el.style.setProperty("--gs-w", String(n.w))}
     if (n.h) { el.setAttribute('gs-h', String(n.h)); }
     return this;
   }

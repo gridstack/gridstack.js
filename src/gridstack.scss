@@ -88,20 +88,8 @@ $animation_speed: .3s !default;
       }
     }
 
-    @for $i from 0 through $gridstack-columns {
-      &[gs-w='#{$i}'] { width: math.div(100%, $gridstack-columns) * $i; }
-      &[gs-x='#{$i}'] { left: math.div(100%, $gridstack-columns) * $i; }
-      &[gs-min-w='#{$i}'] { min-width: math.div(100%, $gridstack-columns) * $i; }
-      &[gs-max-w='#{$i}'] { max-width: math.div(100%, $gridstack-columns) * $i; }
-    }
-  }
-
-  &.grid-stack-1>.grid-stack-item {
-    min-width: 100%;
-    &[gs-w='1'] { width: 100%; }
-    &[gs-x='1'] { left: 100%; }
-    &[gs-min-w='1'] { min-width: 100%; }
-    &[gs-max-w='1'] { max-width: 100%; }
+    width: calc(calc(100% / var(--grid-column)) * var(--gs-w));
+    left: calc(calc(100% / var(--grid-column)) * var(--gs-x));
   }
 
   &.grid-stack-animate,
