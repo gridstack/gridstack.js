@@ -83,7 +83,9 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 7.2.3-dev (TBD)
+* feat [#2229](https://github.com/gridstack/gridstack.js/pull/2229) support nonce for CSP
 * fix [#2206](https://github.com/gridstack/gridstack.js/issues/2206) `load()` with collision fix
+* fix [#2232](https://github.com/gridstack/gridstack.js/issues/2232) `autoPosition` bug loading from DOM
 
 ## 7.2.3 (2023-02-02)
 * fix `addWidget()` to handle passing just {el} which was needed for Angular HMTL template demo
