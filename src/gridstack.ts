@@ -346,19 +346,7 @@ export class GridStack {
 
     if (this.opts.auto) {
       this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
-      let elements: {el: HTMLElement; i: number}[] = [];
-      let column = this.getColumn();
-      if (column === 1 && this._prevColumn) column = this._prevColumn; // do 12 column when reading into 1 column mode
-      this.getGridItems().forEach(el => { // get dom elements (not nodes yet)
-        let x = parseInt(el.getAttribute('gs-x'));
-        let y = parseInt(el.getAttribute('gs-y'));
-        elements.push({
-          el,
-          // if x,y are missing (autoPosition) add them to end of list - but keep their respective DOM order
-          i: (Number.isNaN(x) ? 1000 : x) + (Number.isNaN(y) ? 1000 : y) * column
-        });
-      });
-      elements.sort((a, b) => b.i - a.i).forEach(e => this._prepareElement(e.el)); // revert sort so lowest item wins
+      this.getGridItems().forEach(el => this._prepareElement(el));
       this.batchUpdate(false);
     }
 
