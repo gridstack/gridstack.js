@@ -350,14 +350,31 @@ describe('gridstack', function() {
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
-      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
-      expect(parseInt(el3.getAttribute('gs-y'))).toBe(6); // ??? keep same row, but might more intuitive higher
-      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1); // ??? could take entire width if it did above
+      // remembers autoPlacement so finds next slot on 12 layout after 4x2 + 4x4
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(8);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
       expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
 
-      // back to 1 column, move item2 to beginning to [3][1][2] vertically
+      // back to 1 column
       grid.column(1);
       expect(grid.getColumn()).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
+
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-y'))).toBe(2);
+      expect(parseInt(el2.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
+
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(6);
+      expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
+      expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
+
+      // move item2 to beginning to [3][1][2] vertically
       grid.update(el3, {x:0, y:0});
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
@@ -377,7 +394,7 @@ describe('gridstack', function() {
       // back to 12 column, el3 to be beginning still, but [1][2] to be in 1 columns still but wide 4x2 and 4x still
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
-      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0); // 8 TEST WHY
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
       expect(parseInt(el3.getAttribute('gs-w'))).toBe(1);
       expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
@@ -397,7 +414,7 @@ describe('gridstack', function() {
       grid.column(2);
       expect(grid.getColumn()).toBe(2);
 
-      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0); // 1 TEST WHY
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
       expect(parseInt(el3.getAttribute('gs-w'))).toBe(1); // 1 as we scaled from 12 columns
       expect(parseInt(el3.getAttribute('gs-h'))).toBe(1);
