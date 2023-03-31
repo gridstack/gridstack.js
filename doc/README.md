@@ -51,6 +51,7 @@ gridstack.js API
   - [`isAreaEmpty(x, y, width, height)`](#isareaemptyx-y-width-height)
   - [`load(layout: GridStackWidget[], boolean | ((w: GridStackWidget, add: boolean) => void)  = true)`](#loadlayout-gridstackwidget-boolean--w-gridstackwidget-add-boolean--void---true)
   - [`makeWidget(el)`](#makewidgetel)
+  - [`makeSubGrid(el)`](#makeSubGrid)
   - [`margin(value: numberOrString)`](#marginvalue-numberorstring)
   - [`movable(el, val)`](#movableel-val)
   - [`removeWidget(el, removeDOM = true, triggerEvent = true)`](#removewidgetel-removedom--true-triggerevent--true)
@@ -501,7 +502,20 @@ let grid = GridStack.init();
 grid.el.appendChild('<div id="gsi-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true"></div>')
 grid.makeWidget('#gsi-1');
 ```
-
+### `makeSubgrid(el)`
+Used to add a subgrid into an existing grid.
+```js
+const grid = Gridstack.init()
+grid.el.appendChild(`
+<div id="gsi-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true">
+      <div class="grid-stack" id="nested-grid">
+          <div id="gsi-2" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true">
+          </div>
+      </div>
+</div>`)
+grid.addSubGrid(grid.el.getElementById('nested-grid'))
+```
+Make sure that the subgrid is inside of a grid item. It is important to remember that subgrids are themselves grid items capable of containing other grid items.
 ### `margin(value: numberOrString)`
 
 gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below
