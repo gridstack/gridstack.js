@@ -3,6 +3,7 @@ dist
 *.tgz
 *.zip
 demo/angular/node_modules/*
+demo/angular/.angular
 
 !node_modules/
 node_modules/*
