@@ -83,7 +83,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 7.2.3-dev (TBD)
-* feat [#2229](https://github.com/gridstack/gridstack.js/pull/2229) support nonce for CSP
+* feat [#2229](https://github.com/gridstack/gridstack.js/pull/2229) support nonce for CSP. Thank you [@jedwards1211](https://github.com/jedwards1211)
+* feat: support nested grids with Angular component demo. Thank you R. Blanken for supporting this.
 * fix [#2206](https://github.com/gridstack/gridstack.js/issues/2206) `load()` with collision fix
 * fix [#2232](https://github.com/gridstack/gridstack.js/issues/2232) `autoPosition` bug loading from DOM
 

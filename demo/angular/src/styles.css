@@ -1,2 +1,4 @@
 /* re-use existing demo css file we already use for the plain demos - that include gridstack.css which is required */
 @import "../../demo.css";
+/* required file for gridstack 2-11 column */
+@import "../../../dist/gridstack-extra.css";

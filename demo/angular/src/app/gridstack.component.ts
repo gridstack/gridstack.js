@@ -7,15 +7,20 @@ import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, 
   NgZone, OnDestroy, OnInit, Output, QueryList, ViewChild, ViewContainerRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AddRemoveFcn, GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
+import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
 
-import { GridstackItemComponent } from './gridstack-item.component';
+import { GridItemCompHTMLElement, GridstackItemComponent } from './gridstack-item.component';
 
 /** events handlers emitters signature for different events */
 export type eventCB = {event: Event};
 export type elementCB = {event: Event, el: GridItemHTMLElement};
 export type nodesCB = {event: Event, nodes: GridStackNode[]};
 export type droppedCB = {event: Event, previousNode: GridStackNode, newNode: GridStackNode};
+
+/** store element to Ng Class pointer back */
+export interface GridCompHTMLElement extends GridHTMLElement {
+  _gridComp?: GridstackComponent;
+}
 
 /**
  * HTML Component Wrapper for gridstack, in combination with GridstackItemComponent for the items
@@ -71,7 +76,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   @Output() public resizeStopCB = new EventEmitter<elementCB>();
 
   /** return the native element that contains grid specific fields as well */
-  public get el(): GridHTMLElement { return this.elementRef.nativeElement; }
+  public get el(): GridCompHTMLElement { return this.elementRef.nativeElement; }
 
   /** return the GridStack class */
   public get grid(): GridStack | undefined { return this._grid; }
@@ -79,20 +84,19 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   private _options?: GridStackOptions;
   private _grid?: GridStack;
   private loaded?: boolean;
-  private outsideAddRemove?: AddRemoveFcn;
   private ngUnsubscribe: Subject<void> = new Subject();
 
   constructor(
     private readonly zone: NgZone,
-    private readonly elementRef: ElementRef<GridHTMLElement>,
+    private readonly elementRef: ElementRef<GridCompHTMLElement>,
   ) {
+    this.el._gridComp = this;
   }
 
   public ngOnInit(): void {
     // inject our own addRemove so we can create GridItemComponent instead of simple divs
     const opts: GridStackOptions = this._options || {};
-    if (opts.addRemoveCB) this.outsideAddRemove = opts.addRemoveCB;
-    opts.addRemoveCB = this._addRemoveCB.bind(this);
+    opts.addRemoveCB = GridstackComponent._addRemoveCB;
 
     // init ourself before any template children are created since we track them below anyway - no need to double create+update widgets
     this.loaded = !!this.options?.children?.length;
@@ -118,6 +122,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
     this.ngUnsubscribe.complete();
     this.grid?.destroy();
     delete this._grid;
+    delete this.el._gridComp;
   }
 
   /**
@@ -159,14 +164,22 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   /** called by GS when a new item needs to be created, which we do as a Angular component, or deleted (skip) */
-  private _addRemoveCB(g: GridStack, w: GridStackWidget, add: boolean): HTMLElement | undefined {
+  private static _addRemoveCB(parent: GridCompHTMLElement | HTMLElement, w: GridStackWidget | GridStackOptions, add: boolean, isGrid: boolean): HTMLElement | undefined {
     if (add) {
-      if (!this.container) return;
+      if (!parent) return;
       // create the grid item dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
-      const gridItem = this.container.createComponent(GridstackItemComponent)?.instance;
-      return gridItem?.el;
+      if (isGrid) {
+        const gridItemComp = (parent.parentElement as GridItemCompHTMLElement)._gridItemComp;
+        const grid = gridItemComp?.container?.createComponent(GridstackComponent)?.instance;
+        if (grid) grid.options = w as GridStackOptions;
+        return grid?.el;
+      } else {
+        // TODO: use GridStackWidget to define what type of component to create as child, or do it in GridstackItemComponent template...
+        const gridComp = (parent as GridCompHTMLElement)._gridComp;
+        const gridItem = gridComp?.container?.createComponent(GridstackItemComponent)?.instance;
+        return gridItem?.el;
+      }
     }
-    // if (this.outsideAddRemove) this.outsideAddRemove(g, w, add); // TODO: ?
     return;
   }
 }

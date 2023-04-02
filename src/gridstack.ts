@@ -137,11 +137,16 @@ export class GridStack {
 
     // create the grid element, but check if the passed 'parent' already has grid styling and should be used instead
     let el = parent;
-    if (!parent.classList.contains('grid-stack')) {
-      let doc = document.implementation.createHTMLDocument(''); // IE needs a param
-      doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
-      el = doc.body.children[0] as HTMLElement;
-      parent.appendChild(el);
+    const parentIsGrid = parent.classList.contains('grid-stack');
+    if (!parentIsGrid || opt.addRemoveCB) {
+      if (opt.addRemoveCB) {
+        el = opt.addRemoveCB(parent, opt, true, true);
+      } else {
+        let doc = document.implementation.createHTMLDocument(''); // IE needs a param
+        doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
+        el = doc.body.children[0] as HTMLElement;
+        parent.appendChild(el);
+      }
     }
 
     // create grid class and load any children
@@ -181,7 +186,6 @@ export class GridStack {
   protected _styleSheetClass?: string;
   /** @internal true if we got created by drag over gesture, so we can removed on drag out (temporary) */
   public _isTemp?: boolean;
-
 
   /** @internal create placeholder DIV as needed */
   public get placeholder(): HTMLElement {
@@ -409,7 +413,7 @@ export class GridStack {
       if (node?.el) {
         el = node.el; // re-use element stored in the node
       } else if (this.opts.addRemoveCB) {
-        el = this.opts.addRemoveCB(this, options, true);
+        el = this.opts.addRemoveCB(this.el, options, true, false);
       } else {
         let content = options?.content || '';
         let doc = document.implementation.createHTMLDocument(''); // IE needs a param
@@ -443,7 +447,7 @@ export class GridStack {
 
     // see if there is a sub-grid to create
     if (node.subGrid) {
-      this.makeSubGrid(node.el, undefined, undefined, false);
+      this.makeSubGrid(node.el, undefined, undefined, false); //node.subGrid will be used as option in method, no need to pass
     }
 
     // if we're adding an item into 1 column (_prevColumn is set only when going to 1) make sure
@@ -493,16 +497,11 @@ export class GridStack {
     }
 
     // if we're converting an existing full item, move over the content to be the first sub item in the new grid
-    // TODO: support this.opts.addRemoveCB for frameworks
     let content = node.el.querySelector('.grid-stack-item-content') as HTMLElement;
     let newItem: HTMLElement;
     let newItemOpt: GridStackNode;
     if (saveContent) {
       this._removeDD(node.el); // remove D&D since it's set on content div
-      let doc = document.implementation.createHTMLDocument(''); // IE needs a param
-      doc.body.innerHTML = `<div class="grid-stack-item"></div>`;
-      newItem = doc.body.children[0] as HTMLElement;
-      newItem.appendChild(content);
       newItemOpt = {...node, x:0, y:0};
       Utils.removeInternalForSave(newItemOpt);
       delete newItemOpt.subGrid;
@@ -510,9 +509,17 @@ export class GridStack {
         newItemOpt.content = node.content;
         delete node.content;
       }
-      doc.body.innerHTML = `<div class="grid-stack-item-content"></div>`;
-      content = doc.body.children[0] as HTMLElement;
-      node.el.appendChild(content);
+      if (this.opts.addRemoveCB) {
+        newItem = this.opts.addRemoveCB(this.el, newItemOpt, true, false);
+      } else {
+        let doc = document.implementation.createHTMLDocument(''); // IE needs a param
+        doc.body.innerHTML = `<div class="grid-stack-item"></div>`;
+        newItem = doc.body.children[0] as HTMLElement;
+        newItem.appendChild(content);
+        doc.body.innerHTML = `<div class="grid-stack-item-content"></div>`;
+        content = doc.body.children[0] as HTMLElement;
+        node.el.appendChild(content);
+      }
       this._prepareDragDropByNode(node); // ... and restore original D&D
     }
 
@@ -526,6 +533,9 @@ export class GridStack {
       setTimeout(() =>  style.transition = null); // recover animation
     }
 
+    if (this.opts.addRemoveCB) {
+      ops.addRemoveCB = ops.addRemoveCB || this.opts.addRemoveCB;
+    }
     let subGrid = node.subGrid = GridStack.addGrid(content, ops);
     if (nodeToAdd?._moving) subGrid._isTemp = true; // prevent re-nesting as we add over
     if (autoColumn) subGrid._autoColumn = true;
@@ -564,6 +574,7 @@ export class GridStack {
       pGrid.addWidget(n.el, n);
     });
     pGrid.batchUpdate(false);
+    if (this.parentGridItem) delete this.parentGridItem.subGrid;
     delete this.parentGridItem;
 
     // create an artificial event for the original grid now that this one is gone (got a leave, but won't get enter)
@@ -668,7 +679,7 @@ export class GridStack {
         let item = items.find(w => n.id === w.id);
         if (!item) {
           if (this.opts.addRemoveCB)
-            this.opts.addRemoveCB(this, n, false);
+            this.opts.addRemoveCB(this.el, n, false, false);
           removed.push(n); // batch keep track
           this.removeWidget(n.el, true, false);
         }
@@ -873,6 +884,7 @@ export class GridStack {
     }
     this._removeStylesheet();
     this.el.removeAttribute('gs-current-row');
+    if (this.parentGridItem) delete this.parentGridItem.subGrid;
     delete this.parentGridItem;
     delete this.opts;
     delete this._placeholder;
