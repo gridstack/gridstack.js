@@ -29,12 +29,35 @@ export class AppComponent {
     children: this.items,
   }
 
+  // nested grid options
+  public sub1: GridStackWidget[] = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
+  public sub2: GridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
+  public subOptions: GridStackOptions = {
+    cellHeight: 50, // should be 50 - top/bottom
+    column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
+    acceptWidgets: true, // will accept .grid-stack-item by default
+    margin: 5,
+  };
+  public nestedGridOptions: GridStackOptions = { // main grid options
+    cellHeight: 50,
+    margin: 5,
+    minRow: 2, // don't collapse when empty
+    disableOneColumnMode: true,
+    acceptWidgets: true,
+    id: 'main',
+    children: [
+      {x:0, y:0, content: 'regular item', id: 0},
+      {x:1, y:0, w:4, h:4, subGrid: {children: this.sub1, id:'sub1_grid', class: 'sub1', ...this.subOptions}},
+      {x:5, y:0, w:3, h:4, subGrid: {children: this.sub2, id:'sub2_grid', class: 'sub2', ...this.subOptions}},
+    ]
+  };
+
   constructor() {
     // give them content and unique id to make sure we track them during changes below...
-    this.items.forEach(w => {
+    [...this.items, ...this.sub1, ...this.sub2].forEach(w => {
       w.content = `item ${ids}`;
       w.id = String(ids++);
-    })
+    });
   }
 
   /** called whenever items change size/position/etc.. */
@@ -72,7 +95,7 @@ export class AppComponent {
   }
 
   /**
-   * TEST TEMPLATE operations for ngFor case - NOT recommended unless you have no GS creating/re-parenting
+   * ngFor case: TEST TEMPLATE operations - NOT recommended unless you have no GS creating/re-parenting
    */
   public addNgFor() {
     // new array isn't required as Angular detects changes to content with trackBy:identify()

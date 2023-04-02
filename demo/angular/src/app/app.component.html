@@ -1,12 +1,13 @@
 
-<div>
+<div class="button-container">
   <p class="pick-info">Pick a demo to load:</p>
-  <button (click)="show=0">Simple</button>
-  <button (click)="show=1">ngFor case</button>
-  <button (click)="show=2">ngFor custom command</button>
-  <button (click)="show=3">Component HTML template</button>
-  <button (click)="show=4">Component ngFor</button>
-  <button (click)="show=5">Component Dynamic</button>
+  <button (click)="show=0" [class.active]="show===0">Simple</button>
+  <button (click)="show=1" [class.active]="show===1">ngFor case</button>
+  <button (click)="show=2" [class.active]="show===2">ngFor custom command</button>
+  <button (click)="show=3" [class.active]="show===3">Component HTML template</button>
+  <button (click)="show=4" [class.active]="show===4">Component ngFor</button>
+  <button (click)="show=5" [class.active]="show===5">Component Dynamic</button>
+  <button (click)="show=6" [class.active]="show===6">Nested Grid</button>
 </div>
 
 <div class="test-container">
@@ -46,6 +47,17 @@
   <button (click)="modify(gridComp)">modify item</button>
   <button (click)="newLayout(gridComp)">new layout</button>
   <gridstack #gridComp [options]="gridOptionsFull" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">
+  </gridstack>
+</div>
+
+
+<div *ngIf="show===6" >
+  <p><b>Nested Grid</b>: shows nested component grids, like nested.html demo but with Ng Components</p>
+  <button (click)="add(gridComp)">add item</button>
+  <button (click)="delete(gridComp)">remove item</button>
+  <button (click)="modify(gridComp)">modify item</button>
+  <button (click)="newLayout(gridComp)">new layout</button>
+  <gridstack #gridComp [options]="nestedGridOptions" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">
   </gridstack>
 </div>
 
