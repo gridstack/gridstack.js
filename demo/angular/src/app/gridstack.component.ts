@@ -10,12 +10,19 @@ import { takeUntil } from 'rxjs/operators';
 import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
 
 import { GridItemCompHTMLElement, GridstackItemComponent } from './gridstack-item.component';
+import { selectorToComponent } from './dummy.component';
 
 /** events handlers emitters signature for different events */
 export type eventCB = {event: Event};
 export type elementCB = {event: Event, el: GridItemHTMLElement};
 export type nodesCB = {event: Event, nodes: GridStackNode[]};
 export type droppedCB = {event: Event, previousNode: GridStackNode, newNode: GridStackNode};
+
+
+/** extends to store Ng Component selector, instead/inAddition to content */
+export interface NgGridStackWidget extends GridStackWidget {
+  type?: string; // component type to create as content
+}
 
 /** store element to Ng Class pointer back */
 export interface GridCompHTMLElement extends GridHTMLElement {
@@ -96,7 +103,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   public ngOnInit(): void {
     // inject our own addRemove so we can create GridItemComponent instead of simple divs
     const opts: GridStackOptions = this._options || {};
-    opts.addRemoveCB = GridstackComponent._addRemoveCB;
+    opts.addRemoveCB = addRemoveCB;
 
     // init ourself before any template children are created since we track them below anyway - no need to double create+update widgets
     this.loaded = !!this.options?.children?.length;
@@ -162,24 +169,31 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
     .on('resizestart', (event: Event, el: GridItemHTMLElement) => this.zone.run(() => this.resizeStartCB.emit({event, el})))
     .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.zone.run(() => this.resizeStopCB.emit({event, el})))
   }
-
-  /** called by GS when a new item needs to be created, which we do as a Angular component, or deleted (skip) */
-  private static _addRemoveCB(parent: GridCompHTMLElement | HTMLElement, w: GridStackWidget | GridStackOptions, add: boolean, isGrid: boolean): HTMLElement | undefined {
-    if (add) {
-      if (!parent) return;
-      // create the grid item dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
-      if (isGrid) {
-        const gridItemComp = (parent.parentElement as GridItemCompHTMLElement)._gridItemComp;
-        const grid = gridItemComp?.container?.createComponent(GridstackComponent)?.instance;
-        if (grid) grid.options = w as GridStackOptions;
-        return grid?.el;
-      } else {
-        // TODO: use GridStackWidget to define what type of component to create as child, or do it in GridstackItemComponent template...
-        const gridComp = (parent as GridCompHTMLElement)._gridComp;
-        const gridItem = gridComp?.container?.createComponent(GridstackItemComponent)?.instance;
-        return gridItem?.el;
-      }
-    }
-    return;
-  }
 }
+
+/** called by GS when a new item needs to be created, which we do as a Angular component, or deleted (skip) */
+function addRemoveCB(parent: GridCompHTMLElement | HTMLElement, w: NgGridStackWidget | GridStackOptions, add: boolean, isGrid: boolean): HTMLElement | undefined {
+  if (add) {
+    if (!parent) return;
+    // create the grid item dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
+    if (isGrid) {
+      const gridItemComp = (parent.parentElement as GridItemCompHTMLElement)._gridItemComp;
+      const grid = gridItemComp?.container?.createComponent(GridstackComponent)?.instance;
+      if (grid) grid.options = w as GridStackOptions;
+      return grid?.el;
+    } else {
+      const gridComp = (parent as GridCompHTMLElement)._gridComp;
+      const gridItem = gridComp?.container?.createComponent(GridstackItemComponent)?.instance;
+
+      // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
+      const type = (w as NgGridStackWidget).type;
+      if (!w.subGrid && type && selectorToComponent[type]) {
+        gridItem?.container?.createComponent(selectorToComponent[type]);
+      }
+
+      return gridItem?.el;
+    }
+  }
+  return;
+}
+
