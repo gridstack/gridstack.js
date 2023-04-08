@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { GridStackOptions, GridStackWidget } from 'gridstack';
-import { GridstackComponent, elementCB, nodesCB } from './gridstack.component';
+import { GridstackComponent, NgGridStackWidget, elementCB, nodesCB } from './gridstack.component';
 
 // unique ids sets for each item for correct ngFor updating
 let ids = 1;
@@ -30,8 +30,8 @@ export class AppComponent {
   }
 
   // nested grid options
-  public sub1: GridStackWidget[] = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
-  public sub2: GridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
+  public sub1: NgGridStackWidget[] = [ {x:0, y:0, type:'app-a'}, {x:1, y:0, type:'app-b'}, {x:2, y:0, type:'app-c'}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
+  public sub2: NgGridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
   public subOptions: GridStackOptions = {
     cellHeight: 50, // should be 50 - top/bottom
     column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
@@ -54,8 +54,8 @@ export class AppComponent {
 
   constructor() {
     // give them content and unique id to make sure we track them during changes below...
-    [...this.items, ...this.sub1, ...this.sub2].forEach(w => {
-      w.content = `item ${ids}`;
+    [...this.items, ...this.sub1, ...this.sub2].forEach((w: NgGridStackWidget) => {
+      if (!w.type && !w.subGrid) w.content = `item ${ids}`;
       w.id = String(ids++);
     });
   }
