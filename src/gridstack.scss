@@ -88,16 +88,14 @@ $animation_speed: .3s !default;
       }
     }
 
-    @for $i from 0 through $gridstack-columns {
-      &[gs-w='#{$i}'] { width: math.div(100%, $gridstack-columns) * $i; }
+    @for $i from 0 through ($gridstack-columns - 1) {
       &[gs-x='#{$i}'] { left: math.div(100%, $gridstack-columns) * $i; }
+      &[gs-w='#{$i + 1}'] { width: math.div(100%, $gridstack-columns) * ($i + 1); }
     }
   }
 
   &.grid-stack-1>.grid-stack-item {
     min-width: 100%;
-    &[gs-w='1'] { width: 100%; }
-    &[gs-x='0'] { left: 0; }
   }
 
   &.grid-stack-animate,
