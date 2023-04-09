@@ -1415,8 +1415,8 @@ export class GridStack {
   protected _writePosAttr(el: HTMLElement, n: GridStackPosition): GridStack {
     if (n.x !== undefined && n.x !== null) { el.setAttribute('gs-x', String(n.x)); }
     if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
-    if (n.w) { el.setAttribute('gs-w', String(n.w)); }
-    if (n.h) { el.setAttribute('gs-h', String(n.h)); }
+    n.w > 1 ? el.setAttribute('gs-w', String(n.w)) : el.removeAttribute('gs-w');
+    n.h > 1 ? el.setAttribute('gs-h', String(n.h)) : el.removeAttribute('gs-h');
     return this;
   }
 
@@ -1444,36 +1444,38 @@ export class GridStack {
 
   /** @internal call to read any default attributes from element */
   protected _readAttr(el: HTMLElement): GridStackWidget {
-    let node: GridStackNode = {};
-    node.x = Utils.toNumber(el.getAttribute('gs-x'));
-    node.y = Utils.toNumber(el.getAttribute('gs-y'));
-    node.w = Utils.toNumber(el.getAttribute('gs-w'));
-    node.h = Utils.toNumber(el.getAttribute('gs-h'));
-    node.autoPosition = Utils.toBool(el.getAttribute('gs-auto-position'));
-    node.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
-    node.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
-    node.locked = Utils.toBool(el.getAttribute('gs-locked'));
-    node.id = el.getAttribute('gs-id');
+    let n: GridStackNode = {};
+    n.x = Utils.toNumber(el.getAttribute('gs-x'));
+    n.y = Utils.toNumber(el.getAttribute('gs-y'));
+    n.w = Utils.toNumber(el.getAttribute('gs-w'));
+    n.h = Utils.toNumber(el.getAttribute('gs-h'));
+    if (!(n.w > 1)) el.removeAttribute('gs-w');
+    if (!(n.h > 1)) el.removeAttribute('gs-h');
+    n.autoPosition = Utils.toBool(el.getAttribute('gs-auto-position'));
+    n.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
+    n.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
+    n.locked = Utils.toBool(el.getAttribute('gs-locked'));
+    n.id = el.getAttribute('gs-id');
 
     // read but never written out
-    node.maxW = Utils.toNumber(el.getAttribute('gs-max-w'));
-    if (node.maxW) el.removeAttribute('gs-max-w');
-    node.minW = Utils.toNumber(el.getAttribute('gs-min-w'));
-    if (node.minW) el.removeAttribute('gs-min-w');
-    node.maxH = Utils.toNumber(el.getAttribute('gs-max-h'));
-    if (node.maxH) el.removeAttribute('gs-max-h');
-    node.minH = Utils.toNumber(el.getAttribute('gs-min-h'));
-    if (node.minH) el.removeAttribute('gs-min-h');
+    n.maxW = Utils.toNumber(el.getAttribute('gs-max-w'));
+    if (n.maxW) el.removeAttribute('gs-max-w');
+    n.minW = Utils.toNumber(el.getAttribute('gs-min-w'));
+    if (n.minW) el.removeAttribute('gs-min-w');
+    n.maxH = Utils.toNumber(el.getAttribute('gs-max-h'));
+    if (n.maxH) el.removeAttribute('gs-max-h');
+    n.minH = Utils.toNumber(el.getAttribute('gs-min-h'));
+    if (n.minH) el.removeAttribute('gs-min-h');
 
     // remove any key not found (null or false which is default)
-    for (const key in node) {
-      if (!node.hasOwnProperty(key)) return;
-      if (!node[key] && node[key] !== 0) { // 0 can be valid value (x,y only really)
-        delete node[key];
+    for (const key in n) {
+      if (!n.hasOwnProperty(key)) return;
+      if (!n[key] && n[key] !== 0) { // 0 can be valid value (x,y only really)
+        delete n[key];
       }
     }
 
-    return node;
+    return n;
   }
 
   /** @internal */

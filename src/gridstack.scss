@@ -97,7 +97,7 @@ $animation_speed: .3s !default;
   &.grid-stack-1>.grid-stack-item {
     min-width: 100%;
     &[gs-w='1'] { width: 100%; }
-    &[gs-x='1'] { left: 100%; }
+    &[gs-x='0'] { left: 0; }
   }
 
   &.grid-stack-animate,

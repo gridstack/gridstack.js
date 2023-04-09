@@ -240,10 +240,10 @@ export class Utils {
 
   /** copies over b size & position (GridStackPosition), and optionally min/max as well */
   static copyPos(a: GridStackWidget, b: GridStackWidget, doMinMax = false): GridStackWidget {
-    a.x = b.x;
-    a.y = b.y;
-    a.w = b.w;
-    a.h = b.h;
+    if (b.x !== undefined) a.x = b.x;
+    if (b.y !== undefined) a.y = b.y;
+    if (b.w !== undefined) a.w = b.w;
+    if (b.h !== undefined) a.h = b.h;
     if (doMinMax) {
       if (b.minW) a.minW = b.minW;
       if (b.minH) a.minH = b.minH;
