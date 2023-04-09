@@ -258,6 +258,15 @@ export class Utils {
     return a && b && a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
   }
 
+  /** given a node, makes sure it's min/max are valid */
+  static sanitizeMinMax(node: GridStackNode) {
+    // remove 0, undefine, null
+    if (!node.minW) { delete node.minW; }
+    if (!node.minH) { delete node.minH; }
+    if (!node.maxW) { delete node.maxW; }
+    if (!node.maxH) { delete node.maxH; }
+  }
+
   /** removes field from the first object if same as the second objects (like diffing) and internal '_' for saving */
   static removeInternalAndSame(a: unknown, b: unknown):void {
     if (typeof a !== 'object' || typeof b !== 'object') return;

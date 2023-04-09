@@ -1180,6 +1180,7 @@ export class GridStack {
           ddChanged = ddChanged || (!this.opts.staticGrid && (key === 'noResize' || key === 'noMove' || key === 'locked'));
         }
       }
+      Utils.sanitizeMinMax(n);
 
       // finally move the widget
       if (m) {
@@ -1361,8 +1362,6 @@ export class GridStack {
         let h: string = getHeight(i);
         Utils.addCSSRule(this._styles, `${prefix}[gs-y="${i-1}"]`,   `top: ${getHeight(i-1)}`); // start at 0
         Utils.addCSSRule(this._styles, `${prefix}[gs-h="${i}"]`,     `height: ${h}`);
-        Utils.addCSSRule(this._styles, `${prefix}[gs-min-h="${i}"]`, `min-height: ${h}`);
-        Utils.addCSSRule(this._styles, `${prefix}[gs-max-h="${i}"]`, `max-height: ${h}`);
       }
       this._styles._max = maxH;
     }
@@ -1428,10 +1427,6 @@ export class GridStack {
 
     let attrs /*: GridStackWidget but strings */ = { // remaining attributes
       autoPosition: 'gs-auto-position',
-      minW: 'gs-min-w',
-      minH: 'gs-min-h',
-      maxW: 'gs-max-w',
-      maxH: 'gs-max-h',
       noResize: 'gs-no-resize',
       noMove: 'gs-no-move',
       locked: 'gs-locked',
@@ -1454,15 +1449,21 @@ export class GridStack {
     node.y = Utils.toNumber(el.getAttribute('gs-y'));
     node.w = Utils.toNumber(el.getAttribute('gs-w'));
     node.h = Utils.toNumber(el.getAttribute('gs-h'));
-    node.maxW = Utils.toNumber(el.getAttribute('gs-max-w'));
-    node.minW = Utils.toNumber(el.getAttribute('gs-min-w'));
-    node.maxH = Utils.toNumber(el.getAttribute('gs-max-h'));
-    node.minH = Utils.toNumber(el.getAttribute('gs-min-h'));
     node.autoPosition = Utils.toBool(el.getAttribute('gs-auto-position'));
     node.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
     node.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
     node.locked = Utils.toBool(el.getAttribute('gs-locked'));
     node.id = el.getAttribute('gs-id');
+
+    // read but never written out
+    node.maxW = Utils.toNumber(el.getAttribute('gs-max-w'));
+    if (node.maxW) el.removeAttribute('gs-max-w');
+    node.minW = Utils.toNumber(el.getAttribute('gs-min-w'));
+    if (node.minW) el.removeAttribute('gs-min-w');
+    node.maxH = Utils.toNumber(el.getAttribute('gs-max-h'));
+    if (node.maxH) el.removeAttribute('gs-max-h');
+    node.minH = Utils.toNumber(el.getAttribute('gs-min-h'));
+    if (node.minH) el.removeAttribute('gs-min-h');
 
     // remove any key not found (null or false which is default)
     for (const key in node) {
