@@ -17,8 +17,6 @@ $gridstack-columns: 11 !default;
       @for $i from 1 through $columns {
         &[gs-w='#{$i}'] { width: math.div(100%, $columns) * $i; }
         &[gs-x='#{$i}'] { left: math.div(100%, $columns) * $i; }
-        &[gs-min-w='#{$i}'] { min-width: math.div(100%, $columns) * $i; }
-        &[gs-max-w='#{$i}'] { max-width: math.div(100%, $columns) * $i; }
       }
     }
   }

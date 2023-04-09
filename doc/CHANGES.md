@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [7.3.0-dev (TBD)](#730-dev-tbd)
 - [7.3.0 (2023-04-01)](#730-2023-04-01)
 - [7.2.3 (2023-02-02)](#723-2023-02-02)
 - [7.2.2 (2023-01-16)](#722-2023-01-16)
@@ -81,6 +82,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 7.3.0-dev (TBD)
+* feat [#2243](https://github.com/gridstack/gridstack.js/issues/2243) removed `gs-min|max_w|h` attribute generated in CSS or written out as they are never used for rendering, only for initial load. This reduce our column/row styles in half!
 
 ## 7.3.0 (2023-04-01)
 * feat [#2229](https://github.com/gridstack/gridstack.js/pull/2229) support nonce for CSP. Thank you [@jedwards1211](https://github.com/jedwards1211)

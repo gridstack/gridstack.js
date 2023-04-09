@@ -348,15 +348,16 @@ export class GridStackEngine {
     if (!node.autoPosition) { delete node.autoPosition; }
     if (!node.noResize) { delete node.noResize; }
     if (!node.noMove) { delete node.noMove; }
+    Utils.sanitizeMinMax(node);
 
     // check for NaN (in case messed up strings were passed. can't do parseInt() || defaults.x above as 0 is valid #)
-    if (typeof node.x == 'string')      { node.x = Number(node.x); }
-    if (typeof node.y == 'string')      { node.y = Number(node.y); }
-    if (typeof node.w == 'string')  { node.w = Number(node.w); }
+    if (typeof node.x == 'string') { node.x = Number(node.x); }
+    if (typeof node.y == 'string') { node.y = Number(node.y); }
+    if (typeof node.w == 'string') { node.w = Number(node.w); }
     if (typeof node.h == 'string') { node.h = Number(node.h); }
-    if (isNaN(node.x))      { node.x = defaults.x; node.autoPosition = true; }
-    if (isNaN(node.y))      { node.y = defaults.y; node.autoPosition = true; }
-    if (isNaN(node.w))  { node.w = defaults.w; }
+    if (isNaN(node.x)) { node.x = defaults.x; node.autoPosition = true; }
+    if (isNaN(node.y)) { node.y = defaults.y; node.autoPosition = true; }
+    if (isNaN(node.w)) { node.w = defaults.w; }
     if (isNaN(node.h)) { node.h = defaults.h; }
 
     return this.nodeBoundFix(node, resizing);
