@@ -42,9 +42,6 @@ function addEvents(grid, id) {
   })
   .on('resizestart', function(event, el) {
     let n = el.gridstackNode;
-    let w = parseInt(el.getAttribute('gs-w')); // verify node (easiest) and attr are the same
-    let h = parseInt(el.getAttribute('gs-h'));
-    if (w !== n.w || h !== n.h) alert('resizestart missmatch');
     let rec = el.getBoundingClientRect();
     console.log(`${g} resizestart ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
 
@@ -56,9 +53,6 @@ function addEvents(grid, id) {
   })
   .on('resizestop', function(event, el) {
     let n = el.gridstackNode;
-    let w = parseInt(el.getAttribute('gs-w')); // verify node (easiest) and attr are the same
-    let h = parseInt(el.getAttribute('gs-h'));
-    if (w !== n.w || h !== n.h) alert('resizestop missmatch');
     let rec = el.getBoundingClientRect();
     console.log(`${g} resizestop ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
   });

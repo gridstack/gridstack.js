@@ -30,14 +30,8 @@
     };
     let grid = GridStack.init(options);
 
-    addNewWidget = function() {
-      grid.addWidget({content: String(count++)});
-    };
-
     grid.batchUpdate();
-    for (; count <= COLUMNS;) {
-      this.addNewWidget(); 
-    }
+    for (; count <= COLUMNS;) grid.addWidget({content: String(count++)});
     grid.batchUpdate(false);
   </script>
 </body>
