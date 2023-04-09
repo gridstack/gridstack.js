@@ -73,7 +73,6 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   public enable(): void {
     super.enable();
-    this.el.classList.add('ui-resizable');
     this.el.classList.remove('ui-resizable-disabled');
     this._setupAutoHide(this.option.autoHide);
   }
@@ -81,14 +80,12 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   public disable(): void {
     super.disable();
     this.el.classList.add('ui-resizable-disabled');
-    this.el.classList.remove('ui-resizable');
     this._setupAutoHide(false);
   }
 
   public destroy(): void {
     this._removeHandlers();
     this._setupAutoHide(false);
-    this.el.classList.remove('ui-resizable');
     delete this.el;
     super.destroy();
   }

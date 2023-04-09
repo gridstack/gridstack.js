@@ -92,7 +92,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       // this.dragEl.style.touchAction = 'none'; // not needed unlike pointerdown doc comment
     }
     this.el.classList.remove('ui-draggable-disabled');
-    this.el.classList.add('ui-draggable');
   }
 
   public disable(forDestroy = false): void {
@@ -103,7 +102,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.dragEl.removeEventListener('touchstart', touchstart);
       this.dragEl.removeEventListener('pointerdown', pointerdown);
     }
-    this.el.classList.remove('ui-draggable');
     if (!forDestroy) this.el.classList.add('ui-draggable-disabled');
   }
 
