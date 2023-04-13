@@ -3,7 +3,7 @@
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
-import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
+import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget, GridItemHTMLElement } from './types';
 
 export interface HeightData {
   h: number;
@@ -365,6 +365,18 @@ export class Utils {
     }
   }
 
+  static getPositionContainerElement(el: HTMLElement): HTMLElement {
+    if (!el) return null;
+
+    const style = getComputedStyle(el);
+
+    if (style.position === 'relative' || style.position === 'absolute' || style.position === 'fixed') {
+      return el;
+    } else {
+      return this.getPositionContainerElement(el.parentElement);
+    }
+  }
+
   /** @internal */
   static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
     // is widget in view?
@@ -543,6 +555,20 @@ export class Utils {
       e.target      // relatedTarget
     );
     (target || e.target).dispatchEvent(simulatedEvent);
+  }
+
+  public static getScaleForElement(element: HTMLElement) {
+    let elementToGetTheScaleFrom = element;
+
+    // Check if element is visible, otherwise the width/height will be of 0
+    while (!elementToGetTheScaleFrom.offsetParent) {
+      elementToGetTheScaleFrom = elementToGetTheScaleFrom.parentElement;
+    }
+
+    const boundingClientRect = elementToGetTheScaleFrom.getBoundingClientRect();
+    const scaleX = boundingClientRect.width / elementToGetTheScaleFrom.offsetWidth;
+    const scaleY = boundingClientRect.height / elementToGetTheScaleFrom.offsetHeight;
+    return { scaleX, scaleY };
   }
 
   /** returns true if event is inside the given element rectangle */

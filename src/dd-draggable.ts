@@ -24,15 +24,6 @@ export interface DDDraggableOpt {
   drag?: (event: Event, ui: DDUIData) => void;
 }
 
-interface DragOffset {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
-  offsetLeft: number;
-  offsetTop: number;
-}
-
 type DDDragEvent = 'drag' | 'dragstart' | 'dragstop';
 
 // make sure we are not clicking on known object that handles mouseDown
@@ -47,8 +38,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected mouseDownEvent: MouseEvent;
-  /** @internal */
-  protected dragOffset: DragOffset;
   /** @internal */
   protected dragElementOriginStyle: Array<string>;
   /** @internal */
@@ -193,6 +182,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
         this._callDrag(e);
       }
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 3) {
+      let node = (this.el as GridItemHTMLElement)?.gridstackNode;
+      if (node) {
+        const rect = this.el.getBoundingClientRect();
+        node._originalMousePositionInsideElement = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      }
       /**
        * don't start unless we've moved at least 3 pixels
        */
@@ -207,7 +201,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       }
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
-      this.dragOffset = this._getDragOffset(e, this.el, this.helperContainment);
       const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
 
       this._setupHelperStyle(e);
@@ -285,8 +278,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const style = this.helper.style;
     style.pointerEvents = 'none'; // needed for over items to get enter/leave
     // style.cursor = 'move'; //  TODO: can't set with pointerEvents=none ! (done in CSS as well)
-    style.width = this.dragOffset.width + 'px';
-    style.height = this.dragOffset.height + 'px';
+    style.width = this.el.offsetWidth + 'px';
+    style.height = this.el.offsetHeight + 'px';
     style.willChange = 'left, top';
     style.position = 'fixed'; // let us drag between grids by not clipping as parent .grid-stack is position: 'relative'
     this._dragFollow(e); // now position it
@@ -322,15 +315,18 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal updates the top/left position to follow the mouse */
   protected _dragFollow(e: DragEvent): void {
-    let containmentRect = { left: 0, top: 0 };
-    // if (this.helper.style.position === 'absolute') { // we use 'fixed'
-    //   const { left, top } = this.helperContainment.getBoundingClientRect();
-    //   containmentRect = { left, top };
-    // }
     const style = this.helper.style;
-    const offset = this.dragOffset;
-    style.left = e.clientX + offset.offsetLeft - containmentRect.left + 'px';
-    style.top = e.clientY + offset.offsetTop - containmentRect.top + 'px';
+    const containerElement = Utils.getPositionContainerElement(this.helper.parentElement);
+    const containerBoundingClientRect = containerElement.getBoundingClientRect();
+    const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
+
+    // Position the element behind the mouse
+    const node = (this.el as GridItemHTMLElement).gridstackNode || {};
+    const x = (e.clientX - containerBoundingClientRect.left - (node._originalMousePositionInsideElement?.x || 0)) / scaleX;
+    const y = (e.clientY - containerBoundingClientRect.top - (node._originalMousePositionInsideElement?.y || 0)) / scaleY;
+    style.left = `${x}px`;
+    style.top = `${y}px`;
+    console.log('isVisible', this.helper !== null)
   }
 
   /** @internal */
@@ -345,51 +341,17 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal */
-  protected _getDragOffset(event: DragEvent, el: HTMLElement, parent: HTMLElement): DragOffset {
-
-    // in case ancestor has transform/perspective css properties that change the viewpoint
-    let xformOffsetX = 0;
-    let xformOffsetY = 0;
-    if (parent) {
-      const testEl = document.createElement('div');
-      Utils.addElStyles(testEl, {
-        opacity: '0',
-        position: 'fixed',
-        top: 0 + 'px',
-        left: 0 + 'px',
-        width: '1px',
-        height: '1px',
-        zIndex: '-999999',
-      });
-      parent.appendChild(testEl);
-      const testElPosition = testEl.getBoundingClientRect();
-      parent.removeChild(testEl);
-      xformOffsetX = testElPosition.left;
-      xformOffsetY = testElPosition.top;
-      // TODO: scale ?
-    }
-
-    const targetOffset = el.getBoundingClientRect();
-    return {
-      left: targetOffset.left,
-      top: targetOffset.top,
-      offsetLeft: - event.clientX + targetOffset.left - xformOffsetX,
-      offsetTop: - event.clientY + targetOffset.top - xformOffsetY,
-      width: targetOffset.width,
-      height: targetOffset.height
-    };
-  }
-
   /** @internal TODO: set to public as called by DDDroppable! */
   public ui(): DDUIData {
     const containmentEl = this.el.parentElement;
     const containmentRect = containmentEl.getBoundingClientRect();
     const offset = this.helper.getBoundingClientRect();
+    const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
+
     return {
-      position: { //Current CSS position of the helper as { top, left } object
-        top: offset.top - containmentRect.top,
-        left: offset.left - containmentRect.left
+      position: { // Current CSS position of the helper as { top, left } object
+        top: (offset.top - containmentRect.top) / scaleY,
+        left: (offset.left - containmentRect.left) / scaleX,
       }
       /* not used by GridStack for now...
       helper: [this.helper], //The object arr representing the helper that's being dragged.
