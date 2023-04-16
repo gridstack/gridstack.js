@@ -12,7 +12,7 @@ module.exports = {
       {
         test: /\.ts$/,
         use: 'ts-loader',
-        exclude: ['/node_modules/', '/src/h5/', '/src/index-*.ts'], // TODO: doesn't seem to excluded for generating .d.ts !
+        exclude: ['/node_modules/'],
       },
     ],
   },

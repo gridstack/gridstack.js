@@ -84,6 +84,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 7.3.0-dev (TBD)
+* package is now ES2020 (for TS exported files), webpack all.js still umd (could be commonjs ?), still have es5 files too
 * optimize [#2243](https://github.com/gridstack/gridstack.js/issues/2243) removed `gs-min|max_w|h` attribute generated in CSS or written out as they are never used for rendering, only for initial load. This reduce our column/row CSS in half!
 * optimize: removed `gs-w='1'` and `gs-h='1'` dom attribute writing since we already have min-width/min-height set, no need to set more attributes.
 * optimize: remove `'ui-draggable'` and `'ui-resizable'` since wasn't used in CSS and we have the `-disabled` version when off (so we can use `not(xyz-disabled)`).
