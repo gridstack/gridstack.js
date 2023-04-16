@@ -257,8 +257,6 @@ Better yet, here is a SASS code snippet which can make life much easier (Thanks 
   @for $i from 0 through $gridstack-columns {
     &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
     &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
-    &[gs-min-w='#{$i}'] { min-width: (100% / $gridstack-columns) * $i; }
-    &[gs-max-w='#{$i}'] { max-width: (100% / $gridstack-columns) * $i; }
   }
 } 
 ```

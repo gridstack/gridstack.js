@@ -1,5 +1,5 @@
 /**
- * types.ts 7.2.3-dev
+ * types.ts 7.3.0-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
@@ -73,8 +73,8 @@ export type GridStackNodesHandler = (event: Event, nodes: GridStackNode[]) => vo
 export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => void;
 export type GridStackEventHandlerCallback = GridStackEventHandler | GridStackElementHandler | GridStackNodesHandler | GridStackDroppedHandler;
 
-/** optional function called during load() to callback the user on new added/remove items */
-export type AddRemoveFcn = (g: GridStack, w: GridStackWidget, add: boolean) => HTMLElement | undefined;
+/** optional function called during load() to callback the user on new added/remove grid items | grids */
+export type AddRemoveFcn = (parent: HTMLElement, w: GridStackWidget, add: boolean, grid: boolean) => HTMLElement | undefined;
 
 /**
  * Defines the options for a Grid
@@ -89,10 +89,12 @@ export interface GridStackOptions {
   acceptWidgets?: boolean | string | ((element: Element) => boolean);
 
   /**
-   * callback method use when new items needs to be created or deleted, instead of the default
-   * <div class="grid-stack-item"><div class="grid-stack-item-content">w.content</div></div>
-   * Create: the returned DOM element will then be converted to a GridItemHTMLElement using makeWidget().
-   * Delete: the item will be removed from DOM (if not already done)
+   * callback method use when new items|grids needs to be created or deleted, instead of the default
+   * item: <div class="grid-stack-item"><div class="grid-stack-item-content">w.content</div></div>
+   * grid: <div class="grid-stack">grid content...</div>
+   * add = true: the returned DOM element will then be converted to a GridItemHTMLElement using makeWidget()|GridStack:init().
+   * add = false: the item will be removed from DOM (if not already done)
+   * grid = true|false for grid vs grid-items
    */
   addRemoveCB?: AddRemoveFcn;
 

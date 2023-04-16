@@ -13,7 +13,7 @@ const config = {...webpackConfig,
             configFile: 'es5/tsconfig.json'
           }
         },
-        exclude: ['/node_modules/', '/src/h5/', '/src/index-*.ts'],
+        exclude: ['/node_modules/'],
       },
     ],
   },

@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [7.2.3-dev (TBD)](#723-dev-tbd)
+- [7.3.0-dev (TBD)](#730-dev-tbd)
+- [7.3.0 (2023-04-01)](#730-2023-04-01)
 - [7.2.3 (2023-02-02)](#723-2023-02-02)
 - [7.2.2 (2023-01-16)](#722-2023-01-16)
 - [7.2.1 (2023-01-14)](#721-2023-01-14)
@@ -82,8 +83,17 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 7.2.3-dev (TBD)
+## 7.3.0-dev (TBD)
+* package is now ES2020 (for TS exported files), webpack all.js still umd (could be commonjs ?), still have es5 files too
+* optimize [#2243](https://github.com/gridstack/gridstack.js/issues/2243) removed `gs-min|max_w|h` attribute generated in CSS or written out as they are never used for rendering, only for initial load. This reduce our column/row CSS in half!
+* optimize: removed `gs-w='1'` and `gs-h='1'` dom attribute writing since we already have min-width/min-height set, no need to set more attributes.
+* optimize: remove `'ui-draggable'` and `'ui-resizable'` since wasn't used in CSS and we have the `-disabled` version when off (so we can use `not(xyz-disabled)`).
+
+## 7.3.0 (2023-04-01)
+* feat [#2229](https://github.com/gridstack/gridstack.js/pull/2229) support nonce for CSP. Thank you [@jedwards1211](https://github.com/jedwards1211)
+* feat: support nested grids with Angular component demo. Thank you R. Blanken for supporting this.
 * fix [#2206](https://github.com/gridstack/gridstack.js/issues/2206) `load()` with collision fix
+* fix [#2232](https://github.com/gridstack/gridstack.js/issues/2232) `autoPosition` bug loading from DOM
 
 ## 7.2.3 (2023-02-02)
 * fix `addWidget()` to handle passing just {el} which was needed for Angular HMTL template demo

@@ -26,18 +26,13 @@
     let options = {
       column: COLUMNS,
       cellHeight: 'auto',
-      margin: 1
+      margin: 1,
+      // staticGrid: true,
     };
     let grid = GridStack.init(options);
 
-    addNewWidget = function() {
-      grid.addWidget({content: String(count++)});
-    };
-
     grid.batchUpdate();
-    for (; count <= COLUMNS;) {
-      this.addNewWidget(); 
-    }
+    for (; count <= COLUMNS;) grid.addWidget({content: String(count++)});
     grid.batchUpdate(false);
   </script>
 </body>

@@ -1,5 +1,5 @@
 /**
- * utils.ts 7.2.3-dev
+ * utils.ts 7.3.0-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
@@ -240,10 +240,10 @@ export class Utils {
 
   /** copies over b size & position (GridStackPosition), and optionally min/max as well */
   static copyPos(a: GridStackWidget, b: GridStackWidget, doMinMax = false): GridStackWidget {
-    a.x = b.x;
-    a.y = b.y;
-    a.w = b.w;
-    a.h = b.h;
+    if (b.x !== undefined) a.x = b.x;
+    if (b.y !== undefined) a.y = b.y;
+    if (b.w !== undefined) a.w = b.w;
+    if (b.h !== undefined) a.h = b.h;
     if (doMinMax) {
       if (b.minW) a.minW = b.minW;
       if (b.minH) a.minH = b.minH;
@@ -256,6 +256,15 @@ export class Utils {
   /** true if a and b has same size & position */
   static samePos(a: GridStackPosition, b: GridStackPosition): boolean {
     return a && b && a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
+  }
+
+  /** given a node, makes sure it's min/max are valid */
+  static sanitizeMinMax(node: GridStackNode) {
+    // remove 0, undefine, null
+    if (!node.minW) { delete node.minW; }
+    if (!node.minH) { delete node.minH; }
+    if (!node.maxW) { delete node.maxW; }
+    if (!node.maxH) { delete node.maxH; }
   }
 
   /** removes field from the first object if same as the second objects (like diffing) and internal '_' for saving */

@@ -14,6 +14,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     sass: {
       options: {
+        // precision: 3, // doesn't work
         implementation: sass,
 			  sourceMap: false
       },

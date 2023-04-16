@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DOM reading</title>
+
+  <link rel="stylesheet" href="../../../demo.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>DOM reading, with auto placement mix (1&2 set, others not)</h1>
+    <div class="grid-stack">
+      <div class="grid-stack-item" gs-w="12" gs-x="0" gs-y="0">
+        <div class="grid-stack-item-content">1</div>
+      </div>
+      <div class="grid-stack-item" gs-w="4" gs-x="0" gs-y="1">
+        <div class="grid-stack-item-content">2</div>
+      </div>
+      <div class="grid-stack-item" gs-w="4">
+        <div class="grid-stack-item-content">3</div>
+      </div>
+      <div class="grid-stack-item">
+        <div class="grid-stack-item-content">4</div>
+      </div>
+    </div>
+      </div>
+  <script type="text/javascript">
+    let grid = GridStack.init({cellHeight: 70});
+  </script>
+</body>
+</html>

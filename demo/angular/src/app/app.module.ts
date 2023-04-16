@@ -7,6 +7,7 @@ import { GridstackComponent } from './gridstack.component';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
+import { AComponent, BComponent, CComponent } from './dummy.component';
 
 @NgModule({
     declarations: [
@@ -16,6 +17,9 @@ import { AngularSimpleComponent } from './simple';
         AppComponent,
         GridstackComponent,
         GridstackItemComponent,
+        AComponent,
+        BComponent,
+        CComponent,
     ],
     imports: [
         BrowserModule

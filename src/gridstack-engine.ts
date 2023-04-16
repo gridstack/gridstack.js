@@ -1,5 +1,5 @@
 /**
- * gridstack-engine.ts 7.2.3-dev
+ * gridstack-engine.ts 7.3.0-dev
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
@@ -348,15 +348,16 @@ export class GridStackEngine {
     if (!node.autoPosition) { delete node.autoPosition; }
     if (!node.noResize) { delete node.noResize; }
     if (!node.noMove) { delete node.noMove; }
+    Utils.sanitizeMinMax(node);
 
     // check for NaN (in case messed up strings were passed. can't do parseInt() || defaults.x above as 0 is valid #)
-    if (typeof node.x == 'string')      { node.x = Number(node.x); }
-    if (typeof node.y == 'string')      { node.y = Number(node.y); }
-    if (typeof node.w == 'string')  { node.w = Number(node.w); }
+    if (typeof node.x == 'string') { node.x = Number(node.x); }
+    if (typeof node.y == 'string') { node.y = Number(node.y); }
+    if (typeof node.w == 'string') { node.w = Number(node.w); }
     if (typeof node.h == 'string') { node.h = Number(node.h); }
-    if (isNaN(node.x))      { node.x = defaults.x; node.autoPosition = true; }
-    if (isNaN(node.y))      { node.y = defaults.y; node.autoPosition = true; }
-    if (isNaN(node.w))  { node.w = defaults.w; }
+    if (isNaN(node.x)) { node.x = defaults.x; node.autoPosition = true; }
+    if (isNaN(node.y)) { node.y = defaults.y; node.autoPosition = true; }
+    if (isNaN(node.w)) { node.w = defaults.w; }
     if (isNaN(node.h)) { node.h = defaults.h; }
 
     return this.nodeBoundFix(node, resizing);
@@ -376,9 +377,10 @@ export class GridStackEngine {
     // remember it's position & width so we can restore back (1 -> 12 column) #1655 #1985
     // IFF we're not in the middle of column resizing!
     const saveOrig = this.column === 1 || node.x + node.w > this.column;
-    if (saveOrig && this.column < 12 && !this._inColumnResize && !node.autoPosition && node._id && this.findCacheLayout(node, 12) === -1) {
+    if (saveOrig && this.column < 12 && !this._inColumnResize && node._id && this.findCacheLayout(node, 12) === -1) {
       let copy = {...node}; // need _id + positions
-      copy.x = Math.min(11, copy.x);
+      if (copy.autoPosition) { delete copy.x; delete copy.y; }
+      else copy.x = Math.min(11, copy.x);
       copy.w = Math.min(12, copy.w);
       this.cacheOneLayout(copy, 12);
     }
@@ -474,20 +476,23 @@ export class GridStackEngine {
     return this;
   }
 
-  /** find the first available empty spot for the given node width/height, updating the x,y attributes. return true if found */
-  public findEmptyPosition(node: GridStackNode): boolean {
-    this.sortNodes();
+  /** find the first available empty spot for the given node width/height, updating the x,y attributes. return true if found.
+   * optionally you can pass your own existing node list and column count, otherwise defaults to that engine data.
+   */
+  public findEmptyPosition(node: GridStackNode, nodeList = this.nodes, column = this.column): boolean {
+    nodeList = Utils.sort(nodeList, -1, column);
     let found = false;
     for (let i = 0; !found; ++i) {
-      let x = i % this.column;
-      let y = Math.floor(i / this.column);
-      if (x + node.w > this.column) {
+      let x = i % column;
+      let y = Math.floor(i / column);
+      if (x + node.w > column) {
         continue;
       }
       let box = {x, y, w: node.w, h: node.h};
-      if (!this.nodes.find(n => Utils.isIntercepted(box, n))) {
+      if (!nodeList.find(n => Utils.isIntercepted(box, n))) {
         node.x = x;
         node.y = y;
+        delete node.autoPosition;
         found = true;
       }
     }
@@ -829,10 +834,15 @@ export class GridStackEngine {
       let j = nodes.findIndex(n => n._id === cacheNode._id);
       if (j !== -1) {
         // still current, use cache info positions
-        nodes[j].x = cacheNode.x;
-        nodes[j].y = cacheNode.y;
-        nodes[j].w = cacheNode.w;
-        newNodes.push(nodes[j]);
+        if (cacheNode.autoPosition || isNaN(cacheNode.x) || isNaN(cacheNode.y)) {
+          this.findEmptyPosition(cacheNode, newNodes);
+        }
+        if (!cacheNode.autoPosition) {
+          nodes[j].x = cacheNode.x;
+          nodes[j].y = cacheNode.y;
+          nodes[j].w = cacheNode.w;
+          newNodes.push(nodes[j]);
+        }
         nodes.splice(j, 1);
       }
     });
@@ -892,14 +902,15 @@ export class GridStackEngine {
    */
   public cacheOneLayout(n: GridStackNode, column: number): GridStackEngine {
     n._id = n._id || GridStackEngine._idSeq++;
-    let layout: GridStackNode = {x: n.x, y: n.y, w: n.w, _id: n._id}
+    let l: GridStackNode = {x: n.x, y: n.y, w: n.w, _id: n._id}
+    if (n.autoPosition) { delete l.x; delete l.y; l.autoPosition = true; }
     this._layouts = this._layouts || [];
     this._layouts[column] = this._layouts[column] || [];
     let index = this.findCacheLayout(n, column);
     if (index === -1)
-      this._layouts[column].push(layout);
+      this._layouts[column].push(l);
     else
-      this._layouts[column][index] = layout;
+      this._layouts[column][index] = l;
     return this;
   }
 

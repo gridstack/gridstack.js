@@ -1,10 +1,15 @@
 /**
- * gridstack-item.component.ts 7.2.3-dev
+ * gridstack-item.component.ts 7.3.0-dev
  * Copyright (c) 2022 Alain Dumesny - see GridStack root license
  */
 
-import { ChangeDetectionStrategy, Component, ElementRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
 import { GridItemHTMLElement, GridStackNode } from 'gridstack';
+
+/** store element to Ng Class pointer back */
+export interface GridItemCompHTMLElement extends GridItemHTMLElement {
+  _gridItemComp?: GridstackItemComponent;
+}
 
 /**
  * HTML Component Wrapper for gridstack items, in combination with GridstackComponent for parent grid
@@ -13,15 +18,23 @@ import { GridItemHTMLElement, GridStackNode } from 'gridstack';
   selector: 'gridstack-item',
   template: `
     <div class="grid-stack-item-content">
+      <!-- TODO: this is where you would create the right component based on some internal type or id IFF !this.options.subGrid
+       Doing options.content for demo purpose -->
       {{options.content}}
+      <!-- any static (defined in dom) content goes here -->
       <ng-content></ng-content>
+      <!-- where dynamic items go (like sub-grids, other dynamic NgComponents, etc...) -->
+      <ng-template #container></ng-template>
     </div>`,
   styles: [`
     :host { display: block; }
   `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GridstackItemComponent {
+export class GridstackItemComponent implements OnDestroy {
+
+  /** container to append items dynamically */
+  @ViewChild('container', { read: ViewContainerRef, static: true}) public container?: ViewContainerRef;
 
   /** list of options for creating/updating this item */
   @Input() public set options(val: GridStackNode) {
@@ -42,7 +55,7 @@ export class GridstackItemComponent {
   private _options?: GridStackNode;
 
   /** return the native element that contains grid specific fields as well */
-  public get el(): GridItemHTMLElement { return this.elementRef.nativeElement; }
+  public get el(): GridItemCompHTMLElement { return this.elementRef.nativeElement; }
 
   /** clears the initial options now that we've built */
   public clearOptions() {
@@ -50,5 +63,10 @@ export class GridstackItemComponent {
   }
 
   constructor(private readonly elementRef: ElementRef<GridItemHTMLElement>) {
+    this.el._gridItemComp = this;
+  }
+
+  public ngOnDestroy(): void {
+    delete this.el._gridItemComp;
   }
 }
