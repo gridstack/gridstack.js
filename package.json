@@ -10,6 +10,7 @@
   "description": "TypeScript/JS lib for dashboard layout and creation, responsive, mobile support, no external dependencies, with many wrappers (React, Angular, Vue, Ember, knockout...)",
   "main": "./dist/gridstack.js",
   "types": "./dist/gridstack.d.ts",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gridstack/gridstack.js.git"
@@ -59,10 +60,10 @@
   "homepage": "http://gridstackjs.com/",
   "dependencies": {},
   "devDependencies": {
-    "@rollup/plugin-alias": "^3.1.9",
-    "@rollup/plugin-node-resolve": "^13.3.0",
-    "@rollup/plugin-replace": "^4.0.0",
-    "@rollup/plugin-typescript": "^8.3.2",
+    "@rollup/plugin-alias": "^5.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-replace": "^5.0.2",
+    "@rollup/plugin-typescript": "^11.1.0",
     "@types/jasmine": "^4.3.1",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
@@ -89,7 +90,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-typescript": "5.5.3",
     "protractor": "^7.0.0",
-    "rollup": "^2.75.6",
+    "rollup": "^3.20.3",
     "sass": "^1.62.0",
     "serve-static": "^1.15.0",
     "ts-loader": "^9.4.2",
