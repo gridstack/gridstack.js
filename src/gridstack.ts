@@ -660,7 +660,7 @@ export class GridStack {
 
     // if we're loading a layout into for example 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
-    if (this._prevColumn && this._prevColumn !== this.opts.column && items.some(n => (n.x + n.w) > this.opts.column)) {
+    if (this._prevColumn && this._prevColumn !== this.opts.column && items.some(n => (n.x + n.w) > (this.opts.column as number))) {
       this._ignoreLayoutsNodeChange = true; // skip layout update
       this.engine.cacheLayout(items, this._prevColumn, true);
     }

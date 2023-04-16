@@ -10,12 +10,12 @@
     "experimentalDecorators": true,
     "inlineSources": true,
     "lib": [ "es6", "es2015", "dom" ],
-    "module": "CommonJS",
+    "module": "ES2020",
     "noImplicitAny": false,
     "outDir": "./dist",
     "sourceMap": true,
     "strict": false,
-    "target": "ES6"
+    "target": "ES2020"
   }, 
   "exclude": [
     "./src/**/*.spec.ts",
