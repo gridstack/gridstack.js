@@ -1,0 +1,3 @@
+[submodule "packages/vue"]
+	path = packages/vue
+	url = https://github.com/shibisuriya/vue-gridstack
