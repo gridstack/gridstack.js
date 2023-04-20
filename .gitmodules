@@ -1,0 +1,4 @@
+[submodule "demo/vue"]
+	path = demo/vue
+	url = https://github.com/shibisuriya/vue-gridstack
+	branch = master
