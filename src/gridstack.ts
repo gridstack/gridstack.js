@@ -9,7 +9,7 @@ import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn } from './types';
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn } from './types';
 
 /*
  * and include D&D by default
@@ -135,12 +135,20 @@ export class GridStack {
   public static addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack {
     if (!parent) return null;
 
+    let el = parent as GridHTMLElement;
+    if (el.gridstack) {
+      // already a grid - set option and load data
+      const grid = el.gridstack;
+      if (opt) grid.opts = {...grid.opts, ...opt};
+      if (opt.children !== undefined) grid.load(opt.children);
+      return grid;
+    }
+
     // create the grid element, but check if the passed 'parent' already has grid styling and should be used instead
-    let el = parent;
     const parentIsGrid = parent.classList.contains('grid-stack');
-    if (!parentIsGrid || opt.addRemoveCB) {
-      if (opt.addRemoveCB) {
-        el = opt.addRemoveCB(parent, opt, true, true);
+    if (!parentIsGrid || GridStack.addRemoveCB) {
+      if (GridStack.addRemoveCB) {
+        el = GridStack.addRemoveCB(parent, opt, true, true);
       } else {
         let doc = document.implementation.createHTMLDocument(''); // IE needs a param
         doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
@@ -161,6 +169,21 @@ export class GridStack {
   static registerEngine(engineClass: typeof GridStackEngine): void {
     GridStack.engineClass = engineClass;
   }
+
+  /**
+   * callback method use when new items|grids needs to be created or deleted, instead of the default
+   * item: <div class="grid-stack-item"><div class="grid-stack-item-content">w.content</div></div>
+   * grid: <div class="grid-stack">grid content...</div>
+   * add = true: the returned DOM element will then be converted to a GridItemHTMLElement using makeWidget()|GridStack:init().
+   * add = false: the item will be removed from DOM (if not already done)
+   * grid = true|false for grid vs grid-items
+   */
+  public static addRemoveCB: AddRemoveFcn;
+
+  /**
+   * callback during saving to application can inject extra data for each widget, on top of the grid layout properties
+   */
+  public static saveCB: SaveFcn;
 
   /** scoping so users can call GridStack.Utils.sort() for example */
   public static Utils = Utils;
@@ -412,8 +435,8 @@ export class GridStack {
       node = options = els;
       if (node?.el) {
         el = node.el; // re-use element stored in the node
-      } else if (this.opts.addRemoveCB) {
-        el = this.opts.addRemoveCB(this.el, options, true, false);
+      } else if (GridStack.addRemoveCB) {
+        el = GridStack.addRemoveCB(this.el, options, true, false);
       } else {
         let content = options?.content || '';
         let doc = document.implementation.createHTMLDocument(''); // IE needs a param
@@ -509,8 +532,8 @@ export class GridStack {
         newItemOpt.content = node.content;
         delete node.content;
       }
-      if (this.opts.addRemoveCB) {
-        newItem = this.opts.addRemoveCB(this.el, newItemOpt, true, false);
+      if (GridStack.addRemoveCB) {
+        newItem = GridStack.addRemoveCB(this.el, newItemOpt, true, false);
       } else {
         let doc = document.implementation.createHTMLDocument(''); // IE needs a param
         doc.body.innerHTML = `<div class="grid-stack-item"></div>`;
@@ -533,9 +556,6 @@ export class GridStack {
       setTimeout(() =>  style.transition = null); // recover animation
     }
 
-    if (this.opts.addRemoveCB) {
-      ops.addRemoveCB = ops.addRemoveCB || this.opts.addRemoveCB;
-    }
     let subGrid = node.subGrid = GridStack.addGrid(content, ops);
     if (nodeToAdd?._moving) subGrid._isTemp = true; // prevent re-nesting as we add over
     if (autoColumn) subGrid._autoColumn = true;
@@ -584,29 +604,29 @@ export class GridStack {
   }
 
   /**
-  /**
    * saves the current layout returning a list of widgets for serialization which might include any nested grids.
    * @param saveContent if true (default) the latest html inside .grid-stack-content will be saved to GridStackWidget.content field, else it will
    * be removed.
    * @param saveGridOpt if true (default false), save the grid options itself, so you can call the new GridStack.addGrid()
    * to recreate everything from scratch. GridStackOptions.children would then contain the widget list instead.
+   * @param saveCB callback for each node -> widget, so application can insert additional data to be saved into the widget data structure.
    * @returns list of widgets or full grid option, including .children list of widgets
    */
-  public save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions {
-    // return copied nodes we can modify at will...
-    let list = this.engine.save(saveContent);
+  public save(saveContent = true, saveGridOpt = false, saveCB = GridStack.saveCB): GridStackWidget[] | GridStackOptions {
+    // return copied GridStackWidget (with optionally .el) we can modify at will...
+    let list = this.engine.save(saveContent, saveCB);
 
     // check for HTML content and nested grids
     list.forEach(n => {
-      if (saveContent && n.el && !n.subGrid) { // sub-grid are saved differently, not plain content
+      if (saveContent && n.el && !n.subGrid && !saveCB) { // sub-grid are saved differently, not plain content
         let sub = n.el.querySelector('.grid-stack-item-content');
         n.content = sub ? sub.innerHTML : undefined;
         if (!n.content) delete n.content;
       } else {
-        if (!saveContent) { delete n.content; }
+        if (!saveContent && !saveCB) { delete n.content; }
         // check for nested grid
         if ((n.subGrid as GridStack)?.el) {
-          const listOrOpt = (n.subGrid as GridStack).save(saveContent, saveGridOpt);
+          const listOrOpt = (n.subGrid as GridStack).save(saveContent, saveGridOpt, saveCB);
           n.subGrid = (saveGridOpt ? listOrOpt : {children: listOrOpt}) as GridStackOptions;
         }
       }
@@ -654,7 +674,7 @@ export class GridStack {
    * @example
    * see http://gridstackjs.com/demo/serialization.html
    **/
-  public load(layout: GridStackWidget[], addRemove: boolean | AddRemoveFcn = this.opts.addRemoveCB || true): GridStack {
+  public load(layout: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true): GridStack {
     let items = GridStack.Utils.sort([...layout], -1, this._prevColumn || this.getColumn()); // make copy before we mod/sort
     this._insertNotAppend = true; // since create in reverse order...
 
@@ -665,9 +685,9 @@ export class GridStack {
       this.engine.cacheLayout(items, this._prevColumn, true);
     }
 
-    // if given a different callback, temporally set it as global option to creating will use it
-    const prevCB = this.opts.addRemoveCB;
-    if (typeof(addRemove) === 'function') this.opts.addRemoveCB = addRemove as AddRemoveFcn;
+    // if given a different callback, temporally set it as global option so creating will use it
+    const prevCB = GridStack.addRemoveCB;
+    if (typeof(addRemove) === 'function') GridStack.addRemoveCB = addRemove as AddRemoveFcn;
 
     let removed: GridStackNode[] = [];
     this.batchUpdate();
@@ -678,8 +698,8 @@ export class GridStack {
       copyNodes.forEach(n => {
         let item = items.find(w => n.id === w.id);
         if (!item) {
-          if (this.opts.addRemoveCB)
-            this.opts.addRemoveCB(this.el, n, false, false);
+          if (GridStack.addRemoveCB)
+            GridStack.addRemoveCB(this.el, n, false, false);
           removed.push(n); // batch keep track
           this.removeWidget(n.el, true, false);
         }
@@ -709,7 +729,7 @@ export class GridStack {
     // after commit, clear that flag
     delete this._ignoreLayoutsNodeChange;
     delete this._insertNotAppend;
-    prevCB ? this.opts.addRemoveCB = prevCB : delete this.opts.addRemoveCB;
+    prevCB ? GridStack.addRemoveCB = prevCB : delete GridStack.addRemoveCB;
     return this;
   }
 

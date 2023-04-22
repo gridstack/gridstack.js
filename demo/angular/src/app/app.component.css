@@ -5,3 +5,7 @@ button.active {
   color: #fff;
   background-color: #007bff;
 }
+
+.text-container {
+  display: flex;
+}
