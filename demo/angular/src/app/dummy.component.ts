@@ -5,7 +5,7 @@
 
 // dummy testing component that will be grid items content
 
-import { Component, Type } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-a',
@@ -27,13 +27,3 @@ export class BComponent {
 })
 export class CComponent {
 }
-
-/**
- * stores the selector -> Type mapping, so we can create items dynamically from a string.
- * Unfortunately Ng doesn't provide public access to that mapping.
- */
-export const selectorToComponent: {[key: string]: Type<Object>} = {
-  'app-a': AComponent,
-  'app-b': BComponent,
-  'app-c': CComponent,
-};

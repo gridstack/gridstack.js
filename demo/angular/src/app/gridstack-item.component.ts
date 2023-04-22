@@ -18,13 +18,12 @@ export interface GridItemCompHTMLElement extends GridItemHTMLElement {
   selector: 'gridstack-item',
   template: `
     <div class="grid-stack-item-content">
-      <!-- TODO: this is where you would create the right component based on some internal type or id IFF !this.options.subGrid
-       Doing options.content for demo purpose -->
-      {{options.content}}
+      <!-- where dynamic items go based on component types, or sub-grids, etc...) -->
+      <ng-template #container></ng-template>
       <!-- any static (defined in dom) content goes here -->
       <ng-content></ng-content>
-      <!-- where dynamic items go (like sub-grids, other dynamic NgComponents, etc...) -->
-      <ng-template #container></ng-template>
+      <!-- fallback HTML content from GridStackWidget content field if used instead -->
+      {{options.content}}
     </div>`,
   styles: [`
     :host { display: block; }

@@ -31,4 +31,13 @@ import { AComponent, BComponent, CComponent } from './dummy.component';
     providers: [],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    // register all our dynamic components created in the grid
+    GridstackComponent.selectorToType = {
+      'app-a': AComponent,
+      'app-b': BComponent,
+      'app-c': CComponent,
+    };
+  }
+}

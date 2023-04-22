@@ -4,7 +4,7 @@
  */
 
 import { Utils } from './utils';
-import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts } from './types';
+import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts, SaveFcn } from './types';
 
 /** callback to update the DOM attributes since this class is generic (no HTML or other info) for items that changed - see _notify() */
 type OnChangeCB = (nodes: GridStackNode[]) => void;
@@ -43,8 +43,8 @@ export class GridStackEngine {
   protected _inColumnResize: boolean;
   /** @internal true if we have some items locked */
   protected _hasLocked: boolean;
-  /** @internal unique global internal _id counter NOT starting at 0 */
-  public static _idSeq = 1;
+  /** @internal unique global internal _id counter */
+  public static _idSeq = 0;
 
   public constructor(opts: GridStackEngineOptions = {}) {
     this.column = opts.column || 12;
@@ -334,7 +334,7 @@ export class GridStackEngine {
    */
   public prepareNode(node: GridStackNode, resizing?: boolean): GridStackNode {
     node = node || {};
-    node._id = node._id || GridStackEngine._idSeq++;
+    node._id = node._id ?? GridStackEngine._idSeq++;
 
     // if we're missing position, have the grid position us automatically (before we set them to 0,0)
     if (node.x === undefined || node.y === undefined || node.x === null || node.y === null) {
@@ -717,7 +717,7 @@ export class GridStackEngine {
 
   /** saves a copy of the largest column layout (eg 12 even when rendering oneColumnMode) so we don't loose orig layout,
    * returning a list of widgets for serialization */
-  public save(saveElement = true): GridStackNode[] {
+  public save(saveElement = true, saveCB?: SaveFcn): GridStackNode[] {
     // use the highest layout for any saved info so we can have full detail on reload #1849
     let len = this._layouts?.length;
     let layout = len && this.column !== (len - 1) ? this._layouts[len - 1] : null;
@@ -729,6 +729,7 @@ export class GridStackEngine {
       // use layout info instead if set
       if (wl) { w.x = wl.x; w.y = wl.y; w.w = wl.w; }
       Utils.removeInternalForSave(w, !saveElement);
+      if (saveCB) saveCB(n, w);
       list.push(w);
     });
     return list;
@@ -887,7 +888,7 @@ export class GridStackEngine {
   public cacheLayout(nodes: GridStackNode[], column: number, clear = false): GridStackEngine {
     let copy: GridStackNode[] = [];
     nodes.forEach((n, i) => {
-      n._id = n._id || GridStackEngine._idSeq++; // make sure we have an id in case this is new layout, else re-use id already set
+      n._id = n._id ?? GridStackEngine._idSeq++; // make sure we have an id in case this is new layout, else re-use id already set
       copy[i] = {x: n.x, y: n.y, w: n.w, _id: n._id} // only thing we change is x,y,w and id to find it back
     });
     this._layouts = clear ? [] : this._layouts || []; // use array to find larger quick
@@ -901,7 +902,7 @@ export class GridStackEngine {
    * @param column corresponding column index to save it under
    */
   public cacheOneLayout(n: GridStackNode, column: number): GridStackEngine {
-    n._id = n._id || GridStackEngine._idSeq++;
+    n._id = n._id ?? GridStackEngine._idSeq++;
     let l: GridStackNode = {x: n.x, y: n.y, w: n.w, _id: n._id}
     if (n.autoPosition) { delete l.x; delete l.y; l.autoPosition = true; }
     this._layouts = this._layouts || [];
