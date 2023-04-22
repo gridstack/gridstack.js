@@ -3,7 +3,7 @@
  * Copyright (c) 2022 Alain Dumesny - see GridStack root license
  */
 
-import { ChangeDetectionStrategy, Component, ElementRef, Input, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
 import { GridItemHTMLElement, GridStackNode } from 'gridstack';
 
 /** store element to Ng Class pointer back */
@@ -28,7 +28,7 @@ export interface GridItemCompHTMLElement extends GridItemHTMLElement {
   styles: [`
     :host { display: block; }
   `],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // changeDetection: ChangeDetectionStrategy.OnPush, // IFF you want to optimize and control when ChangeDetection needs to happen...
 })
 export class GridstackItemComponent implements OnDestroy {
 
@@ -42,8 +42,7 @@ export class GridstackItemComponent implements OnDestroy {
       this.el.gridstackNode.grid.update(this.el, val);
     } else {
       // store our custom element in options so we can update it and not re-create a generic div!
-      val.el = this.el;
-      this._options = val;
+      this._options = {...val, el: this.el};
     }
   }
   /** return the latest grid options (from GS once built, otherwise initial values) */

@@ -17,7 +17,7 @@
    // gridstack.min.css and other custom styles should be included in global styles.scss
  })
  export class AngularSimpleComponent implements OnInit {
-   private items: GridStackWidget[] = [
+   public items: GridStackWidget[] = [
      { x: 0, y: 0, w: 9, h: 6, content: '0' },
      { x: 9, y: 0, w: 3, h: 3, content: '1' },
      { x: 9, y: 3, w: 3, h: 3, content: '2' },
