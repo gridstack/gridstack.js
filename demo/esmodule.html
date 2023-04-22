@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ES Module demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+
+</head>
+<body>
+  <h1>ES Module loading demo</h1>
+  <div class="grid-stack"></div>
+
+  <!-- loading GS as an ES module instead of commonjs all.js. get CORS error though -->
+  <script type="module">
+    import { GridStack } from '../dist/gridstack.js';
+
+    let items = [{x: 1, y: 1}, {x: 2, y: 2, w: 3}];
+    let count = 0;
+    items.forEach(e => e.content = String(count++));
+
+    GridStack.init({float: true}).load(items);
+  </script>
+</body>
+</html>
