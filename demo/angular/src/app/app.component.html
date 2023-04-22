@@ -35,7 +35,6 @@
   <button (click)="newLayoutNgFor()">new layout</button>
   <gridstack [options]="gridOptions" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">
     <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n">
-      {{n.content}}
     </gridstack-item>
   </gridstack>
 </div>
@@ -46,6 +45,9 @@
   <button (click)="delete()">remove item</button>
   <button (click)="modify()">modify item</button>
   <button (click)="newLayout()">new layout</button>
+  <button (click)="saveGrid()">Save</button>
+  <button (click)="clearGrid()">Clear</button>
+  <button (click)="loadGrid()">Load</button>
   <gridstack [options]="gridOptionsFull" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">
   </gridstack>
 </div>
@@ -57,8 +59,8 @@
   <button (click)="delete()">remove item</button>
   <button (click)="modify()">modify item</button>
   <button (click)="newLayout()">new layout</button>
-  <button (click)="clearGrid()">Clear</button>
   <button (click)="saveGrid()">Save</button>
+  <button (click)="clearGrid()">Clear</button>
   <button (click)="loadGrid()">Load</button>
   <!-- TODO: addGrid() in code for testing instead ? -->
   <gridstack [options]="nestedGridOptions" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">

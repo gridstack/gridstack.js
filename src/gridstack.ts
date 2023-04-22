@@ -178,12 +178,12 @@ export class GridStack {
    * add = false: the item will be removed from DOM (if not already done)
    * grid = true|false for grid vs grid-items
    */
-  public static addRemoveCB: AddRemoveFcn;
+  public static addRemoveCB?: AddRemoveFcn;
 
   /**
    * callback during saving to application can inject extra data for each widget, on top of the grid layout properties
    */
-  public static saveCB: SaveFcn;
+  public static saveCB?: SaveFcn;
 
   /** scoping so users can call GridStack.Utils.sort() for example */
   public static Utils = Utils;
@@ -899,11 +899,11 @@ export class GridStack {
     if (!removeDOM) {
       this.removeAll(removeDOM);
       this.el.classList.remove(this._styleSheetClass);
+      this.el.removeAttribute('gs-current-row');
     } else {
       this.el.parentNode.removeChild(this.el);
     }
     this._removeStylesheet();
-    this.el.removeAttribute('gs-current-row');
     if (this.parentGridItem) delete this.parentGridItem.subGrid;
     delete this.parentGridItem;
     delete this.opts;
@@ -1286,7 +1286,7 @@ export class GridStack {
   /** @internal */
   protected _triggerAddEvent(): GridStack {
     if (this.engine.batchMode) return this;
-    if (this.engine.addedNodes && this.engine.addedNodes.length > 0) {
+    if (this.engine.addedNodes?.length) {
       if (!this._ignoreLayoutsNodeChange) {
         this.engine.layoutsNodesChange(this.engine.addedNodes);
       }
@@ -1301,7 +1301,7 @@ export class GridStack {
   /** @internal */
   public _triggerRemoveEvent(): GridStack {
     if (this.engine.batchMode) return this;
-    if (this.engine.removedNodes && this.engine.removedNodes.length > 0) {
+    if (this.engine.removedNodes?.length) {
       this._triggerEvent('removed', this.engine.removedNodes);
       this.engine.removedNodes = [];
     }

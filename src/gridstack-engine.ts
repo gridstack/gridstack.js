@@ -538,7 +538,7 @@ export class GridStackEngine {
 
   public removeAll(removeDOM = true): GridStackEngine {
     delete this._layouts;
-    if (this.nodes.length === 0) return this;
+    if (!this.nodes.length) return this;
     removeDOM && this.nodes.forEach(n => n._removeDOM = true); // let CB remove actual HTML (used to set _id to null, but then we loose layout info)
     this.removedNodes = this.nodes;
     this.nodes = [];
