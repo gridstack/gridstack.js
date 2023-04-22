@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GridStack, GridStackOptions, GridStackWidget } from 'gridstack';
-import { GridstackComponent, NgGridStackWidget, elementCB, nodesCB } from './gridstack.component';
+import { GridstackComponent, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from './gridstack.component';
+import { AngularSimpleComponent } from './simple';
+import { AngularNgForTestComponent } from './ngFor';
+import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 
 // unique ids sets for each item for correct ngFor updating
 let ids = 1;
@@ -11,12 +14,15 @@ let ids = 1;
 })
 export class AppComponent implements OnInit {
 
+  @ViewChild(AngularSimpleComponent) case0Comp?: AngularSimpleComponent;
+  @ViewChild(AngularNgForTestComponent) case1Comp?: AngularNgForTestComponent;
+  @ViewChild(AngularNgForCmdTestComponent) case2Comp?: AngularNgForCmdTestComponent;
   @ViewChild(GridstackComponent) gridComp?: GridstackComponent;
   @ViewChild('origTextArea', {static: true}) origTextEl?: ElementRef<HTMLTextAreaElement>;
   @ViewChild('textArea', {static: true}) textEl?: ElementRef<HTMLTextAreaElement>;
 
   // which sample to show
-  public show = 6; // nested
+  public show = 6;
 
   /** sample grid options and items to load... */
   public items: GridStackWidget[] = [
@@ -74,15 +80,37 @@ export class AppComponent implements OnInit {
     // setTimeout(() => {
     //   if (!this.gridComp) return;
     //   this.saveGrid();
-    //   this.clearGrid();
-    //   // this.loadGrid();
+    //   // this.clearGrid();
+    //   this.delete();
+    //   this.delete();
+    //   this.loadGrid();
+    //   this.delete();
+    //   this.delete();
     // }, 500)
   }
 
   public onShow(val: number) {
     this.show = val;
-    const data = val === 6 ? this.nestedGridOptions : this.gridOptionsFull;
-    if (this.origTextEl) this.origTextEl.nativeElement.value = JSON.stringify(data, null, '  ');
+
+    // set globally our method to create the right widget type
+    if (val < 3) GridStack.addRemoveCB = undefined;
+    else GridStack.addRemoveCB = gsCreateNgComponents;
+
+    // let the switch take affect then load the starting values (since we sometimes save())
+    setTimeout(() => {
+      let data;
+      switch(val) {
+        case 0: data = this.case0Comp?.items; break;
+        case 1: data = this.case1Comp?.items; break;
+        case 2: data = this.case2Comp?.items; break;
+        case 3: data = this.gridComp?.grid?.save(true, true); break;
+        case 4: data = this.items; break;
+        case 5: data = this.gridOptionsFull; break;
+        case 6: data = this.nestedGridOptions; break;
+      }
+      if (this.origTextEl) this.origTextEl.nativeElement.value = JSON.stringify(data, null, '  ');
+    });
+    if (this.textEl) this.textEl.nativeElement.value = '';
 
     // if (val === 6 && !this.gridComp) {
     //   const cont: HTMLElement | null = document.querySelector('.grid-container');
