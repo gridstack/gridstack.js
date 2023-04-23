@@ -1,4 +1,4 @@
-# gridstack.js
+be# gridstack.js
 
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 [![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
@@ -248,17 +248,13 @@ Better yet, here is a SASS code snippet which can make life much easier (Thanks 
 
 ```sass
 .grid-stack > .grid-stack-item {
-  $gridstack-columns: 2;
+  $gridstack-columns: 12;
 
   min-width: calc(100% / $gridstack-columns);
 
   @for $i from 0 through $gridstack-columns {
-    &[gs-w='#{$i}'] {
-      width: (calc(100% / $gridstack-columns)) * $i;
-    }
-    &[gs-x='#{$i}'] {
-      left: (calc(100% / $gridstack-columns)) * $i;
-    }
+    &[gs-w='#{$i}'] { width: (calc(100% / $gridstack-columns)) * $i; }
+    &[gs-x='#{$i}'] { left: (calc(100% / $gridstack-columns)) * $i; }
   }
 }
 ```
