@@ -216,7 +216,7 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
 
       // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
       const type = (w as NgGridStackWidget).type;
-      if (!w.subGrid && type && GridstackComponent.selectorToType[type]) {
+      if (!w.subGridOpts && type && GridstackComponent.selectorToType[type]) {
         gridItem?.container?.createComponent(GridstackComponent.selectorToType[type]);
       }
 

@@ -469,8 +469,8 @@ export class GridStack {
     this._updateContainerHeight();
 
     // see if there is a sub-grid to create
-    if (node.subGrid) {
-      this.makeSubGrid(node.el, undefined, undefined, false); //node.subGrid will be used as option in method, no need to pass
+    if (node.subGridOpts) {
+      this.makeSubGrid(node.el, node.subGridOpts, undefined, false); // node.subGrid will be used as option in method, no need to pass
     }
 
     // if we're adding an item into 1 column (_prevColumn is set only when going to 1) make sure
@@ -498,18 +498,18 @@ export class GridStack {
     if (!node) {
       node = this.makeWidget(el).gridstackNode;
     }
-    if ((node.subGrid as GridStack)?.el) return node.subGrid as GridStack; // already done
+    if (node.subGrid?.el) return node.subGrid; // already done
 
     // find the template subGrid stored on a parent as fallback...
     let subGridTemplate: GridStackOptions; // eslint-disable-next-line @typescript-eslint/no-this-alias
     let grid: GridStack = this;
     while (grid && !subGridTemplate) {
-      subGridTemplate = grid.opts?.subGrid;
+      subGridTemplate = grid.opts?.subGridOpts;
       grid = grid.parentGridItem?.grid;
     }
     //... and set the create options
-    ops = Utils.cloneDeep({...(subGridTemplate || {}), children: undefined, ...(ops || node.subGrid as GridStackOptions)});
-    node.subGrid = ops;
+    ops = Utils.cloneDeep({...(subGridTemplate || {}), children: undefined, ...(ops || node.subGridOpts)});
+    node.subGridOpts = ops;
 
     // if column special case it set, remember that flag and set default
     let autoColumn: boolean;
@@ -527,7 +527,7 @@ export class GridStack {
       this._removeDD(node.el); // remove D&D since it's set on content div
       newItemOpt = {...node, x:0, y:0};
       Utils.removeInternalForSave(newItemOpt);
-      delete newItemOpt.subGrid;
+      delete newItemOpt.subGridOpts;
       if (node.content) {
         newItemOpt.content = node.content;
         delete node.content;
@@ -625,9 +625,10 @@ export class GridStack {
       } else {
         if (!saveContent && !saveCB) { delete n.content; }
         // check for nested grid
-        if ((n.subGrid as GridStack)?.el) {
-          const listOrOpt = (n.subGrid as GridStack).save(saveContent, saveGridOpt, saveCB);
-          n.subGrid = (saveGridOpt ? listOrOpt : {children: listOrOpt}) as GridStackOptions;
+        if (n.subGrid?.el) {
+          const listOrOpt = n.subGrid.save(saveContent, saveGridOpt, saveCB);
+          n.subGridOpts = (saveGridOpt ? listOrOpt : {children: listOrOpt}) as GridStackOptions;
+          delete n.subGrid;
         }
       }
       delete n.el;
@@ -711,10 +712,10 @@ export class GridStack {
       let item = (w.id || w.id === 0) ? this.engine.nodes.find(n => n.id === w.id) : undefined;
       if (item) {
         this.update(item.el, w);
-        if (w.subGrid && (w.subGrid as GridStackOptions).children) { // update any sub grid as well
+        if (w.subGridOpts?.children) { // update any sub grid as well
           let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
           if (sub && sub.gridstack) {
-            sub.gridstack.load((w.subGrid as GridStackOptions).children); // TODO: support updating grid options ?
+            sub.gridstack.load(w.subGridOpts.children); // TODO: support updating grid options ?
             this._insertNotAppend = true; // got reset by above call
           }
         }
@@ -1138,7 +1139,7 @@ export class GridStack {
     this._setupAcceptWidget();
     this.engine.nodes.forEach(n => {
       this._prepareDragDropByNode(n); // either delete or init Drag&drop
-      if (n.subGrid && recurse) (n.subGrid as GridStack).setStatic(val, updateClass, recurse);
+      if (n.subGrid && recurse) n.subGrid.setStatic(val, updateClass, recurse);
     });
     if (updateClass) { this._setStaticClass(); }
     return this;
@@ -1553,7 +1554,7 @@ export class GridStack {
 
     // finally update any nested grids
     this.engine.nodes.forEach(n => {
-      if (n.subGrid) {(n.subGrid as GridStack).onParentResize()}
+      if (n.subGrid) n.subGrid.onParentResize()
     });
 
     return this;
@@ -1757,7 +1758,7 @@ export class GridStack {
     this.opts.disableDrag = !doEnable; // FIRST before we update children as grid overrides #1658
     this.engine.nodes.forEach(n => {
       this.movable(n.el, doEnable);
-      if (n.subGrid && recurse) (n.subGrid as GridStack).enableMove(doEnable, recurse);
+      if (n.subGrid && recurse) n.subGrid.enableMove(doEnable, recurse);
     });
     return this;
   }
@@ -1771,7 +1772,7 @@ export class GridStack {
     this.opts.disableResize = !doEnable; // FIRST before we update children as grid overrides #1658
     this.engine.nodes.forEach(n => {
       this.resizable(n.el, doEnable);
-      if (n.subGrid && recurse) (n.subGrid as GridStack).enableResize(doEnable, recurse);
+      if (n.subGrid && recurse) n.subGrid.enableResize(doEnable, recurse);
     });
     return this;
   }
@@ -1987,7 +1988,7 @@ export class GridStack {
         if (!wasAdded) return false;
         el.gridstackNode = node;
         node.el = el;
-        let subGrid = (node.subGrid as GridStack)?.el?.gridstack; // set when actual sub-grid present
+        let subGrid = node.subGrid?.el?.gridstack; // set when actual sub-grid present
         // @ts-ignore
         Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
         Utils.removePositioningStyles(el);// @ts-ignore
@@ -2263,7 +2264,7 @@ export class GridStack {
       node._lastUiPosition = ui.position;
       this.engine.cacheRects(cellWidth, cellHeight, mTop, mRight, mBottom, mLeft);
       delete node._skipDown;
-      if (resizing && node.subGrid) { (node.subGrid as GridStack).onParentResize(); }// @ts-ignore
+      if (resizing && node.subGrid) node.subGrid.onParentResize();
       this._extraDragRow = 0;// @ts-ignore
       this._updateContainerHeight();
 
