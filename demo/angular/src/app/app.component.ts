@@ -51,8 +51,8 @@ export class AppComponent implements OnInit {
   private sub2: NgGridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
   private subChildren: NgGridStackWidget[] = [
     {x:0, y:0, content: 'regular item'},
-    {x:1, y:0, w:4, h:4, subGrid: {children: this.sub1, id:'sub1_grid', class: 'sub1', ...this.subOptions}},
-    {x:5, y:0, w:3, h:4, subGrid: {children: this.sub2, id:'sub2_grid', class: 'sub2', ...this.subOptions}},
+    {x:1, y:0, w:4, h:4, subGridOpts: {children: this.sub1, id:'sub1_grid', class: 'sub1', ...this.subOptions}},
+    {x:5, y:0, w:3, h:4, subGridOpts: {children: this.sub2, id:'sub2_grid', class: 'sub2', ...this.subOptions}},
   ]
   public nestedGridOptions: GridStackOptions = { // main grid options
     cellHeight: 50,
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
   constructor() {
     // give them content and unique id to make sure we track them during changes below...
     [...this.items, ...this.subChildren, ...this.sub1, ...this.sub2].forEach((w: NgGridStackWidget) => {
-      if (!w.type && !w.subGrid) w.content = `item ${ids}`;
+      if (!w.type && !w.subGridOpts) w.content = `item ${ids}`;
       w.id = String(ids++);
     });
   }
@@ -141,9 +141,10 @@ export class AppComponent implements OnInit {
     let grid = this.gridComp?.grid;
     if (!grid) return;
     let node = grid.engine.nodes[0];
-    if (node?.subGrid) {
-      grid = node.subGrid as GridStack;
-      node = grid?.engine.nodes[0];
+    // delete any children first before subGrid itself...
+    if (node?.subGrid && node.subGrid.engine.nodes.length) {
+      grid = node.subGrid;
+      node = grid.engine.nodes[0];
     }
     if (node) grid.removeWidget(node.el!);
   }

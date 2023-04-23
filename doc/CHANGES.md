@@ -91,6 +91,7 @@ Change log
 * add: `GridStack.saveCB` global callback for each item during save so app can insert any custom data before serializing it. `save()` can now be passed optional callback
 * move: `GridStack.addRemoveCB` is now global instead of grid option. `load()` can still be passed different optional callback
 * fix: addGrid() to handle passing an existing initialized grid already
+* break: `GridStackOptions.subGrid` -> `GridStackOptions.subGridOpts`. We now have `GridStackWidget.subGridOpts` vs `GridStackNode.subGrid` (subclass) rather than try to merge the two at runtime since very different types...
 
 ## 7.3.0 (2023-04-01)
 * feat [#2229](https://github.com/gridstack/gridstack.js/pull/2229) support nonce for CSP. Thank you [@jedwards1211](https://github.com/jedwards1211)

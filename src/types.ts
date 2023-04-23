@@ -252,8 +252,8 @@ export interface GridStackOptions {
   /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
   styleInHead?: boolean;
 
-  /** list of differences in options for automatically created sub-grids under us */
-  subGrid?: GridStackOptions;
+  /** list of differences in options for automatically created sub-grids under us (inside our grid-items) */
+  subGridOpts?: GridStackOptions;
 
   /** enable/disable the creation of sub-grids on the fly by dragging items completely
    * over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that. */
@@ -318,8 +318,8 @@ export interface GridStackWidget extends GridStackPosition {
   id?: numberOrString;
   /** html to append inside as content */
   content?: string;
-  /** optional nested grid options and list of children, which then turns into actual instance at runtime */
-  subGrid?: GridStackOptions | GridStack;
+  /** optional nested grid options and list of children, which then turns into actual instance at runtime to get options from */
+  subGridOpts?: GridStackOptions;
 }
 
 /** Drag&Drop resize options */
@@ -390,8 +390,10 @@ export interface DDUIData {
 export interface GridStackNode extends GridStackWidget {
   /** pointer back to HTML element */
   el?: GridItemHTMLElement;
-  /** pointer back to Grid instance */
+  /** pointer back to parent Grid instance */
   grid?: GridStack;
+  /** actual sub-grid instance */
+  subGrid?: GridStack;
   /** @internal internal id used to match when cloning engines or saving column layouts */
   _id?: number;
   /** @internal */
