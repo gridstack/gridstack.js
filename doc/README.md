@@ -94,7 +94,7 @@ gridstack.js API
 - `column` - Integer > 0 (default 12) which can change on the fly with `column(N)` API, or `'auto'` for nested grids to size themselves to the parent grid container (to make sub-items are the same size). See [column](http://gridstackjs.com/demo/column.html) and [nested](http://gridstackjs.com/demo/nested.html)
 - `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
 - `disableDrag` - disallows dragging of widgets (default: `false`).
-- `disableOneColumnMode` - disables the oneColumnMode when the grid width is less than minW (default: 'false')
+- `disableOneColumnMode` - Prevents the grid container from being displayed in "one column mode", even when the container's width is smaller than the value of oneColumnSize (default value of oneColumnSize is 768px). By default, this option is set to "false".
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `dragIn` - specify the class of items that can be dragged into grids
   * example: `dragIn: '.newWidget'`.
@@ -121,7 +121,7 @@ gridstack.js API
 - `minRow` - minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
 - `nonce` - If you are using a nonce-based Content Security Policy, pass your nonce here and
 GridStack will add it to the <style> elements it creates.
-- `oneColumnSize` - minimal width. If grid width is less than or equal to, grid will be shown in one-column mode (default: `768`)
+- `oneColumnSize` - When the width of the grid is equal to or less than the value set in oneColumnSize, the grid will be displayed in one-column mode. By default, the value of this option is set to "768".
 - `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
