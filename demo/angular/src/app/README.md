@@ -15,7 +15,7 @@ HTML
 Code
 ```ts
 import { GridStack, GridStackOptions } from 'gridstack';
-import { gsCreateNgComponents } from './gridstack.component';
+import { gsCreateNgComponents } from 'gridstack/dist/ng/gridstack.component';
 
 constructor() {
   // use the built in component creation code
@@ -48,7 +48,7 @@ Code
 ```ts
 import { Component } from '@angular/core';
 import { GridStack, GridStackOptions } from 'gridstack';
-import { GridstackComponent, gsCreateNgComponents, NgGridStackWidget, nodesCB } from './gridstack.component';
+import { GridstackComponent, gsCreateNgComponents, NgGridStackWidget, nodesCB } from 'gridstack/dist/ng/gridstack.component';
 
 // some custom components
 @Component({
@@ -107,7 +107,7 @@ HTML
 Code
 ```javascript
 import { GridStackOptions, GridStackWidget } from 'gridstack';
-import { nodesCB } from './gridstack.component';
+import { nodesCB } from 'gridstack/dist/ng/gridstack.component';
 
 /** sample grid options and items to load... */
 public gridOptions: GridStackOptions = {
@@ -138,8 +138,10 @@ to build the demo, go to demo/angular and run `yarn` + `yarn start` and Navigate
 
 ## Caveats 
 
- - This wrapper needs v8.0+ to run as it needs the latest changes
- - Code isn't compiled into a lib YET. You'll need to copy those files. Let me know (slack) if you are using it...
+ - This wrapper needs: 
+    - gridstack v8.0+ to run as it needs the latest changes (use older version to match gs versions)
+    - Angular 13+ for dynamic createComponent() API
+ - Code in now shipped starting with v8.0+ in dist/ng for people to use directly!
 
  ## *ngFor Caveats
  - This wrapper handles well ngFor loops, but if you're using a trackBy function (as I would recommend) and no element id change after an update,

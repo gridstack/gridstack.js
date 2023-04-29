@@ -44,6 +44,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Migrating to v5](#migrating-to-v5)
   - [Migrating to v6](#migrating-to-v6)
   - [Migrating to v7](#migrating-to-v7)
+  - [Migrating to v8](#migrating-to-v8)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -443,6 +444,13 @@ The main difference is you only need to include gridstack.js and get D&D (deskto
 ## Migrating to v7
 
 New addition, no API breakage per say. See release notes about creating sub-grids on the fly.
+
+## Migrating to v8
+
+Possible breaking change if you use nested grid JSON format, or original Angular wrapper. Also target is now ES2020 (see release notes).
+* `GridStackOptions.subGrid` -> `GridStackOptions.subGridOpts` rename
+* We now have `GridStackWidget.subGridOpts` vs `GridStackNode.subGrid` (was `subGrid` with both types which is error prone)
+* `GridStackOptions.addRemoveCB` -> `GridStack.addRemoveCB` is now global instead of grid option
 
 # jQuery Application
 
