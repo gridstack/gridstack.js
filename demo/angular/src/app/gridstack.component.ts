@@ -24,6 +24,10 @@ export interface NgGridStackWidget extends GridStackWidget {
 export interface NgGridStackNode extends GridStackNode {
   type?: string; // component type to create as content
 }
+export interface NgGridStackOptions extends GridStackOptions {
+  children?: NgGridStackWidget[];
+  subGridOpts?: NgGridStackOptions;
+}
 
 /** store element to Ng Class pointer back */
 export interface GridCompHTMLElement extends GridHTMLElement {
@@ -194,43 +198,43 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
  * can be used when a new item needs to be created, which we do as a Angular component, or deleted (skip)
  **/
 export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w: NgGridStackWidget | GridStackOptions, add: boolean, isGrid: boolean): HTMLElement | undefined {
-  if (add) {
-    if (!host) return;
-    // create the grid item dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
-    if (isGrid) {
-      let grid: GridstackComponent | undefined;
-      const gridItemComp = (host.parentElement as GridItemCompHTMLElement)._gridItemComp;
-      if (gridItemComp) {
-        grid = gridItemComp?.container?.createComponent(GridstackComponent)?.instance;
-      } else {
-        // TODO: figure out how to creat ng component inside regular Div. need to access app injectors...
-        // const hostElement: Element = host;
-        // const environmentInjector: EnvironmentInjector;
-        // grid = createComponent(GridstackComponent, {environmentInjector, hostElement})?.instance;
-      }
-      if (grid) grid.options = w as GridStackOptions;
-      return grid?.el;
+  // only care about creating ng components here...
+  if (!add || !host) return;
+
+  // create the component dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
+  if (isGrid) {
+    let grid: GridstackComponent | undefined;
+    const gridItemComp = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp;
+    if (gridItemComp) {
+      grid = gridItemComp.container?.createComponent(GridstackComponent)?.instance;
     } else {
-      const gridComp = (host as GridCompHTMLElement)._gridComp;
-      const gridItem = gridComp?.container?.createComponent(GridstackItemComponent)?.instance;
-
-      // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
-      const type = (w as NgGridStackWidget).type;
-      if (!w.subGridOpts && type && GridstackComponent.selectorToType[type]) {
-        gridItem?.container?.createComponent(GridstackComponent.selectorToType[type]);
-      }
-
-      return gridItem?.el;
+      // TODO: figure out how to create ng component inside regular Div. need to access app injectors...
+      // const hostElement: Element = host;
+      // const environmentInjector: EnvironmentInjector;
+      // grid = createComponent(GridstackComponent, {environmentInjector, hostElement})?.instance;
     }
+    if (grid) grid.options = w as GridStackOptions;
+    return grid?.el;
+  } else {
+    const gridComp = (host as GridCompHTMLElement)._gridComp;
+    const gridItem = gridComp?.container?.createComponent(GridstackItemComponent)?.instance;
+
+    // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
+    const selector = (w as NgGridStackWidget).type;
+    const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
+    if (!w.subGridOpts && type) {
+      gridItem?.container?.createComponent(type);
+    }
+
+    return gridItem?.el;
   }
-  return;
 }
 
 /**
  * can be used when saving the grid - make sure we save the content from the field (not HTML as we get ng markups)
  * and can put the extra info of type, otherwise content
  */
-export function gsSaveAdditionNgInfo(n: NgGridStackNode, w: NgGridStackWidget) {
+export function gsSaveAdditionalNgInfo(n: NgGridStackNode, w: NgGridStackWidget) {
   if (n.type) w.type = n.type;
   else if (n.content) w.content = n.content;
 }

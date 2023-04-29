@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GridStack, GridStackOptions, GridStackWidget } from 'gridstack';
-import { GridstackComponent, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from './gridstack.component';
+import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from './gridstack.component';
 import { AngularSimpleComponent } from './simple';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
     {x:1, y:0, w:4, h:4, subGridOpts: {children: this.sub1, id:'sub1_grid', class: 'sub1', ...this.subOptions}},
     {x:5, y:0, w:3, h:4, subGridOpts: {children: this.sub2, id:'sub2_grid', class: 'sub2', ...this.subOptions}},
   ]
-  public nestedGridOptions: GridStackOptions = { // main grid options
+  public nestedGridOptions: NgGridStackOptions = { // main grid options
     cellHeight: 50,
     margin: 5,
     minRow: 2, // don't collapse when empty
@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
     id: 'main',
     children: this.subChildren
   };
-  private serializedData?: GridStackOptions;
+  private serializedData?: NgGridStackOptions;
 
   constructor() {
     // give them content and unique id to make sure we track them during changes below...

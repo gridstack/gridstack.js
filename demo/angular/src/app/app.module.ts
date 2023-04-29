@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { GridstackItemComponent } from './gridstack-item.component';
-import { GridstackComponent, gsCreateNgComponents, gsSaveAdditionNgInfo } from './gridstack.component';
+import { GridstackComponent, gsCreateNgComponents, gsSaveAdditionalNgInfo } from './gridstack.component';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
@@ -38,6 +38,6 @@ export class AppModule {
     GridstackComponent.addComponentToSelectorType([AComponent, BComponent, CComponent]);
     // set globally our method to create the right widget type
     GridStack.addRemoveCB = gsCreateNgComponents; // DONE in case switcher onShow() as well
-    GridStack.saveCB = gsSaveAdditionNgInfo;
+    GridStack.saveCB = gsSaveAdditionalNgInfo;
   }
 }
