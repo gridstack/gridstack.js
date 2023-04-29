@@ -1,5 +1,6 @@
 coverage
 dist
+dist_save
 *.tgz
 *.zip
 demo/angular/node_modules/*

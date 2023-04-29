@@ -45,19 +45,19 @@
     let main = [{x:0, y:0}, {x:0, y:1}, {x:1, y:0}]
     let sub1 = [{x:0, y:0}];
     let sub0 = [{x:0, y:0}, {x:1, y:0}];
-    // let sub0 = [{x:0, y:0}, {x:1, y:0}, {x:1, y:1, h:2, subGrid: {children: sub1, ...subOptions}}];
+    // let sub0 = [{x:0, y:0}, {x:1, y:0}, {x:1, y:1, h:2, subGridOpts: {children: sub1, ...subOptions}}];
     let options = { // main grid options
       cellHeight: 50,
       margin: 5,
       minRow: 2, // don't collapse when empty
       acceptWidgets: true,
-      subGrid: subOptions,
+      subGridOpts: subOptions,
       subGridDynamic: true, // v7 api to create sub-grids on the fly
       children: [
         ...main,
-        {x:2, y:0, w:2, h:3, id: 'sub0', subGrid: {children: sub0, ...subOptions}},
-        {x:4, y:0, h:2, id: 'sub1', subGrid: {children: sub1, ...subOptions}},
-        // {x:2, y:0, w:2, h:3, subGrid: {children: [...sub1, {x:0, y:1, subGrid: subOptions}], ...subOptions}/*,content: "<div>nested grid here</div>"*/},
+        {x:2, y:0, w:2, h:3, id: 'sub0', subGridOpts: {children: sub0, ...subOptions}},
+        {x:4, y:0, h:2, id: 'sub1', subGridOpts: {children: sub1, ...subOptions}},
+        // {x:2, y:0, w:2, h:3, subGridOpts: {children: [...sub1, {x:0, y:1, subGridOpts: subOptions}], ...subOptions}/*,content: "<div>nested grid here</div>"*/},
       ]
     };
     let count = 0;
