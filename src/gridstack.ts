@@ -894,6 +894,7 @@ export class GridStack {
    */
   public destroy(removeDOM = true): GridStack {
     if (!this.el) return; // prevent multiple calls
+    this.offAll();
     this._updateWindowResizeEvent(true);
     this.setStatic(true, false); // permanently removes DD but don't set CSS class (we're going away)
     this.setAnimation(false);
@@ -1061,6 +1062,12 @@ export class GridStack {
     }
     delete this._gsEventHandler[name];
 
+    return this;
+  }
+
+  /** remove all event handlers */
+  public offAll(): GridStack {
+    Object.keys(this._gsEventHandler).forEach(key => this.off(key));
     return this;
   }
 
