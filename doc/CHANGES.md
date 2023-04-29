@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [8.0.0-dev (TBD)](#800-dev-tbd)
 - [8.0.0 (2023-04-29)](#800-2023-04-29)
 - [7.3.0 (2023-04-01)](#730-2023-04-01)
 - [7.2.3 (2023-02-02)](#723-2023-02-02)
@@ -82,6 +83,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 8.0.0-dev (TBD)
+* feat: [#2275](https://github.com/gridstack/gridstack.js/issues/2275) `setupDragIn()` now can take an array or elements (in addition to selector string) and optional parent root (for shadow DOM support)
 
 ## 8.0.0 (2023-04-29)
 * package is now ES2020 (TS exported files), webpack all.js still umd (better than commonjs for browsers), still have es5/ files unchanged (for now)

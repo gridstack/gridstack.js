@@ -266,7 +266,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       helper = Utils.cloneNode(this.el);
     }
     if (!document.body.contains(helper)) {
-      Utils.appendTo(helper, this.option.appendTo === 'parent' ? this.el.parentNode : this.option.appendTo);
+      Utils.appendTo(helper, this.option.appendTo === 'parent' ? this.el.parentElement : this.option.appendTo);
     }
     if (helper === this.el) {
       this.dragElementOriginStyle = DDDraggable.originStyleProp.map(prop => this.el.style[prop]);

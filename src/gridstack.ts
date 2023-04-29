@@ -1666,20 +1666,20 @@ export class GridStack {
    * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
    * Called during GridStack.init() as options, but can also be called directly (last param are used) in case the toolbar
    * is dynamically create and needs to be set later.
-   * @param dragIn string selector (ex: '.sidebar .grid-stack-item')
+   * @param dragIn string selector (ex: '.sidebar .grid-stack-item') or list of dom elements
    * @param dragInOptions options - see DDDragInOpt. (default: {handle: '.grid-stack-item-content', appendTo: 'body'}
+   * @param root optional root which defaults to document (for shadow dom)
    **/
-  public static setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt): void {
+  public static setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = document): void {
     if (dragInOptions?.pause !== undefined) {
       DDManager.pauseDrag = dragInOptions.pause;
     }
 
-    if (typeof dragIn === 'string') {
-      dragInOptions = {...dragInDefaultOptions, ...(dragInOptions || {})};
-      Utils.getElements(dragIn).forEach(el => {
-        if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
-      });
-    }
+    dragInOptions = {...dragInDefaultOptions, ...(dragInOptions || {})};
+    let els: HTMLElement[] = (typeof dragIn === 'string') ? Utils.getElements(dragIn, root) : dragIn;
+    if (els.length) els?.forEach(el => {
+      if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
+    });
   }
 
   /**
