@@ -1,0 +1,12 @@
+/* config to publish the angular wrapper classes */
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": ".../../../../dist/ng",
+    "declaration": true,
+  },
+  "include": [
+    "./src/app/gridstack.component.ts",
+    "./src/app/gridstack-item.component.ts",
+  ],
+}

@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
-    /*
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
-   */
+    // "allowJs": true,
+    // "esModuleInterop": true,
+    // "allowSyntheticDefaultImports": true
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
