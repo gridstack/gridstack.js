@@ -19,22 +19,22 @@
     "@angular/platform-browser-dynamic": "^15.1.1",
     "@angular/router": "^15.1.1",
     "gridstack": "^8.0.0",
-    "rxjs": "~6.6.0",
+    "rxjs": "~7.8.1",
     "tslib": "^2.3.0",
-    "zone.js": "~0.11.4"
+    "zone.js": "~0.13.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.1.2",
     "@angular/cli": "^15.1.2",
     "@angular/compiler-cli": "^15.1.1",
-    "@types/jasmine": "~3.8.0",
-    "@types/node": "^12.11.1",
-    "jasmine-core": "~3.8.0",
-    "karma": "~6.3.0",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "~2.0.3",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "~1.7.0",
-    "typescript": "~4.9.4"
+    "@types/jasmine": "~4.3.1",
+    "@types/node": "^18.16.3",
+    "jasmine-core": "~4.6.0",
+    "karma": "~6.4.2",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.0.0",
+    "typescript": "<5.0"
   }
 }
