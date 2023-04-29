@@ -53,39 +53,39 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
  */
 export class Utils {
 
-  /** convert a potential selector into actual list of html elements */
-  static getElements(els: GridStackElement): HTMLElement[] {
+  /** convert a potential selector into actual list of html elements. optional root which defaults to document (for shadow dom) */
+  static getElements(els: GridStackElement, root = document): HTMLElement[] {
     if (typeof els === 'string') {
-      let list = document.querySelectorAll(els);
+      let list = root.querySelectorAll(els);
       if (!list.length && els[0] !== '.' && els[0] !== '#') {
-        list = document.querySelectorAll('.' + els);
-        if (!list.length) { list = document.querySelectorAll('#' + els) }
+        list = root.querySelectorAll('.' + els);
+        if (!list.length) { list = root.querySelectorAll('#' + els) }
       }
       return Array.from(list) as HTMLElement[];
     }
     return [els];
   }
 
-  /** convert a potential selector into actual single element */
-  static getElement(els: GridStackElement): HTMLElement {
+  /** convert a potential selector into actual single element. optional root which defaults to document (for shadow dom) */
+  static getElement(els: GridStackElement, root = document): HTMLElement {
     if (typeof els === 'string') {
       if (!els.length) return null;
       if (els[0] === '#') {
-        return document.getElementById(els.substring(1));
+        return root.getElementById(els.substring(1));
       }
       if (els[0] === '.' || els[0] === '[') {
-        return document.querySelector(els);
+        return root.querySelector(els);
       }
 
       // if we start with a digit, assume it's an id (error calling querySelector('#1')) as class are not valid CSS
       if(!isNaN(+els[0])) { // start with digit
-        return document.getElementById(els);
+        return root.getElementById(els);
       }
 
-      // finally try string, then id then class
-      let el = document.querySelector(els);
-      if (!el) { el = document.getElementById(els) }
-      if (!el) { el = document.querySelector('.' + els) }
+      // finally try string, then id, then class
+      let el = root.querySelector(els);
+      if (!el) { el = root.getElementById(els) }
+      if (!el) { el = root.querySelector('.' + els) }
       return el as HTMLElement;
     }
     return els;
@@ -452,12 +452,12 @@ export class Utils {
     return node;
   }
 
-  public static appendTo(el: HTMLElement, parent: string | HTMLElement | Node): void {
+  public static appendTo(el: HTMLElement, parent: string | HTMLElement): void {
     let parentNode: HTMLElement;
     if (typeof parent === 'string') {
-      parentNode = document.querySelector(parent as string);
+      parentNode = Utils.getElement(parent);
     } else {
-      parentNode = parent as HTMLElement;
+      parentNode = parent;
     }
     if (parentNode) {
       parentNode.appendChild(el);
