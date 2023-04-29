@@ -56,6 +56,15 @@ export class Utils {
   /** convert a potential selector into actual list of html elements. optional root which defaults to document (for shadow dom) */
   static getElements(els: GridStackElement, root = document): HTMLElement[] {
     if (typeof els === 'string') {
+
+      // Note: very common for people use to id='1,2,3' which is only legal as HTML5 id, but not CSS selectors
+      // so if we start with a number, assume it's an id and just return that one item...
+      // see https://github.com/gridstack/gridstack.js/issues/2234#issuecomment-1523796562
+      if(!isNaN(+els[0])) { // start with digit
+        const el = root.getElementById(els);
+        return el ? [el] : [];
+      }
+
       let list = root.querySelectorAll(els);
       if (!list.length && els[0] !== '.' && els[0] !== '#') {
         list = root.querySelectorAll('.' + els);
