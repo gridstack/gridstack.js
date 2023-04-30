@@ -1,4 +1,4 @@
-# gridstack.js
+be# gridstack.js
 
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 [![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
@@ -248,18 +248,16 @@ and so on.
 Better yet, here is a SASS code snippet which can make life much easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)) and you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
 
 ```sass
-@use "sass:math";
 .grid-stack > .grid-stack-item {
-
   $gridstack-columns: 12;
 
-  min-width: 100%/$gridstack-columns;
+  min-width: calc(100% / $gridstack-columns);
 
   @for $i from 0 through $gridstack-columns {
-    &[gs-w='#{$i}'] { width: (100% / $gridstack-columns) * $i; }
-    &[gs-x='#{$i}'] { left: (100% / $gridstack-columns) * $i; }
+    &[gs-w='#{$i}'] { width: (calc(100% / $gridstack-columns)) * $i; }
+    &[gs-x='#{$i}'] { left: (calc(100% / $gridstack-columns)) * $i; }
   }
-} 
+}
 ```
 
 you can also use the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/tree/master/src/gridstack-extra.scss) included in NPM package and modify to add more columns.
