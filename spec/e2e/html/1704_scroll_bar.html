@@ -36,17 +36,12 @@
   <script type="text/javascript">
     let grids = GridStack.initAll({
       acceptWidgets: true,
-      dragIn: ".newWidget", // class that can be dragged from outside
-      dragOut: false,
-      dragInOptions: {
-        appendTo: "body",
-        helper: "clone"
-      },
       removable: "#trash", // drag-out delete class
       removeTimeout: 100,
       float: true,
       row: 3,
     });
+    GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
     // let items = [{x: 0, y: 0, content: "0"}];
     // grids.forEach(grid => grid.load(items));
   </script>

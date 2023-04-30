@@ -96,13 +96,6 @@ gridstack.js API
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - Prevents the grid container from being displayed in "one column mode", even when the container's width is smaller than the value of oneColumnSize (default value of oneColumnSize is 768px). By default, this option is set to "false".
 - `disableResize` - disallows resizing of widgets (default: `false`).
-- `dragIn` - specify the class of items that can be dragged into grids
-  * example: `dragIn: '.newWidget'`.
-  * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
-- `dragInOptions` - options for items that can be dragged into grids - see `DDDragInOpt`
-  * example `dragInOptions: { appendTo: 'body', helper: 'clone', handle: '.grid-stack-item-content' }`
-  * **Note**: if you have multiple grids, it's best to call `GridStack.setupDragIn()` with same params as it only need to be done once.
-  * **Note2**: instead of 'clone' you can also pass your own function (get passed the event).
 - `draggable` - allows to override draggable options - see `DDDragOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body', scroll: true}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `engineClass` - the type of engine to create (so you can subclass) default to GridStackEngine
@@ -330,14 +323,14 @@ grids.forEach(...)
 * @param opt grids options used to initialize the grid, and list of children
 * see [nested.html](https://github.com/gridstack/gridstack.js/tree/master/demo/nested.html) demo
 
-### `setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt)`
+### `setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = document)`
 
 * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
 Called during `GridStack.init()` as options, but can also be called directly (last param are cached) in case the toolbar is dynamically create and needs to change later.
-* @param dragIn string selector (ex: `'.sidebar .grid-stack-item'`)
+* @param dragIn string selector (ex: `'.sidebar .grid-stack-item'`) or list of dom elements
 * @param dragInOptions options - see `DDDragInOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body'}`
+* @param root - default to document (for shadow dom support)
 but you will probably also want `helper: 'clone'` or your own callback function).
-
 
 ### `GridStack.registerEngine(engineClass: typeof GridStackEngine)`
 

@@ -88,6 +88,7 @@ Change log
 * feat: [#2275](https://github.com/gridstack/gridstack.js/issues/2275) `setupDragIn()` now can take an array or elements (in addition to selector string) and optional parent root (for shadow DOM support)
 * fix: [#2234](https://github.com/gridstack/gridstack.js/issues/2234) `Utils.getElements('1')` (called by removeWidget() and others) now checks for digit 'selector' (becomes an id).
 * fix: [#2213](https://github.com/gridstack/gridstack.js/issues/2213) `destroy()` now removes event handlers too
+* break: (meant to be in v8) removed `GridStackOptions.dragInOptions` since `setupDragIn()`has it replaced since 4.0
 
 ## 8.0.0 (2023-04-29)
 * package is now ES2020 (TS exported files), webpack all.js still umd (better than commonjs for browsers), still have es5/ files unchanged (for now)

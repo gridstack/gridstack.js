@@ -148,12 +148,6 @@ export interface GridStackOptions {
   /** allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', appendTo?: 'body' }) */
   draggable?: DDDragOpt;
 
-  /** @internal Use `GridStack.setupDragIn()` instead (global, not per grid). old way to allow external items to be draggable. (default: undefined) */
-  dragIn?: string;
-
-  /** @internal Use `GridStack.setupDragIn()` instead (global, not per grid).  old way to allow external items to be draggable. (default: undefined) */
-  dragInOptions?: DDDragInOpt;
-
   /** let user drag nested grid items out of a parent or not (default true - not supported yet) */
   //dragOut?: boolean;
 
