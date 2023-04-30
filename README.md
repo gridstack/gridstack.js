@@ -451,6 +451,7 @@ Possible breaking change if you use nested grid JSON format, or original Angular
 * `GridStackOptions.subGrid` -> `GridStackOptions.subGridOpts` rename
 * We now have `GridStackWidget.subGridOpts` vs `GridStackNode.subGrid` (was `subGrid` with both types which is error prone)
 * `GridStackOptions.addRemoveCB` -> `GridStack.addRemoveCB` is now global instead of grid option
+* removed `GridStackOptions.dragInOptions` since `setupDragIn()`has it replaced since 4.0
 
 # jQuery Application
 

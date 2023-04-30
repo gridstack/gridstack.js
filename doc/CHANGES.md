@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [8.0.0-dev (TBD)](#800-dev-tbd)
+- [8.0.1 (2023-04-29)](#801-2023-04-29)
 - [8.0.0 (2023-04-29)](#800-2023-04-29)
 - [7.3.0 (2023-04-01)](#730-2023-04-01)
 - [7.2.3 (2023-02-02)](#723-2023-02-02)
@@ -84,7 +84,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 8.0.0-dev (TBD)
+## 8.0.1 (2023-04-29)
 * feat: [#2275](https://github.com/gridstack/gridstack.js/issues/2275) `setupDragIn()` now can take an array or elements (in addition to selector string) and optional parent root (for shadow DOM support)
 * fix: [#2234](https://github.com/gridstack/gridstack.js/issues/2234) `Utils.getElements('1')` (called by removeWidget() and others) now checks for digit 'selector' (becomes an id).
 * fix: [#2213](https://github.com/gridstack/gridstack.js/issues/2213) `destroy()` now removes event handlers too
