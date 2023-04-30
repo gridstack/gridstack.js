@@ -49,8 +49,6 @@
     let grid = GridStack.init({ acceptWidgets: '.otherWidgetType' }, '.grid-stack.outer');
     let gridNest = GridStack.init({
       acceptWidgets: '.newWidget',
-      dragIn: '.newWidget', // class that can be dragged from outside
-      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       itemClass: 'sub',
     }, '.grid-stack.nested');
     gridNest.load([
@@ -61,6 +59,8 @@
       {x:0, y:1, w:3, content:'4'},
       {x:3, y:1, w:3, content:'5'},
     ]);
+
+    GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
     
     grid.on('added removed change', function(e, items) {
       let str = '';

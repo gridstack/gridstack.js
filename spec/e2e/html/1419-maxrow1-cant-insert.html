@@ -61,11 +61,10 @@
     let options = {
       row: 1,
       cellHeight: 120,
-      dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
-      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       acceptWidgets: true
     };
     let grid = GridStack.init(options);
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
     addEvents(grid);
     grid.addWidget({x: 0});
   </script>

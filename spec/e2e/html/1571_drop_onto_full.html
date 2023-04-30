@@ -86,11 +86,11 @@
       cellHeight: 70,
       disableOneColumnMode: true,
       float: false,
-      dragIn: '.sidebar .grid-stack-item', // class that can be dragged from outside
-      dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone or can be your function
       removable: '.trash', // drag-out delete class
       acceptWidgets: function(el) { return true; } // function example, else can be simple: true | false | '.someClass' value
     };
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
+
     let grids = GridStack.initAll(options);
     grids[0].load([{x: 4, y: 0, w: 1, h: 1}])
     grids[1].load([{x: 0, y: 0, w: 6, h: 1}])

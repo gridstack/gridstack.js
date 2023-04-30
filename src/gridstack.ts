@@ -114,7 +114,6 @@ export class GridStack {
     GridStack.getGridElements(selector).forEach(el => {
       if (!el.gridstack) {
         el.gridstack = new GridStack(el, Utils.cloneDeep(options));
-        delete options.dragIn; delete options.dragInOptions; // only need to be done once (really a static global thing, not per grid)
       }
       grids.push(el.gridstack);
     });
@@ -390,11 +389,6 @@ export class GridStack {
     if (this.opts.column != 12) {
       this.el.classList.add('grid-stack-' + this.opts.column);
     }
-
-    // legacy support to appear 'per grid` options when really global.
-    if (this.opts.dragIn) GridStack.setupDragIn(this.opts.dragIn, this.opts.dragInOptions);
-    delete this.opts.dragIn;
-    delete this.opts.dragInOptions;
 
     // dynamic grids require pausing during drag to detect over to nest vs push
     if (this.opts.subGridDynamic && !DDManager.pauseDrag) DDManager.pauseDrag = true;
