@@ -56,8 +56,6 @@
       cellHeight: 70,
       disableOneColumnMode: true,
       float: true,
-      // dragIn: '.sidebar .grid-stack-item', // add draggable to class
-      // dragInOptions: { appendTo: 'body', helper: 'clone' }, // clone
       removable: '.trash', // true or drag-out delete class
       acceptWidgets: function(el) { return true; } // function example, but can also be: true | false | '.someClass' value
     };
@@ -83,7 +81,9 @@
 
     // decide what the dropped item will be - for now just a clone but can be anything
     function myClone(event) {
-      return event.target.cloneNode(true);
+      const el = event.target.cloneNode(true);
+      el.setAttribute('gs-id', 'foo'); // TEST why clone element is not used directly on drop #2231
+      return el;
     }
 
     function toggleFloat(button, i) {
