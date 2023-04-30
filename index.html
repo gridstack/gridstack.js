@@ -371,13 +371,13 @@
     var advGrid = GridStack.init({
       margin: 5,
       acceptWidgets: true,
-      dragIn: '.newWidget',  // class that can be dragged from outside
-      dragInOptions: { appendTo: 'body', helper: 'clone' },
       removable: '#trash',
       removeTimeout: 100
-    }, '#advanced-grid');
-    advGrid.load(advanced);
+    }, '#advanced-grid')
+    .load(advanced);
     
+    GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
+
     $('#search').on('submit', function (event) {
       event.preventDefault();
       var searchTerm = $('#searchTerm').val();
