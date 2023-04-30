@@ -270,13 +270,6 @@ export class GridStack {
     if (opts.column === 'auto') {
       delete opts.column;
     }
-    // 'minWidth' legacy support in 5.1
-    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
-    let anyOpts = opts as any;
-    if (anyOpts.minWidth !== undefined) {
-      opts.oneColumnSize = opts.oneColumnSize || anyOpts.minWidth;
-      delete anyOpts.minWidth;
-    }
     // save original setting so we can restore on save
     if (opts.alwaysShowResizeHandle !== undefined) {
       (opts as InternalGridStackOptions)._alwaysShowResizeHandle = opts.alwaysShowResizeHandle;
@@ -386,9 +379,7 @@ export class GridStack {
     this.setAnimation(this.opts.animate);
 
     this._updateStyles();
-    if (this.opts.column != 12) {
-      this.el.classList.add('grid-stack-' + this.opts.column);
-    }
+    this.el.classList.add('grid-stack-' + this.opts.column);
 
     // dynamic grids require pausing during drag to detect over to nest vs push
     if (this.opts.subGridDynamic && !DDManager.pauseDrag) DDManager.pauseDrag = true;

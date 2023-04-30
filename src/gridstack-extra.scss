@@ -2,21 +2,22 @@
  * default to generate [2-11] columns as 1 (oneColumnMode) and 12 (default) are in the main css
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
-
-@use "sass:math";
-
 $gridstack-columns-start: 2 !default;
 $gridstack-columns: 11 !default;
 
+@function fixed($float) {
+  @return calc(round($float * 1000) / 1000);
+}
+
 @mixin grid-stack-items($columns) {
-  .grid-stack.grid-stack-#{$columns} {
+  .grid-stack-#{$columns} {
 
     > .grid-stack-item {
-      min-width: math.div(100%, $columns);
+      min-width: fixed(calc(100% / $columns));
 
-      @for $i from 1 through $columns {
-        &[gs-w='#{$i}'] { width: math.div(100%, $columns) * $i; }
-        &[gs-x='#{$i}'] { left: math.div(100%, $columns) * $i; }
+      @for $i from 1 through $columns - 1 {
+        &[gs-x='#{$i}'] { left: fixed(calc(100% / $columns) * $i); }
+        &[gs-w='#{$i+1}'] { width: fixed(calc(100% / $columns) * ($i+1)); }
       }
     }
   }
