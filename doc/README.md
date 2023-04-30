@@ -28,7 +28,7 @@ gridstack.js API
   - [`init(options: GridStackOptions = {}, elOrString: GridStackElement = '.grid-stack'): GridStack`](#initoptions-gridstackoptions---elorstring-gridstackelement--grid-stack-gridstack)
   - [`initAll(options: GridStackOptions = {}, selector = '.grid-stack'): GridStack[]`](#initalloptions-gridstackoptions---selector--grid-stack-gridstack)
   - [`addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack `](#addgridparent-htmlelement-opt-gridstackoptions---gridstack-)
-  - [`setupDragIn(dragIn?: string, dragInOptions?: DDDragInOpt)`](#setupdragindragin-string-draginoptions-dddraginopt)
+  - [`setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = document)`](#setupdragindragin-string--htmlelement-draginoptions-dddraginopt-root--document)
   - [`GridStack.registerEngine(engineClass: typeof GridStackEngine)`](#gridstackregisterengineengineclass-typeof-gridstackengine)
 - [API](#api)
   - [`addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
