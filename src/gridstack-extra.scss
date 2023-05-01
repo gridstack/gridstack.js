@@ -6,7 +6,7 @@ $gridstack-columns-start: 2 !default;
 $gridstack-columns: 11 !default;
 
 @function fixed($float) {
-  @return calc(round($float * 100) / 100); // total 4 digits being %
+  @return calc(round($float * 1000) / 1000); // total 4-5 digits being %
 }
 
 @mixin grid-stack-items($columns) {
