@@ -37,18 +37,21 @@ $animation_speed: .3s !default;
   z-index: 0 !important;
 }
 
-.grid-stack-item-content {
-  margin: 0;
-  position: absolute;
-  width: auto;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.grid-stack-item {
+// make those more unique as to not conflict with side panel items
+.grid-stack > .grid-stack-item {
   position: absolute;
   padding: 0;
 
+  > .grid-stack-item-content {
+    margin: 0;
+    position: absolute;
+    width: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+.grid-stack-item {
   > .ui-resizable-handle {
     position: absolute;
     font-size: 0.1px;
@@ -129,7 +132,8 @@ $animation_speed: .3s !default;
   @include vendor(transition, left 0s, top 0s, height 0s, width 0s);
 }
 
-.grid-stack-item[gs-x="0"] {
+// make those more unique as to not conflict with side panel items
+.grid-stack > .grid-stack-item[gs-x="0"] {
   left: 0%;
 }
 

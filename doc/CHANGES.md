@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [8.0.2 TBD](#802-tbd)
 - [8.0.1 (2023-04-29)](#801-2023-04-29)
 - [8.0.0 (2023-04-29)](#800-2023-04-29)
 - [7.3.0 (2023-04-01)](#730-2023-04-01)
