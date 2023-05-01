@@ -7,7 +7,7 @@ $columns: 12 !default;
 $animation_speed: .3s !default;
 
 @function fixed($float) {
-  @return calc(round($float * 1000) / 1000);
+  @return calc(round($float * 100) / 100); // total 4 digits being %
 }
 
 @mixin vendor($property, $value...){

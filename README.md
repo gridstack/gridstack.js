@@ -250,7 +250,7 @@ Better yet, here is a SASS code snippet, you can use sites like [sassmeister.com
 ```sass
 $columns: 12;
 @function fixed($float) {
-  @return calc(round($float * 1000) / 1000);
+  @return calc(round($float * 100) / 100); // total 4 digits being %
 }
 .grid-stack-#{$columns} > .grid-stack-item {
 
