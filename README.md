@@ -245,17 +245,20 @@ For 4-column grid it should be:
 
 and so on.
 
-Better yet, here is a SASS code snippet which can make life much easier (Thanks to @ascendantofrain, [#81](https://github.com/gridstack/gridstack.js/issues/81) and @StefanM98, [#868](https://github.com/gridstack/gridstack.js/issues/868)) and you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
+Better yet, here is a SASS code snippet, you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
 
 ```sass
-.grid-stack > .grid-stack-item {
-  $gridstack-columns: 12;
+$columns: 12;
+@function fixed($float) {
+  @return calc(round($float * 1000) / 1000);
+}
+.grid-stack-#{$columns} > .grid-stack-item {
 
-  min-width: calc(100% / $gridstack-columns);
+  min-width: fixed(calc(100% / $columns));
 
-  @for $i from 0 through $gridstack-columns {
-    &[gs-w='#{$i}'] { width: (calc(100% / $gridstack-columns)) * $i; }
-    &[gs-x='#{$i}'] { left: (calc(100% / $gridstack-columns)) * $i; }
+  @for $i from 1 through $columns - 1 {
+    &[gs-x='#{$i}'] { left: fixed(calc(100% / $columns) * $i); }
+    &[gs-w='#{$i+1}'] { width: fixed(calc(100% / $columns) * ($i+1)); }
   }
 }
 ```
@@ -445,11 +448,12 @@ New addition, no API breakage per say. See release notes about creating sub-grid
 
 ## Migrating to v8
 
-Possible breaking change if you use nested grid JSON format, or original Angular wrapper. Also target is now ES2020 (see release notes).
+Possible breaking change if you use nested grid JSON format, or original Angular wrapper, or relied on specific CSS paths. Also target is now ES2020 (see release notes).
 * `GridStackOptions.subGrid` -> `GridStackOptions.subGridOpts` rename
 * We now have `GridStackWidget.subGridOpts` vs `GridStackNode.subGrid` (was `subGrid` with both types which is error prone)
 * `GridStackOptions.addRemoveCB` -> `GridStack.addRemoveCB` is now global instead of grid option
 * removed `GridStackOptions.dragInOptions` since `setupDragIn()`has it replaced since 4.0
+* remove `GridStackOptions.minWidth` obsolete since 5.1, use `oneColumnSize` instead
 
 # jQuery Application
 

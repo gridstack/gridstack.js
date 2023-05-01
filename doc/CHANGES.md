@@ -84,6 +84,10 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 8.0.2 TBD
+* break: remove `GridStackOptions.minWidth` obsolete since 5.1, use `oneColumnSize` instead
+* optimize: CSS files now even 25% smaller (after being halfed in 8.0.0) by removing `.grid-stack` prefix for anything already gs based, and 3 digit rounding.
+
 ## 8.0.1 (2023-04-29)
 * feat: [#2275](https://github.com/gridstack/gridstack.js/issues/2275) `setupDragIn()` now can take an array or elements (in addition to selector string) and optional parent root (for shadow DOM support)
 * fix: [#2234](https://github.com/gridstack/gridstack.js/issues/2234) `Utils.getElements('1')` (called by removeWidget() and others) now checks for digit 'selector' (becomes an id).

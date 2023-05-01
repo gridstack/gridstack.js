@@ -44,21 +44,18 @@ h1 {
   background: rgba(0, 255, 0, 0.1);
   padding: 25px 0;
   height: 100px;
-  text-align: center;
 }
 .sidebar .grid-stack-item {
+  display: inline-block;
+  position: relative;
   width: 120px;
   height: 50px;
-  border: 2px dashed green;
   text-align: center;
   line-height: 35px;
-  z-index: 10;
-  background: rgba(0, 255, 0, 0.1);
-  cursor: default;
-  display: inline-block;
 }
 .sidebar .grid-stack-item .grid-stack-item-content {
-  background: none;
+  width: 100%;
+  height: 100%;
 }
 
 /* make nested grid have slightly darker bg take almost all space (need some to tell them apart) so items inside can have similar to external size+margin */
