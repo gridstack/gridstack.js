@@ -131,9 +131,10 @@ GridStack will add it to the <style> elements it creates.
 - `appendTo`?: string - default to 'body' (TODO: is this even used anymore ?)
 - `pause`?: boolean | number - if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global
 - `scroll`?: boolean - default to 'true', enable or disable the scroll when an element is dragged on bottom or top of the grid.
+- `cancel`?: string - prevents dragging from starting on specified elements, listed as comma separated selectors (eg: '.no-drag'). default built in is 'input,textarea,button,select,option'
 
 ### DDDragInOpt extends DDDragOpt
-- `helper`?: string | ((event: Event) => HTMLElement) - helper function when dropping (ex: 'clone' or your own method) 
+- `helper`?: 'clone' | ((event: Event) => HTMLElement) - helper function when dropping (ex: 'clone' or your own method) 
 
 ## Grid attributes
 

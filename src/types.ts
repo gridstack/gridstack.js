@@ -343,12 +343,12 @@ export interface DDDragOpt {
   pause?: boolean | number;
   /** default to `true` */
   scroll?: boolean;
-  /** parent constraining where item can be dragged out from (default: null = no constrain) */
-  // containment?: string;
+  /** prevents dragging from starting on specified elements, listed as comma separated selectors (eg: '.no-drag'). default built in is 'input,textarea,button,select,option' */
+  cancel?: string;
 }
 export interface DDDragInOpt extends DDDragOpt {
-  /** helper function when dropping (ex: 'clone' or your own method) */
-  helper?: string | ((event: Event) => HTMLElement);
+  /** helper function when dropping: 'clone' or your own method */
+  helper?: 'clone' | ((event: Event) => HTMLElement);
   /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
   // revert?: string | ((event: Event) => HTMLElement);
 }

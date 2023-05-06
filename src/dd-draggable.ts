@@ -14,10 +14,11 @@ import { isTouch, touchend, touchmove, touchstart, pointerdown } from './dd-touc
 export interface DDDraggableOpt {
   appendTo?: string | HTMLElement;
   handle?: string;
-  helper?: string | HTMLElement | ((event: Event) => HTMLElement);
+  helper?: 'clone' | HTMLElement | ((event: Event) => HTMLElement);
+  cancel?: string;
   // containment?: string | HTMLElement; // TODO: not implemented yet
   // revert?: string | boolean | unknown; // TODO: not implemented yet
-  // scroll?: boolean; // native support by HTML5 drag drop, can't be switch to off actually
+  // scroll?: boolean;
   start?: (event: Event, ui: DDUIData) => void;
   stop?: (event: Event) => void;
   drag?: (event: Event, ui: DDUIData) => void;
@@ -33,6 +34,9 @@ interface DragOffset {
 }
 
 type DDDragEvent = 'drag' | 'dragstart' | 'dragstop';
+
+// make sure we are not clicking on known object that handles mouseDown
+const skipMouseDown = 'input,textarea,button,select,option,[contenteditable="true"],.ui-resizable-handle';
 
 // let count = 0; // TEST
 
@@ -64,6 +68,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     super();
     this.el = el;
     this.option = option;
+
     // get the element that is actually supposed to be dragged by
     let handleName = option.handle.substring(1);
     this.dragEl = el.classList.contains(handleName) ? el : el.querySelector(option.handle) || el;
@@ -127,12 +132,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (DDManager.mouseHandled) return;
     if (e.button !== 0) return true; // only left click
 
-    // make sure we are not clicking on known object that handles mouseDown (TODO: make this extensible ?) #2054
-    const skipMouseDown = ['input', 'textarea', 'button', 'select', 'option'];
-    const name = (e.target as HTMLElement).nodeName.toLowerCase();
-    if (skipMouseDown.find(skip => skip === name)) return true;
-    // also check for content editable
-    if ((e.target as HTMLElement).closest('[contenteditable="true"]')) return true;
+    // make sure we are not clicking on known object that handles mouseDown, or ones supplied by the user
+    if ((e.target as HTMLElement).closest(skipMouseDown)) return true;
+    if (this.option.cancel) {
+      if ((e.target as HTMLElement).closest(this.option.cancel)) return true;
+    }
 
     // REMOVE: why would we get the event if it wasn't for us or child ?
     // make sure we are clicking on a drag handle or child of it...
