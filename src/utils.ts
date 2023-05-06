@@ -54,14 +54,15 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
 export class Utils {
 
   /** convert a potential selector into actual list of html elements. optional root which defaults to document (for shadow dom) */
-  static getElements(els: GridStackElement, root = document): HTMLElement[] {
+  static getElements(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement[] {
+    const doc = ('getElementById' in root) ? root as Document : undefined;
     if (typeof els === 'string') {
 
       // Note: very common for people use to id='1,2,3' which is only legal as HTML5 id, but not CSS selectors
       // so if we start with a number, assume it's an id and just return that one item...
       // see https://github.com/gridstack/gridstack.js/issues/2234#issuecomment-1523796562
-      if(!isNaN(+els[0])) { // start with digit
-        const el = root.getElementById(els);
+      if (doc && !isNaN(+els[0])) { // start with digit
+        const el = doc.getElementById(els);
         return el ? [el] : [];
       }
 
@@ -76,24 +77,25 @@ export class Utils {
   }
 
   /** convert a potential selector into actual single element. optional root which defaults to document (for shadow dom) */
-  static getElement(els: GridStackElement, root = document): HTMLElement {
+  static getElement(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement {
+    const doc = ('getElementById' in root) ? root as Document : undefined;
     if (typeof els === 'string') {
       if (!els.length) return null;
-      if (els[0] === '#') {
-        return root.getElementById(els.substring(1));
+      if (doc && els[0] === '#') {
+        return doc.getElementById(els.substring(1));
       }
-      if (els[0] === '.' || els[0] === '[') {
+      if (els[0] === '#' || els[0] === '.' || els[0] === '[') {
         return root.querySelector(els);
       }
 
       // if we start with a digit, assume it's an id (error calling querySelector('#1')) as class are not valid CSS
-      if(!isNaN(+els[0])) { // start with digit
-        return root.getElementById(els);
+      if (doc && !isNaN(+els[0])) { // start with digit
+        return doc.getElementById(els);
       }
 
       // finally try string, then id, then class
       let el = root.querySelector(els);
-      if (!el) { el = root.getElementById(els) }
+      if (doc && !el) { el = doc.getElementById(els) }
       if (!el) { el = root.querySelector('.' + els) }
       return el as HTMLElement;
     }
