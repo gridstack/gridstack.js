@@ -27,7 +27,8 @@
   <script type="text/javascript">
     let grid = GridStack.init({
       minRow: 1, // don't let it collapse when empty
-      cellHeight: '7rem'
+      cellHeight: '7rem',
+      draggable: { cancel: '.no-drag'} // example of additional custom elements to skip drag on
     });
     
     grid.on('added removed change', function(e, items) {
@@ -39,8 +40,8 @@
 
     let serializedData = [
       {x: 0, y: 0, w: 2, h: 2, id: '0'},
-      {x: 3, y: 1, h: 2, id: '1', 
-      content: "<button onclick=\"alert('clicked!')\">Press me</button><div>text area</div><div><textarea></textarea></div><div>Input Field</div><input type='text'><div contentEditable=\"true\">Editable Div</div>"},
+      {x: 3, y: 1, h: 3, id: '1', 
+      content: "<button onclick=\"alert('clicked!')\">Press me</button><div>text area</div><div><textarea></textarea></div><div>Input Field</div><input type='text'><div contentEditable=\"true\">Editable Div</div><div class=\"no-drag\">no drag</div>"},
       {x: 4, y: 1, id: '2'},
       {x: 2, y: 3, w: 3, id: '3'},
       {x: 1, y: 3, id: '4'}
