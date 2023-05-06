@@ -1660,9 +1660,9 @@ export class GridStack {
    * is dynamically create and needs to be set later.
    * @param dragIn string selector (ex: '.sidebar .grid-stack-item') or list of dom elements
    * @param dragInOptions options - see DDDragInOpt. (default: {handle: '.grid-stack-item-content', appendTo: 'body'}
-   * @param root optional root which defaults to document (for shadow dom)
+   * @param root optional root which defaults to document (for shadow dom pas the parent HTMLDocument)
    **/
-  public static setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = document): void {
+  public static setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root: HTMLElement | Document = document): void {
     if (dragInOptions?.pause !== undefined) {
       DDManager.pauseDrag = dragInOptions.pause;
     }

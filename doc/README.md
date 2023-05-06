@@ -28,7 +28,7 @@ gridstack.js API
   - [`init(options: GridStackOptions = {}, elOrString: GridStackElement = '.grid-stack'): GridStack`](#initoptions-gridstackoptions---elorstring-gridstackelement--grid-stack-gridstack)
   - [`initAll(options: GridStackOptions = {}, selector = '.grid-stack'): GridStack[]`](#initalloptions-gridstackoptions---selector--grid-stack-gridstack)
   - [`addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack `](#addgridparent-htmlelement-opt-gridstackoptions---gridstack-)
-  - [`setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = document)`](#setupdragindragin-string--htmlelement-draginoptions-dddraginopt-root--document)
+  - [`setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = HTMLElement | Document)`](#setupdragindragin-string--htmlelement-draginoptions-dddraginopt-root--htmlelement--document)
   - [`GridStack.registerEngine(engineClass: typeof GridStackEngine)`](#gridstackregisterengineengineclass-typeof-gridstackengine)
 - [API](#api)
   - [`addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
@@ -323,13 +323,13 @@ grids.forEach(...)
 * @param opt grids options used to initialize the grid, and list of children
 * see [nested.html](https://github.com/gridstack/gridstack.js/tree/master/demo/nested.html) demo
 
-### `setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = document)`
+### `setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = HTMLElement | Document)`
 
 * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
 Called during `GridStack.init()` as options, but can also be called directly (last param are cached) in case the toolbar is dynamically create and needs to change later.
 * @param dragIn string selector (ex: `'.sidebar .grid-stack-item'`) or list of dom elements
 * @param dragInOptions options - see `DDDragInOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body'}`
-* @param root - default to document (for shadow dom support)
+* @param root - default to document. for shadow dom support pass the parent container.
 but you will probably also want `helper: 'clone'` or your own callback function).
 
 ### `GridStack.registerEngine(engineClass: typeof GridStackEngine)`
