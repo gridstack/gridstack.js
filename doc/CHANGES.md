@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [8.0.2 TBD](#802-tbd)
+- [8.1.0 (2023-05-06)](#810-2023-05-06)
 - [8.0.1 (2023-04-29)](#801-2023-04-29)
 - [8.0.0 (2023-04-29)](#800-2023-04-29)
 - [7.3.0 (2023-04-01)](#730-2023-04-01)
@@ -85,7 +85,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 8.0.2 TBD
+## 8.1.0 (2023-05-06)
 * break: remove `GridStackOptions.minWidth` obsolete since 5.1, use `oneColumnSize` instead
 * optimize: CSS files now even 25% smaller (after being halfed in 8.0.0) by removing `.grid-stack` prefix for anything already gs based, and 3 digit rounding.
 * fix: [#2275](https://github.com/gridstack/gridstack.js/issues/2275) `setupDragIn()` signature tweaks (HTMLElement | Document)
