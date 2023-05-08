@@ -148,7 +148,7 @@ GridStack no longer requires external dependencies as of v1.0.0 (lodash was remo
 search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
 
 - **Angular**: we now ship out of the box with Angular wrapper components - see <a href="https://github.com/gridstack/gridstack.js/tree/master/demo/angular/src/app" target="_blank">Angular Demo</a>.
-- **Angular9**: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for **concept ONLY if you wish to use directive instead**.
+- **Angular9**: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for **concept ONLY if you wish to use directive instead**. teh code has been vented as I use components.
 - **AngularJS**: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
 - **Ember**: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
 - **knockout**: see [demo](https://gridstackjs.com/demo/knockout.html) using component, but check [custom bindings ticket](https://github.com/gridstack/gridstack.js/issues/465) which is likely better approach.
@@ -219,36 +219,23 @@ See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.htm
 
 If you need > 12 columns or want to generate the CSS manually you will need to generate CSS rules for `.grid-stack-item[gs-w="X"]` and `.grid-stack-item[gs-x="X"]`.
 
-For instance for 3-column grid you need to rewrite CSS to be:
+For instance for 4-column grid you need to write CSS to be:
 
 ```css
-.grid-stack-item[gs-w="3"]  { width: 100% }
-.grid-stack-item[gs-w="2"]  { width: 66.67% }
-.grid-stack-item[gs-w="1"]  { width: 33.33% }
+.grid-stack-4 > .grid-stack-item { min-width: 25% }
+.grid-stack-4 > .grid-stack-item[gs-w="4"]  { width: 100% }
+.grid-stack-4 > .grid-stack-item[gs-w="3"]  { width: 75% }
+.grid-stack-4 > .grid-stack-item[gs-w="2"]  { width: 50% }
 
-.grid-stack-item[gs-x="2"]  { left: 66.67% }
-.grid-stack-item[gs-x="1"]  { left: 33.33% }
+.grid-stack-4 > .grid-stack-item[gs-x="3"]  { left: 75% }
+.grid-stack-4 > .grid-stack-item[gs-x="2"]  { left: 50% }
+.grid-stack-4 > .grid-stack-item[gs-x="1"]  { left: 25% }
 ```
-
-For 4-column grid it should be:
-
-```css
-.grid-stack-item[gs-w="4"]  { width: 100% }
-.grid-stack-item[gs-w="3"]  { width: 75% }
-.grid-stack-item[gs-w="2"]  { width: 50% }
-.grid-stack-item[gs-w="1"]  { width: 25% }
-
-.grid-stack-item[gs-x="3"]  { left: 75% }
-.grid-stack-item[gs-x="2"]  { left: 50% }
-.grid-stack-item[gs-x="1"]  { left: 25% }
-```
-
-and so on.
 
 Better yet, here is a SASS code snippet, you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
 
 ```sass
-$columns: 12;
+$columns: 20;
 @function fixed($float) {
   @return calc(round($float * 100) / 100); // total 4 digits being %
 }
@@ -449,11 +436,11 @@ New addition, no API breakage per say. See release notes about creating sub-grid
 ## Migrating to v8
 
 Possible breaking change if you use nested grid JSON format, or original Angular wrapper, or relied on specific CSS paths. Also target is now ES2020 (see release notes).
-* `GridStackOptions.subGrid` -> `GridStackOptions.subGridOpts` rename
-* We now have `GridStackWidget.subGridOpts` vs `GridStackNode.subGrid` (was `subGrid` with both types which is error prone)
+* `GridStackOptions.subGrid` -> `GridStackOptions.subGridOpts` rename. We now have `GridStackWidget.subGridOpts` vs `GridStackNode.subGrid` (was both types which is error prone)
 * `GridStackOptions.addRemoveCB` -> `GridStack.addRemoveCB` is now global instead of grid option
-* removed `GridStackOptions.dragInOptions` since `setupDragIn()`has it replaced since 4.0
+* removed `GridStackOptions.dragInOptions` since `GridStack.setupDragIn()` has it replaced since 4.0
 * remove `GridStackOptions.minWidth` obsolete since 5.1, use `oneColumnSize` instead
+* CSS rules removed `.grid-stack` prefix for anything already gs based, 12 column (default) now uses `.grid-stack-12`, `gs-min|max_w|h` attribute no longer written (but read)
 
 # jQuery Application
 
@@ -501,4 +488,4 @@ View our change log [here](https://github.com/gridstack/gridstack.js/tree/master
 
 # The Team
 
-gridstack.js is currently maintained by [Alain Dumesny](https://github.com/adumesny) and [Dylan Weiss](https://github.com/radiolips), originally created by [Pavel Reznikov](https://github.com/troolee). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
+gridstack.js is currently maintained by [Alain Dumesny](https://github.com/adumesny), before that [Dylan Weiss](https://github.com/radiolips), originally created by [Pavel Reznikov](https://github.com/troolee). We appreciate [all contributors](https://github.com/gridstack/gridstack.js/graphs/contributors) for help.
