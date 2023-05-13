@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [8.1.1 (2023-05-13)](#811-2023-05-13)
 - [8.1.0 (2023-05-06)](#810-2023-05-06)
 - [8.0.1 (2023-04-29)](#801-2023-04-29)
 - [8.0.0 (2023-04-29)](#800-2023-04-29)
@@ -84,6 +85,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 8.1.1 (2023-05-13)
+* fix: [#2314](https://github.com/gridstack/gridstack.js/issues/2314) fix issue with having min-height/width instead of height/width for gs-h|x="1"
+also further compressed CSS multi column rules (use `.gs-# > .grid-stack-item` instead of `.grid-stack-# > .grid-stack-item`)
 
 ## 8.1.0 (2023-05-06)
 * break: remove `GridStackOptions.minWidth` obsolete since 5.1, use `oneColumnSize` instead

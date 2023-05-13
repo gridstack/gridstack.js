@@ -10,8 +10,8 @@ $gridstack-columns: 11 !default;
 }
 
 @mixin grid-stack-items($columns) {
-  .grid-stack-#{$columns} > .grid-stack-item {
-    min-width: fixed(calc(100% / $columns));
+  .gs-#{$columns} > .grid-stack-item {
+    width: fixed(calc(100% / $columns));
 
     @for $i from 1 through $columns - 1 {
       &[gs-x='#{$i}'] { left: fixed(calc(100% / $columns) * $i); }
