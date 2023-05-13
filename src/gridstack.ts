@@ -336,7 +336,7 @@ export class GridStack {
       this.opts.alwaysShowResizeHandle = isTouch;
     }
 
-    this._styleSheetClass = 'grid-stack-instance-' + GridStackEngine._idSeq++;
+    this._styleSheetClass = 'gs-id-' + GridStackEngine._idSeq++;
     this.el.classList.add(this._styleSheetClass);
 
     this._setStaticClass();
@@ -379,7 +379,7 @@ export class GridStack {
     this.setAnimation(this.opts.animate);
 
     this._updateStyles();
-    this.el.classList.add('grid-stack-' + this.opts.column);
+    this.el.classList.add('gs-' + this.opts.column);
 
     // dynamic grids require pausing during drag to detect over to nest vs push
     if (this.opts.subGridDynamic && !DDManager.pauseDrag) DDManager.pauseDrag = true;
@@ -836,8 +836,8 @@ export class GridStack {
       delete this._prevColumn;
     }
 
-    this.el.classList.remove('grid-stack-' + oldColumn);
-    this.el.classList.add('grid-stack-' + column);
+    this.el.classList.remove('gs-' + oldColumn);
+    this.el.classList.add('gs-' + column);
     this.opts.column = this.engine.column = column;
 
     // update the items now - see if the dom order nodes should be passed instead (else default to current list)
@@ -1348,7 +1348,7 @@ export class GridStack {
       this._styles._max = 0;
 
       // these are done once only
-      Utils.addCSSRule(this._styles, prefix, `min-height: ${cellHeight}${cellHeightUnit}`);
+      Utils.addCSSRule(this._styles, prefix, `height: ${cellHeight}${cellHeightUnit}`);
       // content margins
       let top: string = this.opts.marginTop + this.opts.marginUnit;
       let bottom: string = this.opts.marginBottom + this.opts.marginUnit;
@@ -1372,9 +1372,8 @@ export class GridStack {
     if (maxH > this._styles._max) {
       let getHeight = (rows: number): string => (cellHeight * rows) + cellHeightUnit;
       for (let i = this._styles._max + 1; i <= maxH; i++) { // start at 1
-        let h: string = getHeight(i);
-        Utils.addCSSRule(this._styles, `${prefix}[gs-y="${i-1}"]`,   `top: ${getHeight(i-1)}`); // start at 0
-        Utils.addCSSRule(this._styles, `${prefix}[gs-h="${i}"]`,     `height: ${h}`);
+        Utils.addCSSRule(this._styles, `${prefix}[gs-y="${i}"]`, `top: ${getHeight(i)}`);
+        Utils.addCSSRule(this._styles, `${prefix}[gs-h="${i+1}"]`, `height: ${getHeight(i+1)}`); // start at 2
       }
       this._styles._max = maxH;
     }

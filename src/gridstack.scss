@@ -40,6 +40,8 @@ $animation_speed: .3s !default;
 // make those more unique as to not conflict with side panel items
 .grid-stack > .grid-stack-item {
   position: absolute;
+  top: 0px;
+  left: 0%;
   padding: 0;
 
   > .grid-stack-item-content {
@@ -132,19 +134,14 @@ $animation_speed: .3s !default;
   @include vendor(transition, left 0s, top 0s, height 0s, width 0s);
 }
 
-// make those more unique as to not conflict with side panel items
-.grid-stack > .grid-stack-item[gs-x="0"] {
-  left: 0%;
-}
-
-.grid-stack-#{$columns} > .grid-stack-item {
-  min-width: fixed(calc(100% / $columns));
+.gs-#{$columns} > .grid-stack-item {
+  width: fixed(calc(100% / $columns));
   @for $i from 1 through ($columns - 1) {
     &[gs-x='#{$i}'] { left: fixed(calc(100% / $columns) * $i); }
     &[gs-w='#{$i + 1}'] { width: fixed(calc(100% / $columns) * ($i + 1)); }
   }
 }
 
-.grid-stack-1 > .grid-stack-item {
-  min-width: 100%;
+.gs-1 > .grid-stack-item {
+  width: 100%;
 }

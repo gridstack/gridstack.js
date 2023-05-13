@@ -14,7 +14,7 @@ module.exports = function(config) {
       //     }
       //   }
       // },
-      exclude: ["demo"] // ignore dummy demo .ts files
+      exclude: ["demo", "dist/ng"] // ignore dummy demo .ts files
     },
 
     // base path that will be used to resolve all patterns (eg. files, exclude)

@@ -222,14 +222,14 @@ If you need > 12 columns or want to generate the CSS manually you will need to g
 For instance for 4-column grid you need to write CSS to be:
 
 ```css
-.grid-stack-4 > .grid-stack-item { min-width: 25% }
-.grid-stack-4 > .grid-stack-item[gs-w="4"]  { width: 100% }
-.grid-stack-4 > .grid-stack-item[gs-w="3"]  { width: 75% }
-.grid-stack-4 > .grid-stack-item[gs-w="2"]  { width: 50% }
+.gs-4 > .grid-stack-item[gs-x="1"]  { left: 25% }
+.gs-4 > .grid-stack-item[gs-x="2"]  { left: 50% }
+.gs-4 > .grid-stack-item[gs-x="3"]  { left: 75% }
 
-.grid-stack-4 > .grid-stack-item[gs-x="3"]  { left: 75% }
-.grid-stack-4 > .grid-stack-item[gs-x="2"]  { left: 50% }
-.grid-stack-4 > .grid-stack-item[gs-x="1"]  { left: 25% }
+.gs-4 > .grid-stack-item { width: 25% }
+.gs-4 > .grid-stack-item[gs-w="2"]  { width: 50% }
+.gs-4 > .grid-stack-item[gs-w="3"]  { width: 75% }
+.gs-4 > .grid-stack-item[gs-w="4"]  { width: 100% }
 ```
 
 Better yet, here is a SASS code snippet, you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
@@ -239,9 +239,9 @@ $columns: 20;
 @function fixed($float) {
   @return calc(round($float * 100) / 100); // total 4 digits being %
 }
-.grid-stack-#{$columns} > .grid-stack-item {
+.gs-#{$columns} > .grid-stack-item {
 
-  min-width: fixed(calc(100% / $columns));
+  width: fixed(calc(100% / $columns));
 
   @for $i from 1 through $columns - 1 {
     &[gs-x='#{$i}'] { left: fixed(calc(100% / $columns) * $i); }
