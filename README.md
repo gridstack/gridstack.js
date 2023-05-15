@@ -255,8 +255,8 @@ you can also use the SCSS [src/gridstack-extra.scss](https://github.com/gridstac
 Sample gulp command for 30 columns:
 ```js
 gulp.src('node_modules/gridstack/dist/src/gridstack-extra.scss')
-        .pipe(replace('$gridstack-columns-start: 2 !default;','$gridstack-columns-start: 30;'))
-        .pipe(replace('$gridstack-columns: 11 !default;','$gridstack-columns: 30;'))
+        .pipe(replace('$start: 2 !default;','$start: 30;'))
+        .pipe(replace('$end: 11 !default;','$end: 30;'))
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(rename({extname: '.min.css'}))
         .pipe(gulp.dest('dist/css'))
