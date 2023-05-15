@@ -237,7 +237,7 @@ Better yet, here is a SCSS code snippet, you can use sites like [sassmeister.com
 ```scss
 $columns: 20;
 @function fixed($float) {
-  @return round($float * 100) / 100; // total 4 digits being %
+  @return round($float * 1000) / 1000; // total 2+3 digits being %
 }
 .gs-#{$columns} > .grid-stack-item {
 
