@@ -219,7 +219,7 @@ See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.htm
 
 If you need > 12 columns or want to generate the CSS manually you will need to generate CSS rules for `.grid-stack-item[gs-w="X"]` and `.grid-stack-item[gs-x="X"]`.
 
-For instance for 4-column grid you need to write CSS to be:
+For instance for 4-column grid you need CSS to be:
 
 ```css
 .gs-4 > .grid-stack-item[gs-x="1"]  { left: 25% }
@@ -232,29 +232,30 @@ For instance for 4-column grid you need to write CSS to be:
 .gs-4 > .grid-stack-item[gs-w="4"]  { width: 100% }
 ```
 
-Better yet, here is a SASS code snippet, you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
+Better yet, here is a SCSS code snippet, you can use sites like [sassmeister.com](https://www.sassmeister.com/) to generate the CSS for you instead:
 
-```sass
+```scss
 $columns: 20;
 @function fixed($float) {
-  @return calc(round($float * 100) / 100); // total 4 digits being %
+  @return round($float * 100) / 100; // total 4 digits being %
 }
 .gs-#{$columns} > .grid-stack-item {
 
-  width: fixed(calc(100% / $columns));
+  width: fixed(100% / $columns);
 
   @for $i from 1 through $columns - 1 {
-    &[gs-x='#{$i}'] { left: fixed(calc(100% / $columns) * $i); }
-    &[gs-w='#{$i+1}'] { width: fixed(calc(100% / $columns) * ($i+1)); }
+    &[gs-x='#{$i}'] { left: fixed((100% / $columns) * $i); }
+    &[gs-w='#{$i+1}'] { width: fixed((100% / $columns) * ($i+1)); }
   }
 }
 ```
 
-you can also use the SASS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/tree/master/src/gridstack-extra.scss) included in NPM package and modify to add more columns.
+you can also use the SCSS [src/gridstack-extra.scss](https://github.com/gridstack/gridstack.js/tree/master/src/gridstack-extra.scss) included in NPM package and modify to add more columns.
 
 Sample gulp command for 30 columns:
 ```js
 gulp.src('node_modules/gridstack/dist/src/gridstack-extra.scss')
+        .pipe(replace('$gridstack-columns-start: 2 !default;','$gridstack-columns-start: 30;'))
         .pipe(replace('$gridstack-columns: 11 !default;','$gridstack-columns: 30;'))
         .pipe(sass({outputStyle: 'compressed'}))
         .pipe(rename({extname: '.min.css'}))
