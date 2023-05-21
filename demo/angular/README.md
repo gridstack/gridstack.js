@@ -1,6 +1,8 @@
 # Angular wrapper
 
-The Angular [wrapper component](./gridstack.component.ts) <gridstack> is a better way to use Gridstack, but alternative raw [ngFor](./ngFor.ts) or [simple](./simple.ts) demos are also given.
+The Angular [wrapper component](src/gridstack.component.ts) <gridstack> is a better way to use Gridstack, but alternative raw [ngFor](src/ngFor.ts) or [simple](src/simple.ts) demos are also given.
+
+**NOTE:**  still having [issue](https://github.com/gridstack/gridstack.js/issues/2310) exporting the files to be included by Angular projects, so for now copy gridstack/dist/ng/src/* to your project and adjust the paths below.
 
 # Dynamic grid items
 this is the recommended way if you are going to have multiple grids (alow drag&drop between) or drag from toolbar to create items, or drag to remove items, etc...
@@ -26,15 +28,21 @@ CSS
 }
 ```
 
-Code
+Your module Code
 ```ts
-import { GridStack, GridStackOptions } from 'gridstack';
-import { gsCreateNgComponents } from 'gridstack/dist/ng/gridstack.component';
+import { GridstackModule } from 'gridstack/dist/ng/src/gridstack.module';
 
-constructor() {
-  // use the built in component creation code
-  GridStack.addRemoveCB = gsCreateNgComponents;
-}
+@NgModule({
+  imports: [GridstackModule, ...]
+  ...
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+Component Code
+```ts
+import { GridStackOptions } from 'gridstack';
 
 // sample grid options and items to load...
 public gridOptions: GridStackOptions = {
@@ -49,7 +57,7 @@ public gridOptions: GridStackOptions = {
 ```
 
 # More Complete example
-In this example will use your actual custom angular components inside each grid item (instead of dummy html content)
+In this example (build on previous one) will use your actual custom angular components inside each grid item (instead of dummy html content)
 
 HTML 
 ```html
@@ -83,9 +91,6 @@ export class BComponent {
 constructor() {
   // register all our dynamic components created in the grid
   GridstackComponent.addComponentToSelectorType([AComponent, BComponent]);
-  // set globally our method to create the right widget type
-  GridStack.addRemoveCB = gsCreateNgComponents;
-  GridStack.saveCB = gsSaveAdditionalNgInfo;
 }
 
 // and now our content will look like instead of dummy html content
@@ -146,9 +151,9 @@ public identify(index: number, w: GridStackWidget) {
 ```
 
 ## Demo
-You can see a fuller example at [app.component.ts](https://github.com/gridstack/gridstack.js/blob/master/demo/angular/src/app/app.component.ts)
+You can see a fuller example at [app.component.ts](src/app/app.component.ts)
 
-to build the demo, go to demo/angular and run `yarn` + `yarn start` and Navigate to `http://localhost:4200/` 
+to build the demo, go to demo/angular and run `yarn` + `yarn start` and navigate to `http://localhost:4200/` 
 
 Code now shipped starting with v8.0+ in dist/ng for people to use directly!
 ## Caveats 
@@ -159,7 +164,7 @@ Code now shipped starting with v8.0+ in dist/ng for people to use directly!
 
  ## *ngFor Caveats
  - This wrapper handles well ngFor loops, but if you're using a trackBy function (as I would recommend) and no element id change after an update,
- you must manually update the `GridstackItemComponent.option` directly - see [modifyNgFor()](./app.component.ts#L174) example.
+ you must manually update the `GridstackItemComponent.option` directly - see [modifyNgFor()](src/app.component.ts#L174) example.
  - The original client list of items is not updated to match **content** changes made by gridstack (TBD later), but adding new item or removing (as shown in demo) will update those new items. Client could use change/added/removed events to sync that list if they wish to do so.
 
 
