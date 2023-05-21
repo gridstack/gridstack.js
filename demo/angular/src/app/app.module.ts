@@ -6,42 +6,37 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { GridstackItemComponent } from './gridstack-item.component';
-import { GridstackComponent, gsCreateNgComponents, gsSaveAdditionalNgInfo } from './gridstack.component';
+import { GridstackComponent } from '../gridstack.component';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
 import { AComponent, BComponent, CComponent } from './dummy.component';
-import { GridStack } from 'gridstack';
+
+// local copy but user would use 'gridstack/dist/ng/gridstack.module'
+import { GridstackModule } from 'src/gridstack.module';
 
 @NgModule({
-    declarations: [
-        AngularNgForCmdTestComponent,
-        AngularNgForTestComponent,
-        AngularSimpleComponent,
-        AppComponent,
-        GridstackComponent,
-        GridstackItemComponent,
-        AComponent,
-        BComponent,
-        CComponent,
-    ],
-    imports: [
-        BrowserModule
-    ],
-    exports: [
-        GridstackComponent,
-        GridstackItemComponent,
-    ],
-    providers: [],
-    bootstrap: [AppComponent]
+  imports: [
+    BrowserModule,
+    GridstackModule,
+  ],
+  declarations: [
+      AngularNgForCmdTestComponent,
+      AngularNgForTestComponent,
+      AngularSimpleComponent,
+      AppComponent,
+      AComponent,
+      BComponent,
+      CComponent,
+  ],
+  exports: [
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor() {
     // register all our dynamic components created in the grid
     GridstackComponent.addComponentToSelectorType([AComponent, BComponent, CComponent]);
-    // set globally our method to create the right widget type
-    GridStack.addRemoveCB = gsCreateNgComponents; // DONE in case switcher onShow() as well
-    GridStack.saveCB = gsSaveAdditionalNgInfo;
   }
 }

@@ -43,9 +43,10 @@ module.exports = function(grunt) {
           'dist/es5/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
           'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
-          'dist/ng/README.md': ['demo/angular/src/app/README.md'],
-          // 'dist/ng/gridstack.component.ts': ['demo/angular/src/app/gridstack.component.ts'],
-          // 'dist/ng/gridstack-item.component.ts': ['demo/angular/src/app/gridstack-item.component.ts'],
+          'dist/ng/README.md': ['demo/angular/README.md'],
+          'dist/ng/src/gridstack.component.ts': ['demo/angular/src/gridstack.component.ts'],
+          'dist/ng/src/gridstack-item.component.ts': ['demo/angular/src/gridstack-item.component.ts'],
+          'dist/ng/src/gridstack.module.ts': ['demo/angular/src/gridstack.module.ts'],
         }
       }
     },
