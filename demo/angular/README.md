@@ -1,6 +1,6 @@
 # Angular wrapper
 
-The Angular [wrapper component](src/gridstack.component.ts) <gridstack> is a better way to use Gridstack, but alternative raw [ngFor](src/ngFor.ts) or [simple](src/simple.ts) demos are also given.
+The Angular [wrapper component](src/gridstack.component.ts) <gridstack> is a better way to use Gridstack, but alternative raw [ngFor](src/app/ngFor.ts) or [simple](src/app/simple.ts) demos are also given.
 
 **NOTE:**  still having [issue](https://github.com/gridstack/gridstack.js/issues/2310) exporting the files to be included by Angular projects, so for now copy gridstack/dist/ng/src/* to your project and adjust the paths below.
 
@@ -28,7 +28,7 @@ CSS
 }
 ```
 
-Your module Code
+in your module Code
 ```ts
 import { GridstackModule } from 'gridstack/dist/ng/src/gridstack.module';
 
@@ -44,7 +44,7 @@ Component Code
 ```ts
 import { GridStackOptions } from 'gridstack';
 
-// sample grid options and items to load...
+// sample grid options + items to load...
 public gridOptions: GridStackOptions = {
   margin: 5,
   float: true,
@@ -89,11 +89,11 @@ export class BComponent {
 
 // .... in your module for example
 constructor() {
-  // register all our dynamic components created in the grid
+  // register all our dynamic components types created by the grid
   GridstackComponent.addComponentToSelectorType([AComponent, BComponent]);
 }
 
-// and now our content will look like instead of dummy html content
+// now our content will use Components instead of dummy html content
 public gridOptions: NgGridStackOptions = {
   margin: 5,
   float: true,
@@ -164,9 +164,8 @@ Code now shipped starting with v8.0+ in dist/ng for people to use directly!
 
  ## *ngFor Caveats
  - This wrapper handles well ngFor loops, but if you're using a trackBy function (as I would recommend) and no element id change after an update,
- you must manually update the `GridstackItemComponent.option` directly - see [modifyNgFor()](src/app.component.ts#L174) example.
+ you must manually update the `GridstackItemComponent.option` directly - see [modifyNgFor()](src/app/app.component.ts#L174) example.
  - The original client list of items is not updated to match **content** changes made by gridstack (TBD later), but adding new item or removing (as shown in demo) will update those new items. Client could use change/added/removed events to sync that list if they wish to do so.
-
 
  Would appreciate getting help doing the same for React and Vue (2 other popular frameworks)
  
