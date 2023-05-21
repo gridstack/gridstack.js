@@ -98,7 +98,7 @@
       // is NOT A GOOD IDEA as you end up fighting between gridstack users' edits and your template items structure which are not in sync.
       // At best, you end up re-creating widgets DOM (from React template) and all their content & state after a widget was inserted/re-parented by the user.
       // a MUCH better way is to let GS create React components using it's API/user interactions, with only initial load() of a stored layout.
-      // See the Angular component wrapper that does that: https://github.com/gridstack/gridstack.js/tree/master/demo/angular/src/app (lib author uses Angular)
+      // See the Angular component wrapper that does that: https://github.com/gridstack/gridstack.js/tree/master/demo/angular/ (lib author uses Angular)
       // ...TBD creating React equivalent...
       //
       // Also templating forces you to spell out the 15+ GridStackWidget attributes (only x,y,w,h done below), instead of passing an option structure that 

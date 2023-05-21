@@ -6,7 +6,8 @@
     "declaration": true,
   },
   "include": [
-    "./src/app/gridstack.component.ts",
-    "./src/app/gridstack-item.component.ts",
+    "./src/gridstack.component.ts",
+    "./src/gridstack-item.component.ts",
+    "./src/gridstack.module.ts",
   ],
 }
