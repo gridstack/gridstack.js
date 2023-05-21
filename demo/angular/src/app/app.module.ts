@@ -1,3 +1,7 @@
+/**
+ * gridstack.component.ts 8.1.1-dev
+ * Copyright (c) 2022 Alain Dumesny - see GridStack root license
+ */
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
