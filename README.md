@@ -441,7 +441,7 @@ Possible breaking change if you use nested grid JSON format, or original Angular
 * `GridStackOptions.addRemoveCB` -> `GridStack.addRemoveCB` is now global instead of grid option
 * removed `GridStackOptions.dragInOptions` since `GridStack.setupDragIn()` has it replaced since 4.0
 * remove `GridStackOptions.minWidth` obsolete since 5.1, use `oneColumnSize` instead
-* CSS rules removed `.grid-stack` prefix for anything already gs based, 12 column (default) now uses `.grid-stack-12`, `gs-min|max_w|h` attribute no longer written (but read)
+* CSS rules removed `.grid-stack` prefix for anything already gs based, 12 column (default) now uses `.gs-12`, extra.css is less than 1/4th it original size!, `gs-min|max_w|h` attribute no longer written (but read)
 
 # jQuery Application
 
