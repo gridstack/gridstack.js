@@ -1,5 +1,5 @@
 /**
- * types.ts 8.1.1-dev
+ * types.ts 8.1.2
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
