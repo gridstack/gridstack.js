@@ -147,7 +147,7 @@ GridStack no longer requires external dependencies as of v1.0.0 (lodash was remo
 
 search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&ranking=popularity) for latest, more to come...
 
-- **Angular**: we now ship out of the box with Angular wrapper components - see <a href="https://github.com/gridstack/gridstack.js/tree/master/demo/angular" target="_blank">Angular Demo</a>.
+- **Angular**: we now ship out of the box with Angular wrapper components - see <a href="https://github.com/gridstack/gridstack.js/tree/master/angular" target="_blank">Angular Component</a>.
 - **Angular9**: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for **concept ONLY if you wish to use directive instead**. teh code has been vented as I use components.
 - **AngularJS**: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
 - **Ember**: [ember-gridstack](https://github.com/yahoo/ember-gridstack)

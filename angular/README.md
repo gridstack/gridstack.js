@@ -1,8 +1,6 @@
 # Angular wrapper
 
-The Angular [wrapper component](src/gridstack.component.ts) <gridstack> is a better way to use Gridstack, but alternative raw [ngFor](src/app/ngFor.ts) or [simple](src/app/simple.ts) demos are also given.
-
-**NOTE:**  still having [issue](https://github.com/gridstack/gridstack.js/issues/2310) exporting the files to be included by Angular projects, so for now copy gridstack/dist/ng/src/* to your project and adjust the paths below.
+The Angular [wrapper component](projects/lib/src/lib/gridstack.component.ts) <gridstack> is a better way to use Gridstack, but alternative raw [ngFor](projects/demo/src/app/ngFor.ts) or [simple](projects/demo/src/app/simple.ts) demos are also given.
 
 # Dynamic grid items
 this is the recommended way if you are going to have multiple grids (alow drag&drop between) or drag from toolbar to create items, or drag to remove items, etc...
@@ -30,7 +28,7 @@ CSS
 
 in your module Code
 ```ts
-import { GridstackModule } from 'gridstack/dist/ng/src/gridstack.module';
+import { GridstackModule } from 'gridstack/dist/angular';
 
 @NgModule({
   imports: [GridstackModule, ...]
@@ -70,7 +68,7 @@ Code
 ```ts
 import { Component } from '@angular/core';
 import { GridStack, GridStackOptions } from 'gridstack';
-import { GridstackComponent, gsCreateNgComponents, NgGridStackWidget, nodesCB } from 'gridstack/dist/ng/gridstack.component';
+import { GridstackComponent, gsCreateNgComponents, NgGridStackWidget, nodesCB } from 'gridstack/dist/angular';
 
 // some custom components
 @Component({
@@ -126,7 +124,7 @@ HTML
 Code
 ```javascript
 import { GridStackOptions, GridStackWidget } from 'gridstack';
-import { nodesCB } from 'gridstack/dist/ng/gridstack.component';
+import { nodesCB } from 'gridstack/dist/angular';
 
 /** sample grid options and items to load... */
 public gridOptions: GridStackOptions = {
@@ -153,9 +151,9 @@ public identify(index: number, w: GridStackWidget) {
 ## Demo
 You can see a fuller example at [app.component.ts](src/app/app.component.ts)
 
-to build the demo, go to demo/angular and run `yarn` + `yarn start` and navigate to `http://localhost:4200/` 
+to build the demo, go to angular/projects/demo and run `yarn` + `yarn start` and navigate to `http://localhost:4200/` 
 
-Code now shipped starting with v8.0+ in dist/ng for people to use directly!
+Code now shipped starting with v8.1.2+ in `dist/angular` for people to use directly! (source code under `dist/angular/src`)
 ## Caveats 
 
  - This wrapper needs: 
