@@ -1,0 +1,11 @@
+{
+  "name": "gridstack-angular",
+  "version": "8.1.1-dev",
+  "peerDependencies": {
+    "@angular/common": "^14.2.0",
+    "@angular/core": "^14.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  }
+}
