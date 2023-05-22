@@ -1,5 +1,5 @@
 /**
- * touch.ts 8.1.2
+ * touch.ts 8.1.2-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
