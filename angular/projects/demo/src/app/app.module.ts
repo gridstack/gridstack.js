@@ -7,9 +7,9 @@ import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
 import { AComponent, BComponent, CComponent } from './dummy.component';
 
-// local copy but user would use 'gridstack/dist/angular'
-import { GridstackModule, GridstackComponent } from '../../../../../dist/angular';
-// import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
+// local testing
+// import { GridstackModule, GridstackComponent } from '../../../../../dist/angular';
+import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
 
 @NgModule({
   imports: [

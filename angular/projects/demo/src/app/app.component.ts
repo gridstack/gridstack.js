@@ -4,9 +4,9 @@ import { AngularSimpleComponent } from './simple';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 
-// NOTE: local testing of file, but normal include would be 'gridstack/dist/angular'
-import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from '../../../../../dist/angular';
-// import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from 'gridstack/dist/angular';
+// NOTE: local testing of file
+// import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from '../../../../../dist/angular';
+import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from 'gridstack/dist/angular';
 
 // unique ids sets for each item for correct ngFor updating
 let ids = 1;
