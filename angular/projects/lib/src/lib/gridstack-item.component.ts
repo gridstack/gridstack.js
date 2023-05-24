@@ -1,11 +1,11 @@
 /**
- * gridstack-item.component.ts 8.1.2-dev
+ * gridstack-item.component.ts 8.2.0
  * Copyright (c) 2022 Alain Dumesny - see GridStack root license
  */
 
 import { Component, ElementRef, Input, ViewChild, ViewContainerRef, OnDestroy, ComponentRef } from '@angular/core';
 import { GridItemHTMLElement, GridStackNode } from 'gridstack';
-import { BaseWidget } from './base-widgets';
+import { BaseWidget } from './base-widget';
 
 /** store element to Ng Class pointer back */
 export interface GridItemCompHTMLElement extends GridItemHTMLElement {

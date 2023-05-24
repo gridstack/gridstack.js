@@ -5,8 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [8.1.2-dev TBD](#812-dev-tbd)
-- [8.1.2 (2023-5-22)](#812-2023-5-22)
+- [8.2.0 (2023-05-24)](#820-2023-05-24)
+- [8.1.2 (2023-05-22)](#812-2023-05-22)
 - [8.1.1 (2023-05-13)](#811-2023-05-13)
 - [8.1.0 (2023-05-06)](#810-2023-05-06)
 - [8.0.1 (2023-04-29)](#801-2023-04-29)
@@ -88,12 +88,12 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 8.1.2-dev TBD
+## 8.2.0 (2023-05-24)
 * feat: `makeWidget()` now take optional `GridStackWidget` for sizing
 * fix: make sure `GridStack.saveCB` is call in `removeWidget()`
 * feat: angular wrapper: serialize custom data support, and making sure destroy() is called on ng components
 
-## 8.1.2 (2023-5-22)
+## 8.1.2 (2023-05-22)
 * [#2323](https://github.com/gridstack/gridstack.js/issues/2323) module for Angular wrapper 
 
 ## 8.1.1 (2023-05-13)

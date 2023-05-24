@@ -1,5 +1,5 @@
 /**
- * gridstack.component.ts 8.1.2-dev
+ * gridstack.component.ts 8.2.0
  * Copyright (c) 2022 Alain Dumesny - see GridStack root license
  */
 
@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
 
 import { GridItemCompHTMLElement, GridstackItemComponent } from './gridstack-item.component';
-import { BaseWidget } from './base-widgets';
+import { BaseWidget } from './base-widget';
 
 /** events handlers emitters signature for different events */
 export type eventCB = {event: Event};
