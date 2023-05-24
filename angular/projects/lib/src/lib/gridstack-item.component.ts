@@ -5,7 +5,7 @@
 
 import { Component, ElementRef, Input, ViewChild, ViewContainerRef, OnDestroy, ComponentRef } from '@angular/core';
 import { GridItemHTMLElement, GridStackNode } from 'gridstack';
-import { BaseWidget } from './base-widgets';
+import { BaseWidget } from './base-widget';
 
 /** store element to Ng Class pointer back */
 export interface GridItemCompHTMLElement extends GridItemHTMLElement {

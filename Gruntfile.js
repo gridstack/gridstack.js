@@ -46,6 +46,7 @@ module.exports = function(grunt) {
           'dist/angular/README.md': ['angular/README.md'],
           'dist/angular/src/gridstack.component.ts': ['angular/projects/lib/src/lib/gridstack.component.ts'],
           'dist/angular/src/gridstack-item.component.ts': ['angular/projects/lib/src/lib/gridstack-item.component.ts'],
+          'dist/angular/src/base-widget.ts': ['angular/projects/lib/src/lib/base-widget.ts'],
           'dist/angular/src/gridstack.module.ts': ['angular/projects/lib/src/lib/gridstack.module.ts'],
         }
       }
