@@ -90,6 +90,8 @@ Change log
 
 ## 8.1.2-dev TBD
 * feat: `makeWidget()` now take optional `GridStackWidget` for sizing
+* fix: make sure `GridStack.saveCB` is call in `removeWidget()`
+* feat: angular wrapper: serialize custom data support, and making sure destroy() is called on ng components
 
 ## 8.1.2 (2023-5-22)
 * [#2323](https://github.com/gridstack/gridstack.js/issues/2323) module for Angular wrapper 

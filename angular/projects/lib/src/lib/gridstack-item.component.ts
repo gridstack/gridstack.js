@@ -3,8 +3,9 @@
  * Copyright (c) 2022 Alain Dumesny - see GridStack root license
  */
 
-import { Component, ElementRef, Input, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, ViewContainerRef, OnDestroy, ComponentRef } from '@angular/core';
 import { GridItemHTMLElement, GridStackNode } from 'gridstack';
+import { BaseWidget } from './base-widgets';
 
 /** store element to Ng Class pointer back */
 export interface GridItemCompHTMLElement extends GridItemHTMLElement {
@@ -34,6 +35,12 @@ export class GridstackItemComponent implements OnDestroy {
 
   /** container to append items dynamically */
   @ViewChild('container', { read: ViewContainerRef, static: true}) public container?: ViewContainerRef;
+
+  /** ComponentRef of ourself - used by dynamic object to correctly get removed */
+  public ref: ComponentRef<GridstackItemComponent> | undefined;
+
+  /** child component so we can save/restore additional data to be saved along */
+  public childWidget: BaseWidget | undefined;
 
   /** list of options for creating/updating this item */
   @Input() public set options(val: GridStackNode) {
@@ -65,6 +72,7 @@ export class GridstackItemComponent implements OnDestroy {
   }
 
   public ngOnDestroy(): void {
+    delete this.ref;
     delete this.el._gridItemComp;
   }
 }
