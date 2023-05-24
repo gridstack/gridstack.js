@@ -5,7 +5,7 @@ import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 
 // NOTE: local testing of file
-// import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from '../../../../../dist/angular';
+// import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from './gridstack.component';
 import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from 'gridstack/dist/angular';
 
 // unique ids sets for each item for correct ngFor updating
@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
   @ViewChild('textArea', {static: true}) textEl?: ElementRef<HTMLTextAreaElement>;
 
   // which sample to show
-  public show = 6;
+  public show = 5;
 
   /** sample grid options and items to load... */
   public items: GridStackWidget[] = [
@@ -38,9 +38,9 @@ export class AppComponent implements OnInit {
     float: true,
     minRow: 1,
   }
-  public gridOptionsFull: GridStackOptions = {
+  public gridOptionsFull: NgGridStackOptions = {
     ...this.gridOptions,
-    children: this.items,
+    children: [{x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-b'}, {x:2, y:0, content:'plain html'}],
   }
 
   // nested grid options
@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
     acceptWidgets: true, // will accept .grid-stack-item by default
     margin: 5,
   };
-  private sub1: NgGridStackWidget[] = [ {x:0, y:0, type:'app-a'}, {x:1, y:0, type:'app-b'}, {x:2, y:0, type:'app-c'}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
+  private sub1: NgGridStackWidget[] = [ {x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-b'}, {x:2, y:0, selector:'app-c'}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
   private sub2: NgGridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
   private subChildren: NgGridStackWidget[] = [
     {x:0, y:0, content: 'regular item'},
@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
   constructor() {
     // give them content and unique id to make sure we track them during changes below...
     [...this.items, ...this.subChildren, ...this.sub1, ...this.sub2].forEach((w: NgGridStackWidget) => {
-      if (!w.type && !w.subGridOpts) w.content = `item ${ids}`;
+      if (!w.selector && !w.subGridOpts) w.content = `item ${ids}`;
       w.id = String(ids++);
     });
   }

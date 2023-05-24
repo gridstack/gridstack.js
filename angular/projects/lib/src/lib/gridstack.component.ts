@@ -4,12 +4,13 @@
  */
 
 import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, Input,
-  OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType } from '@angular/core';
+  OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType, ComponentRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
 
 import { GridItemCompHTMLElement, GridstackItemComponent } from './gridstack-item.component';
+import { BaseWidget } from './base-widgets';
 
 /** events handlers emitters signature for different events */
 export type eventCB = {event: Event};
@@ -17,12 +18,15 @@ export type elementCB = {event: Event, el: GridItemHTMLElement};
 export type nodesCB = {event: Event, nodes: GridStackNode[]};
 export type droppedCB = {event: Event, previousNode: GridStackNode, newNode: GridStackNode};
 
+export type NgCompInputs = {[key: string]: any};
+
 /** extends to store Ng Component selector, instead/inAddition to content */
 export interface NgGridStackWidget extends GridStackWidget {
-  type?: string; // component type to create as content
+  selector?: string; // component type to create as content
+  input?: NgCompInputs; // serialized data for the component input fields
 }
 export interface NgGridStackNode extends GridStackNode {
-  type?: string; // component type to create as content
+  selector?: string; // component type to create as content
 }
 export interface NgGridStackOptions extends GridStackOptions {
   children?: NgGridStackWidget[];
@@ -96,6 +100,9 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /** return the GridStack class */
   public get grid(): GridStack | undefined { return this._grid; }
 
+  /** ComponentRef of ourself - used by dynamic object to correctly get removed */
+  public ref: ComponentRef<GridstackComponent> | undefined;
+
   /**
    * stores the selector -> Type mapping, so we can create items dynamically from a string.
    * Unfortunately Ng doesn't provide public access to that mapping.
@@ -107,8 +114,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   }
   /** return the ng Component selector */
   public static getSelector(type: Type<Object>): string {
-    const mirror = reflectComponentType(type)!;
-    return mirror.selector;
+    return reflectComponentType(type)!.selector;
   }
 
   private _options?: GridStackOptions;
@@ -145,6 +151,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
+    delete this.ref;
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     this.grid?.destroy();
@@ -197,44 +204,84 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
 /**
  * can be used when a new item needs to be created, which we do as a Angular component, or deleted (skip)
  **/
-export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w: NgGridStackWidget | GridStackOptions, add: boolean, isGrid: boolean): HTMLElement | undefined {
-  // only care about creating ng components here...
-  if (!add || !host) return;
-
-  // create the component dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
-  if (isGrid) {
-    let grid: GridstackComponent | undefined;
-    const gridItemComp = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp;
-    if (gridItemComp) {
-      grid = gridItemComp.container?.createComponent(GridstackComponent)?.instance;
-    } else {
+export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w: NgGridStackWidget | GridStackNode, add: boolean, isGrid: boolean): HTMLElement | undefined {
+  if (add) {
+    //
+    // create the component dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
+    //
+    if (!host) return;
+    if (isGrid) {
+      const container = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp?.container;
       // TODO: figure out how to create ng component inside regular Div. need to access app injectors...
-      // const hostElement: Element = host;
-      // const environmentInjector: EnvironmentInjector;
-      // grid = createComponent(GridstackComponent, {environmentInjector, hostElement})?.instance;
+      // if (!container) {
+      //   const hostElement: Element = host;
+      //   const environmentInjector: EnvironmentInjector;
+      //   grid = createComponent(GridstackComponent, {environmentInjector, hostElement})?.instance;
+      // }
+      const gridRef = container?.createComponent(GridstackComponent);
+      const grid = gridRef?.instance;
+      if (!grid) return;
+      grid.ref = gridRef;
+      grid.options = w as GridStackOptions;
+      return grid.el;
+    } else {
+      const gridComp = (host as GridCompHTMLElement)._gridComp;
+      const gridItemRef = gridComp?.container?.createComponent(GridstackItemComponent);
+      const gridItem = gridItemRef?.instance;
+      if (!gridItem) return;
+      gridItem.ref = gridItemRef
+
+      // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
+      const selector = (w as NgGridStackWidget).selector;
+      const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
+      if (!w.subGridOpts && type) {
+        const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
+        if (typeof childWidget?.serialize === 'function' && typeof childWidget?.deserialize === 'function') {
+          // proper BaseWidget subclass, save it and load additional data
+          gridItem.childWidget = childWidget;
+          childWidget.deserialize(w);
+        }
+      }
+
+      return gridItem.el;
     }
-    if (grid) grid.options = w as GridStackOptions;
-    return grid?.el;
   } else {
-    const gridComp = (host as GridCompHTMLElement)._gridComp;
-    const gridItem = gridComp?.container?.createComponent(GridstackItemComponent)?.instance;
-
-    // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
-    const selector = (w as NgGridStackWidget).type;
-    const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
-    if (!w.subGridOpts && type) {
-      gridItem?.container?.createComponent(type);
+    //
+    // REMOVE - have to call ComponentRef:destroy() for dynamic objects to correctly remove themselves
+    // Note: this will destroy all children dynamic components as well: gridItem -> childWidget
+    //
+    const n = w as GridStackNode;
+    if (isGrid) {
+      const grid = (n.el as GridCompHTMLElement)?._gridComp;
+      if (grid?.ref) grid.ref.destroy();
+      else grid?.ngOnDestroy();
+    } else {
+      const gridItem = (n.el as GridItemCompHTMLElement)?._gridItemComp;
+      if (gridItem?.ref) gridItem.ref.destroy();
+      else gridItem?.ngOnDestroy();
     }
-
-    return gridItem?.el;
   }
+  return;
 }
 
 /**
- * can be used when saving the grid - make sure we save the content from the field (not HTML as we get ng markups)
- * and can put the extra info of type, otherwise content
+ * called for each item in the grid - check if additional information needs to be saved.
+ * Note: since this is options minus gridstack private members using Utils.removeInternalForSave(),
+ * this typically doesn't need to do anything. However your custom Component @Input() are now supported
+ * using BaseWidget.serialize()
  */
 export function gsSaveAdditionalNgInfo(n: NgGridStackNode, w: NgGridStackWidget) {
-  if (n.type) w.type = n.type;
-  else if (n.content) w.content = n.content;
+  const gridItem = (n.el as GridItemCompHTMLElement)?._gridItemComp;
+  if (gridItem) {
+    const input = gridItem.childWidget?.serialize();
+    if (input) {
+      w.input = input;
+    }
+    return;
+  }
+  // else check if Grid
+  const grid = (n.el as GridCompHTMLElement)?._gridComp;
+  if (grid) {
+    //.... save any custom data
+  }
 }

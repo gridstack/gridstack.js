@@ -8,7 +8,8 @@ import { AngularSimpleComponent } from './simple';
 import { AComponent, BComponent, CComponent } from './dummy.component';
 
 // local testing
-// import { GridstackModule, GridstackComponent } from '../../../../../dist/angular';
+// import { GridstackModule } from './gridstack.module';
+// import { GridstackComponent } from './gridstack.component';
 import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
 
 @NgModule({
