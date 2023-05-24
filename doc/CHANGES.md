@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [8.1.2-dev TBD](#812-dev-tbd)
 - [8.1.2 (2023-5-22)](#812-2023-5-22)
 - [8.1.1 (2023-05-13)](#811-2023-05-13)
 - [8.1.0 (2023-05-06)](#810-2023-05-06)
@@ -86,6 +87,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 8.1.2-dev TBD
+* feat: `makeWidget()` now take optional `GridStackWidget` for sizing
+
 ## 8.1.2 (2023-5-22)
 * [#2323](https://github.com/gridstack/gridstack.js/issues/2323) module for Angular wrapper 
 
