@@ -965,19 +965,22 @@ export class GridStack {
   }
 
   /**
-   * If you add elements to your grid by hand, you have to tell gridstack afterwards to make them widgets.
+   * If you add elements to your grid by hand (or have some framework creating DOM), you have to tell gridstack afterwards to make them widgets.
    * If you want gridstack to add the elements for you, use `addWidget()` instead.
    * Makes the given element a widget and returns it.
    * @param els widget or single selector to convert.
+   * @param options widget definition to use instead of reading attributes or using default sizing values
    *
    * @example
    * let grid = GridStack.init();
-   * grid.el.appendChild('<div id="gsi-1" gs-w="3"></div>');
-   * grid.makeWidget('#gsi-1');
+   * grid.el.appendChild('<div id="1" gs-w="3"></div>');
+   * grid.el.appendChild('<div id="2"></div>');
+   * grid.makeWidget('1');
+   * grid.makeWidget('2', {w:2, content: 'hello'});
    */
-  public makeWidget(els: GridStackElement): GridItemHTMLElement {
+  public makeWidget(els: GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
     let el = GridStack.getElement(els);
-    this._prepareElement(el, true);
+    this._prepareElement(el, true, options);
     this._updateContainerHeight();
     this._triggerAddEvent();
     this._triggerChangeEvent();
@@ -1071,6 +1074,10 @@ export class GridStack {
         node = this.engine.nodes.find(n => el === n.el);
       }
       if (!node) return;
+
+      if (GridStack.addRemoveCB) {
+        GridStack.addRemoveCB(this.el, node, false, false);
+      }
 
       // remove our DOM data (circular link) and drag&drop permanently
       delete el.gridstackNode;
