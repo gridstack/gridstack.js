@@ -35,12 +35,13 @@ export class AppComponent implements OnInit {
   ];
   public gridOptions: GridStackOptions = {
     margin: 5,
-    float: true,
+    // float: true,
     minRow: 1,
   }
+  private sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a'}, {x:1, y:0, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
   public gridOptionsFull: NgGridStackOptions = {
     ...this.gridOptions,
-    children: [{x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-b'}, {x:2, y:0, content:'plain html'}],
+    children: this.sub0,
   }
 
   // nested grid options
@@ -70,8 +71,8 @@ export class AppComponent implements OnInit {
 
   constructor() {
     // give them content and unique id to make sure we track them during changes below...
-    [...this.items, ...this.subChildren, ...this.sub1, ...this.sub2].forEach((w: NgGridStackWidget) => {
-      if (!w.selector && !w.subGridOpts) w.content = `item ${ids}`;
+    [...this.items, ...this.subChildren, ...this.sub1, ...this.sub2, ...this.sub0].forEach((w: NgGridStackWidget) => {
+      if (!w.selector && !w.content && !w.subGridOpts) w.content = `item ${ids}`;
       w.id = String(ids++);
     });
   }

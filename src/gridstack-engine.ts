@@ -126,10 +126,14 @@ export class GridStackEngine {
 
   /** return the nodes that intercept the given node. Optionally a different area can be used, as well as a second node to skip */
   public collide(skip: GridStackNode, area = skip, skip2?: GridStackNode): GridStackNode {
-    return this.nodes.find(n => n !== skip && n !== skip2 && Utils.isIntercepted(n, area));
+    const skipId = skip._id;
+    const skip2Id = skip2?._id;
+    return this.nodes.find(n => n._id !== skipId && n._id !== skip2Id && Utils.isIntercepted(n, area));
   }
   public collideAll(skip: GridStackNode, area = skip, skip2?: GridStackNode): GridStackNode[] {
-    return this.nodes.filter(n => n !== skip && n !== skip2 && Utils.isIntercepted(n, area));
+    const skipId = skip._id;
+    const skip2Id = skip2?._id;
+    return this.nodes.filter(n => n._id !== skipId && n._id !== skip2Id && Utils.isIntercepted(n, area));
   }
 
   /** does a pixel coverage collision based on where we started, returning the node that has the most coverage that is >50% mid line */
@@ -522,7 +526,7 @@ export class GridStackEngine {
   }
 
   public removeNode(node: GridStackNode, removeDOM = true, triggerEvent = false): GridStackEngine {
-    if (!this.nodes.find(n => n === node)) {
+    if (!this.nodes.find(n => n._id === node._id)) {
       // TEST console.log(`Error: GridStackEngine.removeNode() node._id=${node._id} not found!`)
       return this;
     }
@@ -531,7 +535,7 @@ export class GridStackEngine {
     }
     if (removeDOM) node._removeDOM = true; // let CB remove actual HTML (used to set _id to null, but then we loose layout info)
     // don't use 'faster' .splice(findIndex(),1) in case node isn't in our list, or in multiple times.
-    this.nodes = this.nodes.filter(n => n !== node);
+    this.nodes = this.nodes.filter(n => n._id !== node._id);
     return this._packNodes()
       ._notify([node]);
   }
@@ -564,7 +568,7 @@ export class GridStackEngine {
       column: this.column,
       float: this.float,
       nodes: this.nodes.map(n => {
-        if (n === node) {
+        if (n._id === node._id) {
           clonedNode = {...n};
           return clonedNode;
         }

@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [8.2.0-dev (TBD)](#820-dev-tbd)
 - [8.2.0 (2023-05-24)](#820-2023-05-24)
 - [8.1.2 (2023-05-22)](#812-2023-05-22)
 - [8.1.1 (2023-05-13)](#811-2023-05-13)
@@ -87,6 +88,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 8.2.0-dev (TBD)
+* fix: make sure `removeNode()` uses internal _id (unique) and not node itself (since we clone those often)
 
 ## 8.2.0 (2023-05-24)
 * feat: `makeWidget()` now take optional `GridStackWidget` for sizing
