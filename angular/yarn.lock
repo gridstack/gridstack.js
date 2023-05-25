@@ -3641,10 +3641,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, 
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-gridstack@^8.1.2:
-  version "8.1.2"
-  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-8.1.2.tgz#77472b0394e6a7eb86fd804cddad990e6ee17970"
-  integrity sha512-FVzAVDfVSF1E6LJfNomQGjZp859EKhuWOchA+aIufB+DJMuvIgO579X7CE84Kj+Tm4L5rWBvmnwv6r67baeCOg==
+gridstack@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-8.2.0.tgz#20bd295057d8a734b7ac0b90365fb988faba5e18"
+  integrity sha512-ojEFTbBsX7uklIdAo0yDiDy4uYTMcNwtHegCt9nfR03SMQThjhVgZpKBurCq3a1EmN/bQrtaX7V5vJK8qKYhjg==
 
 handle-thing@^2.0.0:
   version "2.0.1"
@@ -6123,9 +6123,9 @@ socket.io-adapter@~2.5.2:
     ws "~8.11.0"
 
 socket.io-parser@~4.2.1:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/socket.io-parser/-/socket.io-parser-4.2.3.tgz#926bcc6658e2ae0883dc9dee69acbdc76e4e3667"
-  integrity sha512-JMafRntWVO2DCJimKsRTh/wnqVvO4hrfwOqtO7f+uzwsQMuxO6VwImtYxaQ+ieoyshWOTJyV0fA21lccEXRPpQ==
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/socket.io-parser/-/socket.io-parser-4.2.2.tgz#1dd384019e25b7a3d374877f492ab34f2ad0d206"
+  integrity sha512-DJtziuKypFkMMHCm2uIshOYC7QaylbtzQwiMYDuCKy3OPkjLzu4B2vAhTlqipRHHzrI0NJeBAizTK7X+6m1jVw==
   dependencies:
     "@socket.io/component-emitter" "~3.1.0"
     debug "~4.3.1"
