@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [8.2.0-dev (TBD)](#820-dev-tbd)
+- [8.2.1 (2023-05-26)](#821-2023-05-26)
 - [8.2.0 (2023-05-24)](#820-2023-05-24)
 - [8.1.2 (2023-05-22)](#812-2023-05-22)
 - [8.1.1 (2023-05-13)](#811-2023-05-13)
@@ -89,7 +89,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 8.2.0-dev (TBD)
+## 8.2.1 (2023-05-26)
 * fix: make sure `removeNode()` uses internal _id (unique) and not node itself (since we clone those often)
 * fix: after calling `addRemoveCB` make sure we don't makeWidget() (incorrectly) a second time
 * break: `GridStackWidget.id` is now string only (used to be numberOrString) as it causes usage to have to check and cast
