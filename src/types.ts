@@ -163,9 +163,6 @@ export interface GridStackOptions {
   /** draggable handle class (e.g. 'grid-stack-item-content'). If set 'handle' is ignored (default?: null) */
   handleClass?: string;
 
-  /** id used to debug grid instance, not currently stored in DOM attributes */
-  id?: numberOrString;
-
   /** additional widget class (default?: 'grid-stack-item') */
   itemClass?: string;
 
@@ -309,7 +306,7 @@ export interface GridStackWidget extends GridStackPosition {
   /** prevents being moved by others during their (default?: undefined = un-constrained) */
   locked?: boolean;
   /** value for `gs-id` stored on the widget (default?: undefined) */
-  id?: numberOrString;
+  id?: string;
   /** html to append inside as content */
   content?: string;
   /** optional nested grid options and list of children, which then turns into actual instance at runtime to get options from */
