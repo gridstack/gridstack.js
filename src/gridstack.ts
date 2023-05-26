@@ -682,7 +682,7 @@ export class GridStack {
 
     // now add/update the widgets
     items.forEach(w => {
-      let item = (w.id || w.id === 0) ? this.engine.nodes.find(n => n.id === w.id) : undefined;
+      let item = (w.id !== undefined) ? this.engine.nodes.find(n => n.id === w.id) : undefined;
       if (item) {
         this.update(item.el, w);
         if (w.subGridOpts?.children) { // update any sub grid as well
