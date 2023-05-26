@@ -55,8 +55,8 @@ export class AppComponent implements OnInit {
   private sub2: NgGridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
   private subChildren: NgGridStackWidget[] = [
     {x:0, y:0, content: 'regular item'},
-    {x:1, y:0, w:4, h:4, subGridOpts: {children: this.sub1, id:'sub1_grid', class: 'sub1', ...this.subOptions}},
-    {x:5, y:0, w:3, h:4, subGridOpts: {children: this.sub2, id:'sub2_grid', class: 'sub2', ...this.subOptions}},
+    {x:1, y:0, w:4, h:4, subGridOpts: {children: this.sub1, class: 'sub1', ...this.subOptions}},
+    {x:5, y:0, w:3, h:4, subGridOpts: {children: this.sub2, class: 'sub2', ...this.subOptions}},
   ]
   public nestedGridOptions: NgGridStackOptions = { // main grid options
     cellHeight: 50,
@@ -64,7 +64,6 @@ export class AppComponent implements OnInit {
     minRow: 2, // don't collapse when empty
     disableOneColumnMode: true,
     acceptWidgets: true,
-    id: 'main',
     children: this.subChildren
   };
   private serializedData?: NgGridStackOptions;
