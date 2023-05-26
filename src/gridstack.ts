@@ -410,7 +410,7 @@ export class GridStack {
       return w.el !== undefined || w.x !== undefined || w.y !== undefined || w.w !== undefined || w.h !== undefined || w.content !== undefined ? true : false;
     }
 
-    let el: HTMLElement;
+    let el: GridItemHTMLElement;
     let node: GridStackNode;
     if (typeof els === 'string') {
       let doc = document.implementation.createHTMLDocument(''); // IE needs a param
@@ -434,6 +434,10 @@ export class GridStack {
 
     if (!el) return;
 
+    // if the caller ended up initializing the widget in addRemoveCB, or we stared with one already, skip the rest
+    node = el.gridstackNode;
+    if (node && el.parentElement === this.el && this.engine.nodes.find(n => n._id === node._id)) return el;
+
     // Tempting to initialize the passed in opt with default and valid values, but this break knockout demos
     // as the actual value are filled in when _prepareElement() calls el.getAttribute('gs-xyz') before adding the node.
     // So make sure we load any DOM attributes that are not specified in passed in options (which override)
@@ -449,23 +453,7 @@ export class GridStack {
       this.el.appendChild(el);
     }
 
-    // similar to makeWidget() that doesn't read attr again and worse re-create a new node and loose any _id
-    this._prepareElement(el, true, options);
-    this._updateContainerHeight();
-
-    // see if there is a sub-grid to create
-    if (node.subGridOpts) {
-      this.makeSubGrid(node.el, node.subGridOpts, undefined, false); // node.subGrid will be used as option in method, no need to pass
-    }
-
-    // if we're adding an item into 1 column (_prevColumn is set only when going to 1) make sure
-    // we don't override the larger 12 column layout that was already saved. #1985
-    if (this._prevColumn && this.opts.column === 1) {
-      this._ignoreLayoutsNodeChange = true;
-    }
-    this._triggerAddEvent();
-    this._triggerChangeEvent();
-    delete this._ignoreLayoutsNodeChange;
+    this.makeWidget(el, options);
 
     return el;
   }
@@ -982,8 +970,22 @@ export class GridStack {
     let el = GridStack.getElement(els);
     this._prepareElement(el, true, options);
     this._updateContainerHeight();
+
+    // see if there is a sub-grid to create
+    const node = el.gridstackNode;
+    if (node.subGridOpts) {
+      this.makeSubGrid(el, node.subGridOpts, undefined, false); // node.subGrid will be used as option in method, no need to pass
+    }
+
+    // if we're adding an item into 1 column (_prevColumn is set only when going to 1) make sure
+    // we don't override the larger 12 column layout that was already saved. #1985
+    if (this._prevColumn && this.opts.column === 1) {
+      this._ignoreLayoutsNodeChange = true;
+    }
     this._triggerAddEvent();
     this._triggerChangeEvent();
+    delete this._ignoreLayoutsNodeChange;
+
     return el;
   }
 

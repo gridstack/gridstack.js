@@ -91,6 +91,7 @@ Change log
 
 ## 8.2.0-dev (TBD)
 * fix: make sure `removeNode()` uses internal _id (unique) and not node itself (since we clone those often)
+* fix: after calling `addRemoveCB` make sure we don't makeWidget() (incorrectly) a second time
 
 ## 8.2.0 (2023-05-24)
 * feat: `makeWidget()` now take optional `GridStackWidget` for sizing
