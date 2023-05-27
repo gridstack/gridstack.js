@@ -28,7 +28,6 @@ h1 {
 }
 
 .grid-stack-item-content {
-  color: #2c3e50;
   text-align: center;
   background-color: #18bc9c;
 }
@@ -52,7 +51,6 @@ h1 {
   border: 2px dashed green;
   text-align: center;
   line-height: 35px;
-  z-index: 10;
   background: rgba(0, 255, 0, 0.1);
   cursor: default;
   display: inline-block;
