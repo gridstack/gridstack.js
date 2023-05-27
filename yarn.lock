@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-gridstack@8.1.1:
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-8.1.1.tgz#acdc910346989d2016e03763b0de55b0de0d3224"
-  integrity sha512-Ya7EdwAh72iug8A51hSjH8FI0v83zxPKjo9zIT5iw5Dvh3BUbgRl2hrrmGAkDfbPlfK5lgeEsQNx08UK8iNAQw==
+gridstack@8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-8.2.1.tgz#b3997d76aad331efc9a050a633ce886e0838871b"
+  integrity sha512-onNay1MD/IrRfqkyXoRxpCqh0gKlQzaXGUunpZOP+PYI+eZaZnWSq/RitUUy0T0fKChl3ri92FjqGZunhc7TUA==
