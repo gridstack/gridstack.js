@@ -45,17 +45,16 @@ import { GridStackOptions } from 'gridstack';
 // sample grid options + items to load...
 public gridOptions: GridStackOptions = {
   margin: 5,
-  float: true,
   children: [ // or call load()/addWidget() with same data
     {x:0, y:0, minW:2, content:'Item 1'},
-    {x:1, y:1, content:'Item 2'},
-    {x:2, y:2, content:'Item 3'},
+    {x:1, y:0, content:'Item 2'},
+    {x:0, y:1, content:'Item 3'},
   ]
 }
 ```
 
 # More Complete example
-In this example (build on previous one) will use your actual custom angular components inside each grid item (instead of dummy html content)
+In this example (build on previous one) will use your actual custom angular components inside each grid item (instead of dummy html content) and have per component saved settings as well (using BaseWidget).
 
 HTML 
 ```html
@@ -68,21 +67,26 @@ Code
 ```ts
 import { Component } from '@angular/core';
 import { GridStack, GridStackOptions } from 'gridstack';
-import { GridstackComponent, gsCreateNgComponents, NgGridStackWidget, nodesCB } from 'gridstack/dist/angular';
+import { GridstackComponent, gsCreateNgComponents, NgGridStackWidget, nodesCB, BaseWidget } from 'gridstack/dist/angular';
 
 // some custom components
 @Component({
   selector: 'app-a',
-  template: 'Comp A', // your real ng content goes in each component instead...
+  template: 'Comp A {{text}}',
 })
-export class AComponent {
+export class AComponent extends BaseWidget implements OnDestroy {
+  @Input() text: string = 'foo'; // test custom input data
+  public override serialize(): NgCompInputs | undefined  { return this.text ? {text: this.text} : undefined; }
+  ngOnDestroy() {
+    console.log('Comp A destroyed'); // test to make sure cleanup happens
+  }
 }
 
 @Component({
   selector: 'app-b',
   template: 'Comp B',
 })
-export class BComponent {
+export class BComponent extends BaseWidget {
 }
 
 // .... in your module for example
@@ -94,12 +98,11 @@ constructor() {
 // now our content will use Components instead of dummy html content
 public gridOptions: NgGridStackOptions = {
   margin: 5,
-  float: true,
   minRow: 1, // make space for empty message
   children: [ // or call load()/addWidget() with same data
-    {x:0, y:0, minW:2, type:'app-a'},
-    {x:1, y:1, type:'app-b'},
-    {x:2, y:2, content:'plain html content'},
+    {x:0, y:0, minW:2, selector:'app-a'},
+    {x:1, y:0, selector:'app-b'},
+    {x:0, y:1, content:'plain html content'},
   ]
 }
 
@@ -127,14 +130,11 @@ import { GridStackOptions, GridStackWidget } from 'gridstack';
 import { nodesCB } from 'gridstack/dist/angular';
 
 /** sample grid options and items to load... */
-public gridOptions: GridStackOptions = {
-  margin: 5,
-  float: true,
-}
+public gridOptions: GridStackOptions = { margin: 5 }
 public items: GridStackWidget[] = [
   {x:0, y:0, minW:2, id:'1'}, // must have unique id used for trackBy
-  {x:1, y:1, id:'2'},
-  {x:2, y:2, id:'3'},
+  {x:1, y:0, id:'2'},
+  {x:0, y:1, id:'3'},
 ];
 
 // called whenever items change size/position/etc..
@@ -149,11 +149,11 @@ public identify(index: number, w: GridStackWidget) {
 ```
 
 ## Demo
-You can see a fuller example at [app.component.ts](src/app/app.component.ts)
+You can see a fuller example at [app.component.ts](projects/demo/src/app/app.component.ts)
 
-to build the demo, go to angular/projects/demo and run `yarn` + `yarn start` and navigate to `http://localhost:4200/` 
+to build the demo, go to [angular/projects/demo](projects/demo/) and run `yarn` + `yarn start` and navigate to `http://localhost:4200/` 
 
-Code now shipped starting with v8.1.2+ in `dist/angular` for people to use directly! (source code under `dist/angular/src`)
+Code ship starting with v8.1.2+ in `dist/angular` for people to use directly and is an angular module! (source code under `dist/angular/src`)
 ## Caveats 
 
  - This wrapper needs: 
