@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [8.2.1-dev (TBD)](#821-dev-tbd)
 - [8.2.1 (2023-05-26)](#821-2023-05-26)
 - [8.2.0 (2023-05-24)](#820-2023-05-24)
 - [8.1.2 (2023-05-22)](#812-2023-05-22)
@@ -88,6 +89,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 8.2.1-dev (TBD)
+* fix [#2349](https://github.com/gridstack/gridstack.js/issues/2349) grid NoMove vs item NoMove support
 
 ## 8.2.1 (2023-05-26)
 * fix: make sure `removeNode()` uses internal _id (unique) and not node itself (since we clone those often)
