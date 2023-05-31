@@ -52,6 +52,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected static originStyleProp = ['transition', 'pointerEvents', 'position', 'left', 'top', 'minWidth', 'willChange'];
   /** @internal pause before we call the actual drag hit collision code */
   protected dragTimeout: number;
+  protected _originalMousePositionInsideElement: { x: number; y: number; };
 
   constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
     super();
@@ -199,6 +200,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       } else {
         delete DDManager.dropElement;
       }
+      if (node) {
+        const rect = this.el.getBoundingClientRect();
+        this._originalMousePositionInsideElement = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      }
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
       const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
@@ -280,6 +285,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // style.cursor = 'move'; //  TODO: can't set with pointerEvents=none ! (done in CSS as well)
     style.width = this.el.offsetWidth + 'px';
     style.height = this.el.offsetHeight + 'px';
+
     style.willChange = 'left, top';
     style.position = 'fixed'; // let us drag between grids by not clipping as parent .grid-stack is position: 'relative'
     this._dragFollow(e); // now position it
@@ -316,17 +322,14 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal updates the top/left position to follow the mouse */
   protected _dragFollow(e: DragEvent): void {
     const style = this.helper.style;
-    const containerElement = Utils.getPositionContainerElement(this.helper.parentElement);
-    const containerBoundingClientRect = containerElement.getBoundingClientRect();
     const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
 
+
     // Position the element behind the mouse
-    const node = (this.el as GridItemHTMLElement).gridstackNode || {};
-    const x = (e.clientX - containerBoundingClientRect.left - (node._originalMousePositionInsideElement?.x || 0)) / scaleX;
-    const y = (e.clientY - containerBoundingClientRect.top - (node._originalMousePositionInsideElement?.y || 0)) / scaleY;
+    const x = (e.clientX  - (this._originalMousePositionInsideElement?.x || 0)) / scaleX;
+    const y = (e.clientY  - (this._originalMousePositionInsideElement?.y || 0)) / scaleY;
     style.left = `${x}px`;
     style.top = `${y}px`;
-    console.log('isVisible', this.helper !== null)
   }
 
   /** @internal */
