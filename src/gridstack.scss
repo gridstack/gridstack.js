@@ -103,16 +103,6 @@ $animation_speed: .3s !default;
     }
   }
 
-  &.ui-draggable-dragging,
-  &.ui-resizable-resizing {
-    z-index: 100;
-
-    > .grid-stack-item-content {
-      box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
-      opacity: 0.8;
-    }
-  }
-
   &.ui-draggable-dragging {
     will-change: left, top;
     cursor: move;
@@ -120,6 +110,17 @@ $animation_speed: .3s !default;
 
   &.ui-resizable-resizing {
     will-change: width, height;
+  }
+}
+
+// not .grid-stack-item specific to also affect dragIn regions
+.ui-draggable-dragging,
+.ui-resizable-resizing {
+  z-index: 10000; // bootstrap modal has a z-index of 1050
+
+  > .grid-stack-item-content {
+    box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.2);
+    opacity: 0.8;
   }
 }
 
