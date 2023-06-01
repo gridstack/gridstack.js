@@ -202,7 +202,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       }
       if (node) {
         const rect = this.el.getBoundingClientRect();
-        this._originalMousePositionInsideElement = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        this._originalMousePositionInsideElement = { x: s.clientX - rect.left, y: s.clientY - rect.top };
       }
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
@@ -323,11 +323,14 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _dragFollow(e: DragEvent): void {
     const style = this.helper.style;
     const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
+    // when an element is scaled, the helper is positioned relative to it's parent, so we need to remove the extra offset
+    const containementRect = this.helperContainment.getBoundingClientRect();
+    const offsetX = scaleX === 1 ? 0 : containementRect.left;
+    const offsetY = scaleY === 1 ? 0 : containementRect.top;
 
-
-    // Position the element behind the mouse
-    const x = (e.clientX  - (this._originalMousePositionInsideElement?.x || 0)) / scaleX;
-    const y = (e.clientY  - (this._originalMousePositionInsideElement?.y || 0)) / scaleY;
+    // Position the element under the mouse
+    const x = (e.clientX - offsetX - (this._originalMousePositionInsideElement?.x || 0)) / scaleX;
+    const y = (e.clientY - offsetY - (this._originalMousePositionInsideElement?.y || 0)) / scaleY;
     style.left = `${x}px`;
     style.top = `${y}px`;
   }

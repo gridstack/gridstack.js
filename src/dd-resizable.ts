@@ -281,10 +281,11 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal constrain the size to the set min/max values */
   protected _constrainSize(oWidth: number, oHeight: number): Size {
     const { scaleX, scaleY } = Utils.getScaleForElement(this.el);
-    const maxWidth = this.option.maxWidth ? this.option.maxWidth * scaleX : Number.MAX_SAFE_INTEGER;
-    const minWidth = this.option.minWidth ? this.option.minWidth * scaleX : oWidth;
-    const maxHeight = this.option.maxHeight ? this.option.maxHeight * scaleY : Number.MAX_SAFE_INTEGER;
-    const minHeight = this.option.minHeight ? this.option.minHeight * scaleY : oHeight;
+    const o = this.option;
+    const maxWidth = o.maxWidth ? o.maxWidth * scaleX : Number.MAX_SAFE_INTEGER;
+    const minWidth = o.minWidth ? o.minWidth * scaleX : oWidth;
+    const maxHeight = o.maxHeight ? o.maxHeight * scaleY : Number.MAX_SAFE_INTEGER;
+    const minHeight = o.minHeight ? o.minHeight * scaleY : oHeight;
     const width = Math.min(maxWidth, Math.max(minWidth, oWidth));
     const height = Math.min(maxHeight, Math.max(minHeight, oHeight));
     return { width, height };

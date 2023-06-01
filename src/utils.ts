@@ -3,7 +3,7 @@
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
-import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget, GridItemHTMLElement } from './types';
+import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
 
 export interface HeightData {
   h: number;
@@ -558,20 +558,20 @@ export class Utils {
   }
 
   public static getScaleForElement(element: HTMLElement) {
-    let elementToGetTheScaleFrom = element;
+    let el = element;
 
     // Check if element is visible, otherwise the width/height will be of 0
-    while (elementToGetTheScaleFrom && !elementToGetTheScaleFrom.offsetParent) {
-      elementToGetTheScaleFrom = elementToGetTheScaleFrom.parentElement;
+    while (el && !el.offsetParent) {
+      el = el.parentElement;
     }
 
-    if (!elementToGetTheScaleFrom) {
+    if (!el) {
       return { scaleX: 1, scaleY: 1 };
     }
 
-    const boundingClientRect = elementToGetTheScaleFrom.getBoundingClientRect();
-    const scaleX = boundingClientRect.width / elementToGetTheScaleFrom.offsetWidth;
-    const scaleY = boundingClientRect.height / elementToGetTheScaleFrom.offsetHeight;
+    const boundingClientRect = el.getBoundingClientRect();
+    const scaleX = boundingClientRect.width / el.offsetWidth;
+    const scaleY = boundingClientRect.height / el.offsetHeight;
     return { scaleX, scaleY };
   }
 
