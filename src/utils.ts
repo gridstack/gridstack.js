@@ -561,8 +561,12 @@ export class Utils {
     let elementToGetTheScaleFrom = element;
 
     // Check if element is visible, otherwise the width/height will be of 0
-    while (!elementToGetTheScaleFrom.offsetParent) {
+    while (elementToGetTheScaleFrom && !elementToGetTheScaleFrom.offsetParent) {
       elementToGetTheScaleFrom = elementToGetTheScaleFrom.parentElement;
+    }
+
+    if (!elementToGetTheScaleFrom) {
+      return { scaleX: 1, scaleY: 1 };
     }
 
     const boundingClientRect = elementToGetTheScaleFrom.getBoundingClientRect();
