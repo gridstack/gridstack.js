@@ -285,7 +285,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const style = this.helper.style;
     style.pointerEvents = 'none'; // needed for over items to get enter/leave
     // style.cursor = 'move'; //  TODO: can't set with pointerEvents=none ! (done in CSS as well)
-    style['min-width'] = 0; // since we no longer relative to our parent and we don't resize anyway (normally 100/#column %)
     style.width = this.dragOffset.width + 'px';
     style.height = this.dragOffset.height + 'px';
     style.willChange = 'left, top';

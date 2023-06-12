@@ -94,6 +94,7 @@ Change log
 * fix [#2349](https://github.com/gridstack/gridstack.js/issues/2349) grid NoMove vs item NoMove support
 * fix [#2352](https://github.com/gridstack/gridstack.js/issues/2352) .ui-draggable-dragging z-index for modal dialogs
 * fix [#2357](https://github.com/gridstack/gridstack.js/issues/2357) NaN inf loop when using cellHeight rem/em
+* fix [#2354](https://github.com/gridstack/gridstack.js/issues/2354) max-w cloning issue fix
 
 ## 8.2.1 (2023-05-26)
 * fix: make sure `removeNode()` uses internal _id (unique) and not node itself (since we clone those often)
