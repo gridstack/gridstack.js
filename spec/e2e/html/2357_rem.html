@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+  <title>REM demo</title>
+  <link rel="stylesheet" href="../../../demo.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+</head>
+<body>
+  <div class="grid-stack"></div>
+  <script type="text/javascript">
+    let items = [
+      {x: 0, y: 0},
+      {x: 1, y: 0},
+    ];
+    let count = 0;
+    items.forEach(d => d.content = String(count++));
+
+    let grid = GridStack.init({
+      // cellHeight: '90',
+      cellHeight: '8rem',
+    }).load(items);
+  </script>
+</body>
+</html>
