@@ -55,8 +55,8 @@ export class Utils {
 
   /** convert a potential selector into actual list of html elements. optional root which defaults to document (for shadow dom) */
   static getElements(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement[] {
-    const doc = ('getElementById' in root) ? root as Document : undefined;
     if (typeof els === 'string') {
+      const doc = ('getElementById' in root) ? root as Document : undefined;
 
       // Note: very common for people use to id='1,2,3' which is only legal as HTML5 id, but not CSS selectors
       // so if we start with a number, assume it's an id and just return that one item...
@@ -78,8 +78,8 @@ export class Utils {
 
   /** convert a potential selector into actual single element. optional root which defaults to document (for shadow dom) */
   static getElement(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement {
-    const doc = ('getElementById' in root) ? root as Document : undefined;
     if (typeof els === 'string') {
+      const doc = ('getElementById' in root) ? root as Document : undefined;
       if (!els.length) return null;
       if (doc && els[0] === '#') {
         return doc.getElementById(els.substring(1));

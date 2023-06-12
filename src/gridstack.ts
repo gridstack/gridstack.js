@@ -1464,14 +1464,12 @@ export class GridStack {
   }
 
   /** @internal call to read any default attributes from element */
-  protected _readAttr(el: HTMLElement): GridStackWidget {
+  protected _readAttr(el: HTMLElement, clearDefaultAttr = true): GridStackWidget {
     let n: GridStackNode = {};
     n.x = Utils.toNumber(el.getAttribute('gs-x'));
     n.y = Utils.toNumber(el.getAttribute('gs-y'));
     n.w = Utils.toNumber(el.getAttribute('gs-w'));
     n.h = Utils.toNumber(el.getAttribute('gs-h'));
-    if (!(n.w > 1)) el.removeAttribute('gs-w');
-    if (!(n.h > 1)) el.removeAttribute('gs-h');
     n.autoPosition = Utils.toBool(el.getAttribute('gs-auto-position'));
     n.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
     n.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
@@ -1480,13 +1478,19 @@ export class GridStack {
 
     // read but never written out
     n.maxW = Utils.toNumber(el.getAttribute('gs-max-w'));
-    if (n.maxW) el.removeAttribute('gs-max-w');
     n.minW = Utils.toNumber(el.getAttribute('gs-min-w'));
-    if (n.minW) el.removeAttribute('gs-min-w');
     n.maxH = Utils.toNumber(el.getAttribute('gs-max-h'));
-    if (n.maxH) el.removeAttribute('gs-max-h');
     n.minH = Utils.toNumber(el.getAttribute('gs-min-h'));
-    if (n.minH) el.removeAttribute('gs-min-h');
+
+    // v8.x optimization to reduce un-needed attr that don't render or are default CSS
+    if (clearDefaultAttr) {
+      if (n.w === 1) el.removeAttribute('gs-w');
+      if (n.h === 1) el.removeAttribute('gs-h');
+      if (n.maxW) el.removeAttribute('gs-max-w');
+      if (n.minW) el.removeAttribute('gs-min-w');
+      if (n.maxH) el.removeAttribute('gs-max-h');
+      if (n.minH) el.removeAttribute('gs-min-h');
+    }
 
     // remove any key not found (null or false which is default)
     for (const key in n) {
@@ -1884,8 +1888,8 @@ export class GridStack {
         cellHeight = this.getCellHeight(true);
 
         // load any element attributes if we don't have a node
-        if (!node) {// @ts-ignore private read only on ourself
-          node = this._readAttr(el);
+        if (!node) {
+          node = this._readAttr(el, false); // don't wipe external (e.g. drag toolbar) attr #2354
         }
         if (!node.grid) {
           node._isExternal = true;
