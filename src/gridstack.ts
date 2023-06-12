@@ -732,7 +732,7 @@ export class GridStack {
     // else get first cell height
     let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
     if (el) {
-      let height = Utils.toNumber(el.getAttribute('gs-h'));
+      let height = Utils.toNumber(el.getAttribute('gs-h')) || 1; // since we don't write 1 anymore
       return Math.round(el.offsetHeight / height);
     }
     // else do entire grid and # of rows (but doesn't work if min-height is the actual constrain)
