@@ -134,7 +134,7 @@ export class Utils {
    * @param dir 1 for asc, -1 for desc (optional)
    * @param width width of the grid. If undefined the width will be calculated automatically (optional).
    **/
-  static sort(nodes: GridStackNode[], dir?: -1 | 1, column?: number): GridStackNode[] {
+  static sort(nodes: GridStackNode[], dir: 1 | -1 = 1, column?: number): GridStackNode[] {
     column = column || nodes.reduce((col, n) => Math.max(n.x + n.w, col), 0) || 12;
     if (dir === -1)
       return nodes.sort((a, b) => (b.x + b.y * column)-(a.x + a.y * column));
