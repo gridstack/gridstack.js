@@ -4,7 +4,7 @@
  */
 
 import { Utils } from './utils';
-import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts, SaveFcn } from './types';
+import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts, SaveFcn, CompactOptions } from './types';
 
 /** callback to update the DOM attributes since this class is generic (no HTML or other info) for items that changed - see _notify() */
 type OnChangeCB = (nodes: GridStackNode[]) => void;
@@ -258,20 +258,23 @@ export class GridStackEngine {
     return !this.collide(nn);
   }
 
-  /** re-layout grid items to reclaim any empty space */
-  public compact(): GridStackEngine {
+  /** re-layout grid items to reclaim any empty space - optionally keeping the sort order exactly the same (list mode) vs truly finding an empty spaces */
+  public compact(layout: CompactOptions = 'compact', sortBefore = true): GridStackEngine {
     if (this.nodes.length === 0) return this;
     this.batchUpdate()
-      .sortNodes();
+    if (sortBefore) this.sortNodes();
+    this._inColumnResize = true; // faster addNode()
     let copyNodes = this.nodes;
     this.nodes = []; // pretend we have no nodes to conflict layout to start with...
-    copyNodes.forEach(node => {
-      if (!node.locked) {
-        node.autoPosition = true;
+    copyNodes.forEach((n, index, list) => {
+      let after: GridStackNode;
+      if (!n.locked) {
+        n.autoPosition = true;
+        if (layout === 'list' && index) after = list[index - 1];
       }
-      this.addNode(node, false); // 'false' for add event trigger
-      node._dirty = true; // will force attr update
+      this.addNode(n, false, after); // 'false' for add event trigger
     });
+    delete this._inColumnResize;
     return this.batchUpdate(false);
   }
 
@@ -288,8 +291,8 @@ export class GridStackEngine {
   public get float(): boolean { return this._float || false; }
 
   /** sort the nodes array from first to last, or reverse. Called during collision/placement to force an order */
-  public sortNodes(dir?: -1 | 1): GridStackEngine {
-    this.nodes = Utils.sort(this.nodes, dir, this.column);
+  public sortNodes(dir: 1 | -1 = 1, column = this.column): GridStackEngine {
+    this.nodes = Utils.sort(this.nodes, dir, column);
     return this;
   }
 
@@ -482,11 +485,12 @@ export class GridStackEngine {
 
   /** find the first available empty spot for the given node width/height, updating the x,y attributes. return true if found.
    * optionally you can pass your own existing node list and column count, otherwise defaults to that engine data.
+   * Optionally pass a widget to start search AFTER, meaning the order will remain the same but possibly have empty slots we skipped
    */
-  public findEmptyPosition(node: GridStackNode, nodeList = this.nodes, column = this.column): boolean {
-    nodeList = Utils.sort(nodeList, -1, column);
+  public findEmptyPosition(node: GridStackNode, nodeList = this.nodes, column = this.column, after?: GridStackNode): boolean {
+    let start = after ? after.y * column + (after.x + after.w) : 0;
     let found = false;
-    for (let i = 0; !found; ++i) {
+    for (let i = start; !found; ++i) {
       let x = i % column;
       let y = Math.floor(i / column);
       if (x + node.w > column) {
@@ -494,6 +498,7 @@ export class GridStackEngine {
       }
       let box = {x, y, w: node.w, h: node.h};
       if (!nodeList.find(n => Utils.isIntercepted(box, n))) {
+        if (node.x !== x || node.y !== y) node._dirty = true;
         node.x = x;
         node.y = y;
         delete node.autoPosition;
@@ -504,7 +509,7 @@ export class GridStackEngine {
   }
 
   /** call to add the given node to our list, fixing collision and re-packing */
-  public addNode(node: GridStackNode, triggerAddEvent = false): GridStackNode {
+  public addNode(node: GridStackNode, triggerAddEvent = false, after?: GridStackNode): GridStackNode {
     let dup = this.nodes.find(n => n._id === node._id);
     if (dup) return dup; // prevent inserting twice! return it instead.
 
@@ -513,7 +518,7 @@ export class GridStackEngine {
     delete node._temporaryRemoved;
     delete node._removeDOM;
 
-    if (node.autoPosition && this.findEmptyPosition(node)) {
+    if (node.autoPosition && this.findEmptyPosition(node, this.nodes, this.column, after)) {
       delete node.autoPosition; // found our slot
     }
 
@@ -790,10 +795,18 @@ export class GridStackEngine {
   public updateNodeWidths(prevColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
     if (!this.nodes.length || !column || prevColumn === column) return this;
 
+    // simpler shortcuts layouts
+    const doCompact = layout === 'compact' || layout === 'list';
+    if (doCompact) {
+      this.sortNodes(1, prevColumn); // sort with original layout once and only once (new column will affect order otherwise)
+      return this.compact(layout, false);
+    }
+    
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
     this.cacheLayout(this.nodes, prevColumn);
     this.batchUpdate(); // do this EARLY as it will call saveInitial() so we can detect where we started for _dirty and collision
     let newNodes: GridStackNode[] = [];
+
 
     // if we're going to 1 column and using DOM order rather than default sorting, then generate that layout
     let domOrder = false;

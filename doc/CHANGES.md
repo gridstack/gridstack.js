@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [8.2.3-dev TBD](#823-dev-tbd)
 - [8.2.3 (2023-06-11)](#823-2023-06-11)
 - [8.2.1 (2023-05-26)](#821-2023-05-26)
 - [8.2.0 (2023-05-24)](#820-2023-05-24)
@@ -89,6 +90,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 8.2.3-dev TBD
+* feat [#2358](https://github.com/gridstack/gridstack.js/issues/2358) column() resizing now support reflowing content as list
 
 ## 8.2.3 (2023-06-11)
 * fix [#2349](https://github.com/gridstack/gridstack.js/issues/2349) grid NoMove vs item NoMove support

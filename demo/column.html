@@ -17,6 +17,8 @@
     <div>
       <label>Choose re-layout:</label>
       <select onchange="setLayout(this.value)">
+        <option value="list">list</option>
+        <option value="compact">compact</option>
         <option value="moveScale">move + scale</option>
         <option value="move">move</option>
         <option value="scale">scale</option>
@@ -25,6 +27,8 @@
       </select>
     </div>
     <div>
+      <a onClick="grid.removeAll().load(layout1)" class="btn btn-primary" href="#">random</a>
+      <a onClick="grid.removeAll().load(layout2)" class="btn btn-primary" href="#">list</a>
       <a onClick="addWidget()" class="btn btn-primary" href="#">Add Widget</a>
       <a onClick="setOneColumn(false)" class="btn btn-primary" href="#">1 Column</a>
       <a onClick="setOneColumn(true)" class="btn btn-primary" href="#">1 Column DOM</a>
@@ -41,21 +45,7 @@
   </div>
 
   <script type="text/javascript">
-    let grid = GridStack.init({
-      float: true,
-      disableOneColumnMode: true, // prevent auto column for this manual demo
-      cellHeight: 100 // fixed as default 'auto' (square) makes it hard to test 1-3 column in actual large windows tests
-    });
-    let text = document.querySelector('#column-text');
-    let layout = 'moveScale';
-
-    grid.on('added removed change', function(e, items) {
-      let str = '';
-      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-      console.log(e.type + ' ' + items.length + ' items:' + str );
-    });
-
-    let items = [
+    let layout1 = [ // DOM order will be 0,1,2,3,4,5,6 vs column1 = 0,1,4,3,2,5,6
       /* match karma testing
       {x: 0, y: 0, w: 4, h: 2},
       {x: 4, y: 0, w: 4, h: 4},
@@ -71,11 +61,29 @@
       {x: 5, y: 3, w: 2},
       {x: 0, y: 4, w: 12}
     ];
-    let count = 0;
-    items.forEach(n => {
-      n.content = '<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>' + count++ + (n.text ? n.text : '');
-      grid.addWidget(n); // DOM order will be 0,1,2,3,4,5,6 vs column1 = 0,1,4,3,2,5,6
+    let layout2 = [{h:2},{},{},{},{},{},{},{},{},{w:2},{},{},{},{},{},{}];
+    layout2.forEach((n,i) => {
+      n.content = '<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>' + ++i;
     });
+    let count = 0;
+    layout1.forEach(n => {
+      n.content = '<button onClick="grid.removeWidget(this.parentNode.parentNode)">X</button><br>' + count++ + (n.text ? n.text : '');
+    });
+
+    let grid = GridStack.init({
+      float: true,
+      disableOneColumnMode: true, // prevent auto column for this manual demo
+      cellHeight: 100 // fixed as default 'auto' (square) makes it hard to test 1-3 column in actual large windows tests
+    }).load(layout2);
+    let text = document.querySelector('#column-text');
+    let layout = 'list';
+
+    grid.on('added removed change', function(e, items) {
+      let str = '';
+      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
+      console.log(e.type + ' ' + items.length + ' items:' + str );
+    });
+
 
     function addWidget() {
       let n = items[count] || {
