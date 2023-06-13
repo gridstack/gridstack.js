@@ -33,7 +33,7 @@ gridstack.js API
 - [API](#api)
   - [`addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
   - [`batchUpdate(flag = true)`](#batchupdateflag--true)
-  - [`compact()`](#compact)
+  - [`compact(layout: CompactOptions = 'compact', doSort = true)`](#compactlayout-compactoptions--compact-dosort--true)
   - [`cellHeight(val: number, update = true)`](#cellheightval-number-update--true)
   - [`cellWidth()`](#cellwidth)
   - [`column(column: number, layout: ColumnOptions = 'moveScale')`](#columncolumn-number-layout-columnoptions--movescale)
@@ -361,9 +361,14 @@ grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content
 
 use before calling a bunch of `addWidget()` to prevent un-necessary relayouts in between (more efficient) and get a single event callback. You will see no changes until `batchUpdate(false)` is called.
 
-### `compact()`
+### `compact(layout: CompactOptions = 'compact', doSort = true)`
 
-re-layout grid items to reclaim any empty space.
+re-layout grid items to reclaim any empty space. Options are:
+- `'list'` keep the widget left->right order the same, even if that means leaving an empty slot if things don't fit
+- `'compact'` might re-order items to fill any empty space
+
+- `doSort` - `false` to let you do your own sorting ahead in case you need to control a different order. (default to sort)
+ 
 
 ### `cellHeight(val: number, update = true)`
 
@@ -385,10 +390,14 @@ Requires `gridstack-extra.css` (or minimized version) for [2-11],
 else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
 
 - `column` - Integer > 0 (default 12)
-- `layout` - specify the type of re-layout that will happen (position, size, etc...).
-Note: items will never be outside of the current column boundaries. default ('moveScale'). Ignored for 1 column.
-Possible values: 'moveScale' | 'move' | 'scale' | 'none' | (column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void.
-A custom function option takes new/old column count, and array of new/old positions.
+- `layout` - specify the type of re-layout that will happen (position, size, etc...). Values are: `'list' | 'compact' | 'moveScale' | 'move' | 'scale' | 'none' | ((column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void);`
+
+* `'list'` - treat items as sorted list, keeping items (un-sized unless too big for column count) sequentially reflowing them
+* `'compact'` - similar to list, but using compact() method which will possibly re-order items if an empty slots are available due to a larger item needing to be pushed to next row
+* `'moveScale'` - will scale and move items by the ratio new newColumnCount / oldColumnCount
+* `'move'` | `'scale'` - will only size or move items
+* `'none'` will leave items unchanged, unless they don't fit in column count
+* custom function that takes new/old column count, and array of new/old positions
 Note: new list may be partially already filled if we have a partial cache of the layout at that size (items were added later). If complete cache is present this won't get called at all.
 
 ### `destroy([removeDOM])`

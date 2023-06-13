@@ -54,7 +54,7 @@ export class GridStackEngine {
     this.onChange = opts.onChange;
   }
 
-  public batchUpdate(flag = true): GridStackEngine {
+  public batchUpdate(flag = true, doPack = true): GridStackEngine {
     if (!!this.batchMode === flag) return this;
     this.batchMode = flag;
     if (flag) {
@@ -64,7 +64,8 @@ export class GridStackEngine {
     } else {
       this._float = this._prevFloat;
       delete this._prevFloat;
-      this._packNodes()._notify();
+      if (doPack) this._packNodes();
+      this._notify();
     }
     return this;
   }
@@ -258,12 +259,14 @@ export class GridStackEngine {
     return !this.collide(nn);
   }
 
-  /** re-layout grid items to reclaim any empty space - optionally keeping the sort order exactly the same (list mode) vs truly finding an empty spaces */
-  public compact(layout: CompactOptions = 'compact', sortBefore = true): GridStackEngine {
+  /** re-layout grid items to reclaim any empty space - optionally keeping the sort order exactly the same ('list' mode) vs truly finding an empty spaces */
+  public compact(layout: CompactOptions = 'compact', doSort = true): GridStackEngine {
     if (this.nodes.length === 0) return this;
-    this.batchUpdate()
-    if (sortBefore) this.sortNodes();
-    this._inColumnResize = true; // faster addNode()
+    if (doSort) this.sortNodes();
+    const wasBatch = this.batchMode;
+    if (!wasBatch) this.batchUpdate();
+    const wasColumnResize = this._inColumnResize;
+    if (!wasColumnResize) this._inColumnResize = true; // faster addNode()
     let copyNodes = this.nodes;
     this.nodes = []; // pretend we have no nodes to conflict layout to start with...
     copyNodes.forEach((n, index, list) => {
@@ -274,8 +277,9 @@ export class GridStackEngine {
       }
       this.addNode(n, false, after); // 'false' for add event trigger
     });
-    delete this._inColumnResize;
-    return this.batchUpdate(false);
+    if (!wasColumnResize) delete this._inColumnResize;
+    if (!wasBatch) this.batchUpdate(false);
+    return this;
   }
 
   /** enable/disable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html) */
@@ -518,14 +522,16 @@ export class GridStackEngine {
     delete node._temporaryRemoved;
     delete node._removeDOM;
 
+    let skipCollision: boolean;
     if (node.autoPosition && this.findEmptyPosition(node, this.nodes, this.column, after)) {
       delete node.autoPosition; // found our slot
+      skipCollision = true;
     }
 
     this.nodes.push(node);
     if (triggerAddEvent) { this.addedNodes.push(node); }
 
-    this._fixCollisions(node);
+    if (!skipCollision) this._fixCollisions(node);
     if (!this.batchMode) { this._packNodes()._notify(); }
     return node;
   }
@@ -792,23 +798,21 @@ export class GridStackEngine {
    * @param layout specify the type of re-layout that will happen (position, size, etc...).
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public updateNodeWidths(prevColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
+  public columnChanged(prevColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
     if (!this.nodes.length || !column || prevColumn === column) return this;
 
     // simpler shortcuts layouts
     const doCompact = layout === 'compact' || layout === 'list';
     if (doCompact) {
       this.sortNodes(1, prevColumn); // sort with original layout once and only once (new column will affect order otherwise)
-      return this.compact(layout, false);
     }
-    
-    // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data
-    this.cacheLayout(this.nodes, prevColumn);
+
+    // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data IFF we're sizing down (see below)
+    if (column < prevColumn) this.cacheLayout(this.nodes, prevColumn);
     this.batchUpdate(); // do this EARLY as it will call saveInitial() so we can detect where we started for _dirty and collision
     let newNodes: GridStackNode[] = [];
-
-
-    // if we're going to 1 column and using DOM order rather than default sorting, then generate that layout
+    
+    // if we're going to 1 column and using DOM order (item passed in) rather than default sorting, then generate that layout
     let domOrder = false;
     if (column === 1 && nodes?.length) {
       domOrder = true;
@@ -822,14 +826,13 @@ export class GridStackEngine {
       newNodes = nodes;
       nodes = [];
     } else {
-      nodes = Utils.sort(this.nodes, -1, prevColumn); // current column reverse sorting so we can insert last to front (limit collision)
+      nodes = doCompact ? this.nodes : Utils.sort(this.nodes, -1, prevColumn); // current column reverse sorting so we can insert last to front (limit collision)
     }
 
     // see if we have cached previous layout IFF we are going up in size (restore) otherwise always
     // generate next size down from where we are (looks more natural as you gradually size down).
-    let cacheNodes: GridStackNode[] = [];
-    if (column > prevColumn) {
-      cacheNodes = this._layouts[column] || [];
+    if (column > prevColumn && this._layouts) {
+      const cacheNodes = this._layouts[column] || [];
       // ...if not, start with the largest layout (if not already there) as down-scaling is more accurate
       // by pretending we came from that larger column by assigning those values as starting point
       let lastIndex = this._layouts.length - 1;
@@ -839,59 +842,72 @@ export class GridStackEngine {
           let n = nodes.find(n => n._id === cacheNode._id);
           if (n) {
             // still current, use cache info positions
-            n.x = cacheNode.x;
-            n.y = cacheNode.y;
+            if (!doCompact) {
+              n.x = cacheNode.x;
+              n.y = cacheNode.y;
+            }
             n.w = cacheNode.w;
           }
         });
       }
+
+      // if we found cache re-use those nodes that are still current
+      cacheNodes.forEach(cacheNode => {
+        let j = nodes.findIndex(n => n._id === cacheNode._id);
+        if (j !== -1) {
+          // still current, use cache info positions
+          if (doCompact) {
+            nodes[j].w = cacheNode.w; // only w is used, and don't trim the list
+            return;
+          }
+          if (cacheNode.autoPosition || isNaN(cacheNode.x) || isNaN(cacheNode.y)) {
+            this.findEmptyPosition(cacheNode, newNodes);
+          }
+          if (!cacheNode.autoPosition) {
+            nodes[j].x = cacheNode.x;
+            nodes[j].y = cacheNode.y;
+            nodes[j].w = cacheNode.w;
+            newNodes.push(nodes[j]);
+          }
+          nodes.splice(j, 1);
+        }
+      });
     }
 
-    // if we found cache re-use those nodes that are still current
-    cacheNodes.forEach(cacheNode => {
-      let j = nodes.findIndex(n => n._id === cacheNode._id);
-      if (j !== -1) {
-        // still current, use cache info positions
-        if (cacheNode.autoPosition || isNaN(cacheNode.x) || isNaN(cacheNode.y)) {
-          this.findEmptyPosition(cacheNode, newNodes);
+    // much simpler layout that just compacts
+    if (doCompact) {
+      this.compact(layout, false);
+    } else {
+      // ...and add any extra non-cached ones
+      if (nodes.length) {
+        if (typeof layout === 'function') {
+          layout(column, prevColumn, newNodes, nodes);
+        } else if (!domOrder) {
+          let ratio = (doCompact || layout === 'none') ? 1 : column / prevColumn;
+          let move = (layout === 'move' || layout === 'moveScale');
+          let scale = (layout === 'scale' || layout === 'moveScale');
+          nodes.forEach(node => {
+            // NOTE: x + w could be outside of the grid, but addNode() below will handle that
+            node.x = (column === 1 ? 0 : (move ? Math.round(node.x * ratio) : Math.min(node.x, column - 1)));
+            node.w = ((column === 1 || prevColumn === 1) ? 1 : scale ? (Math.round(node.w * ratio) || 1) : (Math.min(node.w, column)));
+            newNodes.push(node);
+          });
+          nodes = [];
         }
-        if (!cacheNode.autoPosition) {
-          nodes[j].x = cacheNode.x;
-          nodes[j].y = cacheNode.y;
-          nodes[j].w = cacheNode.w;
-          newNodes.push(nodes[j]);
-        }
-        nodes.splice(j, 1);
       }
-    });
-    // ...and add any extra non-cached ones
-    if (nodes.length) {
-      if (typeof layout === 'function') {
-        layout(column, prevColumn, newNodes, nodes);
-      } else if (!domOrder) {
-        let ratio = column / prevColumn;
-        let move = (layout === 'move' || layout === 'moveScale');
-        let scale = (layout === 'scale' || layout === 'moveScale');
-        nodes.forEach(node => {
-          // NOTE: x + w could be outside of the grid, but addNode() below will handle that
-          node.x = (column === 1 ? 0 : (move ? Math.round(node.x * ratio) : Math.min(node.x, column - 1)));
-          node.w = ((column === 1 || prevColumn === 1) ? 1 :
-            scale ? (Math.round(node.w * ratio) || 1) : (Math.min(node.w, column)));
-          newNodes.push(node);
-        });
-        nodes = [];
-      }
-    }
 
-    // finally re-layout them in reverse order (to get correct placement)
-    if (!domOrder) newNodes = Utils.sort(newNodes, -1, column);
-    this._inColumnResize = true; // prevent cache update
-    this.nodes = []; // pretend we have no nodes to start with (add() will use same structures) to simplify layout
-    newNodes.forEach(node => {
-      this.addNode(node, false); // 'false' for add event trigger
-      delete node._orig; // make sure the commit doesn't try to restore things back to original
-    });
-    this.batchUpdate(false);
+      // finally re-layout them in reverse order (to get correct placement)
+      if (!domOrder) newNodes = Utils.sort(newNodes, -1, column);
+      this._inColumnResize = true; // prevent cache update
+      this.nodes = []; // pretend we have no nodes to start with (add() will use same structures) to simplify layout
+      newNodes.forEach(node => {
+        this.addNode(node, false); // 'false' for add event trigger
+        delete node._orig; // make sure the commit doesn't try to restore things back to original
+      });
+    }
+    
+    this.nodes.forEach(n => delete n._orig); // clear _orig before batch=false so it doesn't handle float=true restore
+    this.batchUpdate(false, !doCompact);
     delete this._inColumnResize;
     return this;
   }

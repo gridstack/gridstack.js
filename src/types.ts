@@ -53,7 +53,7 @@ export const dragInDefaultOptions: DDDragInOpt = {
  * different layout options when changing # of columns, including a custom function that takes new/old column count, and array of new/old positions
  * Note: new list may be partially already filled if we have a cache of the layout at that size and new items were added later.
  * Options are:
- * 'list' - treat items as sorted list, keeping items (unsized unless too big for column count) sequentially reflowing them
+ * 'list' - treat items as sorted list, keeping items (un-sized unless too big for column count) sequentially reflowing them
  * 'compact' - similar to list, but using compact() method which will possibly re-order items if an empty slots are available due to a larger item needing to be pushed to next row
  * 'moveScale' - will scale and move items by the ratio new newColumnCount / oldColumnCount
  * 'move' | 'scale' - will only size or move items
