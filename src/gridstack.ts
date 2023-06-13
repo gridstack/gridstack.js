@@ -9,7 +9,7 @@ import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn } from './types';
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions } from './types';
 
 /*
  * and include D&D by default
@@ -796,9 +796,15 @@ export class GridStack {
     return (this.el.clientWidth || this.el.parentElement.clientWidth || window.innerWidth);
   }
 
-  /** re-layout grid items to reclaim any empty space */
-  public compact(): GridStack {
-    this.engine.compact();
+  /**
+   * re-layout grid items to reclaim any empty space. Options are:
+   * 'list' keep the widget left->right order the same, even if that means leaving an empty slot if things don't fit
+   * 'compact' might re-order items to fill any empty space
+   * 
+   * doSort - 'false' to let you do your own sorting ahead in case you need to control a different order. (default to sort)
+   **/
+  public compact(layout: CompactOptions = 'compact', doSort = true): GridStack {
+    this.engine.compact(layout, doSort);
     this._triggerChangeEvent();
     return this;
   }
@@ -810,7 +816,7 @@ export class GridStack {
    * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
    * @param column - Integer > 0 (default 12).
    * @param layout specify the type of re-layout that will happen (position, size, etc...).
-   * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
+   * Note: items will never be outside of the current column boundaries. default ('moveScale'). Ignored for 1 column
    */
   public column(column: number, layout: ColumnOptions = 'moveScale'): GridStack {
     if (column < 1 || this.opts.column === column) return this;
@@ -837,7 +843,7 @@ export class GridStack {
       });
       if (!domNodes.length) { domNodes = undefined; }
     }
-    this.engine.updateNodeWidths(oldColumn, column, domNodes, layout);
+    this.engine.columnChanged(oldColumn, column, domNodes, layout);
     if (this._isAutoCellHeight) this.cellHeight();
 
     // and trigger our event last...
