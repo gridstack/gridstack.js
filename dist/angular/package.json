@@ -1,0 +1,31 @@
+{
+  "name": "gridstack-angular",
+  "version": "8.3.0-dev",
+  "peerDependencies": {
+    "@angular/common": "^14.2.0",
+    "@angular/core": "^14.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "module": "fesm2015/gridstack-angular.mjs",
+  "es2020": "fesm2020/gridstack-angular.mjs",
+  "esm2020": "esm2020/gridstack-angular.mjs",
+  "fesm2020": "fesm2020/gridstack-angular.mjs",
+  "fesm2015": "fesm2015/gridstack-angular.mjs",
+  "typings": "index.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "esm2020": "./esm2020/gridstack-angular.mjs",
+      "es2020": "./fesm2020/gridstack-angular.mjs",
+      "es2015": "./fesm2015/gridstack-angular.mjs",
+      "node": "./fesm2015/gridstack-angular.mjs",
+      "default": "./fesm2020/gridstack-angular.mjs"
+    }
+  },
+  "sideEffects": false
+}

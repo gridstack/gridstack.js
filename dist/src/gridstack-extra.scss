@@ -1,0 +1,25 @@
+/**
+ * default to generate [2-11] columns as 1 (oneColumnMode) and 12 (default) are in the main css
+ * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ */
+$start: 2 !default;
+$end: 11 !default;
+
+@function fixed($float) {
+  @return calc(round($float * 1000) / 1000); // total 4-5 digits being %
+}
+
+@mixin grid-stack-items($columns) {
+  .gs-#{$columns} > .grid-stack-item {
+    width: fixed(calc(100% / $columns));
+
+    @for $i from 1 through $columns - 1 {
+      &[gs-x='#{$i}'] { left: fixed(calc(100% / $columns) * $i); }
+      &[gs-w='#{$i+1}'] { width: fixed(calc(100% / $columns) * ($i+1)); }
+    }
+  }
+}
+
+@for $j from $start through $end {
+  @include grid-stack-items($j)
+}

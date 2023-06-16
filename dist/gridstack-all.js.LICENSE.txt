@@ -1,0 +1,7 @@
+/*!
+ * GridStack 8.3.0-dev
+ * https://gridstackjs.com/
+ *
+ * Copyright (c) 2021-2022 Alain Dumesny
+ * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
+ */

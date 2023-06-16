@@ -7,21 +7,15 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "inlineSources": true,
-    "lib": [ "es6", "es2015", "dom" ],
+    "lib": ["es6", "es2015", "dom"],
     "module": "ES2020",
     "noImplicitAny": false,
     "outDir": "./dist",
     "sourceMap": true,
     "strict": false,
-    "target": "ES2020"
-  }, 
-  "exclude": [
-    "./src/**/*.spec.ts",
-  ],
-  "include": [
-    "./src/**/*.ts"
-  ],
-  "typeroots": [
-    "./node_modules/@types"
-  ]
+    "target": "ES2015"
+  },
+  "exclude": ["./src/**/*.spec.ts"],
+  "include": ["./src/**/*.ts"],
+  "typeroots": ["./node_modules/@types"]
 }
