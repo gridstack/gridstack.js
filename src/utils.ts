@@ -377,6 +377,18 @@ export class Utils {
     }
   }
 
+  static getContainerForPositionFixedElement(el: HTMLElement | HTMLHtmlElement): HTMLElement {
+    if (el === document.documentElement) return el;
+
+    const style = getComputedStyle(el as HTMLElement);
+
+    if (style.transform && style.transform !== 'none') {
+      return el;
+    } else {
+      return this.getContainerForPositionFixedElement(el.parentElement);
+    }
+  }
+
   /** @internal */
   static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
     // is widget in view?

@@ -323,10 +323,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _dragFollow(e: DragEvent): void {
     const style = this.helper.style;
     const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
-    // when an element is scaled, the helper is positioned relative to it's parent, so we need to remove the extra offset
-    const containementRect = this.helperContainment.getBoundingClientRect();
-    const offsetX = scaleX === 1 ? 0 : containementRect.left;
-    const offsetY = scaleY === 1 ? 0 : containementRect.top;
+    const transformParent = Utils.getContainerForPositionFixedElement(this.helper);
+    const transformParentRect = transformParent.getBoundingClientRect();
+    // when an element is scaled, the helper is positioned relative to the first transformed parent, so we need to remove the extra offset
+    const offsetX = transformParentRect.left;
+    const offsetY = transformParentRect.top;
 
     // Position the element under the mouse
     const x = (e.clientX - offsetX - (this._originalMousePositionInsideElement?.x || 0)) / scaleX;
@@ -350,14 +351,20 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal TODO: set to public as called by DDDroppable! */
   public ui(): DDUIData {
     const containmentEl = this.el.parentElement;
+    const scrollElement = Utils.getScrollElement(this.el.parentElement);
     const containmentRect = containmentEl.getBoundingClientRect();
     const offset = this.helper.getBoundingClientRect();
     const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
 
+    // When an element is inside a scrolled element, the boundingClientRect will return the position of the element minus the scroll.
+    const parentPositionIncludingScroll = containmentEl === scrollElement
+      ? { top: containmentRect.top + scrollElement.scrollTop, left: containmentRect.left + scrollElement.scrollLeft }
+      : { top: containmentRect.top, left: containmentRect.left };
+
     return {
       position: { // Current CSS position of the helper as { top, left } object
-        top: (offset.top - containmentRect.top) / scaleY,
-        left: (offset.left - containmentRect.left) / scaleX,
+        top: (offset.top - parentPositionIncludingScroll.top) / scaleY,
+        left: (offset.left - parentPositionIncludingScroll.left) / scaleX,
       }
       /* not used by GridStack for now...
       helper: [this.helper], //The object arr representing the helper that's being dragged.
