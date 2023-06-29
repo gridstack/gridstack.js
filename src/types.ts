@@ -25,7 +25,7 @@ export const gridDefaults: GridStackOptions = {
   oneColumnSize: 768,
   placeholderClass: 'grid-stack-placeholder',
   placeholderText: '',
-  removableOptions: { accept: '.grid-stack-item' },
+  removableOptions: { accept: '.grid-stack-item' ,decline:'grid-stack-non-removable'},
   resizable: { handles: 'se' },
   rtl: 'auto',
 
@@ -39,6 +39,7 @@ export const gridDefaults: GridStackOptions = {
   // removable: false,
   // staticGrid: false,
   // styleInHead: false,
+  //removable
 };
 
 /** default dragIn options */
@@ -334,6 +335,7 @@ export interface DDResizeOpt {
 export interface DDRemoveOpt {
   /** class that can be removed (default?: '.' + opts.itemClass) */
   accept?: string;
+  decline?: string;
 }
 
 /** Drag&Drop dragging options */
