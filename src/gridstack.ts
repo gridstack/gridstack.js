@@ -286,6 +286,7 @@ export class GridStack {
       },
       removableOptions: {
         accept: opts.itemClass ? '.' + opts.itemClass : gridDefaults.removableOptions.accept,
+        decline: gridDefaults.removableOptions.decline
       },
     };
     if (el.getAttribute('gs-animate')) { // default to true, but if set to false use that instead
@@ -2038,7 +2039,7 @@ export class GridStack {
   /** @internal mark item for removal */
   private _itemRemoving(el: GridItemHTMLElement, remove: boolean) {
     let node = el ? el.gridstackNode : undefined;
-    if (!node || !node.grid) return;
+    if (!node || !node.grid || el.classList.contains(this.opts.removableOptions.decline)) return;
     remove ? node._isAboutToRemove = true : delete node._isAboutToRemove;
     remove ? el.classList.add('grid-stack-item-removing') : el.classList.remove('grid-stack-item-removing');
   }
