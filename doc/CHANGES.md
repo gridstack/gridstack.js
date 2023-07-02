@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [8.3.0-dev (TBD)](#830-dev-tbd)
 - [8.3.0 (2023-06-13)](#830-2023-06-13)
 - [8.2.3 (2023-06-11)](#823-2023-06-11)
 - [8.2.1 (2023-05-26)](#821-2023-05-26)
@@ -90,6 +91,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 8.3.0-dev (TBD)
+* feat [#2378](https://github.com/gridstack/gridstack.js/pull/2378) attribute `DDRemoveOpt.decline` to deny the removal of a specific class.
 
 ## 8.3.0 (2023-06-13)
 * feat [#2358](https://github.com/gridstack/gridstack.js/issues/2358) column(N, 'list'|'compact'|...) resizing now support reflowing content as list

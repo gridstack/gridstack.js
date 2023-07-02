@@ -70,7 +70,7 @@ gridstack.js API
 ## Grid Options
 
 - `acceptWidgets` - Accept widgets dragged from other grids or from outside (default: `false`). Can be:
-   * `true` will accept HTML element having `'.grid-stack-item'` as class attribute, else `false`
+   * `true` will accept HTML element having `'grid-stack-item'` as class attribute, else `false`
    * string for explicit class name to accept instead
    * `function (el: Element): boolean` function called before an item will be accepted when entering a grid. the function will be passed the item being dragged, and should return true | false. See [example](https://github.com/gridstack/gridstack.js/blob/master/demo/two.html#L62)
 - `alwaysShowResizeHandle` - possible values (default: `mobile`) - does not apply to non-resizable widgets
