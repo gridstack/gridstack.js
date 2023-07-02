@@ -156,7 +156,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _setupAccept(): DDDroppable {
     if (!this.option.accept) return this;
     if (typeof this.option.accept === 'string') {
-      this.accept = (el: HTMLElement) => el.matches(this.option.accept as string);
+      this.accept = (el: HTMLElement) => el.classList.contains(this.option.accept as string) || el.matches(this.option.accept as string);
     } else {
       this.accept = this.option.accept;
     }

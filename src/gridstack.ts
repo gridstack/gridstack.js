@@ -285,7 +285,7 @@ export class GridStack {
         handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) || gridDefaults.draggable.handle,
       },
       removableOptions: {
-        accept: opts.itemClass ? '.' + opts.itemClass : gridDefaults.removableOptions.accept,
+        accept: opts.itemClass || gridDefaults.removableOptions.accept,
         decline: gridDefaults.removableOptions.decline
       },
     };
