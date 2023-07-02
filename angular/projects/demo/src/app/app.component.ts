@@ -66,6 +66,23 @@ export class AppComponent implements OnInit {
     acceptWidgets: true,
     children: this.subChildren
   };
+  public twoGridOpt1: NgGridStackOptions = {
+    column: 6,
+    cellHeight: 50,
+    margin: 5,
+    minRow: 1, // don't collapse when empty
+    disableOneColumnMode: true,
+    removable: '.trash',
+    acceptWidgets: true,
+    float: true,
+    children: [
+      {x: 0, y: 0, w: 2, h: 2},
+      {x: 3, y: 1, h: 2},
+      {x: 4, y: 1},
+      {x: 2, y: 3, w: 3, maxW: 3, id: 'special', content: 'has maxW=3'},
+    ]
+  };
+  public twoGridOpt2: NgGridStackOptions = { ...this.twoGridOpt1, float: false }
   private serializedData?: NgGridStackOptions;
 
   constructor() {
@@ -110,15 +127,13 @@ export class AppComponent implements OnInit {
         case 4: data = this.items; break;
         case 5: data = this.gridOptionsFull; break;
         case 6: data = this.nestedGridOptions; break;
+        case 7: data = this.twoGridOpt1;
+          GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
+          break;
       }
       if (this.origTextEl) this.origTextEl.nativeElement.value = JSON.stringify(data, null, '  ');
     });
     if (this.textEl) this.textEl.nativeElement.value = '';
-
-    // if (val === 6 && !this.gridComp) {
-    //   const cont: HTMLElement | null = document.querySelector('.grid-container');
-    //   if (cont) GridStack.addGrid(cont, this.serializedData);
-    // }
   }
 
   /** called whenever items change size/position/etc.. */
