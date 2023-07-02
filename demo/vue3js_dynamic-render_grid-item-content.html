@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue3 Gridstack: Gridstack DOM with Vue Rendering</title>
+    <link rel="stylesheet" href="demo.css"/>
+    <script src="../dist/gridstack-all.js"></script>
+  </head>
+  <body>
+    <main id="app">
+      <a href="./index.html">Back to All Demos</a>
+      <h1>Vue3: Gridstack Controls Vue Rendering Grid Item Content</h1>
+      <p>
+        <strong>Use Vue3 render functions to dynamically render only the grid item content.</strong><br />
+        GridStack is handles when items are added/removed, rendering grid item element, and Vue handles rendering <i>only</i> the item content.
+      </p>
+      <p>
+        Helpful Resources:
+        <ul>
+          <li><a href="https://vuejs.org/guide/extras/render-function.html#render-functions-jsx" target="_blank">Vue Render Functions</a></li>
+        </ul>
+      </p>
+      <p>
+        Notes:
+        <ul>
+          <li>This implementation currently does not support nested grid</li>
+        </ul>
+      </p>
+      <button type="button" @click="addNewWidget()">Add Widget</button> {{ info }}
+      <div class="grid-stack"></div>
+    </main>
+    <script type="module">
+      import { createApp, ref, onMounted, onBeforeUnmount, h, render, toRefs } from "https://cdn.jsdelivr.net/npm/vue@3.0.11/dist/vue.esm-browser.js";
+
+      const GridContentComponent = {
+        props: {
+          itemId: {
+            type: [String, Number],
+            required: true,
+          },
+        },
+        emits: ['remove'],
+        setup(props, { emit }) {
+          const { itemId } = toRefs(props)
+
+          onBeforeUnmount(() => {
+            console.log(`In vue onBeforeUnmount for item ${itemId.value}`)
+          });
+
+          function handleRemove() {
+            emit('remove', itemId.value)
+          }
+
+          return {
+            itemId,
+            handleRemove,
+          }
+        },
+        template: `
+          <div class="my-custom-grid-item-content">
+            <button @click=handleRemove>X</button>
+            <p>
+              Vue Grid Item Content {{ itemId }}
+            </p>
+          </div>
+        `
+      }
+
+      createApp({
+        setup() {
+          let info = ref("");
+          let grid = null; // DO NOT use ref(null) as proxies GS will break all logic when comparing structures... see https://github.com/gridstack/gridstack.js/issues/2115
+          const items = [
+            { id: 1, x: 2, y: 1, h: 2 },
+            { id: 2, x: 2, y: 4, w: 3 },
+            { id: 3, x: 4, y: 2 },
+            { id: 4, x: 3, y: 1, h: 2 },
+            { id: 5, x: 0, y: 6, w: 2, h: 2 },
+          ];
+          let count = ref(items.length);
+
+          onMounted(() => {
+            grid = GridStack.init({ // DO NOT user grid.value = GridStack.init(), see above
+              float: true,
+              cellHeight: "70px",
+              minRow: 1,
+            });
+
+            grid.on('added', function(event, items) {
+              for (const item of items) {
+                const itemEl = item.el
+                const itemElContent = itemEl.querySelector('.grid-stack-item-content')
+
+                const itemId = item.id
+
+                // Use Vue's render function to create the content
+                // See https://vuejs.org/guide/extras/render-function.html#render-functions-jsx
+                //      Supports: emit, slots, props, attrs, see onRemove event below
+                const itemContentVNode = h(
+                  GridContentComponent,
+                  {
+                    itemId: itemId,
+                    onRemove: (itemId) => {
+                      grid.removeWidget(itemEl)
+                    }
+                  }
+                )
+
+                // Render the vue node into the item element
+                render(itemContentVNode, itemElContent)
+              }
+            });
+
+            grid.on('removed', function(event, items) {
+              for (const item of items) {
+                const itemEl = item.el
+                const itemElContent = itemEl.querySelector('.grid-stack-item-content')
+                // Unmount the vue node from the item element
+                // Calling render with null will allow vue to clean up the DOM, and trigger lifecycle hooks
+                render(null, itemElContent)
+              }
+            });
+
+            grid.load(items);
+          });
+
+          function addNewWidget() {
+            const node = items[count.value] || {
+              x: Math.round(12 * Math.random()),
+              y: Math.round(5 * Math.random()),
+              w: Math.round(1 + 3 * Math.random()),
+              h: Math.round(1 + 3 * Math.random()),
+            };
+            node.id = String(count.value++);
+            grid.addWidget(node);
+          }
+
+          return {
+            info,
+            addNewWidget,
+          };
+        },
+
+        watch: {
+          /**
+           * Clear the info text after a two second timeout. Clears previous timeout first.
+           */
+          info: function (newVal) {
+            if (newVal.length === 0) return;
+
+            window.clearTimeout(this.timerId);
+            this.timerId = window.setTimeout(() => {
+              this.info = "";
+            }, 2000);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
