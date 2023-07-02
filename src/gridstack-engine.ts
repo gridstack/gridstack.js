@@ -547,8 +547,9 @@ export class GridStackEngine {
     if (removeDOM) node._removeDOM = true; // let CB remove actual HTML (used to set _id to null, but then we loose layout info)
     // don't use 'faster' .splice(findIndex(),1) in case node isn't in our list, or in multiple times.
     this.nodes = this.nodes.filter(n => n._id !== node._id);
-    return this._packNodes()
-      ._notify([node]);
+    if (!node._isAboutToRemove) this._packNodes(); // if dragged out, no need to relayout as already done...
+    this._notify([node]);
+    return this;
   }
 
   public removeAll(removeDOM = true): GridStackEngine {

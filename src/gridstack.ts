@@ -2113,17 +2113,12 @@ export class GridStack {
         node.el = target;
 
         if (node._isAboutToRemove) {
-          let gridToNotify = el.gridstackNode.grid;
-          if (gridToNotify._gsEventHandler[event.type]) {
-            gridToNotify._gsEventHandler[event.type](event, target);
+          let grid = el.gridstackNode.grid;
+          if (grid._gsEventHandler[event.type]) {
+            grid._gsEventHandler[event.type](event, target);
           }
-          this._removeDD(el);
-          gridToNotify.engine.removedNodes.push(node);
-          gridToNotify._triggerRemoveEvent();
-          // break circular links and remove DOM
-          delete el.gridstackNode;
-          delete node.el;
-          el.remove();
+          grid.engine.nodes.push(node); // temp add it back so we can proper remove it next
+          grid.removeWidget(el, true, true);
         } else {
           Utils.removePositioningStyles(target);
           if (node._temporaryRemoved) {
