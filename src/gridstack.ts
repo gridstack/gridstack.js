@@ -1192,10 +1192,16 @@ export class GridStack {
 
       // check for content changing
       if (w.content) {
-        let sub = el.querySelector('.grid-stack-item-content');
-        if (sub && sub.innerHTML !== w.content) {
-          sub.innerHTML = w.content;
+        let toRemove = el.querySelectorAll('.grid-stack-item-content > :not(.grid-stack-nested, style)');
+        const subGrid = el.querySelector('.grid-stack-item-content > .grid-stack-nested')
+        const itemContent = el.querySelector('.grid-stack-item-content');
+        if (toRemove) {
+          toRemove.forEach(child => itemContent.removeChild(child));
         }
+        const tempEl = document.createElement("div");
+        tempEl.innerHTML = w.content;
+        tempEl.childNodes.forEach(childNode => itemContent.insertBefore(childNode, subGrid));
+
         delete w.content;
       }
 
