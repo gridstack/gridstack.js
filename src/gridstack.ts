@@ -1170,8 +1170,8 @@ export class GridStack {
     }
 
     GridStack.getElements(els).forEach(el => {
-      if (!el || !el.gridstackNode) return;
-      let n = el.gridstackNode;
+      let n = el?.gridstackNode;
+      if (!n) return;
       let w = Utils.cloneDeep(opt); // make a copy we can modify in case they re-use it or multiple items
       delete w.autoPosition;
 
@@ -1191,17 +1191,15 @@ export class GridStack {
       }
 
       // check for content changing
-      if (w.content) {
-        let toRemove = el.querySelectorAll('.grid-stack-item-content > :not(.grid-stack-nested, style)');
-        const subGrid = el.querySelector('.grid-stack-item-content > .grid-stack-nested')
+      if (w.content !== undefined) {
         const itemContent = el.querySelector('.grid-stack-item-content');
-        if (toRemove) {
-          toRemove.forEach(child => itemContent.removeChild(child));
+        if (!itemContent || itemContent.innerHTML === w.content) return;
+        itemContent.innerHTML = w.content;
+        // restore any sub-grid back
+        if (n.subGrid?.el) {
+          itemContent.appendChild(n.subGrid.el);
+          if (!n.subGrid.opts.styleInHead) n.subGrid._updateStyles(true); // force create
         }
-        const tempEl = document.createElement("div");
-        tempEl.innerHTML = w.content;
-        tempEl.childNodes.forEach(childNode => itemContent.insertBefore(childNode, subGrid));
-
         delete w.content;
       }
 

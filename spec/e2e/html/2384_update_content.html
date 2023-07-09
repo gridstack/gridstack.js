@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<head>
+  <title>Nested grid update content</title>
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <link rel="stylesheet" href="../../../dist/gridstack-extra.min.css"/>
+  <style type="text/css">
+    .grid-stack {
+      background: lightgoldenrodyellow;
+    }
+    .grid-stack-item-content {
+      color: #2c3e50;
+      text-align: center;
+      background-color: #18bc9c;
+    }
+    .grid-stack.grid-stack-nested {
+      position: absolute;
+      inset: 20px 0 0 0; 
+      border: 1px solid black;
+    }
+  </style>
+  <script src="../../../dist/gridstack-all.js"></script>
+</head>
+<body>
+  <h1>Nested grid when updating content</h1>
+  <div>
+    <button onClick="updateContent()">Update Subgrid</button>
+    <button onClick="move()">move Subgrid</button>
+  </div>
+  <br/>
+  <div class="grid-stack"></div>
+  <script type="text/javascript">
+    var options = {
+      cellHeight: 70,
+      acceptWidgets: true,
+      margin: 5,
+      children: [
+        {x:0, y:0, w:2, h:2, content: 'original content', subGridOpts: {
+          children: [{x:0, y:0, content: '1'}, {x:1, y:0, content: '2'}], cellHeight: 50, column: 2, margin: 5, acceptWidgets: true,
+        }},
+      ]
+    };
+
+    var grid = GridStack.init(options);
+
+    updateContent = function() {
+      const n = grid.engine.nodes[0];
+      grid.update(n.el, {content: "updated content"});
+    }
+
+    move = function() {
+      const n = grid.engine.nodes[0];;
+      grid.update(n.el, {x: n.x+1});
+    }
+  </script>
+</body>
+</html>
