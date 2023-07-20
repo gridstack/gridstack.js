@@ -95,6 +95,7 @@ Change log
 ## 8.3.0-dev (TBD)
 * feat [#2378](https://github.com/gridstack/gridstack.js/pull/2378) attribute `DDRemoveOpt.decline` to deny the removal of a specific class.
 * fix: dragging onto trash now calls removeWidget() and therefore `GridStack.addRemoveCB` (for component cleanup)
+* feat: make `load()` support re-order loading without explicit coordinates (`autoPosition` or missing `x,y`) uses passed order.
 
 ## 8.3.0 (2023-06-13)
 * feat [#2358](https://github.com/gridstack/gridstack.js/issues/2358) column(N, 'list'|'compact'|...) resizing now support reflowing content as list
