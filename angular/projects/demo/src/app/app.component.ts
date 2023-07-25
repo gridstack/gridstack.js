@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
     // float: true,
     minRow: 1,
   }
-  private sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a'}, {x:1, y:0, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
+  private sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a' , input: {text: 'test'}}, {x:1, y:0, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
   public gridOptionsFull: NgGridStackOptions = {
     ...this.gridOptions,
     children: this.sub0,
