@@ -102,6 +102,11 @@ export class Utils {
     return els;
   }
 
+  /** true if we should resize to content */
+  static shouldFitToContent(n: GridStackNode): boolean {
+    return n.fitToContent || (n.grid?.opts.fitToContent && n.fitToContent !== false);
+  }
+
   /** returns true if a and b overlap */
   static isIntercepted(a: GridStackPosition, b: GridStackPosition): boolean {
     return !(a.y >= b.y + b.h || a.y + a.h <= b.y || a.x + a.w <= b.x || a.x >= b.x + b.w);

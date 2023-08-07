@@ -9,7 +9,7 @@ import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions } from './types';
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts } from './types';
 
 /*
  * and include D&D by default
@@ -203,6 +203,7 @@ export class GridStack {
   public parentGridItem?: GridStackNode;
 
   protected static engineClass: typeof GridStackEngine;
+  protected resizeObserver: ResizeObserver;
 
   /** @internal unique class name for our generated CSS style sheet */
   protected _styleSheetClass?: string;
@@ -235,10 +236,10 @@ export class GridStack {
   protected _styles: GridCSSStyleSheet;
   /** @internal flag to keep cells square during resize */
   protected _isAutoCellHeight: boolean;
-  /** @internal track event binding to window resize so we can remove */
-  protected _windowResizeBind: () => void;
   /** @internal limit auto cell resizing method */
-  protected _cellHeightThrottle: () => void;
+  protected _sizeThrottle: () => void;
+  /** @internal limit auto cell resizing method */
+  protected prevWidth: number;
   /** @internal true when loading items to insert first rather than append */
   protected _insertNotAppend: boolean;
   /** @internal extra row added when dragging at the bottom of the grid */
@@ -388,7 +389,7 @@ export class GridStack {
 
     this._setupRemoveDrop();
     this._setupAcceptWidget();
-    this._updateWindowResizeEvent();
+    this._updateResizeEvent();
   }
 
   /**
@@ -772,7 +773,7 @@ export class GridStack {
     if (update && val !== undefined) {
       if (this._isAutoCellHeight !== (val === 'auto')) {
         this._isAutoCellHeight = (val === 'auto');
-        this._updateWindowResizeEvent();
+        this._updateResizeEvent();
       }
     }
     if (val === 'initial' || val === 'auto') { val = undefined; }
@@ -857,6 +858,9 @@ export class GridStack {
     }
     this.engine.columnChanged(oldColumn, column, domNodes, layout);
     if (this._isAutoCellHeight) this.cellHeight();
+    // this.engine.nodes.forEach(n => {
+    //   if (Utils.shouldFitToContent(n)) this.resizeToContent(n.el);
+    // });
 
     // and trigger our event last...
     this._ignoreLayoutsNodeChange = true; // skip layout update
@@ -886,7 +890,7 @@ export class GridStack {
   public destroy(removeDOM = true): GridStack {
     if (!this.el) return; // prevent multiple calls
     this.offAll();
-    this._updateWindowResizeEvent(true);
+    this._updateResizeEvent(true);
     this.setStatic(true, false); // permanently removes DD but don't set CSS class (we're going away)
     this.setAnimation(false);
     if (!removeDOM) {
@@ -1227,14 +1231,7 @@ export class GridStack {
       Utils.sanitizeMinMax(n);
 
       // finally move the widget
-      if (m) {
-        this.engine.cleanNodes()
-          .beginUpdate(n)
-          .moveNode(n, m);
-        this._updateContainerHeight();
-        this._triggerChangeEvent();
-        this.engine.endUpdate();
-      }
+      if (m) this.moveNode(n, m);
       if (changed) { // move will only update x,y,w,h so update the rest too
         this._writeAttr(el, n);
       }
@@ -1245,6 +1242,37 @@ export class GridStack {
     return this;
   }
 
+  private moveNode(n: GridStackNode, m: GridStackMoveOpts) {
+    this.engine.cleanNodes()
+      .beginUpdate(n)
+      .moveNode(n, m);
+    this._updateContainerHeight();
+    this._triggerChangeEvent();
+    this.engine.endUpdate();
+  }
+
+  /** Updates widget height to match the content height to avoid v-scrollbar or dead space.
+   Note: this assumes only 1 child under '.grid-stack-item-content' (sized to gridItem minus padding) that is at the entire content size wanted */
+  public resizeToContent(els: GridStackElement) {
+    GridStack.getElements(els).forEach(el => {
+      let n = el?.gridstackNode;
+      if (!n) return;
+      let height = el.clientHeight;
+      if (!height) return; // 0 when hidden, skip
+      const item = el.querySelector('.grid-stack-item-content');
+      if (!item) return;
+      const itemH = item.clientHeight;
+      const wantedH = (item.firstChild as Element)?.clientHeight || itemH; // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
+      if (itemH === wantedH) return;
+      height += wantedH - itemH;
+      const cell = this.getCellHeight();
+      if (!cell) return;
+      let h = Math.ceil(height / cell);
+      if (n.maxH && h > n.maxH) h = n.maxH;
+      if (h !== n.h) this.moveNode(n, {h});
+    });
+  }
+  
   /**
    * Updates the margins which will set all 4 sides at once - see `GridStackOptions.margin` for format options (CSS string format of 1,2,4 values or single number).
    * @param value margin value
@@ -1450,6 +1478,7 @@ export class GridStack {
     if (!Utils.same(node, copy)) {
       this._writeAttr(el, node);
     }
+    if (Utils.shouldFitToContent(node)) el.classList.add('fit-to-content');
     this._prepareDragDropByNode(node);
     return this;
   }
@@ -1541,62 +1570,64 @@ export class GridStack {
   }
 
   /**
-   * called when we are being resized by the window - check if the one Column Mode needs to be turned on/off
-   * and remember the prev columns we used, or get our count from parent, as well as check for auto cell height (square)
+   * called when we are being resized - check if the one Column Mode needs to be turned on/off
+   * and remember the prev columns we used, or get our count from parent, as well as check for cellHeight==='auto' (square)
+   * or `fitToContent` gridItem options.
    */
-  public onParentResize(): GridStack {
-    if (!this.el || !this.el.clientWidth) return; // return if we're gone or no size yet (will get called again)
-    let changedColumn = false;
+  public onResize(): GridStack {
+    if (!this.el?.clientWidth) return; // return if we're gone or no size yet (will get called again)
+    if (this.prevWidth === this.el.clientWidth) return; // no-op
+    this.prevWidth = this.el.clientWidth
+    // console.log('onResize ', this.el.clientWidth);
 
     // see if we're nested and take our column count from our parent....
+    let columnChanged = false;
     if (this._autoColumn && this.parentGridItem) {
       if (this.opts.column !== this.parentGridItem.w) {
-        changedColumn = true;
         this.column(this.parentGridItem.w, 'none');
+        columnChanged = true;
       }
     } else {
       // else check for 1 column in/out behavior
       let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.oneColumnSize;
       if ((this.opts.column === 1) !== oneColumn) {
-        changedColumn = true;
-        if (this.opts.animate) { this.setAnimation(false); } // 1 <-> 12 is too radical, turn off animation
+        // if (this.opts.animate) this.setAnimation(false); // 1 <-> 12 is too radical, turn off animation and we need it for fitToContent
         this.column(oneColumn ? 1 : this._prevColumn);
-        if (this.opts.animate) { this.setAnimation(true); }
+        // if (this.opts.animate) setTimeout(() => this.setAnimation(true));
+        columnChanged = true;
       }
     }
 
     // make the cells content square again
-    if (this._isAutoCellHeight) {
-      if (!changedColumn && this.opts.cellHeightThrottle) {
-        if (!this._cellHeightThrottle) {
-          this._cellHeightThrottle = Utils.throttle(() => this.cellHeight(), this.opts.cellHeightThrottle);
-        }
-        this._cellHeightThrottle();
-      } else {
-        // immediate update if we've changed column count or have no threshold
-        this.cellHeight();
-      }
-    }
+    if (this._isAutoCellHeight) this.cellHeight();
 
-    // finally update any nested grids
+    // update any nested grids, or items size
     this.engine.nodes.forEach(n => {
-      if (n.subGrid) n.subGrid.onParentResize()
+      if (n.subGrid) n.subGrid.onResize()
+      // update any gridItem height with fitToContent, but wait for DOM $animation_speed to settle if we changed column count
+      // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
+      if (Utils.shouldFitToContent(n)) {
+        columnChanged ? setTimeout(() => this.resizeToContent(n.el), 300 + 10) : this.resizeToContent(n.el);
+      }
     });
 
     return this;
   }
 
-  /** add or remove the window size event handler */
-  protected _updateWindowResizeEvent(forceRemove = false): GridStack {
+  /** add or remove the grid element size event handler */
+  protected _updateResizeEvent(forceRemove = false): GridStack {
     // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting oneColumn (i.e. doing work)
-    const workTodo = (this._isAutoCellHeight || !this.opts.disableOneColumnMode) && !this.parentGridItem;
+    // or supporting new fitToContent option.
+    const trackSize = !this.parentGridItem && (this._isAutoCellHeight || this.opts.fitToContent || !this.opts.disableOneColumnMode || this.engine.nodes.find(n => n.fitToContent));
 
-    if (!forceRemove && workTodo && !this._windowResizeBind) {
-      this._windowResizeBind = this.onParentResize.bind(this); // so we can properly remove later
-      window.addEventListener('resize', this._windowResizeBind);
-    } else if ((forceRemove || !workTodo) && this._windowResizeBind) {
-      window.removeEventListener('resize', this._windowResizeBind);
-      delete this._windowResizeBind; // remove link to us so we can free
+    if (!forceRemove && trackSize && !this.resizeObserver) {
+      this._sizeThrottle = Utils.throttle(() => this.onResize(), this.opts.cellHeightThrottle);
+      this.resizeObserver = new ResizeObserver(entries => this._sizeThrottle());
+      this.resizeObserver.observe(this.el);
+    } else if ((forceRemove || !trackSize) && this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      delete this.resizeObserver;
+      delete this._sizeThrottle;
     }
 
     return this;
@@ -2285,7 +2316,7 @@ export class GridStack {
       node._lastUiPosition = ui.position;
       this.engine.cacheRects(cellWidth, cellHeight, mTop, mRight, mBottom, mLeft);
       delete node._skipDown;
-      if (resizing && node.subGrid) node.subGrid.onParentResize();
+      if (resizing && node.subGrid) node.subGrid.onResize();
       this._extraDragRow = 0;// @ts-ignore
       this._updateContainerHeight();
 

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FitToContent demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+  <style type="text/css">
+    .grid-stack-item-content {
+      text-align: unset;
+    }
+  </style>  
+</head>
+<body>
+  <div class="container">
+    <h1>Cell FitToContent options demo</h1>
+    <p>new 9.x feature that size the items to fit their content height as to not have scroll bars (unless `fitToContent:false` in C: case) </p>
+    <br>
+    <div class="grid-stack"></div>
+  </div>
+  <script type="text/javascript">
+    let opts = {
+      margin: 5,
+      cellHeight: 50,
+      fitToContent: true, // default to make them all fit
+      // cellHeightThrottle: 100, // ms before fitToContent happens
+    }
+    let grid = GridStack.init(opts);
+    let text ='some very large content that will normally not fit in the window.'
+    text = text + text;
+    let items = [
+      {x:0, y:0, w:2, content: `<div>A: ${text}</div>`},
+      {x:2, y:0, w:1, h:2, content: '<div>B: shrink</div>'}, // make taller than needed upfront
+      {x:3, y:0, w:2, fitToContent: false, content: `<div>C: WILL SCROLL. ${text}</div>`}, // prevent this from fitting testing
+      {x:0, y:1, w:3, content: `<div>D: ${text} ${text}</div>`},
+    ];
+    grid.load(items);
+  </script>
+</body>
+</html>
