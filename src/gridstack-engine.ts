@@ -60,6 +60,7 @@ export class GridStackEngine {
     if (flag) {
       this._prevFloat = this._float;
       this._float = true; // let things go anywhere for now... will restore and possibly reposition later
+      this.cleanNodes();
       this.saveInitial(); // since begin update (which is called multiple times) won't do this
     } else {
       this._float = this._prevFloat;

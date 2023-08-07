@@ -727,6 +727,7 @@ export class GridStack {
   public batchUpdate(flag = true): GridStack {
     this.engine.batchUpdate(flag);
     if (!flag) {
+      this._updateContainerHeight();
       this._triggerRemoveEvent();
       this._triggerAddEvent();
       this._triggerChangeEvent();
@@ -1580,6 +1581,8 @@ export class GridStack {
     this.prevWidth = this.el.clientWidth
     // console.log('onResize ', this.el.clientWidth);
 
+    this.batchUpdate();
+
     // see if we're nested and take our column count from our parent....
     let columnChanged = false;
     if (this._autoColumn && this.parentGridItem) {
@@ -1610,6 +1613,8 @@ export class GridStack {
         columnChanged ? setTimeout(() => this.resizeToContent(n.el), 300 + 10) : this.resizeToContent(n.el);
       }
     });
+
+    this.batchUpdate(false);
 
     return this;
   }
