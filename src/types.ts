@@ -161,6 +161,10 @@ export interface GridStackOptions {
   /** the type of engine to create (so you can subclass) default to GridStackEngine */
   engineClass?: typeof GridStackEngine;
 
+  /** set to true if all grid items (by default, but item can also override) height should be based on content size instead of WidgetItem.h to avoid v-scrollbars.
+   Note: this is still row based, not pixels, so it will use ceil(getBoundingClientRect().height / getCellHeight()) */
+  fitToContent?: boolean;
+
   /** enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) */
   float?: boolean;
 
@@ -316,6 +320,8 @@ export interface GridStackWidget extends GridStackPosition {
   id?: string;
   /** html to append inside as content */
   content?: string;
+  /** local (grid) override - see GridStackOptions */
+  fitToContent?: boolean;
   /** optional nested grid options and list of children, which then turns into actual instance at runtime to get options from */
   subGridOpts?: GridStackOptions;
 }
