@@ -95,6 +95,7 @@ Change log
 
 ## 8.4.0-dev (TBD)
 - feat [#404](https://github.com/gridstack/gridstack.js/issues/404) added `GridStackOptions.fitToContent` and `GridStackWidget.fitToContent` to make gridItems size themselves to their content (no scroll bar), calling `GridStack.resizeToContent(el)` whenever the grid or item is resized.
+- fix [#2406](https://github.com/gridstack/gridstack.js/issues/2406) inf loop when autoPosition after loading into 1 column, then 2.
 
 ## 8.4.0 (2023-07-20)
 * feat [#2378](https://github.com/gridstack/gridstack.js/pull/2378) attribute `DDRemoveOpt.decline` to deny the removal of a specific class.

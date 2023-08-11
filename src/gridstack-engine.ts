@@ -844,11 +844,12 @@ export class GridStackEngine {
           let n = nodes.find(n => n._id === cacheNode._id);
           if (n) {
             // still current, use cache info positions
-            if (!doCompact) {
-              n.x = cacheNode.x;
-              n.y = cacheNode.y;
+            if (!doCompact && !cacheNode.autoPosition) {
+              n.x = cacheNode.x ?? n.x;
+              n.y = cacheNode.y ?? n.y;
             }
-            n.w = cacheNode.w;
+            n.w = cacheNode.w ?? n.w;
+            if (cacheNode.x == undefined || cacheNode.y === undefined) n.autoPosition = true;
           }
         });
       }
@@ -857,19 +858,20 @@ export class GridStackEngine {
       cacheNodes.forEach(cacheNode => {
         let j = nodes.findIndex(n => n._id === cacheNode._id);
         if (j !== -1) {
+          const n = nodes[j];
           // still current, use cache info positions
           if (doCompact) {
-            nodes[j].w = cacheNode.w; // only w is used, and don't trim the list
+            n.w = cacheNode.w; // only w is used, and don't trim the list
             return;
           }
           if (cacheNode.autoPosition || isNaN(cacheNode.x) || isNaN(cacheNode.y)) {
             this.findEmptyPosition(cacheNode, newNodes);
           }
           if (!cacheNode.autoPosition) {
-            nodes[j].x = cacheNode.x;
-            nodes[j].y = cacheNode.y;
-            nodes[j].w = cacheNode.w;
-            newNodes.push(nodes[j]);
+            n.x = cacheNode.x ?? n.x;
+            n.y = cacheNode.y ?? n.y;
+            n.w = cacheNode.w ?? n.w;
+            newNodes.push(n);
           }
           nodes.splice(j, 1);
         }

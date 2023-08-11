@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Float grid demo</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <link rel="stylesheet" href="../../../dist/gridstack-extra.css" />
+  <script src="../../../dist/gridstack-all.js"></script>
+
+</head>
+
+<body>
+  <h1>1 column, autoPosition bug</h1>
+  <p>add a widget, switch to 2 column, add another widget</p>
+  <div><a class="btn btn-default" onClick="addNewWidget()" href="#">Add Widget</a></div>
+  <div><a class="btn btn-default" onClick="resizeColumns()" href="#">Resize Columns</a></div>
+  <br />
+  <div class="grid-stack"></div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    var options = {
+      float: false,
+      column: 1,
+      cellHeight: 100
+    };
+    var grid = GridStack.init(options);
+    var count = 0;
+
+    addNewWidget = function () {
+      var node = {
+        autoPosition: true,
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        w: Math.round(1 + 3 * Math.random()),
+        h: Math.round(1 + 3 * Math.random()),
+        content: String(count++),
+      };
+      grid.addWidget(node);
+    };
+
+    resizeColumns = function () {
+      grid.column(2);
+    }
+  </script>
+</body>
+
+</html>
