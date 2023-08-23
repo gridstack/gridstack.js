@@ -365,11 +365,13 @@
 
     var simpleGrid = GridStack.init({
       margin: 5,
+      disableOneColumnMode: true,
     }, '#simple-grid');
     simpleGrid.load(simple);
 
     var advGrid = GridStack.init({
       margin: 5,
+      disableOneColumnMode: true,
       acceptWidgets: true,
       removable: '#trash',
       removeTimeout: 100
