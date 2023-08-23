@@ -1,5 +1,5 @@
 /**
- * dd-draggable.ts 8.4.0-dev
+ * dd-draggable.ts 9.0.0
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 

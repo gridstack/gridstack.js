@@ -45,6 +45,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Migrating to v6](#migrating-to-v6)
   - [Migrating to v7](#migrating-to-v7)
   - [Migrating to v8](#migrating-to-v8)
+  - [Migrating to v9](#migrating-to-v9)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -442,6 +443,12 @@ Possible breaking change if you use nested grid JSON format, or original Angular
 * removed `GridStackOptions.dragInOptions` since `GridStack.setupDragIn()` has it replaced since 4.0
 * remove `GridStackOptions.minWidth` obsolete since 5.1, use `oneColumnSize` instead
 * CSS rules removed `.grid-stack` prefix for anything already gs based, 12 column (default) now uses `.gs-12`, extra.css is less than 1/4th it original size!, `gs-min|max_w|h` attribute no longer written (but read)
+
+## Migrating to v9
+
+New addition - see release notes about `fitToContent` feature.
+Possible break:
+* `GridStack.onParentResize()` is now called `onResize()` as grid now directly track size change, no longer involving parent per say to tell us anything. Note sure why it was public.
 
 # jQuery Application
 
