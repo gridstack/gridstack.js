@@ -9,7 +9,7 @@ import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts } from './types';
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn } from './types';
 
 /*
  * and include D&D by default
@@ -35,7 +35,7 @@ export interface GridHTMLElement extends HTMLElement {
 }
 /** list of possible events, or space separated list of them */
 export type GridStackEvent = 'added' | 'change' | 'disable' | 'drag' | 'dragstart' | 'dragstop' | 'dropped' |
-  'enable' | 'removed' | 'resize' | 'resizestart' | 'resizestop' | string;
+  'enable' | 'removed' | 'resize' | 'resizestart' | 'resizestop' | 'resizecontent' | string;
 
 /** Defines the coordinates of an object */
 export interface MousePosition {
@@ -183,6 +183,11 @@ export class GridStack {
    * callback during saving to application can inject extra data for each widget, on top of the grid layout properties
    */
   public static saveCB?: SaveFcn;
+
+  /** callback to use for resizeToContent instead of the built in one */
+  public static resizeToContentCB?: ResizeToContentFcn;
+  /** parent class for sizing content. defaults to '.grid-stack-item-content' */
+  public static resizeToContentParent = '.grid-stack-item-content';
 
   /** scoping so users can call GridStack.Utils.sort() for example */
   public static Utils = Utils;
@@ -859,9 +864,8 @@ export class GridStack {
     }
     this.engine.columnChanged(oldColumn, column, domNodes, layout);
     if (this._isAutoCellHeight) this.cellHeight();
-    // this.engine.nodes.forEach(n => {
-    //   if (Utils.shouldFitToContent(n)) this.resizeToContent(n.el);
-    // });
+
+    this.doContentResize();
 
     // and trigger our event last...
     this._ignoreLayoutsNodeChange = true; // skip layout update
@@ -1045,7 +1049,8 @@ export class GridStack {
         this._gsEventHandler[name] = (event: CustomEvent) => (callback as GridStackNodesHandler)(event, event.detail);
       }
       this.el.addEventListener(name, this._gsEventHandler[name]);
-    } else if (name === 'drag' || name === 'dragstart' || name === 'dragstop' || name === 'resizestart' || name === 'resize' || name === 'resizestop' || name === 'dropped') {
+    } else if (name === 'drag' || name === 'dragstart' || name === 'dragstop' || name === 'resizestart' || name === 'resize'
+      || name === 'resizestop' || name === 'dropped' || name === 'resizecontent') {
       // drag&drop stop events NEED to be call them AFTER we update node attributes so handle them ourself.
       // do same for start event to make it easier...
       this._gsEventHandler[name] = callback;
@@ -1258,20 +1263,31 @@ export class GridStack {
     GridStack.getElements(els).forEach(el => {
       let n = el?.gridstackNode;
       if (!n) return;
-      let height = el.clientHeight;
+      if (el.parentElement !== n.grid.el) return; // skip if we are not inside a grid
+      let height = el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
       if (!height) return; // 0 when hidden, skip
-      const item = el.querySelector('.grid-stack-item-content');
+      const item = el.querySelector(GridStack.resizeToContentParent);
       if (!item) return;
-      const itemH = item.clientHeight;
-      const wantedH = (item.firstChild as Element)?.clientHeight || itemH; // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
+      const itemH = item.clientHeight; // available height to our child (minus border, padding...)
+      const wantedH = (item.firstChild as Element)?.getBoundingClientRect().height || itemH; // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
       if (itemH === wantedH) return;
       height += wantedH - itemH;
       const cell = this.getCellHeight();
       if (!cell) return;
       let h = Math.ceil(height / cell);
       if (n.maxH && h > n.maxH) h = n.maxH;
-      if (h !== n.h) this.moveNode(n, {h});
+      if (h !== n.h) {
+        this._ignoreLayoutsNodeChange = true;
+        this.moveNode(n, {h});
+        delete this._ignoreLayoutsNodeChange;
+      }
     });
+  }
+
+  /** call the user resize (so we can do extra work) else our build in version */
+  protected resizeToContentCheck(el: GridItemHTMLElement) {
+    if (GridStack.resizeToContentCB) GridStack.resizeToContentCB(el);
+    else this.resizeToContent(el);
   }
   
   /**
@@ -1608,16 +1624,27 @@ export class GridStack {
     // update any nested grids, or items size
     this.engine.nodes.forEach(n => {
       if (n.subGrid) n.subGrid.onResize()
-      // update any gridItem height with fitToContent, but wait for DOM $animation_speed to settle if we changed column count
-      // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
-      if (Utils.shouldFitToContent(n)) {
-        columnChanged ? setTimeout(() => this.resizeToContent(n.el), 300 + 10) : this.resizeToContent(n.el);
-      }
     });
+    this.doContentResize(columnChanged);
 
     this.batchUpdate(false);
 
     return this;
+  }
+
+  private doContentResize(delay = true, n: GridStackNode = undefined) {
+    // update any gridItem height with fitToContent, but wait for DOM $animation_speed to settle if we changed column count
+    // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
+    setTimeout(() =>  {
+       if (n) {
+        if (Utils.shouldFitToContent(n)) this.resizeToContentCheck(n.el);
+       } else {
+        this.engine.nodes.forEach(n => {
+          if (Utils.shouldFitToContent(n)) this.resizeToContentCheck(n.el);
+        });
+      }
+      if (this._gsEventHandler['resizeContent']) this._gsEventHandler['resizeContent'](null, n ? [n] : this.engine.nodes);
+    }, delay ? 300 + 10 : 0);
   }
 
   /** add or remove the grid element size event handler */
@@ -2192,6 +2219,8 @@ export class GridStack {
         this._triggerChangeEvent();
 
         this.engine.endUpdate();
+
+        if (event.type === 'resizestop') this.doContentResize(false, node);
       }
 
       dd.draggable(el, {

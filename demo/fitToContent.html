@@ -7,6 +7,7 @@
   <title>FitToContent demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
+  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
   <script src="../dist/gridstack-all.js"></script>
   <style type="text/css">
     .grid-stack-item-content {
@@ -18,6 +19,11 @@
   <div class="container">
     <h1>Cell FitToContent options demo</h1>
     <p>new 9.x feature that size the items to fit their content height as to not have scroll bars (unless `fitToContent:false` in C: case) </p>
+    <div>
+      column:
+      <a onClick="column(8)" class="btn btn-primary" href="#">8</a>
+      <a onClick="column(12)" class="btn btn-primary" href="#">12</a>
+    </div>
     <br>
     <div class="grid-stack"></div>
   </div>
@@ -38,6 +44,10 @@
       {x:0, y:1, w:3, content: `<div>D: ${text} ${text}</div>`},
     ];
     grid.load(items);
+
+    function column(n) {
+      grid.column(n, 'none');
+    }
   </script>
 </body>
 </html>
