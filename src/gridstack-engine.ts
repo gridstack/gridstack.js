@@ -385,10 +385,10 @@ export class GridStackEngine {
     if (node.minW && node.minW <= this.column) { node.w = Math.max(node.w, node.minW); }
     if (node.minH) { node.h = Math.max(node.h, node.minH); }
 
-    // if user loaded a larger than allowed widget for current # of columns (or force 1 column mode),
+    // if user loaded a larger than allowed widget for current # of columns,
     // remember it's position & width so we can restore back (1 -> 12 column) #1655 #1985
     // IFF we're not in the middle of column resizing!
-    const saveOrig = this.column === 1 || node.x + node.w > this.column;
+    const saveOrig = (node.x || 0) + (node.w || 1) > this.column;
     if (saveOrig && this.column < 12 && !this._inColumnResize && node._id && this.findCacheLayout(node, 12) === -1) {
       let copy = {...node}; // need _id + positions
       if (copy.autoPosition) { delete copy.x; delete copy.y; }
@@ -771,7 +771,7 @@ export class GridStackEngine {
           if (!n) return; // no cache for new nodes. Will use those values.
           // Y changed, push down same amount
           // TODO: detect doing item 'swaps' will help instead of move (especially in 1 column mode)
-          if (node.y !== node._orig.y) {
+          if (n.y >= 0 && node.y !== node._orig.y) {
             n.y += (node.y - node._orig.y);
           }
           // X changed, scale from new position
