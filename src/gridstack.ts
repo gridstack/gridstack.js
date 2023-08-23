@@ -1268,8 +1268,11 @@ export class GridStack {
       if (!height) return; // 0 when hidden, skip
       const item = el.querySelector(GridStack.resizeToContentParent);
       if (!item) return;
+      const child = item.firstElementChild;
+      // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
+      if (!child) { console.log(`Error: resizeToContent() '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }
       const itemH = item.clientHeight; // available height to our child (minus border, padding...)
-      const wantedH = (item.firstChild as Element)?.getBoundingClientRect().height || itemH; // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
+      const wantedH = child.getBoundingClientRect().height || itemH;
       if (itemH === wantedH) return;
       height += wantedH - itemH;
       const cell = this.getCellHeight();
@@ -1639,9 +1642,12 @@ export class GridStack {
        if (n) {
         if (Utils.shouldFitToContent(n)) this.resizeToContentCheck(n.el);
        } else {
-        this.engine.nodes.forEach(n => {
+        const nodes = [...this.engine.nodes]; // in case order changes while resizing one
+        this.batchUpdate();
+        nodes.forEach(n => {
           if (Utils.shouldFitToContent(n)) this.resizeToContentCheck(n.el);
         });
+        this.batchUpdate(false);
       }
       if (this._gsEventHandler['resizeContent']) this._gsEventHandler['resizeContent'](null, n ? [n] : this.engine.nodes);
     }, delay ? 300 + 10 : 0);
