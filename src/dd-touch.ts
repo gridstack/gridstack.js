@@ -175,7 +175,9 @@ export function touchend(e: TouchEvent): void {
  */
 export function pointerdown(e: PointerEvent): void {
   // console.log("pointer down")
-  (e.target as HTMLElement).releasePointerCapture(e.pointerId) // <- Important!
+  if (e.pointerType !== 'mouse') {
+    (e.target as HTMLElement).releasePointerCapture(e.pointerId) // <- Important!
+  }
 }
 
 export function pointerenter(e: PointerEvent): void {
@@ -185,7 +187,9 @@ export function pointerenter(e: PointerEvent): void {
     return;
   }
   // console.log('pointerenter');
-  simulatePointerMouseEvent(e, 'mouseenter');
+  if (e.pointerType !== 'mouse') {
+    simulatePointerMouseEvent(e, 'mouseenter');
+  }
 }
 
 export function pointerleave(e: PointerEvent): void {
@@ -195,10 +199,12 @@ export function pointerleave(e: PointerEvent): void {
     // console.log('pointerleave ignored');
     return;
   }
-  DDTouch.pointerLeaveTimeout = window.setTimeout(() => {
-    delete DDTouch.pointerLeaveTimeout;
-    // console.log('pointerleave delayed');
-    simulatePointerMouseEvent(e, 'mouseleave');
-  }, 10);
+  if (e.pointerType !== 'mouse') {
+    DDTouch.pointerLeaveTimeout = window.setTimeout(() => {
+      delete DDTouch.pointerLeaveTimeout;
+      // console.log('pointerleave delayed');
+      simulatePointerMouseEvent(e, 'mouseleave');
+    }, 10);
+  }
 }
 
