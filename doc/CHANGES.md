@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [9.0.0-dev (TBD)](#900-dev-tbd)
 - [9.0.0 (2023-08-23)](#900-2023-08-23)
 - [8.4.0 (2023-07-20)](#840-2023-07-20)
 - [8.3.0 (2023-06-13)](#830-2023-06-13)
@@ -92,6 +93,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 9.0.0-dev (TBD)
+* tweak to `fitToContent` [#2412](from https://github.com/gridstack/gridstack.js/pull/2412#issuecomment-1690219018)
+* fix [#2413](https://github.com/gridstack/gridstack.js/issues/2413) support touchscreen+mouse devices. Thank you [@Ruslan207](https://github.com/Ruslan207)
 
 ## 9.0.0 (2023-08-23)
 - feat [#404](https://github.com/gridstack/gridstack.js/issues/404) added `GridStackOptions.fitToContent` and `GridStackWidget.fitToContent` to make gridItems size themselves to their content (no scroll bar), calling `GridStack.resizeToContent(el)` whenever the grid or item is resized.
