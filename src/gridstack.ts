@@ -798,6 +798,8 @@ export class GridStack {
     this.opts.cellHeightUnit = data.unit;
     this.opts.cellHeight = data.h;
 
+    this.doContentResize(false);
+
     if (update) {
       this._updateStyles(true); // true = force re-create for current # of rows
     }
@@ -996,10 +998,13 @@ export class GridStack {
   public makeWidget(els: GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
     let el = GridStack.getElement(els);
     this._prepareElement(el, true, options);
+    const node = el.gridstackNode;
+
     this._updateContainerHeight();
 
+    this.doContentResize(false, node);
+
     // see if there is a sub-grid to create
-    const node = el.gridstackNode;
     if (node.subGridOpts) {
       this.makeSubGrid(el, node.subGridOpts, undefined, false); // node.subGrid will be used as option in method, no need to pass
     }
@@ -1266,19 +1271,20 @@ export class GridStack {
       const grid = n.grid;
       if (grid !== this) return grid?.resizeToContent(el);
       if (el.parentElement !== this.el) return; // skip if we are not inside a grid
-      let height = el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
+      const cell = this.getCellHeight();
+      if (!cell) return;
+      let height = n.h ? n.h * cell : el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
       if (!height) return; // 0 when hidden, skip
       const item = el.querySelector(GridStack.resizeToContentParent);
       if (!item) return;
       const child = item.firstElementChild;
       // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
       if (!child) { console.log(`Error: resizeToContent() '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }
-      const itemH = item.clientHeight; // available height to our child (minus border, padding...)
+      const padding = el.clientHeight - item.clientHeight; // full - available height to our child (minus border, padding...)
+      const itemH = n.h ? n.h * cell - padding : item.clientHeight; // calculated to what cellHeight is or will become (rather than actual to prevent waiting for animation to finish)
       const wantedH = child.getBoundingClientRect().height || itemH;
       if (itemH === wantedH) return;
       height += wantedH - itemH;
-      const cell = this.getCellHeight();
-      if (!cell) return;
       let h = Math.ceil(height / cell);
       if (n.minH && h < n.minH) h = n.minH;
       else if (n.maxH && h > n.maxH) h = n.maxH;

@@ -97,6 +97,7 @@ Change log
 
 ## 9.0.1-dev (TBD)
 * fix 'resizecontent' event fix not called.
+* partial fix [#2427](https://github.com/gridstack/gridstack.js/issues/2427) fitToContent when calling cellHeight()/addWidget()/MakeWidget()
 
 ## 9.0.1 (2023-08-27)
 * fix [#2413](https://github.com/gridstack/gridstack.js/issues/2413) support touchscreen+mouse devices. Thank you [@Ruslan207](https://github.com/Ruslan207)
