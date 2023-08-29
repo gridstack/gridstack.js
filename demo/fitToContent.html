@@ -18,11 +18,19 @@
 <body>
   <div class="container">
     <h1>Cell FitToContent options demo</h1>
-    <p>new 9.x feature that size the items to fit their content height as to not have scroll bars (unless `fitToContent:false` in C: case) </p>
+    <p>new 9.x feature that size the items to fit their content height as to not have scroll bars
+      (unless `fitToContent:false` in C: case). Defaulting to different initial size (see code) to show grow/shrink behavior.</p>
     <div>
       column:
       <a onClick="column(8)" class="btn btn-primary" href="#">8</a>
       <a onClick="column(12)" class="btn btn-primary" href="#">12</a>
+      cellHeight:
+      <a onClick="cellHeight(25)" class="btn btn-primary" href="#">25</a>
+      <a onClick="cellHeight(50)" class="btn btn-primary" href="#">50</a>
+      <a onClick="cellHeight(75)" class="btn btn-primary" href="#">75</a>
+      Widget:
+      <a onClick="addWidget()" class="btn btn-primary" href="#">Add</a>
+      <a onClick="makeWidget()" class="btn btn-primary" href="#">Make</a>
     </div>
     <br>
     <div class="grid-stack"></div>
@@ -32,21 +40,35 @@
       margin: 5,
       cellHeight: 50,
       fitToContent: true, // default to make them all fit
+      resizable: { handles: 'all'} // do all sides for testing
       // cellHeightThrottle: 100, // ms before fitToContent happens
     }
     let grid = GridStack.init(opts);
     let text ='some very large content that will normally not fit in the window.'
     text = text + text;
     let items = [
-      {x:0, y:0, w:2, content: `<div>A: ${text}</div>`},
-      {x:2, y:0, w:1, h:2, content: '<div>B: shrink</div>'}, // make taller than needed upfront
+      {x:0, y:0, w:2, content: `<div>A no h: ${text}</div>`},
+      {x:2, y:0, w:1, h:2, content: '<div>B: shrink h=2</div>'}, // make taller than needed upfront
       {x:3, y:0, w:2, fitToContent: false, content: `<div>C: WILL SCROLL. ${text}</div>`}, // prevent this from fitting testing
-      {x:0, y:1, w:3, content: `<div>D: ${text} ${text}</div>`},
+      {x:0, y:1, w:3, content: `<div>D no h: ${text} ${text}</div>`},
     ];
     grid.load(items);
 
     function column(n) {
       grid.column(n, 'none');
+    }
+    function cellHeight(n) {
+      grid.cellHeight(n);
+    }
+    function addWidget() {
+      grid.addWidget({content: `<div>New: ${text}</div>`});
+    }
+    function makeWidget() {
+      let doc = document.implementation.createHTMLDocument();
+      doc.body.innerHTML = `<div class="item"><div class="grid-stack-item-content"><div>New Make: ${text}</div></div></div>`;
+      let el = doc.body.children[0];
+      grid.el.appendChild(el);
+      grid.makeWidget(el);
     }
   </script>
 </body>
