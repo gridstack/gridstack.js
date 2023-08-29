@@ -436,6 +436,4 @@ export interface GridStackNode extends GridStackWidget {
   _removeDOM?: boolean;
   /** @internal */
   _initDD?: boolean;
-  /** @internal original mouse position inside the element */
-  _originalMousePositionInsideElement?: GridStackPosition;
 }

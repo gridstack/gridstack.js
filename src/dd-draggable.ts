@@ -52,7 +52,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected static originStyleProp = ['transition', 'pointerEvents', 'position', 'left', 'top', 'minWidth', 'willChange'];
   /** @internal pause before we call the actual drag hit collision code */
   protected dragTimeout: number;
-  protected _originalMousePositionInsideElement: { x: number; y: number; };
+  protected origRelativeMouse: { x: number; y: number; };
 
   constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
     super();
@@ -184,10 +184,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       }
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 3) {
       let node = (this.el as GridItemHTMLElement)?.gridstackNode;
-      if (node) {
-        const rect = this.el.getBoundingClientRect();
-        node._originalMousePositionInsideElement = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-      }
       /**
        * don't start unless we've moved at least 3 pixels
        */
@@ -200,10 +196,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       } else {
         delete DDManager.dropElement;
       }
-      if (node) {
-        const rect = this.el.getBoundingClientRect();
-        this._originalMousePositionInsideElement = { x: s.clientX - rect.left, y: s.clientY - rect.top };
-      }
+      const rect = this.el.getBoundingClientRect();
+      this.origRelativeMouse = { x: s.clientX - rect.left, y: s.clientY - rect.top };
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
       const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
@@ -330,8 +324,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const offsetY = transformParentRect.top;
 
     // Position the element under the mouse
-    const x = (e.clientX - offsetX - (this._originalMousePositionInsideElement?.x || 0)) / scaleX;
-    const y = (e.clientY - offsetY - (this._originalMousePositionInsideElement?.y || 0)) / scaleY;
+    const x = (e.clientX - offsetX - (this.origRelativeMouse?.x || 0)) / scaleX;
+    const y = (e.clientY - offsetY - (this.origRelativeMouse?.y || 0)) / scaleY;
     style.left = `${x}px`;
     style.top = `${y}px`;
   }

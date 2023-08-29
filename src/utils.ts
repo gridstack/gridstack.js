@@ -373,7 +373,7 @@ export class Utils {
     if (style.position === 'relative' || style.position === 'absolute' || style.position === 'fixed') {
       return el;
     } else {
-      return this.getPositionContainerElement(el.parentElement);
+      return Utils.getPositionContainerElement(el.parentElement);
     }
   }
 
@@ -385,7 +385,7 @@ export class Utils {
     if (style.transform && style.transform !== 'none') {
       return el;
     } else {
-      return this.getContainerForPositionFixedElement(el.parentElement);
+      return Utils.getContainerForPositionFixedElement(el.parentElement);
     }
   }
 
