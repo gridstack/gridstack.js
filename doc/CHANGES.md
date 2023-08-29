@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [9.0.1-dev (TBD)](#901-dev-tbd)
 - [9.0.1 (2023-08-27)](#901-2023-08-27)
 - [9.0.0 (2023-08-23)](#900-2023-08-23)
 - [8.4.0 (2023-07-20)](#840-2023-07-20)
@@ -93,6 +94,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 9.0.1-dev (TBD)
+* fix 'resizecontent' event fix not called.
 
 ## 9.0.1 (2023-08-27)
 * fix [#2413](https://github.com/gridstack/gridstack.js/issues/2413) support touchscreen+mouse devices. Thank you [@Ruslan207](https://github.com/Ruslan207)

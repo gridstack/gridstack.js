@@ -1,5 +1,5 @@
 /*!
- * GridStack 9.0.1
+ * GridStack 9.0.1-dev
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2022 Alain Dumesny
@@ -1263,7 +1263,9 @@ export class GridStack {
     GridStack.getElements(els).forEach(el => {
       let n = el?.gridstackNode;
       if (!n) return;
-      if (el.parentElement !== n.grid.el) return; // skip if we are not inside a grid
+      const grid = n.grid;
+      if (grid !== this) return grid?.resizeToContent(el);
+      if (el.parentElement !== this.el) return; // skip if we are not inside a grid
       let height = el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
       if (!height) return; // 0 when hidden, skip
       const item = el.querySelector(GridStack.resizeToContentParent);
@@ -1278,7 +1280,8 @@ export class GridStack {
       const cell = this.getCellHeight();
       if (!cell) return;
       let h = Math.ceil(height / cell);
-      if (n.maxH && h > n.maxH) h = n.maxH;
+      if (n.minH && h < n.minH) h = n.minH;
+      else if (n.maxH && h > n.maxH) h = n.maxH;
       if (h !== n.h) {
         this._ignoreLayoutsNodeChange = true;
         this.moveNode(n, {h});
@@ -1649,7 +1652,7 @@ export class GridStack {
         });
         this.batchUpdate(false);
       }
-      if (this._gsEventHandler['resizeContent']) this._gsEventHandler['resizeContent'](null, n ? [n] : this.engine.nodes);
+      if (this._gsEventHandler['resizecontent']) this._gsEventHandler['resizecontent'](null, n ? [n] : this.engine.nodes);
     }, delay ? 300 + 10 : 0);
   }
 
@@ -1745,7 +1748,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '9.0.1';
+  static GDRev = '9.0.1-dev';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
