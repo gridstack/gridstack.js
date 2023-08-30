@@ -1,5 +1,5 @@
 /**
- * types.ts 9.0.2
+ * types.ts 9.0.2-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
@@ -164,7 +164,7 @@ export interface GridStackOptions {
 
   /** set to true if all grid items (by default, but item can also override) height should be based on content size instead of WidgetItem.h to avoid v-scrollbars.
    Note: this is still row based, not pixels, so it will use ceil(getBoundingClientRect().height / getCellHeight()) */
-  fitToContent?: boolean;
+  sizeToContent?: boolean;
 
   /** enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) */
   float?: boolean;
@@ -322,7 +322,7 @@ export interface GridStackWidget extends GridStackPosition {
   /** html to append inside as content */
   content?: string;
   /** local (grid) override - see GridStackOptions */
-  fitToContent?: boolean;
+  sizeToContent?: boolean;
   /** optional nested grid options and list of children, which then turns into actual instance at runtime to get options from */
   subGridOpts?: GridStackOptions;
 }

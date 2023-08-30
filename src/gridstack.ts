@@ -1,5 +1,5 @@
 /*!
- * GridStack 9.0.2
+ * GridStack 9.0.2-dev
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2022 Alain Dumesny
@@ -1507,7 +1507,7 @@ export class GridStack {
     if (!Utils.same(node, copy)) {
       this._writeAttr(el, node);
     }
-    if (Utils.shouldFitToContent(node)) el.classList.add('fit-to-content');
+    if (Utils.shouldSizeToContent(node)) el.classList.add('fit-to-content');
     this._prepareDragDropByNode(node);
     return this;
   }
@@ -1601,7 +1601,7 @@ export class GridStack {
   /**
    * called when we are being resized - check if the one Column Mode needs to be turned on/off
    * and remember the prev columns we used, or get our count from parent, as well as check for cellHeight==='auto' (square)
-   * or `fitToContent` gridItem options.
+   * or `sizeToContent` gridItem options.
    */
   public onResize(): GridStack {
     if (!this.el?.clientWidth) return; // return if we're gone or no size yet (will get called again)
@@ -1623,7 +1623,7 @@ export class GridStack {
       let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.oneColumnSize ||
       (this.opts.column === 1 && !this._prevColumn);
       if ((this.opts.column === 1) !== oneColumn) {
-        // if (this.opts.animate) this.setAnimation(false); // 1 <-> 12 is too radical, turn off animation and we need it for fitToContent
+        // if (this.opts.animate) this.setAnimation(false); // 1 <-> 12 is too radical, turn off animation and we need it for sizeToContent
         this.column(oneColumn ? 1 : this._prevColumn);
         // if (this.opts.animate) setTimeout(() => this.setAnimation(true));
         columnChanged = true;
@@ -1645,16 +1645,16 @@ export class GridStack {
   }
 
   private doContentResize(delay = true, n: GridStackNode = undefined) {
-    // update any gridItem height with fitToContent, but wait for DOM $animation_speed to settle if we changed column count
+    // update any gridItem height with sizeToContent, but wait for DOM $animation_speed to settle if we changed column count
     // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
     setTimeout(() =>  {
        if (n) {
-        if (Utils.shouldFitToContent(n)) this.resizeToContentCheck(n.el);
+        if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el);
        } else {
         const nodes = [...this.engine.nodes]; // in case order changes while resizing one
         this.batchUpdate();
         nodes.forEach(n => {
-          if (Utils.shouldFitToContent(n)) this.resizeToContentCheck(n.el);
+          if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el);
         });
         this.batchUpdate(false);
       }
@@ -1665,8 +1665,8 @@ export class GridStack {
   /** add or remove the grid element size event handler */
   protected _updateResizeEvent(forceRemove = false): GridStack {
     // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting oneColumn (i.e. doing work)
-    // or supporting new fitToContent option.
-    const trackSize = !this.parentGridItem && (this._isAutoCellHeight || this.opts.fitToContent || !this.opts.disableOneColumnMode || this.engine.nodes.find(n => n.fitToContent));
+    // or supporting new sizeToContent option.
+    const trackSize = !this.parentGridItem && (this._isAutoCellHeight || this.opts.sizeToContent || !this.opts.disableOneColumnMode || this.engine.nodes.find(n => n.sizeToContent));
 
     if (!forceRemove && trackSize && !this.resizeObserver) {
       this._sizeThrottle = Utils.throttle(() => this.onResize(), this.opts.cellHeightThrottle);
@@ -1754,7 +1754,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '9.0.2';
+  static GDRev = '9.0.2-dev';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
