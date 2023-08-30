@@ -104,7 +104,7 @@ export class Utils {
 
   /** true if we should resize to content */
   static shouldSizeToContent(n: GridStackNode | undefined): boolean {
-    return n?.grid && (n.sizeToContent || (n.grid.opts.sizeToContent && n.sizeToContent !== false));
+    return n?.grid && (!!n.sizeToContent || (n.grid.opts.sizeToContent && n.sizeToContent !== false));
   }
 
   /** returns true if a and b overlap */

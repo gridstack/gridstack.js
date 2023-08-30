@@ -99,7 +99,7 @@ gridstack.js API
 - `draggable` - allows to override draggable options - see `DDDragOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body', scroll: true}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `engineClass` - the type of engine to create (so you can subclass) default to GridStackEngine
-- `sizeToContent` - make gridItems size themselves to their content, calling `resizeToContent(el)` whenever the grid or item is resized.
+- `sizeToContent`: boolean - make gridItems size themselves to their content, calling `resizeToContent(el)` whenever the grid or item is resized.
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
@@ -159,7 +159,8 @@ You need to add `noResize` and `noMove` attributes to completely lock the widget
 - `noMove` - disable element moving
 - `id`- (number | string) good for quick identification (for example in change event)
 - `content` - (string) html content to be added when calling `grid.load()/addWidget()` as content inside the item
-- `sizeToContent` - make gridItem size itself to the content, calling `GridStack.resizeToContent(el)` whenever the grid or item is resized.
+- `sizeToContent`?: boolean | number - make gridItem size itself to the content, calling `GridStack.resizeToContent(el)` whenever the grid or item is resized.
+Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar)
 - `subGrid`?: GridStackOptions - optional nested grid options and list of children
 - `subGridDynamic`?: boolean - enable/disable the creation of sub-grids on the fly by dragging items completely over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that.
 

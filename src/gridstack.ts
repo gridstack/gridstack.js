@@ -1286,6 +1286,13 @@ export class GridStack {
       if (itemH === wantedH) return;
       height += wantedH - itemH;
       let h = Math.ceil(height / cell);
+      // check for min/max and special sizing
+      if (Number.isInteger(n.sizeToContent)) {
+        if (h > (n.sizeToContent as number)) {
+          h = n.sizeToContent as number;
+          el.classList.remove('size-to-content');  // get v-scroll back
+        } else el.classList.add('size-to-content');
+      }
       if (n.minH && h < n.minH) h = n.minH;
       else if (n.maxH && h > n.maxH) h = n.maxH;
       if (h !== n.h) {
@@ -1507,7 +1514,7 @@ export class GridStack {
     if (!Utils.same(node, copy)) {
       this._writeAttr(el, node);
     }
-    if (Utils.shouldSizeToContent(node)) el.classList.add('fit-to-content');
+    if (Utils.shouldSizeToContent(node)) el.classList.add('size-to-content');
     this._prepareDragDropByNode(node);
     return this;
   }
@@ -2235,7 +2242,10 @@ export class GridStack {
 
         this.engine.endUpdate();
 
-        if (event.type === 'resizestop') this.doContentResize(false, node);
+        if (event.type === 'resizestop') {
+          if (Number.isInteger(node.sizeToContent)) node.sizeToContent = node.h; // new soft limit
+          this.doContentResize(false, node);
+        }
       }
 
       dd.draggable(el, {

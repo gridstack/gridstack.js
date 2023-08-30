@@ -51,7 +51,7 @@
       {x:2, y:0, w:1, h:2, content: '<div>B: shrink h=2</div>'}, // make taller than needed upfront
       {x:3, y:0, w:2, sizeToContent: false, content: `<div>C: WILL SCROLL. ${text}</div>`}, // prevent this from fitting testing
       {x:0, y:1, w:3, content: `<div>D no h: ${text} ${text}</div>`},
-    ];
+      {x:3, y:1, w:2, sizeToContent:3, content: `<div>E sizeToContent=3 <button onClick="more()">more</button><button onClick="less()">less</button><div id="dynContent">${text} ${text} ${text}</div></div>`}    ];
     grid.load(items);
 
     function column(n) {
@@ -69,6 +69,21 @@
       let el = doc.body.children[0];
       grid.el.appendChild(el);
       grid.makeWidget(el);
+    }
+    function more() {
+      let cont = document.getElementById('dynContent');
+      if (!cont) return;
+      cont.innerHTML += cont.innerHTML;
+      let el = cont.parentElement.parentElement.parentElement;
+      grid.resizeToContent(el)
+    }
+    function less() {
+      let cont = document.getElementById('dynContent');
+      if (!cont) return;
+      let content = cont.innerHTML;
+      cont.innerHTML = content.substring(0, content.length/2);
+      let el = cont.parentElement.parentElement.parentElement;
+      grid.resizeToContent(el);
     }
   </script>
 </body>

@@ -321,8 +321,9 @@ export interface GridStackWidget extends GridStackPosition {
   id?: string;
   /** html to append inside as content */
   content?: string;
-  /** local (grid) override - see GridStackOptions */
-  sizeToContent?: boolean;
+  /** local (vs grid) override - see GridStackOptions. 
+   * Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) */
+  sizeToContent?: boolean | number;
   /** optional nested grid options and list of children, which then turns into actual instance at runtime to get options from */
   subGridOpts?: GridStackOptions;
 }
