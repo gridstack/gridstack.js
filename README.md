@@ -446,7 +446,7 @@ Possible breaking change if you use nested grid JSON format, or original Angular
 
 ## Migrating to v9
 
-New addition - see release notes about `fitToContent` feature.
+New addition - see release notes about `sizeToContent` feature.
 Possible break:
 * `GridStack.onParentResize()` is now called `onResize()` as grid now directly track size change, no longer involving parent per say to tell us anything. Note sure why it was public.
 

@@ -97,17 +97,18 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 9.0.2-dev (TBD)
+* renamed fitToContent to sizeToContent (API BREAK)
 
 ## 9.0.2 (2023-08-29)
 * fix 'resizecontent' event fix not called.
-* partial fix [#2427](https://github.com/gridstack/gridstack.js/issues/2427) fitToContent when calling cellHeight()/addWidget()/MakeWidget()
+* partial fix [#2427](https://github.com/gridstack/gridstack.js/issues/2427) sizeToContent when calling cellHeight()/addWidget()/MakeWidget()
 
 ## 9.0.1 (2023-08-27)
 * fix [#2413](https://github.com/gridstack/gridstack.js/issues/2413) support touchscreen+mouse devices. Thank you [@Ruslan207](https://github.com/Ruslan207)
-* tweak to `fitToContent` from [#2412](https://github.com/gridstack/gridstack.js/pull/2412#issuecomment-1690219018). Thank you [@JonSohn](https://github.com/JonSohn)
+* tweak to `sizeToContent` from [#2412](https://github.com/gridstack/gridstack.js/pull/2412#issuecomment-1690219018). Thank you [@JonSohn](https://github.com/JonSohn)
 
 ## 9.0.0 (2023-08-23)
-- feat [#404](https://github.com/gridstack/gridstack.js/issues/404) added `GridStackOptions.fitToContent` and `GridStackWidget.fitToContent` to make gridItems size themselves to their content (no scroll bar), calling `GridStack.resizeToContent(el)` whenever the grid or item is resized.
+- feat [#404](https://github.com/gridstack/gridstack.js/issues/404) added `GridStackOptions.sizeToContent` and `GridStackWidget.sizeToContent` to make gridItems size themselves to their content (no scroll bar), calling `GridStack.resizeToContent(el)` whenever the grid or item is resized.
 - also added new `'resizecontent'` event, and `resizeToContentCB` and `resizeToContentParent` vars.
 - fix [#2406](https://github.com/gridstack/gridstack.js/issues/2406) inf loop when autoPosition after loading into 1 column, then 2.
 
