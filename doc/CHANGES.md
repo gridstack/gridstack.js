@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [9.0.1-dev (TBD)](#901-dev-tbd)
+- [9.0.2 (2023-08-29)](#902-2023-08-29)
 - [9.0.1 (2023-08-27)](#901-2023-08-27)
 - [9.0.0 (2023-08-23)](#900-2023-08-23)
 - [8.4.0 (2023-07-20)](#840-2023-07-20)
@@ -95,7 +95,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 9.0.1-dev (TBD)
+## 9.0.2 (2023-08-29)
 * fix 'resizecontent' event fix not called.
 * partial fix [#2427](https://github.com/gridstack/gridstack.js/issues/2427) fitToContent when calling cellHeight()/addWidget()/MakeWidget()
 
