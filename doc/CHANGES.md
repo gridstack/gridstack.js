@@ -99,6 +99,7 @@ Change log
 ## 9.0.2-dev (TBD)
 * renamed fitToContent to sizeToContent (API BREAK)
 * feat: `sizeToContent` now supports being `boolean|number` to limit the height but user can resize past that, unlike maxH.
+* feat: `resizeToContentParent` now on GridStackWidget for those widgets that need to resize differently.
 
 ## 9.0.2 (2023-08-29)
 * fix 'resizecontent' event fix not called.
