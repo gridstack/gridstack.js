@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [9.0.2-dev (TBD)](#902-dev-tbd)
+- [9.1.0 (2023-09-04)](#910-2023-09-04)
 - [9.0.2 (2023-08-29)](#902-2023-08-29)
 - [9.0.1 (2023-08-27)](#901-2023-08-27)
 - [9.0.0 (2023-08-23)](#900-2023-08-23)
@@ -96,7 +96,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 9.0.2-dev (TBD)
+## 9.1.0 (2023-09-04)
 * renamed fitToContent to sizeToContent (API BREAK)
 * feat: `sizeToContent` now supports being `boolean|number` to limit the height but user can resize past that, unlike maxH.
 * feat: `resizeToContentParent` now on GridStackWidget for those widgets that need to resize differently.
