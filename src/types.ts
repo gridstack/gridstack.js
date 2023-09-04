@@ -324,6 +324,8 @@ export interface GridStackWidget extends GridStackPosition {
   /** local (vs grid) override - see GridStackOptions. 
    * Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) */
   sizeToContent?: boolean | number;
+  /** local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height */
+  resizeToContentParent?: string;
   /** optional nested grid options and list of children, which then turns into actual instance at runtime to get options from */
   subGridOpts?: GridStackOptions;
 }

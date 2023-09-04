@@ -1266,6 +1266,7 @@ export class GridStack {
    Note: this assumes only 1 child under '.grid-stack-item-content' (sized to gridItem minus padding) that is at the entire content size wanted */
   public resizeToContent(els: GridStackElement) {
     GridStack.getElements(els).forEach(el => {
+      if (!el.clientHeight) return; // 0 when hidden, skip
       let n = el?.gridstackNode;
       if (!n) return;
       const grid = n.grid;
@@ -1274,8 +1275,9 @@ export class GridStack {
       const cell = this.getCellHeight();
       if (!cell) return;
       let height = n.h ? n.h * cell : el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
-      if (!height) return; // 0 when hidden, skip
-      const item = el.querySelector(GridStack.resizeToContentParent);
+      let item: Element;
+      if (n.resizeToContentParent) item = el.querySelector(n.resizeToContentParent);
+      if (!item) item = el.querySelector(GridStack.resizeToContentParent);
       if (!item) return;
       const child = item.firstElementChild;
       // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
@@ -1287,9 +1289,10 @@ export class GridStack {
       height += wantedH - itemH;
       let h = Math.ceil(height / cell);
       // check for min/max and special sizing
-      if (Number.isInteger(n.sizeToContent)) {
-        if (h > (n.sizeToContent as number)) {
-          h = n.sizeToContent as number;
+      const softMax = Number.isInteger(n.sizeToContent) ? n.sizeToContent as number : 0;
+      if (softMax) {
+        if (h > softMax) {
+          h = softMax;
           el.classList.remove('size-to-content');  // get v-scroll back
         } else el.classList.add('size-to-content');
       }
