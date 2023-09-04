@@ -377,16 +377,14 @@ export class Utils {
     }
   }
 
-  static getContainerForPositionFixedElement(el: HTMLElement | HTMLHtmlElement): HTMLElement {
-    if (el === document.documentElement) return el;
-
+  static getContainerForPositionFixedElement(el: HTMLElement): HTMLElement {
     const style = getComputedStyle(el as HTMLElement);
 
-    if (style.transform && style.transform !== 'none') {
-      return el;
-    } else {
-      return Utils.getContainerForPositionFixedElement(el.parentElement);
+    while (el !== document.documentElement && el.parentElement && style.transform === 'none') {
+      el = el.parentElement;
     }
+
+    return el;
   }
 
   /** @internal */
@@ -570,20 +568,18 @@ export class Utils {
   }
 
   public static getScaleForElement(element: HTMLElement) {
-    let el = element;
-
     // Check if element is visible, otherwise the width/height will be of 0
-    while (el && !el.offsetParent) {
-      el = el.parentElement;
+    while (element && !element.offsetParent) {
+      element = element.parentElement;
     }
 
-    if (!el) {
+    if (!element) {
       return { scaleX: 1, scaleY: 1 };
     }
 
-    const boundingClientRect = el.getBoundingClientRect();
-    const scaleX = boundingClientRect.width / el.offsetWidth;
-    const scaleY = boundingClientRect.height / el.offsetHeight;
+    const boundingClientRect = element.getBoundingClientRect();
+    const scaleX = boundingClientRect.width / element.offsetWidth;
+    const scaleY = boundingClientRect.height / element.offsetHeight;
     return { scaleX, scaleY };
   }
 

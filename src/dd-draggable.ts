@@ -183,7 +183,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
         this._callDrag(e);
       }
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 3) {
-      let node = (this.el as GridItemHTMLElement)?.gridstackNode;
       /**
        * don't start unless we've moved at least 3 pixels
        */

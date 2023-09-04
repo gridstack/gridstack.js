@@ -295,10 +295,10 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _applyChange(): DDResizable {
     if (!this.temporalRect) return this;
     const { scaleX, scaleY } = Utils.getScaleForElement(this.el);
-    this.el.style.width = `${Math.floor(this.temporalRect.width / scaleX)}px`;
-    this.el.style.height = `${Math.floor(this.temporalRect.height / scaleY)}px`;
-    this.el.style.top = `${Math.floor(this.temporalRect.top / scaleY)}px`;
-    this.el.style.left = `${Math.floor(this.temporalRect.left / scaleX)}px`;
+    this.el.style.width = `${Math.round(this.temporalRect.width / scaleX)}px`;
+    this.el.style.height = `${Math.round(this.temporalRect.height / scaleY)}px`;
+    this.el.style.top = `${Math.round(this.temporalRect.top / scaleY)}px`;
+    this.el.style.left = `${Math.round(this.temporalRect.left / scaleX)}px`;
     return this;
   }
 
