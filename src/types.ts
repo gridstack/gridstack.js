@@ -311,11 +311,11 @@ export interface GridStackWidget extends GridStackPosition {
   minH?: number;
   /** maximum height allowed during resize/creation (default?: undefined = un-constrained) */
   maxH?: number;
-  /** prevent resizing (default?: undefined = un-constrained) */
+  /** prevent direct resizing by the user (default?: undefined = un-constrained) */
   noResize?: boolean;
-  /** prevents moving (default?: undefined = un-constrained) */
+  /** prevents direct moving by the user (default?: undefined = un-constrained) */
   noMove?: boolean;
-  /** prevents being moved by others during their (default?: undefined = un-constrained) */
+  /** same as noMove+noResize but also prevents being pushed by other widgets or api (default?: undefined = un-constrained) */
   locked?: boolean;
   /** value for `gs-id` stored on the widget (default?: undefined) */
   id?: string;
