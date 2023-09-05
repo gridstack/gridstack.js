@@ -338,7 +338,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.helperContainment = this.helper.parentElement;
     if (this.helper.style.position !== 'fixed') {
       this.parentOriginStylePosition = this.helperContainment.style.position;
-      if (window.getComputedStyle(this.helperContainment).position.match(/static/)) {
+      if (getComputedStyle(this.helperContainment).position.match(/static/)) {
         this.helperContainment.style.position = 'relative';
       }
     }

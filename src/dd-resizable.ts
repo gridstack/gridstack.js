@@ -217,7 +217,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _setupHelper(): DDResizable {
     this.elOriginStyleVal = DDResizable._originStyleProp.map(prop => this.el.style[prop]);
     this.parentOriginStylePosition = this.el.parentElement.style.position;
-    if (window.getComputedStyle(this.el.parentElement).position.match(/static/)) {
+    if (getComputedStyle(this.el.parentElement).position.match(/static/)) {
       this.el.parentElement.style.position = 'relative';
     }
     this.el.style.position = 'absolute';
