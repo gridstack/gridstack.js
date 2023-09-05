@@ -481,7 +481,7 @@ export class Utils {
   }
 
   // public static setPositionRelative(el: HTMLElement): void {
-  //   if (!(/^(?:r|a|f)/).test(window.getComputedStyle(el).position)) {
+  //   if (!(/^(?:r|a|f)/).test(getComputedStyle(el).position)) {
   //     el.style.position = "relative";
   //   }
   // }
