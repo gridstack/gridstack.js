@@ -159,10 +159,11 @@ export class GridStackEngine {
     }
 
     let collide: GridStackNode;
+    let overMax = 0.5; // need >50%
     collides.forEach(n => {
       if (n.locked || !n._rect) return;
       let r2 = n._rect; // overlapping target
-      let yOver = Number.MAX_VALUE, xOver = Number.MAX_VALUE, overMax = 0.5; // need >50%
+      let yOver = Number.MAX_VALUE, xOver = Number.MAX_VALUE;
       // depending on which side we started from, compute the overlap % of coverage
       // (ex: from above/below we only compute the max horizontal line coverage)
       if (r0.y < r2.y) { // from above
