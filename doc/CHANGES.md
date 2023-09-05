@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [9.1.0-dev (TBD)](#910-dev-tbd)
 - [9.1.0 (2023-09-04)](#910-2023-09-04)
 - [9.0.2 (2023-08-29)](#902-2023-08-29)
 - [9.0.1 (2023-08-27)](#901-2023-08-27)
@@ -95,6 +96,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 9.1.0-dev (TBD)
+* fix [#2435](https://github.com/gridstack/gridstack.js/issues/2435) directionCollideCoverage() tweaks
 
 ## 9.1.0 (2023-09-04)
 * renamed fitToContent to sizeToContent (API BREAK)
