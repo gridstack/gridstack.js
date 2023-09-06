@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [9.1.0-dev (TBD)](#910-dev-tbd)
+- [9.1.1 (2023-09-06)](#911-2023-09-06)
 - [9.1.0 (2023-09-04)](#910-2023-09-04)
 - [9.0.2 (2023-08-29)](#902-2023-08-29)
 - [9.0.1 (2023-08-27)](#901-2023-08-27)
@@ -97,7 +97,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 9.1.0-dev (TBD)
+## 9.1.1 (2023-09-06)
 * fix [#2435](https://github.com/gridstack/gridstack.js/issues/2435) directionCollideCoverage() tweaks
 * fix resizeToContent() to handle node.h (using when cellHeight changes or we resize) vs DOM sizing (rest of the time)
 
