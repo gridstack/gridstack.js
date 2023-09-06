@@ -51,7 +51,7 @@ $animation_speed: .3s !default;
     overflow-x: hidden;
     overflow-y: auto;
   }
-  &.size-to-content > .grid-stack-item-content {
+  &.size-to-content:not(.size-to-content-max) > .grid-stack-item-content {
     overflow-y: hidden;
   }
 }

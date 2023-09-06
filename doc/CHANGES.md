@@ -99,6 +99,7 @@ Change log
 
 ## 9.1.0-dev (TBD)
 * fix [#2435](https://github.com/gridstack/gridstack.js/issues/2435) directionCollideCoverage() tweaks
+* fix resizeToContent() to handle node.h (using when cellHeight changes or we resize) vs DOM sizing (rest of the time)
 
 ## 9.1.0 (2023-09-04)
 * renamed fitToContent to sizeToContent (API BREAK)
