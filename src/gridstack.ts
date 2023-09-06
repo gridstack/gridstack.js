@@ -798,7 +798,7 @@ export class GridStack {
     this.opts.cellHeightUnit = data.unit;
     this.opts.cellHeight = data.h;
 
-    this.doContentResize(false);
+    this.doContentResize(false, true); // no anim wait, but use attributes since we only change row height
 
     if (update) {
       this._updateStyles(true); // true = force re-create for current # of rows
@@ -1002,7 +1002,7 @@ export class GridStack {
 
     this._updateContainerHeight();
 
-    this.doContentResize(false, node);
+    this.doContentResize(false, false, node);
 
     // see if there is a sub-grid to create
     if (node.subGridOpts) {
@@ -1262,54 +1262,54 @@ export class GridStack {
     this.engine.endUpdate();
   }
 
-  /** Updates widget height to match the content height to avoid v-scrollbar or dead space.
-   Note: this assumes only 1 child under '.grid-stack-item-content' (sized to gridItem minus padding) that is at the entire content size wanted */
-  public resizeToContent(els: GridStackElement) {
-    GridStack.getElements(els).forEach(el => {
-      if (!el.clientHeight) return; // 0 when hidden, skip
-      let n = el?.gridstackNode;
-      if (!n) return;
-      const grid = n.grid;
-      if (grid !== this) return grid?.resizeToContent(el);
-      if (el.parentElement !== this.el) return; // skip if we are not inside a grid
-      const cell = this.getCellHeight();
-      if (!cell) return;
-      let height = n.h ? n.h * cell : el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
-      let item: Element;
-      if (n.resizeToContentParent) item = el.querySelector(n.resizeToContentParent);
-      if (!item) item = el.querySelector(GridStack.resizeToContentParent);
-      if (!item) return;
-      const child = item.firstElementChild;
-      // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
-      if (!child) { console.log(`Error: resizeToContent() '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }
-      const padding = el.clientHeight - item.clientHeight; // full - available height to our child (minus border, padding...)
-      const itemH = n.h ? n.h * cell - padding : item.clientHeight; // calculated to what cellHeight is or will become (rather than actual to prevent waiting for animation to finish)
-      const wantedH = child.getBoundingClientRect().height || itemH;
-      if (itemH === wantedH) return;
-      height += wantedH - itemH;
-      let h = Math.ceil(height / cell);
-      // check for min/max and special sizing
-      const softMax = Number.isInteger(n.sizeToContent) ? n.sizeToContent as number : 0;
-      if (softMax) {
-        if (h > softMax) {
-          h = softMax;
-          el.classList.remove('size-to-content');  // get v-scroll back
-        } else el.classList.add('size-to-content');
-      }
-      if (n.minH && h < n.minH) h = n.minH;
-      else if (n.maxH && h > n.maxH) h = n.maxH;
-      if (h !== n.h) {
-        this._ignoreLayoutsNodeChange = true;
-        this.moveNode(n, {h});
-        delete this._ignoreLayoutsNodeChange;
-      }
-    });
+  /** 
+   * Updates widget height to match the content height to avoid v-scrollbar or dead space.
+   * Note: this assumes only 1 child under resizeToContentParent='.grid-stack-item-content' (sized to gridItem minus padding) that is at the entire content size wanted.
+   * useAttrSize set to true if GridStackNode.h should be used instead of actual container height when we don't need to wait for animation to finish to get actual DOM heights
+   **/
+  public resizeToContent(el: GridItemHTMLElement, useAttrSize = false) {
+    el?.classList.remove('size-to-content-max');
+    if (!el?.clientHeight) return; // 0 when hidden, skip
+    let n = el.gridstackNode;
+    if (!n) return;
+    const grid = n.grid;
+    if (!grid) return;
+    if (el.parentElement !== grid.el) return; // skip if we are not inside a grid
+    const cell = grid.getCellHeight();
+    if (!cell) return;
+    let height = useAttrSize && n.h ? n.h * cell : el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
+    let item: Element;
+    if (n.resizeToContentParent) item = el.querySelector(n.resizeToContentParent);
+    if (!item) item = el.querySelector(GridStack.resizeToContentParent);
+    if (!item) return;
+    const child = item.firstElementChild;
+    // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
+    if (!child) { console.log(`Error: resizeToContent() '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }
+    const padding = el.clientHeight - item.clientHeight; // full - available height to our child (minus border, padding...)
+    const itemH = useAttrSize && n.h ? n.h * cell - padding : item.clientHeight; // calculated to what cellHeight is or will become (rather than actual to prevent waiting for animation to finish)
+    const wantedH = child.getBoundingClientRect().height || itemH;
+    if (itemH === wantedH) return;
+    height += wantedH - itemH;
+    let h = Math.ceil(height / cell);
+    // check for min/max and special sizing
+    const softMax = Number.isInteger(n.sizeToContent) ? n.sizeToContent as number : 0;
+    if (softMax && h > softMax) {
+      h = softMax;
+      el.classList.add('size-to-content-max');  // get v-scroll back
+    }
+    if (n.minH && h < n.minH) h = n.minH;
+    else if (n.maxH && h > n.maxH) h = n.maxH;
+    if (h !== n.h) {
+      grid._ignoreLayoutsNodeChange = true;
+      grid.moveNode(n, {h});
+      delete grid._ignoreLayoutsNodeChange;
+    }
   }
 
   /** call the user resize (so we can do extra work) else our build in version */
-  protected resizeToContentCheck(el: GridItemHTMLElement) {
+  protected resizeToContentCheck(el: GridItemHTMLElement, useAttr = false) {
     if (GridStack.resizeToContentCB) GridStack.resizeToContentCB(el);
-    else this.resizeToContent(el);
+    else this.resizeToContent(el, useAttr);
   }
   
   /**
@@ -1647,24 +1647,24 @@ export class GridStack {
     this.engine.nodes.forEach(n => {
       if (n.subGrid) n.subGrid.onResize()
     });
-    this.doContentResize(columnChanged);
+    this.doContentResize(columnChanged); // wait for anim of column changed (DOM reflow before we can size correctly)
 
     this.batchUpdate(false);
 
     return this;
   }
 
-  private doContentResize(delay = true, n: GridStackNode = undefined) {
+  private doContentResize(delay = true, useAttr = false, n: GridStackNode = undefined) {
     // update any gridItem height with sizeToContent, but wait for DOM $animation_speed to settle if we changed column count
     // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
     setTimeout(() =>  {
        if (n) {
-        if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el);
+        if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el, useAttr);
        } else {
         const nodes = [...this.engine.nodes]; // in case order changes while resizing one
         this.batchUpdate();
         nodes.forEach(n => {
-          if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el);
+          if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el, useAttr);
         });
         this.batchUpdate(false);
       }
@@ -2247,7 +2247,7 @@ export class GridStack {
 
         if (event.type === 'resizestop') {
           if (Number.isInteger(node.sizeToContent)) node.sizeToContent = node.h; // new soft limit
-          this.doContentResize(false, node);
+          this.doContentResize(false, true, node); // no amin wait as will use the actual sized coordinate attr
         }
       }
 
