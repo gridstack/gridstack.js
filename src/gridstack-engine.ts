@@ -592,7 +592,8 @@ export class GridStackEngine {
     if (!clonedNode) return false;
 
     // check if we're covering 50% collision and could move
-    let canMove = clone.moveNode(clonedNode, o) && clone.getRow() <= this.maxRow;
+    // allow move/resize if number of rows does not increase above current size or configured maxRow
+    let canMove = clone.moveNode(clonedNode, o) && clone.getRow() <= Math.max(this.getRow(), this.maxRow);
     // else check if we can force a swap (float=true, or different shapes) on non-resize
     if (!canMove && !o.resizing && o.collide) {
       let collide = o.collide.el.gridstackNode; // find the source node the clone collided with at 50%
