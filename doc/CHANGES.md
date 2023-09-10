@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [9.1.1-dev (TBD)](#911-dev-tbd)
+- [9.2.0 (2023-09-10)](#920-2023-09-10)
 - [9.1.1 (2023-09-06)](#911-2023-09-06)
 - [9.1.0 (2023-09-04)](#910-2023-09-04)
 - [9.0.2 (2023-08-29)](#902-2023-08-29)
@@ -98,7 +98,8 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 9.1.1-dev (TBD)
+## 9.2.0 (2023-09-10)
+* feat: nested grids now support `sizeToContent` to size themselves to how many sub items they contain - Thank you [@Helix](https://gridstackjs.slack.com/team/U05QT7G8H7T) for sponsoring this!
 * fix [#2449](https://github.com/gridstack/gridstack.js/issues/2449) full grid maxRow fix
 
 ## 9.1.1 (2023-09-06)
