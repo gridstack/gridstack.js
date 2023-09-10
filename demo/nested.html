@@ -13,8 +13,9 @@
   <div class="container-fluid">
     <h1>Nested grids demo</h1>
     <p>This example shows v5.x dragging between nested grids (dark yellow) and parent grid (bright yellow.)<br>
+      Use v9.2 <b>sizeToContent:true</b> on first subgrid item parent to grow/shrink as needed, while leaving leaf green items unchanged.<br>
       Uses v3.1 API to load the entire nested grid from JSON.<br>
-      Nested grids uses new <b>column:'auto'</b> to keep items same size during resize.</p>
+      Nested grids uses v5 <b>column:'auto'</b> to keep items same size during resize.</p>
     <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
     <a class="btn btn-primary" onClick="addNewWidget('.sub1')" href="#">Add Widget Grid1</a>
     <a class="btn btn-primary" onClick="addNewWidget('.sub2')" href="#">Add Widget Grid2</a>
@@ -33,7 +34,7 @@
   <script src="events.js"></script>
   <script type="text/javascript">
     let sub1 = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
-    let sub2 = [ {x:0, y:0}, {x:0, y:1, w:2}];
+    let sub2 = [ {x:0, y:0, h:2}, {x:1, y:1, w:2}];
     let count = 0;
     [...sub1, ...sub2].forEach(d => d.content = String(count++));
     let subOptions = {
@@ -51,7 +52,7 @@
       id: 'main',
       children: [
         {x:0, y:0, content: 'regular item'},
-        {x:1, y:0, w:4, h:4, subGridOpts: {children: sub1, id:'sub1_grid', class: 'sub1', ...subOptions}},
+        {x:1, y:0, w:4, h:4, sizeToContent: true, subGridOpts: {children: sub1, id:'sub1_grid', class: 'sub1', ...subOptions}},
         {x:5, y:0, w:3, h:4, subGridOpts: {children: sub2, id:'sub2_grid', class: 'sub2', ...subOptions}},
       ]
     };
