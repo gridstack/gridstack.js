@@ -958,6 +958,17 @@ export class GridStackEngine {
     return this._layouts?.[column]?.findIndex(l => l._id === n._id) ?? -1;
   }
 
+  public removeNodeFromLayoutCache(n: GridStackNode) {
+    if (!this._layouts) {
+      return;
+    }
+    for (let i = 0; i < this._layouts.length; i++) {
+      let index = this.findCacheLayout(n, i);
+      if (index !== -1) {
+        this._layouts[i].splice(index, 1);
+      }
+    }
+  }
 
   /** called to remove all internal values but the _id */
   public cleanupNode(node: GridStackNode): GridStackEngine {
