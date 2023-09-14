@@ -57,6 +57,7 @@ gridstack.js API
   - [`removeWidget(el, removeDOM = true, triggerEvent = true)`](#removewidgetel-removedom--true-triggerevent--true)
   - [`removeAll(removeDOM = true)`](#removeallremovedom--true)
   - [`resizable(el, val)`](#resizableel-val)
+  - [`resizeToContent(el: GridItemHTMLElement, useAttrSize = false)`](#resizetocontentel-griditemhtmlelement-useattrsize--false)
   - [`save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions`](#savesavecontent--true-savegridopt--false-gridstackwidget--gridstackoptions)
   - [`setAnimation(doAnimate)`](#setanimationdoanimate)
   - [`setStatic(staticValue)`](#setstaticstaticvalue)
@@ -562,6 +563,12 @@ Enables/Disables user resizing of specific grid element. If you want all items, 
 
 - `el` - widget to modify
 - `val` - if `true` widget will be resizable.
+
+### `resizeToContent(el: GridItemHTMLElement, useAttrSize = false)`
+
+Updates widget height to match the content height to avoid v-scrollbar or dead space.
+Note: this assumes only 1 child under `resizeToContentParent='.grid-stack-item-content'` (sized to gridItem minus padding) that is at the entire content size wanted.
+- `useAttrSize` set to `true` if GridStackNode.h should be used instead of actual container height when we don't need to wait for animation to finish to get actual DOM heights
 
 ### `save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions`
 
