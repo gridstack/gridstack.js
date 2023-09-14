@@ -86,7 +86,7 @@ export type AddRemoveFcn = (parent: HTMLElement, w: GridStackWidget, add: boolea
 /** optional function called during save() to let the caller add additional custom data to the GridStackWidget structure that will get returned */
 export type SaveFcn = (node: GridStackNode, w: GridStackWidget) => void;
 
-export type ResizeToContentFcn = (els: GridItemHTMLElement) => void;
+export type ResizeToContentFcn = (el: GridItemHTMLElement, useAttr?: boolean) => void;
 
 /**
  * Defines the options for a Grid
