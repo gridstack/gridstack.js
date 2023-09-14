@@ -1269,8 +1269,9 @@ export class GridStack {
    * useAttrSize set to true if GridStackNode.h should be used instead of actual container height when we don't need to wait for animation to finish to get actual DOM heights
    */
   public resizeToContent(el: GridItemHTMLElement, useAttrSize = false) {
-    el?.classList.remove('size-to-content-max');
-    if (!el?.clientHeight) return; // 0 when hidden, skip
+    if (!el) return;
+    el.classList.remove('size-to-content-max');
+    if (!el.clientHeight) return; // 0 when hidden, skip
     let n = el.gridstackNode;
     if (!n) return;
     const grid = n.grid;
@@ -1313,9 +1314,9 @@ export class GridStack {
     }
   }
 
-  /** call the user resize (so we can do extra work) else our build in version */
+  /** call the user resize (so they can do extra work) else our build in version */
   protected resizeToContentCheck(el: GridItemHTMLElement, useAttr = false) {
-    if (GridStack.resizeToContentCB) GridStack.resizeToContentCB(el);
+    if (GridStack.resizeToContentCB) GridStack.resizeToContentCB(el, useAttr);
     else this.resizeToContent(el, useAttr);
   }
   
