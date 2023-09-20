@@ -378,9 +378,7 @@ export class Utils {
   }
 
   static getContainerForPositionFixedElement(el: HTMLElement): HTMLElement {
-    const style = getComputedStyle(el as HTMLElement);
-
-    while (el !== document.documentElement && el.parentElement && style.transform === 'none') {
+    while (el !== document.documentElement && el.parentElement && getComputedStyle(el as HTMLElement).transform === 'none') {
       el = el.parentElement;
     }
 
