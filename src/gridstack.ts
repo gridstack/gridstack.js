@@ -1489,30 +1489,34 @@ export class GridStack {
   /** @internal */
   protected _updateContainerHeight(): GridStack {
     if (!this.engine || this.engine.batchMode) return this;
-    let row = this.getRow() + this._extraDragRow; // checks for minRow already
-    // check for css min height
-    // Note: we don't handle %,rem correctly so comment out, beside we don't need need to create un-necessary
-    // rows as the CSS will make us bigger than our set height if needed... not sure why we had this.
-    // let cssMinHeight = parseInt(getComputedStyle(this.el)['min-height']);
-    // if (cssMinHeight > 0) {
-    //   let minRow = Math.round(cssMinHeight / this.getCellHeight(true));
-    //   if (row < minRow) {
-    //     row = minRow;
-    //   }
-    // }
+    const parent = this.parentGridItem;
+    let row = this.getRow() + this._extraDragRow; // this checks for minRow already
+    const cellHeight = this.opts.cellHeight as number;
+    const unit = this.opts.cellHeightUnit;
+    if (!cellHeight) return this;
+
+    // check for css min height (non nested grid). TODO: support mismatch, say: min % while unit is px.
+    if (!parent) {
+      const cssMinHeight = Utils.parseHeight(getComputedStyle(this.el)['minHeight']);
+      if (cssMinHeight.h > 0 && cssMinHeight.unit === unit) {
+        const minRow = Math.floor(cssMinHeight.h / cellHeight);
+        if (row < minRow) {
+          row = minRow;
+        }
+      }
+    }
+
     this.el.setAttribute('gs-current-row', String(row));
-    if (row === 0) {
-      this.el.style.removeProperty('min-height');
-    } else {
-      let cellHeight = this.opts.cellHeight as number;
-      let unit = this.opts.cellHeightUnit;
-      if (!cellHeight) return this;
-      this.el.style.minHeight = row * cellHeight + unit;
+    this.el.style.removeProperty('min-height');
+    this.el.style.removeProperty('height');
+    if (row) {
+      // nested grids have 'insert:0' to fill the space of parent by default, but we may be taller so use min-height for possible scrollbars
+      this.el.style[parent ? 'minHeight' : 'height'] = row * cellHeight + unit;
     }
 
     // if we're a nested grid inside an sizeToContent item, tell it to resize itself too
-    if (this.parentGridItem && !this.parentGridItem.grid.engine.batchMode && Utils.shouldSizeToContent(this.parentGridItem)) {
-      this.parentGridItem.grid.resizeToContentCheck(this.parentGridItem.el);
+    if (parent && !parent.grid.engine.batchMode && Utils.shouldSizeToContent(parent)) {
+      parent.grid.resizeToContentCheck(parent.el);
     }
 
     return this;
