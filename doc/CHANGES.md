@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [9.2.1 (2023-09-20)](#921-2023-09-20)
 - [9.2.0 (2023-09-10)](#920-2023-09-10)
 - [9.1.1 (2023-09-06)](#911-2023-09-06)
 - [9.1.0 (2023-09-04)](#910-2023-09-04)
@@ -97,6 +98,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 9.2.1 (2023-09-20)
+* fix _updateContainerHeight() to use height rather than min-height again (apart for nested grids which need it) and partial getComputedStyle CSS minHeight support
 
 ## 9.2.0 (2023-09-10)
 * feat: nested grids now support `sizeToContent` to size themselves to how many sub items they contain - Thank you [@Helix](https://gridstackjs.slack.com/team/U05QT7G8H7T) for sponsoring this!
