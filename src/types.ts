@@ -1,5 +1,5 @@
 /**
- * types.ts 9.2.1
+ * types.ts 9.2.1-dev
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
