@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [9.2.1-dev (TBD)](#921-dev-tbd)
 - [9.2.1 (2023-09-20)](#921-2023-09-20)
 - [9.2.0 (2023-09-10)](#920-2023-09-10)
 - [9.1.1 (2023-09-06)](#911-2023-09-06)
@@ -98,6 +99,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 9.2.1-dev (TBD)
+* fix - sub-grid styles now look for immediate correct parent, not any depth above.
 
 ## 9.2.1 (2023-09-20)
 * fix _updateContainerHeight() to use height rather than min-height again (apart for nested grids which need it) and partial getComputedStyle CSS minHeight support
