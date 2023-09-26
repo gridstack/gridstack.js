@@ -318,7 +318,8 @@ export class GridStack {
     }
 
     // check if we're been nested, and if so update our style and keep pointer around (used during save)
-    let parentGridItem = (Utils.closestUpByClass(this.el, gridDefaults.itemClass) as GridItemHTMLElement)?.gridstackNode;
+    const grandParent: GridItemHTMLElement = this.el.parentElement?.parentElement;
+    let parentGridItem = grandParent?.classList.contains(gridDefaults.itemClass) ? grandParent.gridstackNode : undefined;
     if (parentGridItem) {
       parentGridItem.subGrid = this;
       this.parentGridItem = parentGridItem;

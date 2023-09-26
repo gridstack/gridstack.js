@@ -314,13 +314,13 @@ export class Utils {
   }
 
   /** return the closest parent (or itself) matching the given class */
-  static closestUpByClass(el: HTMLElement, name: string): HTMLElement {
-    while (el) {
-      if (el.classList.contains(name)) return el;
-      el = el.parentElement
-    }
-    return null;
-  }
+  // static closestUpByClass(el: HTMLElement, name: string): HTMLElement {
+  //   while (el) {
+  //     if (el.classList.contains(name)) return el;
+  //     el = el.parentElement
+  //   }
+  //   return null;
+  // }
 
   /** delay calling the given function for given delay, preventing new calls from happening while waiting */
   static throttle(func: () => void, delay: number): () => void {
