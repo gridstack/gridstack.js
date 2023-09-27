@@ -392,9 +392,9 @@ export class GridStackEngine {
     const saveOrig = (node.x || 0) + (node.w || 1) > this.column;
     if (saveOrig && this.column < 12 && !this._inColumnResize && node._id && this.findCacheLayout(node, 12) === -1) {
       let copy = {...node}; // need _id + positions
-      if (copy.autoPosition) { delete copy.x; delete copy.y; }
+      if (copy.autoPosition || copy.x === undefined) { delete copy.x; delete copy.y; }
       else copy.x = Math.min(11, copy.x);
-      copy.w = Math.min(12, copy.w);
+      copy.w = Math.min(12, copy.w || 1);
       this.cacheOneLayout(copy, 12);
     }
 
@@ -744,9 +744,8 @@ export class GridStackEngine {
     this.sortNodes();
     this.nodes.forEach(n => {
       let wl = layout?.find(l => l._id === n._id);
-      let w: GridStackNode = {...n};
-      // use layout info instead if set
-      if (wl) { w.x = wl.x; w.y = wl.y; w.w = wl.w; }
+      // use layout info fields instead if set
+      let w: GridStackNode = {...n, ...(wl || {})};
       Utils.removeInternalForSave(w, !saveElement);
       if (saveCB) saveCB(n, w);
       list.push(w);
@@ -943,7 +942,7 @@ export class GridStackEngine {
   public cacheOneLayout(n: GridStackNode, column: number): GridStackEngine {
     n._id = n._id ?? GridStackEngine._idSeq++;
     let l: GridStackNode = {x: n.x, y: n.y, w: n.w, _id: n._id}
-    if (n.autoPosition) { delete l.x; delete l.y; l.autoPosition = true; }
+    if (n.autoPosition || n.x === undefined) { delete l.x; delete l.y; if (n.autoPosition) l.autoPosition = true; }
     this._layouts = this._layouts || [];
     this._layouts[column] = this._layouts[column] || [];
     let index = this.findCacheLayout(n, column);
