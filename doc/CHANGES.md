@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [9.2.1-dev (TBD)](#921-dev-tbd)
+- [9.2.2 (2023-09-27)](#922-2023-09-27)
 - [9.2.1 (2023-09-20)](#921-2023-09-20)
 - [9.2.0 (2023-09-10)](#920-2023-09-10)
 - [9.1.1 (2023-09-06)](#911-2023-09-06)
@@ -100,7 +100,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 9.2.1-dev (TBD)
+## 9.2.2 (2023-09-27)
 * fix - sub-grid styles now look for immediate correct parent, not any depth above.
 * fix [#2469](https://github.com/gridstack/gridstack.js/issues/2469) "Invalid height" error CSS minHeight
 * fix [#2394](https://github.com/gridstack/gridstack.js/issues/2394) nested grid size issue when sub-items moved up/down
