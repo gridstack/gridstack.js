@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flex display test #2469</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <script src="../../../dist/gridstack-all.js"></script>
+  <style type="text/css">
+    .some-flex-wrapper {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
+
+</head>
+<body>
+  <h1>Flex display test #2469</h1>
+  <div class="some-flex-wrapper">
+    <div class="grid-stack"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let grid = GridStack.init({
+      disableOneColumnMode: true,
+      float: false,
+      cellHeight: '120px',
+      minRow: 1,
+      margin: 10,
+    });
+
+    let items = [
+      {x: 1, y: 1, content:'0'},
+      {x: 2, y: 2, w: 3, content:'1'},
+    ];
+    grid.load(items);
+  </script>
+</body>
+</html>
