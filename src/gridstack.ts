@@ -2042,12 +2042,14 @@ export class GridStack {
         // console.log('dropover cloning node'); // TEST
           if (!el._gridstackNodeOrig) el._gridstackNodeOrig = node; // shouldn't have multiple nested!
           el.gridstackNode = node = {...node, w, h, grid: this};
+          delete node.x;
+          delete node.y;
           this.engine.cleanupNode(node)
             .nodeBoundFix(node);
           // restore some internal fields we need after clearing them all
           node._initDD =
-        node._isExternal =  // DOM needs to be re-parented on a drop
-        node._temporaryRemoved = true; // so it can be inserted onDrag below
+          node._isExternal =  // DOM needs to be re-parented on a drop
+          node._temporaryRemoved = true; // so it can be inserted onDrag below
         } else {
           node.w = w; node.h = h;
           node._temporaryRemoved = true; // so we can insert it
@@ -2096,6 +2098,7 @@ export class GridStack {
         delete el._gridstackNodeOrig;
         if (wasAdded && origNode?.grid && origNode.grid !== this) {
           let oGrid = origNode.grid;
+          oGrid.engine.removeNodeFromLayoutCache(origNode);
           oGrid.engine.removedNodes.push(origNode);
           oGrid._triggerRemoveEvent()._triggerChangeEvent();
           // if it's an empty sub-grid that got auto-created, nuke it
@@ -2141,7 +2144,6 @@ export class GridStack {
         this._updateContainerHeight();
         this.engine.addedNodes.push(node);// @ts-ignore
         this._triggerAddEvent();// @ts-ignore
-        this.engine.removeNodeFromLayoutCache(node);
         this._triggerChangeEvent();
 
         this.engine.endUpdate();

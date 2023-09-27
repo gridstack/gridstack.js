@@ -103,6 +103,7 @@ Change log
 ## 9.2.1-dev (TBD)
 * fix - sub-grid styles now look for immediate correct parent, not any depth above.
 * fix [#2469](https://github.com/gridstack/gridstack.js/issues/2469) "Invalid height" error CSS minHeight
+* fix [#2394](https://github.com/gridstack/gridstack.js/issues/2394) nested grid size issue when sub-items moved up/down
 
 ## 9.2.1 (2023-09-20)
 * fix _updateContainerHeight() to use height rather than min-height again (apart for nested grids which need it) and partial getComputedStyle CSS minHeight support

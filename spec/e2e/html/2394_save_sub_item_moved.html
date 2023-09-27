@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>#2394 Save sub item moved</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <link rel="stylesheet" href="../../../dist/gridstack-extra.min.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <h1>#2394 Save sub item moved</h1>
+  <button onClick="print()">Save</button>
+  <!-- <button onClick="reset()">Reset</button> -->
+  <button onClick="load()">Load</button>
+  <br><br>
+  <div class="grid-stack"></div>
+
+  <script type="text/javascript">
+    let subGridOpts = {
+        cellHeight: 50,
+        column: 3,
+        padding: 5,
+        minRow: 2, // don't collapse when empty
+        disableOneColumnMode: true,
+        acceptWidgets: true,
+        children: [ {id:0, x:0, y:0, w:3, content:'move to parent grid col=2'}]
+      };
+
+    var options = { // put in gridstack options here
+      disableOneColumnMode: true, // for jfiddle small window size
+      cellHeight: 70,
+      column: 2,
+      minRow: 3,
+      acceptWidgets: true,
+      children: [
+        {id:1, x:0, y:0, w:2, h:2, content:'3 columns', subGridOpts: subGridOpts },
+        {id:2, x:0, y:2, w:1, y:1, content:'widget' }
+      ]
+    };
+    var grid = GridStack.init(options);
+    var layout;
+
+    print = function() {
+      layout = grid.save(false, false);
+      console.log(layout);
+    }
+    load = function() {
+      grid.load(layout);
+    }
+    // reset = function() {
+    //   grid.removeAll();
+    // }
+    print()
+  </script>
+</body>
+</html>
