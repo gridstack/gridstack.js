@@ -2141,6 +2141,7 @@ export class GridStack {
         this._updateContainerHeight();
         this.engine.addedNodes.push(node);// @ts-ignore
         this._triggerAddEvent();// @ts-ignore
+        this.engine.removeNodeFromLayoutCache(node);
         this._triggerChangeEvent();
 
         this.engine.endUpdate();
