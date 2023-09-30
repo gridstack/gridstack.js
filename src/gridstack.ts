@@ -823,7 +823,7 @@ export class GridStack {
    * re-layout grid items to reclaim any empty space. Options are:
    * 'list' keep the widget left->right order the same, even if that means leaving an empty slot if things don't fit
    * 'compact' might re-order items to fill any empty space
-   * 
+   *
    * doSort - 'false' to let you do your own sorting ahead in case you need to control a different order. (default to sort)
    */
   public compact(layout: CompactOptions = 'compact', doSort = true): GridStack {
@@ -1264,7 +1264,7 @@ export class GridStack {
     this.engine.endUpdate();
   }
 
-  /** 
+  /**
    * Updates widget height to match the content height to avoid v-scrollbar or dead space.
    * Note: this assumes only 1 child under resizeToContentParent='.grid-stack-item-content' (sized to gridItem minus padding) that is at the entire content size wanted.
    * useAttrSize set to true if GridStackNode.h should be used instead of actual container height when we don't need to wait for animation to finish to get actual DOM heights
@@ -1294,7 +1294,7 @@ export class GridStack {
     } else {
       // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
       const child = item.firstElementChild;
-      if (!child) { console.log(`Error: resizeToContent() '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }  
+      if (!child) { console.log(`Error: resizeToContent() '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }
       wantedH = child.getBoundingClientRect().height || itemH;
     }
     if (itemH === wantedH) return;
@@ -1320,7 +1320,7 @@ export class GridStack {
     if (GridStack.resizeToContentCB) GridStack.resizeToContentCB(el, useAttr);
     else this.resizeToContent(el, useAttr);
   }
-  
+
   /**
    * Updates the margins which will set all 4 sides at once - see `GridStackOptions.margin` for format options (CSS string format of 1,2,4 values or single number).
    * @param value margin value
@@ -1678,10 +1678,10 @@ export class GridStack {
   private doContentResize(delay = true, useAttr = false, n: GridStackNode = undefined) {
     // update any gridItem height with sizeToContent, but wait for DOM $animation_speed to settle if we changed column count
     // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
-    setTimeout(() =>  {
-       if (n) {
+    setTimeout(() => {
+      if (n) {
         if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el, useAttr);
-       } else if (this.engine.nodes.some(n => Utils.shouldSizeToContent(n))) {
+      } else if (this.engine.nodes.some(n => Utils.shouldSizeToContent(n))) {
         const nodes = [...this.engine.nodes]; // in case order changes while resizing one
         this.batchUpdate();
         nodes.forEach(n => {
@@ -1703,7 +1703,7 @@ export class GridStack {
 
     if (!forceRemove && trackSize && !this.resizeObserver) {
       this._sizeThrottle = Utils.throttle(() => this.onResize(), this.opts.cellHeightThrottle);
-      this.resizeObserver = new ResizeObserver(entries => this._sizeThrottle());
+      this.resizeObserver = new ResizeObserver(() => this._sizeThrottle());
       this.resizeObserver.observe(this.el);
       this._skipInitialResize = true; // makeWidget will originally have called on startup
     } else if ((forceRemove || !trackSize) && this.resizeObserver) {

@@ -814,7 +814,7 @@ export class GridStackEngine {
     if (column < prevColumn) this.cacheLayout(this.nodes, prevColumn);
     this.batchUpdate(); // do this EARLY as it will call saveInitial() so we can detect where we started for _dirty and collision
     let newNodes: GridStackNode[] = [];
-    
+
     // if we're going to 1 column and using DOM order (item passed in) rather than default sorting, then generate that layout
     let domOrder = false;
     if (column === 1 && nodes?.length) {
@@ -910,7 +910,7 @@ export class GridStackEngine {
         delete node._orig; // make sure the commit doesn't try to restore things back to original
       });
     }
-    
+
     this.nodes.forEach(n => delete n._orig); // clear _orig before batch=false so it doesn't handle float=true restore
     this.batchUpdate(false, !doCompact);
     delete this._inColumnResize;

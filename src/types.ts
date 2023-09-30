@@ -50,7 +50,7 @@ export const dragInDefaultOptions: DDDragInOpt = {
   // scroll: false,
 };
 
-/** 
+/**
  * different layout options when changing # of columns, including a custom function that takes new/old column count, and array of new/old positions
  * Note: new list may be partially already filled if we have a cache of the layout at that size and new items were added later.
  * Options are:
@@ -321,7 +321,7 @@ export interface GridStackWidget extends GridStackPosition {
   id?: string;
   /** html to append inside as content */
   content?: string;
-  /** local (vs grid) override - see GridStackOptions. 
+  /** local (vs grid) override - see GridStackOptions.
    * Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) */
   sizeToContent?: boolean | number;
   /** local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height */
