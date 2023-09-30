@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [9.2.2-dev (TBD)](#922-dev-tbd)
+- [9.3.0 (2023-09-30)](#930-2023-09-30)
 - [9.2.2 (2023-09-27)](#922-2023-09-27)
 - [9.2.1 (2023-09-20)](#921-2023-09-20)
 - [9.2.0 (2023-09-10)](#920-2023-09-10)
@@ -101,7 +101,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 9.2.2-dev (TBD)
+## 9.3.0 (2023-09-30)
 * fix [#1275](https://github.com/gridstack/gridstack.js/issues/1275) div scale support - Thank you [VincentMolinie](https://github.com/VincentMolinie) for implementing this
 
 ## 9.2.2 (2023-09-27)
