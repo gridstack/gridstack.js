@@ -13,14 +13,14 @@
 <body>
   <div class="container-fluid">
     <h1>Transform Parent demo</h1>
-    <p>example where the grid parent has a scale (0.5, 0.5)</p>
+    <p>example where the grid parent has a translate(50px, 100px) scale(0.5, 0.5) </p>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
       <a class="btn btn-primary" onClick="zoomIn()" href="#">Zoom in</a>
       <a class="btn btn-primary" onClick="zoomOut()" href="#">Zoom out</a>
     </div>
     <br><br>
-    <div style="transform: scale(var(--global-scale), var(--global-scale)); transform-origin: 0 0;">
+    <div style="transform: translate(50px, 100px) scale(var(--global-scale), var(--global-scale)); transform-origin: 0 0;">
       <div class="grid-stack"></div>
     </div>
   </div>
