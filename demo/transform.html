@@ -4,26 +4,28 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Transform Parent demo</title>
-
+  <title>Transform (Scale) Parent demo</title>
   <link rel="stylesheet" href="demo.css"/>
   <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
-
 </head>
 <body>
   <div class="container-fluid">
     <h1>Transform Parent demo</h1>
-    <p>example where the grid parent has a transform (50px, 100px). Scale not supported yet - see #1275</p>
+    <p>example where the grid parent has a translate(50px, 100px) scale(0.5, 0.5) </p>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <a class="btn btn-primary" onClick="zoomIn()" href="#">Zoom in</a>
+      <a class="btn btn-primary" onClick="zoomOut()" href="#">Zoom out</a>
     </div>
     <br><br>
-    <div style="transform: translate(50px, 100px)">
+    <div style="transform: translate(50px, 100px) scale(var(--global-scale), var(--global-scale)); transform-origin: 0 0;">
       <div class="grid-stack"></div>
     </div>
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
+    let scale = 0.5;
+
     let grid = GridStack.init({float: true});
     addEvents(grid);
 
@@ -50,6 +52,25 @@
     addNewWidget = function() {
       let w = grid.addWidget(getNode());
     };
+
+    const updateScaleCssVariable = () => {
+      document.body.style.setProperty('--global-scale', `${scale}`);
+    }
+
+    zoomIn = function() {
+      const scaleStep = scale < 1 ? 0.05 : 0.1;
+      scale += scaleStep;
+      updateScaleCssVariable();
+    }
+
+    zoomOut = function() {
+      const scaleStep = scale < 1 ? 0.05 : 0.1;
+      scale -= scaleStep;
+      updateScaleCssVariable();
+    }
+
+    updateScaleCssVariable();
+
 
     addNewWidget();
     addNewWidget();
