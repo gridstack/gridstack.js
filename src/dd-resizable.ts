@@ -237,11 +237,14 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected _getChange(event: MouseEvent, dir: string): Rect {
     const oEvent = this.startEvent;
+    const containerElement = Utils.getPositionContainerElement(this.el.parentElement);
+    const containerRect = containerElement.getBoundingClientRect();
+
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
       height: this.originalRect.height + this.scrolled,
-      left: this.originalRect.left,
-      top: this.originalRect.top - this.scrolled
+      left: this.originalRect.left - containerRect.left,
+      top: this.originalRect.top - this.scrolled - containerRect.top
     };
 
     const offsetX = event.clientX - oEvent.clientX;
@@ -277,10 +280,12 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal constrain the size to the set min/max values */
   protected _constrainSize(oWidth: number, oHeight: number): Size {
-    const maxWidth = this.option.maxWidth || Number.MAX_SAFE_INTEGER;
-    const minWidth = this.option.minWidth || oWidth;
-    const maxHeight = this.option.maxHeight || Number.MAX_SAFE_INTEGER;
-    const minHeight = this.option.minHeight || oHeight;
+    const { scaleX, scaleY } = Utils.getScaleForElement(this.el);
+    const o = this.option;
+    const maxWidth = o.maxWidth ? o.maxWidth * scaleX : Number.MAX_SAFE_INTEGER;
+    const minWidth = o.minWidth ? o.minWidth * scaleX : oWidth;
+    const maxHeight = o.maxHeight ? o.maxHeight * scaleY : Number.MAX_SAFE_INTEGER;
+    const minHeight = o.minHeight ? o.minHeight * scaleY : oHeight;
     const width = Math.min(maxWidth, Math.max(minWidth, oWidth));
     const height = Math.min(maxHeight, Math.max(minHeight, oHeight));
     return { width, height };
@@ -288,17 +293,12 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _applyChange(): DDResizable {
-    let containmentRect = { left: 0, top: 0, width: 0, height: 0 };
-    if (this.el.style.position === 'absolute') {
-      const containmentEl = this.el.parentElement;
-      const { left, top } = containmentEl.getBoundingClientRect();
-      containmentRect = { left, top, width: 0, height: 0 };
-    }
     if (!this.temporalRect) return this;
-    Object.keys(this.temporalRect).forEach(key => {
-      const value = this.temporalRect[key];
-      this.el.style[key] = value - containmentRect[key] + 'px';
-    });
+    const { scaleX, scaleY } = Utils.getScaleForElement(this.el);
+    this.el.style.width = `${Math.round(this.temporalRect.width / scaleX)}px`;
+    this.el.style.height = `${Math.round(this.temporalRect.height / scaleY)}px`;
+    this.el.style.top = `${Math.round(this.temporalRect.top / scaleY)}px`;
+    this.el.style.left = `${Math.round(this.temporalRect.left / scaleX)}px`;
     return this;
   }
 
@@ -311,23 +311,22 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _ui = (): DDUIData => {
-    const containmentEl = this.el.parentElement;
-    const containmentRect = containmentEl.getBoundingClientRect();
+    const { scaleX, scaleY } = Utils.getScaleForElement(this.el);
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
-      height: this.originalRect.height + this.scrolled,
+      height: (this.originalRect.height + this.scrolled),
       left: this.originalRect.left,
-      top: this.originalRect.top - this.scrolled
+      top: (this.originalRect.top - this.scrolled)
     };
     const rect = this.temporalRect || newRect;
     return {
       position: {
-        left: rect.left - containmentRect.left,
-        top: rect.top - containmentRect.top
+        left: rect.left / scaleX,
+        top: rect.top / scaleY,
       },
       size: {
-        width: rect.width,
-        height: rect.height
+        width: rect.width / scaleX,
+        height: rect.height / scaleY,
       }
       /* Gridstack ONLY needs position set above... keep around in case.
       element: [this.el], // The object representing the element to be resized

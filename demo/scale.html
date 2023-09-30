@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transform (Scale) Parent demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Transform Parent demo</h1>
+    <p>example where the grid parent has a scale (0.5, 0.5)</p>
+    <div>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <a class="btn btn-primary" onClick="zoomIn()" href="#">Zoom in</a>
+      <a class="btn btn-primary" onClick="zoomOut()" href="#">Zoom out</a>
+    </div>
+    <br><br>
+    <div style="transform: scale(var(--global-scale), var(--global-scale)); transform-origin: 0 0;">
+      <div class="grid-stack"></div>
+    </div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let scale = 0.5;
+
+    let grid = GridStack.init({float: true});
+    addEvents(grid);
+
+    let items = [
+      {x: 0, y: 0, w: 2, h: 2},
+      {x: 2, y: 0, w: 1},
+      {x: 3, y: 0, h: 1},
+      {x: 0, y: 2, w: 2},
+    ];
+    let count = 0;
+
+    getNode = function() {
+      let n = items[count] || {
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        w: Math.round(1 + 3 * Math.random()),
+        h: Math.round(1 + 3 * Math.random())
+      };
+      n.content = n.content || String(count);
+      count++;
+      return n;
+    };
+
+    addNewWidget = function() {
+      let w = grid.addWidget(getNode());
+    };
+
+    const updateScaleCssVariable = () => {
+      document.body.style.setProperty('--global-scale', `${scale}`);
+    }
+
+    zoomIn = function() {
+      const scaleStep = scale < 1 ? 0.05 : 0.1;
+      scale += scaleStep;
+      updateScaleCssVariable();
+    }
+
+    zoomOut = function() {
+      const scaleStep = scale < 1 ? 0.05 : 0.1;
+      scale -= scaleStep;
+      updateScaleCssVariable();
+    }
+
+    updateScaleCssVariable();
+
+
+    addNewWidget();
+    addNewWidget();
+    addNewWidget();
+  </script>
+</body>
+</html>
