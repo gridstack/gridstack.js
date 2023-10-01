@@ -13,9 +13,9 @@
   <h1>ES Module loading demo</h1>
   <div class="grid-stack"></div>
 
-  <!-- loading GS as an ES module instead of commonjs all.js. get CORS error though -->
+  <!-- loading GS as an ES module instead of commonjs all.js. doesn't work (see #2476) and get CORS error locally -->
   <script type="module">
-    import { GridStack } from '../node_modules/gridstack/dist/gridstack-all.js';
+    import { GridStack } from '../node_modules/gridstack/dist/gridstack.js';
 
     let items = [{x: 1, y: 1}, {x: 2, y: 2, w: 3}];
     let count = 0;
