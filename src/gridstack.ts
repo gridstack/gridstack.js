@@ -1123,11 +1123,7 @@ export class GridStack {
       this.engine.removeNode(node, removeDOM, triggerEvent);
 
       if (removeDOM && el.parentElement) {
-        if (node._isEndMoving || this.opts.removeOnDropOut === 'display-none') {
-          el.style.display = 'none';
-        } else {
-          el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
-        }
+        el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
       }
     });
     if (triggerEvent) {
@@ -2129,7 +2125,11 @@ export class GridStack {
             el = el.cloneNode(true) as GridItemHTMLElement;
           }
         } else {
-          el.remove(); // reduce flicker as we change depth here, and size further down
+          if (this.opts.disableRemoveNodeOnDrop) {
+            el.style.display = 'none';
+          } else {
+            el.remove();  // reduce flicker as we change depth here, and size further down
+          }
           this._removeDD(el);
         }
         if (!wasAdded) return false;
@@ -2141,7 +2141,9 @@ export class GridStack {
         Utils.removePositioningStyles(el);// @ts-ignore
         this._writeAttr(el, node);
         el.classList.add(gridDefaults.itemClass, this.opts.itemClass);
-        this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
+        if (!this.opts.disableRemoveNodeOnDrop) {
+          this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
+        }
         if (subGrid) {
           subGrid.parentGridItem = node;
           if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
@@ -2254,7 +2256,6 @@ export class GridStack {
             grid._gsEventHandler[event.type](event, target);
           }
           grid.engine.nodes.push(node); // temp add it back so we can proper remove it next
-          node._isEndMoving = true; // so we can ignore the remove event from the engine
           grid.removeWidget(el, true, true);
         } else {
           Utils.removePositioningStyles(target);
