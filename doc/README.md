@@ -122,6 +122,7 @@ GridStack will add it to the <style> elements it creates.
 - `placeholderText` - placeholder default content (default: `''`)
 - `resizable` - allows to override resizable options. (default: `{handles: 'se'}`). `handles` can be any combo of `n,ne,e,se,s,sw,w,nw` or `all`.
 - `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
+- `removeOnDropOut` - if `remove` the widget will be removed from the dom when dropped to another grid. If `display-none` the widget will be hidden instead (default: `'remove'`).
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
 - `row` - fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain)
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](https://gridstackjs.com/demo/right-to-left(rtl).html)
