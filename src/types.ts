@@ -28,6 +28,7 @@ export const gridDefaults: GridStackOptions = {
   removableOptions: { accept: 'grid-stack-item', decline: 'grid-stack-non-removable'},
   resizable: { handles: 'se' },
   rtl: 'auto',
+  removeOnDropOut: 'remove',
 
   // **** same as not being set ****
   // disableDrag: false,
@@ -231,6 +232,9 @@ export interface GridStackOptions {
 
   /** allows to override UI removable options. (default?: { accept: '.grid-stack-item' }) */
   removableOptions?: DDRemoveOpt;
+
+  /** allows to override the removal from the dom when dropped to another grid with a display none */
+  removeOnDropOut?: 'remove' | 'display-none';
 
   /** fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain) */
   row?: number;
@@ -438,4 +442,6 @@ export interface GridStackNode extends GridStackWidget {
   _removeDOM?: boolean;
   /** @internal */
   _initDD?: boolean;
+  /** @internal is used to check if a remove event is send from the onEndMoving event */
+  _isEndMoving?: boolean;
 }

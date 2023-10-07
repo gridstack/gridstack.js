@@ -1123,7 +1123,11 @@ export class GridStack {
       this.engine.removeNode(node, removeDOM, triggerEvent);
 
       if (removeDOM && el.parentElement) {
-        el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
+        if (node._isEndMoving || this.opts.removeOnDropOut === 'display-none') {
+          el.style.display = 'none';
+        } else {
+          el.remove(); // in batch mode engine.removeNode doesn't call back to remove DOM
+        }
       }
     });
     if (triggerEvent) {
@@ -2250,6 +2254,7 @@ export class GridStack {
             grid._gsEventHandler[event.type](event, target);
           }
           grid.engine.nodes.push(node); // temp add it back so we can proper remove it next
+          node._isEndMoving = true; // so we can ignore the remove event from the engine
           grid.removeWidget(el, true, true);
         } else {
           Utils.removePositioningStyles(target);
