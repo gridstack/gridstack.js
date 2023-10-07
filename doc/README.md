@@ -96,6 +96,7 @@ gridstack.js API
 - `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableOneColumnMode` - Prevents the grid container from being displayed in "one column mode", even when the container's width is smaller than the value of oneColumnSize (default value of oneColumnSize is 768px). By default, this option is set to "false".
+- `disableRemoveNodeOnDrop` - if `false` the widget will be removed from the dom when dropped to another grid. If `true` the widget will be hidden instead (default: `false`).
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `draggable` - allows to override draggable options - see `DDDragOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body', scroll: true}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
@@ -122,7 +123,6 @@ GridStack will add it to the <style> elements it creates.
 - `placeholderText` - placeholder default content (default: `''`)
 - `resizable` - allows to override resizable options. (default: `{handles: 'se'}`). `handles` can be any combo of `n,ne,e,se,s,sw,w,nw` or `all`.
 - `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
-- `removeOnDropOut` - if `remove` the widget will be removed from the dom when dropped to another grid. If `display-none` the widget will be hidden instead (default: `'remove'`).
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
 - `row` - fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain)
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](https://gridstackjs.com/demo/right-to-left(rtl).html)
