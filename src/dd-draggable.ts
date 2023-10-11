@@ -328,9 +328,20 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     //   containmentRect = { left, top };
     // }
     const style = this.helper.style;
-    const offset = this.dragOffset;
-    style.left = e.clientX + offset.offsetLeft - containmentRect.left + 'px';
-    style.top = e.clientY + offset.offsetTop - containmentRect.top + 'px';
+    const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
+    const transformParent = Utils.getContainerForPositionFixedElement(this.helper);
+    // We need to be careful here as the html element actually also includes scroll
+    // so in this case we always need to ignore it
+    const transformParentRect = transformParent === document.documentElement ? { top: 0, left: 0 } : transformParent.getBoundingClientRect();
+    // when an element is scaled, the helper is positioned relative to the first transformed parent, so we need to remove the extra offset
+    const offsetX = transformParentRect.left;
+    const offsetY = transformParentRect.top;
+
+    // Position the element under the mouse
+    const x = (e.clientX - offsetX - (this.origRelativeMouse?.x || 0)) / scaleX;
+    const y = (e.clientY - offsetY - (this.origRelativeMouse?.y || 0)) / scaleY;
+    style.left = `${x}px`;
+    style.top = `${y}px`;
   }
 
   /** @internal */
