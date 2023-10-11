@@ -1,0 +1,4 @@
+node_modules/
+dist/
+coverage/
+angular/node_modules/
