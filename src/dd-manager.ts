@@ -25,5 +25,4 @@ export class DDManager {
 
   /** current item we're over for resizing purpose (ignore nested grid resize handles) */
   public static overResizeElement: DDResizable;
-
 }

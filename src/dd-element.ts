@@ -13,9 +13,10 @@ export interface DDElementHost extends GridItemHTMLElement {
 }
 
 export class DDElement {
-
   static init(el: DDElementHost): DDElement {
-    if (!el.ddElement) { el.ddElement = new DDElement(el); }
+    if (!el.ddElement) {
+      el.ddElement = new DDElement(el);
+    }
     return el.ddElement;
   }
 
@@ -33,7 +34,10 @@ export class DDElement {
       this.ddDraggable.on(eventName as 'drag' | 'dragstart' | 'dragstop', callback);
     } else if (this.ddDroppable && ['drop', 'dropover', 'dropout'].indexOf(eventName) > -1) {
       this.ddDroppable.on(eventName as 'drop' | 'dropover' | 'dropout', callback);
-    } else if (this.ddResizable && ['resizestart', 'resize', 'resizestop'].indexOf(eventName) > -1) {
+    } else if (
+      this.ddResizable &&
+      ['resizestart', 'resize', 'resizestop'].indexOf(eventName) > -1
+    ) {
       this.ddResizable.on(eventName as 'resizestart' | 'resize' | 'resizestop', callback);
     }
     return this;
@@ -44,7 +48,10 @@ export class DDElement {
       this.ddDraggable.off(eventName as 'drag' | 'dragstart' | 'dragstop');
     } else if (this.ddDroppable && ['drop', 'dropover', 'dropout'].indexOf(eventName) > -1) {
       this.ddDroppable.off(eventName as 'drop' | 'dropover' | 'dropout');
-    } else if (this.ddResizable && ['resizestart', 'resize', 'resizestop'].indexOf(eventName) > -1) {
+    } else if (
+      this.ddResizable &&
+      ['resizestart', 'resize', 'resizestop'].indexOf(eventName) > -1
+    ) {
       this.ddResizable.off(eventName as 'resizestart' | 'resize' | 'resizestop');
     }
     return this;

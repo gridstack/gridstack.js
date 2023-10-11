@@ -25,7 +25,7 @@ export const gridDefaults: GridStackOptions = {
   oneColumnSize: 768,
   placeholderClass: 'grid-stack-placeholder',
   placeholderText: '',
-  removableOptions: { accept: 'grid-stack-item', decline: 'grid-stack-non-removable'},
+  removableOptions: { accept: 'grid-stack-item', decline: 'grid-stack-non-removable' },
   resizable: { handles: 'se' },
   rtl: 'auto',
 
@@ -60,8 +60,19 @@ export const dragInDefaultOptions: DDDragInOpt = {
  * 'move' | 'scale' - will only size or move items
  * 'none' will leave items unchanged, unless they don't fit in column count
  */
-export type ColumnOptions = 'list' | 'compact' | 'moveScale' | 'move' | 'scale' | 'none' |
-  ((column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void);
+export type ColumnOptions =
+  | 'list'
+  | 'compact'
+  | 'moveScale'
+  | 'move'
+  | 'scale'
+  | 'none'
+  | ((
+      column: number,
+      oldColumn: number,
+      nodes: GridStackNode[],
+      oldNodes: GridStackNode[],
+    ) => void);
 export type CompactOptions = 'list' | 'compact';
 export type numberOrString = number | string;
 export interface GridItemHTMLElement extends HTMLElement {
@@ -77,11 +88,24 @@ export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 export type GridStackEventHandler = (event: Event) => void;
 export type GridStackElementHandler = (event: Event, el: GridItemHTMLElement) => void;
 export type GridStackNodesHandler = (event: Event, nodes: GridStackNode[]) => void;
-export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => void;
-export type GridStackEventHandlerCallback = GridStackEventHandler | GridStackElementHandler | GridStackNodesHandler | GridStackDroppedHandler;
+export type GridStackDroppedHandler = (
+  event: Event,
+  previousNode: GridStackNode,
+  newNode: GridStackNode,
+) => void;
+export type GridStackEventHandlerCallback =
+  | GridStackEventHandler
+  | GridStackElementHandler
+  | GridStackNodesHandler
+  | GridStackDroppedHandler;
 
 /** optional function called during load() to callback the user on new added/remove grid items | grids */
-export type AddRemoveFcn = (parent: HTMLElement, w: GridStackWidget, add: boolean, grid: boolean) => HTMLElement | undefined;
+export type AddRemoveFcn = (
+  parent: HTMLElement,
+  w: GridStackWidget,
+  add: boolean,
+  grid: boolean,
+) => HTMLElement | undefined;
 
 /** optional function called during save() to let the caller add additional custom data to the GridStackWidget structure that will get returned */
 export type SaveFcn = (node: GridStackNode, w: GridStackWidget) => void;
@@ -243,7 +267,7 @@ export interface GridStackOptions {
 
   /** set to true if all grid items (by default, but item can also override) height should be based on content size instead of WidgetItem.h to avoid v-scrollbars.
    Note: this is still row based, not pixels, so it will use ceil(getBoundingClientRect().height / getCellHeight()) */
-   sizeToContent?: boolean;
+  sizeToContent?: boolean;
 
   /**
    * makes grid static (default?: false). If `true` widgets are not movable/resizable.
@@ -337,7 +361,7 @@ export interface DDResizeOpt {
   /**
    * sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east)
    * Note: it is not recommended to resize from the top sides as weird side effect may occur.
-  */
+   */
   handles?: string;
 }
 

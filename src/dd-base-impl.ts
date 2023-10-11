@@ -3,10 +3,12 @@
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 
-export type EventCallback = (event: Event) => boolean|void;
+export type EventCallback = (event: Event) => boolean | void;
 export abstract class DDBaseImplement {
   /** returns the enable state, but you have to call enable()/disable() to change (as other things need to happen) */
-  public get disabled(): boolean   { return this._disabled; }
+  public get disabled(): boolean {
+    return this._disabled;
+  }
 
   /** @internal */
   protected _disabled: boolean; // initial state to differentiate from false
@@ -35,7 +37,7 @@ export abstract class DDBaseImplement {
     delete this._eventRegister;
   }
 
-  public triggerEvent(eventName: string, event: Event): boolean|void {
+  public triggerEvent(eventName: string, event: Event): boolean | void {
     if (!this.disabled && this._eventRegister && this._eventRegister[eventName])
       return this._eventRegister[eventName](event);
   }

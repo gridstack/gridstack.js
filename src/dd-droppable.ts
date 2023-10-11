@@ -21,7 +21,6 @@ export interface DDDroppableOpt {
 // let count = 0; // TEST
 
 export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt<DDDroppableOpt> {
-
   public accept: (el: HTMLElement) => boolean;
   public el: HTMLElement;
   public option: DDDroppableOpt;
@@ -79,7 +78,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public updateOption(opts: DDDroppableOpt): DDDroppable {
-    Object.keys(opts).forEach(key => this.option[key] = opts[key]);
+    Object.keys(opts).forEach((key) => (this.option[key] = opts[key]));
     this._setupAccept();
     return this;
   }
@@ -100,7 +99,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
     const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dropover' });
     if (this.option.over) {
-      this.option.over(ev, this._ui(DDManager.dragElement))
+      this.option.over(ev, this._ui(DDManager.dragElement));
     }
     this.triggerEvent('dropover', ev);
     this.el.classList.add('ui-droppable-over');
@@ -116,7 +115,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
     const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dropout' });
     if (this.option.out) {
-      this.option.out(ev, this._ui(DDManager.dragElement))
+      this.option.out(ev, this._ui(DDManager.dragElement));
     }
     this.triggerEvent('dropout', ev);
 
@@ -142,7 +141,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     e.preventDefault();
     const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'drop' });
     if (this.option.drop) {
-      this.option.drop(ev, this._ui(DDManager.dragElement))
+      this.option.drop(ev, this._ui(DDManager.dragElement));
     }
     this.triggerEvent('drop', ev);
   }
@@ -156,7 +155,9 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _setupAccept(): DDDroppable {
     if (!this.option.accept) return this;
     if (typeof this.option.accept === 'string') {
-      this.accept = (el: HTMLElement) => el.classList.contains(this.option.accept as string) || el.matches(this.option.accept as string);
+      this.accept = (el: HTMLElement) =>
+        el.classList.contains(this.option.accept as string) ||
+        el.matches(this.option.accept as string);
     } else {
       this.accept = this.option.accept;
     }
@@ -167,8 +168,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _ui(drag: DDDraggable): DDUIData {
     return {
       draggable: drag.el,
-      ...drag.ui()
+      ...drag.ui(),
     };
   }
 }
-
