@@ -693,6 +693,7 @@ export class GridStack {
     }
 
     // now add/update the widgets
+    let widthChanged = false;
     items.forEach(w => {
       let item = Utils.find(this.engine.nodes, w.id);
       if (item) {
@@ -702,6 +703,7 @@ export class GridStack {
           w.h = w.h || item.h;
           this.engine.findEmptyPosition(w);
         }
+        widthChanged = widthChanged || (w.w !== undefined && w.w !== item.w);
         this.update(item.el, w);
         if (w.subGridOpts?.children) { // update any sub grid as well
           let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
@@ -716,6 +718,7 @@ export class GridStack {
     });
 
     this.engine.removedNodes = removed;
+    this.doContentResize(widthChanged, true); // we only need to wait for animation if we changed any widths
     this.batchUpdate(false);
 
     // after commit, clear that flag
@@ -1220,12 +1223,13 @@ export class GridStack {
       // check for content changing
       if (w.content !== undefined) {
         const itemContent = el.querySelector('.grid-stack-item-content');
-        if (!itemContent || itemContent.innerHTML === w.content) return;
-        itemContent.innerHTML = w.content;
-        // restore any sub-grid back
-        if (n.subGrid?.el) {
-          itemContent.appendChild(n.subGrid.el);
-          if (!n.subGrid.opts.styleInHead) n.subGrid._updateStyles(true); // force create
+        if (itemContent && itemContent.innerHTML !== w.content) {
+          itemContent.innerHTML = w.content;
+          // restore any sub-grid back
+          if (n.subGrid?.el) {
+            itemContent.appendChild(n.subGrid.el);
+            if (!n.subGrid.opts.styleInHead) n.subGrid._updateStyles(true); // force create
+          }
         }
         delete w.content;
       }
