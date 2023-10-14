@@ -655,7 +655,7 @@ export class GridStackEngine {
   public moveNode(node: GridStackNode, o: GridStackMoveOpts): boolean {
     if (!node || /*node.locked ||*/ !o) return false;
     let wasUndefinedPack: boolean;
-    if (o.pack === undefined) {
+    if (o.pack === undefined && !this.batchMode) {
       wasUndefinedPack = o.pack = true;
     }
 
