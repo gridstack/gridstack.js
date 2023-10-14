@@ -330,16 +330,20 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const style = this.helper.style;
     const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
     const transformParent = Utils.getContainerForPositionFixedElement(this.helper);
+    const scrollParent = Utils.getScrollElement(this.helper);
     // We need to be careful here as the html element actually also includes scroll
     // so in this case we always need to ignore it
-    const transformParentRect = transformParent === document.documentElement ? { top: 0, left: 0 } : transformParent.getBoundingClientRect();
+    const transformParentRect =  transformParent !== document.documentElement ? transformParent.getBoundingClientRect() : { top: 0, left: 0 };
     // when an element is scaled, the helper is positioned relative to the first transformed parent, so we need to remove the extra offset
+    const scroll = transformParent === scrollParent && transformParent !== document.documentElement
+      ? { top: scrollParent.scrollTop, left: scrollParent.scrollLeft }
+      : { top: 0, left: 0 };
     const offsetX = transformParentRect.left;
     const offsetY = transformParentRect.top;
 
     // Position the element under the mouse
-    const x = (e.clientX - offsetX - (this.origRelativeMouse?.x || 0)) / scaleX;
-    const y = (e.clientY - offsetY - (this.origRelativeMouse?.y || 0)) / scaleY;
+    const x = (e.clientX - offsetX - (this.origRelativeMouse?.x || 0)) / scaleX + scroll.left;
+    const y = (e.clientY - offsetY - (this.origRelativeMouse?.y || 0)) / scaleY + scroll.top;
     style.left = `${x}px`;
     style.top = `${y}px`;
   }
@@ -357,55 +361,18 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  protected _getDragOffset(event: DragEvent, el: HTMLElement, parent: HTMLElement): DragOffset {
-
-    // in case ancestor has transform/perspective css properties that change the viewpoint
-    let xformOffsetX = 0;
-    let xformOffsetY = 0;
-    if (parent) {
-      const testEl = document.createElement('div');
-      Utils.addElStyles(testEl, {
-        opacity: '0',
-        position: 'fixed',
-        top: 0 + 'px',
-        left: 0 + 'px',
-        width: '1px',
-        height: '1px',
-        zIndex: '-999999',
-      });
-      parent.appendChild(testEl);
-      const testElPosition = testEl.getBoundingClientRect();
-      parent.removeChild(testEl);
-      xformOffsetX = testElPosition.left;
-      xformOffsetY = testElPosition.top;
-      // TODO: scale ?
-    }
-
-    const targetOffset = el.getBoundingClientRect();
-    return {
-      left: targetOffset.left,
-      top: targetOffset.top,
-      offsetLeft: - event.clientX + targetOffset.left - xformOffsetX,
-      offsetTop: - event.clientY + targetOffset.top - xformOffsetY,
-      width: targetOffset.width,
-      height: targetOffset.height
-    };
-  }
-
-  /** @internal TODO: set to public as called by DDDroppable! */
   public ui(): DDUIData {
     const containmentEl = this.el.parentElement;
     const containmentRect = containmentEl.getBoundingClientRect();
     const offset = this.helper.getBoundingClientRect();
+    const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
+
+    const scroll = containmentEl.contains(scrollElement) ? scrollElement : { scrollTop: 0, scrollLeft: 0 };
     return {
-      position: { //Current CSS position of the helper as { top, left } object
-        top: offset.top - containmentRect.top,
-        left: offset.left - containmentRect.left
+      position: { // Current CSS position of the helper as { top, left } object
+        top: (offset.top - containmentRect.top) / scaleY + scroll.scrollTop,
+        left: (offset.left - containmentRect.left) / scaleX + scroll.scrollLeft,
       }
-      /* not used by GridStack for now...
-      helper: [this.helper], //The object arr representing the helper that's being dragged.
-      offset: { top: offset.top, left: offset.left } // Current offset position of the helper as { top, left } object.
-      */
     };
   }
 }
