@@ -657,10 +657,10 @@ export class GridStack {
    * @example
    * see http://gridstackjs.com/demo/serialization.html
    */
-  public load(layout: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true): GridStack {
+  public load(items: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true): GridStack {
     // if passed list has coordinates, use them (insert from end to beginning for conflict resolution) else force widget same order
-    const haveCoord = layout.some(w => w.x !== undefined || w.y !== undefined);
-    let items = haveCoord ? Utils.sort(layout, -1, this._prevColumn || this.getColumn()) : layout;
+    const haveCoord = items.some(w => w.x !== undefined || w.y !== undefined);
+    if (haveCoord) items = Utils.sort(items, -1, this._prevColumn || this.getColumn());
     this._insertNotAppend = haveCoord; // if we create in reverse order...
 
     // if we're loading a layout into for example 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
@@ -681,7 +681,8 @@ export class GridStack {
     if (addRemove) {
       let copyNodes = [...this.engine.nodes]; // don't loop through array you modify
       copyNodes.forEach(n => {
-        let item = items.find(w => n.id === w.id);
+        if (!n.id) return;
+        let item = Utils.find(items, n.id);
         if (!item) {
           if (GridStack.addRemoveCB)
             GridStack.addRemoveCB(this.el, n, false, false);
@@ -691,11 +692,9 @@ export class GridStack {
       });
     }
 
-    // now add/update the widgets - starting with an empty list to reduce collision and add no-coord ones at next available spot
-    let copyNodes = this.engine.nodes;
-    this.engine.nodes = [];
+    // now add/update the widgets
     items.forEach(w => {
-      let item = (w.id !== undefined) ? copyNodes.find(n => n.id === w.id) : undefined;
+      let item = Utils.find(this.engine.nodes, w.id);
       if (item) {
         // check if missing coord, in which case find next empty slot with new (or old if missing) sizes
         if (w.autoPosition || w.x === undefined || w.y === undefined) {
@@ -703,7 +702,6 @@ export class GridStack {
           w.h = w.h || item.h;
           this.engine.findEmptyPosition(w);
         }
-        this.engine.nodes.push(item); // now back to current list...
         this.update(item.el, w);
         if (w.subGridOpts?.children) { // update any sub grid as well
           let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
@@ -1202,6 +1200,7 @@ export class GridStack {
       if (!n) return;
       let w = Utils.cloneDeep(opt); // make a copy we can modify in case they re-use it or multiple items
       delete w.autoPosition;
+      delete w.id;
 
       // move/resize widget if anything changed
       let keys = ['x', 'y', 'w', 'h'];
@@ -1244,7 +1243,7 @@ export class GridStack {
       Utils.sanitizeMinMax(n);
 
       // finally move the widget
-      if (m) this.moveNode(n, m);
+      if (m !== undefined) this.moveNode(n, m);
       if (changed) { // move will only update x,y,w,h so update the rest too
         this._writeAttr(el, n);
       }

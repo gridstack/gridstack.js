@@ -147,6 +147,11 @@ export class Utils {
       return nodes.sort((b, a) => ((b.x ?? 1000) + (b.y ?? 1000) * column)-((a.x ?? 1000) + (a.y ?? 1000) * column));
   }
 
+  /** find an item by id */
+  static find(nodes: GridStackNode[], id: string): GridStackNode | undefined {
+    return id ? nodes.find(n => n.id === id) : undefined;
+  }
+
   /**
    * creates a style sheet with style id under given parent
    * @param id will set the 'gs-style-id' attribute to that id

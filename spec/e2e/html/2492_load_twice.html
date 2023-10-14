@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>load() twice bug</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <script src="../../../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>load twice bug</h1>
+    <p>this load() twice in a row with overlapping content and floating item</p>
+    <div class="grid-stack"></div>
+  </div>
+  <script type="text/javascript">
+    let items = [
+      {x: 0, y: 0, w:2, content: '0 wide'},
+      {x: 1, y: 0, content: '1 over'},
+      {x: 2, y: 1, content: '2 float'},
+    ];
+    let count = 0;
+    items.forEach(n => n.id = String(count++)); // TEST loading with ids
+    let grid = GridStack.init({disableOneColumnMode: true, cellHeight: 70, margin: 5}).load(items)
+    items.forEach(n => n.content += '*')
+    grid.load(items);
+  </script>
+</body>
+</html>
