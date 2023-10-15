@@ -373,26 +373,6 @@ export class Utils {
     }
   }
 
-  static getPositionContainerElement(el: HTMLElement): HTMLElement {
-    if (!el) return null;
-
-    const style = getComputedStyle(el);
-
-    if (style.position === 'relative' || style.position === 'absolute' || style.position === 'fixed') {
-      return el;
-    } else {
-      return Utils.getPositionContainerElement(el.parentElement);
-    }
-  }
-
-  static getContainerForPositionFixedElement(el: HTMLElement): HTMLElement {
-    while (el !== document.documentElement && el.parentElement && getComputedStyle(el as HTMLElement).transform === 'none') {
-      el = el.parentElement;
-    }
-
-    return el;
-  }
-
   /** @internal */
   static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
     // is widget in view?
@@ -571,22 +551,6 @@ export class Utils {
       e.target      // relatedTarget
     );
     (target || e.target).dispatchEvent(simulatedEvent);
-  }
-
-  public static getScaleForElement(element: HTMLElement) {
-    // Check if element is visible, otherwise the width/height will be of 0
-    while (element && !element.offsetParent) {
-      element = element.parentElement;
-    }
-
-    if (!element) {
-      return { scaleX: 1, scaleY: 1 };
-    }
-
-    const boundingClientRect = element.getBoundingClientRect();
-    const scaleX = boundingClientRect.width / element.offsetWidth;
-    const scaleY = boundingClientRect.height / element.offsetHeight;
-    return { scaleX, scaleY };
   }
 
   /** returns true if event is inside the given element rectangle */

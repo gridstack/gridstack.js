@@ -24,6 +24,15 @@ export interface DDDraggableOpt {
   drag?: (event: Event, ui: DDUIData) => void;
 }
 
+interface DragOffset {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  offsetLeft: number;
+  offsetTop: number;
+}
+
 type DDDragEvent = 'drag' | 'dragstart' | 'dragstop';
 
 // make sure we are not clicking on known object that handles mouseDown
@@ -39,6 +48,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected mouseDownEvent: MouseEvent;
   /** @internal */
+  protected dragOffset: DragOffset;
+  /** @internal */
   protected dragElementOriginStyle: Array<string>;
   /** @internal */
   protected dragEl: HTMLElement;
@@ -52,7 +63,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected static originStyleProp = ['transition', 'pointerEvents', 'position', 'left', 'top', 'minWidth', 'willChange'];
   /** @internal pause before we call the actual drag hit collision code */
   protected dragTimeout: number;
-  protected origRelativeMouse: { x: number; y: number; };
 
   constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
     super();
@@ -195,10 +205,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       } else {
         delete DDManager.dropElement;
       }
-      const rect = this.el.getBoundingClientRect();
-      this.origRelativeMouse = { x: s.clientX - rect.left, y: s.clientY - rect.top };
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
+      this.dragOffset = this._getDragOffset(e, this.el, this.helperContainment);
       const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
 
       this._setupHelperStyle(e);
@@ -276,9 +285,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const style = this.helper.style;
     style.pointerEvents = 'none'; // needed for over items to get enter/leave
     // style.cursor = 'move'; //  TODO: can't set with pointerEvents=none ! (done in CSS as well)
-    style.width = this.el.offsetWidth + 'px';
-    style.height = this.el.offsetHeight + 'px';
-
+    style.width = this.dragOffset.width + 'px';
+    style.height = this.dragOffset.height + 'px';
     style.willChange = 'left, top';
     style.position = 'fixed'; // let us drag between grids by not clipping as parent .grid-stack is position: 'relative'
     this._dragFollow(e); // now position it
@@ -314,19 +322,15 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal updates the top/left position to follow the mouse */
   protected _dragFollow(e: DragEvent): void {
+    let containmentRect = { left: 0, top: 0 };
+    // if (this.helper.style.position === 'absolute') { // we use 'fixed'
+    //   const { left, top } = this.helperContainment.getBoundingClientRect();
+    //   containmentRect = { left, top };
+    // }
     const style = this.helper.style;
-    const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
-    const transformParent = Utils.getContainerForPositionFixedElement(this.helper);
-    const transformParentRect = transformParent.getBoundingClientRect();
-    // when an element is scaled, the helper is positioned relative to the first transformed parent, so we need to remove the extra offset
-    const offsetX = transformParentRect.left;
-    const offsetY = transformParentRect.top;
-
-    // Position the element under the mouse
-    const x = (e.clientX - offsetX - (this.origRelativeMouse?.x || 0)) / scaleX;
-    const y = (e.clientY - offsetY - (this.origRelativeMouse?.y || 0)) / scaleY;
-    style.left = `${x}px`;
-    style.top = `${y}px`;
+    const offset = this.dragOffset;
+    style.left = e.clientX + offset.offsetLeft - containmentRect.left + 'px';
+    style.top = e.clientY + offset.offsetTop - containmentRect.top + 'px';
   }
 
   /** @internal */
@@ -341,23 +345,51 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
+  /** @internal */
+  protected _getDragOffset(event: DragEvent, el: HTMLElement, parent: HTMLElement): DragOffset {
+
+    // in case ancestor has transform/perspective css properties that change the viewpoint
+    let xformOffsetX = 0;
+    let xformOffsetY = 0;
+    if (parent) {
+      const testEl = document.createElement('div');
+      Utils.addElStyles(testEl, {
+        opacity: '0',
+        position: 'fixed',
+        top: 0 + 'px',
+        left: 0 + 'px',
+        width: '1px',
+        height: '1px',
+        zIndex: '-999999',
+      });
+      parent.appendChild(testEl);
+      const testElPosition = testEl.getBoundingClientRect();
+      parent.removeChild(testEl);
+      xformOffsetX = testElPosition.left;
+      xformOffsetY = testElPosition.top;
+      // TODO: scale ?
+    }
+
+    const targetOffset = el.getBoundingClientRect();
+    return {
+      left: targetOffset.left,
+      top: targetOffset.top,
+      offsetLeft: - event.clientX + targetOffset.left - xformOffsetX,
+      offsetTop: - event.clientY + targetOffset.top - xformOffsetY,
+      width: targetOffset.width,
+      height: targetOffset.height
+    };
+  }
+
   /** @internal TODO: set to public as called by DDDroppable! */
   public ui(): DDUIData {
     const containmentEl = this.el.parentElement;
-    const scrollElement = Utils.getScrollElement(this.el.parentElement);
     const containmentRect = containmentEl.getBoundingClientRect();
     const offset = this.helper.getBoundingClientRect();
-    const { scaleX, scaleY } = Utils.getScaleForElement(this.helper);
-
-    // When an element is inside a scrolled element, the boundingClientRect will return the position of the element minus the scroll.
-    const parentPositionIncludingScroll = containmentEl === scrollElement
-      ? { top: containmentRect.top + scrollElement.scrollTop, left: containmentRect.left + scrollElement.scrollLeft }
-      : { top: containmentRect.top, left: containmentRect.left };
-
     return {
-      position: { // Current CSS position of the helper as { top, left } object
-        top: (offset.top - parentPositionIncludingScroll.top) / scaleY,
-        left: (offset.left - parentPositionIncludingScroll.left) / scaleX,
+      position: { //Current CSS position of the helper as { top, left } object
+        top: offset.top - containmentRect.top,
+        left: offset.left - containmentRect.left
       }
       /* not used by GridStack for now...
       helper: [this.helper], //The object arr representing the helper that's being dragged.
