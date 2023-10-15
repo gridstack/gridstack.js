@@ -284,6 +284,8 @@ export interface GridStackMoveOpts extends GridStackPosition {
   resizing?: boolean;
   /** best node (most coverage) we collied with */
   collide?: GridStackNode;
+  /** for collision check even if we don't move */
+  forceCollide?: boolean;
 }
 
 export interface GridStackPosition {

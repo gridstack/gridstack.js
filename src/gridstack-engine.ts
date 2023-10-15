@@ -670,7 +670,7 @@ export class GridStackEngine {
     nn = this.nodeBoundFix(nn, resizing);
     Utils.copyPos(o, nn);
 
-    if (Utils.samePos(node, o)) return false;
+    if (!o.forceCollide && Utils.samePos(node, o)) return false;
     let prevPos: GridStackPosition = Utils.copyPos({}, node);
 
     // check if we will need to fix collision at our new location
