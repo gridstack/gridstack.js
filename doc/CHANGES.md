@@ -103,6 +103,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 9.3.0-dev (TBD)
+* revert [#1275](https://github.com/gridstack/gridstack.js/issues/1275) div scale support - causing too many issues for now (#2498 #2497 #2491)
 * fix [#2492](https://github.com/gridstack/gridstack.js/issues/2492) calling load() allows overlapping widgets
 
 ## 9.3.0 (2023-09-30)

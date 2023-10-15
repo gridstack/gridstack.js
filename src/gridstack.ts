@@ -1947,10 +1947,9 @@ export class GridStack {
 
       helper = helper || el;
       let parent = this.el.getBoundingClientRect();
-      const { scaleX, scaleY } = Utils.getScaleForElement(helper);
       let {top, left} = helper.getBoundingClientRect();
-      left = (left - parent.left) / scaleX;
-      top = (top - parent.top) / scaleY;
+      left -= parent.left;
+      top -= parent.top;
       let ui: DDUIData = {position: {top, left}};
 
       if (node._temporaryRemoved) {
