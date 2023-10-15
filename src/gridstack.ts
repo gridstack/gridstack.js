@@ -658,6 +658,7 @@ export class GridStack {
    * see http://gridstackjs.com/demo/serialization.html
    */
   public load(items: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true): GridStack {
+    items = Utils.cloneDeep(items); // so we can mod
     // if passed list has coordinates, use them (insert from end to beginning for conflict resolution) else force widget same order
     const haveCoord = items.some(w => w.x !== undefined || w.y !== undefined);
     if (haveCoord) items = Utils.sort(items, -1, this._prevColumn || this.getColumn());
@@ -692,11 +693,19 @@ export class GridStack {
       });
     }
 
-    // now add/update the widgets
+    // now add/update the widgets - starting with removing items in the new layout we will reposition
+    // to reduce collision and add no-coord ones at next available spot
+    let updateNodes: GridStackWidget[] = [];
+    this.engine.nodes = this.engine.nodes.filter(n => {
+      if (Utils.find(items, n.id)) { updateNodes.push(n); return false; } // remove if found from list
+      return true;
+    });
     let widthChanged = false;
     items.forEach(w => {
-      let item = Utils.find(this.engine.nodes, w.id);
+      let item = Utils.find(updateNodes, w.id);
       if (item) {
+        // if item sizes to content, re-use the exiting height so it's a better guess at the final size 9same if width doesn't change)
+        if (Utils.shouldSizeToContent(item)) w.h = item.h;
         // check if missing coord, in which case find next empty slot with new (or old if missing) sizes
         if (w.autoPosition || w.x === undefined || w.y === undefined) {
           w.w = w.w || item.w;
@@ -704,6 +713,14 @@ export class GridStack {
           this.engine.findEmptyPosition(w);
         }
         widthChanged = widthChanged || (w.w !== undefined && w.w !== item.w);
+
+        // add back to current list BUT force a collision check if it 'appears' we didn't change to make sure we don't overlap others now
+        this.engine.nodes.push(item);
+        if (Utils.samePos(item, w)) {
+          this.moveNode(item, {...w, forceCollide: true});
+          Utils.copyPos(w, item, true);
+        }
+
         this.update(item.el, w);
         if (w.subGridOpts?.children) { // update any sub grid as well
           let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;

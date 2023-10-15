@@ -279,7 +279,7 @@ export class Utils {
 
   /** true if a and b has same size & position */
   static samePos(a: GridStackPosition, b: GridStackPosition): boolean {
-    return a && b && a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
+    return a && b && a.x === b.x && a.y === b.y && (a.w || 1) === (b.w || 1) && (a.h || 1) === (b.h || 1);
   }
 
   /** given a node, makes sure it's min/max are valid */
