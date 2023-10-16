@@ -385,6 +385,14 @@ export class Utils {
     }
   }
 
+  static getContainerOfGridStackItem(el: HTMLElement): HTMLElement {
+    if (!el) return null;
+
+    return el.classList.contains('grid-stack-item')
+      ? el.parentElement
+      : Utils.getContainerOfGridStackItem(el.parentElement);
+  }
+
   static getContainerForPositionFixedElement(el: HTMLElement): HTMLElement {
     while (el !== document.documentElement && el.parentElement && getComputedStyle(el as HTMLElement).transform === 'none') {
       el = el.parentElement;
