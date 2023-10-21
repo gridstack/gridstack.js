@@ -13,21 +13,25 @@
 <body>
   <div class="container-fluid">
     <h1>Transform Parent demo</h1>
-    <p>example where the grid parent has a translate(50px, 100px) <s>scale(0.5, 0.5)</s> (scale not working yet see #1275)</p>
+    <p>example where the grid parent has a translate(50px, 100px) and a scale(<span id="scale-x"></span>, <span id="scale-y"></span>)</p>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
-      <!-- <a class="btn btn-primary" onClick="zoomIn()" href="#">Zoom in</a>
-      <a class="btn btn-primary" onClick="zoomOut()" href="#">Zoom out</a> -->
+      <a class="btn btn-primary" onClick="zoomIn()" href="#">Zoom in</a>
+      <a class="btn btn-primary" onClick="zoomOut()" href="#">Zoom out</a>
+      <a class="btn btn-primary" onClick="increaseScaleX()" href="#">Increase Scale X</a>
+      <a class="btn btn-primary" onClick="decreaseScaleX()" href="#">Decrease Scale X</a>
+      <a class="btn btn-primary" onClick="increaseScaleY()" href="#">Increase Scale Y</a>
+      <a class="btn btn-primary" onClick="decreaseScaleY()" href="#">Decrease Scale Y</a>
     </div>
     <br><br>
-    <!-- <div style="transform: translate(50px, 100px) scale(var(--global-scale), var(--global-scale)); transform-origin: 0 0;"> -->
-    <div style="transform: translate(50px, 100px)">
+    <div style="transform: translate(50px, 100px) scale(var(--global-scale-x), var(--global-scale-y)); transform-origin: 0 0;">
         <div class="grid-stack"></div>
     </div>
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
-    let scale = 0.5;
+    let scaleX = 0.5;
+    let scaleY = 0.5;
 
     let grid = GridStack.init({float: true});
     addEvents(grid);
@@ -57,19 +61,54 @@
     };
 
     const updateScaleCssVariable = () => {
-      document.body.style.setProperty('--global-scale', `${scale}`);
+      document.body.style.setProperty('--global-scale-x', `${scaleX}`);
+      document.body.style.setProperty('--global-scale-y', `${scaleY}`);
+      document.getElementById("scale-x").textContent = scaleX.toFixed(2);
+      document.getElementById("scale-y").textContent = scaleY.toFixed(2);
     }
 
     zoomIn = function() {
-      const scaleStep = scale < 1 ? 0.05 : 0.1;
-      scale += scaleStep;
+      const scaleStep = scaleX < 1 ? 0.05 : 0.1;
+      scaleX += scaleStep;
+      scaleY += scaleStep;
       updateScaleCssVariable();
     }
 
     zoomOut = function() {
-      const scaleStep = scale < 1 ? 0.05 : 0.1;
-      scale -= scaleStep;
+      if(scaleX >= 0.2 && scaleY >= 0.2) {
+        const scaleStep = scaleX < 1 ? 0.05 : 0.1;
+        scaleX -= scaleStep;
+        scaleY -= scaleStep;
+        updateScaleCssVariable();
+      }
+    }
+
+    increaseScaleX = function() {
+      const scaleStep = scaleX < 1 ? 0.05 : 0.1;
+      scaleX += scaleStep;
       updateScaleCssVariable();
+    }
+
+    decreaseScaleX = function() {
+      if(scaleX >= 0.2) {
+        const scaleStep = scaleX < 1 ? 0.05 : 0.1;
+        scaleX -= scaleStep;
+        updateScaleCssVariable();
+      }
+    }
+
+    increaseScaleY = function() {
+      const scaleStep = scaleX < 1 ? 0.05 : 0.1;
+      scaleY += scaleStep;
+      updateScaleCssVariable();
+    }
+    
+    decreaseScaleY = function() {
+      if(scaleY >= 0.2) {
+        const scaleStep = scaleX < 1 ? 0.05 : 0.1;
+        scaleY -= scaleStep;
+        updateScaleCssVariable();
+      }
     }
 
     updateScaleCssVariable();
