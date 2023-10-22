@@ -2134,6 +2134,7 @@ export class GridStack {
           this.engine.cleanupNode(node); // removes all internal _xyz values
           node.grid = this;
         }
+        delete node.grid._isTemp;
         dd.off(el, 'drag');
         // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
         // as the helper will be nuked by jquery-ui otherwise. TODO: update old code path
@@ -2161,6 +2162,7 @@ export class GridStack {
           subGrid.parentGridItem = node;
           if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
         }
+        this._prepareDragDropByNode(node);
         this._updateContainerHeight();
         this.engine.addedNodes.push(node);// @ts-ignore
         this._triggerAddEvent();// @ts-ignore
@@ -2170,18 +2172,7 @@ export class GridStack {
         if (this._gsEventHandler['dropped']) {
           this._gsEventHandler['dropped']({...event, type: 'dropped'}, origNode && origNode.grid ? origNode : undefined, node);
         }
-
-        // wait till we return out of the drag callback to set the new drag&resize handler or they may get messed up
-        window.setTimeout(() => {
-          // IFF we are still there (some application will use as placeholder and insert their real widget instead and better call makeWidget())
-          if (node.el && node.el.parentElement) {
-            this._prepareDragDropByNode(node);
-          } else {
-            this.engine.removeNode(node);
-          }
-          delete node.grid._isTemp;
-        });
-
+        
         return false; // prevent parent from receiving msg (which may be grid as well)
       });
     return this;
