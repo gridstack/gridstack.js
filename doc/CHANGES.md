@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [9.4.0-dev (TBD)](#940-dev-tbd)
 - [9.4.0 (2023-10-15)](#940-2023-10-15)
 - [9.3.0 (2023-09-30)](#930-2023-09-30)
 - [9.2.2 (2023-09-27)](#922-2023-09-27)
@@ -102,8 +103,11 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 9.4.0-dev (TBD)
+* fix [#1275](https://github.com/gridstack/gridstack.js/issues/1275) div scale support - Thank you [elmehdiamlou](https://github.com/elmehdiamlou) for implementing this teh right way (add scale to current code)
+
 ## 9.4.0 (2023-10-15)
-* revert [#2263](https://github.com/gridstack/gridstack.js/issues/2263) div scale support - causing too many issues for now (#2498 #2497 #2491)
+* revert [#2263](https://github.com/gridstack/gridstack.js/issues/2263) div scale support - causing too many issues for now (#2498 #2491)
 * fix [#2492](https://github.com/gridstack/gridstack.js/issues/2492) calling load() allows overlapping widgets
 
 ## 9.3.0 (2023-09-30)
