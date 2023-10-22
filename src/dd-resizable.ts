@@ -24,6 +24,11 @@ export interface DDResizableOpt {
   resize?: (event: Event, ui: DDUIData) => void;
 }
 
+interface RectScaleReciprocal {
+  x: number;
+  y: number;
+}
+
 export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt<DDResizableOpt> {
 
   // have to be public else complains for HTMLElementExtendOpt ?
@@ -34,6 +39,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected handlers: DDResizableHandle[];
   /** @internal */
   protected originalRect: Rect;
+  /** @internal */
+  protected rectScale: RectScaleReciprocal = { x: 1, y: 1 };
   /** @internal */
   protected temporalRect: Rect;
   /** @internal */
@@ -217,6 +224,26 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _setupHelper(): DDResizable {
     this.elOriginStyleVal = DDResizable._originStyleProp.map(prop => this.el.style[prop]);
     this.parentOriginStylePosition = this.el.parentElement.style.position;
+
+    const parent = this.el.parentElement;
+    const testEl = document.createElement('div');
+    Utils.addElStyles(testEl, {
+      opacity: '0',
+      position: 'fixed',
+      top: 0 + 'px',
+      left: 0 + 'px',
+      width: '1px',
+      height: '1px',
+      zIndex: '-999999',
+    });
+    parent.appendChild(testEl);
+    const testElPosition = testEl.getBoundingClientRect();
+    parent.removeChild(testEl);
+    this.rectScale = {
+      x: 1 / testElPosition.width,
+      y: 1 / testElPosition.height
+    };
+
     if (getComputedStyle(this.el.parentElement).position.match(/static/)) {
       this.el.parentElement.style.position = 'relative';
     }
@@ -278,9 +305,9 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal constrain the size to the set min/max values */
   protected _constrainSize(oWidth: number, oHeight: number): Size {
     const maxWidth = this.option.maxWidth || Number.MAX_SAFE_INTEGER;
-    const minWidth = this.option.minWidth || oWidth;
+    const minWidth = this.option.minWidth / this.rectScale.x || oWidth;
     const maxHeight = this.option.maxHeight || Number.MAX_SAFE_INTEGER;
-    const minHeight = this.option.minHeight || oHeight;
+    const minHeight = this.option.minHeight / this.rectScale.y || oHeight;
     const width = Math.min(maxWidth, Math.max(minWidth, oWidth));
     const height = Math.min(maxHeight, Math.max(minHeight, oHeight));
     return { width, height };
@@ -297,7 +324,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     if (!this.temporalRect) return this;
     Object.keys(this.temporalRect).forEach(key => {
       const value = this.temporalRect[key];
-      this.el.style[key] = value - containmentRect[key] + 'px';
+      const scaleReciprocal = key === 'width' || key === 'left' ? this.rectScale.x : key === 'height' || key === 'top' ? this.rectScale.y : 1;
+      this.el.style[key] = (value - containmentRect[key]) * scaleReciprocal + 'px';
     });
     return this;
   }
@@ -322,12 +350,12 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     const rect = this.temporalRect || newRect;
     return {
       position: {
-        left: rect.left - containmentRect.left,
-        top: rect.top - containmentRect.top
+        left: (rect.left - containmentRect.left) * this.rectScale.x,
+        top: (rect.top - containmentRect.top) * this.rectScale.y
       },
       size: {
-        width: rect.width,
-        height: rect.height
+        width: rect.width * this.rectScale.x,
+        height: rect.height * this.rectScale.y
       }
       /* Gridstack ONLY needs position set above... keep around in case.
       element: [this.el], // The object representing the element to be resized
