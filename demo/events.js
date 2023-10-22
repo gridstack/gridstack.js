@@ -15,22 +15,22 @@ function addEvents(grid, id) {
     console.log(g + 'disable');
   })
   .on('dragstart', function(event, el) {
-    let node = el.gridstackNode;
+    let n = el.gridstackNode;
     let x = el.getAttribute('gs-x'); // verify node (easiest) and attr are the same
     let y = el.getAttribute('gs-y');
-    console.log(g + 'dragstart ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') = (' + x + ',' + y + ')');
+    console.log(g + 'dragstart ' + (n.content || '') + ' pos: (' + n.x + ',' + n.y + ') = (' + x + ',' + y + ')');
   })
   .on('drag', function(event, el) {
-    let node = el.gridstackNode;
+    let n = el.gridstackNode;
     let x = el.getAttribute('gs-x'); // verify node (easiest) and attr are the same
     let y = el.getAttribute('gs-y');
-    // console.log(g + 'drag ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') = (' + x + ',' + y + ')');
+    // console.log(g + 'drag ' + (n.content || '') + ' pos: (' + n.x + ',' + n.y + ') = (' + x + ',' + y + ')');
   })
   .on('dragstop', function(event, el) {
-    let node = el.gridstackNode;
+    let n = el.gridstackNode;
     let x = el.getAttribute('gs-x'); // verify node (easiest) and attr are the same
     let y = el.getAttribute('gs-y');
-    console.log(g + 'dragstop ' + el.textContent + ' pos: (' + node.x + ',' + node.y + ') = (' + x + ',' + y + ')');
+    console.log(g + 'dragstop ' + (n.content || '') + ' pos: (' + n.x + ',' + n.y + ') = (' + x + ',' + y + ')');
   })
   .on('dropped', function(event, previousNode, newNode) {
     if (previousNode) {
@@ -43,17 +43,17 @@ function addEvents(grid, id) {
   .on('resizestart', function(event, el) {
     let n = el.gridstackNode;
     let rec = el.getBoundingClientRect();
-    console.log(`${g} resizestart ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
+    console.log(`${g} resizestart ${n.content || ''} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
 
   })
   .on('resize', function(event, el) {
     let n = el.gridstackNode;
     let rec = el.getBoundingClientRect();
-    console.log(`${g} resize ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
+    console.log(`${g} resize ${n.content || ''} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
   })
   .on('resizestop', function(event, el) {
     let n = el.gridstackNode;
     let rec = el.getBoundingClientRect();
-    console.log(`${g} resizestop ${el.textContent} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
+    console.log(`${g} resizestop ${n.content || ''} size: (${n.w}x${n.h}) = (${Math.round(rec.width)}x${Math.round(rec.height)})px`);
   });
 }
