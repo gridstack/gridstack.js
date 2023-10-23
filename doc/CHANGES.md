@@ -106,6 +106,7 @@ Change log
 ## 9.4.0-dev (TBD)
 * fix [#1275](https://github.com/gridstack/gridstack.js/issues/1275) div scale support - Thank you [elmehdiamlou](https://github.com/elmehdiamlou) for implementing this teh right way (add scale to current code)
 * fix [#2489](https://github.com/gridstack/gridstack.js/commit/2489) moved the dropped event handler to after doing everything (no more setTimeout) - Thanks [arnoudb](https://github.com/arnoudb) for suggesting a fix.
+* fix [#2497](https://github.com/gridstack/gridstack.js/issues/2497) Utils.parseHeight() fix
 
 ## 9.4.0 (2023-10-15)
 * revert [#2263](https://github.com/gridstack/gridstack.js/issues/2263) div scale support - causing too many issues for now (#2498 #2491)
