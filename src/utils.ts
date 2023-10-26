@@ -215,8 +215,8 @@ export class Utils {
   static parseHeight(val: numberOrString): HeightData {
     let h: number;
     let unit = 'px';
-    if (val && typeof val === 'string') {
-      if (val === 'auto') h = 0;
+    if (typeof val === 'string') {
+      if (val === 'auto' || val === '') h = 0;
       else {
         let match = val.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw|%)?$/);
         if (!match) {
