@@ -863,9 +863,9 @@ export class GridStack {
     if (!column || column < 1 || this.opts.column === column) return this;
     let oldColumn = this.getColumn();
 
-    // if we go into 1 column mode (which happens if we're sized less than minW unless disableOneColumnMode is on)
+    // if we go into 1 column mode due to size change (disableOneColumnMode is off and we hit min width)
     // then remember the original columns so we can restore.
-    if (column === 1) {
+    if (column === 1 && !this.opts.disableOneColumnMode) {
       this._prevColumn = oldColumn;
     } else {
       delete this._prevColumn;
