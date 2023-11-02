@@ -120,7 +120,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   public destroy(): void {
     if (this.dragTimeout) window.clearTimeout(this.dragTimeout);
     delete this.dragTimeout;
-    if (this.dragging) this._mouseUp(this.mouseDownEvent);
+    if (this.mouseDownEvent) this._mouseUp(this.mouseDownEvent);
     this.disable(true);
     delete this.el;
     delete this.helper;
