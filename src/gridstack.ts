@@ -1699,6 +1699,7 @@ export class GridStack {
     // update any gridItem height with sizeToContent, but wait for DOM $animation_speed to settle if we changed column count
     // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
     setTimeout(() => {
+      if (!this.engine) return; // we've been deleted in between!
       if (n) {
         if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el, useAttr);
       } else if (this.engine.nodes.some(n => Utils.shouldSizeToContent(n))) {

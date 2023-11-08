@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [9.5.0-dev (TBD)](#950-dev-tbd)
 - [9.5.0 (2023-10-26)](#950-2023-10-26)
 - [9.4.0 (2023-10-15)](#940-2023-10-15)
 - [9.3.0 (2023-09-30)](#930-2023-09-30)
@@ -102,6 +103,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 9.5.0-dev (TBD)
+* fix [#2525](https://github.com/gridstack/gridstack.js/commit/2525) Fixed unhandled exception happening in _mouseMove handler
+* fix potential crash in doContentResize() if grid gets deleted by the time the delay happens
 
 ## 9.5.0 (2023-10-26)
 * feat [#1275](https://github.com/gridstack/gridstack.js/issues/1275) div scale support - Thank you [elmehdiamlou](https://github.com/elmehdiamlou) for implementing this teh right way (add scale to current code)
