@@ -40,7 +40,7 @@ export class GridStackEngine {
   /** @internal cached layouts of difference column count so we can restore back (eg 12 -> 1 -> 12) */
   protected _layouts?: GridStackNode[][]; // maps column # to array of values nodes
   /** @internal true while we are resizing widgets during column resize to skip certain parts */
-  protected _inColumnResize: boolean;
+  protected _inColumnResize?: boolean;
   /** @internal true if we have some items locked */
   protected _hasLocked: boolean;
   /** @internal unique global internal _id counter */
@@ -127,7 +127,7 @@ export class GridStackEngine {
   }
 
   /** return the nodes that intercept the given node. Optionally a different area can be used, as well as a second node to skip */
-  public collide(skip: GridStackNode, area = skip, skip2?: GridStackNode): GridStackNode {
+  public collide(skip: GridStackNode, area = skip, skip2?: GridStackNode): GridStackNode | undefined {
     const skipId = skip._id;
     const skip2Id = skip2?._id;
     return this.nodes.find(n => n._id !== skipId && n._id !== skip2Id && Utils.isIntercepted(n, area));
@@ -139,7 +139,7 @@ export class GridStackEngine {
   }
 
   /** does a pixel coverage collision based on where we started, returning the node that has the most coverage that is >50% mid line */
-  protected directionCollideCoverage(node: GridStackNode, o: GridStackMoveOpts, collides: GridStackNode[]): GridStackNode {
+  protected directionCollideCoverage(node: GridStackNode, o: GridStackMoveOpts, collides: GridStackNode[]): GridStackNode | undefined {
     if (!o.rect || !node._rect) return;
     let r0 = node._rect; // where started
     let r = {...o.rect}; // where we are
@@ -218,7 +218,7 @@ export class GridStackEngine {
   }
 
   /** called to possibly swap between 2 nodes (same size or column, not locked, touching), returning true if successful */
-  public swap(a: GridStackNode, b: GridStackNode): boolean {
+  public swap(a: GridStackNode, b: GridStackNode): boolean | undefined {
     if (!b || b.locked || !a || a.locked) return false;
 
     function _doSwap(): true { // assumes a is before b IFF they have different height (put after rather than exact swap)
@@ -953,7 +953,7 @@ export class GridStackEngine {
     return this;
   }
 
-  protected findCacheLayout(n: GridStackNode, column: number): number {
+  protected findCacheLayout(n: GridStackNode, column: number): number | undefined {
     return this._layouts?.[column]?.findIndex(l => l._id === n._id) ?? -1;
   }
 
