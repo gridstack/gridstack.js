@@ -15,7 +15,7 @@
   },
   "homepage": "http://gridstackjs.com",
   "dependencies": {
-    "gridstack": "9.4.0"
+    "gridstack": "9.5.1"
   },
   "devDependencies": {}
 }
