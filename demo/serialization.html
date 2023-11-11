@@ -12,47 +12,43 @@
 <body>
   <div class="container-fluid">
     <h1>Serialization demo</h1>
-    <a onClick="saveGrid()" class="btn btn-primary" href="#">Save</a>
-    <a onClick="loadGrid()" class="btn btn-primary" href="#">Load</a>
-    <a onClick="saveFullGrid()" class="btn btn-primary" href="#">Save Full</a>
-    <a onClick="loadFullGrid()" class="btn btn-primary" href="#">Load Full</a>
-    <a onClick="clearGrid()" class="btn btn-primary" href="#">Clear</a>
+    <a onclick="saveGrid()" class="btn btn-primary" href="#">Save</a>
+    <a onclick="loadGrid()" class="btn btn-primary" href="#">Load</a>
+    <a onclick="saveFullGrid()" class="btn btn-primary" href="#">Save Full</a>
+    <a onclick="loadFullGrid()" class="btn btn-primary" href="#">Load Full</a>
+    <a onclick="clearGrid()" class="btn btn-primary" href="#">Clear</a>
     <br/><br/>
-    <div contentEditable="true">Editable Div</div>
     <div id="gridCont"><div class="grid-stack"></div></div>
     <hr/>
-    <textarea id="saved-data" cols="100" rows="20" readonly="readonly"></textarea>
+    <textarea id="saved-data" style="width: 100%" cols="100" rows="20" readonly="readonly"></textarea>
   </div>
-
+  <script src="events.js"></script>
   <script type="text/javascript">
+    let serializedData = [
+      {x: 0, y: 0, w: 2, h: 2},
+      {x: 2, y: 1, w: 2, h: 3, 
+      content: `<button onclick=\"alert('clicked!')\">Press me</button><div>text area</div><div><textarea></textarea></div><div>Input Field</div><input type="text"><div contenteditable=\"true\">Editable Div</div><div class=\"no-drag\">no drag</div>`},
+      {x: 4, y: 1},
+      {x: 1, y: 3},
+      {x: 2, y: 3, w:3},
+    ];
+    serializedData.forEach((n, i) => {
+      n.id = String(i);
+      n.content = `<button onclick="removeWidget(this.parentElement.parentElement)">X</button><br> ${i}<br> ${n.content ? n.content : ''}`;
+    });
+    let serializedFull;
+
     let grid = GridStack.init({
       minRow: 1, // don't let it collapse when empty
-      cellHeight: '7rem',
+      cellHeight: 80,
+      float: true,
       draggable: { cancel: '.no-drag'} // example of additional custom elements to skip drag on
-    });
-    
-    grid.on('added removed change', function(e, items) {
-      if (!items) return;
-      let str = '';
-      items.forEach(function(item) { str += ' (x,y)=' + item.x + ',' + item.y; });
-      console.log(e.type + ' ' + items.length + ' items:' + str );
-    });
-
-    let serializedData = [
-      {x: 0, y: 0, w: 2, h: 2, id: '0'},
-      {x: 3, y: 1, h: 3, id: '1', 
-      content: "<button onclick=\"alert('clicked!')\">Press me</button><div>text area</div><div><textarea></textarea></div><div>Input Field</div><input type='text'><div contentEditable=\"true\">Editable Div</div><div class=\"no-drag\">no drag</div>"},
-      {x: 4, y: 1, id: '2'},
-      {x: 2, y: 3, w: 3, id: '3'},
-      {x: 1, y: 3, id: '4'}
-    ];
-    serializedData.forEach((n, i) =>
-      n.content = `<button onClick="removeWidget(this.parentElement.parentElement)">X</button><br> ${i}<br> ${n.content ? n.content : ''}`);
-    let serializedFull;
+    }).load(serializedData);
+    addEvents(grid);
 
     // 2.x method - just saving list of widgets with content (default)
     function loadGrid() {
-      grid.load(serializedData, true); // update things
+      grid.load(serializedData);
     }
 
     // 2.x method
@@ -86,7 +82,7 @@
       grid.removeWidget(el, false);
     }
 
-    loadGrid();
+    // setTimeout(() => loadGrid(), 1000); // TEST force a second load which should be no-op
   </script>
 </body>
 </html>

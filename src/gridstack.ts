@@ -666,7 +666,8 @@ export class GridStack {
 
     // if we're loading a layout into for example 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
-    if (this._prevColumn && this._prevColumn !== this.opts.column && items.some(n => ((n.x || 0) + n.w) > (this.opts.column as number))) {
+    const column = this.opts.column as number;
+    if (this._prevColumn && this._prevColumn !== column && items.some(n => ((n.x || 0) + n.w) > column)) {
       this._ignoreLayoutsNodeChange = true; // skip layout update
       this.engine.cacheLayout(items, this._prevColumn, true);
     }
@@ -707,6 +708,7 @@ export class GridStack {
         // if item sizes to content, re-use the exiting height so it's a better guess at the final size 9same if width doesn't change)
         if (Utils.shouldSizeToContent(item)) w.h = item.h;
         // check if missing coord, in which case find next empty slot with new (or old if missing) sizes
+        this.engine.nodeBoundFix(w); // before widthChanged is checked below...
         if (w.autoPosition || w.x === undefined || w.y === undefined) {
           w.w = w.w || item.w;
           w.h = w.h || item.h;
@@ -718,7 +720,6 @@ export class GridStack {
         this.engine.nodes.push(item);
         if (Utils.samePos(item, w)) {
           this.moveNode(item, {...w, forceCollide: true});
-          Utils.copyPos(w, item, true);
         }
 
         this.update(item.el, w);
@@ -1219,6 +1220,7 @@ export class GridStack {
       let n = el?.gridstackNode;
       if (!n) return;
       let w = Utils.cloneDeep(opt); // make a copy we can modify in case they re-use it or multiple items
+      this.engine.nodeBoundFix(w);
       delete w.autoPosition;
       delete w.id;
 
@@ -1263,9 +1265,9 @@ export class GridStack {
       }
       Utils.sanitizeMinMax(n);
 
-      // finally move the widget
-      if (m !== undefined) this.moveNode(n, m);
-      if (changed) { // move will only update x,y,w,h so update the rest too
+      // finally move the widget and update attr
+      if (m) this.moveNode(n, m);
+      if (m || changed) {
         this._writeAttr(el, n);
       }
       if (ddChanged) {
