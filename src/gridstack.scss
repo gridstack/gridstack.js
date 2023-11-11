@@ -40,8 +40,6 @@ $animation_speed: .3s !default;
 // make those more unique as to not conflict with side panel items
 .grid-stack > .grid-stack-item {
   position: absolute;
-  top: 0px;
-  left: 0%;
   padding: 0;
 
   > .grid-stack-item-content {
@@ -136,6 +134,14 @@ $animation_speed: .3s !default;
 .grid-stack-animate .grid-stack-item.ui-resizable-resizing,
 .grid-stack-animate .grid-stack-item.grid-stack-placeholder{
   @include vendor(transition, left 0s, top 0s, height 0s, width 0s);
+}
+
+// make those more unique as to not conflict with side panel items, but apply to all column layouts (so not in loop below)
+.grid-stack > .grid-stack-item[gs-y="0"] {
+  top: 0px;
+}
+.grid-stack > .grid-stack-item[gs-x="0"] {
+  left: 0%;
 }
 
 .gs-#{$columns} > .grid-stack-item {
