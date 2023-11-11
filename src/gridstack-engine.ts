@@ -346,7 +346,6 @@ export class GridStackEngine {
    * @param resizing if out of bound, resize down or move into the grid to fit ?
    */
   public prepareNode(node: GridStackNode, resizing?: boolean): GridStackNode {
-    node = node || {};
     node._id = node._id ?? GridStackEngine._idSeq++;
 
     // if we're missing position, have the grid position us automatically (before we set them to 0,0)
@@ -373,11 +372,12 @@ export class GridStackEngine {
     if (isNaN(node.w)) { node.w = defaults.w; }
     if (isNaN(node.h)) { node.h = defaults.h; }
 
-    return this.nodeBoundFix(node, resizing);
+    this.nodeBoundFix(node, resizing);
+    return node;
   }
 
   /** part2 of preparing a node to fit inside our grid - checks for x,y,w from grid dimensions */
-  public nodeBoundFix(node: GridStackNode, resizing?: boolean): GridStackNode {
+  public nodeBoundFix(node: GridStackNode, resizing?: boolean): GridStackEngine {
 
     let before = node._orig || Utils.copyPos({}, node);
 
@@ -436,7 +436,7 @@ export class GridStackEngine {
       node._dirty = true;
     }
 
-    return node;
+    return this;
   }
 
   /** returns a list of modified nodes from their original values */
@@ -520,7 +520,7 @@ export class GridStackEngine {
     if (dup) return dup; // prevent inserting twice! return it instead.
 
     // skip prepareNode if we're in middle of column resize (not new) but do check for bounds!
-    node = this._inColumnResize ? this.nodeBoundFix(node) : this.prepareNode(node);
+    this._inColumnResize ? this.nodeBoundFix(node) : this.prepareNode(node);
     delete node._temporaryRemoved;
     delete node._removeDOM;
 
@@ -667,7 +667,7 @@ export class GridStackEngine {
     let resizing = (node.w !== o.w || node.h !== o.h);
     let nn: GridStackNode = Utils.copyPos({}, node, true); // get min/max out first, then opt positions next
     Utils.copyPos(nn, o);
-    nn = this.nodeBoundFix(nn, resizing);
+    this.nodeBoundFix(nn, resizing);
     Utils.copyPos(o, nn);
 
     if (!o.forceCollide && Utils.samePos(node, o)) return false;
@@ -926,7 +926,11 @@ export class GridStackEngine {
   public cacheLayout(nodes: GridStackNode[], column: number, clear = false): GridStackEngine {
     let copy: GridStackNode[] = [];
     nodes.forEach((n, i) => {
-      n._id = n._id ?? GridStackEngine._idSeq++; // make sure we have an id in case this is new layout, else re-use id already set
+      // make sure we have an id in case this is new layout, else re-use id already set
+      if (n._id === undefined) {
+        const existing = n.id ? this.nodes.find(n2 => n2.id === n.id) : undefined; // find existing node using users id
+        n._id = existing?._id ?? GridStackEngine._idSeq++;
+      }
       copy[i] = {x: n.x, y: n.y, w: n.w, _id: n._id} // only thing we change is x,y,w and id to find it back
     });
     this._layouts = clear ? [] : this._layouts || []; // use array to find larger quick
