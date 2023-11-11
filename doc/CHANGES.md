@@ -108,6 +108,7 @@ Change log
 * fix [#2525](https://github.com/gridstack/gridstack.js/commit/2525) Fixed unhandled exception happening in _mouseMove handler
 * fix potential crash in doContentResize() if grid gets deleted by the time the delay happens
 * fix [#2527](https://github.com/gridstack/gridstack.js/issues/2527) Incorrect layout on grid load in one column mode
+* fix [#2496](https://github.com/gridstack/gridstack.js/issues/2496) animation on init, introduced in 8.1.1
 
 ## 9.5.0 (2023-10-26)
 * feat [#1275](https://github.com/gridstack/gridstack.js/issues/1275) div scale support - Thank you [elmehdiamlou](https://github.com/elmehdiamlou) for implementing this teh right way (add scale to current code)
