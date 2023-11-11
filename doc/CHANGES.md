@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [9.5.0-dev (TBD)](#950-dev-tbd)
+- [9.5.1 (2023-11-11)](#951-2023-11-11)
 - [9.5.0 (2023-10-26)](#950-2023-10-26)
 - [9.4.0 (2023-10-15)](#940-2023-10-15)
 - [9.3.0 (2023-09-30)](#930-2023-09-30)
@@ -104,7 +104,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 9.5.0-dev (TBD)
+## 9.5.1 (2023-11-11)
 * fix [#2525](https://github.com/gridstack/gridstack.js/commit/2525) Fixed unhandled exception happening in _mouseMove handler
 * fix potential crash in doContentResize() if grid gets deleted by the time the delay happens
 * fix [#2527](https://github.com/gridstack/gridstack.js/issues/2527) Incorrect layout on grid load in one column mode
