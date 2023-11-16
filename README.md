@@ -15,7 +15,7 @@ If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/alaind831)
 [![Donate](https://img.shields.io/badge/Donate-Venmo-g.svg)](https://www.venmo.com/adumesny)
 
-Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/gridstackjs/shared_invite/zt-1jobnclsy-FqGGeLX5dFPM_ZQzTunBsw)
+Join us on Slack: [https://gridstackjs.slack.com](https://gridstackjs.slack.com)
 
 <!-- [![Slack Status](https://gridstackjs.com/badge.svg)](https://gridstackjs.slack.com) -->
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
