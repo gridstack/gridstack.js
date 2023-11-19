@@ -20,8 +20,7 @@ import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, Gri
 import { DDGridStack } from './dd-gridstack';
 import { isTouch } from './dd-touch';
 import { DDManager } from './dd-manager';
-import { DDElementHost } from './dd-element';
-/** global instance */
+import { DDElementHost } from './dd-element';/** global instance */
 const dd = new DDGridStack;
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -56,6 +55,17 @@ interface GridCSSStyleSheet extends CSSStyleSheet {
 // extend with internal fields we need - TODO: move other items in here
 interface InternalGridStackOptions extends GridStackOptions {
   _alwaysShowResizeHandle?: true | false | 'mobile'; // so we can restore for save
+}
+
+// temporary legacy (<10.x) support
+interface OldOneColumnOpts extends GridStackOptions {
+  /** disables the onColumnMode when the grid width is less (default?: false) */
+  disableOneColumnMode?: boolean;
+  /** minimal width before grid will be shown in one column mode (default?: 768) */
+  oneColumnSize?: number;
+  /** set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column
+   layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: false) */
+  oneColumnModeDomSort?: boolean;
 }
 
 /**
@@ -231,8 +241,6 @@ export class GridStack {
   }
   /** @internal */
   protected _placeholder: HTMLElement;
-  /** @internal */
-  protected _prevColumn: number;
   /** @internal prevent cached layouts from being updated when loading into small column layouts */
   protected _ignoreLayoutsNodeChange: boolean;
   /** @internal */
@@ -281,6 +289,37 @@ export class GridStack {
     if (opts.alwaysShowResizeHandle !== undefined) {
       (opts as InternalGridStackOptions)._alwaysShowResizeHandle = opts.alwaysShowResizeHandle;
     }
+    let bk = opts.responsive?.breakpoints;
+    // LEGACY: oneColumnMode stuff changed in v10.x - check if user explicitly set something to convert over
+    const oldOpts: OldOneColumnOpts = opts;
+    if (oldOpts.oneColumnModeDomSort) {
+      delete oldOpts.oneColumnModeDomSort;
+      console.log('Error: Gridstack oneColumnModeDomSort no longer supported. Check GridStackOptions.responsive instead.')
+    }
+    if (oldOpts.oneColumnSize || oldOpts.disableOneColumnMode === false) {
+      const oneSize = oldOpts.oneColumnSize || 768;
+      delete oldOpts.oneColumnSize;
+      delete oldOpts.disableOneColumnMode;
+      opts.responsive = opts.responsive || {};
+      bk = opts.responsive.breakpoints = opts.responsive.breakpoints || [];
+      let oneColumn = bk.find(b => b.c === 1);
+      if (!oneColumn) {
+        oneColumn = {c: 1, w: oneSize};
+        bk.push(oneColumn, {c: 12, w: oneSize+1});
+      } else oneColumn.w = oneSize;
+    }
+    //...end LEGACY
+    // cleanup responsive opts (must have columnWidth | breakpoints) then sort breakpoints by size (so we can match during resize)
+    const resp = opts.responsive;
+    if (resp) {
+      if (!resp.columnWidth && !resp.breakpoints?.length) {
+        delete opts.responsive;
+        bk = undefined;
+      } else {
+        resp.columnMax = resp.columnMax || 12;
+      }
+    }
+    if (bk?.length > 1) bk.sort((a,b) => (b.w || 0) - (a.w || 0));
 
     // elements DOM attributes override any passed options (like CSS style) - merge the two together
     let defaults: GridStackOptions = {...Utils.cloneDeep(gridDefaults),
@@ -305,10 +344,7 @@ export class GridStack {
     this._initMargin(); // part of settings defaults...
 
     // Now check if we're loading into 1 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
-    if (this.opts.column !== 1 && !this.opts.disableOneColumnMode && this._widthOrContainer() <= this.opts.oneColumnSize) {
-      this._prevColumn = this.getColumn();
-      this.opts.column = 1;
-    }
+    this.checkDynamicColumn();
 
     if (this.opts.rtl === 'auto') {
       this.opts.rtl = (el.style.direction === 'rtl');
@@ -498,7 +534,7 @@ export class GridStack {
     if (ops.column === 'auto') {
       autoColumn = true;
       ops.column = Math.max(node.w || 1, nodeToAdd?.w || 1);
-      ops.disableOneColumnMode = true; // driven by parent
+      delete ops.responsive; // driven by parent
     }
 
     // if we're converting an existing full item, move over the content to be the first sub item in the new grid
@@ -630,7 +666,6 @@ export class GridStack {
       }
       if (this._autoColumn) {
         o.column = 'auto';
-        delete o.disableOneColumnMode;
       }
       const origShow = o._alwaysShowResizeHandle;
       delete o._alwaysShowResizeHandle;
@@ -659,17 +694,18 @@ export class GridStack {
    */
   public load(items: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true): GridStack {
     items = Utils.cloneDeep(items); // so we can mod
-    // if passed list has coordinates, use them (insert from end to beginning for conflict resolution) else force widget same order
+    const column = this.getColumn();
+
+    // if passed list has coordinates, use them (insert from end to beginning for conflict resolution) else keep widget order
     const haveCoord = items.some(w => w.x !== undefined || w.y !== undefined);
-    if (haveCoord) items = Utils.sort(items, -1, this._prevColumn || this.getColumn());
+    if (haveCoord) items = Utils.sort(items, -1, column);
     this._insertNotAppend = haveCoord; // if we create in reverse order...
 
-    // if we're loading a layout into for example 1 column (_prevColumn is set only when going to 1) and items don't fit, make sure to save
+    // if we're loading a layout into for example 1 column and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
-    const column = this.opts.column as number;
-    if (this._prevColumn && this._prevColumn !== column && items.some(n => ((n.x || 0) + n.w) > column)) {
+    if (items.some(n => ((n.x || 0) + (n.w || 1)) > column)) {
       this._ignoreLayoutsNodeChange = true; // skip layout update
-      this.engine.cacheLayout(items, this._prevColumn, true);
+      this.engine.cacheLayout(items, 12, true); // TODO: 12 is arbitrary. use max value in layout ?
     }
 
     // if given a different callback, temporally set it as global option so creating will use it
@@ -831,11 +867,35 @@ export class GridStack {
   public cellWidth(): number {
     return this._widthOrContainer() / this.getColumn();
   }
-  /** return our expected width (or parent) for 1 column check */
-  protected _widthOrContainer(): number {
+  /** return our expected width (or parent) , and optionally of window for dynamic column check */
+  protected _widthOrContainer(forBreakpoint = false): number {
     // use `offsetWidth` or `clientWidth` (no scrollbar) ?
     // https://stackoverflow.com/questions/21064101/understanding-offsetwidth-clientwidth-scrollwidth-and-height-respectively
-    return (this.el.clientWidth || this.el.parentElement.clientWidth || window.innerWidth);
+    return forBreakpoint && this.opts.responsive?.breakpointForWindow ? window.innerWidth : (this.el.clientWidth || this.el.parentElement.clientWidth || window.innerWidth);
+  }
+  /** checks for dynamic column count for our current size, returning true if changed */
+  protected checkDynamicColumn(): boolean {
+    const resp = this.opts.responsive;
+    if (!resp || (!resp.columnWidth && !resp.breakpoints?.length)) return false;
+    const column = this.getColumn();
+    let newColumn = column;
+    const w = this._widthOrContainer(true);
+    if (resp.columnWidth) {
+      newColumn = Math.min(Math.round(w / resp.columnWidth) || 1, resp.columnMax);
+    } else {
+      // find the closest breakpoint (already sorted big to small) that matches
+      newColumn = resp.columnMax;
+      let i = 0;
+      while (i < resp.breakpoints.length && w <= resp.breakpoints[i].w) {
+        newColumn = resp.breakpoints[i++].c || column;
+      }
+    }
+    if (newColumn !== column) {
+      const bk = resp.breakpoints?.find(b => b.c === newColumn);
+      this.column(newColumn, bk?.layout || resp.layout);
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -862,30 +922,19 @@ export class GridStack {
    */
   public column(column: number, layout: ColumnOptions = 'moveScale'): GridStack {
     if (!column || column < 1 || this.opts.column === column) return this;
+
     let oldColumn = this.getColumn();
+    this.opts.column = column;
+    if (!this.engine) return this; // called in constructor, noting else to do
 
-    // if we go into 1 column mode due to size change (disableOneColumnMode is off and we hit min width)
-    // then remember the original columns so we can restore.
-    if (column === 1 && !this.opts.disableOneColumnMode) {
-      this._prevColumn = oldColumn;
-    } else {
-      delete this._prevColumn;
-    }
-
+    this.engine.column = column;
     this.el.classList.remove('gs-' + oldColumn);
     this.el.classList.add('gs-' + column);
-    this.opts.column = this.engine.column = column;
 
-    // update the items now - see if the dom order nodes should be passed instead (else default to current list)
-    let domNodes: GridStackNode[];
-    if (column === 1 && this.opts.oneColumnModeDomSort) {
-      domNodes = [];
-      this.getGridItems().forEach(el => { // get dom elements in order
-        if (el.gridstackNode) { domNodes.push(el.gridstackNode); }
-      });
-      if (!domNodes.length) { domNodes = undefined; }
-    }
-    this.engine.columnChanged(oldColumn, column, domNodes, layout);
+    // update the items now, checking if we have a custom children layout
+    /*const newChildren = this.opts.responsive?.breakpoints?.find(r => r.c === column)?.children;
+    if (newChildren) this.load(newChildren);
+    else*/ this.engine.columnChanged(oldColumn, column, undefined, layout);
     if (this._isAutoCellHeight) this.cellHeight();
 
     this.doContentResize();
@@ -901,9 +950,7 @@ export class GridStack {
   /**
    * get the number of columns in the grid (default 12)
    */
-  public getColumn(): number {
-    return this.opts.column as number;
-  }
+  public getColumn(): number { return this.opts.column as number; }
 
   /** returns an array of grid HTML elements (no placeholder) - used to iterate through our children in DOM order */
   public getGridItems(): GridItemHTMLElement[] {
@@ -1030,9 +1077,9 @@ export class GridStack {
       this.makeSubGrid(el, node.subGridOpts, undefined, false); // node.subGrid will be used as option in method, no need to pass
     }
 
-    // if we're adding an item into 1 column (_prevColumn is set only when going to 1) make sure
+    // if we're adding an item into 1 column make sure
     // we don't override the larger 12 column layout that was already saved. #1985
-    if (this._prevColumn && this.opts.column === 1) {
+    if (this.opts.column === 1) {
       this._ignoreLayoutsNodeChange = true;
     }
     this._triggerAddEvent();
@@ -1066,8 +1113,8 @@ export class GridStack {
       return this;
     }
 
+    // native CustomEvent handlers - cash the generic handlers so we can easily remove
     if (name === 'change' || name === 'added' || name === 'removed' || name === 'enable' || name === 'disable') {
-      // native CustomEvent handlers - cash the generic handlers so we can easily remove
       let noData = (name === 'enable' || name === 'disable');
       if (noData) {
         this._gsEventHandler[name] = (event: Event) => (callback as GridStackEventHandler)(event);
@@ -1081,7 +1128,7 @@ export class GridStack {
       // do same for start event to make it easier...
       this._gsEventHandler[name] = callback;
     } else {
-      console.log('GridStack.on(' + name + ') event not supported, but you can still use $(".grid-stack").on(...) while jquery-ui is still used internally.');
+      console.log('GridStack.on(' + name + ') event not supported');
     }
     return this;
   }
@@ -1670,15 +1717,8 @@ export class GridStack {
         columnChanged = true;
       }
     } else {
-      // else check for 1 column in/out behavior
-      let oneColumn = !this.opts.disableOneColumnMode && this.el.clientWidth <= this.opts.oneColumnSize ||
-      (this.opts.column === 1 && !this._prevColumn);
-      if ((this.opts.column === 1) !== oneColumn) {
-        // if (this.opts.animate) this.setAnimation(false); // 1 <-> 12 is too radical, turn off animation and we need it for sizeToContent
-        this.column(oneColumn ? 1 : this._prevColumn);
-        // if (this.opts.animate) setTimeout(() => this.setAnimation(true));
-        columnChanged = true;
-      }
+      // else check for dynamic column
+      columnChanged = this.checkDynamicColumn();
     }
 
     // make the cells content square again
@@ -1719,9 +1759,9 @@ export class GridStack {
 
   /** add or remove the grid element size event handler */
   protected _updateResizeEvent(forceRemove = false): GridStack {
-    // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting oneColumn (i.e. doing work)
+    // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting dynamic column (i.e. doing work)
     // or supporting new sizeToContent option.
-    const trackSize = !this.parentGridItem && (this._isAutoCellHeight || this.opts.sizeToContent || !this.opts.disableOneColumnMode
+    const trackSize = !this.parentGridItem && (this._isAutoCellHeight || this.opts.sizeToContent || this.opts.responsive
       || this.engine.nodes.find(n => n.sizeToContent));
 
     if (!forceRemove && trackSize && !this.resizeObserver) {
