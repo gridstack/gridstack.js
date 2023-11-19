@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Responsive column</title>
+  <title>Responsive breakpoint</title>
 
   <link rel="stylesheet" href="demo.css"/>
   <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
@@ -9,9 +9,8 @@
 </head>
 <body>
   <div>
-    <h1>Responsive: by column size</h1>
-    <p>Using new v10 <code>GridStackOptions.responsive: { columnWidth: x }</code></p>
-
+    <h1>Responsive: using breakpoint</h1>
+    <p>Using new v10 <code>GridStackOptions.responsive: { breakpoints: [] }</code></p>
     <div>
       <span>Number of Columns:</span> <span id="column-text"></span>
     </div>
@@ -52,10 +51,11 @@
     items.forEach(n => {n.id = count; n.content = String(count++)});
 
     let grid = GridStack.init({
-      cellHeight: 80, // use 'auto' to make square
+      cellHeight: 80,
       animate: false, // show immediate (animate: true is nice for user dragging though)
       responsive: {
-        columnWidth: 100, // wanted width
+        breakpointForWindow: true,  // test window vs grid size
+        breakpoints: [{w:700, c:1},{w:850, c:3},{w:950, c:6},{w:1100, c:8}]
       },
       children: items,
       float: true })

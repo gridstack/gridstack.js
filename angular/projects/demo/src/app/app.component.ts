@@ -62,7 +62,6 @@ export class AppComponent implements OnInit {
     cellHeight: 50,
     margin: 5,
     minRow: 2, // don't collapse when empty
-    disableOneColumnMode: true,
     acceptWidgets: true,
     children: this.subChildren
   };
@@ -71,7 +70,6 @@ export class AppComponent implements OnInit {
     cellHeight: 50,
     margin: 5,
     minRow: 1, // don't collapse when empty
-    disableOneColumnMode: true,
     removable: '.trash',
     acceptWidgets: true,
     float: true,

@@ -46,6 +46,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://gridstackjs.slack.com)
   - [Migrating to v7](#migrating-to-v7)
   - [Migrating to v8](#migrating-to-v8)
   - [Migrating to v9](#migrating-to-v9)
+  - [Migrating to v10](#migrating-to-v10)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -449,6 +450,15 @@ Possible breaking change if you use nested grid JSON format, or original Angular
 New addition - see release notes about `sizeToContent` feature.
 Possible break:
 * `GridStack.onParentResize()` is now called `onResize()` as grid now directly track size change, no longer involving parent per say to tell us anything. Note sure why it was public.
+
+## Migrating to v10
+
+we now support much richer responsive behavior with `GridStackOptions.responsive` including any breakpoint width:column pairs, or automatic column sizing.
+
+breaking change: 
+* `disableOneColumnMode`, `oneColumnSize` have been removed (thought we temporary convert if you have them). use `{ responsive: breakpoints: [{w:768, c:1}] }` for the same behavior.
+* 1 column mode switch is no longer by default (`responsive` is not defined) as too many new users had issues. Instead set it explicitly (see above).
+* `oneColumnModeDomSort` has been removed. Planning to support per column layouts at some future times. TBD
 
 # jQuery Application
 

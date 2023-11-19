@@ -6,6 +6,8 @@ gridstack.js API
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [Grid Options](#grid-options)
+  - [Responsive](#responsive)
+    - [ResponsiveBreakpoint](#responsivebreakpoint)
   - [DDDragOpt](#dddragopt)
   - [DDDragInOpt extends DDDragOpt](#dddraginopt-extends-dddragopt)
 - [Grid attributes](#grid-attributes)
@@ -95,7 +97,6 @@ gridstack.js API
 - `column` - Integer > 0 (default 12) which can change on the fly with `column(N)` API, or `'auto'` for nested grids to size themselves to the parent grid container (to make sub-items are the same size). See [column](http://gridstackjs.com/demo/column.html) and [nested](http://gridstackjs.com/demo/nested.html)
 - `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
 - `disableDrag` - disallows dragging of widgets (default: `false`).
-- `disableOneColumnMode` - Prevents the grid container from being displayed in "one column mode", even when the container's width is smaller than the value of oneColumnSize (default value of oneColumnSize is 768px). By default, this option is set to "false".
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `draggable` - allows to override draggable options - see `DDDragOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body', scroll: true}`)
 - `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
@@ -115,18 +116,30 @@ gridstack.js API
 - `maxRow` - maximum rows amount. Default is `0` which means no max.
 - `minRow` - minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
 - `nonce` - If you are using a nonce-based Content Security Policy, pass your nonce here and
-GridStack will add it to the <style> elements it creates.
-- `oneColumnSize` - When the width of the grid is equal to or less than the value set in oneColumnSize, the grid will be displayed in one-column mode. By default, the value of this option is set to "768".
-- `oneColumnModeDomSort` - set to `true` if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: `false`)
+GridStack will add it to the `<style>` elements it creates.
 - `placeholderClass` - class for placeholder (default: `'grid-stack-placeholder'`)
 - `placeholderText` - placeholder default content (default: `''`)
 - `resizable` - allows to override resizable options. (default: `{handles: 'se'}`). `handles` can be any combo of `n,ne,e,se,s,sw,w,nw` or `all`.
 - `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
+- `responsive` - describes the responsive nature of the grid. see `Responsive` interface.
 - `row` - fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain)
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](https://gridstackjs.com/demo/right-to-left(rtl).html)
 - `staticGrid` - removes drag|drop|resize (default `false`). If `true` widgets are not movable/resizable by the user, but code can still move and oneColumnMode will still work. You can use the smaller gridstack-static.js lib. A CSS class `grid-stack-static` is also added to the container.
 - `styleInHead` - if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`).
+
+### Responsive
+v10.x supports a much richer responsive behavior, you can have breakpoints of width:column, or auto column sizing,  where no code is longer needed.
+- `columnWidth`?: number - wanted width to maintain (+-50%) to dynamically pick a column count
+- `columnMax`?: number - maximum number of columns allowed (default: 12). Note: make sure to have correct CSS to support this.
+- `layout`?: ColumnOptions - global re-layout mode when changing columns
+- `breakpointForWindow`?: boolean - specify if breakpoints are for window size or grid size (default:false = grid)
+- `breakpoints`?: ResponsiveBreakpoint[] - explicit width:column breakpoints instead of automatic 'columnWidth'. Note: make sure to have correct CSS to support this.
+
+#### ResponsiveBreakpoint
+- `w`?: number - width
+- `c`: number - column
+- `layout`?: ColumnOptions - re-layout mode if different from global one
 
 ### DDDragOpt
 - `handle`?: string - class selector of items that can be dragged. default to '.grid-stack-item-content'

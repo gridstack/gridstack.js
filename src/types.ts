@@ -22,7 +22,6 @@ export const gridDefaults: GridStackOptions = {
   marginUnit: 'px',
   maxRow: 0,
   minRow: 0,
-  oneColumnSize: 768,
   placeholderClass: 'grid-stack-placeholder',
   placeholderText: '',
   removableOptions: { accept: 'grid-stack-item', decline: 'grid-stack-non-removable'},
@@ -31,11 +30,9 @@ export const gridDefaults: GridStackOptions = {
 
   // **** same as not being set ****
   // disableDrag: false,
-  // disableOneColumnMode: false,
   // disableResize: false,
   // float: false,
   // handleClass: null,
-  // oneColumnModeDomSort: false,
   // removable: false,
   // staticGrid: false,
   // styleInHead: false,
@@ -87,6 +84,31 @@ export type AddRemoveFcn = (parent: HTMLElement, w: GridStackWidget, add: boolea
 export type SaveFcn = (node: GridStackNode, w: GridStackWidget) => void;
 
 export type ResizeToContentFcn = (el: GridItemHTMLElement, useAttr?: boolean) => void;
+
+/** describes the responsive nature of the grid */
+export interface Responsive {
+  /** wanted width to maintain (+-50%) to dynamically pick a column count */
+  columnWidth?: number;
+  /** maximum number of columns allowed (default: 12). Note: make sure to have correct CSS to support this.*/
+  columnMax?: number;
+  /** global re-layout mode when changing columns */
+  layout?: ColumnOptions;
+  /** specify if breakpoints are for window size or grid size (default:false = grid) */
+  breakpointForWindow?: boolean;
+  /** explicit width:column breakpoints instead of automatic 'columnWidth'. Note: make sure to have correct CSS to support this.*/
+  breakpoints?: ResponsiveBreakpoint[];
+}
+
+export interface ResponsiveBreakpoint {
+  /** width */
+  w?: number;
+  /** column */
+  c: number;
+  /** re-layout mode if different from global one */
+  layout?: ColumnOptions;
+  /** TODO: children layout, which spells out exact locations and could omit/add some children */
+  // children?: GridStackWidget[];
+}
 
 /**
  * Defines the options for a Grid
@@ -147,9 +169,6 @@ export interface GridStackOptions {
   /** disallows dragging of widgets (default?: false) */
   disableDrag?: boolean;
 
-  /** disables the onColumnMode when the grid width is less than oneColumnSize (default?: false) */
-  disableOneColumnMode?: boolean;
-
   /** disallows resizing of widgets (default?: false). */
   disableResize?: boolean;
 
@@ -204,15 +223,6 @@ export interface GridStackOptions {
    * GridStack will add it to the <style> elements it creates. */
   nonce?: string;
 
-  /** minimal width before grid will be shown in one column mode (default?: 768) */
-  oneColumnSize?: number;
-
-  /**
-   * set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column
-   * layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: false)
-   */
-  oneColumnModeDomSort?: boolean;
-
   /** class for placeholder (default?: 'grid-stack-placeholder') */
   placeholderClass?: string;
 
@@ -221,6 +231,9 @@ export interface GridStackOptions {
 
   /** allows to override UI resizable options. (default?: { handles: 'se' }) */
   resizable?: DDResizeOpt;
+
+  /** responsive layout for width->column behavior */
+  responsive?: Responsive;
 
   /**
    * if true widgets could be removed by dragging outside of the grid. It could also be a selector string (ex: ".trash"),
@@ -397,7 +410,7 @@ export interface DDUIData {
 }
 
 /**
- * internal descriptions describing the items in the grid
+ * internal runtime descriptions describing the widgets in the grid
  */
 export interface GridStackNode extends GridStackWidget {
   /** pointer back to HTML element */
@@ -408,7 +421,7 @@ export interface GridStackNode extends GridStackWidget {
   subGrid?: GridStack;
   /** @internal internal id used to match when cloning engines or saving column layouts */
   _id?: number;
-  /** @internal */
+  /** @internal does the node attr ned to be updated due to changed x,y,w,h values */
   _dirty?: boolean;
   /** @internal */
   _updating?: boolean;
@@ -438,6 +451,6 @@ export interface GridStackNode extends GridStackWidget {
   _temporaryRemoved?: boolean;
   /** @internal true if we should remove DOM element on _notify() rather than clearing _id (old way) */
   _removeDOM?: boolean;
-  /** @internal */
+  /** @internal had drag&drop been initialized */
   _initDD?: boolean;
 }
