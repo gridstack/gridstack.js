@@ -106,7 +106,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 10.0.0 (TBD)
-* feat - we now support much richer responsive behavior with `GridStackOptions.responsive` including any breakpoint width:column pairs, or automatic column sizing. 
+* feat [#2542](https://github.com/gridstack/gridstack.js/pull/2542) we now support much richer responsive behavior with `GridStackOptions.responsive` including any breakpoint width:column pairs, or automatic column sizing. 
 * `disableOneColumnMode`, `oneColumnSize`, `oneColumnModeDomSort` have been removed (see v10 migration doc)
 
 ## 9.5.1 (2023-11-11)
