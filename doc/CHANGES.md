@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [10.0.0 (TBD)](#1000-tbd)
+- [10.0.0 (2023-11-20)](#1000-2023-11-20)
 - [9.5.1 (2023-11-11)](#951-2023-11-11)
 - [9.5.0 (2023-10-26)](#950-2023-10-26)
 - [9.4.0 (2023-10-15)](#940-2023-10-15)
@@ -105,7 +105,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 10.0.0 (TBD)
+## 10.0.0 (2023-11-20)
 * feat [#2542](https://github.com/gridstack/gridstack.js/pull/2542) we now support much richer responsive behavior with `GridStackOptions.columnOpts` including any breakpoint width:column pairs, or automatic column sizing. 
 * `disableOneColumnMode`, `oneColumnSize`, `oneColumnModeDomSort` have been removed (see v10 migration doc)
 
