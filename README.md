@@ -453,7 +453,7 @@ Possible break:
 
 ## Migrating to v10
 
-we now support much richer responsive behavior with `GridStackOptions.responsive` including any breakpoint width:column pairs, or automatic column sizing.
+we now support much richer responsive behavior with `GridStackOptions.columnOpts` including any breakpoint width:column pairs, or automatic column sizing.
 
 breaking change: 
 * `disableOneColumnMode`, `oneColumnSize` have been removed (thought we temporary convert if you have them). use `{ responsive: breakpoints: [{w:768, c:1}] }` for the same behavior.

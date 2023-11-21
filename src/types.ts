@@ -89,20 +89,20 @@ export type ResizeToContentFcn = (el: GridItemHTMLElement, useAttr?: boolean) =>
 export interface Responsive {
   /** wanted width to maintain (+-50%) to dynamically pick a column count */
   columnWidth?: number;
-  /** maximum number of columns allowed (default: 12). Note: make sure to have correct CSS to support this.*/
+  /** maximum number of columns allowed (default: 12). Note: make sure to have correct extra CSS to support this.*/
   columnMax?: number;
   /** global re-layout mode when changing columns */
   layout?: ColumnOptions;
   /** specify if breakpoints are for window size or grid size (default:false = grid) */
   breakpointForWindow?: boolean;
-  /** explicit width:column breakpoints instead of automatic 'columnWidth'. Note: make sure to have correct CSS to support this.*/
-  breakpoints?: ResponsiveBreakpoint[];
+  /** explicit width:column breakpoints instead of automatic 'columnWidth'. Note: make sure to have correct extra CSS to support this.*/
+  breakpoints?: Breakpoint[];
 }
 
-export interface ResponsiveBreakpoint {
-  /** width */
+export interface Breakpoint {
+  /** <= width for the breakpoint to trigger */
   w?: number;
-  /** column */
+  /** column count */
   c: number;
   /** re-layout mode if different from global one */
   layout?: ColumnOptions;
@@ -161,6 +161,9 @@ export interface GridStackOptions {
    * items always to same. flag is not supported for regular non-nested grids.
    */
   column?: number | 'auto';
+
+  /** responsive column layout for width:column behavior */
+  columnOpts?: Responsive;
 
   /** additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance.
   Note: only used by addGrid(), else your element should have the needed class */
@@ -231,9 +234,6 @@ export interface GridStackOptions {
 
   /** allows to override UI resizable options. (default?: { handles: 'se' }) */
   resizable?: DDResizeOpt;
-
-  /** responsive layout for width->column behavior */
-  responsive?: Responsive;
 
   /**
    * if true widgets could be removed by dragging outside of the grid. It could also be a selector string (ex: ".trash"),
