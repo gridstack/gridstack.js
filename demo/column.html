@@ -74,7 +74,6 @@
 
     let grid = GridStack.init({
       float: true,
-      disableOneColumnMode: true, // prevent auto column for this manual demo
       cellHeight: 100 // fixed as default 'auto' (square) makes it hard to test 1-3 column in actual large windows tests
     }).load(list);
     let text = document.querySelector('#column-text');
