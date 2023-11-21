@@ -83,7 +83,7 @@
     "karma-chrome-launcher": "^3.1.1",
     "karma-cli": "^2.0.0",
     "karma-jasmine": "^5.1.0",
-    "karma-typescript": "5.5.3",
+    "karma-typescript": "5.5.4",
     "protractor": "^7.0.0",
     "sass": "^1.62.0",
     "serve-static": "^1.15.0",
