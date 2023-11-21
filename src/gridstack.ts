@@ -289,19 +289,19 @@ export class GridStack {
     if (opts.alwaysShowResizeHandle !== undefined) {
       (opts as InternalGridStackOptions)._alwaysShowResizeHandle = opts.alwaysShowResizeHandle;
     }
-    let bk = opts.responsive?.breakpoints;
+    let bk = opts.columnOpts?.breakpoints;
     // LEGACY: oneColumnMode stuff changed in v10.x - check if user explicitly set something to convert over
     const oldOpts: OldOneColumnOpts = opts;
     if (oldOpts.oneColumnModeDomSort) {
       delete oldOpts.oneColumnModeDomSort;
-      console.log('Error: Gridstack oneColumnModeDomSort no longer supported. Check GridStackOptions.responsive instead.')
+      console.log('Error: Gridstack oneColumnModeDomSort no longer supported. Check GridStackOptions.columnOpts instead.')
     }
     if (oldOpts.oneColumnSize || oldOpts.disableOneColumnMode === false) {
       const oneSize = oldOpts.oneColumnSize || 768;
       delete oldOpts.oneColumnSize;
       delete oldOpts.disableOneColumnMode;
-      opts.responsive = opts.responsive || {};
-      bk = opts.responsive.breakpoints = opts.responsive.breakpoints || [];
+      opts.columnOpts = opts.columnOpts || {};
+      bk = opts.columnOpts.breakpoints = opts.columnOpts.breakpoints || [];
       let oneColumn = bk.find(b => b.c === 1);
       if (!oneColumn) {
         oneColumn = {c: 1, w: oneSize};
@@ -310,10 +310,10 @@ export class GridStack {
     }
     //...end LEGACY
     // cleanup responsive opts (must have columnWidth | breakpoints) then sort breakpoints by size (so we can match during resize)
-    const resp = opts.responsive;
+    const resp = opts.columnOpts;
     if (resp) {
       if (!resp.columnWidth && !resp.breakpoints?.length) {
-        delete opts.responsive;
+        delete opts.columnOpts;
         bk = undefined;
       } else {
         resp.columnMax = resp.columnMax || 12;
@@ -534,7 +534,7 @@ export class GridStack {
     if (ops.column === 'auto') {
       autoColumn = true;
       ops.column = Math.max(node.w || 1, nodeToAdd?.w || 1);
-      delete ops.responsive; // driven by parent
+      delete ops.columnOpts; // driven by parent
     }
 
     // if we're converting an existing full item, move over the content to be the first sub item in the new grid
@@ -871,11 +871,11 @@ export class GridStack {
   protected _widthOrContainer(forBreakpoint = false): number {
     // use `offsetWidth` or `clientWidth` (no scrollbar) ?
     // https://stackoverflow.com/questions/21064101/understanding-offsetwidth-clientwidth-scrollwidth-and-height-respectively
-    return forBreakpoint && this.opts.responsive?.breakpointForWindow ? window.innerWidth : (this.el.clientWidth || this.el.parentElement.clientWidth || window.innerWidth);
+    return forBreakpoint && this.opts.columnOpts?.breakpointForWindow ? window.innerWidth : (this.el.clientWidth || this.el.parentElement.clientWidth || window.innerWidth);
   }
   /** checks for dynamic column count for our current size, returning true if changed */
   protected checkDynamicColumn(): boolean {
-    const resp = this.opts.responsive;
+    const resp = this.opts.columnOpts;
     if (!resp || (!resp.columnWidth && !resp.breakpoints?.length)) return false;
     const column = this.getColumn();
     let newColumn = column;
@@ -932,7 +932,7 @@ export class GridStack {
     this.el.classList.add('gs-' + column);
 
     // update the items now, checking if we have a custom children layout
-    /*const newChildren = this.opts.responsive?.breakpoints?.find(r => r.c === column)?.children;
+    /*const newChildren = this.opts.columnOpts?.breakpoints?.find(r => r.c === column)?.children;
     if (newChildren) this.load(newChildren);
     else*/ this.engine.columnChanged(oldColumn, column, undefined, layout);
     if (this._isAutoCellHeight) this.cellHeight();
@@ -1761,7 +1761,7 @@ export class GridStack {
   protected _updateResizeEvent(forceRemove = false): GridStack {
     // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting dynamic column (i.e. doing work)
     // or supporting new sizeToContent option.
-    const trackSize = !this.parentGridItem && (this._isAutoCellHeight || this.opts.sizeToContent || this.opts.responsive
+    const trackSize = !this.parentGridItem && (this._isAutoCellHeight || this.opts.sizeToContent || this.opts.columnOpts
       || this.engine.nodes.find(n => n.sizeToContent));
 
     if (!forceRemove && trackSize && !this.resizeObserver) {

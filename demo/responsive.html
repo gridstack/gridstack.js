@@ -10,14 +10,14 @@
 <body>
   <div>
     <h1>Responsive: by column size</h1>
-    <p>Using new v10 <code>GridStackOptions.responsive: { columnWidth: x }</code></p>
+    <p>Using new v10 <code>GridStackOptions.columnOpts: { columnWidth: x }</code></p>
 
     <div>
       <span>Number of Columns:</span> <span id="column-text"></span>
     </div>
     <div>
       <label>Choose re-layout:</label>
-      <select onchange="grid.opts.responsive.layout = this.value">
+      <select onchange="grid.opts.columnOpts.layout = this.value">
         <option value="moveScale">move + scale</option>
         <option value="move">move</option>
         <option value="scale">scale</option>
@@ -54,7 +54,7 @@
     let grid = GridStack.init({
       cellHeight: 80, // use 'auto' to make square
       animate: false, // show immediate (animate: true is nice for user dragging though)
-      responsive: {
+      columnOpts: {
         columnWidth: 100, // wanted width
       },
       children: items,

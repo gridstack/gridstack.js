@@ -7,7 +7,7 @@ gridstack.js API
 
 - [Grid Options](#grid-options)
   - [Responsive](#responsive)
-    - [ResponsiveBreakpoint](#responsivebreakpoint)
+    - [Breakpoint](#breakpoint)
   - [DDDragOpt](#dddragopt)
   - [DDDragInOpt extends DDDragOpt](#dddraginopt-extends-dddragopt)
 - [Grid attributes](#grid-attributes)
@@ -95,6 +95,7 @@ gridstack.js API
    * A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event!
 - `children`?: GridStackWidget[] - list of children item to create when calling load() or addGrid()
 - `column` - Integer > 0 (default 12) which can change on the fly with `column(N)` API, or `'auto'` for nested grids to size themselves to the parent grid container (to make sub-items are the same size). See [column](http://gridstackjs.com/demo/column.html) and [nested](http://gridstackjs.com/demo/nested.html)
+- `columnOpts`?:Responsive - describes the responsive nature of the column grid. see `Responsive` interface.
 - `class`?: string - additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableResize` - disallows resizing of widgets (default: `false`).
@@ -122,7 +123,6 @@ GridStack will add it to the `<style>` elements it creates.
 - `resizable` - allows to override resizable options. (default: `{handles: 'se'}`). `handles` can be any combo of `n,ne,e,se,s,sw,w,nw` or `all`.
 - `removable` - if `true` widgets could be removed by dragging outside of the grid. It could also be a selector string, in this case widgets will be removed by dropping them there (default: `false`) See [example](http://gridstackjs.com/demo/two.html)
 - `removeTimeout` - time in milliseconds before widget is being removed while dragging outside of the grid. (default: `2000`)
-- `responsive` - describes the responsive nature of the grid. see `Responsive` interface.
 - `row` - fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain)
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](https://gridstackjs.com/demo/right-to-left(rtl).html)
 - `staticGrid` - removes drag|drop|resize (default `false`). If `true` widgets are not movable/resizable by the user, but code can still move and oneColumnMode will still work. You can use the smaller gridstack-static.js lib. A CSS class `grid-stack-static` is also added to the container.
@@ -134,9 +134,9 @@ v10.x supports a much richer responsive behavior, you can have breakpoints of wi
 - `columnMax`?: number - maximum number of columns allowed (default: 12). Note: make sure to have correct CSS to support this.
 - `layout`?: ColumnOptions - global re-layout mode when changing columns
 - `breakpointForWindow`?: boolean - specify if breakpoints are for window size or grid size (default:false = grid)
-- `breakpoints`?: ResponsiveBreakpoint[] - explicit width:column breakpoints instead of automatic 'columnWidth'. Note: make sure to have correct CSS to support this.
+- `breakpoints`?: Breakpoint[] - explicit width:column breakpoints instead of automatic 'columnWidth'. Note: make sure to have correct CSS to support this.
 
-#### ResponsiveBreakpoint
+#### Breakpoint
 - `w`?: number - width
 - `c`: number - column
 - `layout`?: ColumnOptions - re-layout mode if different from global one
