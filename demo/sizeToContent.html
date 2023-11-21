@@ -21,6 +21,8 @@
     <p>new 9.x feature that size the items to fit their content height as to not have scroll bars
       (unless `sizeToContent:false` in C: case). Defaulting to different initial size (see code) to show grow/shrink behavior.</p>
     <div>
+      <a onClick="clearGrid()" class="btn btn-primary" href="#">clear</a>
+      <a onClick="load()" class="btn btn-primary" href="#">load</a>
       column:
       <a onClick="column(8)" class="btn btn-primary" href="#">8</a>
       <a onClick="column(12)" class="btn btn-primary" href="#">12</a>
@@ -46,14 +48,22 @@
     let grid = GridStack.init(opts);
     let text ='some very large content that will normally not fit in the window.'
     text = text + text;
+    let count = 0;
     let items = [
       {x:0, y:0, w:2, content: `<div>A no h: ${text}</div>`},
       {x:2, y:0, w:1, h:2, content: '<div>B: shrink h=2</div>'}, // make taller than needed upfront
       {x:3, y:0, w:2, sizeToContent: false, content: `<div>C: WILL SCROLL. ${text}</div>`}, // prevent this from fitting testing
       {x:0, y:1, w:3, content: `<div>D no h: ${text} ${text}</div>`},
       {x:3, y:1, w:2, sizeToContent:3, content: `<div>E sizeToContent=3 <button onClick="more()">more</button><button onClick="less()">less</button><div id="dynContent">${text} ${text} ${text}</div></div>`}    ];
+    items.forEach(n => n.id = String(count++));
     grid.load(items);
 
+    function clearGrid() {
+      grid.removeAll();
+    }
+    function load() {
+      grid.load(items);
+    }
     function column(n) {
       grid.column(n, 'none');
     }
@@ -85,6 +95,10 @@
       let el = cont.parentElement.parentElement.parentElement;
       grid.resizeToContent(el);
     }
+
+    // TEST
+    // grid.update(grid.engine.nodes[0].el, {x:7});
+    // load();
   </script>
 </body>
 </html>

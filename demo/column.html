@@ -7,8 +7,8 @@
   <title>Column grid demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="../node_modules/gridstack/dist/gridstack-extra.min.css"/>
-  <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
+  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
+  <script src="../dist/gridstack-all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -33,8 +33,7 @@
       <a onClick="random()" class="btn btn-primary" href="#">random</a>
       <a onClick="addWidget()" class="btn btn-primary" href="#">Add Widget</a>
       column:
-      <a onClick="setOneColumn(false)" class="btn btn-primary" href="#">1</a>
-      <a onClick="setOneColumn(true)" class="btn btn-primary" href="#">1 DOM</a>
+      <a onClick="column(1)" class="btn btn-primary" href="#">1</a>
       <a onClick="column(2)" class="btn btn-primary" href="#">2</a>
       <a onClick="column(3)" class="btn btn-primary" href="#">3</a>
       <a onClick="column(4)" class="btn btn-primary" href="#">4</a>
@@ -75,7 +74,6 @@
 
     let grid = GridStack.init({
       float: true,
-      disableOneColumnMode: true, // prevent auto column for this manual demo
       cellHeight: 100 // fixed as default 'auto' (square) makes it hard to test 1-3 column in actual large windows tests
     }).load(list);
     let text = document.querySelector('#column-text');
@@ -107,14 +105,6 @@
       grid.column(n, layout);
       text.innerHTML = n;
     }
-    function setOneColumn(dom) {
-      if (grid.opts.column === 1 && grid.opts.oneColumnModeDomSort !== dom) {
-        column(12); // go ack to 12 before going to new column1 version
-      }
-      grid.opts.oneColumnModeDomSort = dom;
-      grid.column(1, layout);
-      text.innerHTML = dom ? '1 DOM' : '1';
-    }
     // dummy test method that moves items to the right each new layout... grid engine will validate those values (can't be neg or out of bounds) anyway...
     function columnLayout(column, oldColumn, nodes, oldNodes) {
       oldNodes.forEach(n => {
@@ -126,7 +116,6 @@
     function setLayout(name) {
       layout = name === 'custom' ? this.columnLayout : name;
     }
-    // setOneColumn(true); // test dom order
   </script>
 </body>
 </html>
