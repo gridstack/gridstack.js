@@ -149,7 +149,7 @@ v10.x supports a much richer responsive behavior, you can have breakpoints of wi
 - `cancel`?: string - prevents dragging from starting on specified elements, listed as comma separated selectors (eg: '.no-drag'). default built in is 'input,textarea,button,select,option'
 
 ### DDDragInOpt extends DDDragOpt
-- `helper`?: 'clone' | ((event: Event) => HTMLElement) - helper function when dropping (ex: 'clone' or your own method) 
+- `helper`?: 'clone' | ((event: Event) => HTMLElement) - helper function when dropping (ex: 'clone' or your own method)
 
 ## Grid attributes
 
@@ -334,7 +334,7 @@ let grids = GridStack.initAll();
 grids.forEach(...)
 ```
 
-### `addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack ` 
+### `addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack `
 
 * call to create a grid with the given options, including loading any children from JSON structure. This will call `GridStack.init()`, then `grid.load()` on any passed children (recursively). Great alternative to calling `init()` if you want entire grid to come from JSON serialized data, including options.
 * @param parent HTML element parent to the grid
@@ -385,7 +385,7 @@ re-layout grid items to reclaim any empty space. Options are:
 - `'compact'` might re-order items to fill any empty space
 
 - `doSort` - `false` to let you do your own sorting ahead in case you need to control a different order. (default to sort)
- 
+
 
 ### `cellHeight(val: number, update = true)`
 
@@ -522,7 +522,7 @@ let grid = GridStack.init();
 grid.el.appendChild('<div id="gsi-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true"></div>')
 grid.makeWidget('#gsi-1');
 ```
-### `makeSubgrid(el)`
+### `makeSubGrid(el)`
 Used to add a subgrid into an existing grid.
 ```js
 const grid = Gridstack.init()
@@ -533,7 +533,7 @@ grid.el.appendChild(`
           </div>
       </div>
 </div>`)
-grid.addSubGrid(grid.el.getElementById('nested-grid'))
+grid.makeSubGrid(grid.el.getElementById('nested-grid'))
 ```
 Make sure that the subgrid is inside of a grid item. It is important to remember that subgrids are themselves grid items capable of containing other grid items.
 ### `margin(value: numberOrString)`
