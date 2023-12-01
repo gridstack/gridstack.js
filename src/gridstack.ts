@@ -267,6 +267,7 @@ export class GridStack {
    * @param opts
    */
   public constructor(el: GridHTMLElement, opts: GridStackOptions = {}) {
+    el.gridstack = this;
     this.el = el; // exposed HTML element to the user
     opts = opts || {}; // handles null/undefined/0
 
