@@ -1489,7 +1489,8 @@ export class GridStack {
   protected _removeStylesheet(): GridStack {
 
     if (this._styles) {
-      Utils.removeStylesheet(this._styleSheetClass);
+      const styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
+      Utils.removeStylesheet(this._styleSheetClass, styleLocation);
       delete this._styles;
     }
     return this;
@@ -1517,7 +1518,7 @@ export class GridStack {
     // create one as needed
     if (!this._styles) {
       // insert style to parent (instead of 'head' by default) to support WebComponent
-      let styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
+      const styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
       this._styles = Utils.createStylesheet(this._styleSheetClass, styleLocation, {
         nonce: this.opts.nonce,
       });
@@ -2216,7 +2217,7 @@ export class GridStack {
         if (this._gsEventHandler['dropped']) {
           this._gsEventHandler['dropped']({...event, type: 'dropped'}, origNode && origNode.grid ? origNode : undefined, node);
         }
-        
+
         return false; // prevent parent from receiving msg (which may be grid as well)
       });
     return this;

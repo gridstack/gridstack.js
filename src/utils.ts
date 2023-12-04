@@ -182,8 +182,9 @@ export class Utils {
   }
 
   /** removed the given stylesheet id */
-  static removeStylesheet(id: string): void {
-    let el = document.querySelector('STYLE[gs-style-id=' + id + ']');
+  static removeStylesheet(id: string, parent?: HTMLElement): void {
+    const target = parent || document;
+    let el = target.querySelector('STYLE[gs-style-id=' + id + ']');
     if (el && el.parentNode) el.remove();
   }
 
