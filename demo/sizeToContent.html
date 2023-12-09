@@ -13,13 +13,21 @@
     .grid-stack-item-content {
       text-align: unset;
     }
+    .sidebar.inline {
+      width: fit-content;
+      height: fit-content;
+      display: inline-block;
+      padding: 0;
+    }
   </style>  
 </head>
 <body>
   <div class="container">
-    <h1>Cell sizeToContent options demo</h1>
-    <p>new 9.x feature that size the items to fit their content height as to not have scroll bars
-      (unless `sizeToContent:false` in C: case). Defaulting to different initial size (see code) to show grow/shrink behavior.</p>
+    <h1>sizeToContent options demo</h1>
+    <p>New 9.x feature that size the items to fit their content height as to not have scroll bars
+    <br>case C: `sizeToContent:false` to turn off.
+    <br>case E: has soft maxsize `sizeToContent:3`, shrinking to smaller content as needed
+    <br>Defaulting to different initial size (see code) to show grow/shrink behavior</p>
     <div>
       <a onClick="clearGrid()" class="btn btn-primary" href="#">clear</a>
       <a onClick="load()" class="btn btn-primary" href="#">load</a>
@@ -32,31 +40,52 @@
       <a onClick="cellHeight(75)" class="btn btn-primary" href="#">75</a>
       Widget:
       <a onClick="addWidget()" class="btn btn-primary" href="#">Add</a>
-      <a onClick="makeWidget()" class="btn btn-primary" href="#">Make</a>
+      <a onClick="makeWidget()" class="btn btn-primary" href="#">Make w:2</a>
+      <div class="sidebar inline">
+        <div class="grid-stack-item" gs-w="2" gs-h="3">
+          <div class="grid-stack-item-content"><div>Insert me 2x3</div></div>
+        </div>
+      </div>
     </div>
     <br>
-    <div class="grid-stack"></div>
+    <div id="grid1"></div>
+    <p>from DOM test:</p>
+    <div id="grid2">
+      <div class="grid-stack-item" gs-x="11" gs-y="0" gs-h="4">
+        <div class="grid-stack-item-content">
+          <div>DOM: h:4 sized down</div>
+        </div>
+      </div>
+    </div>
+
   </div>
   <script type="text/javascript">
-    let opts = {
-      margin: 5,
-      cellHeight: 50,
-      sizeToContent: true, // default to make them all fit
-      resizable: { handles: 'all'} // do all sides for testing
-      // cellHeightThrottle: 100, // ms before sizeToContent happens
-    }
-    let grid = GridStack.init(opts);
     let text ='some very large content that will normally not fit in the window.'
     text = text + text;
     let count = 0;
     let items = [
+      // {x:0, y:0, w:2, h:3, sizeToContent: false, content: `<div>A no h: ${text}</div>`},
       {x:0, y:0, w:2, content: `<div>A no h: ${text}</div>`},
       {x:2, y:0, w:1, h:2, content: '<div>B: shrink h=2</div>'}, // make taller than needed upfront
       {x:3, y:0, w:2, sizeToContent: false, content: `<div>C: WILL SCROLL. ${text}</div>`}, // prevent this from fitting testing
       {x:0, y:1, w:3, content: `<div>D no h: ${text} ${text}</div>`},
-      {x:3, y:1, w:2, sizeToContent:3, content: `<div>E sizeToContent=3 <button onClick="more()">more</button><button onClick="less()">less</button><div id="dynContent">${text} ${text} ${text}</div></div>`}    ];
+      {x:3, y:1, w:2, sizeToContent:3, content: `<div>E sizeToContent=3 <button onClick="more()">more</button><button onClick="less()">less</button><div id="dynContent">${text} ${text} ${text}</div></div>`},
+    ];
     items.forEach(n => n.id = String(count++));
-    grid.load(items);
+    let opts = {
+      margin: 5,
+      cellHeight: 50,
+      sizeToContent: true, // default to make them all fit
+      resizable: { handles: 'all'}, // do all sides for testing
+      acceptWidgets: true,
+      // cellHeightThrottle: 100, // ms before sizeToContent happens
+      // children: items, // test loading first
+    }
+    let grid = GridStack.init(opts, '#grid1');
+    grid.load(items); // test loading after
+    GridStack.init({...opts, children:undefined}, '#grid2');
+
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
 
     function clearGrid() {
       grid.removeAll();
@@ -78,7 +107,7 @@
       doc.body.innerHTML = `<div class="item"><div class="grid-stack-item-content"><div>New Make: ${text}</div></div></div>`;
       let el = doc.body.children[0];
       grid.el.appendChild(el);
-      grid.makeWidget(el);
+      grid.makeWidget(el, {w:2});
     }
     function more() {
       let cont = document.getElementById('dynContent');

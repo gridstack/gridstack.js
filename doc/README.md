@@ -53,7 +53,7 @@ gridstack.js API
   - [`isAreaEmpty(x, y, width, height)`](#isareaemptyx-y-width-height)
   - [`load(layout: GridStackWidget[], boolean | ((w: GridStackWidget, add: boolean) => void)  = true)`](#loadlayout-gridstackwidget-boolean--w-gridstackwidget-add-boolean--void---true)
   - [`makeWidget(el)`](#makewidgetel)
-  - [`makeSubgrid(el)`](#makesubgridel)
+  - [`makeSubGrid(el)`](#makesubgridel)
   - [`margin(value: numberOrString)`](#marginvalue-numberorstring)
   - [`movable(el, val)`](#movableel-val)
   - [`removeWidget(el, removeDOM = true, triggerEvent = true)`](#removewidgetel-removedom--true-triggerevent--true)

@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [10.0.0-dev (TBD)](#1000-dev-tbd)
 - [10.0.0 (2023-11-20)](#1000-2023-11-20)
 - [9.5.1 (2023-11-11)](#951-2023-11-11)
 - [9.5.0 (2023-10-26)](#950-2023-10-26)
@@ -105,13 +106,20 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 10.0.0-dev (TBD)
+* fix: [#2552](https://github.com/gridstack/gridstack.js/issues/2552) DOM init doesn't sizeToContent
+* fix: issues with sizeToContent and animation, cleanup, etc...
+* fix: [#2558](https://github.com/gridstack/gridstack.js/pull/2558) remove style node in shadow root
+* fix: [#2556](https://github.com/gridstack/gridstack.js/pull/2556) make sure 'new GridStack(el)' set el.gridstack=this right away
+* cleanup: [#2550](https://github.com/gridstack/gridstack.js/pull/2550) Optimize resize arrow (~88% lighter from 1.82 KB to 225B)
+
 ## 10.0.0 (2023-11-20)
 * feat [#2542](https://github.com/gridstack/gridstack.js/pull/2542) we now support much richer responsive behavior with `GridStackOptions.columnOpts` including any breakpoint width:column pairs, or automatic column sizing. 
 * `disableOneColumnMode`, `oneColumnSize`, `oneColumnModeDomSort` have been removed (see v10 migration doc)
 
 ## 9.5.1 (2023-11-11)
 * fix [#2525](https://github.com/gridstack/gridstack.js/commit/2525) Fixed unhandled exception happening in _mouseMove handler
-* fix potential crash in doContentResize() if grid gets deleted by the time the delay happens
+* fix potential crash in resizeToContentCheck() if grid gets deleted by the time the delay happens
 * fix [#2527](https://github.com/gridstack/gridstack.js/issues/2527) Incorrect layout on grid load in one column mode
 * fix [#2496](https://github.com/gridstack/gridstack.js/issues/2496) animation on init, introduced in 8.1.1
 
