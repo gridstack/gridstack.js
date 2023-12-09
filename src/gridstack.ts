@@ -346,6 +346,7 @@ export class GridStack {
 
     // Now check if we're loading into 1 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
     this.checkDynamicColumn();
+    this.el.classList.add('gs-' + this.opts.column);
 
     if (this.opts.rtl === 'auto') {
       this.opts.rtl = (el.style.direction === 'rtl');
@@ -409,6 +410,9 @@ export class GridStack {
       }
     });
 
+    // create initial global styles BEFORE loading children so resizeToContent margin can be calculated correctly
+    this._updateStyles(false, 0);
+
     if (this.opts.auto) {
       this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
       this.getGridItems().forEach(el => this._prepareElement(el));
@@ -422,10 +426,8 @@ export class GridStack {
       if (children.length) this.load(children); // don't load empty
     }
 
+    // if (this.engine.nodes.length) this._updateStyles(); // update based on # of children. done in engine onChange CB
     this.setAnimation(this.opts.animate);
-
-    this._updateStyles();
-    this.el.classList.add('gs-' + this.opts.column);
 
     // dynamic grids require pausing during drag to detect over to nest vs push
     if (this.opts.subGridDynamic && !DDManager.pauseDrag) DDManager.pauseDrag = true;
@@ -716,6 +718,10 @@ export class GridStack {
     let removed: GridStackNode[] = [];
     this.batchUpdate();
 
+    // if we are blank (loading into empty like startup) temp remove animation
+    const noAnim = !this.engine.nodes.length;
+    if (noAnim) this.setAnimation(false);
+
     // see if any items are missing from new layout and need to be removed first
     if (addRemove) {
       let copyNodes = [...this.engine.nodes]; // don't loop through array you modify
@@ -738,20 +744,18 @@ export class GridStack {
       if (Utils.find(items, n.id)) { updateNodes.push(n); return false; } // remove if found from list
       return true;
     });
-    let widthChanged = false;
     items.forEach(w => {
       let item = Utils.find(updateNodes, w.id);
       if (item) {
-        // if item sizes to content, re-use the exiting height so it's a better guess at the final size 9same if width doesn't change)
+        // if item sizes to content, re-use the exiting height so it's a better guess at the final size (same if width doesn't change)
         if (Utils.shouldSizeToContent(item)) w.h = item.h;
         // check if missing coord, in which case find next empty slot with new (or old if missing) sizes
-        this.engine.nodeBoundFix(w); // before widthChanged is checked below...
+        this.engine.nodeBoundFix(w);
         if (w.autoPosition || w.x === undefined || w.y === undefined) {
           w.w = w.w || item.w;
           w.h = w.h || item.h;
           this.engine.findEmptyPosition(w);
         }
-        widthChanged = widthChanged || (w.w !== undefined && w.w !== item.w);
 
         // add back to current list BUT force a collision check if it 'appears' we didn't change to make sure we don't overlap others now
         this.engine.nodes.push(item);
@@ -773,13 +777,14 @@ export class GridStack {
     });
 
     this.engine.removedNodes = removed;
-    this.doContentResize(widthChanged, true); // we only need to wait for animation if we changed any widths
     this.batchUpdate(false);
 
     // after commit, clear that flag
     delete this._ignoreLayoutsNodeChange;
     delete this._insertNotAppend;
     prevCB ? GridStack.addRemoveCB = prevCB : delete GridStack.addRemoveCB;
+    // delay adding animation back
+    if (noAnim && this.opts.animate) setTimeout(() => this.setAnimation(this.opts.animate));
     return this;
   }
 
@@ -856,7 +861,7 @@ export class GridStack {
     this.opts.cellHeightUnit = data.unit;
     this.opts.cellHeight = data.h;
 
-    this.doContentResize(false, true); // no anim wait, but use attributes since we only change row height
+    this.resizeToContentCheck();
 
     if (update) {
       this._updateStyles(true); // true = force re-create for current # of rows
@@ -938,7 +943,7 @@ export class GridStack {
     else*/ this.engine.columnChanged(oldColumn, column, undefined, layout);
     if (this._isAutoCellHeight) this.cellHeight();
 
-    this.doContentResize();
+    this.resizeToContentCheck(true); // wait for width resizing
 
     // and trigger our event last...
     this._ignoreLayoutsNodeChange = true; // skip layout update
@@ -1070,8 +1075,6 @@ export class GridStack {
     const node = el.gridstackNode;
 
     this._updateContainerHeight();
-
-    this.doContentResize(false, false, node);
 
     // see if there is a sub-grid to create
     if (node.subGridOpts) {
@@ -1227,6 +1230,8 @@ export class GridStack {
     }
     return this;
   }
+  /** @internal */
+  private hasAnimationCSS(): boolean { return this.el.classList.contains('grid-stack-animate')  }
 
   /**
    * Toggle the grid static state, which permanently removes/add Drag&Drop support, unlike disable()/enable() that just turns it off/on.
@@ -1314,7 +1319,11 @@ export class GridStack {
       Utils.sanitizeMinMax(n);
 
       // finally move the widget and update attr
-      if (m) this.moveNode(n, m);
+      if (m) {
+        const widthChanged = (m.w !== undefined && m.w !== n.w);
+        this.moveNode(n, m);
+        this.resizeToContentCheck(widthChanged, n); // wait for animation if we changed width
+      }
       if (m || changed) {
         this._writeAttr(el, n);
       }
@@ -1322,6 +1331,7 @@ export class GridStack {
         this._prepareDragDropByNode(n);
       }
     });
+
     return this;
   }
 
@@ -1337,26 +1347,26 @@ export class GridStack {
   /**
    * Updates widget height to match the content height to avoid v-scrollbar or dead space.
    * Note: this assumes only 1 child under resizeToContentParent='.grid-stack-item-content' (sized to gridItem minus padding) that is at the entire content size wanted.
-   * useAttrSize set to true if GridStackNode.h should be used instead of actual container height when we don't need to wait for animation to finish to get actual DOM heights
+   * @param el grid item element
+   * @param useNodeH set to true if GridStackNode.h should be used instead of actual container height when we don't need to wait for animation to finish to get actual DOM heights
    */
-  public resizeToContent(el: GridItemHTMLElement, useAttrSize = false) {
+  public resizeToContent(el: GridItemHTMLElement) {
     if (!el) return;
     el.classList.remove('size-to-content-max');
     if (!el.clientHeight) return; // 0 when hidden, skip
-    let n = el.gridstackNode;
+    const n = el.gridstackNode;
     if (!n) return;
     const grid = n.grid;
-    if (!grid) return;
-    if (el.parentElement !== grid.el) return; // skip if we are not inside a grid
+    if (!grid || el.parentElement !== grid.el) return; // skip if we are not inside a grid
     const cell = grid.getCellHeight();
     if (!cell) return;
-    let height = useAttrSize && n.h ? n.h * cell : el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
+    let height = n.h ? n.h * cell : el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
     let item: Element;
     if (n.resizeToContentParent) item = el.querySelector(n.resizeToContentParent);
     if (!item) item = el.querySelector(GridStack.resizeToContentParent);
     if (!item) return;
     const padding = el.clientHeight - item.clientHeight; // full - available height to our child (minus border, padding...)
-    const itemH = useAttrSize && n.h ? n.h * cell - padding : item.clientHeight; // calculated to what cellHeight is or will become (rather than actual to prevent waiting for animation to finish)
+    const itemH = n.h ? n.h * cell - padding : item.clientHeight; // calculated to what cellHeight is or will become (rather than actual to prevent waiting for animation to finish)
     let wantedH: number;
     if (n.subGrid) {
       // sub-grid - use their actual row count * their cell height
@@ -1386,9 +1396,9 @@ export class GridStack {
   }
 
   /** call the user resize (so they can do extra work) else our build in version */
-  protected resizeToContentCheck(el: GridItemHTMLElement, useAttr = false) {
-    if (GridStack.resizeToContentCB) GridStack.resizeToContentCB(el, useAttr);
-    else this.resizeToContent(el, useAttr);
+  private resizeToContentCBCheck(el: GridItemHTMLElement) {
+    if (GridStack.resizeToContentCB) GridStack.resizeToContentCB(el);
+    else this.resizeToContent(el);
   }
 
   /**
@@ -1503,7 +1513,7 @@ export class GridStack {
       this._removeStylesheet();
     }
 
-    if (!maxH) maxH = this.getRow();
+    if (maxH === undefined) maxH = this.getRow();
     this._updateContainerHeight();
 
     // if user is telling us they will handle the CSS themselves by setting heights to 0. Do we need this opts really ??
@@ -1588,7 +1598,7 @@ export class GridStack {
 
     // if we're a nested grid inside an sizeToContent item, tell it to resize itself too
     if (parent && !parent.grid.engine.batchMode && Utils.shouldSizeToContent(parent)) {
-      parent.grid.resizeToContentCheck(parent.el);
+      parent.grid.resizeToContentCBCheck(parent.el);
     }
 
     return this;
@@ -1596,18 +1606,19 @@ export class GridStack {
 
   /** @internal */
   protected _prepareElement(el: GridItemHTMLElement, triggerAddEvent = false, node?: GridStackNode): GridStack {
-    el.classList.add(this.opts.itemClass);
     node = node || this._readAttr(el);
     el.gridstackNode = node;
     node.el = el;
     node.grid = this;
-    let copy = {...node};
     node = this.engine.addNode(node, triggerAddEvent);
-    // write node attr back in case there was collision or we have to fix bad values during addNode()
-    if (!Utils.same(node, copy)) {
-      this._writeAttr(el, node);
-    }
-    if (Utils.shouldSizeToContent(node)) el.classList.add('size-to-content');
+
+    // write the dom sizes and class
+    this._writeAttr(el, node);
+    el.classList.add(gridDefaults.itemClass, this.opts.itemClass);
+    const sizeToContent = Utils.shouldSizeToContent(node);
+    sizeToContent ? el.classList.add('size-to-content') : el.classList.remove('size-to-content');
+    if (sizeToContent) this.resizeToContentCheck(false, node);
+
     this._prepareDragDropByNode(node);
     return this;
   }
@@ -1731,7 +1742,7 @@ export class GridStack {
       if (n.subGrid) n.subGrid.onResize()
     });
 
-    if (!this._skipInitialResize) this.doContentResize(columnChanged); // wait for anim of column changed (DOM reflow before we can size correctly)
+    if (!this._skipInitialResize) this.resizeToContentCheck(columnChanged); // wait for anim of column changed (DOM reflow before we can size correctly)
     delete this._skipInitialResize;
 
     this.batchUpdate(false);
@@ -1739,24 +1750,26 @@ export class GridStack {
     return this;
   }
 
-  private doContentResize(delay = true, useAttr = false, n: GridStackNode = undefined) {
+  /** resizes content for given node (or all) if shouldSizeToContent() is true */
+  private resizeToContentCheck(delay = false, n: GridStackNode = undefined) {
+    if (!this.engine) return; // we've been deleted in between!
+
     // update any gridItem height with sizeToContent, but wait for DOM $animation_speed to settle if we changed column count
     // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
-    setTimeout(() => {
-      if (!this.engine) return; // we've been deleted in between!
-      if (n) {
-        if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el, useAttr);
-      } else if (this.engine.nodes.some(n => Utils.shouldSizeToContent(n))) {
-        const nodes = [...this.engine.nodes]; // in case order changes while resizing one
-        this.batchUpdate();
-        nodes.forEach(n => {
-          if (Utils.shouldSizeToContent(n)) this.resizeToContentCheck(n.el, useAttr);
-        });
-        this.batchUpdate(false);
-      }
-      // call this regardless of shouldSizeToContent because widget might need to stretch to take available space after a resize
-      if (this._gsEventHandler['resizecontent']) this._gsEventHandler['resizecontent'](null, n ? [n] : this.engine.nodes);
-    }, delay ? 300 + 10 : 0);
+    if (delay && this.hasAnimationCSS()) return setTimeout(() => this.resizeToContentCheck(false, n), 300 + 10);
+
+    if (n) {
+      if (Utils.shouldSizeToContent(n)) this.resizeToContentCBCheck(n.el);
+    } else if (this.engine.nodes.some(n => Utils.shouldSizeToContent(n))) {
+      const nodes = [...this.engine.nodes]; // in case order changes while resizing one
+      this.batchUpdate();
+      nodes.forEach(n => {
+        if (Utils.shouldSizeToContent(n)) this.resizeToContentCBCheck(n.el);
+      });
+      this.batchUpdate(false);
+    }
+    // call this regardless of shouldSizeToContent because widget might need to stretch to take available space after a resize
+    if (this._gsEventHandler['resizecontent']) this._gsEventHandler['resizecontent'](null, n ? [n] : this.engine.nodes);
   }
 
   /** add or remove the grid element size event handler */
@@ -1895,7 +1908,7 @@ export class GridStack {
   public movable(els: GridStackElement, val: boolean): GridStack {
     if (this.opts.staticGrid) return this; // can't move a static grid!
     GridStack.getElements(els).forEach(el => {
-      let n = el.gridstackNode;
+      const n = el.gridstackNode;
       if (!n) return;
       val ? delete n.noMove : n.noMove = true;
       this._prepareDragDropByNode(n); // init DD if need be, and adjust
@@ -2154,8 +2167,12 @@ export class GridStack {
         // ignore drop on ourself from ourself that didn't come from the outside - dragend will handle the simple move instead
         if (node?.grid === this && !node._isExternal) return false;
 
-        let wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
+        const wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
         this.placeholder.remove();
+
+        // disable animation when replacing a placeholder (already positioned) with actual content
+        const noAnim = wasAdded && this.opts.animate;
+        if (noAnim) this.setAnimation(false);
 
         // notify previous grid of removal
         // console.log('drop delete _gridstackNodeOrig') // TEST
@@ -2200,16 +2217,13 @@ export class GridStack {
         // @ts-ignore
         Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
         Utils.removePositioningStyles(el);// @ts-ignore
-        this._writeAttr(el, node);
-        el.classList.add(gridDefaults.itemClass, this.opts.itemClass);
         this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
+        this._prepareElement(el, true, node);
         if (subGrid) {
           subGrid.parentGridItem = node;
           if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
         }
-        this._prepareDragDropByNode(node);
         this._updateContainerHeight();
-        this.engine.addedNodes.push(node);// @ts-ignore
         this._triggerAddEvent();// @ts-ignore
         this._triggerChangeEvent();
 
@@ -2217,6 +2231,9 @@ export class GridStack {
         if (this._gsEventHandler['dropped']) {
           this._gsEventHandler['dropped']({...event, type: 'dropped'}, origNode && origNode.grid ? origNode : undefined, node);
         }
+
+        // delay adding animation back
+        if (noAnim) setTimeout(() => this.setAnimation(this.opts.animate));
 
         return false; // prevent parent from receiving msg (which may be grid as well)
       });
@@ -2292,6 +2309,7 @@ export class GridStack {
         delete node._moving;
         delete node._event;
         delete node._lastTried;
+        const widthChanged = node.w !== node._orig.w;
 
         // if the item has moved to another grid, we're done here
         let target: GridItemHTMLElement = event.target as GridItemHTMLElement;
@@ -2330,7 +2348,7 @@ export class GridStack {
 
         if (event.type === 'resizestop') {
           if (Number.isInteger(node.sizeToContent)) node.sizeToContent = node.h; // new soft limit
-          this.doContentResize(false, true, node); // no amin wait as will use the actual sized coordinate attr
+          this.resizeToContentCheck(widthChanged, node); // wait for width animation if changed
         }
       }
 
