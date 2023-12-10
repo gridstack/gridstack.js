@@ -2224,6 +2224,7 @@ export class GridStack {
           if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
         }
         this._updateContainerHeight();
+        this.engine.addedNodes.push(node);// @ts-ignore
         this._triggerAddEvent();// @ts-ignore
         this._triggerChangeEvent();
 
