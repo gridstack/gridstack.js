@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [10.0.0-dev (TBD)](#1000-dev-tbd)
+- [10.0.1 (2023-12-10)](#1001-2023-12-10)
 - [10.0.0 (2023-11-20)](#1000-2023-11-20)
 - [9.5.1 (2023-11-11)](#951-2023-11-11)
 - [9.5.0 (2023-10-26)](#950-2023-10-26)
@@ -106,7 +106,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 10.0.0-dev (TBD)
+## 10.0.1 (2023-12-10)
 * fix: [#2552](https://github.com/gridstack/gridstack.js/issues/2552) DOM init doesn't sizeToContent
 * fix: [#2561](https://github.com/gridstack/gridstack.js/pull/2561) issues with sizeToContent animation, cleanup, etc...
 * fix: [#2427](https://github.com/gridstack/gridstack.js/issues/2427) sizeToContent supports rem/em cell height
