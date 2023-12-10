@@ -36,6 +36,7 @@
       <a onClick="column(12)" class="btn btn-primary" href="#">12</a>
       cellHeight:
       <a onClick="cellHeight(25)" class="btn btn-primary" href="#">25</a>
+      <a onClick="cellHeight('3rem')" class="btn btn-primary" href="#">3rem</a>
       <a onClick="cellHeight(50)" class="btn btn-primary" href="#">50</a>
       <a onClick="cellHeight(75)" class="btn btn-primary" href="#">75</a>
       Widget:
@@ -74,7 +75,7 @@
     items.forEach(n => n.id = String(count++));
     let opts = {
       margin: 5,
-      cellHeight: 50,
+      cellHeight: '3rem', // = 48px
       sizeToContent: true, // default to make them all fit
       resizable: { handles: 'all'}, // do all sides for testing
       acceptWidgets: true,

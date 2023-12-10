@@ -109,6 +109,7 @@ Change log
 ## 10.0.0-dev (TBD)
 * fix: [#2552](https://github.com/gridstack/gridstack.js/issues/2552) DOM init doesn't sizeToContent
 * fix: [#2561](https://github.com/gridstack/gridstack.js/pull/2561) issues with sizeToContent animation, cleanup, etc...
+* fix: [#2427](https://github.com/gridstack/gridstack.js/issues/2427) sizeToContent supports rem/em cell height
 * fix: [#2558](https://github.com/gridstack/gridstack.js/pull/2558) remove style node in shadow root
 * fix: [#2556](https://github.com/gridstack/gridstack.js/pull/2556) make sure 'new GridStack(el)' set el.gridstack=this right away
 * cleanup: [#2550](https://github.com/gridstack/gridstack.js/pull/2550) Optimize resize arrow (~88% lighter from 1.82 KB to 225B)

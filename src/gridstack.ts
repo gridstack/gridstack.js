@@ -811,11 +811,18 @@ export class GridStack {
        (!forcePixel || !this.opts.cellHeightUnit || this.opts.cellHeightUnit === 'px')) {
       return this.opts.cellHeight as number;
     }
+    // do rem/em to px conversion
+    if (this.opts.cellHeightUnit === 'rem') {
+      return (this.opts.cellHeight as number) * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    }
+    if (this.opts.cellHeightUnit === 'em') {
+      return (this.opts.cellHeight as number) * parseFloat(getComputedStyle(this.el).fontSize);
+    }
     // else get first cell height
     let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
     if (el) {
-      let height = Utils.toNumber(el.getAttribute('gs-h')) || 1; // since we don't write 1 anymore
-      return Math.round(el.offsetHeight / height);
+      let h = Utils.toNumber(el.getAttribute('gs-h')) || 1; // since we don't write 1 anymore
+      return Math.round(el.offsetHeight / h);
     }
     // else do entire grid and # of rows (but doesn't work if min-height is the actual constrain)
     let rows = parseInt(this.el.getAttribute('gs-current-row'));
@@ -1358,7 +1365,7 @@ export class GridStack {
     if (!n) return;
     const grid = n.grid;
     if (!grid || el.parentElement !== grid.el) return; // skip if we are not inside a grid
-    const cell = grid.getCellHeight();
+    const cell = grid.getCellHeight(true);
     if (!cell) return;
     let height = n.h ? n.h * cell : el.clientHeight; // getBoundingClientRect().height seem to flicker back and forth
     let item: Element;
@@ -1370,7 +1377,7 @@ export class GridStack {
     let wantedH: number;
     if (n.subGrid) {
       // sub-grid - use their actual row count * their cell height
-      wantedH = n.subGrid.getRow() * n.subGrid.getCellHeight();
+      wantedH = n.subGrid.getRow() * n.subGrid.getCellHeight(true);
     } else {
       // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
       const child = item.firstElementChild;
