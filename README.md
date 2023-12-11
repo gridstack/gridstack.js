@@ -456,8 +456,8 @@ Possible break:
 we now support much richer responsive behavior with `GridStackOptions.columnOpts` including any breakpoint width:column pairs, or automatic column sizing.
 
 breaking change: 
-* `disableOneColumnMode`, `oneColumnSize` have been removed (thought we temporary convert if you have them). use `{ responsive: breakpoints: [{w:768, c:1}] }` for the same behavior.
-* 1 column mode switch is no longer by default (`responsive` is not defined) as too many new users had issues. Instead set it explicitly (see above).
+* `disableOneColumnMode`, `oneColumnSize` have been removed (thought we temporary convert if you have them). use `{ columnOpts: breakpoints: [{w:768, c:1}] }` for the same behavior.
+* 1 column mode switch is no longer by default (`columnOpts` is not defined) as too many new users had issues. Instead set it explicitly (see above).
 * `oneColumnModeDomSort` has been removed. Planning to support per column layouts at some future times. TBD
 
 # jQuery Application
