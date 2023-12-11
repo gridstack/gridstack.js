@@ -295,7 +295,7 @@ export class GridStack {
     const oldOpts: OldOneColumnOpts = opts;
     if (oldOpts.oneColumnModeDomSort) {
       delete oldOpts.oneColumnModeDomSort;
-      console.log('Error: Gridstack oneColumnModeDomSort no longer supported. Check GridStackOptions.columnOpts instead.')
+      console.log('warning: Gridstack oneColumnModeDomSort no longer supported. Use GridStackOptions.columnOpts instead.')
     }
     if (oldOpts.oneColumnSize || oldOpts.disableOneColumnMode === false) {
       const oneSize = oldOpts.oneColumnSize || 768;
@@ -1139,7 +1139,7 @@ export class GridStack {
       // do same for start event to make it easier...
       this._gsEventHandler[name] = callback;
     } else {
-      console.log('GridStack.on(' + name + ') event not supported');
+      console.error('GridStack.on(' + name + ') event not supported');
     }
     return this;
   }
@@ -1381,7 +1381,7 @@ export class GridStack {
     } else {
       // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
       const child = item.firstElementChild;
-      if (!child) { console.log(`Error: resizeToContent() '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }
+      if (!child) { console.error(`Error: GridStack.resizeToContent() '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }
       wantedH = child.getBoundingClientRect().height || itemH;
     }
     if (itemH === wantedH) return;
