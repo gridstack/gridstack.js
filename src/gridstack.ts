@@ -2526,6 +2526,7 @@ export class GridStack {
     } else if (node._isExternal) {
       // item came from outside (like a toolbar) so nuke any node info
       delete node.el;
+      delete el.gridstackNode;
       // and restore all nodes back to original
       this.engine.restoreInitial();
     }
