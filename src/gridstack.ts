@@ -811,12 +811,19 @@ export class GridStack {
        (!forcePixel || !this.opts.cellHeightUnit || this.opts.cellHeightUnit === 'px')) {
       return this.opts.cellHeight as number;
     }
-    // do rem/em to px conversion
+    // do rem/em/cm/mm to px conversion
     if (this.opts.cellHeightUnit === 'rem') {
       return (this.opts.cellHeight as number) * parseFloat(getComputedStyle(document.documentElement).fontSize);
     }
     if (this.opts.cellHeightUnit === 'em') {
       return (this.opts.cellHeight as number) * parseFloat(getComputedStyle(this.el).fontSize);
+    }
+    if (this.opts.cellHeightUnit === 'cm') {
+      // 1cm = 96px/2.54. See https://www.w3.org/TR/css-values-3/#absolute-lengths
+      return (this.opts.cellHeight as number) * (96 / 2.54);
+    }
+    if (this.opts.cellHeightUnit === 'mm') {
+      return (this.opts.cellHeight as number) * (96 / 2.54) / 10;
     }
     // else get first cell height
     let el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
