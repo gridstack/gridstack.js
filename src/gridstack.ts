@@ -2030,16 +2030,35 @@ export class GridStack {
     // vars shared across all methods
     let cellHeight: number, cellWidth: number;
 
+    // creates a reference element for tracking the right position after scaling
+    const testEl = document.createElement('div');
+    Utils.addElStyles(testEl, {
+      opacity: '0',
+      position: 'fixed',
+      top: 0 + 'px',
+      left: 0 + 'px',
+      width: '1px',
+      height: '1px',
+      zIndex: '-999999',
+    });
+
     let onDrag = (event: DragEvent, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
       if (!node) return;
 
       helper = helper || el;
+      helper.appendChild(testEl);
+      const testElPosition = testEl.getBoundingClientRect();
+      helper.removeChild(testEl);
+      const dragScale = {
+        x: 1 / testElPosition.width,
+        y: 1 / testElPosition.height,
+      }
       let parent = this.el.getBoundingClientRect();
       let {top, left} = helper.getBoundingClientRect();
       left -= parent.left;
       top -= parent.top;
-      let ui: DDUIData = {position: {top, left}};
+      let ui: DDUIData = {position: {top: top * dragScale.y, left: left * dragScale.x}};
 
       if (node._temporaryRemoved) {
         node.x = Math.max(0, Math.round(left / cellWidth));
