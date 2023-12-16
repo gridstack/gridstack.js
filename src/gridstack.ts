@@ -6,7 +6,7 @@
  * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
  */
 import { GridStackEngine } from './gridstack-engine';
-import { Utils, HeightData, obsolete } from './utils';
+import { Utils, HeightData, obsolete, DragTransform } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
   dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn } from './types';
@@ -2031,34 +2031,50 @@ export class GridStack {
     let cellHeight: number, cellWidth: number;
 
     // creates a reference element for tracking the right position after scaling
-    const testEl = document.createElement('div');
-    Utils.addElStyles(testEl, {
-      opacity: '0',
-      position: 'fixed',
-      top: 0 + 'px',
-      left: 0 + 'px',
-      width: '1px',
-      height: '1px',
-      zIndex: '-999999',
-    });
+    const transformReference = Utils.createTransformReferenceElement();
 
     let onDrag = (event: DragEvent, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
       if (!node) return;
 
       helper = helper || el;
-      helper.appendChild(testEl);
-      const testElPosition = testEl.getBoundingClientRect();
-      helper.removeChild(testEl);
-      const dragScale = {
-        x: 1 / testElPosition.width,
-        y: 1 / testElPosition.height,
+      let transformValues: DragTransform;
+      // if we are dragging an element in and out that is coming from a grid
+      // we get the transform values by using the helper attached to the grid
+      if (node.grid?.el) {
+        transformValues = Utils.getValuesFromTransformedElement(transformReference, helper)
+      }
+      // if the element is being dragged from outside (not from any grid)
+      // we use the grid as the transformation reference, since the helper is not subject to transformation
+      else if (this._placeholder && this._placeholder.closest('.grid-stack')) {
+        const gridEl = this._placeholder.closest('.grid-stack') as HTMLElement;
+        transformValues = Utils.getValuesFromTransformedElement(transformReference, gridEl);
+        // if the element is being dragged from outside, scale it down to match the grid's scale
+        helper.style.transform = `scale(${1 / transformValues.xScale},${1 / transformValues.yScale})`;
+        // this makes it so that the helper is well positioned relative to the mouse after scaling
+        const helperRect = helper.getBoundingClientRect();
+        helper.style.left = helperRect.x + (transformValues.xScale - 1) * (event.clientX - helperRect.x) / transformValues.xScale + 'px';
+        helper.style.top = helperRect.y + (transformValues.yScale - 1) * (event.clientY - helperRect.y) / transformValues.yScale + 'px';
+        helper.style.transformOrigin = `0px 0px`
+      } // if all else fails, we might want to use the default transform value
+      else {
+        transformValues = {
+          xScale: 1,
+          xOffset: 0,
+          yScale: 1,
+          yOffset: 0,
+        }
       }
       let parent = this.el.getBoundingClientRect();
       let {top, left} = helper.getBoundingClientRect();
       left -= parent.left;
       top -= parent.top;
-      let ui: DDUIData = {position: {top: top * dragScale.y, left: left * dragScale.x}};
+      let ui: DDUIData = {
+        position: {
+          top: top * transformValues.xScale,
+          left: left * transformValues.yScale
+        }
+      };
 
       if (node._temporaryRemoved) {
         node.x = Math.max(0, Math.round(left / cellWidth));
@@ -2534,6 +2550,9 @@ export class GridStack {
     let node = el.gridstackNode;
     if (!node) return;
 
+    helper = helper || el;
+    // restore the scale of the helper on leave
+    helper.style.transform = 'scale(1)';
     dd.off(el, 'drag'); // no need to track while being outside
 
     // this gets called when cursor leaves and shape is outside, so only do this once

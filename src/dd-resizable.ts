@@ -57,11 +57,14 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected parentOriginStylePosition: string;
   /** @internal */
   protected static _originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
+  /** @internal */
+  protected transformReference: HTMLElement;
 
   constructor(el: HTMLElement, opts: DDResizableOpt = {}) {
     super();
     this.el = el;
     this.option = opts;
+    this.transformReference = Utils.createTransformReferenceElement();
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseOver = this._mouseOver.bind(this);
     this._mouseOut = this._mouseOut.bind(this);
@@ -226,22 +229,10 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.parentOriginStylePosition = this.el.parentElement.style.position;
 
     const parent = this.el.parentElement;
-    const testEl = document.createElement('div');
-    Utils.addElStyles(testEl, {
-      opacity: '0',
-      position: 'fixed',
-      top: 0 + 'px',
-      left: 0 + 'px',
-      width: '1px',
-      height: '1px',
-      zIndex: '-999999',
-    });
-    parent.appendChild(testEl);
-    const testElPosition = testEl.getBoundingClientRect();
-    parent.removeChild(testEl);
+    const transformValues = Utils.getValuesFromTransformedElement(this.transformReference, parent);
     this.rectScale = {
-      x: 1 / testElPosition.width,
-      y: 1 / testElPosition.height
+      x: transformValues.xScale,
+      y: transformValues.yScale
     };
 
     if (getComputedStyle(this.el.parentElement).position.match(/static/)) {
