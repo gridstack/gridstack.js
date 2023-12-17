@@ -57,14 +57,11 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected parentOriginStylePosition: string;
   /** @internal */
   protected static _originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
-  /** @internal */
-  protected transformReference: HTMLElement;
 
   constructor(el: HTMLElement, opts: DDResizableOpt = {}) {
     super();
     this.el = el;
     this.option = opts;
-    this.transformReference = Utils.createTransformReferenceElement();
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseOver = this._mouseOver.bind(this);
     this._mouseOut = this._mouseOut.bind(this);
@@ -229,7 +226,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.parentOriginStylePosition = this.el.parentElement.style.position;
 
     const parent = this.el.parentElement;
-    const transformValues = Utils.getValuesFromTransformedElement(this.transformReference, parent);
+    const transformValues = Utils.getValuesFromTransformedElement(parent);
     this.rectScale = {
       x: transformValues.xScale,
       y: transformValues.yScale

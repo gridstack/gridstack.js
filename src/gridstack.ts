@@ -2030,9 +2030,6 @@ export class GridStack {
     // vars shared across all methods
     let cellHeight: number, cellWidth: number;
 
-    // creates a reference element for tracking the right position after scaling
-    const transformReference = Utils.createTransformReferenceElement();
-
     let onDrag = (event: DragEvent, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
       let node = el.gridstackNode;
       if (!node) return;
@@ -2042,13 +2039,13 @@ export class GridStack {
       // if we are dragging an element in and out that is coming from a grid
       // we get the transform values by using the helper attached to the grid
       if (node.grid?.el) {
-        transformValues = Utils.getValuesFromTransformedElement(transformReference, helper)
+        transformValues = Utils.getValuesFromTransformedElement(helper)
       }
       // if the element is being dragged from outside (not from any grid)
       // we use the grid as the transformation reference, since the helper is not subject to transformation
       else if (this._placeholder && this._placeholder.closest('.grid-stack')) {
         const gridEl = this._placeholder.closest('.grid-stack') as HTMLElement;
-        transformValues = Utils.getValuesFromTransformedElement(transformReference, gridEl);
+        transformValues = Utils.getValuesFromTransformedElement(gridEl);
         // if the element is being dragged from outside, scale it down to match the grid's scale
         helper.style.transform = `scale(${1 / transformValues.xScale},${1 / transformValues.yScale})`;
         // this makes it so that the helper is well positioned relative to the mouse after scaling

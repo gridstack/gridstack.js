@@ -64,8 +64,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal pause before we call the actual drag hit collision code */
   protected dragTimeout: number;
   /** @internal */
-  protected transformReference: HTMLElement;
-  /** @internal */
   protected dragTransform: DragTransform = {
     xScale: 1,
     yScale: 1,
@@ -81,7 +79,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // get the element that is actually supposed to be dragged by
     let handleName = option.handle.substring(1);
     this.dragEl = el.classList.contains(handleName) ? el : el.querySelector(option.handle) || el;
-    this.transformReference = Utils.createTransformReferenceElement();
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
@@ -218,7 +215,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
       this.dragTransform = Utils.getValuesFromTransformedElement(
-        this.transformReference,
         this.helperContainment
       );
       this.dragOffset = this._getDragOffset(e, this.el, this.helperContainment);

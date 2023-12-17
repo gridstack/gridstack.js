@@ -563,10 +563,9 @@ export class Utils {
 
   /**
    * defines an element that is used to get the offset and scale from grid transforms
-   * has to be hooked to a helper
-   * should be called once
+   * returns the scale and offsets from said element
   */
-  public static createTransformReferenceElement(): HTMLElement {
+  public static getValuesFromTransformedElement(parent: HTMLElement): DragTransform {
     const transformReference = document.createElement('div');
     Utils.addElStyles(transformReference, {
       opacity: '0',
@@ -577,16 +576,10 @@ export class Utils {
       height: '1px',
       zIndex: '-999999',
     });
-    return transformReference;
-  }
-
-  /**
-   * can be used after setting the reference element from createTransformReferenceElement
-  */
-  public static getValuesFromTransformedElement(transformReference: HTMLElement, helper: HTMLElement): DragTransform {
-    helper.appendChild(transformReference);
+    parent.appendChild(transformReference);
     const transformValues = transformReference.getBoundingClientRect();
-    helper.removeChild(transformReference);
+    parent.removeChild(transformReference);
+    transformReference.remove();
     return {
       xScale: 1 / transformValues.width,
       yScale: 1 / transformValues.height,
