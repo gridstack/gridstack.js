@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [10.0.1-dev (TBD)](#1001-dev-tbd)
 - [10.0.1 (2023-12-10)](#1001-2023-12-10)
 - [10.0.0 (2023-11-20)](#1000-2023-11-20)
 - [9.5.1 (2023-11-11)](#951-2023-11-11)
@@ -105,6 +106,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 10.0.1-dev (TBD)
+* feat: [#2574](https://github.com/gridstack/gridstack.js/pull/2574) Allow cell height in cm and mm units
+* fix: [#2577](https://github.com/gridstack/gridstack.js/issues/2577) ui-resizable-s/-n style fix
 
 ## 10.0.1 (2023-12-10)
 * fix: [#2552](https://github.com/gridstack/gridstack.js/issues/2552) DOM init doesn't sizeToContent

@@ -1561,6 +1561,8 @@ export class GridStack {
       Utils.addCSSRule(this._styles, content, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
       Utils.addCSSRule(this._styles, placeholder, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
       // resize handles offset (to match margin)
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-n`, `top: ${top};`);
+      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-s`, `bottom: ${bottom}`);
       Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-ne`, `right: ${right}`);
       Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-e`, `right: ${right}`);
       Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-se`, `right: ${right}; bottom: ${bottom}`);
