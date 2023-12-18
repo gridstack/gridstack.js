@@ -954,7 +954,7 @@ export class GridStack {
     // update the items now, checking if we have a custom children layout
     /*const newChildren = this.opts.columnOpts?.breakpoints?.find(r => r.c === column)?.children;
     if (newChildren) this.load(newChildren);
-    else*/ this.engine.columnChanged(oldColumn, column, undefined, layout);
+    else*/ this.engine.columnChanged(oldColumn, column, layout);
     if (this._isAutoCellHeight) this.cellHeight();
 
     this.resizeToContentCheck(true); // wait for width resizing
