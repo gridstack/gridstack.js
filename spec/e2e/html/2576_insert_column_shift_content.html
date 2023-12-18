@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Column insert bug #2578</title>
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <script src="../../../dist/gridstack-all.js"></script>
+  <link rel="stylesheet" href="../../../dist/gridstack-extra.css"/>
+</head>
+
+<body>
+  <button onClick="addColAtIndex(0)">Add column 0</button>
+  <button onClick="removeColAtIndex(0)">Remove column 0</button>
+  <div class="grid-stack"></div>
+  </div>
+  <script type="text/javascript">
+    var items = [
+      { content: 'Item 1', x: 0, y: 0 },
+      { content: 'Item 2', x: 1, y: 0 },
+      { content: 'Item 3', x: 2, y: 2 },
+    ];
+    var options = { float: true, column: 3, row: 3, cellHeight: 50, children: items};
+
+    var grid = GridStack.init(options);
+
+    const addColAtIndex = (colIndex) => {
+      grid.column(grid.getColumn() + 1, 'none');
+      grid.engine.nodes.filter(n => n.x >= colIndex).sort((a, b) => b.x - a.x).forEach(n =>
+        grid.update(n.el, {x: n.x+1})
+      )
+    };
+
+    const removeColAtIndex = (colIndex) => {
+      grid.engine.nodes.filter(n => n.x >= colIndex).sort((a, b) => a.x - b.x).forEach(n => {
+        if (n.x) grid.update(n.el, {x: n.x-1})
+      })
+      grid.column(grid.getColumn() - 1, 'none')
+    };
+
+    addColAtIndex(0)
+    addColAtIndex(0)
+    removeColAtIndex(0)
+    removeColAtIndex(0)
+    addColAtIndex(0)
+    addColAtIndex(0)
+  </script>
+</body>
+
+</html>

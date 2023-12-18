@@ -797,12 +797,14 @@ export class GridStackEngine {
    *
    * @param prevColumn previous number of columns
    * @param column  new column number
-   * @param nodes different sorted list (ex: DOM order) instead of current list
    * @param layout specify the type of re-layout that will happen (position, size, etc...).
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public columnChanged(prevColumn: number, column: number, nodes: GridStackNode[], layout: ColumnOptions = 'moveScale'): GridStackEngine {
+  public columnChanged(prevColumn: number, column: number, layout: ColumnOptions = 'moveScale'): GridStackEngine {
     if (!this.nodes.length || !column || prevColumn === column) return this;
+
+    // in this mode no layout is done whatsoever, up to the caller to handle it
+    if (layout === 'none') return this;
 
     // simpler shortcuts layouts
     const doCompact = layout === 'compact' || layout === 'list';
@@ -814,23 +816,7 @@ export class GridStackEngine {
     if (column < prevColumn) this.cacheLayout(this.nodes, prevColumn);
     this.batchUpdate(); // do this EARLY as it will call saveInitial() so we can detect where we started for _dirty and collision
     let newNodes: GridStackNode[] = [];
-
-    // if we're going to 1 column and using DOM order (item passed in) rather than default sorting, then generate that layout
-    let domOrder = false;
-    if (column === 1 && nodes?.length) {
-      domOrder = true;
-      let top = 0;
-      nodes.forEach(n => {
-        n.x = 0;
-        n.w = 1;
-        n.y = Math.max(n.y, top);
-        top = n.y + n.h;
-      });
-      newNodes = nodes;
-      nodes = [];
-    } else {
-      nodes = doCompact ? this.nodes : Utils.sort(this.nodes, -1, prevColumn); // current column reverse sorting so we can insert last to front (limit collision)
-    }
+    let nodes = doCompact ? this.nodes : Utils.sort(this.nodes, -1, prevColumn); // current column reverse sorting so we can insert last to front (limit collision)
 
     // see if we have cached previous layout IFF we are going up in size (restore) otherwise always
     // generate next size down from where we are (looks more natural as you gradually size down).
@@ -887,8 +873,8 @@ export class GridStackEngine {
       if (nodes.length) {
         if (typeof layout === 'function') {
           layout(column, prevColumn, newNodes, nodes);
-        } else if (!domOrder) {
-          let ratio = (doCompact || layout === 'none') ? 1 : column / prevColumn;
+        } else {
+          let ratio = doCompact ? 1 : column / prevColumn;
           let move = (layout === 'move' || layout === 'moveScale');
           let scale = (layout === 'scale' || layout === 'moveScale');
           nodes.forEach(node => {
@@ -902,7 +888,7 @@ export class GridStackEngine {
       }
 
       // finally re-layout them in reverse order (to get correct placement)
-      if (!domOrder) newNodes = Utils.sort(newNodes, -1, column);
+      newNodes = Utils.sort(newNodes, -1, column);
       this._inColumnResize = true; // prevent cache update
       this.nodes = []; // pretend we have no nodes to start with (add() will use same structures) to simplify layout
       newNodes.forEach(node => {
