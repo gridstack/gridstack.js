@@ -2115,7 +2115,7 @@ export class GridStack {
           node._isExternal = true;
           el.gridstackNode = node;
         }
-        
+
         // calculate the grid size based on element outer size
         helper = helper || el;
         let w = node.w || Math.round(helper.offsetWidth / cellWidth) || 1;
