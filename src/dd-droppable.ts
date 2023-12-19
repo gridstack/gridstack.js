@@ -94,7 +94,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
     // make sure when we enter this, that the last one gets a leave FIRST to correctly cleanup as we don't always do
     if (DDManager.dropElement && DDManager.dropElement !== this) {
-      DDManager.dropElement._mouseLeave(e as DragEvent);
+      DDManager.dropElement._mouseLeave(e as DragEvent, true);
     }
     DDManager.dropElement = this;
 
@@ -108,7 +108,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal called when the item is leaving our area, stop tracking if we had moving item */
-  protected _mouseLeave(e: MouseEvent): void {
+  protected _mouseLeave(e: MouseEvent, external = false): void {
     // console.log(`${count++} Leave ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
     if (!DDManager.dragElement || DDManager.dropElement !== this) return;
     e.preventDefault();
@@ -120,7 +120,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     this.triggerEvent('dropout', ev);
 
-    if (DDManager.dropElement === this) {
+    if (!external && DDManager.dropElement === this) {
       delete DDManager.dropElement;
       // console.log('not tracking'); // TEST
 
