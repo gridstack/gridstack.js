@@ -2111,14 +2111,18 @@ export class GridStack {
         if (!node) {
           node = this._readAttr(el, false); // don't wipe external (e.g. drag toolbar) attr #2354
         }
-
+        if (!node.grid) {
+          node._isExternal = true;
+          el.gridstackNode = node;
+        }
+        
         // calculate the grid size based on element outer size
         helper = helper || el;
         let w = node.w || Math.round(helper.offsetWidth / cellWidth) || 1;
         let h = node.h || Math.round(helper.offsetHeight / cellHeight) || 1;
 
         // if the item came from another grid, make a copy and save the original info in case we go back there
-        if (node.grid !== this) {
+        if (node.grid && node.grid !== this) {
         // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
         // console.log('dropover cloning node'); // TEST
           if (!el._gridstackNodeOrig) el._gridstackNodeOrig = node; // shouldn't have multiple nested!
