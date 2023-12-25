@@ -9,7 +9,7 @@ import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn } from './types';
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler } from './types';
 
 /*
  * and include D&D by default
@@ -34,7 +34,7 @@ export interface GridHTMLElement extends HTMLElement {
 }
 /** list of possible events, or space separated list of them */
 export type GridStackEvent = 'added' | 'change' | 'disable' | 'drag' | 'dragstart' | 'dragstop' | 'dropped' |
-  'enable' | 'removed' | 'resize' | 'resizestart' | 'resizestop' | 'resizecontent' | string;
+  'enable' | 'removed' | 'resize' | 'resizestart' | 'resizestop' | 'resizecontent';
 
 /** Defines the coordinates of an object */
 export interface MousePosition {
@@ -1123,7 +1123,12 @@ export class GridStack {
    * grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
    *
    */
-  public on(name: GridStackEvent, callback: GridStackEventHandlerCallback): GridStack {
+  public on(name: 'dropped', callback: GridStackDroppedHandler): GridStack
+  public on(name: 'enable' | 'disable', callback: GridStackEventHandler): GridStack
+  public on(name: 'change' | 'added' | 'removed' | 'resizecontent', callback: GridStackNodesHandler): GridStack
+  public on(name: 'resizestart' | 'resize' | 'resizestop' | 'dragstart' | 'drag' | 'dragstop', callback: GridStackElementHandler): GridStack
+  public on(name: string, callback: GridStackEventHandlerCallback): GridStack
+  public on(name: GridStackEvent | string, callback: GridStackEventHandlerCallback): GridStack {
     // check for array of names being passed instead
     if (name.indexOf(' ') !== -1) {
       let names = name.split(' ') as GridStackEvent[];
@@ -1155,7 +1160,8 @@ export class GridStack {
    * unsubscribe from the 'on' event below
    * @param name of the event (see possible values)
    */
-  public off(name: GridStackEvent): GridStack {
+  public off(name: GridStackEvent): GridStack
+  public off(name: string): GridStack {
     // check for array of names being passed instead
     if (name.indexOf(' ') !== -1) {
       let names = name.split(' ') as GridStackEvent[];
@@ -1176,7 +1182,7 @@ export class GridStack {
 
   /** remove all event handlers */
   public offAll(): GridStack {
-    Object.keys(this._gsEventHandler).forEach(key => this.off(key));
+    Object.keys(this._gsEventHandler).forEach((key: GridStackEvent) => this.off(key));
     return this;
   }
 
