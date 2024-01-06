@@ -259,6 +259,8 @@ export class GridStack {
   protected _extraDragRow = 0;
   /** @internal true if nested grid should get column count from our width */
   protected _autoColumn?: boolean;
+  /** @internal meant to store the scale of the active grid */
+  protected dragTransform: DragTransform = { xScale: 1, yScale: 1, xOffset: 0, yOffset: 0 };
   private _skipInitialResize: boolean;
 
   /**
@@ -2035,41 +2037,27 @@ export class GridStack {
       if (!node) return;
 
       helper = helper || el;
-      let transformValues: DragTransform;
-      // if we are dragging an element in and out that is coming from a grid
-      // we get the transform values by using the helper attached to the grid
-      if (node.grid?.el) {
-        transformValues = Utils.getValuesFromTransformedElement(helper)
-      }
-      // if the element is being dragged from outside (not from any grid)
-      // we use the grid as the transformation reference, since the helper is not subject to transformation
-      else if (this._placeholder && this._placeholder.closest('.grid-stack')) {
-        const gridEl = this._placeholder.closest('.grid-stack') as HTMLElement;
-        transformValues = Utils.getValuesFromTransformedElement(gridEl);
-        // if the element is being dragged from outside, scale it down to match the grid's scale
-        helper.style.transform = `scale(${1 / transformValues.xScale},${1 / transformValues.yScale})`;
+
+      // if the element is being dragged from outside, scale it down to match the grid's scale
+      // and slightly adjust its position relative to the mouse
+      if (!node.grid?.el) {
+        // this scales the helper down
+        helper.style.transform = `scale(${1 / this.dragTransform.xScale},${1 / this.dragTransform.yScale})`;
         // this makes it so that the helper is well positioned relative to the mouse after scaling
         const helperRect = helper.getBoundingClientRect();
-        helper.style.left = helperRect.x + (transformValues.xScale - 1) * (event.clientX - helperRect.x) / transformValues.xScale + 'px';
-        helper.style.top = helperRect.y + (transformValues.yScale - 1) * (event.clientY - helperRect.y) / transformValues.yScale + 'px';
+        helper.style.left = helperRect.x + (this.dragTransform.xScale - 1) * (event.clientX - helperRect.x) / this.dragTransform.xScale + 'px';
+        helper.style.top = helperRect.y + (this.dragTransform.yScale - 1) * (event.clientY - helperRect.y) / this.dragTransform.yScale + 'px';
         helper.style.transformOrigin = `0px 0px`
-      } // if all else fails, we might want to use the default transform value
-      else {
-        transformValues = {
-          xScale: 1,
-          xOffset: 0,
-          yScale: 1,
-          yOffset: 0,
-        }
       }
+
       let parent = this.el.getBoundingClientRect();
       let {top, left} = helper.getBoundingClientRect();
       left -= parent.left;
       top -= parent.top;
       let ui: DDUIData = {
         position: {
-          top: top * transformValues.xScale,
-          left: left * transformValues.yScale
+          top: top * this.dragTransform.xScale,
+          left: left * this.dragTransform.yScale
         }
       };
 
@@ -2426,6 +2414,27 @@ export class GridStack {
     this._writePosAttr(this.placeholder, node)
     this.el.appendChild(this.placeholder);
     // console.log('_onStartMoving placeholder') // TEST
+
+    // if the element is inside a grid, it has already been scaled
+    // we can use that as a scale reference
+    if (node.grid?.el) {
+      this.dragTransform = Utils.getValuesFromTransformedElement(el);
+    }
+    // if the element is being dragged from outside (not from any grid)
+    // we use the grid as the transformation reference, since the helper is not subject to transformation
+    else if (this.placeholder && this.placeholder.closest('.grid-stack')) {
+      const gridEl = this.placeholder.closest('.grid-stack') as HTMLElement;
+      this.dragTransform = Utils.getValuesFromTransformedElement(gridEl);
+    }
+    // Fallback
+    else {
+      this.dragTransform = {
+        xScale: 1,
+        xOffset: 0,
+        yScale: 1,
+        yOffset: 0,
+      }
+    }
 
     node.el = this.placeholder;
     node._lastUiPosition = ui.position;
