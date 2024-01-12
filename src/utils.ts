@@ -56,7 +56,7 @@ export class Utils {
   /** convert a potential selector into actual list of html elements. optional root which defaults to document (for shadow dom) */
   static getElements(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement[] {
     if (typeof els === 'string') {
-      const doc = ('getElementById' in root) ? root as Document : undefined;
+      const doc = ('getElementById' in (root || {})) ? root as Document : undefined;
 
       // Note: very common for people use to id='1,2,3' which is only legal as HTML5 id, but not CSS selectors
       // so if we start with a number, assume it's an id and just return that one item...
@@ -66,10 +66,10 @@ export class Utils {
         return el ? [el] : [];
       }
 
-      let list = root.querySelectorAll(els);
+      let list = root?.querySelectorAll(els);
       if (!list.length && els[0] !== '.' && els[0] !== '#') {
-        list = root.querySelectorAll('.' + els);
-        if (!list.length) { list = root.querySelectorAll('#' + els) }
+        list = root?.querySelectorAll('.' + els);
+        if (!list.length) { list = root?.querySelectorAll('#' + els) }
       }
       return Array.from(list) as HTMLElement[];
     }
@@ -79,13 +79,13 @@ export class Utils {
   /** convert a potential selector into actual single element. optional root which defaults to document (for shadow dom) */
   static getElement(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement {
     if (typeof els === 'string') {
-      const doc = ('getElementById' in root) ? root as Document : undefined;
+      const doc = ('getElementById' in (root || {})) ? root as Document : undefined;
       if (!els.length) return null;
       if (doc && els[0] === '#') {
         return doc.getElementById(els.substring(1));
       }
       if (els[0] === '#' || els[0] === '.' || els[0] === '[') {
-        return root.querySelector(els);
+        return root?.querySelector(els);
       }
 
       // if we start with a digit, assume it's an id (error calling querySelector('#1')) as class are not valid CSS
@@ -94,9 +94,9 @@ export class Utils {
       }
 
       // finally try string, then id, then class
-      let el = root.querySelector(els);
+      let el = root?.querySelector(els)
       if (doc && !el) { el = doc.getElementById(els) }
-      if (!el) { el = root.querySelector('.' + els) }
+      if (!el) { el = root?.querySelector('.' + els) }
       return el as HTMLElement;
     }
     return els;
