@@ -110,7 +110,8 @@ Change log
 ## 10.0.1-dev (TBD)
 * feat: [#2574](https://github.com/gridstack/gridstack.js/pull/2574) Allow cell height in cm and mm units
 * fix: [#2577](https://github.com/gridstack/gridstack.js/issues/2577) ui-resizable-s/-n style fix
-* fix: [#2578](https://github.com/gridstack/gridstack.js/issues/2578) column('none') now ignores layouts
+* fix: [#2576](https://github.com/gridstack/gridstack.js/issues/2576) column('none') now ignores layouts
+* fix: [#2560](https://github.com/gridstack/gridstack.js/issues/2560) nested grid fix (enter can call leave which can call enter again).
 
 ## 10.0.1 (2023-12-10)
 * fix: [#2552](https://github.com/gridstack/gridstack.js/issues/2552) DOM init doesn't sizeToContent
