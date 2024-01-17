@@ -530,7 +530,7 @@ export class GridStack {
       grid = grid.parentGridItem?.grid;
     }
     //... and set the create options
-    ops = Utils.cloneDeep({...(subGridTemplate || {}), children: undefined, ...(ops || node.subGridOpts)});
+    ops = Utils.cloneDeep({...(subGridTemplate || {}), children: undefined, ...(ops || node.subGridOpts || {})});
     node.subGridOpts = ops;
 
     // if column special case it set, remember that flag and set default
