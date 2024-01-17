@@ -59,10 +59,11 @@
       minRow: 2, // don't collapse when empty
       acceptWidgets: true,
       id: 'main',
+      subGridOpts: subOptions, // all sub grids will default to those
       children: [
         {x:0, y:0, content: 'regular item'},
-        {x:1, y:0, w:4, h:4, sizeToContent: true, subGridOpts: {children: sub1, id:'sub1_grid', class: 'sub1', ...subOptions}},
-        {x:5, y:0, w:3, h:4, subGridOpts: {children: sub2, id:'sub2_grid', class: 'sub2', ...subOptions}},
+        {x:1, y:0, w:4, h:4, sizeToContent: true, subGridOpts: {children: sub1, id:'sub1_grid', class: 'sub1'}},
+        {x:5, y:0, w:3, h:4, subGridOpts: {children: sub2, id:'sub2_grid', class: 'sub2'}},
       ]
     };
 
@@ -108,12 +109,11 @@
       // if we don't have a prevNode that means it came from toolbar, which today is the only nested case (else check for some node.el.getAttribute or some custom field...)
       if (prevNode) return;
 
-      // clear the content and make it a subgrid
+      // clear the content then make it a subgrid
       n.el.querySelector('.grid-stack-item-content').innerHTML = '';
-
-      // let nodeToAdd = { subGridOpts: {children: [{content: 'nest 1'}, {content: 'nest 2'}], ...subOptions }} TODO that is correct info ?
-      let nodeToAdd = { ...subOptions, subGridOpts: subOptions, children: [{content: 'nest 1'}, {content: 'nest 2'}]}
+      let nodeToAdd = { children: [{content: 'nest 1'}, {content: 'nest 2'}]};
       let subgrid = n.grid.makeSubGrid(n.el, nodeToAdd, undefined, false);
+      
       // add a listener to the subgrid to allow widgets to be added into this newly created nested widget
       subgrid.on('dropped', droppedHandler);
     }
