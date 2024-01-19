@@ -31,6 +31,7 @@ export class GridStackEngine {
   public addedNodes: GridStackNode[] = [];
   public removedNodes: GridStackNode[] = [];
   public batchMode: boolean;
+  public defaultColumn = 12;
   /** @internal callback to update the DOM attributes */
   protected onChange: OnChangeCB;
   /** @internal */
@@ -49,7 +50,7 @@ export class GridStackEngine {
   public static _idSeq = 0;
 
   public constructor(opts: GridStackEngineOptions = {}) {
-    this.column = opts.column || 12;
+    this.column = opts.column || this.defaultColumn;
     this.maxRow = opts.maxRow;
     this._float = opts.float;
     this.nodes = opts.nodes || [];
@@ -403,12 +404,12 @@ export class GridStackEngine {
     // remember it's position & width so we can restore back (1 -> 12 column) #1655 #1985
     // IFF we're not in the middle of column resizing!
     const saveOrig = (node.x || 0) + (node.w || 1) > this.column;
-    if (saveOrig && this.column < 12 && !this._inColumnResize && node._id && this.findCacheLayout(node, 12) === -1) {
+    if (saveOrig && this.column < this.defaultColumn && !this._inColumnResize && node._id && this.findCacheLayout(node, this.defaultColumn) === -1) {
       const copy = {...node}; // need _id + positions
       if (copy.autoPosition || copy.x === undefined) { delete copy.x; delete copy.y; }
-      else copy.x = Math.min(11, copy.x);
-      copy.w = Math.min(12, copy.w || 1);
-      this.cacheOneLayout(copy, 12);
+      else copy.x = Math.min(this.defaultColumn - 1, copy.x);
+      copy.w = Math.min(this.defaultColumn, copy.w || 1);
+      this.cacheOneLayout(copy, this.defaultColumn);
     }
 
     if (node.w > this.column) {

@@ -371,6 +371,53 @@ describe('gridstack engine', function() {
     });
   });
   
+  describe('test columnChanged and save', function() {
+    beforeAll(function() {
+    });
+    it('wont\'t break layouts with 12 columns', function() {
+      engine = new GridStackEngine({ column: 12 });
+      // Add two side-by-side components 6+6 = 12 columns
+      engine.addNode({ x: 0, y: 0, w: 6, h: 1, id: "left" });
+      engine.addNode({ x: 6, y: 0, w: 6, h: 1, id: "right" });
+      engine.save().forEach(node => engine.nodeBoundFix(findNode(engine, node.id!)!));
+      expect(findNode(engine, "left")).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
+      expect(findNode(engine, "right")).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
+      // Resize to 1 column
+      engine.column = 1;
+      engine.columnChanged(12, 1);
+      engine.save().forEach(node => engine.nodeBoundFix(findNode(engine, node.id!)!));
+      expect(findNode(engine, "left")).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
+      expect(findNode(engine, "right")).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
+      // Resize back to 12 column
+      engine.column = 12;
+      engine.columnChanged(1, 12);
+      engine.save().forEach(node => engine.nodeBoundFix(findNode(engine, node.id!)!));
+      expect(findNode(engine, "left")).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
+      expect(findNode(engine, "right")).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
+    });
+    it('wont\'t break layouts with more than 12 columns', function() {
+      engine = new GridStackEngine({ column: 24 });
+      // Add two side-by-side components 12+12 = 24 columns
+      engine.addNode({ x: 0, y: 0, w: 12, h: 1, id: "left" });
+      engine.addNode({ x: 12, y: 0, w: 12, h: 1, id: "right" });
+      engine.save().forEach(node => engine.nodeBoundFix(findNode(engine, node.id!)!));
+      expect(findNode(engine, "left")).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
+      expect(findNode(engine, "right")).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
+      // Resize to 1 column
+      engine.column = 1;
+      engine.columnChanged(24, 1);
+      engine.save().forEach(node => engine.nodeBoundFix(findNode(engine, node.id!)!));
+      expect(findNode(engine, "left")).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
+      expect(findNode(engine, "right")).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
+      // Resize back to 24 column
+      engine.column = 24;
+      engine.columnChanged(1, 24);
+      engine.save().forEach(node => engine.nodeBoundFix(findNode(engine, node.id!)!));
+      expect(findNode(engine, "left")).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
+      expect(findNode(engine, "right")).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
+    });
+  });
+
   describe('test compact', function() {
     beforeAll(function() {
       engine = new GridStackEngine();
