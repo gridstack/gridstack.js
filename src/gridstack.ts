@@ -94,9 +94,7 @@ export class GridStack {
    * let grid = document.querySelector('.grid-stack').gridstack;
    */
   public static init(options: GridStackOptions = {}, elOrString: GridStackElement = '.grid-stack'): GridStack {
-    if(typeof document === 'undefined') {
-      return null
-    }
+    if (typeof document === 'undefined') return null; // temp workaround SSR
     let el = GridStack.getGridElement(elOrString);
     if (!el) {
       if (typeof elOrString === 'string') {
@@ -124,9 +122,7 @@ export class GridStack {
    */
   public static initAll(options: GridStackOptions = {}, selector = '.grid-stack'): GridStack[] {
     let grids: GridStack[] = [];
-    if(typeof document === 'undefined') {
-      return grids
-    }
+    if (typeof document === 'undefined') return grids; // temp workaround SSR
     GridStack.getGridElements(selector).forEach(el => {
       if (!el.gridstack) {
         el.gridstack = new GridStack(el, Utils.cloneDeep(options));

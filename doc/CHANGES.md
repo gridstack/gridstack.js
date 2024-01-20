@@ -112,6 +112,7 @@ Change log
 * fix: [#2577](https://github.com/gridstack/gridstack.js/issues/2577) ui-resizable-s/-n style fix
 * fix: [#2576](https://github.com/gridstack/gridstack.js/issues/2576) column('none') now ignores layouts
 * fix: [#2560](https://github.com/gridstack/gridstack.js/issues/2560) nested grid fix (enter can call leave which can call enter again) - Thank you [v1talii-dev](https://github.com/v1talii-dev)
+* fix: [#2596](https://github.com/gridstack/gridstack.js/pull/2596) prevent SSR crash
 * doc: nested.htm now has nested create and drag&drop example - Thank you [fredericrous](https://github.com/fredericrous)
 
 ## 10.0.1 (2023-12-10)
