@@ -10,6 +10,13 @@ export interface HeightData {
   unit: string;
 }
 
+export interface DragTransform {
+  xScale: number;
+  yScale: number;
+  xOffset: number;
+  yOffset: number;
+}
+
 /** checks for obsolete method names */
 // eslint-disable-next-line
 export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
@@ -552,6 +559,33 @@ export class Utils {
       e.target      // relatedTarget
     );
     (target || e.target).dispatchEvent(simulatedEvent);
+  }
+
+  /**
+   * defines an element that is used to get the offset and scale from grid transforms
+   * returns the scale and offsets from said element
+  */
+  public static getValuesFromTransformedElement(parent: HTMLElement): DragTransform {
+    const transformReference = document.createElement('div');
+    Utils.addElStyles(transformReference, {
+      opacity: '0',
+      position: 'fixed',
+      top: 0 + 'px',
+      left: 0 + 'px',
+      width: '1px',
+      height: '1px',
+      zIndex: '-999999',
+    });
+    parent.appendChild(transformReference);
+    const transformValues = transformReference.getBoundingClientRect();
+    parent.removeChild(transformReference);
+    transformReference.remove();
+    return {
+      xScale: 1 / transformValues.width,
+      yScale: 1 / transformValues.height,
+      xOffset: transformValues.left,
+      yOffset: transformValues.top,
+    }
   }
 
   /** returns true if event is inside the given element rectangle */

@@ -226,22 +226,10 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.parentOriginStylePosition = this.el.parentElement.style.position;
 
     const parent = this.el.parentElement;
-    const testEl = document.createElement('div');
-    Utils.addElStyles(testEl, {
-      opacity: '0',
-      position: 'fixed',
-      top: 0 + 'px',
-      left: 0 + 'px',
-      width: '1px',
-      height: '1px',
-      zIndex: '-999999',
-    });
-    parent.appendChild(testEl);
-    const testElPosition = testEl.getBoundingClientRect();
-    parent.removeChild(testEl);
+    const dragTransform = Utils.getValuesFromTransformedElement(parent);
     this.rectScale = {
-      x: 1 / testElPosition.width,
-      y: 1 / testElPosition.height
+      x: dragTransform.xScale,
+      y: dragTransform.yScale
     };
 
     if (getComputedStyle(this.el.parentElement).position.match(/static/)) {

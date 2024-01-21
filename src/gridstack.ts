@@ -6,7 +6,7 @@
  * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
  */
 import { GridStackEngine } from './gridstack-engine';
-import { Utils, HeightData, obsolete } from './utils';
+import { Utils, HeightData, obsolete, DragTransform } from './utils';
 import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
   dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler } from './types';
@@ -261,6 +261,8 @@ export class GridStack {
   protected _extraDragRow = 0;
   /** @internal true if nested grid should get column count from our width */
   protected _autoColumn?: boolean;
+  /** @internal meant to store the scale of the active grid */
+  protected dragTransform: DragTransform = { xScale: 1, yScale: 1, xOffset: 0, yOffset: 0 };
   private _skipInitialResize: boolean;
 
   /**
@@ -2046,11 +2048,29 @@ export class GridStack {
       if (!node) return;
 
       helper = helper || el;
+
+      // if the element is being dragged from outside, scale it down to match the grid's scale
+      // and slightly adjust its position relative to the mouse
+      if (!node.grid?.el) {
+        // this scales the helper down
+        helper.style.transform = `scale(${1 / this.dragTransform.xScale},${1 / this.dragTransform.yScale})`;
+        // this makes it so that the helper is well positioned relative to the mouse after scaling
+        const helperRect = helper.getBoundingClientRect();
+        helper.style.left = helperRect.x + (this.dragTransform.xScale - 1) * (event.clientX - helperRect.x) / this.dragTransform.xScale + 'px';
+        helper.style.top = helperRect.y + (this.dragTransform.yScale - 1) * (event.clientY - helperRect.y) / this.dragTransform.yScale + 'px';
+        helper.style.transformOrigin = `0px 0px`
+      }
+
       let parent = this.el.getBoundingClientRect();
       let {top, left} = helper.getBoundingClientRect();
       left -= parent.left;
       top -= parent.top;
-      let ui: DDUIData = {position: {top, left}};
+      let ui: DDUIData = {
+        position: {
+          top: top * this.dragTransform.xScale,
+          left: left * this.dragTransform.yScale
+        }
+      };
 
       if (node._temporaryRemoved) {
         node.x = Math.max(0, Math.round(left / cellWidth));
@@ -2406,6 +2426,27 @@ export class GridStack {
     this.el.appendChild(this.placeholder);
     // console.log('_onStartMoving placeholder') // TEST
 
+    // if the element is inside a grid, it has already been scaled
+    // we can use that as a scale reference
+    if (node.grid?.el) {
+      this.dragTransform = Utils.getValuesFromTransformedElement(el);
+    }
+    // if the element is being dragged from outside (not from any grid)
+    // we use the grid as the transformation reference, since the helper is not subject to transformation
+    else if (this.placeholder && this.placeholder.closest('.grid-stack')) {
+      const gridEl = this.placeholder.closest('.grid-stack') as HTMLElement;
+      this.dragTransform = Utils.getValuesFromTransformedElement(gridEl);
+    }
+    // Fallback
+    else {
+      this.dragTransform = {
+        xScale: 1,
+        xOffset: 0,
+        yScale: 1,
+        yOffset: 0,
+      }
+    }
+
     node.el = this.placeholder;
     node._lastUiPosition = ui.position;
     node._prevYPix = ui.position.top;
@@ -2526,6 +2567,9 @@ export class GridStack {
     let node = el.gridstackNode;
     if (!node) return;
 
+    helper = helper || el;
+    // restore the scale of the helper on leave
+    helper.style.transform = 'scale(1)';
     dd.off(el, 'drag'); // no need to track while being outside
 
     // this gets called when cursor leaves and shape is outside, so only do this once

@@ -4,7 +4,7 @@
  */
 
 import { DDManager } from './dd-manager';
-import { Utils } from './utils';
+import { DragTransform, Utils } from './utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { GridItemHTMLElement, DDUIData } from './types';
 import { DDElementHost } from './dd-element';
@@ -33,11 +33,6 @@ interface DragOffset {
   offsetTop: number;
 }
 
-interface DragScaleReciprocal {
-  x: number;
-  y: number;
-}
-
 type DDDragEvent = 'drag' | 'dragstart' | 'dragstop';
 
 // make sure we are not clicking on known object that handles mouseDown
@@ -55,8 +50,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected dragOffset: DragOffset;
   /** @internal */
-  protected dragScale: DragScaleReciprocal = { x: 1, y: 1 };
-  /** @internal */
   protected dragElementOriginStyle: Array<string>;
   /** @internal */
   protected dragEl: HTMLElement;
@@ -70,6 +63,13 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected static originStyleProp = ['transition', 'pointerEvents', 'position', 'left', 'top', 'minWidth', 'willChange'];
   /** @internal pause before we call the actual drag hit collision code */
   protected dragTimeout: number;
+  /** @internal */
+  protected dragTransform: DragTransform = {
+    xScale: 1,
+    yScale: 1,
+    xOffset: 0,
+    yOffset: 0
+  };
 
   constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
     super();
@@ -214,6 +214,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       }
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
+      this.dragTransform = Utils.getValuesFromTransformedElement(
+        this.helperContainment
+      );
       this.dragOffset = this._getDragOffset(e, this.el, this.helperContainment);
       const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
 
@@ -336,8 +339,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // }
     const style = this.helper.style;
     const offset = this.dragOffset;
-    style.left = (e.clientX + offset.offsetLeft - containmentRect.left) * this.dragScale.x + 'px';
-    style.top = (e.clientY + offset.offsetTop - containmentRect.top) * this.dragScale.y + 'px';
+    style.left = (e.clientX + offset.offsetLeft - containmentRect.left) * this.dragTransform.xScale + 'px';
+    style.top = (e.clientY + offset.offsetTop - containmentRect.top) * this.dragTransform.yScale + 'px';
   }
 
   /** @internal */
@@ -359,25 +362,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     let xformOffsetX = 0;
     let xformOffsetY = 0;
     if (parent) {
-      const testEl = document.createElement('div');
-      Utils.addElStyles(testEl, {
-        opacity: '0',
-        position: 'fixed',
-        top: 0 + 'px',
-        left: 0 + 'px',
-        width: '1px',
-        height: '1px',
-        zIndex: '-999999',
-      });
-      parent.appendChild(testEl);
-      const testElPosition = testEl.getBoundingClientRect();
-      parent.removeChild(testEl);
-      xformOffsetX = testElPosition.left;
-      xformOffsetY = testElPosition.top;
-      this.dragScale = {
-        x: 1 / testElPosition.width,
-        y: 1 / testElPosition.height
-      };
+      xformOffsetX = this.dragTransform.xOffset;
+      xformOffsetY = this.dragTransform.yOffset;
     }
 
     const targetOffset = el.getBoundingClientRect();
@@ -386,8 +372,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       top: targetOffset.top,
       offsetLeft: - event.clientX + targetOffset.left - xformOffsetX,
       offsetTop: - event.clientY + targetOffset.top - xformOffsetY,
-      width: targetOffset.width * this.dragScale.x,
-      height: targetOffset.height * this.dragScale.y
+      width: targetOffset.width * this.dragTransform.xScale,
+      height: targetOffset.height * this.dragTransform.yScale
     };
   }
 
@@ -398,8 +384,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const offset = this.helper.getBoundingClientRect();
     return {
       position: { //Current CSS position of the helper as { top, left } object
-        top: (offset.top - containmentRect.top) * this.dragScale.y,
-        left: (offset.left - containmentRect.left) * this.dragScale.x
+        top: (offset.top - containmentRect.top) * this.dragTransform.yScale,
+        left: (offset.left - containmentRect.left) * this.dragTransform.xScale
       }
       /* not used by GridStack for now...
       helper: [this.helper], //The object arr representing the helper that's being dragged.
