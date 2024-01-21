@@ -109,11 +109,12 @@ Change log
 
 ## 10.0.1-dev (TBD)
 * feat: [#2574](https://github.com/gridstack/gridstack.js/pull/2574) Allow cell height in cm and mm units
+* feat: [#2578](https://github.com/gridstack/gridstack.js/pull/2578) allow different scaling between drag toolbar and grid
 * fix: [#2577](https://github.com/gridstack/gridstack.js/issues/2577) ui-resizable-s/-n style fix
 * fix: [#2576](https://github.com/gridstack/gridstack.js/issues/2576) column('none') now ignores layouts
 * fix: [#2560](https://github.com/gridstack/gridstack.js/issues/2560) nested grid fix (enter can call leave which can call enter again) - Thank you [v1talii-dev](https://github.com/v1talii-dev)
 * fix: [#2596](https://github.com/gridstack/gridstack.js/pull/2596) prevent SSR crash
-* doc: nested.htm now has nested create and drag&drop example - Thank you [fredericrous](https://github.com/fredericrous)
+* demo: nested.htm now has nested create and drag&drop example - Thank you [fredericrous](https://github.com/fredericrous)
 
 ## 10.0.1 (2023-12-10)
 * fix: [#2552](https://github.com/gridstack/gridstack.js/issues/2552) DOM init doesn't sizeToContent
