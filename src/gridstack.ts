@@ -1162,11 +1162,10 @@ export class GridStack {
   }
 
   /**
-   * unsubscribe from the 'on' event below
-   * @param name of the event (see possible values)
+   * unsubscribe from the 'on' event GridStackEvent
+   * @param name of the event (see possible values) or list of names space separated
    */
-  public off(name: GridStackEvent): GridStack
-  public off(name: string): GridStack {
+  public off(name: GridStackEvent | string): GridStack {
     // check for array of names being passed instead
     if (name.indexOf(' ') !== -1) {
       let names = name.split(' ') as GridStackEvent[];
