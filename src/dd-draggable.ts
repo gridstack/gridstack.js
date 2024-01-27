@@ -158,7 +158,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     delete DDManager.dragElement;
     delete DDManager.dropElement;
     // document handler so we can continue receiving moves as the item is 'fixed' position, and capture=true so WE get a first crack
-    document.addEventListener('mousemove', this._mouseMove, true); // true=capture, not bubble
+    document.addEventListener('mousemove', this._mouseMove, { capture: true, passive: true}); // true=capture, not bubble
     document.addEventListener('mouseup', this._mouseUp, true);
     if (isTouch) {
       this.dragEl.addEventListener('touchmove', touchmove);
@@ -226,7 +226,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       }
       this.triggerEvent('dragstart', ev);
     }
-    e.preventDefault(); // needed otherwise we get text sweep text selection as we drag around
+    // e.preventDefault(); // passive = true. OLD: was needed otherwise we get text sweep text selection as we drag around
     return true;
   }
 
