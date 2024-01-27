@@ -74,7 +74,7 @@ export class DDResizableHandle {
   /** @internal called on mouse down on us: capture move on the entire document (mouse might not stay on us) until we release the mouse */
   protected _mouseDown(e: MouseEvent): void {
     this.mouseDownEvent = e;
-    document.addEventListener('mousemove', this._mouseMove, true); // capture, not bubble
+    document.addEventListener('mousemove', this._mouseMove, { capture: true, passive: true}); // capture, not bubble
     document.addEventListener('mouseup', this._mouseUp, true);
     if (isTouch) {
       this.el.addEventListener('touchmove', touchmove);
@@ -96,7 +96,7 @@ export class DDResizableHandle {
       this._triggerEvent('move', e);
     }
     e.stopPropagation();
-    e.preventDefault();
+    // e.preventDefault(); passive = true
   }
 
   /** @internal */
