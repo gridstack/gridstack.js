@@ -2251,7 +2251,11 @@ export class GridStack {
             el = el.cloneNode(true) as GridItemHTMLElement;
           }
         } else {
-          el.remove(); // reduce flicker as we change depth here, and size further down
+          if (this.opts.disableRemoveNodeOnDrop) {
+            el.style.display = 'none';
+          } else {
+            el.remove();  // reduce flicker as we change depth here, and size further down
+          }
           this._removeDD(el);
         }
         if (!wasAdded) return false;
@@ -2261,8 +2265,9 @@ export class GridStack {
         // @ts-ignore
         Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
         Utils.removePositioningStyles(el);// @ts-ignore
-        this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
-        this._prepareElement(el, true, node);
+        if (!this.opts.disableRemoveNodeOnDrop) {
+          this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
+        }        this._prepareElement(el, true, node);
         if (subGrid) {
           subGrid.parentGridItem = node;
           if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
