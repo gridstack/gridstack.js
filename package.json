@@ -1,29 +1,20 @@
 {
-  "name": "gridstack",
+  "name": "@homarr/gridstack",
   "version": "10.0.1-dev",
   "license": "MIT",
   "author": "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)",
   "contributors": [
     "Pavel Reznikov <pashka.reznikov@gmail.com>",
-    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)"
+    "Dylan Weiss <dylan.weiss@gmail.com> (https://dylandreams.com)",
+    "Meierschlumpf <meierschlumpf@gmail.com>"
   ],
   "description": "TypeScript/JS lib for dashboard layout and creation, responsive, mobile support, no external dependencies, with many wrappers (React, Angular, Vue, Ember, knockout...)",
   "main": "./dist/gridstack.js",
   "types": "./dist/gridstack.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gridstack/gridstack.js.git"
+    "url": "git+https://github.com/homarr-labs/gridstack.js.git"
   },
-  "funding": [
-    {
-      "type": "paypal",
-      "url": "https://www.paypal.me/alaind831"
-    },
-    {
-      "type": "venmo",
-      "url": "https://www.venmo.com/adumesny"
-    }
-  ],
   "scripts": {
     "build": "yarn --no-progress && yarn build:ng && grunt && yarn build:es6 && yarn build:es5 && yarn doc",
     "build:es6": "webpack && tsc --stripInternal",
@@ -54,9 +45,9 @@
     "JavaScript"
   ],
   "bugs": {
-    "url": "https://github.com/gridstack/gridstack.js/issues"
+    "url": "https://github.com/homarr-labs/gridstack.js/issues"
   },
-  "homepage": "http://gridstackjs.com/",
+  "homepage": "https://homarr.dev/",
   "dependencies": {},
   "devDependencies": {
     "@types/jasmine": "^4.3.1",
