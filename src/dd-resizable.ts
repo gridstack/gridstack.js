@@ -6,7 +6,7 @@
 import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
-import { DDUIData, Rect, Size } from './types';
+import { DDUIData, GridItemHTMLElement, Rect, Size } from './types';
 import { DDManager } from './dd-manager';
 
 // import { GridItemHTMLElement } from './types'; let count = 0; // TEST
@@ -32,7 +32,7 @@ interface RectScaleReciprocal {
 export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt<DDResizableOpt> {
 
   // have to be public else complains for HTMLElementExtendOpt ?
-  public el: HTMLElement;
+  public el: GridItemHTMLElement;
   public option: DDResizableOpt;
 
   /** @internal */
@@ -57,6 +57,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected parentOriginStylePosition: string;
   /** @internal */
   protected static _originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
+  /** @internal */
+  protected sizeToContent: boolean;
 
   constructor(el: HTMLElement, opts: DDResizableOpt = {}) {
     super();
@@ -152,11 +154,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _setupHandlers(): DDResizable {
-    let handlerDirection = this.option.handles || 'e,s,se';
-    if (handlerDirection === 'all') {
-      handlerDirection = 'n,e,s,w,se,sw,ne,nw';
-    }
-    this.handlers = handlerDirection.split(',')
+    this.handlers = this.option.handles.split(',')
       .map(dir => dir.trim())
       .map(dir => new DDResizableHandle(this.el, dir, {
         start: (event: MouseEvent) => {
@@ -174,6 +172,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _resizeStart(event: MouseEvent): DDResizable {
+    this.sizeToContent = Utils.shouldSizeToContent(this.el.gridstackNode);
     this.originalRect = this.el.getBoundingClientRect();
     this.scrollEl = Utils.getScrollElement(this.el);
     this.scrollY = this.scrollEl.scrollTop;
@@ -260,7 +259,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     };
 
     const offsetX = event.clientX - oEvent.clientX;
-    const offsetY = event.clientY - oEvent.clientY;
+    const offsetY = this.sizeToContent ? 0 : event.clientY - oEvent.clientY; // prevent vert resize
 
     if (dir.indexOf('e') > -1) {
       newRect.width += offsetX;
