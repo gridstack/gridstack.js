@@ -23,13 +23,9 @@ export interface DDDroppableOpt {
 export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt<DDDroppableOpt> {
 
   public accept: (el: HTMLElement) => boolean;
-  public el: HTMLElement;
-  public option: DDDroppableOpt;
 
-  constructor(el: HTMLElement, opts: DDDroppableOpt = {}) {
+  constructor(public el: HTMLElement, public option: DDDroppableOpt = {}) {
     super();
-    this.el = el;
-    this.option = opts;
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseEnter = this._mouseEnter.bind(this);
     this._mouseLeave = this._mouseLeave.bind(this);

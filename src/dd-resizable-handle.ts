@@ -14,12 +14,6 @@ export interface DDResizableHandleOpt {
 export class DDResizableHandle {
   /** @internal */
   protected el: HTMLElement;
-  /** @internal */
-  protected host: HTMLElement;
-  /** @internal */
-  protected option: DDResizableHandleOpt;
-  /** @internal */
-  protected dir: string;
   /** @internal true after we've moved enough pixels to start a resize */
   protected moving = false;
   /** @internal */
@@ -27,10 +21,7 @@ export class DDResizableHandle {
   /** @internal */
   protected static prefix = 'ui-resizable-';
 
-  constructor(host: HTMLElement, direction: string, option: DDResizableHandleOpt) {
-    this.host = host;
-    this.dir = direction;
-    this.option = option;
+  constructor(protected host: HTMLElement, protected dir: string, protected option: DDResizableHandleOpt) {
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
@@ -41,12 +32,11 @@ export class DDResizableHandle {
 
   /** @internal */
   protected _init(): DDResizableHandle {
-    const el = document.createElement('div');
+    const el = this.el = document.createElement('div');
     el.classList.add('ui-resizable-handle');
     el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
     el.style.zIndex = '100';
     el.style.userSelect = 'none';
-    this.el = el;
     this.host.appendChild(this.el);
     this.el.addEventListener('mousedown', this._mouseDown);
     if (isTouch) {
