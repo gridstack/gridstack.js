@@ -207,14 +207,8 @@ export class GridStack {
   /** scoping so users can call new GridStack.Engine(12) for example */
   public static Engine = GridStackEngine;
 
-  /** the HTML element tied to this grid after it's been initialized */
-  public el: GridHTMLElement;
-
   /** engine used to implement non DOM grid functionality */
   public engine: GridStackEngine;
-
-  /** grid options - public for classes to access, but use methods to modify! */
-  public opts: GridStackOptions;
 
   /** point to a parent grid item if we're nested (inside a grid-item in between 2 Grids) */
   public parentGridItem?: GridStackNode;
@@ -267,12 +261,11 @@ export class GridStack {
 
   /**
    * Construct a grid item from the given element and options
-   * @param el
-   * @param opts
+   * @param el the HTML element tied to this grid after it's been initialized
+   * @param opts grid options - public for classes to access, but use methods to modify!
    */
-  public constructor(el: GridHTMLElement, opts: GridStackOptions = {}) {
+  public constructor(public el: GridHTMLElement, public opts: GridStackOptions = {}) {
     el.gridstack = this;
-    this.el = el; // exposed HTML element to the user
     opts = opts || {}; // handles null/undefined/0
 
     if (!el.classList.contains('grid-stack')) {
@@ -344,18 +337,17 @@ export class GridStack {
       defaults.animate = Utils.toBool(el.getAttribute('gs-animate'))
     }
 
-    this.opts = Utils.defaults(opts, defaults);
-    opts = null; // make sure we use this.opts instead
+    opts = Utils.defaults(opts, defaults);
     this._initMargin(); // part of settings defaults...
 
     // Now check if we're loading into 1 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
     this.checkDynamicColumn();
-    this.el.classList.add('gs-' + this.opts.column);
+    this.el.classList.add('gs-' + opts.column);
 
-    if (this.opts.rtl === 'auto') {
-      this.opts.rtl = (el.style.direction === 'rtl');
+    if (opts.rtl === 'auto') {
+      opts.rtl = (el.style.direction === 'rtl');
     }
-    if (this.opts.rtl) {
+    if (opts.rtl) {
       this.el.classList.add('grid-stack-rtl');
     }
 
@@ -369,22 +361,22 @@ export class GridStack {
       parentGridItem.el.classList.add('grid-stack-sub-grid');
     }
 
-    this._isAutoCellHeight = (this.opts.cellHeight === 'auto');
-    if (this._isAutoCellHeight || this.opts.cellHeight === 'initial') {
+    this._isAutoCellHeight = (opts.cellHeight === 'auto');
+    if (this._isAutoCellHeight || opts.cellHeight === 'initial') {
       // make the cell content square initially (will use resize/column event to keep it square)
       this.cellHeight(undefined, false);
     } else {
       // append unit if any are set
-      if (typeof this.opts.cellHeight == 'number' && this.opts.cellHeightUnit && this.opts.cellHeightUnit !== gridDefaults.cellHeightUnit) {
-        this.opts.cellHeight = this.opts.cellHeight + this.opts.cellHeightUnit;
-        delete this.opts.cellHeightUnit;
+      if (typeof opts.cellHeight == 'number' && opts.cellHeightUnit && opts.cellHeightUnit !== gridDefaults.cellHeightUnit) {
+        opts.cellHeight = opts.cellHeight + opts.cellHeightUnit;
+        delete opts.cellHeightUnit;
       }
-      this.cellHeight(this.opts.cellHeight, false);
+      this.cellHeight(opts.cellHeight, false);
     }
 
     // see if we need to adjust auto-hide
-    if (this.opts.alwaysShowResizeHandle === 'mobile') {
-      this.opts.alwaysShowResizeHandle = isTouch;
+    if (opts.alwaysShowResizeHandle === 'mobile') {
+      opts.alwaysShowResizeHandle = isTouch;
     }
 
     this._styleSheetClass = 'gs-id-' + GridStackEngine._idSeq++;
@@ -392,11 +384,11 @@ export class GridStack {
 
     this._setStaticClass();
 
-    let engineClass = this.opts.engineClass || GridStack.engineClass || GridStackEngine;
+    let engineClass = opts.engineClass || GridStack.engineClass || GridStackEngine;
     this.engine = new engineClass({
       column: this.getColumn(),
-      float: this.opts.float,
-      maxRow: this.opts.maxRow,
+      float: opts.float,
+      maxRow: opts.maxRow,
       onChange: (cbNodes) => {
         let maxH = 0;
         this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
@@ -417,25 +409,25 @@ export class GridStack {
     // create initial global styles BEFORE loading children so resizeToContent margin can be calculated correctly
     this._updateStyles(false, 0);
 
-    if (this.opts.auto) {
+    if (opts.auto) {
       this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
       this.getGridItems().forEach(el => this._prepareElement(el));
       this.batchUpdate(false);
     }
 
     // load any passed in children as well, which overrides any DOM layout done above
-    if (this.opts.children) {
-      let children = this.opts.children;
-      delete this.opts.children;
+    if (opts.children) {
+      let children = opts.children;
+      delete opts.children;
       if (children.length) this.load(children); // don't load empty
     }
 
     // if (this.engine.nodes.length) this._updateStyles(); // update based on # of children. done in engine onChange CB
-    this.setAnimation(this.opts.animate);
+    this.setAnimation(opts.animate);
 
     // dynamic grids require pausing during drag to detect over to nest vs push
-    if (this.opts.subGridDynamic && !DDManager.pauseDrag) DDManager.pauseDrag = true;
-    if (this.opts.draggable?.pause !== undefined) DDManager.pauseDrag = this.opts.draggable.pause;
+    if (opts.subGridDynamic && !DDManager.pauseDrag) DDManager.pauseDrag = true;
+    if (opts.draggable?.pause !== undefined) DDManager.pauseDrag = opts.draggable.pause;
 
     this._setupRemoveDrop();
     this._setupAcceptWidget();

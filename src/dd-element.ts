@@ -19,14 +19,11 @@ export class DDElement {
     return el.ddElement;
   }
 
-  public el: DDElementHost;
   public ddDraggable?: DDDraggable;
   public ddDroppable?: DDDroppable;
   public ddResizable?: DDResizable;
 
-  constructor(el: DDElementHost) {
-    this.el = el;
-  }
+  constructor(public el: DDElementHost) {}
 
   public on(eventName: string, callback: (event: MouseEvent) => void): DDElement {
     if (this.ddDraggable && ['drag', 'dragstart', 'dragstop'].indexOf(eventName) > -1) {

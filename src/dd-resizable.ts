@@ -30,11 +30,6 @@ interface RectScaleReciprocal {
 }
 
 export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt<DDResizableOpt> {
-
-  // have to be public else complains for HTMLElementExtendOpt ?
-  public el: GridItemHTMLElement;
-  public option: DDResizableOpt;
-
   /** @internal */
   protected handlers: DDResizableHandle[];
   /** @internal */
@@ -60,10 +55,9 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected sizeToContent: boolean;
 
-  constructor(el: HTMLElement, opts: DDResizableOpt = {}) {
+  // have to be public else complains for HTMLElementExtendOpt ?
+  constructor(public el: GridItemHTMLElement, public option: DDResizableOpt = {}) {
     super();
-    this.el = el;
-    this.option = opts;
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseOver = this._mouseOver.bind(this);
     this._mouseOut = this._mouseOut.bind(this);

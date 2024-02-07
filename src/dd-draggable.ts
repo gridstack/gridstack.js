@@ -41,8 +41,6 @@ const skipMouseDown = 'input,textarea,button,select,option,[contenteditable="tru
 // let count = 0; // TEST
 
 export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt<DDDraggableOpt> {
-  public el: HTMLElement;
-  public option: DDDraggableOpt;
   public helper: HTMLElement; // used by GridStackDDNative
 
   /** @internal */
@@ -71,10 +69,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     yOffset: 0
   };
 
-  constructor(el: HTMLElement, option: DDDraggableOpt = {}) {
+  constructor(public el: HTMLElement, public option: DDDraggableOpt = {}) {
     super();
-    this.el = el;
-    this.option = option;
 
     // get the element that is actually supposed to be dragged by
     let handleName = option.handle.substring(1);
