@@ -7,9 +7,11 @@
  */
 import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete, DragTransform } from './utils';
-import { gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
+import {
+  gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler } from './types';
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler
+} from './types';
 
 /*
  * and include D&D by default
@@ -99,7 +101,7 @@ export class GridStack {
     if (!el) {
       if (typeof elOrString === 'string') {
         console.error('GridStack.initAll() no grid was found with selector "' + elOrString + '" - element missing or wrong selector ?' +
-        '\nNote: ".grid-stack" is required for proper CSS styling and drag/drop, and is the default selector.');
+          '\nNote: ".grid-stack" is required for proper CSS styling and drag/drop, and is the default selector.');
       } else {
         console.error('GridStack.init() no grid element was passed.');
       }
@@ -131,7 +133,7 @@ export class GridStack {
     });
     if (grids.length === 0) {
       console.error('GridStack.initAll() no grid was found with selector "' + selector + '" - element missing or wrong selector ?' +
-      '\nNote: ".grid-stack" is required for proper CSS styling and drag/drop, and is the default selector.');
+        '\nNote: ".grid-stack" is required for proper CSS styling and drag/drop, and is the default selector.');
     }
     return grids;
   }
@@ -150,7 +152,7 @@ export class GridStack {
     if (el.gridstack) {
       // already a grid - set option and load data
       const grid = el.gridstack;
-      if (opt) grid.opts = {...grid.opts, ...opt};
+      if (opt) grid.opts = { ...grid.opts, ...opt };
       if (opt.children !== undefined) grid.load(opt.children);
       return grid;
     }
@@ -302,8 +304,8 @@ export class GridStack {
       bk = opts.columnOpts.breakpoints = opts.columnOpts.breakpoints || [];
       let oneColumn = bk.find(b => b.c === 1);
       if (!oneColumn) {
-        oneColumn = {c: 1, w: oneSize};
-        bk.push(oneColumn, {c: 12, w: oneSize+1});
+        oneColumn = { c: 1, w: oneSize };
+        bk.push(oneColumn, { c: 12, w: oneSize + 1 });
       } else oneColumn.w = oneSize;
     }
     //...end LEGACY
@@ -317,10 +319,11 @@ export class GridStack {
         resp.columnMax = resp.columnMax || 12;
       }
     }
-    if (bk?.length > 1) bk.sort((a,b) => (b.w || 0) - (a.w || 0));
+    if (bk?.length > 1) bk.sort((a, b) => (b.w || 0) - (a.w || 0));
 
     // elements DOM attributes override any passed options (like CSS style) - merge the two together
-    let defaults: GridStackOptions = {...Utils.cloneDeep(gridDefaults),
+    let defaults: GridStackOptions = {
+      ...Utils.cloneDeep(gridDefaults),
       column: Utils.toNumber(el.getAttribute('gs-column')) || gridDefaults.column,
       minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-min-row')) || gridDefaults.minRow,
       maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-max-row')) || gridDefaults.maxRow,
@@ -526,7 +529,7 @@ export class GridStack {
       grid = grid.parentGridItem?.grid;
     }
     //... and set the create options
-    ops = Utils.cloneDeep({...(subGridTemplate || {}), children: undefined, ...(ops || node.subGridOpts || {})});
+    ops = Utils.cloneDeep({ ...(subGridTemplate || {}), children: undefined, ...(ops || node.subGridOpts || {}) });
     node.subGridOpts = ops;
 
     // if column special case it set, remember that flag and set default
@@ -543,7 +546,7 @@ export class GridStack {
     let newItemOpt: GridStackNode;
     if (saveContent) {
       this._removeDD(node.el); // remove D&D since it's set on content div
-      newItemOpt = {...node, x:0, y:0};
+      newItemOpt = { ...node, x: 0, y: 0 };
       Utils.removeInternalForSave(newItemOpt);
       delete newItemOpt.subGridOpts;
       if (node.content) {
@@ -570,8 +573,8 @@ export class GridStack {
       let h = node.h + nodeToAdd.h;
       let style = node.el.style;
       style.transition = 'none'; // show up instantly so we don't see scrollbar with nodeToAdd
-      this.update(node.el, {w, h});
-      setTimeout(() =>  style.transition = null); // recover animation
+      this.update(node.el, { w, h });
+      setTimeout(() => style.transition = null); // recover animation
     }
 
     let subGrid = node.subGrid = GridStack.addGrid(content, ops);
@@ -645,7 +648,7 @@ export class GridStack {
         // check for nested grid
         if (n.subGrid?.el) {
           const listOrOpt = n.subGrid.save(saveContent, saveGridOpt, saveCB);
-          n.subGridOpts = (saveGridOpt ? listOrOpt : {children: listOrOpt}) as GridStackOptions;
+          n.subGridOpts = (saveGridOpt ? listOrOpt : { children: listOrOpt }) as GridStackOptions;
           delete n.subGrid;
         }
       }
@@ -710,7 +713,7 @@ export class GridStack {
 
     // if given a different callback, temporally set it as global option so creating will use it
     const prevCB = GridStack.addRemoveCB;
-    if (typeof(addRemove) === 'function') GridStack.addRemoveCB = addRemove as AddRemoveFcn;
+    if (typeof (addRemove) === 'function') GridStack.addRemoveCB = addRemove as AddRemoveFcn;
 
     let removed: GridStackNode[] = [];
     this.batchUpdate();
@@ -757,7 +760,7 @@ export class GridStack {
         // add back to current list BUT force a collision check if it 'appears' we didn't change to make sure we don't overlap others now
         this.engine.nodes.push(item);
         if (Utils.samePos(item, w)) {
-          this.moveNode(item, {...w, forceCollide: true});
+          this.moveNode(item, { ...w, forceCollide: true });
         }
 
         this.update(item.el, w);
@@ -805,7 +808,7 @@ export class GridStack {
    */
   public getCellHeight(forcePixel = false): number {
     if (this.opts.cellHeight && this.opts.cellHeight !== 'auto' &&
-       (!forcePixel || !this.opts.cellHeightUnit || this.opts.cellHeightUnit === 'px')) {
+      (!forcePixel || !this.opts.cellHeightUnit || this.opts.cellHeightUnit === 'px')) {
       return this.opts.cellHeight as number;
     }
     // do rem/em/cm/mm to px conversion
@@ -1033,12 +1036,12 @@ export class GridStack {
   public getCellFromPixel(position: MousePosition, useDocRelative = false): CellPosition {
     let box = this.el.getBoundingClientRect();
     // console.log(`getBoundingClientRect left: ${box.left} top: ${box.top} w: ${box.w} h: ${box.h}`)
-    let containerPos: {top: number, left: number};
+    let containerPos: { top: number, left: number };
     if (useDocRelative) {
-      containerPos = {top: box.top + document.documentElement.scrollTop, left: box.left};
+      containerPos = { top: box.top + document.documentElement.scrollTop, left: box.left };
       // console.log(`getCellFromPixel scrollTop: ${document.documentElement.scrollTop}`)
     } else {
-      containerPos = {top: this.el.offsetTop, left: this.el.offsetLeft}
+      containerPos = { top: this.el.offsetTop, left: this.el.offsetLeft }
       // console.log(`getCellFromPixel offsetTop: ${containerPos.left} offsetLeft: ${containerPos.top}`)
     }
     let relativeLeft = position.left - containerPos.left;
@@ -1047,7 +1050,7 @@ export class GridStack {
     let columnWidth = (box.width / this.getColumn());
     let rowHeight = (box.height / parseInt(this.el.getAttribute('gs-current-row')));
 
-    return {x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight)};
+    return { x: Math.floor(relativeLeft / columnWidth), y: Math.floor(relativeTop / rowHeight) };
   }
 
   /** returns the current number of rows, which will be at least `minRow` if set */
@@ -1247,7 +1250,7 @@ export class GridStack {
     return this;
   }
   /** @internal */
-  private hasAnimationCSS(): boolean { return this.el.classList.contains('grid-stack-animate')  }
+  private hasAnimationCSS(): boolean { return this.el.classList.contains('grid-stack-animate') }
 
   /**
    * Toggle the grid static state, which permanently removes/add Drag&Drop support, unlike disable()/enable() that just turns it off/on.
@@ -1281,7 +1284,7 @@ export class GridStack {
       console.warn('gridstack.ts: `update(el, x, y, w, h)` is deprecated. Use `update(el, {x, w, content, ...})`. It will be removed soon');
       // eslint-disable-next-line prefer-rest-params
       let a = arguments, i = 1;
-      opt = { x:a[i++], y:a[i++], w:a[i++], h:a[i++] };
+      opt = { x: a[i++], y: a[i++], w: a[i++], h: a[i++] };
       return this.update(els, opt);
     }
 
@@ -1406,7 +1409,7 @@ export class GridStack {
     else if (n.maxH && h > n.maxH) h = n.maxH;
     if (h !== n.h) {
       grid._ignoreLayoutsNodeChange = true;
-      grid.moveNode(n, {h});
+      grid.moveNode(n, { h });
       delete grid._ignoreLayoutsNodeChange;
     }
   }
@@ -1459,7 +1462,7 @@ export class GridStack {
       console.warn('gridstack.ts: `willItFit(x,y,w,h,autoPosition)` is deprecated. Use `willItFit({x, y,...})`. It will be removed soon');
       // eslint-disable-next-line prefer-rest-params
       let a = arguments, i = 0,
-        w: GridStackWidget = { x:a[i++], y:a[i++], w:a[i++], h:a[i++], autoPosition:a[i++] };
+        w: GridStackWidget = { x: a[i++], y: a[i++], w: a[i++], h: a[i++], autoPosition: a[i++] };
       return this.willItFit(w);
     }
     return this.engine.willItFit(node);
@@ -1488,8 +1491,9 @@ export class GridStack {
       }
       // prevent added nodes from also triggering 'change' event (which is called next)
       this.engine.addedNodes.forEach(n => { delete n._dirty; });
-      this._triggerEvent('added', this.engine.addedNodes);
+      const addedNodes = [...this.engine.addedNodes];
       this.engine.addedNodes = [];
+      this._triggerEvent('added', addedNodes);
     }
     return this;
   }
@@ -1498,15 +1502,16 @@ export class GridStack {
   public _triggerRemoveEvent(): GridStack {
     if (this.engine.batchMode) return this;
     if (this.engine.removedNodes?.length) {
-      this._triggerEvent('removed', this.engine.removedNodes);
+      const removedNodes = [...this.engine.removedNodes];
       this.engine.removedNodes = [];
+      this._triggerEvent('removed', removedNodes);
     }
     return this;
   }
 
   /** @internal */
   protected _triggerEvent(type: string, data?: GridStackNode[]): GridStack {
-    let event = data ? new CustomEvent(type, {bubbles: false, detail: data}) : new Event(type);
+    let event = data ? new CustomEvent(type, { bubbles: false, detail: data }) : new Event(type);
     this.el.dispatchEvent(event);
     return this;
   }
@@ -1579,7 +1584,7 @@ export class GridStack {
       let getHeight = (rows: number): string => (cellHeight * rows) + cellHeightUnit;
       for (let i = this._styles._max + 1; i <= maxH; i++) { // start at 1
         Utils.addCSSRule(this._styles, `${prefix}[gs-y="${i}"]`, `top: ${getHeight(i)}`);
-        Utils.addCSSRule(this._styles, `${prefix}[gs-h="${i+1}"]`, `height: ${getHeight(i+1)}`); // start at 2
+        Utils.addCSSRule(this._styles, `${prefix}[gs-h="${i + 1}"]`, `height: ${getHeight(i + 1)}`); // start at 2
       }
       this._styles._max = maxH;
     }
@@ -1910,7 +1915,7 @@ export class GridStack {
       DDManager.pauseDrag = dragInOptions.pause;
     }
 
-    dragInOptions = {...dragInDefaultOptions, ...(dragInOptions || {})};
+    dragInOptions = { ...dragInDefaultOptions, ...(dragInOptions || {}) };
     let els: HTMLElement[] = (typeof dragIn === 'string') ? Utils.getElements(dragIn, root) : dragIn;
     if (els.length) els?.forEach(el => {
       if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
@@ -2053,7 +2058,7 @@ export class GridStack {
       }
 
       let parent = this.el.getBoundingClientRect();
-      let {top, left} = helper.getBoundingClientRect();
+      let { top, left } = helper.getBoundingClientRect();
       left -= parent.left;
       top -= parent.top;
       let ui: DDUIData = {
@@ -2107,27 +2112,27 @@ export class GridStack {
         }
         // finally check to make sure we actually have space left #1571
         if (canAccept && node && this.opts.maxRow) {
-          let n = {w: node.w, h: node.h, minW: node.minW, minH: node.minH}; // only width/height matters and autoPosition
+          let n = { w: node.w, h: node.h, minW: node.minW, minH: node.minH }; // only width/height matters and autoPosition
           canAccept = this.engine.willItFit(n);
         }
         return canAccept;
       }
     })
-    /**
-     * entering our grid area
-     */
+      /**
+       * entering our grid area
+       */
       .on(this.el, 'dropover', (event: Event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
-      // console.log(`over ${this.el.gridstack.opts.id} ${count++}`); // TEST
+        // console.log(`over ${this.el.gridstack.opts.id} ${count++}`); // TEST
         let node = el.gridstackNode;
         // ignore drop enter on ourself (unless we temporarily removed) which happens on a simple drag of our item
         if (node?.grid === this && !node._temporaryRemoved) {
-        // delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
+          // delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
           return false; // prevent parent from receiving msg (which may be a grid as well)
         }
 
         // fix #1578 when dragging fast, we may not get a leave on the previous grid so force one now
         if (node?.grid && node.grid !== this && !node._temporaryRemoved) {
-        // console.log('dropover without leave'); // TEST
+          // console.log('dropover without leave'); // TEST
           let otherGrid = node.grid;
           otherGrid._leave(el, helper);
         }
@@ -2152,18 +2157,18 @@ export class GridStack {
 
         // if the item came from another grid, make a copy and save the original info in case we go back there
         if (node.grid && node.grid !== this) {
-        // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
-        // console.log('dropover cloning node'); // TEST
+          // copy the node original values (min/max/id/etc...) but override width/height/other flags which are this grid specific
+          // console.log('dropover cloning node'); // TEST
           if (!el._gridstackNodeOrig) el._gridstackNodeOrig = node; // shouldn't have multiple nested!
-          el.gridstackNode = node = {...node, w, h, grid: this};
+          el.gridstackNode = node = { ...node, w, h, grid: this };
           delete node.x;
           delete node.y;
           this.engine.cleanupNode(node)
             .nodeBoundFix(node);
           // restore some internal fields we need after clearing them all
           node._initDD =
-          node._isExternal =  // DOM needs to be re-parented on a drop
-          node._temporaryRemoved = true; // so it can be inserted onDrag below
+            node._isExternal =  // DOM needs to be re-parented on a drop
+            node._temporaryRemoved = true; // so it can be inserted onDrag below
         } else {
           node.w = w; node.h = h;
           node._temporaryRemoved = true; // so we can insert it
@@ -2177,11 +2182,11 @@ export class GridStack {
         onDrag(event as DragEvent, el, helper);
         return false; // prevent parent from receiving msg (which may be a grid as well)
       })
-    /**
-     * Leaving our grid area...
-     */
+      /**
+       * Leaving our grid area...
+       */
       .on(this.el, 'dropout', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
-      // console.log(`out ${this.el.gridstack.opts.id} ${count++}`); // TEST
+        // console.log(`out ${this.el.gridstack.opts.id} ${count++}`); // TEST
         let node = el.gridstackNode;
         if (!node) return false;
         // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)
@@ -2195,9 +2200,9 @@ export class GridStack {
         }
         return false; // prevent parent from receiving msg (which may be grid as well)
       })
-    /**
-     * end - releasing the mouse
-     */
+      /**
+       * end - releasing the mouse
+       */
       .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
         let node = el.gridstackNode;
         // ignore drop on ourself from ourself that didn't come from the outside - dragend will handle the simple move instead
@@ -2266,7 +2271,7 @@ export class GridStack {
 
         this.engine.endUpdate();
         if (this._gsEventHandler['dropped']) {
-          this._gsEventHandler['dropped']({...event, type: 'dropped'}, origNode && origNode.grid ? origNode : undefined, node);
+          this._gsEventHandler['dropped']({ ...event, type: 'dropped' }, origNode && origNode.grid ? origNode : undefined, node);
         }
 
         // delay adding animation back
@@ -2296,7 +2301,7 @@ export class GridStack {
       if (!dd.isDroppable(trashEl)) {
         dd.droppable(trashEl, this.opts.removableOptions)
           .on(trashEl, 'dropover', (event, el) => this._itemRemoving(el, true))
-          .on(trashEl, 'dropout',  (event, el) => this._itemRemoving(el, false));
+          .on(trashEl, 'dropout', (event, el) => this._itemRemoving(el, false));
       }
     }
     return this;
@@ -2462,7 +2467,7 @@ export class GridStack {
 
   /** @internal handles actual drag/resize */
   protected _dragOrResize(el: GridItemHTMLElement, event: MouseEvent, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void {
-    let p = {...node._orig}; // could be undefined (_isExternal) which is ok (drag only set x,y and w,h will default to node value)
+    let p = { ...node._orig }; // could be undefined (_isExternal) which is ok (drag only set x,y and w,h will default to node value)
     let resizing: boolean;
     let mLeft = this.opts.marginLeft as number,
       mRight = this.opts.marginRight as number,
@@ -2486,8 +2491,8 @@ export class GridStack {
       }
 
       // get new position taking into account the margin in the direction we are moving! (need to pass mid point by margin)
-      let left = ui.position.left + (ui.position.left > node._lastUiPosition.left  ? -mRight : mLeft);
-      let top = ui.position.top + (ui.position.top > node._lastUiPosition.top  ? -mBottom : mTop);
+      let left = ui.position.left + (ui.position.left > node._lastUiPosition.left ? -mRight : mLeft);
+      let top = ui.position.top + (ui.position.top > node._lastUiPosition.top ? -mBottom : mTop);
       p.x = Math.round(left / cellWidth);
       p.y = Math.round(top / cellHeight);
 
@@ -2506,7 +2511,7 @@ export class GridStack {
       if (node.x === p.x && node.y === p.y) return; // skip same
       // DON'T skip one we tried as we might have failed because of coverage <50% before
       // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
-    } else if (event.type === 'resize')  {
+    } else if (event.type === 'resize') {
       if (p.x < 0) return;
       // Scrolling page if needed
       Utils.updateScrollResize(event, el, cellHeight);
@@ -2534,7 +2539,7 @@ export class GridStack {
       w: (ui.size ? ui.size.width : node.w * cellWidth) - mLeft - mRight,
       h: (ui.size ? ui.size.height : node.h * cellHeight) - mTop - mBottom
     };
-    if (this.engine.moveNodeCheck(node, {...p, cellWidth, cellHeight, rect, resizing})) {
+    if (this.engine.moveNodeCheck(node, { ...p, cellWidth, cellHeight, rect, resizing })) {
       node._lastUiPosition = ui.position;
       this.engine.cacheRects(cellWidth, cellHeight, mTop, mRight, mBottom, mLeft);
       delete node._skipDown;
