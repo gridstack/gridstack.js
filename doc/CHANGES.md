@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [10.1.1 (2024-03-03)](#1011-2024-03-03)
 - [10.1.0 (2024-02-04)](#1010-2024-02-04)
 - [10.0.1 (2023-12-10)](#1001-2023-12-10)
 - [10.0.0 (2023-11-20)](#1000-2023-11-20)
@@ -106,6 +107,8 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## 10.1.1 (2024-03-03)
+* fix: [#2620](https://github.com/gridstack/gridstack.js/pull/2620) allow resizing with sizeToContent:NUMBER is uses 
 
 ## 10.1.0 (2024-02-04)
 * feat: [#2574](https://github.com/gridstack/gridstack.js/pull/2574) Allow cell height in cm and mm units
