@@ -46,7 +46,7 @@ export class DDGridStack {
         if (handles === 'all') handles = 'n,e,s,w,se,sw,ne,nw';
         // NOTE: keep the resize handles as e,w don't have enough space (10px) to show resize corners anyway. limit during drag instead
         // restrict vertical resize if height is done to match content anyway... odd to have it spring back
-        // if (Utils.shouldSizeToContent(n)) {
+        // if (Utils.shouldSizeToContent(n, true)) {
         //   const doE = handles.indexOf('e') !== -1;
         //   const doW = handles.indexOf('w') !== -1;
         //   handles = doE ? (doW ? 'e,w' : 'e') : (doW ? 'w' : '');
