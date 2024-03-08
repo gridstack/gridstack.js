@@ -1201,7 +1201,7 @@ export class GridStack {
       }
       if (!node) return;
 
-      if (GridStack.addRemoveCB) {
+      if (removeDOM && GridStack.addRemoveCB) {
         GridStack.addRemoveCB(this.el, node, false, false);
       }
 
@@ -1225,15 +1225,19 @@ export class GridStack {
   /**
    * Removes all widgets from the grid.
    * @param removeDOM if `false` DOM elements won't be removed from the tree (Default? `true`).
+   * @param triggerEvent if `false` (quiet mode) element will not be added to removed list and no 'removed' callbacks will be called (Default? true).
    */
-  public removeAll(removeDOM = true): GridStack {
+  public removeAll(removeDOM = true, triggerEvent = true): GridStack {
     // always remove our DOM data (circular link) before list gets emptied and drag&drop permanently
     this.engine.nodes.forEach(n => {
+      if (removeDOM && GridStack.addRemoveCB) {
+        GridStack.addRemoveCB(this.el, n, false, false);
+      }
       delete n.el.gridstackNode;
       this._removeDD(n.el);
     });
-    this.engine.removeAll(removeDOM);
-    this._triggerRemoveEvent();
+    this.engine.removeAll(removeDOM, triggerEvent);
+    if (triggerEvent) this._triggerRemoveEvent();
     return this;
   }
 

@@ -203,7 +203,7 @@ export class AppComponent implements OnInit {
   }
   public clearGrid() {
     if (!this.gridComp) return;
-    this.gridComp.grid?.removeAll(true);
+    this.gridComp.grid?.removeAll();
   }
   public saveGrid() {
     this.serializedData = this.gridComp?.grid?.save(false, true) as GridStackOptions || ''; // no content, full options
