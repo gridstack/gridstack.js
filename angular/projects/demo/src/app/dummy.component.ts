@@ -15,16 +15,15 @@ import { BaseWidget, NgCompInputs } from 'gridstack/dist/angular';
 export class AComponent extends BaseWidget implements OnDestroy {
   @Input() text: string = 'foo'; // test custom input data
   public override serialize(): NgCompInputs | undefined  { return this.text ? {text: this.text} : undefined; }
-  ngOnDestroy() {
-    console.log('Comp A destroyed'); // test to make sure cleanup happens
-  }
+  ngOnDestroy() { console.log('Comp A destroyed'); } // test to make sure cleanup happens
 }
 
 @Component({
   selector: 'app-b',
   template: 'Comp B',
 })
-export class BComponent extends BaseWidget {
+export class BComponent extends BaseWidget implements OnDestroy {
+  ngOnDestroy() { console.log('Comp B destroyed'); }
 }
 
 @Component({

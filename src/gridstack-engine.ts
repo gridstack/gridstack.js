@@ -554,13 +554,14 @@ export class GridStackEngine {
     return this;
   }
 
-  public removeAll(removeDOM = true): GridStackEngine {
+  public removeAll(removeDOM = true, triggerEvent = true): GridStackEngine {
     delete this._layouts;
     if (!this.nodes.length) return this;
     removeDOM && this.nodes.forEach(n => n._removeDOM = true); // let CB remove actual HTML (used to set _id to null, but then we loose layout info)
-    this.removedNodes = this.nodes;
+    const removedNodes = this.nodes;
+    this.removedNodes = triggerEvent ? removedNodes : [];
     this.nodes = [];
-    return this._notify(this.removedNodes);
+    return this._notify(removedNodes);
   }
 
   /** checks if item can be moved (layout constrain) vs moveNode(), returning true if was able to move.
