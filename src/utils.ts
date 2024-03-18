@@ -146,14 +146,15 @@ export class Utils {
    * Sorts array of nodes
    * @param nodes array to sort
    * @param dir 1 for asc, -1 for desc (optional)
-   * @param width width of the grid. If undefined the width will be calculated automatically (optional).
+   * @param column number of columns in the grid. If undefined columns will be calculated automatically (optional).
    **/
   static sort(nodes: GridStackNode[], dir: 1 | -1 = 1, column?: number): GridStackNode[] {
     column = column || nodes.reduce((col, n) => Math.max(n.x + n.w, col), 0) || 12;
-    if (dir === -1)
-      return nodes.sort((a, b) => ((b.x ?? 1000) + (b.y ?? 1000) * column)-((a.x ?? 1000) + (a.y ?? 1000) * column));
-    else
-      return nodes.sort((b, a) => ((b.x ?? 1000) + (b.y ?? 1000) * column)-((a.x ?? 1000) + (a.y ?? 1000) * column));
+    return nodes.sort((a, b) => {
+      let diffY = dir * (a.y - b.y);
+      if (diffY === 0) return dir * column * (a.x - b.x);
+      return diffY;
+    });
   }
 
   /** find an item by id */
