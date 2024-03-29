@@ -299,8 +299,8 @@ export class GridStackEngine {
   public get float(): boolean { return this._float || false; }
 
   /** sort the nodes array from first to last, or reverse. Called during collision/placement to force an order */
-  public sortNodes(dir: 1 | -1 = 1, column = this.column): GridStackEngine {
-    this.nodes = Utils.sort(this.nodes, dir, column);
+  public sortNodes(dir: 1 | -1 = 1): GridStackEngine {
+    this.nodes = Utils.sort(this.nodes, dir);
     return this;
   }
 
@@ -812,14 +812,14 @@ export class GridStackEngine {
     // simpler shortcuts layouts
     const doCompact = layout === 'compact' || layout === 'list';
     if (doCompact) {
-      this.sortNodes(1, prevColumn); // sort with original layout once and only once (new column will affect order otherwise)
+      this.sortNodes(1); // sort with original layout once and only once (new column will affect order otherwise)
     }
 
     // cache the current layout in case they want to go back (like 12 -> 1 -> 12) as it requires original data IFF we're sizing down (see below)
     if (column < prevColumn) this.cacheLayout(this.nodes, prevColumn);
     this.batchUpdate(); // do this EARLY as it will call saveInitial() so we can detect where we started for _dirty and collision
     let newNodes: GridStackNode[] = [];
-    let nodes = doCompact ? this.nodes : Utils.sort(this.nodes, -1, prevColumn); // current column reverse sorting so we can insert last to front (limit collision)
+    let nodes = doCompact ? this.nodes : Utils.sort(this.nodes, -1); // current column reverse sorting so we can insert last to front (limit collision)
 
     // see if we have cached previous layout IFF we are going up in size (restore) otherwise always
     // generate next size down from where we are (looks more natural as you gradually size down).
@@ -891,7 +891,7 @@ export class GridStackEngine {
       }
 
       // finally re-layout them in reverse order (to get correct placement)
-      newNodes = Utils.sort(newNodes, -1, column);
+      newNodes = Utils.sort(newNodes, -1);
       this._inColumnResize = true; // prevent cache update
       this.nodes = []; // pretend we have no nodes to start with (add() will use same structures) to simplify layout
       newNodes.forEach(node => {

@@ -110,6 +110,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 10.1.1-dev (TBD)
 * fix: [#2628](https://github.com/gridstack/gridstack.js/issues/2628) `removeAll()` does not trigger Angular's ngOnDestroy 
+* fix: [#2503](https://github.com/gridstack/gridstack.js/issues/2503) Drag and drop a widget on top of a locked widget - Thank you [JakubEleniuk](https://github.com/JakubEleniuk)
+* fix: [#2584](https://github.com/gridstack/gridstack.js/issues/2584) wrong sort order during 1 column resize - Thank you [JakubEleniuk](https://github.com/JakubEleniuk) again.
 
 ## 10.1.1 (2024-03-03)
 * fix: [#2620](https://github.com/gridstack/gridstack.js/pull/2620) allow resizing with sizeToContent:NUMBER is uses 
