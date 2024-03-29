@@ -66,7 +66,7 @@ gridstack.js API
   - [`update(el: GridStackElement, opts: GridStackWidget)`](#updateel-gridstackelement-opts-gridstackwidget)
   - [`willItFit(x, y, width, height, autoPosition)`](#willitfitx-y-width-height-autoposition)
 - [Utils](#utils)
-  - [`GridStack.Utils.sort(nodes[, dir[, width]])`](#gridstackutilssortnodes-dir-width)
+  - [`GridStack.Utils.sort(nodes[, dir])`](#gridstackutilssortnodes-dir)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -628,10 +628,9 @@ else {
 
 ## Utils
 
-### `GridStack.Utils.sort(nodes[, dir[, width]])`
+### `GridStack.Utils.sort(nodes[, dir])`
 
 Sorts array of nodes
 
 - `nodes` - array to sort
-- `dir` - `1` for asc, `-1` for desc (optional)
-- `width` - width of the grid. If `undefined` the width will be calculated automatically (optional).
+- `dir` - `1` for ascending, `-1` for descending (optional)

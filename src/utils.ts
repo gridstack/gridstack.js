@@ -145,14 +145,13 @@ export class Utils {
   /**
    * Sorts array of nodes
    * @param nodes array to sort
-   * @param dir 1 for asc, -1 for desc (optional)
-   * @param column number of columns in the grid. If undefined columns will be calculated automatically (optional).
+   * @param dir 1 for ascending, -1 for descending (optional)
    **/
-  static sort(nodes: GridStackNode[], dir: 1 | -1 = 1, column?: number): GridStackNode[] {
-    column = column || nodes.reduce((col, n) => Math.max(n.x + n.w, col), 0) || 12;
+  static sort(nodes: GridStackNode[], dir: 1 | -1 = 1): GridStackNode[] {
+    const und = 10000;
     return nodes.sort((a, b) => {
-      let diffY = dir * (a.y - b.y);
-      if (diffY === 0) return dir * column * (a.x - b.x);
+      let diffY = dir * ((a.y ?? und) - (b.y ?? und));
+      if (diffY === 0) return dir * ((a.x ?? und) - (b.x ?? und));
       return diffY;
     });
   }

@@ -701,7 +701,7 @@ export class GridStack {
 
     // if passed list has coordinates, use them (insert from end to beginning for conflict resolution) else keep widget order
     const haveCoord = items.some(w => w.x !== undefined || w.y !== undefined);
-    if (haveCoord) items = Utils.sort(items, -1, column);
+    if (haveCoord) items = Utils.sort(items, -1);
     this._insertNotAppend = haveCoord; // if we create in reverse order...
 
     // if we're loading a layout into for example 1 column and items don't fit, make sure to save
