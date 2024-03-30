@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>#2453 Recreated trash</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <link rel="stylesheet" href="../../../dist/gridstack-extra.css" />
+  <script src="../../../dist/gridstack-all.js"></script>
+  <style type="text/css">
+    .with-lines { border: 1px dotted #777}
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>#2453 Recreated grid trash bug</h1>
+
+    <div class="row">
+      <div class="col-md-3">
+        <div class="sidebar">
+          <!-- will size to match content -->
+          <div class="grid-stack-item">
+            <div class="grid-stack-item-content">Drag me</div>
+          </div>
+          <!-- manually force a drop size of 2x1 -->
+          <div class="grid-stack-item" gs-w="2" gs-h="1" gs-max-w="3">
+            <div class="grid-stack-item-content">2x1, max=3</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="trash" id="trash">
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px">
+      <div class="col-md-12">
+        <a onClick="recreate()" class="btn btn-primary" href="#">Destroy(false)+init()</a>
+        <div class="grid-stack" id="left_grid"></div>
+      </div>
+    </div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let items = [
+      {x: 0, y: 0, w: 2, h: 2},
+      {x: 3, y: 1, h: 2},
+      {x: 4, y: 1},
+      {x: 2, y: 3, w: 3, maxW: 3, id: 'special', content: 'has maxW=3'},
+      {x: 2, y: 5}
+    ];
+
+    let options = {
+      column: 6,
+      minRow: 1, // don't collapse when empty
+      cellHeight: 70,
+      float: true,
+      removable: '.trash', // true or drag-out delete class
+      acceptWidgets: true
+    };
+    let grid = GridStack.init(options).load(items);
+
+    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
+
+    function recreate() {
+      grid.destroy(false);
+      grid = GridStack.init(options);
+    }
+  </script>
+</body>
+</html>
