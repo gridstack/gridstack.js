@@ -794,8 +794,8 @@ export class GridStack {
     delete this._ignoreLayoutsNodeChange;
     delete this._insertNotAppend;
     prevCB ? GridStack.addRemoveCB = prevCB : delete GridStack.addRemoveCB;
-    // delay adding animation back
-    if (noAnim && this.opts.animate) setTimeout(() => this.setAnimation(this.opts.animate));
+    // delay adding animation back, but check to make sure grid (opt) is still around
+    if (noAnim && this.opts?.animate) setTimeout(() => { if (this.opts) this.setAnimation(this.opts.animate) });
     return this;
   }
 
@@ -1245,7 +1245,7 @@ export class GridStack {
         GridStack.addRemoveCB(this.el, n, false, false);
       }
       delete n.el.gridstackNode;
-      this._removeDD(n.el);
+      if (!this.opts.staticGrid) this._removeDD(n.el);
     });
     this.engine.removeAll(removeDOM, triggerEvent);
     if (triggerEvent) this._triggerRemoveEvent();
@@ -2190,7 +2190,7 @@ export class GridStack {
         }
 
         // clear any marked for complete removal (Note: don't check _isAboutToRemove as that is cleared above - just do it)
-        this._itemRemoving(node.el, false);
+        GridStack._itemRemoving(node.el, false);
 
         dd.on(el, 'drag', onDrag);
         // make sure this is called at least once when going fast #1578
@@ -2289,8 +2289,8 @@ export class GridStack {
           this._gsEventHandler['dropped']({ ...event, type: 'dropped' }, origNode && origNode.grid ? origNode : undefined, node);
         }
 
-        // delay adding animation back
-        if (noAnim) setTimeout(() => this.setAnimation(this.opts.animate));
+        // delay adding animation back, but check to make sure grid (opt) is still around
+        if (noAnim) setTimeout(() => { if (this.opts) this.setAnimation(this.opts.animate) });
 
         return false; // prevent parent from receiving msg (which may be grid as well)
       });
@@ -2298,26 +2298,26 @@ export class GridStack {
   }
 
   /** @internal mark item for removal */
-  private _itemRemoving(el: GridItemHTMLElement, remove: boolean) {
-    let node = el ? el.gridstackNode : undefined;
-    if (!node || !node.grid || el.classList.contains(this.opts.removableOptions.decline)) return;
+  private static _itemRemoving(el: GridItemHTMLElement, remove: boolean) {
+    const node = el ? el.gridstackNode : undefined;
+    if (!node?.grid || el.classList.contains(node.grid.opts.removableOptions.decline)) return;
     remove ? node._isAboutToRemove = true : delete node._isAboutToRemove;
     remove ? el.classList.add('grid-stack-item-removing') : el.classList.remove('grid-stack-item-removing');
   }
 
   /** @internal called to setup a trash drop zone if the user specifies it */
   protected _setupRemoveDrop(): GridStack {
-    if (!this.opts.staticGrid && typeof this.opts.removable === 'string') {
-      let trashEl = document.querySelector(this.opts.removable) as HTMLElement;
-      if (!trashEl) return this;
-      // only register ONE drop-over/dropout callback for the 'trash', and it will
-      // update the passed in item and parent grid because the 'trash' is a shared resource anyway,
-      // and Native DD only has 1 event CB (having a list and technically a per grid removableOptions complicates things greatly)
-      if (!dd.isDroppable(trashEl)) {
-        dd.droppable(trashEl, this.opts.removableOptions)
-          .on(trashEl, 'dropover', (event, el) => this._itemRemoving(el, true))
-          .on(trashEl, 'dropout', (event, el) => this._itemRemoving(el, false));
-      }
+    if (typeof this.opts.removable !== 'string') return this;
+    let trashEl = document.querySelector(this.opts.removable) as HTMLElement;
+    if (!trashEl) return this;
+
+    // only register ONE static drop-over/dropout callback for the 'trash', and it will
+    // update the passed in item and parent grid because the '.trash' is a shared resource anyway,
+    // and Native DD only has 1 event CB (having a list and technically a per grid removableOptions complicates things greatly)
+    if (!this.opts.staticGrid && !dd.isDroppable(trashEl)) {
+      dd.droppable(trashEl, this.opts.removableOptions)
+        .on(trashEl, 'dropover', (event, el) => GridStack._itemRemoving(el, true))
+        .on(trashEl, 'dropout', (event, el) => GridStack._itemRemoving(el, false));
     }
     return this;
   }
@@ -2592,7 +2592,7 @@ export class GridStack {
 
     if (this.opts.removable === true) { // boolean vs a class string
       // item leaving us and we are supposed to remove on leave (no need to drag onto trash) mark it so
-      this._itemRemoving(el, true);
+      GridStack._itemRemoving(el, true);
     }
 
     // finally if item originally came from another grid, but left us, restore things back to prev info
