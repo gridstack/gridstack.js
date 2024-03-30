@@ -37,6 +37,8 @@ export class AppComponent implements OnInit {
     margin: 5,
     // float: true,
     minRow: 1,
+    cellHeight: 70,
+    columnOpts: { breakpoints: [{w:768, c:1}] },
   }
   private sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a'}, {x:1, y:0, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
   public gridOptionsFull: NgGridStackOptions = {
@@ -182,7 +184,7 @@ export class AppComponent implements OnInit {
   public addNgFor() {
     // new array isn't required as Angular detects changes to content with trackBy:identify()
     // this.items = [...this.items, { x:3, y:0, w:3, content:`item ${ids}`, id:String(ids++) }];
-    this.items.push({x:3, y:0, w:2, content:`item ${ids}`, id:String(ids++)});
+    this.items.push({w:2, content:`item ${ids}`, id:String(ids++)});
   }
   public deleteNgFor() {
     this.items.pop();
