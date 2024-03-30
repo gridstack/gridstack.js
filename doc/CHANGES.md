@@ -113,6 +113,7 @@ Change log
 * fix: [#2503](https://github.com/gridstack/gridstack.js/issues/2503) Drag and drop a widget on top of a locked widget - Thank you [JakubEleniuk](https://github.com/JakubEleniuk)
 * fix: [#2584](https://github.com/gridstack/gridstack.js/issues/2584) wrong sort order during 1 column resize - Thank you [JakubEleniuk](https://github.com/JakubEleniuk) again.
 * fix: [#2639](https://github.com/gridstack/gridstack.js/issues/2639) load() with mix of new item without coordinates
+* fix: [#2633](https://github.com/gridstack/gridstack.js/issues/2633) Drop into full grid causes crash
 
 ## 10.1.1 (2024-03-03)
 * fix: [#2620](https://github.com/gridstack/gridstack.js/pull/2620) allow resizing with sizeToContent:NUMBER is uses 

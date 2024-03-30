@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>#2633 Drop into full crash</title>
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <script src="../../../dist/gridstack-all.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>#2633 Drop into full crash</h1>
+    <div class="grid-stack-item" gs-w="2" gs-h="2">
+      <div class="grid-stack-item-content">2x2</div>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    var count = 0;
+    var items = [
+      {x: 0, y: 0, w: 2, h: 2},
+      {x: 2, y: 0, w: 2, h: 2},
+      {x: 4, y: 0, w: 2, h: 2},
+      {x: 6, y: 0, w: 2, h: 2},
+      {x: 8, y: 0, w: 2, h: 2},
+      {x: 10, y: 0, w: 2, h: 2},
+    ];
+    items.forEach(w => w.content = String(count++));
+
+    var options = { // put in gridstack options here
+      float: false,
+      acceptWidgets: true,
+      maxRow: 2
+    };
+    var grid = GridStack.init(options).load(items);
+
+    GridStack.setupDragIn('.grid-stack-item', { appendTo: 'body', helper: 'clone' });
+  </script>
+</body>
+</html>

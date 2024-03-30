@@ -2113,7 +2113,7 @@ export class GridStack {
 
     dd.droppable(this.el, {
       accept: (el: GridItemHTMLElement) => {
-        let node: GridStackNode = el.gridstackNode;
+        let node: GridStackNode = el.gridstackNode || this._readAttr(el, false);
         // set accept drop to true on ourself (which we ignore) so we don't get "can't drop" icon in HTML5 mode while moving
         if (node?.grid === this) return true;
         if (!this.opts.acceptWidgets) return false;
@@ -2125,7 +2125,7 @@ export class GridStack {
           let selector = (this.opts.acceptWidgets === true ? '.grid-stack-item' : this.opts.acceptWidgets as string);
           canAccept = el.matches(selector);
         }
-        // finally check to make sure we actually have space left #1571
+        // finally check to make sure we actually have space left #1571 #2633
         if (canAccept && node && this.opts.maxRow) {
           let n = { w: node.w, h: node.h, minW: node.minW, minH: node.minH }; // only width/height matters and autoPosition
           canAccept = this.engine.willItFit(n);
