@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>#2639 load() fix</title>
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <script src="../../../dist/gridstack-all.js"></script>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>#2639 load() fix with mix of missing coordinates.</h1>
+    <div>
+      <button onClick="addNewWidget()">Add widget using .addWidget()</button>
+      <button onClick="loadNewWidget()">Add widget using .load()</button>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+    <textarea readonly rows="20" id="text" style="width: 100%;"></textarea>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    saveGrid = function() {
+      items = grid.save();
+      document.querySelector('#text').innerHTML = JSON.stringify(items, ' ', 2)
+    }
+
+    var count = 0;
+    var items = [
+      {x: 0, y: 0, w: 2, h: 2},
+      {x: 2, y: 0, w: 8, h: 2},
+      {x: 0, y: 2, w: 6, h: 2},
+      {x: 6, y: 2, w: 3, h: 2},
+      {x: 9, y: 2, w: 3, h: 2},
+      {x: 0, y: 4, w: 5, h: 3},
+    ].map(w => ({
+      ...w,
+      id: String(count),
+      content: String(count++)
+    }));
+
+    var options = { // put in gridstack options here
+      float: false,
+      cellHeight: 70,
+    };
+    var grid = GridStack.init(options).load(items);
+    grid.on('change added', saveGrid);
+    saveGrid();
+
+    createNode = function (str) {
+      return {
+        id: String(count),
+        w: 3,
+        h: 3,
+        content: `${count++} ${str}`,
+      };
+    }
+
+    // Gets placed in the next hortizontal open slot
+    addNewWidget = function () {
+      grid.addWidget(createNode('added'));
+      return false;
+    };
+
+    // Gets placed at the bottom of a grid
+    loadNewWidget = function () {
+      items.push(createNode('loaded'));
+      grid.load(items);
+      return false;
+    }
+  </script>
+</body>
+</html>

@@ -112,6 +112,7 @@ Change log
 * fix: [#2628](https://github.com/gridstack/gridstack.js/issues/2628) `removeAll()` does not trigger Angular's ngOnDestroy 
 * fix: [#2503](https://github.com/gridstack/gridstack.js/issues/2503) Drag and drop a widget on top of a locked widget - Thank you [JakubEleniuk](https://github.com/JakubEleniuk)
 * fix: [#2584](https://github.com/gridstack/gridstack.js/issues/2584) wrong sort order during 1 column resize - Thank you [JakubEleniuk](https://github.com/JakubEleniuk) again.
+* fix: [#2639](https://github.com/gridstack/gridstack.js/issues/2639) load() with mix of new item without coordinates
 
 ## 10.1.1 (2024-03-03)
 * fix: [#2620](https://github.com/gridstack/gridstack.js/pull/2620) allow resizing with sizeToContent:NUMBER is uses 

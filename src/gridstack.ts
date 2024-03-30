@@ -699,6 +699,12 @@ export class GridStack {
     items = Utils.cloneDeep(items); // so we can mod
     const column = this.getColumn();
 
+    // if we have a mix of new items without coordinates and existing items, separate them out so they can be added after #2639
+    let addAfter = items.filter(n => (n.x === undefined || n.y === undefined) && !Utils.find(this.engine.nodes, n.id));
+    if (addAfter.length && addAfter.length !== items.length) {
+      items = items.filter(n => !Utils.find(addAfter, n.id));
+    } else addAfter = [];
+
     // if passed list has coordinates, use them (insert from end to beginning for conflict resolution) else keep widget order
     const haveCoord = items.some(w => w.x !== undefined || w.y !== undefined);
     if (haveCoord) items = Utils.sort(items, -1);
@@ -775,6 +781,11 @@ export class GridStack {
         this.addWidget(w);
       }
     });
+
+    // finally append any separate ones that didn't have explicit coordinates last so they can find next empty spot
+    if (addRemove) {
+      addAfter.forEach(w => this.addWidget(w))
+    }
 
     this.engine.removedNodes = removed;
     this.batchUpdate(false);
