@@ -6,3 +6,8 @@ gridstack@10.1.1:
   version "10.1.1"
   resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-10.1.1.tgz#2aa8f9ce0825230ec22b4f440ead8ea9548ed8ac"
   integrity sha512-pUd+5Bz8KJr/O4JrjKjGoVHAPOB4G+aW3xOM8xK7FZj6msEsbELcAxKFCwm3irjjd4zglE1jdaEPp7b2TObg9w==
+
+prettier@3.2.5:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-3.2.5.tgz#e52bc3090586e824964a8813b09aba6233b28368"
+  integrity sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==

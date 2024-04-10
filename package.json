@@ -7,7 +7,8 @@
     "url": "git+https://github.com/gridstack/gridstack.js.git"
   },
   "scripts": {
-    "reset": "rm -rf dist node_modules coverage && yarn"
+    "reset": "rm -rf dist node_modules coverage && yarn",
+    "format-fix": "prettier ./index.html --write"
   },
   "license": "see GridStack root license",
   "bugs": {
@@ -17,5 +18,7 @@
   "dependencies": {
     "gridstack": "10.1.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "3.2.5"
+  }
 }
