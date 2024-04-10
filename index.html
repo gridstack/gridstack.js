@@ -182,17 +182,14 @@
 
       .grid-stack-item {
         border-radius: 8px;
-        
       }
       .grid-stack-item-content {
         background-color: white;
         border-radius: 8px;
         text-align: center;
       }
-      
-      /* End grid style */
 
-      
+      /* End grid style */
 
       .card {
         background: none;
@@ -218,7 +215,9 @@
   </head>
 
   <body class="font-lexend bg-gray-50">
-    <nav class="flex items-center justify-between fixed w-full top-0 px-4 backdrop-blur-md bg-white/40 shadow-2xl border-b rounded-b-lg z-50 border-white shadow-white h-16">
+    <nav
+      class="flex items-center justify-between fixed w-full top-0 px-4 backdrop-blur-md bg-white/40 shadow-2xl border-b rounded-b-lg z-50 border-white shadow-white h-16"
+    >
       <!-- logo -->
       <a href="#" class="text-2xl font-bold text-gray-700">Gridstack.js</a>
 
@@ -249,48 +248,46 @@
         <li>
           <a
             href="#demo"
-            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400 "
+            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400"
             >Demo</a
           >
         </li>
         <li>
           <a
             href="#getStarted"
-            class="py-2 px-4 transition-all whitespace-nowrap  hover:scale-105 text-gray-700 hover:text-blue-400 "
+            class="py-2 px-4 transition-all whitespace-nowrap hover:scale-105 text-gray-700 hover:text-blue-400"
             >Getting Started</a
           >
         </li>
         <li>
           <a
             href="https://github.com/gridstack/gridstack.js/blob/develop/README.md"
-              target="_blank"
-
-            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400 "
+            target="_blank"
+            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400"
             >Docs</a
           >
         </li>
         <li>
           <a
             href="demo/index.html"
-            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400 "
+            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400"
             >Examples</a
           >
         </li>
         <li>
           <a
             href="https://github.com/gridstack/gridstack.js/blob/develop/doc/CHANGES.md"
-              target="_blank"
+            target="_blank"
             >Changes</a
           >
         </li>
         <li>
           <a
-            class="py-2 px-4 whitespace-nowrap transition-all hover:scale-105 text-gray-700 hover:text-blue-400 "
-              
-              target="_blank"
-              href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
-              >Slack <ion-icon name="logo-slack"></ion-icon
-            ></a>
+            class="py-2 px-4 whitespace-nowrap transition-all hover:scale-105 text-gray-700 hover:text-blue-400"
+            target="_blank"
+            href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
+            >Slack <ion-icon name="logo-slack"></ion-icon
+          ></a>
         </li>
         <li>
           <form id="search" class="relative rounded-md shadow-sm">
@@ -677,8 +674,9 @@
           to try !
         </p>
 
-        <div class="p-1 border bg-gradient-to-br from-gray-200 to-gray-50 rounded-lg">
-
+        <div
+          class="p-1 border bg-gradient-to-br from-gray-200 to-gray-50 rounded-lg"
+        >
           <div class="grid-stack" id="simple-grid"></div>
         </div>
       </section>
@@ -738,7 +736,8 @@
         </p>
         <h2 class="text-4xl font-medium mt-4">Advanced demo</h2>
         <p>
-          A full control example with a trash can to remove widgets and a drag in widget.
+          A full control example with a trash can to remove widgets and a drag
+          in widget.
           <br />
           <br />
           More complex examples are available to demonstrate the full power of
@@ -754,7 +753,9 @@
               name="add-circle"
               class="text-4xl fill-green-700"
             ></ion-icon>
-            <p class="text-green-700 text-center">Drag me into the dashboard!</p>
+            <p class="text-green-700 text-center">
+              Drag me into the dashboard!
+            </p>
           </div>
           <div
             id="trash"
@@ -793,7 +794,9 @@
             </div>
           </div>
         </div> -->
-        <div class="p-1 border bg-gradient-to-br from-gray-200 to-gray-50 rounded-lg mt-8">
+        <div
+          class="p-1 border bg-gradient-to-br from-gray-200 to-gray-50 rounded-lg mt-8"
+        >
           <div class="grid-stack" id="advanced-grid"></div>
         </div>
       </section>
@@ -811,9 +814,10 @@
         </p>
         <ul class="mt-8">
           <li>
-            <a href="https://www.npmjs.com/package/gridstack" target="_blank"
+            <a
+              href="https://www.npmjs.com/package/gridstack"
+              target="_blank"
               class="hover:text-blue-500"
-
               >npm downloads</a
             >
           </li>
@@ -895,75 +899,96 @@
         </p>
       </section>
     </main>
-    
-              <footer class="mt-20 border-t">
-                <div class="px-8 py-12 mx-auto md:px-12 lg:px-32 max-w-7xl">
-                  <div class="xl:grid xl:grid-cols-3 xl:gap-8">
-                    <div>
-                      <p class="text-2xl font-bold uppercase">Gridstack.JS</p>
-                      <p class="mt-2 text-sm font-medium text-gray-500 lg:w-4/5">
-                        Create beautiful draggable, resizable, responsive layouts in minutes.
-                      </p>
-                    </div>
-                    <div class="grid grid-cols-2 gap-8 mt-12 text-sm font-medium text-gray-500 lg:grid-cols-3 lg:mt-0 xl:col-span-2">
-                      <div>
-                        <h3 class="text-base text-black">Contribute</h3>
-                        <ul role="list" class="mt-4 space-y-2">
-                          <li>
-                            <a href="https://github.com/gridstack/gridstack.js" target="_blank" class="hover:text-black">
-                              GitHub
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div>
-                        <h3 class="text-base text-black">Main maintainer</h3>
-                        <ul role="list" class="mt-4 space-y-2">
-                          <li>
-                            <a href="https://github.com/adumesny" target="_blank" class="hover:text-black">
-                              @Alain Dumesny
-                            </a>
-                          </li>
-                          
-                        </ul>
-                        <h3 class="text-base text-black mt-4">Website</h3>
-                        <ul role="list" class="mt-4 space-y-2">
-                          <li>
-                            <a href="https://github.com/damien-schneider" target="_blank" class="hover:text-black">
-                              @Damien Schneider
-                            </a>
-                          </li>
-                          
-                        </ul>
-                      </div>
-                      <div class="mt-12 md:mt-0">
-                        <h3 class="text-base text-black">Join the community</h3>
-                        <ul role="list" class="mt-4 space-y-2">
-                          <li>
-                            <a href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ" target="_blank"  class="hover:text-black">
-                              Slack
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="flex flex-col pt-12 md:flex-row md:items-center md:justify-between" x-data="{ year: new Date().getFullYear() }">
-                    <span class="text-sm font-medium text-gray-500">
-                      Copywright ©2019-2020 gridstack.js is open source software maintained by
-                <a
-                aria-label="Gridstack.js team"
-                  href="https://github.com/gridstack/gridstack.js#the-team"
-                  target="_blank"
-                  class="text-blue-500 hover:text-blue-600"
-                  >the gridstack.js team</a
-                >
-                but wouldn't be possible without the help of developers
-                everywhere.
-                  </div>
-                </div>
-              </footer>
-            
+
+    <footer class="mt-20 border-t">
+      <div class="px-8 py-12 mx-auto md:px-12 lg:px-32 max-w-7xl">
+        <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+          <div>
+            <p class="text-2xl font-bold uppercase">Gridstack.JS</p>
+            <p class="mt-2 text-sm font-medium text-gray-500 lg:w-4/5">
+              Create beautiful draggable, resizable, responsive layouts in
+              minutes.
+            </p>
+          </div>
+          <div
+            class="grid grid-cols-2 gap-8 mt-12 text-sm font-medium text-gray-500 lg:grid-cols-3 lg:mt-0 xl:col-span-2"
+          >
+            <div>
+              <h3 class="text-base text-black">Contribute</h3>
+              <ul role="list" class="mt-4 space-y-2">
+                <li>
+                  <a
+                    href="https://github.com/gridstack/gridstack.js"
+                    target="_blank"
+                    class="hover:text-black"
+                  >
+                    GitHub
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-base text-black">Main maintainer</h3>
+              <ul role="list" class="mt-4 space-y-2">
+                <li>
+                  <a
+                    href="https://github.com/adumesny"
+                    target="_blank"
+                    class="hover:text-black"
+                  >
+                    @Alain Dumesny
+                  </a>
+                </li>
+              </ul>
+              <h3 class="text-base text-black mt-4">Website</h3>
+              <ul role="list" class="mt-4 space-y-2">
+                <li>
+                  <a
+                    href="https://github.com/damien-schneider"
+                    target="_blank"
+                    class="hover:text-black"
+                  >
+                    @Damien Schneider
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-12 md:mt-0">
+              <h3 class="text-base text-black">Join the community</h3>
+              <ul role="list" class="mt-4 space-y-2">
+                <li>
+                  <a
+                    href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
+                    target="_blank"
+                    class="hover:text-black"
+                  >
+                    Slack
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div
+          class="flex flex-col pt-12 md:flex-row md:items-center md:justify-between"
+        >
+          <span class="text-sm font-medium text-gray-500">
+            Copyright ©2019-2020 gridstack.js is open source software
+            maintained by
+            <a
+              aria-label="Gridstack.js team"
+              href="https://github.com/gridstack/gridstack.js#the-team"
+              target="_blank"
+              class="text-blue-500 hover:text-blue-600"
+            >
+              the gridstack.js team
+            </a>
+            but wouldn't be possible without the help of developers everywhere.
+          </span>
+        </div>
+      </div>
+    </footer>
+
     <!-- <footer>
       <section id="footer">
         <div class="row">
