@@ -216,15 +216,25 @@
 
   <body class="font-lexend bg-gray-50">
     <nav
-      class="flex items-center justify-between fixed w-full top-0 px-4 backdrop-blur-md bg-white/40 shadow-2xl border-b rounded-b-lg z-50 border-white shadow-white h-16"
+      class="fixed top-0 z-50 flex items-center justify-between w-full h-16 px-4 border-b border-white rounded-b-lg shadow-2xl backdrop-blur-md bg-white/40 shadow-white"
     >
       <!-- logo -->
-      <a href="#" class="text-2xl font-bold text-gray-700">Gridstack.js</a>
+      <a
+        href="#"
+        class="flex items-center gap-1 text-2xl font-semibold tracking-tighter text-gray-700 hover:text-[#0038FF] transition-colors"
+      >
+        <img
+          src="logos/gridstack-logo-small.png"
+          alt="gridstack.js logo"
+          class="h-10 object-fit"
+        />
+        Gridstack
+      </a>
 
       <!-- mobile menu button -->
 
       <input type="checkbox" id="menu-btn" class="hidden peer" />
-      <label for="menu-btn" class="cursor-pointer block md:hidden">
+      <label for="menu-btn" class="block cursor-pointer md:hidden">
         <svg
           class="w-6 h-6"
           fill="none"
@@ -243,19 +253,19 @@
 
       <!-- menu items -->
       <ul
-        class="absolute left-0 right-0 top-full mt-1 hidden peer-checked:flex flex-col items-center md:bg-transparent bg-white transition-all ease-out duration-300 md:static md:w-auto md:flex md:flex-row gap-4"
+        class="absolute left-0 right-0 z-50 flex flex-col items-center gap-4 py-0 overflow-hidden transition-all duration-500 ease-out bg-white md:gap-0 md:overflow-visible md:bg-transparent md:max-h-16 md:py-0 max-h-0 peer-checked:py-6 peer-checked:max-h-screen md:flex-row peer-checked:backdrop-blur-lg rounded-b-xl md:rounded-none top-full md:top-0 md:relative md:flex"
       >
-        <li>
+        <li class="hidden lg:block">
           <a
             href="#demo"
-            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400"
+            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
             >Demo</a
           >
         </li>
-        <li>
+        <li class="hidden lg:block">
           <a
             href="#getStarted"
-            class="py-2 px-4 transition-all whitespace-nowrap hover:scale-105 text-gray-700 hover:text-blue-400"
+            class="px-4 py-2 text-gray-700 transition-all whitespace-nowrap hover:scale-105 hover:text-indigo-400"
             >Getting Started</a
           >
         </li>
@@ -263,38 +273,39 @@
           <a
             href="https://github.com/gridstack/gridstack.js/blob/develop/README.md"
             target="_blank"
-            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400"
+            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
             >Docs</a
           >
         </li>
         <li>
           <a
             href="demo/index.html"
-            class="py-2 px-4 transition-all hover:scale-105 text-gray-700 hover:text-blue-400"
+            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
             >Examples</a
           >
         </li>
         <li>
           <a
             href="https://github.com/gridstack/gridstack.js/blob/develop/doc/CHANGES.md"
+            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
             target="_blank"
             >Changes</a
           >
         </li>
         <li>
           <a
-            class="py-2 px-4 whitespace-nowrap transition-all hover:scale-105 text-gray-700 hover:text-blue-400"
+            class="px-4 py-2 text-gray-700 transition-all whitespace-nowrap hover:scale-105 hover:text-indigo-400"
             target="_blank"
             href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
             >Slack <ion-icon name="logo-slack"></ion-icon
           ></a>
         </li>
         <li>
-          <form id="search" class="relative rounded-md shadow-sm">
+          <form id="search" class="relative shadow-sm">
             <input
               type="text"
               id="searchTerm"
-              class="form-control block w-full rounded-lg border-0 py-1.5 pl-4 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 transition-all sm:text-sm h-8"
+              class="form-control block w-full rounded-lg border-0 py-1.5 pl-4 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-blue-500 transition-all sm:text-sm h-8"
               placeholder="Search issues"
             />
             <div class="absolute inset-y-0 right-0 flex items-center">
@@ -303,7 +314,7 @@
                 id="send"
                 name="send"
                 type="submit"
-                class="h-full rounded-md border-0 bg-transparent py-0 pl-2 pr-4 text-gray-500 focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm"
+                class="h-full py-0 pl-2 pr-4 text-gray-500 bg-transparent border-0 rounded-md focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm"
               >
                 Search
               </button>
@@ -335,7 +346,7 @@
       </button>
 
       <div class="collapse navbar-collapse" id="navbarColor01">
-        <ul class="navbar-nav mr-auto">
+        <ul class="mr-auto navbar-nav">
           <li class="nav-item nav-item-highlight">
             <a class="nav-link" href="#demo">Demo</a>
           </li>
@@ -415,14 +426,14 @@
             >
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0" id="search">
+        <form class="my-2 form-inline my-lg-0" id="search">
           <input
             class="form-control mr-sm-2"
             type="text"
             placeholder="Search Issues"
             id="searchTerm"
           />
-          <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+          <button class="my-2 btn btn-secondary my-sm-0" type="submit">
             Search
           </button>
         </form>
@@ -433,10 +444,10 @@
     <section>
       <div class="gradient-background -z-10"></div>
 
-      <div class="text-center mt-40 mb-48 z-50">
+      <div class="z-50 pt-40 mb-48 text-center">
         <!-- Version badge -->
         <div
-          class="inline-flex gap-2 items-center px-4 h-10 bg-gradient-to-b from-gray-200/50 to-gray-50/50 text-gray-600 text-sm rounded-full border border-gray-400"
+          class="inline-flex items-center h-10 gap-2 px-4 text-sm text-gray-600 border border-gray-400 rounded-full bg-gradient-to-b from-gray-200/50 to-gray-50/50"
         >
           <!-- Zap icon -->
           <svg
@@ -457,15 +468,19 @@
           </svg>
           <p>Current version | v10.1.0</p>
         </div>
-        <h1 class="sm:text-7xl text-6xl font-semibold tracking-tighter mt-6">
+        <h1
+          class="mt-6 text-6xl font-semibold tracking-tighter text-gray-800 sm:text-7xl"
+        >
           Gridstack.js
         </h1>
+
         <p class="mt-8">Build interactive dashboards in minutes</p>
+
         <!-- Github button link -->
         <a
           href="https://github.com/gridstack/gridstack.js"
           target="_blank"
-          class="mt-8 bg-gradient-to-r transition-all text-lg from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 text-white font-semibold h-16 px-8 rounded-full inline-flex items-center gap-2 group hover:scale-95"
+          class="inline-flex items-center h-16 gap-2 px-8 mt-8 text-lg font-semibold text-white transition-all rounded-full shadow-inner bg-gradient-to-br from-indigo-400 to-indigo-600 shadow-white/25 group hover:scale-95 hover:opacity-80"
         >
           <!-- Github Icon -->
           <svg
@@ -478,7 +493,7 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-github group-hover:scale-110 transition-all"
+            class="transition-all lucide lucide-github group-hover:scale-110"
           >
             <path
               d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
@@ -487,17 +502,34 @@
           </svg>
           View on Github
         </a>
+        <p class="mx-auto mt-4 text-gray-500 sm:w-2/3 lg:w-1/3">
+          If you find this library useful, please donate via
+          <a
+            href="https://www.paypal.me/alaind831"
+            target="_blank"
+            class="text-indigo-500 transition-colors hover:text-indigo-600"
+            >PayPal</a
+          >
+          or
+          <a
+            href="https://www.venmo.com/adumesny"
+            target="_blank"
+            class="text-indigo-500 transition-colors hover:text-indigo-600"
+            >Venmo (adumesny)</a
+          >
+          and help support it!
+        </p>
       </div>
     </section>
 
-    <section class="mt-40 max-w-7xl mx-auto">
+    <section class="pt-40 mx-auto max-w-7xl">
       <p
-        class="px-4 py-1 border border-gray-700 tracking-tight font-medium inline rounded-full"
+        class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
       >
         Workflow
       </p>
-      <h2 class="text-4xl font-medium mt-4">Framework Agnostic</h2>
-      <p class="font-light mt-4">
+      <h2 class="mt-4 text-4xl font-medium">Framework Agnostic</h2>
+      <p class="mt-4 font-light">
         The framework is designed to be used with any PHP framework. It is a set
         of tools that can be used to build a custom application. The framework
         is designed to be used with any PHP framework. It is a set of tools that
@@ -506,31 +538,31 @@
       <ul class="grid grid-cols-1 gap-8 mt-8 md:grid-cols-2">
         <li class="flex items-center gap-4">
           <i
-            class="devicon-laravel-plain icon size-8 inline-flex bg-gray-100 rounded-full items-center justify-center"
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-laravel-plain icon size-8"
           ></i>
           <p class="">Vanilla JS</p>
         </li>
         <li class="flex items-center gap-4">
           <i
-            class="devicon-angularjs-plain icon size-8 inline-flex bg-gray-100 rounded-full items-center justify-center"
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-angularjs-plain icon size-8"
           ></i>
           <p class="">Angular</p>
         </li>
         <li class="flex items-center gap-4">
           <i
-            class="devicon-react-original icon size-8 inline-flex bg-gray-100 rounded-full items-center justify-center"
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-react-original icon size-8"
           ></i>
           <p class="">React</p>
         </li>
         <li class="flex items-center gap-4">
           <i
-            class="devicon-vuejs-plain icon size-8 inline-flex bg-gray-100 rounded-full items-center justify-center"
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-vuejs-plain icon size-8"
           ></i>
           <p class="">Vue</p>
         </li>
         <li class="flex items-center gap-4">
           <i
-            class="devicon-laravel-plain icon size-8 inline-flex bg-gray-100 rounded-full items-center justify-center"
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-laravel-plain icon size-8"
           ></i>
           <p class="">Laravel</p>
         </li>
@@ -539,27 +571,27 @@
         </li>
       </ul>
     </section>
-    <section class="mt-40 max-w-7xl mx-auto">
+    <section class="pt-40 mx-auto max-w-7xl">
       <p
-        class="px-4 py-1 border border-gray-700 tracking-tight font-medium inline rounded-full"
+        class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
       >
         Features
       </p>
-      <h2 class="text-4xl font-medium mt-4">Advanced features</h2>
-      <p class="font-light mt-4">
+      <h2 class="mt-4 text-4xl font-medium">Advanced features</h2>
+      <p class="mt-4 font-light">
         Gridstack.js is a modern Typescript library designed to help developers
         create beautiful draggable, resizable, responsive layouts with just a
         few lines of code.
       </p>
       <div class="grid grid-cols-1 gap-2 mt-8 md:grid-cols-2">
-        <article class="flex flex-col p-4 gap-2 bg-gray-100 rounded-xl">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
           <h5 class="text-xl font-medium">Full Mobile Support</h5>
           <p class="font-light">
             Craft responsive, mobile-friendly applications with ease.
           </p>
         </article>
 
-        <article class="flex flex-col p-4 gap-2 bg-gray-100 rounded-xl">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
           <h5 class="text-xl font-medium">Draggable & Resizable Elements</h5>
           <p class="font-light">
             Intuitive interfaces with interactive components.
@@ -568,7 +600,7 @@
           <!-- Assuming 'test' is additional content -->
         </article>
 
-        <article class="flex flex-col p-4 gap-2 bg-gray-100 rounded-xl">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
           <h5 class="text-xl font-medium">Effortless Drag-and-Drop</h5>
           <p class="font-light">
             Manage content dynamically from a sidebar for insertions and
@@ -576,21 +608,21 @@
           </p>
         </article>
 
-        <article class="flex flex-col p-4 gap-2 bg-gray-100 rounded-xl">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
           <h5 class="text-xl font-medium">Responsive, Column-Based Layouts</h5>
           <p class="font-light">
             Design adaptable and visually appealing web layouts.
           </p>
         </article>
 
-        <article class="flex flex-col p-4 gap-2 bg-gray-100 rounded-xl">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
           <h5 class="text-xl font-medium">Save and Restore Feature</h5>
           <p class="font-light">
             Easily preserve and revert to previous layouts.
           </p>
         </article>
 
-        <article class="flex flex-col p-4 gap-2 bg-gray-100 rounded-xl">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
           <h5 class="text-xl font-medium">Inter-grid Interactivity</h5>
           <p class="font-light">
             Drag items across multiple grids for sophisticated layout
@@ -598,14 +630,14 @@
           </p>
         </article>
 
-        <article class="flex flex-col p-4 gap-2 bg-gray-100 rounded-xl">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
           <h5 class="text-xl font-medium">Nested Grids</h5>
           <p class="font-light">
             Create and manipulate nested grids dynamically to any depth.
           </p>
         </article>
 
-        <article class="flex flex-col p-4 gap-2 bg-gray-100 rounded-xl">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
           <h5 class="text-xl font-medium">Extensive Framework Support</h5>
           <p class="font-light">
             Native Angular support, along with external bindings for Vue, React,
@@ -617,9 +649,9 @@
     <!-- <div class="container-fluid">
       <div class="row bg-dark" id="hero">
         <div class="col-lg-12">
-          <div class="jumbotron bg-dark text-white" style="margin-bottom: 0">
+          <div class="text-white jumbotron bg-dark" style="margin-bottom: 0">
             <h1 class="text-7xl">gridstack.js</h1>
-            <p class="lead text-center">
+            <p class="text-center lead">
               Build interactive dashboards in minutes.
             </p>
             <hr class="my-4" />
@@ -662,42 +694,42 @@
       </div>
     </div> -->
     <main role="main" class="container-fluid" style="padding: 0">
-      <section id="demo" class="mt-40 max-w-7xl mx-auto">
+      <section id="demo" class="pt-40 mx-auto max-w-7xl">
         <p
-          class="px-4 py-1 border border-gray-700 tracking-tight font-medium inline rounded-full"
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
         >
           Demonstration
         </p>
-        <h2 class="text-4xl font-medium mt-4">Basic demo</h2>
-        <p class="font-light my-4">
+        <h2 class="mt-4 text-4xl font-medium">Basic demo</h2>
+        <p class="my-4 font-light">
           Simple to use, configure, and customize. Drag and drop the items below
           to try !
         </p>
 
         <div
-          class="p-1 border bg-gradient-to-br from-gray-200 to-gray-50 rounded-lg"
+          class="p-1 border rounded-lg bg-gradient-to-br from-gray-200 to-gray-50"
         >
           <div class="grid-stack" id="simple-grid"></div>
         </div>
       </section>
-      <section id="getStarted" class="mt-40 max-w-7xl mx-auto">
+      <section id="getStarted" class="pt-40 mx-auto max-w-7xl">
         <p
-          class="px-4 py-1 border border-gray-700 tracking-tight font-medium inline rounded-full"
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
         >
           Code
         </p>
-        <h2 class="text-4xl font-medium mt-4">Getting started</h2>
-        <p class="font-light my-4">
+        <h2 class="mt-4 text-4xl font-medium">Getting started</h2>
+        <p class="my-4 font-light">
           Create your first interactive grid by copy-pasting the HTML+JS, as
           seen below...
         </p>
-        <pre><code class="rounded-lg bg-gray-100 border border-gray-200">npm install gridstack</code></pre>
+        <pre><code class="bg-gray-100 border border-gray-200 rounded-lg">npm install gridstack</code></pre>
 
-        <p class="font-light my-4">
+        <p class="my-4 font-light">
           Then, in your HTML file, include the following code...
         </p>
         <pre>
-<code class="rounded-lg bg-gray-100 border border-gray-200">&lt;script src="node_modules/gridstack/dist/gridstack-all.js"&gt;&lt;/script&gt;
+<code class="bg-gray-100 border border-gray-200 rounded-lg">&lt;script src="node_modules/gridstack/dist/gridstack-all.js"&gt;&lt;/script&gt;
 &lt;link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/&gt;
 &lt;style type="text/css"&gt;
   .grid-stack { background: #FAFAD2; }
@@ -723,18 +755,19 @@
           <a
             href="https://github.com/gridstack/gridstack.js/blob/develop/README.md"
             target="_blank"
+            class="text-indigo-500 transition-colors hover:text-indigo-600"
             >GitHub</a
           >
         </p>
       </section>
 
-      <section id="advancedDemo" class="max-w-7xl mx-auto mt-40">
+      <section id="advancedDemo" class="pt-40 mx-auto max-w-7xl">
         <p
-          class="px-4 py-1 border border-gray-700 tracking-tight font-medium inline rounded-full"
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
         >
           Demonstration
         </p>
-        <h2 class="text-4xl font-medium mt-4">Advanced demo</h2>
+        <h2 class="mt-4 text-4xl font-medium">Advanced demo</h2>
         <p>
           A full control example with a trash can to remove widgets and a drag
           in widget.
@@ -747,68 +780,41 @@
         </p>
         <div class="grid grid-cols-2 gap-8 mt-8">
           <div
-            class="bg-green-100 mx-auto size-40 grid-stack-item-content grid-stack-item newWidget rounded-lg flex flex-col justify-center items-center"
+            class="flex flex-col items-center justify-center mx-auto transition-colors bg-green-100 rounded-lg cursor-pointer hover:bg-green-200 size-40 grid-stack-item-content grid-stack-item newWidget"
           >
             <ion-icon
               name="add-circle"
               class="text-4xl fill-green-700"
             ></ion-icon>
-            <p class="text-green-700 text-center">
+            <p class="text-center text-green-700">
               Drag me into the dashboard!
             </p>
           </div>
           <div
             id="trash"
-            class="bg-red-100 size-40 mx-auto rounded-lg flex flex-col justify-center items-center"
+            class="flex flex-col items-center justify-center mx-auto bg-red-100 rounded-lg size-40"
           >
             <ion-icon name="trash" class="text-4xl fill-red-700"></ion-icon>
 
-            <p class="text-red-700 text-center">Drop here to remove widget!</p>
+            <p class="text-center text-red-700">Drop here to remove widget!</p>
           </div>
         </div>
-        <!-- 
+
         <div
-          class="col-md-2 d-none d-md-block"
-          style="border-right: 1px dashed white"
-        >
-          <div
-            id="trash"
-            style="padding: 15px; margin-bottom: 15px"
-            class="text-center text-white"
-          >
-            <div>
-              <ion-icon name="trash" style="font-size: 400%"></ion-icon>
-            </div>
-            <div>
-              <span>Drop here to remove widget!</span>
-            </div>
-          </div>
-          <div class="text-center card text-white grid-stack-item newWidget">
-            <div class="card-body grid-stack-item-content">
-              <div>
-                <ion-icon name="add-circle" style="font-size: 400%"></ion-icon>
-              </div>
-              <div>
-                <span>Drag me into the dashboard!</span>
-              </div>
-            </div>
-          </div>
-        </div> -->
-        <div
-          class="p-1 border bg-gradient-to-br from-gray-200 to-gray-50 rounded-lg mt-8"
+          class="p-1 mt-8 border rounded-lg bg-gradient-to-br from-gray-200 to-gray-50"
         >
           <div class="grid-stack" id="advanced-grid"></div>
         </div>
       </section>
 
-      <section id="usedBy" class="mt-40 max-w-7xl mx-auto">
+      <section id="usedBy" class="pt-40 mx-auto max-w-7xl">
         <p
-          class="px-4 py-1 border border-gray-700 tracking-tight font-medium inline rounded-full"
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
         >
           Articles
         </p>
-        <h2 class="text-4xl font-medium mt-4">Why use gridstack.js ?</h2>
-        <p class="font-light mt-4">
+        <h2 class="mt-4 text-4xl font-medium">Why use gridstack.js ?</h2>
+        <p class="mt-4 font-light">
           Find out why developers everywhere are choosing gridstack.js for their
           projects.
         </p>
@@ -817,7 +823,7 @@
             <a
               href="https://www.npmjs.com/package/gridstack"
               target="_blank"
-              class="hover:text-blue-500"
+              class="hover:text-indigo-500"
               >npm downloads</a
             >
           </li>
@@ -825,58 +831,82 @@
             <a
               href="https://www.formget.com/jquery-layout-plugins/"
               target="_blank"
-              class="hover:text-blue-500"
+              class="hover:text-indigo-500"
               >6 Best jQuery Layout Plugins 2020</a
             >
           </li>
         </ul>
       </section>
-      <section class="max-w-7xl mx-auto mt-40">
+      <section class="pt-40 mx-auto max-w-7xl">
         <p
-          class="px-4 py-1 border border-gray-700 tracking-tight font-medium inline rounded-full"
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
         >
           Articles
         </p>
-        <h2 class="text-4xl font-medium mt-4">Used by</h2>
-        <p class="font-light mt-4">
+        <h2 class="mt-4 text-4xl font-medium">Used by</h2>
+        <p class="mt-4 font-light">
           Discover the companies and projects that trust gridstack.js for their
           applications.
         </p>
         <div
-          class="grid grid-cols-2 md:grid-cols-3 justify-items-center gap-8 lg:grid-cols-6 items-center my-8"
+          class="grid items-center grid-cols-2 gap-8 my-8 md:grid-cols-3 justify-items-center lg:grid-cols-6"
         >
-          <a href="https://vmware.com" target="_blank">
+          <a
+            href="https://vmware.com"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
             <img
               style="max-width: 100px"
               class="img-responsive"
               src="logos/VMW_09Q3_LOGO_Corp_Gray.png"
           /></a>
-          <a href="https://duckerfrontier.com" target="_blank">
+          <a
+            href="https://duckerfrontier.com"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
             <img
               style="max-width: 150px"
               class="img-responsive"
               src="logos/df-logo-transparent-bg.png"
             />
           </a>
-          <a href="https://guard.no/" target="_blank">
+          <a
+            href="https://guard.no/"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
             <img
               style="max-width: 100px"
               class="img-responsive"
               src="logos/Guard-Logo-RGB.png"
           /></a>
-          <a href="https://www.modul.day/" target="_blank">
+          <a
+            href="https://www.modul.day/"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
             <img
               style="max-width: 100px"
               class="img-responsive"
               src="logos/modul-large-logo.png"
           /></a>
-          <a href="https://nodered.org/" target="_blank">
+          <a
+            href="https://nodered.org/"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
             <img
               style="max-width: 50px"
               class="img-responsive"
               src="logos/node-red-icon.png"
           /></a>
-          <a href="https://flexitanalytics.com" target="_blank">
+          <a
+            href="https://flexitanalytics.com"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
             <img
               style="max-width: 50px"
               class="img-responsive"
@@ -884,7 +914,7 @@
           /></a>
         </div>
         <p>...and many, many others.</p>
-        <h4 class="text-2xl mt-20 mb-4">
+        <h4 class="mt-20 mb-4 text-2xl">
           Does your company use gridstack.js ?
         </h4>
         <p>
@@ -892,6 +922,7 @@
           <a
             target="_blank"
             href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
+            class="text-indigo-500 hover:text-indigo-600"
           >
             <ion-icon name="logo-slack"></ion-icon>Slack community
           </a>
@@ -940,7 +971,7 @@
                   </a>
                 </li>
               </ul>
-              <h3 class="text-base text-black mt-4">Website</h3>
+              <h3 class="mt-4 text-base text-black">Website</h3>
               <ul role="list" class="mt-4 space-y-2">
                 <li>
                   <a
@@ -979,7 +1010,7 @@
               aria-label="Gridstack.js team"
               href="https://github.com/gridstack/gridstack.js#the-team"
               target="_blank"
-              class="text-blue-500 hover:text-blue-600"
+              class="text-indigo-500 hover:text-indigo-600"
             >
               the gridstack.js team
             </a>
@@ -988,28 +1019,6 @@
         </div>
       </div>
     </footer>
-
-    <!-- <footer>
-      <section id="footer">
-        <div class="row">
-          <div class="col-lg-12 text-white">
-            <p style="margin-top: 0.5rem">
-              <small>
-                ©2019-2020 gridstack.js is open source software maintained by
-                <a
-                  href="https://github.com/gridstack/gridstack.js#the-team"
-                  target="_blank"
-                  >the gridstack.js team</a
-                >
-                but wouldn't be possible without the help of developers
-                everywhere
-              </small>
-            </p>
-          </div>
-        </div>
-      </section>
-    </footer> -->
-    <!-- /.container -->
 
     <script type="text/javascript">
       var simple = [
@@ -1021,7 +1030,7 @@
           w: 2,
           h: 2,
           content:
-            '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon>',
+            '<p class="text-center card-text" style="margin-bottom: 0">Drag me!<p class="text-center card-text"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon>',
         },
         { x: 10, y: 0, w: 2, h: 2, content: '4' },
         { x: 0, y: 2, w: 2, h: 2, content: '5' },
@@ -1053,7 +1062,7 @@
           minW: 2,
           noResize: true,
           content:
-            '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon><p class="card-text text-center" style="margin-bottom: 0">...but don\'t resize me!</p>',
+            '<p class="text-center card-text" style="margin-bottom: 0">Drag me!<p class="text-center card-text"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon><p class="text-center card-text" style="margin-bottom: 0">...but don\'t resize me!</p>',
         },
         { x: 10, y: 0, w: 2, h: 2, content: '4' },
         { x: 0, y: 2, w: 2, h: 2, content: '5' },
