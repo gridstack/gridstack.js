@@ -17,3 +17,4 @@
 - [ ] Add micro-interactions to the website
 - [ ] Add animation to mobile navbar
 - [ ] Add lucide icons to the website & in many sections
+- [ ] Improve SEO with meta tags on each page
