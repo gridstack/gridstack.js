@@ -53,7 +53,7 @@
       }
     </script>
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -216,10 +216,11 @@
   </head>
 
   <body class="font-lexend bg-gray-50">
+    <!-- Navbar -->
     <nav
       class="fixed top-0 z-50 flex items-center justify-between w-full h-16 px-4 border-b border-white rounded-b-lg shadow-2xl backdrop-blur-md bg-white/40 shadow-white"
     >
-      <!-- logo -->
+      <!-- Logo -->
       <a
         href="#"
         class="flex items-center gap-1 text-2xl font-semibold tracking-tighter text-gray-700 hover:text-[#0038FF] transition-colors"
@@ -231,8 +232,8 @@
         />
         Gridstack
       </a>
-
-      <!-- mobile menu button -->
+      <!-- End logo -->
+      <!-- Mobile menu button -->
 
       <input type="checkbox" id="menu-btn" class="hidden peer" />
       <label for="menu-btn" class="block cursor-pointer md:hidden">
@@ -251,8 +252,8 @@
           ></path>
         </svg>
       </label>
-
-      <!-- menu items -->
+      <!-- End mobile menu button -->
+      <!-- Menu items -->
       <ul
         class="absolute left-0 right-0 z-50 flex flex-col items-center gap-4 py-0 overflow-hidden transition-all duration-500 ease-out bg-white md:gap-0 md:overflow-visible md:bg-transparent md:max-h-16 md:py-0 max-h-0 peer-checked:py-6 peer-checked:max-h-screen md:flex-row peer-checked:backdrop-blur-lg rounded-b-xl md:rounded-none top-full md:top-0 md:relative md:flex"
       >
@@ -323,124 +324,9 @@
           </form>
         </li>
       </ul>
+      <!-- End menu items -->
     </nav>
-
-    <!-- Add your Tailwind CSS script tag here -->
-
-    <!-- <nav
-      class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top font-lexend"
-    >
-      <a class="navbar-brand" href="#">
-        <ion-icon name="grid" style="vertical-align: middle"></ion-icon
-        >gridstack.js
-      </a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarColor01"
-        aria-controls="navbarColor01"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarColor01">
-        <ul class="mr-auto navbar-nav">
-          <li class="nav-item nav-item-highlight">
-            <a class="nav-link" href="#demo">Demo</a>
-          </li>
-          <li class="nav-item nav-item-highlight">
-            <a class="nav-link" href="#getStarted">Getting Started</a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              href="https://github.com/gridstack/gridstack.js/blob/develop/README.md"
-              target="_blank"
-              >Docs</a
-            >
-          </li>
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              href="#"
-              id="moreExamples"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              >Examples</a
-            >
-            <div class="dropdown-menu" aria-labelledby="moreExamples">
-              <a class="dropdown-item" href="demo/web2.html" target="_blank"
-                >Advance</a
-              >
-              <a
-                class="dropdown-item"
-                href="demo/serialization.html"
-                target="_blank"
-                >Save and restore layout</a
-              >
-              <a class="dropdown-item" href="demo/two.html" target="_blank"
-                >Drag widgets between two grids</a
-              >
-              <a class="dropdown-item" href="demo/nested.html" target="_blank"
-                >Nested grids</a
-              >
-              <a
-                class="dropdown-item"
-                href="demo/responsive.html"
-                target="_blank"
-                >Responsive layout</a
-              >
-              <a class="dropdown-item" href="demo/anijs.html" target="_blank"
-                >Animate widgets</a
-              >
-              <a class="dropdown-item" href="demo/index.html" target="_blank"
-                >more...</a
-              >
-            </div>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              target="_blank"
-              href="https://github.com/gridstack/gridstack.js/blob/develop/doc/CHANGES.md"
-              >Changes</a
-            >
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              target="_blank"
-              href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
-              >Slack <ion-icon name="logo-slack"></ion-icon
-            ></a>
-          </li>
-          <li class="nav-item">
-            <a
-              class="nav-link"
-              target="_blank"
-              href="https://github.com/gridstack/gridstack.js"
-              >GitHub</a
-            >
-          </li>
-        </ul>
-        <form class="my-2 form-inline my-lg-0" id="search">
-          <input
-            class="form-control mr-sm-2"
-            type="text"
-            placeholder="Search Issues"
-            id="searchTerm"
-          />
-          <button class="my-2 btn btn-secondary my-sm-0" type="submit">
-            Search
-          </button>
-        </form>
-      </div>
-    </nav> -->
-
+    <!-- End navbar -->
     <!-- Hero Section -->
     <section>
       <div class="gradient-background -z-10"></div>
@@ -522,7 +408,7 @@
         </p>
       </div>
     </section>
-
+    <!-- End hero section -->
     <section class="pt-40 mx-auto max-w-7xl">
       <p
         class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
@@ -647,53 +533,7 @@
         </article>
       </div>
     </section>
-    <!-- <div class="container-fluid">
-      <div class="row bg-dark" id="hero">
-        <div class="col-lg-12">
-          <div class="text-white jumbotron bg-dark" style="margin-bottom: 0">
-            <h1 class="text-7xl">gridstack.js</h1>
-            <p class="text-center lead">
-              Build interactive dashboards in minutes.
-            </p>
-            <hr class="my-4" />
-            <p>
-              gridstack.js is a modern Typescript library designed to help
-              developers create beautiful draggable, resizable, responsive
-              layouts with just a few lines of code.<br />
-              You can create more advanced grids: allow users to persist
-              changes, create a sidebar of widgets to drag into your grid,
-              nested grids, and much more.<br /><br />
-              Features:
-            </p>
-            <ul>
-              <li>pure TS can be used in any UI framework</li>
-              <li>mobile support</li>
-              <li>draggable, resizable items</li>
-              <li>drag'n'drop from sidebar to insert/delete</li>
-              <li>responsive layouts, column based</li>
-              <li>save/restore</li>
-              <li>drag between multiple grids</li>
-              <li>nested grids, including creation on the fly to any depth</li>
-              <li>
-                Angular (included), demo and external Vue, React, Ember,
-                Knockout.js bindings and more
-              </li>
-            </ul>
-            <p>
-              If you find this lib useful, please donate
-              <a href="https://www.paypal.me/alaind831" target="_blank"
-                >PayPal</a
-              >
-              (use <b>“send to a friend”</b> to avoid 3% fee) or
-              <a href="https://www.venmo.com/adumesny" target="_blank"
-                >Venmo (adumesny)</a
-              >
-              and help support it!
-            </p>
-          </div>
-        </div>
-      </div>
-    </div> -->
+
     <main role="main" class="container-fluid" style="padding: 0">
       <section id="demo" class="pt-40 mx-auto max-w-7xl">
         <p
