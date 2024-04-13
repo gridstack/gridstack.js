@@ -1,203 +1,576 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="gridstack.js Build interactive dashboards in minutes."
+    />
+    <meta
+      name="keywords"
+      content="gridstack, typescript, jquery, grid, layout, drag-n-drop, widgets, js, javascript, gridstack.js, dashboard"
+    />
+    <title>gridstack.js | Build interactive dashboards in minutes.</title>
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="gridstack.js Build interactive dashboards in minutes." />
-  <meta name="keywords"
-    content="gridstack, typescript, jquery, grid, layout, drag-n-drop, widgets, js, javascript, gridstack.js, dashboard" />
-  <title>gridstack.js | Build interactive dashboards in minutes.</title>
+    <!-- ES5 support for IE -->
+    <script src="node_modules/gridstack/dist/es5/gridstack-poly.js"></script>
+    <script src="node_modules/gridstack/dist/es5/gridstack-all.js"></script>
 
-  <!-- ES5 support for IE -->
-  <script src="node_modules/gridstack/dist/es5/gridstack-poly.js"></script>
-  <script src="node_modules/gridstack/dist/es5/gridstack-all.js"></script>
-  
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
-
-  <!-- Bootstrap core CSS -->
-  <link href="https://bootswatch.com/4/yeti/bootstrap.min.css" rel="stylesheet" />
-  <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css"  rel="stylesheet"/>
-  <style type="text/css">
-    .grid-container {
-      padding: 15px;
-      border: 1px solid white;
-      max-width: 1000px;
-    }
-    .center {
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .grid-stack-item {
-      border: 0;
-    }
-    .grid-stack-item-content {
-      background-color: white;
-      text-align: center;
-    }
-    h1 {
-      text-align: center;
-      font-size: 3rem;
-      margin-top: 2rem;
-      margin-bottom: 1.5rem;
-    }
-    .card {
-      background: none;
-    }
-    section {
-      padding: 0 15px 0 15px;
-    }
-    .grid-stack-item-removing {
-      opacity: 0.8;
-      filter: blur(5px);
-    }
-    @media all and (max-width: 575px) {
-      #hero {
-        margin-top: 32px;
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script
+      src="https://getbootstrap.com/docs/4.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/highlight.min.js"></script>
+    <!-- Tailwind css -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            animation: {
+              'infinite-scroll': 'infinite-scroll 25s linear infinite',
+            },
+            keyframes: {
+              'infinite-scroll': {
+                from: { transform: 'translateX(0)' },
+                to: { transform: 'translateX(-100%)' },
+              },
+            },
+            colors: {
+              clifford: '#da373d',
+            },
+            fontFamily: {
+              sans: ['Lexend', 'sans-serif'],
+            },
+          },
+        },
       }
-    }
-    .logo {
-      display: inline;
-      margin-right: 15px;
-    }
-    #trash {
-      background-color: #cc6857;
-    }
-    .newWidget > .grid-stack-item-content {
-      background-color: #6cad84;
-    }
-  </style>
-</head>
+    </script>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Urbanist:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
 
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-    <a class="navbar-brand" href="#">
-      <ion-icon name="grid" style="vertical-align: middle"></ion-icon>gridstack.js
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
-      aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <!-- Bootstrap core CSS -->
+    <!-- <link
+      href="https://bootswatch.com/4/yeti/bootstrap.min.css"
+      rel="stylesheet"
+    /> -->
+    <!-- ICONS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+    />
+    <!-- GRIDSTACK -->
+    <link
+      href="node_modules/gridstack/dist/gridstack.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.16.2/build/styles/default.min.css"
+      rel="stylesheet"
+    />
+    <style type="text/css">
+      /* Gradient header */
+      :root {
+        --white: #ffffff;
+        --black: #000000;
+        --transparent: transparent;
+        --blue-500: #3498db; /* Example blue color */
+        --indigo-300: #6574cd; /* Example indigo color */
+        --blue-300: #6cb2eb; /* Example light blue color */
+        --violet-200: #a779e9; /* Example violet color */
+        --blue-400: #3490dc; /* Another example blue color */
+      }
+      @keyframes auroraAnimation {
+        0% {
+          background-position:
+            0% 50%,
+            50% 50%;
+        }
+        50% {
+          background-position:
+            100% 50%,
+            50% 50%;
+        }
+        100% {
+          background-position:
+            0% 50%,
+            50% 50%;
+        }
+      }
+      .gradient-background {
+        animation: auroraAnimation 100s linear infinite;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        bottom: 0px;
+        left: 0px;
+        background-image: repeating-linear-gradient(
+            100deg,
+            var(--white) 0%,
+            var(--white) 7%,
+            var(--transparent) 10%,
+            var(--transparent) 12%,
+            var(--white) 16%
+          ),
+          repeating-linear-gradient(
+            100deg,
+            var(--blue-500) 10%,
+            var(--indigo-300) 15%,
+            var(--blue-300) 20%,
+            var(--violet-200) 25%,
+            var(--blue-400) 30%
+          );
+        mask-image: linear-gradient(to top, transparent, black);
+        background-size: 300%, 200%;
+        background-position:
+          50% 50%,
+          50% 50%;
+        filter: blur(10px) invert(1);
+        opacity: 0.3;
+        pointer-events: none;
+        will-change: transform;
+      }
 
-    <div class="collapse navbar-collapse" id="navbarColor01">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item nav-item-highlight">
-          <a class="nav-link" href="#demo">Demo</a>
+      .gradient-background::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-image: repeating-linear-gradient(
+            100deg,
+            var(--white) 0%,
+            var(--white) 7%,
+            var(--transparent) 12%,
+            var(--transparent) 20%,
+            var(--white) 30%
+          ),
+          repeating-linear-gradient(
+            100deg,
+            var(--blue-500) 10%,
+            var(--indigo-300) 15%,
+            var(--blue-300) 20%,
+            var(--violet-200) 25%,
+            var(--blue-400) 30%
+          );
+        background-size: 200%, 100%;
+        background-attachment: fixed;
+        mix-blend-mode: difference;
+      }
+      /* End gradient header */
+      section {
+        padding: 0 2rem;
+      }
+      .font-lexend {
+        font-family: 'Lexend', sans-serif;
+      }
+      /* Grid style */
+
+      .grid-stack-item {
+        border-radius: 8px;
+      }
+      .grid-stack-item-content {
+        background-color: white;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      /* End grid style */
+
+      .card {
+        background: none;
+      }
+
+      .grid-stack-item-removing {
+        opacity: 0.8;
+        filter: blur(5px);
+      }
+      @media all and (max-width: 575px) {
+        #hero {
+          margin-top: 32px;
+        }
+      }
+
+      /* #trash {
+        background-color: #cc6857;
+      }
+      .newWidget > .grid-stack-item-content {
+        background-color: #6cad84;
+      } */
+    </style>
+  </head>
+
+  <body class="font-lexend bg-gray-50">
+    <!-- Navbar -->
+    <nav
+      class="fixed top-0 z-50 flex items-center justify-between w-full h-16 px-4 border-b border-white rounded-b-lg shadow-2xl backdrop-blur-md bg-white/40 shadow-white"
+    >
+      <!-- Logo -->
+      <a
+        href="#"
+        class="flex items-center gap-1 text-2xl font-semibold tracking-tighter text-gray-700 hover:text-[#0038FF] transition-colors"
+      >
+        <img
+          src="logos/gridstack-logo-small.png"
+          alt="gridstack.js logo"
+          class="h-10 object-fit"
+        />
+        Gridstack
+      </a>
+      <!-- End logo -->
+      <!-- Mobile menu button -->
+
+      <input type="checkbox" id="menu-btn" class="hidden peer" />
+      <label for="menu-btn" class="block cursor-pointer md:hidden">
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"
+          ></path>
+        </svg>
+      </label>
+      <!-- End mobile menu button -->
+      <!-- Menu items -->
+      <ul
+        class="absolute left-0 right-0 z-50 flex flex-col items-center gap-4 py-0 overflow-hidden transition-all duration-500 ease-out bg-white md:gap-0 md:overflow-visible md:bg-transparent md:max-h-16 md:py-0 max-h-0 peer-checked:py-6 peer-checked:max-h-screen md:flex-row peer-checked:backdrop-blur-lg rounded-b-xl md:rounded-none top-full md:top-0 md:relative md:flex"
+      >
+        <li class="hidden lg:block">
+          <a
+            href="#demo"
+            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
+            >Demo</a
+          >
         </li>
-        <li class="nav-item nav-item-highlight">
-          <a class="nav-link" href="#getStarted">Getting Started</a>
+        <li class="hidden lg:block">
+          <a
+            href="#getStarted"
+            class="px-4 py-2 text-gray-700 transition-all whitespace-nowrap hover:scale-105 hover:text-indigo-400"
+            >Getting Started</a
+          >
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://github.com/gridstack/gridstack.js/blob/develop/README.md" target="_blank">Docs</a>
+        <li>
+          <a
+            href="https://github.com/gridstack/gridstack.js/blob/develop/README.md"
+            target="_blank"
+            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
+            >Docs</a
+          >
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="moreExamples" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">Examples</a>
-          <div class="dropdown-menu" aria-labelledby="moreExamples">
-            <a class="dropdown-item" href="demo/web2.html" target="_blank">Advance</a>
-            <a class="dropdown-item" href="demo/serialization.html" target="_blank">Save and restore layout</a>
-            <a class="dropdown-item" href="demo/two.html" target="_blank">Drag widgets between two grids</a>
-            <a class="dropdown-item" href="demo/nested.html" target="_blank">Nested grids</a>
-            <a class="dropdown-item" href="demo/responsive.html" target="_blank">Responsive layout</a>
-            <a class="dropdown-item" href="demo/anijs.html" target="_blank">Animate widgets</a>
-            <a class="dropdown-item" href="demo/index.html" target="_blank">more...</a>
-          </div>
+        <li>
+          <a
+            href="demo/index.html"
+            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
+            >Examples</a
+          >
         </li>
-        <li class="nav-item">
-          <a class="nav-link" target="_blank"
-            href="https://github.com/gridstack/gridstack.js/blob/develop/doc/CHANGES.md">Changes</a>
+        <li>
+          <a
+            href="https://github.com/gridstack/gridstack.js/blob/develop/doc/CHANGES.md"
+            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
+            target="_blank"
+            >Changes</a
+          >
         </li>
-        <li class="nav-item">
-          <a class="nav-link" target="_blank"
-            href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ">Slack
-            <ion-icon name="logo-slack"></ion-icon></a>
+        <li>
+          <a
+            class="px-4 py-2 text-gray-700 transition-all whitespace-nowrap hover:scale-105 hover:text-indigo-400"
+            target="_blank"
+            href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
+            >Slack <ion-icon name="logo-slack"></ion-icon
+          ></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" target="_blank" href="https://github.com/gridstack/gridstack.js">GitHub</a>
+        <li>
+          <form id="search" class="relative shadow-sm">
+            <input
+              type="text"
+              id="searchTerm"
+              class="form-control block w-full rounded-lg border-0 py-1.5 pl-4 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-blue-500 transition-all sm:text-sm h-8"
+              placeholder="Search issues"
+            />
+            <div class="absolute inset-y-0 right-0 flex items-center">
+              <label for="send" class="sr-only">Github issues</label>
+              <button
+                id="send"
+                name="send"
+                type="submit"
+                class="h-full py-0 pl-2 pr-4 text-gray-500 bg-transparent border-0 rounded-md focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm"
+              >
+                Search
+              </button>
+            </div>
+          </form>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0" id="search">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search Issues" id="searchTerm" />
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
-          Search
-        </button>
-      </form>
-    </div>
-  </nav>
+      <!-- End menu items -->
+    </nav>
+    <!-- End navbar -->
+    <!-- Hero Section -->
+    <section>
+      <div class="gradient-background -z-10"></div>
 
-  <div class="container-fluid">
-    <div class="row bg-dark" id="hero">
-      <div class="col-lg-12">
-        <div class="jumbotron bg-dark text-white" style="margin-bottom: 0;">
-          <h1 class="display-3">gridstack.js</h1>
-          <p class="lead text-center">
-            Build interactive dashboards in minutes.
-          </p>
-          <hr class="my-4" />
-          <p>
-            gridstack.js is a modern Typescript library designed to help developers create
-            beautiful draggable, resizable, responsive layouts with just a few lines of code.<br>
-            You can create more advanced grids: allow users to persist
-            changes, create a sidebar of widgets to drag into your grid, nested grids, and
-            much more.<br><br>
-            Features:
-          </p>
-          <ul>
-            <li>pure TS can be used in any UI framework</li>
-            <li>mobile support</li>
-            <li>draggable, resizable items</li>
-            <li>drag'n'drop from sidebar to insert/delete</li>
-            <li>responsive layouts, column based</li>
-            <li>save/restore</li>
-            <li>drag between multiple grids</li>
-            <li>nested grids, including creation on the fly to any depth</li>
-            <li>Angular (included), demo and external Vue, React, Ember, Knockout.js bindings and more</li>
-          </ul>
-          <p>
-            If you find this lib useful, please donate
-            <a href="https://www.paypal.me/alaind831" target="_blank">PayPal</a> (use <b>“send to a friend”</b> to avoid 3% fee) or
-            <a href="https://www.venmo.com/adumesny" target="_blank">Venmo (adumesny)</a>
-            and help support it!
-          </p>
+      <div class="z-50 pt-40 mb-48 text-center">
+        <!-- Version badge -->
+        <div
+          class="inline-flex items-center h-10 gap-2 px-4 text-sm text-gray-600 border border-gray-400 rounded-full bg-gradient-to-b from-gray-200/50 to-gray-50/50"
+        >
+          <!-- Zap icon -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-zap"
+          >
+            <path
+              d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"
+            ></path>
+          </svg>
+          <p>Current version | v10.2.0</p>
         </div>
-      </div>
-    </div>
-  </div>
-  <main role="main" class="container-fluid" style="padding: 0">
-    <section id="demo" class="bg-primary">
-      <div class="row">
-        <div class="col-lg-12 text-white">
-          <ion-icon class="float-right" name="grid" style="font-size: 350%; margin-top: 10px"></ion-icon>
-          <h1>Basic Demo</h1>
-          <hr />
-        </div>
-      </div>
+        <h1
+          class="mt-6 text-6xl font-semibold tracking-tighter text-gray-800 sm:text-7xl"
+        >
+          Gridstack.js
+        </h1>
 
-      <div class="row">
-        <div class="col-sm-12" style="padding-bottom: 25px;">
-          <div class="grid-container center">
-            <div class="grid-stack" id="simple-grid"></div>
-          </div>
-        </div>
+        <p class="mt-8">Build interactive dashboards in minutes</p>
+
+        <!-- Github button link -->
+        <a
+          href="https://github.com/gridstack/gridstack.js"
+          target="_blank"
+          class="inline-flex items-center h-16 gap-2 px-8 mt-8 text-lg font-semibold text-white transition-all rounded-full shadow-inner bg-gradient-to-br from-indigo-400 to-indigo-600 shadow-white/25 group hover:scale-95 hover:opacity-80"
+        >
+          <!-- Github Icon -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="transition-all lucide lucide-github group-hover:scale-110"
+          >
+            <path
+              d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+            ></path>
+            <path d="M9 18c-4.51 2-5-2-7-2"></path>
+          </svg>
+          View on Github
+        </a>
+        <p class="mx-auto mt-4 text-gray-500 sm:w-2/3 lg:w-1/3">
+          If you find this library useful, please donate via
+          <a
+            href="https://www.paypal.me/alaind831"
+            target="_blank"
+            class="text-indigo-500 transition-colors hover:text-indigo-600"
+            >PayPal</a
+          >
+          or
+          <a
+            href="https://www.venmo.com/adumesny"
+            target="_blank"
+            class="text-indigo-500 transition-colors hover:text-indigo-600"
+            >Venmo (adumesny)</a
+          >
+          and help support it!
+        </p>
       </div>
     </section>
-    <section id="getStarted" class="bg-info">
-      <div class="row">
-        <div class="col-lg-12 text-white">
-          <ion-icon name="code" class="float-right" style="font-size: 350%"></ion-icon>
-          <h1>Getting Started</h1>
-          <p>
-            Create your first interactive grid by copy-pasting the HTML+JS, as seen below...
+    <!-- End hero section -->
+    <section class="pt-40 mx-auto max-w-7xl">
+      <p
+        class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+      >
+        Workflow
+      </p>
+      <h2 class="mt-4 text-4xl font-medium">Framework Agnostic</h2>
+      <p class="mt-4 font-light">
+        The framework is designed to be used with any PHP framework. It is a set
+        of tools that can be used to build a custom application. The framework
+        is designed to be used with any PHP framework. It is a set of tools that
+        can be used to build a custom application.
+      </p>
+      <ul class="grid grid-cols-1 gap-8 mt-8 md:grid-cols-2">
+        <li class="flex items-center gap-4">
+          <i
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-laravel-plain icon size-8"
+          ></i>
+          <p class="">Vanilla JS</p>
+        </li>
+        <li class="flex items-center gap-4">
+          <i
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-angularjs-plain icon size-8"
+          ></i>
+          <p class="">Angular</p>
+        </li>
+        <li class="flex items-center gap-4">
+          <i
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-react-original icon size-8"
+          ></i>
+          <p class="">React</p>
+        </li>
+        <li class="flex items-center gap-4">
+          <i
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-vuejs-plain icon size-8"
+          ></i>
+          <p class="">Vue</p>
+        </li>
+        <li class="flex items-center gap-4">
+          <i
+            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-laravel-plain icon size-8"
+          ></i>
+          <p class="">Laravel</p>
+        </li>
+        <li class="flex items-center gap-4">
+          <p class="">And many more...</p>
+        </li>
+      </ul>
+    </section>
+    <section class="pt-40 mx-auto max-w-7xl">
+      <p
+        class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+      >
+        Features
+      </p>
+      <h2 class="mt-4 text-4xl font-medium">Advanced features</h2>
+      <p class="mt-4 font-light">
+        Gridstack.js is a modern Typescript library designed to help developers
+        create beautiful draggable, resizable, responsive layouts with just a
+        few lines of code.
+      </p>
+      <div class="grid grid-cols-1 gap-2 mt-8 md:grid-cols-2">
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
+          <h5 class="text-xl font-medium">Full Mobile Support</h5>
+          <p class="font-light">
+            Craft responsive, mobile-friendly applications with ease.
           </p>
-          <hr />
-          <h3>Code</h3>
-          <pre>
-<code class="html">npm install gridstack</code>
-<p class="text-white">then in html:</p>
-<code class="html">&lt;script src="node_modules/gridstack/dist/gridstack-all.js"&gt;&lt;/script&gt;
+        </article>
+
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
+          <h5 class="text-xl font-medium">Draggable & Resizable Elements</h5>
+          <p class="font-light">
+            Intuitive interfaces with interactive components.
+          </p>
+          <p class="font-light">test</p>
+          <!-- Assuming 'test' is additional content -->
+        </article>
+
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
+          <h5 class="text-xl font-medium">Effortless Drag-and-Drop</h5>
+          <p class="font-light">
+            Manage content dynamically from a sidebar for insertions and
+            deletions.
+          </p>
+        </article>
+
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
+          <h5 class="text-xl font-medium">Responsive, Column-Based Layouts</h5>
+          <p class="font-light">
+            Design adaptable and visually appealing web layouts.
+          </p>
+        </article>
+
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
+          <h5 class="text-xl font-medium">Save and Restore Feature</h5>
+          <p class="font-light">
+            Easily preserve and revert to previous layouts.
+          </p>
+        </article>
+
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
+          <h5 class="text-xl font-medium">Inter-grid Interactivity</h5>
+          <p class="font-light">
+            Drag items across multiple grids for sophisticated layout
+            management.
+          </p>
+        </article>
+
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
+          <h5 class="text-xl font-medium">Nested Grids</h5>
+          <p class="font-light">
+            Create and manipulate nested grids dynamically to any depth.
+          </p>
+        </article>
+
+        <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
+          <h5 class="text-xl font-medium">Extensive Framework Support</h5>
+          <p class="font-light">
+            Native Angular support, along with external bindings for Vue, React,
+            Ember, Knockout.js, and more.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <main role="main" class="container-fluid" style="padding: 0">
+      <section id="demo" class="pt-40 mx-auto max-w-7xl">
+        <p
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+        >
+          Demonstration
+        </p>
+        <h2 class="mt-4 text-4xl font-medium">Basic demo</h2>
+        <p class="my-4 font-light">
+          Simple to use, configure, and customize. Drag and drop the items below
+          to try !
+        </p>
+
+        <div
+          class="p-1 border rounded-lg bg-gradient-to-br from-gray-200 to-gray-50"
+        >
+          <div class="grid-stack" id="simple-grid"></div>
+        </div>
+      </section>
+      <section id="getStarted" class="pt-40 mx-auto max-w-7xl">
+        <p
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+        >
+          Code
+        </p>
+        <h2 class="mt-4 text-4xl font-medium">Getting started</h2>
+        <p class="my-4 font-light">
+          Create your first interactive grid by copy-pasting the HTML+JS, as
+          seen below...
+        </p>
+        <pre><code class="bg-gray-100 border border-gray-200 rounded-lg">npm install gridstack</code></pre>
+
+        <p class="my-4 font-light">
+          Then, in your HTML file, include the following code...
+        </p>
+        <pre>
+<code class="bg-gray-100 border border-gray-200 rounded-lg">&lt;script src="node_modules/gridstack/dist/gridstack-all.js"&gt;&lt;/script&gt;
 &lt;link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/&gt;
 &lt;style type="text/css"&gt;
   .grid-stack { background: #FAFAD2; }
@@ -215,217 +588,409 @@
   grid.load(items);
 &lt;/script&gt;
 </code>
-    </pre>
-          <p>
-            ...and that's it! Drag, drop, and resize to your heart's content.
-            Looking for more complex examples? Check out the advanced example below, the links in the nav
-            bar, or our docs in <a href="https://github.com/gridstack/gridstack.js/blob/develop/README.md" target="_blank">GitHub</a>
-          </p>
-        </div>
-      </div>
-    </section>
+</pre>
+        <p>
+          ...and that's it! Drag, drop, and resize to your heart's content.
+          Looking for more complex examples? Check out the advanced example
+          below, the links in the nav bar, or our docs in
+          <a
+            href="https://github.com/gridstack/gridstack.js/blob/develop/README.md"
+            target="_blank"
+            class="text-indigo-500 transition-colors hover:text-indigo-600"
+            >GitHub</a
+          >
+        </p>
+      </section>
 
-    <section id="advancedDemo" class="bg-primary">
-      <div class="row">
-        <div class="col-lg-12 text-white">
-          <ion-icon class="float-right" name="grid" style="font-size: 350%; margin-top: 10px"></ion-icon>
-          <h1>Advanced Demo</h1>
-          <hr />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2 d-none d-md-block" style="border-right: 1px dashed white;">
-          <div id="trash" style="padding: 15px; margin-bottom: 15px;" class="text-center text-white">
-            <div>
-              <ion-icon name="trash" style="font-size: 400%"></ion-icon>
-            </div>
-            <div>
-              <span>Drop here to remove widget!</span>
-            </div>
+      <section id="advancedDemo" class="pt-40 mx-auto max-w-7xl">
+        <p
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+        >
+          Demonstration
+        </p>
+        <h2 class="mt-4 text-4xl font-medium">Advanced demo</h2>
+        <p>
+          A full control example with a trash can to remove widgets and a drag
+          in widget.
+          <br />
+          <br />
+          More complex examples are available to demonstrate the full power of
+          gridstack.js.
+          <br />
+          Drag and drop the items below to try!
+        </p>
+        <div class="grid grid-cols-2 gap-8 mt-8">
+          <div
+            class="flex flex-col items-center justify-center mx-auto transition-colors bg-green-100 rounded-lg cursor-pointer hover:bg-green-200 size-40 grid-stack-item-content grid-stack-item newWidget"
+          >
+            <ion-icon
+              name="add-circle"
+              class="text-4xl fill-green-700"
+            ></ion-icon>
+            <p class="text-center text-green-700">
+              Drag me into the dashboard!
+            </p>
           </div>
-          <div class="text-center card text-white grid-stack-item newWidget">
-            <div class="card-body grid-stack-item-content">
-              <div>
-                <ion-icon name="add-circle" style="font-size: 400%"></ion-icon>
-              </div>
-              <div>
-                <span>Drag me into the dashboard!</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-10" style="padding-bottom: 25px;">
-          <div class="grid-container">
-            <div class="grid-stack" id="advanced-grid"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <section id="usedBy" class="bg-info text-white">
-      <div class="row" style="margin-bottom: 15px;">
-        <div class="col-lg-12">
-          <ion-icon name="desktop" class="float-right" style="font-size: 350%"></ion-icon>
+          <div
+            id="trash"
+            class="flex flex-col items-center justify-center mx-auto bg-red-100 rounded-lg size-40"
+          >
+            <ion-icon name="trash" class="text-4xl fill-red-700"></ion-icon>
 
-          <h1>Why use it</h1>
-          <hr />
-          <ul>
-            <li><a href="https://www.npmjs.com/package/gridstack" target="_blank">npm downloads</a></li>
-            <li><a href="https://www.formget.com/jquery-layout-plugins/" target="_blank">6 Best jQuery Layout Plugins 2020</a></li>
-          </ul>
-          <h1>Used by</h1>
-          <hr />
+            <p class="text-center text-red-700">Drop here to remove widget!</p>
+          </div>
+        </div>
+
+        <div
+          class="p-1 mt-8 border rounded-lg bg-gradient-to-br from-gray-200 to-gray-50"
+        >
+          <div class="grid-stack" id="advanced-grid"></div>
+        </div>
+      </section>
+
+      <section id="usedBy" class="pt-40 mx-auto max-w-7xl">
+        <p
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+        >
+          Articles
+        </p>
+        <h2 class="mt-4 text-4xl font-medium">Why use gridstack.js ?</h2>
+        <p class="mt-4 font-light">
+          Find out why developers everywhere are choosing gridstack.js for their
+          projects.
+        </p>
+        <ul class="mt-8">
+          <li>
+            <a
+              href="https://www.npmjs.com/package/gridstack"
+              target="_blank"
+              class="hover:text-indigo-500"
+              >npm downloads</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.formget.com/jquery-layout-plugins/"
+              target="_blank"
+              class="hover:text-indigo-500"
+              >6 Best jQuery Layout Plugins 2020</a
+            >
+          </li>
+        </ul>
+      </section>
+      <section class="pt-40 mx-auto max-w-7xl">
+        <p
+          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+        >
+          Articles
+        </p>
+        <h2 class="mt-4 text-4xl font-medium">Used by</h2>
+        <p class="mt-4 font-light">
+          Discover the companies and projects that trust gridstack.js for their
+          applications.
+        </p>
+        <div
+          class="grid items-center grid-cols-2 gap-8 my-8 md:grid-cols-3 justify-items-center lg:grid-cols-6"
+        >
+          <a
+            href="https://vmware.com"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
+            <img
+              style="max-width: 100px"
+              class="img-responsive"
+              src="logos/VMW_09Q3_LOGO_Corp_Gray.png"
+          /></a>
+          <a
+            href="https://duckerfrontier.com"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
+            <img
+              style="max-width: 150px"
+              class="img-responsive"
+              src="logos/df-logo-transparent-bg.png"
+            />
+          </a>
+          <a
+            href="https://guard.no/"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
+            <img
+              style="max-width: 100px"
+              class="img-responsive"
+              src="logos/Guard-Logo-RGB.png"
+          /></a>
+          <a
+            href="https://www.modul.day/"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
+            <img
+              style="max-width: 100px"
+              class="img-responsive"
+              src="logos/modul-large-logo.png"
+          /></a>
+          <a
+            href="https://nodered.org/"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
+            <img
+              style="max-width: 50px"
+              class="img-responsive"
+              src="logos/node-red-icon.png"
+          /></a>
+          <a
+            href="https://flexitanalytics.com"
+            target="_blank"
+            class="transition-transform hover:scale-105"
+          >
+            <img
+              style="max-width: 50px"
+              class="img-responsive"
+              src="logos/Flex-X-medium.png"
+          /></a>
+        </div>
+        <p>...and many, many others.</p>
+        <h4 class="mt-20 mb-4 text-2xl">
+          Does your company use gridstack.js ?
+        </h4>
+        <p>
+          We'd love to add your logo! Come join our
+          <a
+            target="_blank"
+            href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
+            class="text-indigo-500 hover:text-indigo-600"
+          >
+            <ion-icon name="logo-slack"></ion-icon>Slack community
+          </a>
+          and let us know.
+        </p>
+      </section>
+    </main>
+
+    <footer class="mt-20 border-t">
+      <div class="px-8 py-12 mx-auto md:px-12 lg:px-32 max-w-7xl">
+        <div class="xl:grid xl:grid-cols-3 xl:gap-8">
           <div>
-            <div class="logo">
-              <a href="https://vmware.com" target="_blank">
-                <img style="max-width: 100px;" class="img-responsive" src="logos/VMW_09Q3_LOGO_Corp_Gray.png" /></a>
+            <p class="text-2xl font-bold uppercase">Gridstack.JS</p>
+            <p class="mt-2 text-sm font-medium text-gray-500 lg:w-4/5">
+              Create beautiful draggable, resizable, responsive layouts in
+              minutes.
+            </p>
+          </div>
+          <div
+            class="grid grid-cols-2 gap-8 mt-12 text-sm font-medium text-gray-500 lg:grid-cols-3 lg:mt-0 xl:col-span-2"
+          >
+            <div>
+              <h3 class="text-base text-black">Contribute</h3>
+              <ul role="list" class="mt-4 space-y-2">
+                <li>
+                  <a
+                    href="https://github.com/gridstack/gridstack.js"
+                    target="_blank"
+                    class="hover:text-black"
+                  >
+                    GitHub
+                  </a>
+                </li>
+              </ul>
             </div>
-            <div class="logo">
-              <a href="https://duckerfrontier.com" target="_blank">
-                <img style="max-width: 150px;" class="img-responsive" src="logos/df-logo-transparent-bg.png" />
-              </a>
+            <div>
+              <h3 class="text-base text-black">Main maintainer</h3>
+              <ul role="list" class="mt-4 space-y-2">
+                <li>
+                  <a
+                    href="https://github.com/adumesny"
+                    target="_blank"
+                    class="hover:text-black"
+                  >
+                    @Alain Dumesny
+                  </a>
+                </li>
+              </ul>
+              <h3 class="mt-4 text-base text-black">Website</h3>
+              <ul role="list" class="mt-4 space-y-2">
+                <li>
+                  <a
+                    href="https://github.com/damien-schneider"
+                    target="_blank"
+                    class="hover:text-black"
+                  >
+                    @Damien Schneider
+                  </a>
+                </li>
+              </ul>
             </div>
-            <div class="logo">
-              <a href="https://guard.no/" target="_blank">
-                <img style="max-width: 100px;" class="img-responsive" src="logos/Guard-Logo-RGB.png" /></a>
-            </div>
-            <div class="logo">
-              <a href="https://nodered.org/" target="_blank">
-                <img style="max-width: 50px;" class="img-responsive" src="logos/node-red-icon.png" /></a>
-            </div>
-            <div class="logo">
-              <a href="https://flexitanalytics.com" target="_blank">
-                <img style="max-width: 50px;" class="img-responsive" src="logos/Flex-X-medium.png" /></a>
+            <div class="mt-12 md:mt-0">
+              <h3 class="text-base text-black">Join the community</h3>
+              <ul role="list" class="mt-4 space-y-2">
+                <li>
+                  <a
+                    href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
+                    target="_blank"
+                    class="hover:text-black"
+                  >
+                    Slack
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <p>
-            ...and many, many others.
-          </p>
-          <p>
-            Does your company use gridstack.js? We'd love to add your logo!
-            Come join our
-            <a target="_blank"
-              href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ">
-              <ion-icon name="logo-slack"></ion-icon>Slack community
+        <div
+          class="flex flex-col pt-12 md:flex-row md:items-center md:justify-between"
+        >
+          <span class="text-sm font-medium text-gray-500">
+            Copyright ©2019-2020 gridstack.js is open source software
+            maintained by
+            <a
+              aria-label="Gridstack.js team"
+              href="https://github.com/gridstack/gridstack.js#the-team"
+              target="_blank"
+              class="text-indigo-500 hover:text-indigo-600"
+            >
+              the gridstack.js team
             </a>
-            and let us know.
-          </p>
+            but wouldn't be possible without the help of developers everywhere.
+          </span>
         </div>
       </div>
-    </section>
-  </main>
-  <footer>
-    <section id="getStarted" class="bg-dark">
-      <div class="row">
-        <div class="col-lg-12 text-white">
-          <p style="margin-top: 0.5rem;">
-            <small>
-              ©2019-2020 gridstack.js is open source software maintained by
-              <a href="https://github.com/gridstack/gridstack.js#the-team" target="_blank">the gridstack.js team</a>
-              but wouldn't be possible without the help of developers
-              everywhere
-            </small>
-          </p>
-        </div>
-      </div>
-    </section>
-  </footer>
-  <!-- /.container -->
+    </footer>
 
-  <script type="text/javascript">
-    var simple = [
-      {x: 0, y: 0, w: 4, h: 2, content: '1'},
-      {x: 4, y: 0, w: 4, h: 4, content: '2'},
-      {x: 8, y: 0, w: 2, h: 2, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon>'},
-      {x: 10, y: 0, w: 2, h: 2, content: '4'},
-      {x: 0, y: 2, w: 2, h: 2, content: '5'},
-      {x: 2, y: 2, w: 2, h: 4, content: '6'},
-      {x: 8, y: 2, w: 4, h: 2, content: '7'},
-      {x: 0, y: 4, w: 2, h: 2, content: '8'},
-      {x: 4, y: 4, w: 4, h: 2, content: '9'},
-      {x: 8, y: 4, w: 2, h: 2, content: '10'},
-      {x: 10, y: 4, w: 2, h: 2, content: '11'},
-    ];
-   var advanced = [
-      {x: 0, y: 0, w: 4, h: 2, content: '1'},
-      {x: 4, y: 0, w: 4, h: 4, noMove: true, noResize: true, locked: true, content: 'I can\'t be moved or dragged!<br><ion-icon name="ios-lock" style="font-size:300%"></ion-icon>'},
-      {x: 8, y: 0, w: 2, h: 2, minW: 2, noResize: true, content: '<p class="card-text text-center" style="margin-bottom: 0">Drag me!<p class="card-text text-center"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon><p class="card-text text-center" style="margin-bottom: 0">...but don\'t resize me!</p>'},
-      {x: 10, y: 0, w: 2, h: 2, content: '4'},
-      {x: 0, y: 2, w: 2, h: 2, content: '5'},
-      {x: 2, y: 2, w: 2, h: 4, content: '6'},
-      {x: 8, y: 2, w: 4, h: 2, content: '7'},
-      {x: 0, y: 4, w: 2, h: 2, content: '8'},
-      {x: 4, y: 4, w: 4, h: 2, content: '9'},
-      {x: 8, y: 4, w: 2, h: 2, content: '10'},
-      {x: 10, y: 4, w: 2, h: 2, content: '11'},
-    ];
+    <script type="text/javascript">
+      var simple = [
+        { x: 0, y: 0, w: 4, h: 2, content: '1' },
+        { x: 4, y: 0, w: 4, h: 4, content: '2' },
+        {
+          x: 8,
+          y: 0,
+          w: 2,
+          h: 2,
+          content:
+            '<p class="text-center card-text" style="margin-bottom: 0">Drag me!<p class="text-center card-text"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon>',
+        },
+        { x: 10, y: 0, w: 2, h: 2, content: '4' },
+        { x: 0, y: 2, w: 2, h: 2, content: '5' },
+        { x: 2, y: 2, w: 2, h: 4, content: '6' },
+        { x: 8, y: 2, w: 4, h: 2, content: '7' },
+        { x: 0, y: 4, w: 2, h: 2, content: '8' },
+        { x: 4, y: 4, w: 4, h: 2, content: '9' },
+        { x: 8, y: 4, w: 2, h: 2, content: '10' },
+        { x: 10, y: 4, w: 2, h: 2, content: '11' },
+      ]
+      var advanced = [
+        { x: 0, y: 0, w: 4, h: 2, content: '1' },
+        {
+          x: 4,
+          y: 0,
+          w: 4,
+          h: 4,
+          noMove: true,
+          noResize: true,
+          locked: true,
+          content:
+            'I can\'t be moved or dragged!<br><ion-icon name="ios-lock" style="font-size:300%"></ion-icon>',
+        },
+        {
+          x: 8,
+          y: 0,
+          w: 2,
+          h: 2,
+          minW: 2,
+          noResize: true,
+          content:
+            '<p class="text-center card-text" style="margin-bottom: 0">Drag me!<p class="text-center card-text"style="margin-bottom: 0"><ion-icon name="hand" style="font-size: 300%"></ion-icon><p class="text-center card-text" style="margin-bottom: 0">...but don\'t resize me!</p>',
+        },
+        { x: 10, y: 0, w: 2, h: 2, content: '4' },
+        { x: 0, y: 2, w: 2, h: 2, content: '5' },
+        { x: 2, y: 2, w: 2, h: 4, content: '6' },
+        { x: 8, y: 2, w: 4, h: 2, content: '7' },
+        { x: 0, y: 4, w: 2, h: 2, content: '8' },
+        { x: 4, y: 4, w: 4, h: 2, content: '9' },
+        { x: 8, y: 4, w: 2, h: 2, content: '10' },
+        { x: 10, y: 4, w: 2, h: 2, content: '11' },
+      ]
 
-    var simpleGrid = GridStack.init({
-      margin: 5,
-      disableOneColumnMode: true,
-    }, '#simple-grid');
-    simpleGrid.load(simple);
+      var simpleGrid = GridStack.init(
+        {
+          margin: 5,
+          disableOneColumnMode: true,
+        },
+        '#simple-grid'
+      )
+      simpleGrid.load(simple)
 
-    var advGrid = GridStack.init({
-      margin: 5,
-      disableOneColumnMode: true,
-      acceptWidgets: true,
-      removable: '#trash',
-      removeTimeout: 100
-    }, '#advanced-grid')
-    .load(advanced);
-    
-    GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
+      var advGrid = GridStack.init(
+        {
+          margin: 5,
+          disableOneColumnMode: true,
+          acceptWidgets: true,
+          removable: '#trash',
+          removeTimeout: 100,
+        },
+        '#advanced-grid'
+      ).load(advanced)
 
-    $('#search').on('submit', function (event) {
-      event.preventDefault();
-      var searchTerm = $('#searchTerm').val();
-      window.open(
-        'https://github.com/gridstack/gridstack.js/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+' +
-        searchTerm,
-        '_blank'
-      );
-    });
-    $('.nav-item').on('click', function (event) {
-      $('.nav-item').removeClass('active');
-      var target = $(event.currentTarget);
-      if (target.hasClass('nav-item-highlight')) {
-        target.addClass('active');
-      }
-    });
-    hljs.initHighlightingOnLoad();
-  </script>
-  <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
-  <!-- Google Analytics -->
-  <script>
-    (function (i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      (i[r] =
-        i[r] ||
-        function () {
-          (i[r].q = i[r].q || []).push(arguments);
-        }),
-      (i[r].l = 1 * new Date());
-      (a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-      a.async = 1;
-      a.src = g;
-      m.parentNode.insertBefore(a, m);
-    })(
-      window,
-      document,
-      'script',
-      'https://www.google-analytics.com/analytics.js',
-      'ga'
-    );
+      GridStack.setupDragIn('.newWidget', {
+        appendTo: 'body',
+        helper: 'clone',
+      })
 
-    ga('create', 'UA-1891156-8', 'auto');
-    ga('send', 'pageview');
-  </script>
-  <!-- End Google Analytics -->
-</body>
+      $('#search').on('submit', function (event) {
+        event.preventDefault()
+        var searchTerm = $('#searchTerm').val()
+        window.open(
+          'https://github.com/gridstack/gridstack.js/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+' +
+            searchTerm,
+          '_blank'
+        )
+      })
+      $('.nav-item').on('click', function (event) {
+        $('.nav-item').removeClass('active')
+        var target = $(event.currentTarget)
+        if (target.hasClass('nav-item-highlight')) {
+          target.addClass('active')
+        }
+      })
+      hljs.initHighlightingOnLoad()
+    </script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule=""
+      src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"
+    ></script>
+    <!-- Google Analytics -->
+    <script>
+      ;(function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r
+        ;(i[r] =
+          i[r] ||
+          function () {
+            ;(i[r].q = i[r].q || []).push(arguments)
+          }),
+          (i[r].l = 1 * new Date())
+        ;(a = s.createElement(o)), (m = s.getElementsByTagName(o)[0])
+        a.async = 1
+        a.src = g
+        m.parentNode.insertBefore(a, m)
+      })(
+        window,
+        document,
+        'script',
+        'https://www.google-analytics.com/analytics.js',
+        'ga'
+      )
 
+      ga('create', 'UA-1891156-8', 'auto')
+      ga('send', 'pageview')
+    </script>
+    <!-- End Google Analytics -->
+  </body>
 </html>
