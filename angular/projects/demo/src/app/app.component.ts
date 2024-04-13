@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     cellHeight: 70,
     columnOpts: { breakpoints: [{w:768, c:1}] },
   }
-  private sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a'}, {x:1, y:0, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
+  private sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-a', input: {text: 'bar'}}, {x:1, y:1, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
   public gridOptionsFull: NgGridStackOptions = {
     ...this.gridOptions,
     children: this.sub0,
