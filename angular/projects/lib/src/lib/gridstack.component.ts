@@ -232,14 +232,16 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
       gridItem.ref = gridItemRef
 
       // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
-      const selector = (w as NgGridStackWidget).selector;
-      const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
-      if (!w.subGridOpts && type) {
-        const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
-        if (typeof childWidget?.serialize === 'function' && typeof childWidget?.deserialize === 'function') {
-          // proper BaseWidget subclass, save it and load additional data
-          gridItem.childWidget = childWidget;
-          childWidget.deserialize(w);
+      if (!w.subGridOpts) {
+        const selector = (w as NgGridStackWidget).selector;
+        const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
+        if (type) {
+          const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
+          // if proper BaseWidget subclass, save it and load additional data
+          if (childWidget && typeof childWidget.serialize === 'function' && typeof childWidget.deserialize === 'function') {
+            gridItem.childWidget = childWidget;
+            childWidget.deserialize(w);
+          }
         }
       }
 
