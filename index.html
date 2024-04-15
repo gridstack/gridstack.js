@@ -180,8 +180,12 @@
 
       .grid-stack-item {
         border-radius: 8px;
+        cursor: pointer;
       }
       .grid-stack-item-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: white;
         border-radius: 8px;
         text-align: center;
@@ -195,6 +199,7 @@
         opacity: 0.8;
         filter: blur(5px);
       }
+
       @media all and (max-width: 575px) {
         #hero {
           margin-top: 32px;
@@ -283,11 +288,34 @@
         </li>
         <li>
           <a
-            class="px-4 py-2 text-gray-700 transition-all whitespace-nowrap hover:scale-105 hover:text-indigo-400"
+            class="inline-flex items-center gap-1 px-4 py-2 text-gray-700 transition-all whitespace-nowrap hover:scale-105 hover:text-indigo-400"
             target="_blank"
             href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
-            >Slack <ion-icon name="logo-slack"></ion-icon
-          ></a>
+          >
+            <svg
+              class="size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-slack"
+            >
+              <rect width="3" height="8" x="13" y="2" rx="1.5" />
+              <path d="M19 8.5V10h1.5A1.5 1.5 0 1 0 19 8.5" />
+              <rect width="3" height="8" x="8" y="14" rx="1.5" />
+              <path d="M5 15.5V14H3.5A1.5 1.5 0 1 0 5 15.5" />
+              <rect width="8" height="3" x="14" y="13" rx="1.5" />
+              <path d="M15.5 19H14v1.5a1.5 1.5 0 1 0 1.5-1.5" />
+              <rect width="8" height="3" x="2" y="8" rx="1.5" />
+              <path d="M8.5 5H10V3.5A1.5 1.5 0 1 0 8.5 5" />
+            </svg>
+            Slack
+          </a>
         </li>
         <li>
           <form id="search" class="relative shadow-sm">
@@ -397,37 +425,39 @@
     <!-- End hero section -->
     <section class="pt-40 mx-auto max-w-7xl">
       <p
-        class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+        class="inline px-4 py-1 text-sm tracking-tight text-indigo-700 rounded-lg bg-indigo-500/15"
       >
         Workflow
       </p>
       <h2 class="mt-4 text-4xl font-medium">Framework Agnostic</h2>
       <p class="mt-4 font-light">
-        gridstack.js is a modern pure Typescript library, with no external dependencies, that can work with any framework.
-        It comes bundled with an Angular wrapper, and include many React|Vue examples (wrapper coming soon) as well as others.
+        Gridstack.js is a modern pure Typescript library, with no external
+        dependencies, that can work with any framework. It comes bundled with an
+        Angular wrapper, and include many React|Vue examples (wrapper coming
+        soon) as well as others.
       </p>
       <ul class="grid grid-cols-1 gap-8 mt-8 md:grid-cols-2">
-        <li class="flex items-center gap-4">
+        <li class="flex items-center gap-4 text-blue-700">
           <i
-            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-laravel-plain icon size-8"
+            class="inline-flex items-center justify-center rounded-full devicon-typescript-plain bg-blue-500/15 devicon-laravel-plain icon size-8"
           ></i>
           <p class="">Pure Typescript</p>
         </li>
-        <li class="flex items-center gap-4">
+        <li class="flex items-center gap-4 text-red-700">
           <i
-            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-angularjs-plain icon size-8"
+            class="inline-flex items-center justify-center rounded-full bg-red-500/15 devicon-angularjs-plain icon size-8"
           ></i>
           <p class="">Angular (included)</p>
         </li>
-        <li class="flex items-center gap-4">
+        <li class="flex items-center gap-4 text-sky-700 text text--500">
           <i
-            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-react-original icon size-8"
+            class="inline-flex items-center justify-center rounded-full bg-sky-500/15 devicon-react-original icon size-8"
           ></i>
           <p class="">React</p>
         </li>
-        <li class="flex items-center gap-4">
+        <li class="flex items-center gap-4 text-emerald-700">
           <i
-            class="inline-flex items-center justify-center bg-gray-100 rounded-full devicon-vuejs-plain icon size-8"
+            class="inline-flex items-center justify-center rounded-full bg-emerald-500/15 devicon-vuejs-plain icon size-8"
           ></i>
           <p class="">Vue</p>
         </li>
@@ -438,7 +468,7 @@
     </section>
     <section class="pt-40 mx-auto max-w-7xl">
       <p
-        class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+        class="inline px-4 py-1 text-sm tracking-tight rounded-lg bg-violet-500/15 text-violet-700"
       >
         Features
       </p>
@@ -461,8 +491,6 @@
           <p class="font-light">
             Intuitive interfaces with interactive components.
           </p>
-          <p class="font-light">test</p>
-          <!-- Assuming 'test' is additional content -->
         </article>
 
         <article class="flex flex-col gap-2 p-4 bg-gray-100 rounded-xl">
@@ -515,7 +543,7 @@
     <main role="main" class="container-fluid" style="padding: 0">
       <section id="demo" class="pt-40 mx-auto max-w-7xl">
         <p
-          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+          class="inline px-4 py-1 text-sm tracking-tight text-red-700 rounded-lg bg-red-500/15"
         >
           Demonstration
         </p>
@@ -533,7 +561,7 @@
       </section>
       <section id="getStarted" class="pt-40 mx-auto max-w-7xl">
         <p
-          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+          class="inline px-4 py-1 text-sm tracking-tight rounded-lg bg bg-stone-500/15 text-stone-700"
         >
           Code
         </p>
@@ -582,7 +610,7 @@
 
       <section id="advancedDemo" class="pt-40 mx-auto max-w-7xl">
         <p
-          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+          class="inline px-4 py-1 text-sm tracking-tight rounded-lg bg-amber-500/15 text-amber-700"
         >
           Demonstration
         </p>
@@ -599,22 +627,55 @@
         </p>
         <div class="grid grid-cols-2 gap-8 mt-8">
           <div
-            class="flex flex-col items-center justify-center mx-auto transition-colors bg-green-100 rounded-lg cursor-pointer hover:bg-green-200 size-40 grid-stack-item-content grid-stack-item newWidget"
+            class="flex flex-col items-center justify-center p-1 mx-auto transition-colors rounded-lg cursor-pointer bg-green-500/15 hover:bg-green-500/30 size-40 grid-stack-item-content grid-stack-item newWidget"
           >
-            <ion-icon
-              name="add-circle"
-              class="text-4xl fill-green-700"
-            ></ion-icon>
+            <svg
+              class="text-green-700 size-8"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-hand"
+            >
+              <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
+              <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
+              <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+              <path
+                d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"
+              />
+            </svg>
             <p class="text-center text-green-700">
               Drag me into the dashboard!
             </p>
           </div>
           <div
             id="trash"
-            class="flex flex-col items-center justify-center mx-auto bg-red-100 rounded-lg size-40"
+            class="flex flex-col items-center justify-center p-1 mx-auto rounded-lg bg-red-500/15 size-40"
           >
-            <ion-icon name="trash" class="text-4xl fill-red-700"></ion-icon>
-
+            <svg
+              class="text-red-700 size-8"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-trash-2"
+            >
+              <path d="M3 6h18" />
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+              <line x1="10" x2="10" y1="11" y2="17" />
+              <line x1="14" x2="14" y1="11" y2="17" />
+            </svg>
             <p class="text-center text-red-700">Drop here to remove widget!</p>
           </div>
         </div>
@@ -628,7 +689,7 @@
 
       <section id="usedBy" class="pt-40 mx-auto max-w-7xl">
         <p
-          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+          class="inline px-4 py-1 text-sm tracking-tight text-purple-700 rounded-lg bg-purple-500/15"
         >
           Articles
         </p>
@@ -639,28 +700,32 @@
         </p>
         <ul class="mt-8">
           <li>
+            Check the package statistics on
             <a
               href="https://www.npmjs.com/package/gridstack"
               target="_blank"
-              class="hover:text-indigo-500"
-              >npm downloads</a
+              class="text-indigo-500 hover:text-indigo-600"
+              >npmjs.org gridstack package</a
             >
+            and see the evolution of it.
           </li>
           <li>
+            Check the gridstack rank on the
             <a
               href="https://www.formget.com/jquery-layout-plugins/"
               target="_blank"
-              class="hover:text-indigo-500"
-              >6 Best jQuery Layout Plugins 2020</a
-            >
+              class="text-indigo-500 hover:text-indigo-600"
+              >6 Best jQuery Layout Plugins 2020
+            </a>
+            article on formget.
           </li>
         </ul>
       </section>
       <section class="pt-40 mx-auto max-w-7xl">
         <p
-          class="inline px-4 py-1 font-medium tracking-tight border border-gray-700 rounded-full"
+          class="inline px-4 py-1 text-sm tracking-tight text-yellow-700 rounded-lg bg-yellow-500/15"
         >
-          Articles
+          Companies
         </p>
         <h2 class="mt-4 text-4xl font-medium">Used by</h2>
         <p class="mt-4 font-light">
@@ -741,9 +806,31 @@
           <a
             target="_blank"
             href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
-            class="text-indigo-500 hover:text-indigo-600"
+            class="text-indigo-500 hover:text-indigo-600 relative pl-5 ml-0.5"
           >
-            <ion-icon name="logo-slack"></ion-icon>Slack community
+            <svg
+              class="absolute left-0 -translate-y-1/2 size-4 top-1/2"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-slack"
+            >
+              <rect width="3" height="8" x="13" y="2" rx="1.5" />
+              <path d="M19 8.5V10h1.5A1.5 1.5 0 1 0 19 8.5" />
+              <rect width="3" height="8" x="8" y="14" rx="1.5" />
+              <path d="M5 15.5V14H3.5A1.5 1.5 0 1 0 5 15.5" />
+              <rect width="8" height="3" x="14" y="13" rx="1.5" />
+              <path d="M15.5 19H14v1.5a1.5 1.5 0 1 0 1.5-1.5" />
+              <rect width="8" height="3" x="2" y="8" rx="1.5" />
+              <path d="M8.5 5H10V3.5A1.5 1.5 0 1 0 8.5 5" />
+            </svg>
+            Slack community
           </a>
           and let us know.
         </p>
@@ -770,8 +857,26 @@
                   <a
                     href="https://github.com/gridstack/gridstack.js"
                     target="_blank"
-                    class="hover:text-black"
+                    class="inline-flex items-center gap-1 hover:text-indigo-600"
                   >
+                    <svg
+                      class="size-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="lucide lucide-github"
+                    >
+                      <path
+                        d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+                      />
+                      <path d="M9 18c-4.51 2-5-2-7-2" />
+                    </svg>
                     GitHub
                   </a>
                 </li>
@@ -784,7 +889,7 @@
                   <a
                     href="https://github.com/adumesny"
                     target="_blank"
-                    class="hover:text-black"
+                    class="hover:text-indigo-600"
                   >
                     @Alain Dumesny
                   </a>
@@ -796,7 +901,7 @@
                   <a
                     href="https://github.com/damien-schneider"
                     target="_blank"
-                    class="hover:text-black"
+                    class="hover:text-indigo-600"
                   >
                     @Damien Schneider
                   </a>
@@ -810,8 +915,30 @@
                   <a
                     href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
                     target="_blank"
-                    class="hover:text-black"
+                    class="inline-flex items-center gap-1 hover:text-indigo-600"
                   >
+                    <svg
+                      class="size-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="lucide lucide-slack"
+                    >
+                      <rect width="3" height="8" x="13" y="2" rx="1.5" />
+                      <path d="M19 8.5V10h1.5A1.5 1.5 0 1 0 19 8.5" />
+                      <rect width="3" height="8" x="8" y="14" rx="1.5" />
+                      <path d="M5 15.5V14H3.5A1.5 1.5 0 1 0 5 15.5" />
+                      <rect width="8" height="3" x="14" y="13" rx="1.5" />
+                      <path d="M15.5 19H14v1.5a1.5 1.5 0 1 0 1.5-1.5" />
+                      <rect width="8" height="3" x="2" y="8" rx="1.5" />
+                      <path d="M8.5 5H10V3.5A1.5 1.5 0 1 0 8.5 5" />
+                    </svg>
                     Slack
                   </a>
                 </li>
@@ -823,7 +950,8 @@
           class="flex flex-col pt-12 md:flex-row md:items-center md:justify-between"
         >
           <span class="text-sm font-medium text-gray-500">
-            Copyright ©2019-2024 gridstack.js is open source software maintained by
+            Copyright ©2019-2024 gridstack.js is open source software
+            maintained by
             <a
               aria-label="Gridstack.js team"
               href="https://github.com/gridstack/gridstack.js#the-team"
