@@ -8,7 +8,7 @@
   },
   "scripts": {
     "reset": "rm -rf dist node_modules coverage && yarn",
-    "format-fix": "prettier ./index.html --write"
+    "format-fix": "prettier ./index.html ./src --write"
   },
   "license": "see GridStack root license",
   "bugs": {
