@@ -31,3 +31,4 @@ For code formatting
 - [ ] Improve SEO with meta tags on each page
 - [ ] Find a way to update automatically `Current version | v10.1.2`
 - [ ] Improve responsive design (mobile version) by changing grid to 6 columns instead of 12 for example and reduce padding on x, etc.
+- [ ] Fix advanced demo "Add widget" to not impact the background & fix margins when dropped in the grid
