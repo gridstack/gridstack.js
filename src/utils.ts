@@ -305,14 +305,13 @@ export class Utils {
   static removeInternalAndSame(a: unknown, b: unknown):void {
     if (typeof a !== 'object' || typeof b !== 'object') return;
     for (let key in a) {
-      let val = a[key];
-      if (key[0] === '_' || val === b[key]) {
+      const aVal = a[key];
+      const bVal = b[key];
+      if (key[0] === '_' || aVal === bVal) {
         delete a[key]
-      } else if (val && typeof val === 'object' && b[key] !== undefined) {
-        for (let i in val) {
-          if (val[i] === b[key][i] || i[0] === '_') { delete val[i] }
-        }
-        if (!Object.keys(val).length) { delete a[key] }
+      } else if (aVal && typeof aVal === 'object' && bVal !== undefined) {
+        Utils.removeInternalAndSame(aVal, bVal);
+        if (!Object.keys(aVal).length) { delete a[key] }
       }
     }
   }
