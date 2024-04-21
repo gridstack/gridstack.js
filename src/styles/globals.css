@@ -1,0 +1,148 @@
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --transparent: transparent;
+  --blue-500: #3498db; /* Example blue color */
+  --indigo-300: #6574cd; /* Example indigo color */
+  --blue-300: #6cb2eb; /* Example light blue color */
+  --violet-200: #a779e9; /* Example violet color */
+  --blue-400: #3490dc; /* Another example blue color */
+
+  --tw-gray-50: #f9fafb;
+  --tw-gray-100: #f3f4f6;
+  --tw-gray-200: #e5e7eb;
+  --tw-gray-300: #d1d5db;
+  --tw-gray-400: #9ca3af;
+  --tw-gray-500: #6b7280;
+  --tw-gray-600: #4b5563;
+  --tw-gray-700: #374151;
+  --tw-gray-800: #1f2937;
+  --tw-gray-900: #111827;
+  --tw-gray-950: #030712;
+
+  --tw-indigo-50: #eef2ff;
+  --tw-indigo-100: #e0e7ff;
+  --tw-indigo-200: #c7d2fe;
+  --tw-indigo-300: #a5b4fc;
+  --tw-indigo-400: #818cf8;
+  --tw-indigo-500: #6366f1;
+  --tw-indigo-600: #4f46e5;
+  --tw-indigo-700: #4338ca;
+  --tw-indigo-800: #3730a3;
+  --tw-indigo-900: #312e81;
+  --tw-indigo-950: #1e1b4b;
+}
+@keyframes auroraAnimation {
+  0% {
+    background-position:
+      0% 50%,
+      50% 50%;
+  }
+  50% {
+    background-position:
+      100% 50%,
+      50% 50%;
+  }
+  100% {
+    background-position:
+      0% 50%,
+      50% 50%;
+  }
+}
+.gradient-background {
+  animation: auroraAnimation 100s linear infinite;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background-image: repeating-linear-gradient(
+      100deg,
+      var(--white) 0%,
+      var(--white) 7%,
+      var(--transparent) 10%,
+      var(--transparent) 12%,
+      var(--white) 16%
+    ),
+    repeating-linear-gradient(
+      100deg,
+      var(--blue-500) 10%,
+      var(--indigo-300) 15%,
+      var(--blue-300) 20%,
+      var(--violet-200) 25%,
+      var(--blue-400) 30%
+    );
+  mask-image: linear-gradient(to top, transparent, black);
+  background-size: 300%, 200%;
+  background-position:
+    50% 50%,
+    50% 50%;
+  filter: blur(10px) invert(1);
+  opacity: 0.3;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.gradient-background::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: repeating-linear-gradient(
+      100deg,
+      var(--white) 0%,
+      var(--white) 7%,
+      var(--transparent) 12%,
+      var(--transparent) 20%,
+      var(--white) 30%
+    ),
+    repeating-linear-gradient(
+      100deg,
+      var(--blue-500) 10%,
+      var(--indigo-300) 15%,
+      var(--blue-300) 20%,
+      var(--violet-200) 25%,
+      var(--blue-400) 30%
+    );
+  background-size: 200%, 100%;
+  background-attachment: fixed;
+  mix-blend-mode: difference;
+}
+/* End gradient header */
+section {
+  padding: 0 2rem;
+}
+.font-lexend {
+  font-family: 'Lexend', sans-serif;
+}
+/* Grid style */
+
+.grid-stack-item {
+  border-radius: 8px;
+  cursor: pointer;
+}
+.grid-stack-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* End grid style */
+.card {
+  background: none;
+}
+.grid-stack-item-removing {
+  opacity: 0.8;
+  filter: blur(5px);
+}
+
+@media all and (max-width: 575px) {
+  #hero {
+    margin-top: 32px;
+  }
+}
