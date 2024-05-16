@@ -2252,7 +2252,7 @@ export class GridStack {
           this.engine.cleanupNode(node); // removes all internal _xyz values
           node.grid = this;
         }
-        delete node.grid._isTemp;
+        delete node.grid?._isTemp;
         dd.off(el, 'drag');
         // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
         // as the helper will be nuked by jquery-ui otherwise. TODO: update old code path
