@@ -2470,11 +2470,11 @@ export class GridStack {
       node._moving = true; // AFTER, mark as moving object (wanted fix location before)
     }
 
-    // set the min/max resize info
+    // set the min/max resize info taking into account the column count and position (so we don't resize outside the grid)
     this.engine.cacheRects(cellWidth, cellHeight, this.opts.marginTop as number, this.opts.marginRight as number, this.opts.marginBottom as number, this.opts.marginLeft as number);
     if (event.type === 'resizestart') {
-      dd.resizable(el, 'option', 'minWidth', cellWidth * (node.minW || 1))
-        .resizable(el, 'option', 'minHeight', cellHeight * (node.minH || 1));
+      dd.resizable(el, 'option', 'minWidth', cellWidth * Math.min(node.minW || 1, this.getColumn() - node.x))
+        .resizable(el, 'option', 'minHeight', cellHeight * Math.min(node.minH || 1, (this.opts.maxRow || Number.MAX_SAFE_INTEGER) - node.y));
       if (node.maxW) { dd.resizable(el, 'option', 'maxWidth', cellWidth * node.maxW); }
       if (node.maxH) { dd.resizable(el, 'option', 'maxHeight', cellHeight * node.maxH); }
     }
