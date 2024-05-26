@@ -112,6 +112,7 @@ Change log
 ## 10.1.2-dev (TBD)
 * fix: [#2672](https://github.com/gridstack/gridstack.js/pull/2672) dropping into full grid JS error
 * fix: [#2676](https://github.com/gridstack/gridstack.js/issues/2676) handle minW resizing when column count is less
+* fix: [#2677](https://github.com/gridstack/gridstack.js/issues/2677) allow button as handle dragging
 
 ## 10.1.2 (2024-03-30)
 * fix: [#2628](https://github.com/gridstack/gridstack.js/issues/2628) `removeAll()` does not trigger Angular's ngOnDestroy 

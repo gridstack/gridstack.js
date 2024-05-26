@@ -136,7 +136,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (e.button !== 0) return true; // only left click
 
     // make sure we are not clicking on known object that handles mouseDown, or ones supplied by the user
-    if ((e.target as HTMLElement).closest(skipMouseDown)) return true;
+    if (e.target !== this.dragEl && (e.target as HTMLElement).closest(skipMouseDown)) return true;
     if (this.option.cancel) {
       if ((e.target as HTMLElement).closest(this.option.cancel)) return true;
     }

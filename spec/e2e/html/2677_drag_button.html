@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>drag button demo</title>
+
+  <link rel="stylesheet" href="../../../demo/demo.css" />
+  <script src="../../../dist/gridstack-all.js"></script>
+  <style>
+    .handle { cursor: move }
+  </style>
+</head>
+<body>
+  <div class="grid-stack"></div>
+  <script type="text/javascript">
+    let items = [
+      {x: 0, y: 0, content: '<button class="handle">Handle</button>'},
+      {x: 1, y: 0, w: 3, content: '<span class="handle">Handle</span>'},
+    ];
+    let grid = GridStack.init({handle: '.handle', cellHeight: 70}).load(items);
+  </script>
+</body>
+</html>
