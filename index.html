@@ -2,19 +2,62 @@
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="utf-8" />
+    <title>Gridstack.js | Build interactive dashboards in minutes.</title>
+
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta
       name="description"
-      content="gridstack.js Build interactive dashboards in minutes."
+      content="Easily create dynamic and responsive dashboards with Gridstack.js. Ideal for projects involving React, Vue, Angular, and more."
     />
     <meta
       name="keywords"
-      content="gridstack, typescript, jquery, grid, layout, drag-n-drop, widgets, js, javascript, gridstack.js, dashboard"
+      content="gridstack.js, JavaScript grid layout, draggable widgets, responsive dashboards, TypeScript, React, Vue, Angular, dashboard creation, web development"
     />
-    <title>gridstack.js | Build interactive dashboards in minutes.</title>
+    <link rel="canonical" href="https://gridstackjs.com/" />
+
+    <meta
+      property="og:title"
+      content="Create Responsive Dashboards with Gridstack.js"
+    />
+    <meta
+      property="og:description"
+      content="Start building highly interactive and responsive dashboards quickly with Gridstack.js. Explore features and integrations with React, Vue, Angular, and more."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gridstackjs.com/" />
+    <!-- TODO <meta property="og:image" content="https://www.yourwebsite.com/path/to/og-image.jpg" /> -->
+    <meta property="og:site_name" content="Gridstack.js Official Site" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Meta Tags -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:title"
+      content="Gridstack.js | Create Responsive Dashboards with JavaScript"
+    />
+    <meta
+      property="twitter:description"
+      content="Build dynamic and responsive dashboards quickly with Gridstack.js. Explore features suitable for React, Vue, Angular."
+    />
+    <!-- TODO <meta property="twitter:image" content="https://www.yourwebsite.com/path/to/twitter-image.jpg" /> -->
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Gridstack.js",
+        "applicationCategory": "DeveloperSoftware",
+        "operatingSystem": "All",
+        "url": "https://gridstackjs.com/",
+        "description": "Interactive JavaScript grid layout library that allows you to build dynamic and responsive dashboards in minutes."
+      }
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
     <!-- ES5 support for IE -->
     <script src="node_modules/gridstack/dist/es5/gridstack-poly.js"></script>
@@ -58,8 +101,7 @@
         },
       }
     </script>
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -79,133 +121,7 @@
       href="node_modules/gridstack/dist/gridstack.min.css"
       rel="stylesheet"
     />
-    <style type="text/css">
-      /* Gradient header */
-      :root {
-        --white: #ffffff;
-        --black: #000000;
-        --transparent: transparent;
-        --blue-500: #3498db; /* Example blue color */
-        --indigo-300: #6574cd; /* Example indigo color */
-        --blue-300: #6cb2eb; /* Example light blue color */
-        --violet-200: #a779e9; /* Example violet color */
-        --blue-400: #3490dc; /* Another example blue color */
-      }
-      @keyframes auroraAnimation {
-        0% {
-          background-position:
-            0% 50%,
-            50% 50%;
-        }
-        50% {
-          background-position:
-            100% 50%,
-            50% 50%;
-        }
-        100% {
-          background-position:
-            0% 50%,
-            50% 50%;
-        }
-      }
-      .gradient-background {
-        animation: auroraAnimation 100s linear infinite;
-        position: absolute;
-        top: 0px;
-        right: 0px;
-        bottom: 0px;
-        left: 0px;
-        background-image: repeating-linear-gradient(
-            100deg,
-            var(--white) 0%,
-            var(--white) 7%,
-            var(--transparent) 10%,
-            var(--transparent) 12%,
-            var(--white) 16%
-          ),
-          repeating-linear-gradient(
-            100deg,
-            var(--blue-500) 10%,
-            var(--indigo-300) 15%,
-            var(--blue-300) 20%,
-            var(--violet-200) 25%,
-            var(--blue-400) 30%
-          );
-        mask-image: linear-gradient(to top, transparent, black);
-        background-size: 300%, 200%;
-        background-position:
-          50% 50%,
-          50% 50%;
-        filter: blur(10px) invert(1);
-        opacity: 0.3;
-        pointer-events: none;
-        will-change: transform;
-      }
-
-      .gradient-background::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background-image: repeating-linear-gradient(
-            100deg,
-            var(--white) 0%,
-            var(--white) 7%,
-            var(--transparent) 12%,
-            var(--transparent) 20%,
-            var(--white) 30%
-          ),
-          repeating-linear-gradient(
-            100deg,
-            var(--blue-500) 10%,
-            var(--indigo-300) 15%,
-            var(--blue-300) 20%,
-            var(--violet-200) 25%,
-            var(--blue-400) 30%
-          );
-        background-size: 200%, 100%;
-        background-attachment: fixed;
-        mix-blend-mode: difference;
-      }
-      /* End gradient header */
-      section {
-        padding: 0 2rem;
-      }
-      .font-lexend {
-        font-family: 'Lexend', sans-serif;
-      }
-      /* Grid style */
-
-      .grid-stack-item {
-        border-radius: 8px;
-        cursor: pointer;
-      }
-      .grid-stack-item-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: white;
-        border-radius: 8px;
-        text-align: center;
-      }
-
-      /* End grid style */
-      .card {
-        background: none;
-      }
-      .grid-stack-item-removing {
-        opacity: 0.8;
-        filter: blur(5px);
-      }
-
-      @media all and (max-width: 575px) {
-        #hero {
-          margin-top: 32px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="src/styles/globals.css" />
   </head>
 
   <body class="font-lexend bg-gray-50">
@@ -221,7 +137,7 @@
         <img
           src="logos/gridstack-logo-small.png"
           alt="gridstack.js logo"
-          class="h-10 object-fit"
+          class="h-8 object-fit"
         />
         Gridstack
       </a>
@@ -741,6 +657,7 @@
             class="transition-transform hover:scale-105"
           >
             <img
+              alt="VMware logo"
               style="max-width: 100px"
               class="img-responsive"
               src="logos/VMW_09Q3_LOGO_Corp_Gray.png"
@@ -751,6 +668,7 @@
             class="transition-transform hover:scale-105"
           >
             <img
+              alt="Ducker Frontier logo"
               style="max-width: 150px"
               class="img-responsive"
               src="logos/df-logo-transparent-bg.png"
@@ -762,6 +680,7 @@
             class="transition-transform hover:scale-105"
           >
             <img
+              alt="Guard logo"
               style="max-width: 100px"
               class="img-responsive"
               src="logos/Guard-Logo-RGB.png"
@@ -772,6 +691,7 @@
             class="transition-transform hover:scale-105"
           >
             <img
+              alt="Modul logo"
               style="max-width: 100px"
               class="img-responsive"
               src="logos/modul-large-logo.png"
@@ -782,6 +702,7 @@
             class="transition-transform hover:scale-105"
           >
             <img
+              alt="Node-RED logo"
               style="max-width: 50px"
               class="img-responsive"
               src="logos/node-red-icon.png"
@@ -792,6 +713,7 @@
             class="transition-transform hover:scale-105"
           >
             <img
+              alt="Flexitanalytics logo"
               style="max-width: 50px"
               class="img-responsive"
               src="logos/Flex-X-medium.png"
@@ -837,7 +759,7 @@
       </section>
     </main>
 
-    <footer class="mt-20 border-t">
+    <footer class="mt-40 border-t">
       <div class="px-8 py-12 mx-auto md:px-12 lg:px-32 max-w-7xl">
         <div class="xl:grid xl:grid-cols-3 xl:gap-8">
           <div>
@@ -967,106 +889,114 @@
     </footer>
 
     <script type="text/javascript">
-  var simple = [
-    { x: 0, y: 0, w: 4, h: 2, content: '1' },
-    { x: 4, y: 0, w: 4, h: 4, content: '2' },
-    {
-      x: 8,
-      y: 0,
-      w: 2,
-      h: 2,
-      content: `<div class="flex flex-col items-center justify-center w-full h-full text-indigo-600">
+      var simple = [
+        { x: 0, y: 0, w: 4, h: 2, content: '1' },
+        { x: 4, y: 0, w: 4, h: 4, content: '2' },
+        {
+          x: 8,
+          y: 0,
+          w: 2,
+          h: 2,
+          content: `<div class="flex flex-col items-center justify-center w-full h-full text-indigo-600">
           <svg class="size-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hand">
             <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
             <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
           </svg>
           <p>Drag me !</p>
         </div>`,
-    },
-    { x: 10, y: 0, w: 2, h: 2, content: '4' },
-    { x: 0, y: 2, w: 2, h: 2, content: '5' },
-    { x: 2, y: 2, w: 2, h: 4, content: '6' },
-    { x: 8, y: 2, w: 4, h: 2, content: '7' },
-    { x: 0, y: 4, w: 2, h: 2, content: '8' },
-    { x: 4, y: 4, w: 4, h: 2, content: '9' },
-    { x: 8, y: 4, w: 2, h: 2, content: '10' },
-    { x: 10, y: 4, w: 2, h: 2, content: '11' },
-  ]
-  var advanced = [
-    { x: 0, y: 0, w: 4, h: 2, content: '1' },
-    {
-      x: 4,
-      y: 0,
-      w: 4,
-      h: 4,
-      noMove: true,
-      noResize: true,
-      locked: true,
-      content: `<div class="flex flex-col items-center justify-center w-full h-full gap-2 text-red-600">
+        },
+        { x: 10, y: 0, w: 2, h: 2, content: '4' },
+        { x: 0, y: 2, w: 2, h: 2, content: '5' },
+        { x: 2, y: 2, w: 2, h: 4, content: '6' },
+        { x: 8, y: 2, w: 4, h: 2, content: '7' },
+        { x: 0, y: 4, w: 2, h: 2, content: '8' },
+        { x: 4, y: 4, w: 4, h: 2, content: '9' },
+        { x: 8, y: 4, w: 2, h: 2, content: '10' },
+        { x: 10, y: 4, w: 2, h: 2, content: '11' },
+      ]
+      var advanced = [
+        { x: 0, y: 0, w: 4, h: 2, content: '1' },
+        {
+          x: 4,
+          y: 0,
+          w: 4,
+          h: 4,
+          noMove: true,
+          noResize: true,
+          locked: true,
+          content: `<div class="flex flex-col items-center justify-center w-full h-full gap-2 text-red-600">
           <svg class="text-red-600 size-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-keyhole">
             <circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/>
             <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
           </svg>
           <p>Can't be moved or dragged</p>
         </div>`,
-    },
-    {
-      x: 8,
-      y: 0,
-      w: 2,
-      h: 2,
-      minW: 2,
-      noResize: true,
-      content: `<div class="flex flex-col items-center justify-center w-full h-full gap-2 text-red-600">
+        },
+        {
+          x: 8,
+          y: 0,
+          w: 2,
+          h: 2,
+          minW: 2,
+          noResize: true,
+          content: `<div class="flex flex-col items-center justify-center w-full h-full gap-2 text-red-600">
           <svg class="size-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scaling">
             <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
             <path d="M14 15H9v-5"/><path d="M16 3h5v5"/><path d="M21 3 9 15"/>
           </svg>
           <p>Resize locked</p>
         </div>`,
-    },
-    { x: 10, y: 0, w: 2, h: 2, content: '4' },
-    { x: 0, y: 2, w: 2, h: 2, content: '5' },
-    { x: 2, y: 2, w: 2, h: 4, content: '6' },
-    { x: 8, y: 2, w: 4, h: 2, content: '7' },
-    { x: 0, y: 4, w: 2, h: 2, content: '8' },
-    { x: 4, y: 4, w: 4, h: 2, content: '9' },
-    { x: 8, y: 4, w: 2, h: 2, content: '10' },
-    { x: 10, y: 4, w: 2, h: 2, content: '11' },
-  ]
+        },
+        { x: 10, y: 0, w: 2, h: 2, content: '4' },
+        { x: 0, y: 2, w: 2, h: 2, content: '5' },
+        { x: 2, y: 2, w: 2, h: 4, content: '6' },
+        { x: 8, y: 2, w: 4, h: 2, content: '7' },
+        { x: 0, y: 4, w: 2, h: 2, content: '8' },
+        { x: 4, y: 4, w: 4, h: 2, content: '9' },
+        { x: 8, y: 4, w: 2, h: 2, content: '10' },
+        { x: 10, y: 4, w: 2, h: 2, content: '11' },
+      ]
 
-  // Setup Grids without jQuery
-  document.addEventListener('DOMContentLoaded', function () {
-    var simpleGrid = GridStack.init({
-      margin: 5,
-      disableOneColumnMode: true,
-    }, '#simple-grid');
-    simpleGrid.load(simple);
+      // Setup Grids without jQuery
+      document.addEventListener('DOMContentLoaded', function () {
+        var simpleGrid = GridStack.init(
+          {
+            margin: 5,
+            disableOneColumnMode: true,
+          },
+          '#simple-grid'
+        )
+        simpleGrid.load(simple)
 
-    var advGrid = GridStack.init({
-      margin: 5,
-      disableOneColumnMode: true,
-      acceptWidgets: true,
-      removable: '#trash',
-      removeTimeout: 100,
-    }, '#advanced-grid');
-    advGrid.load(advanced);
+        var advGrid = GridStack.init(
+          {
+            margin: 5,
+            disableOneColumnMode: true,
+            acceptWidgets: true,
+            removable: '#trash',
+            removeTimeout: 100,
+          },
+          '#advanced-grid'
+        )
+        advGrid.load(advanced)
 
-    GridStack.setupDragIn('.newWidget', {
-      appendTo: 'body',
-      helper: 'clone',
-    });
+        GridStack.setupDragIn('.newWidget', {
+          appendTo: 'body',
+          helper: 'clone',
+        })
 
-    document.getElementById('search').addEventListener('submit', function (event) {
-      event.preventDefault();
-      var searchTerm = document.getElementById('searchTerm').value;
-      window.open(
-        `https://github.com/gridstack/gridstack.js/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+${searchTerm}`,
-        '_blank'
-      );
-    });
-  });
-</script>
+        document
+          .getElementById('search')
+          .addEventListener('submit', function (event) {
+            event.preventDefault()
+            var searchTerm = document.getElementById('searchTerm').value
+            window.open(
+              `https://github.com/gridstack/gridstack.js/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+${searchTerm}`,
+              '_blank'
+            )
+          })
+      })
+    </script>
 
     <!-- Google Analytics -->
     <script>

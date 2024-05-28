@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "website for gridstack.js",
   "repository": {
     "type": "git",
@@ -8,9 +8,9 @@
   },
   "scripts": {
     "reset": "rm -rf dist node_modules coverage && yarn",
-    "format-fix": "prettier ./index.html ./src --write"
+    "format:fix": "prettier ./index.html ./src --write ./demo/index.html"
   },
-  "license": "see GridStack root license",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/gridstack/gridstack.js/issues"
   },
