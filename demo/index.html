@@ -1,650 +1,75 @@
-<!doctype html>
-<html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="utf-8" />
-    <title>
-      Gridstack.js Examples: Integrating with React, Vue, Angular, and More
-    </title>
-    <link rel="stylesheet" href="../src/styles/globals.css" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <meta
-      name="description"
-      content="Explore detailed examples of Gridstack.js with frameworks like React, Vue, and Angular, and enhance your web development skills."
-    />
-    <meta
-      name="keywords"
-      content="Gridstack.js, JavaScript grid, UI grid, React, Vue, Angular, web development, interactive UIs"
-    />
-    <link rel="canonical" href="https://gridstackjs.com/demo" />
-    <meta
-      property="og:title"
-      content="Gridstack.js Examples: Integrating with React, Vue, Angular, and More"
-    />
-    <meta
-      property="og:description"
-      content="Learn to integrate Gridstack.js with frameworks like React, Vue, and Angular through comprehensive examples. Start building interactive UIs today."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://gridstackjs.com/demo" />
-    <!-- TODO <meta property="og:image" content="https://www.yourwebsite.com/path/to/demo-image.jpg" /> -->
-    <meta property="og:site_name" content="Gridstack.js Examples Site" />
-    <meta property="og:locale" content="en_US" />
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+<!DOCTYPE html>
+<html>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Gridstack.js Examples: Integrating with React, Vue, Angular, and More"
-    />
-    <meta
-      name="twitter:description"
-      content="Dive into Gridstack.js through interactive examples with React, Vue, and Angular. Perfect your web development skills."
-    />
-    <!-- TODO <meta name="twitter:image" content="https://www.yourwebsite.com/path/to/twitter-demo-image.jpg" /> -->
+<head>
+  <meta charset="utf-8">
+  <title>Demo</title>
+</head>
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Gridstack.js",
-        "applicationCategory": "DeveloperSoftware",
-        "operatingSystem": "All",
-        "url": "https://gridstackjs.com/demo",
-        "description": "Examples of Gridstack use cases allowing to build interactive JavaScript dynamic grid layout and responsive dashboards in minutes."
-      }
-    </script>
+<body>
+  <h1>Demos</h1>
+  <ul>
+    <li><a href="anijs.html">AniJS</a></li>
+    <li><a href="cell-height.html">Cell Height</a></li>
+    <li><a href="column.html">Column</a></li>
+    <!-- <li><a href="esmodule.html">ES Module test</a></li> -->
+    <li><a href="float.html">Float grid</a></li>
+    <li><a href="knockout.html">Knockout.js</a></li>
+    <li><a href="mobile.html">Mobile touch</a></li>
+    <li><a href="nested.html">Nested grids</a></li>
+    <li><a href="nested_advanced.html">Nested Advanced grids</a></li>
+    <li><a href="nested_constraint.html">Nested Constraint grids</a></li>
+    <li><a href="react-hooks-controlled-multiple.html">ReactJS (Hooks), multiple grid, controlled (NOT Ideal)</a></li>
+    <li><a href="react-hooks.html">ReactJS (Hooks)</a></li>
+    <li><a href="react.html">ReactJS</a></li>
+    <li><a href="responsive.html">Responsive: by column size</a></li>
+    <li><a href="responsive_break.html">Responsive: using breakpoints</a></li>
+    <li><a href="right-to-left(rtl).html">Right-To-Left (RTL)</a></li>
+    <li><a href="serialization.html">Serialization</a></li>
+    <li><a href="sizeToContent.html">Size To Content</a></li>
+    <li><a href="static.html">Static</a></li>
+    <li><a href="title_drag.html">Title drag</a></li>
+    <li><a href="transform.html">Transform (scale+offset)</a></li>
+    <li><a href="two.html">Two grids</a></li>
+    <li><a href="two_vertical.html">Two grids Vertical</a></li>
+    <li><a href="vue2js.html">Vue2.js</a></li>
+    <li><a href="vue3js.html">Vue3.js</a></li>
+    <li><a href="vue3js_dynamic-render_grid-item-content.html">Vue3: Gridstack Controls Vue Rendering Grid Item
+        Content</a></li>
+    <li><a href="vue3js_dynamic-render_grid-item.html">Vue3: Gridstack Controls Vue Rendering Grid Item</a></li>
+    <li><a href="vue3js_v-for.html">Vue3 with v-for</a></li>
+    <li><a href="web-comp.html">Web Component</a></li>
+    <li><a href="web1.html">Website demo 1</a></li>
+    <li><a href="web2.html">Website demo 2</a></li>
+  </ul>
+  <h1>Angular wrapper</h1>
+  <p>We now ship an <a href="https://github.com/gridstack/gridstack.js/tree/master/angular/" target="_blank">Angular
+      Component</a>
+    to make it supper easy for that framework (Vue and React examples are above)</p>
+  <p>These are complete Angular projects with multiple options. use `yarn` and `yarn start` in <a
+      href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo" target="_blank">angular
+      demo</a> sub-project to run them</p>
+  <ol>
+    <li><a
+        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/simple.ts">simple.ts</a>
+    </li>
+    <li><a
+        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/ngFor.ts">ngFor.ts</a>
+    </li>
+    <li><a href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/ngFor_cmd.ts">ngFor
+        with command</a> (not recommended)</li>
+    <li><a
+        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/lib/src/lib/gridstack.component.ts">gridstack.component.ts</a>
+      and <a
+        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/lib/src/lib/gridstack-item.component.ts">gridstack-item.component.ts</a>
+      (BEST)</li>
+  </ol>
+  <h1>Old v5.1.1 Jquery Demos</h1>
+  Note: those are no longer supported, and use an old version of the lib to compare functionality.
+  <ul>
+    <li><a href="old_two-jq.html">Two grids</a></li>
+    <li><a href="old_nested-jq.html">Nested grids</a></li>
+  </ul>
+</body>
 
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Urbanist:wght@100;200;300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Tailwind Typography Plugin -->
-    <script>
-      tailwind.config = {
-        important: true,
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Lexend', 'sans-serif'],
-            },
-          },
-        },
-      }
-    </script>
-
-    <style>
-      .demo-grid > li > a {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        background-color: #fff;
-        cursor: pointer;
-        color: rgb(55 65 81);
-        margin-top: 0.5rem;
-        border: 2px solid #fff;
-      }
-      .demo-grid > li > a:hover {
-        color: rgb(99 102 241);
-        border: 2px solid var(--tw-indigo-500);
-        transform: scale(1.05);
-      }
-
-      .badge {
-        display: flex;
-        width: fit-content;
-        padding-top: 0.125rem;
-        padding-bottom: 0.125rem;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-        border-radius: 0.375rem;
-        font-size: 0.875rem;
-        font-weight: 400;
-        line-height: 1.25rem;
-        letter-spacing: -0.025em;
-      }
-      .badge.sky {
-        background-color: rgb(14, 165, 233, 0.15);
-        color: rgb(3, 105, 161);
-      }
-      .badge.green {
-        background-color: rgb(34, 197, 94, 0.15);
-        color: rgb(21, 128, 61);
-      }
-      .badge.red {
-        background-color: rgb(239, 68, 68, 0.15);
-        color: rgb(185, 28, 28);
-      }
-      .badge.gray {
-        background-color: rgb(107, 114, 128, 0.15);
-        color: rgb(55, 65, 81);
-      }
-      section {
-        padding: 0 2rem;
-      }
-    </style>
-  </head>
-
-  <body class="mx-auto bg-gray-50">
-    <!-- Navbar -->
-    <nav
-      class="fixed top-0 z-50 flex items-center justify-between w-full h-16 px-4 bg-gray-200 border-b border-white rounded-b-lg shadow-2xl backdrop-blur-md bg-white/40 shadow-white"
-    >
-      <!-- Logo -->
-      <a
-        href="/"
-        class="flex items-center gap-1 text-2xl font-semibold tracking-tighter text-gray-700 hover:text-[#0038FF] transition-colors"
-      >
-        <img
-          src="../logos/gridstack-logo-small.png"
-          alt="gridstack.js logo"
-          class="h-8 object-fit"
-        />
-        Gridstack
-      </a>
-      <!-- End logo -->
-      <!-- Mobile menu button -->
-      <input type="checkbox" id="menu-btn" class="hidden peer" />
-      <label for="menu-btn" class="block cursor-pointer md:hidden">
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16m-7 6h7"
-          ></path>
-        </svg>
-      </label>
-      <!-- End mobile menu button -->
-      <!-- Menu items -->
-      <ul
-        class="absolute left-0 right-0 z-50 flex flex-col items-center gap-4 py-0 overflow-hidden transition-all duration-500 ease-out bg-white md:gap-0 md:overflow-visible md:bg-transparent md:max-h-16 md:py-0 max-h-0 peer-checked:py-6 peer-checked:max-h-screen md:flex-row peer-checked:backdrop-blur-lg rounded-b-xl md:rounded-none top-full md:top-0 md:relative md:flex"
-      >
-        <li class="hidden lg:block">
-          <a
-            href="/#demo"
-            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
-            >Demo</a
-          >
-        </li>
-        <li class="hidden lg:block">
-          <a
-            href="/#getStarted"
-            class="px-4 py-2 text-gray-700 transition-all whitespace-nowrap hover:scale-105 hover:text-indigo-400"
-            >Getting Started</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://github.com/gridstack/gridstack.js/blob/develop/README.md"
-            target="_blank"
-            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
-            >Docs</a
-          >
-        </li>
-        <li>
-          <a
-            href="/demo/index.html"
-            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
-            >Examples</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://github.com/gridstack/gridstack.js/blob/develop/doc/CHANGES.md"
-            class="px-4 py-2 text-gray-700 transition-all hover:scale-105 hover:text-indigo-400"
-            target="_blank"
-            >Changes</a
-          >
-        </li>
-        <li>
-          <a
-            class="inline-flex items-center gap-1 px-4 py-2 text-gray-700 transition-all whitespace-nowrap hover:scale-105 hover:text-indigo-400"
-            target="_blank"
-            href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
-          >
-            <svg
-              class="size-4"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-slack"
-            >
-              <rect width="3" height="8" x="13" y="2" rx="1.5" />
-              <path d="M19 8.5V10h1.5A1.5 1.5 0 1 0 19 8.5" />
-              <rect width="3" height="8" x="8" y="14" rx="1.5" />
-              <path d="M5 15.5V14H3.5A1.5 1.5 0 1 0 5 15.5" />
-              <rect width="8" height="3" x="14" y="13" rx="1.5" />
-              <path d="M15.5 19H14v1.5a1.5 1.5 0 1 0 1.5-1.5" />
-              <rect width="8" height="3" x="2" y="8" rx="1.5" />
-              <path d="M8.5 5H10V3.5A1.5 1.5 0 1 0 8.5 5" />
-            </svg>
-            Slack
-          </a>
-        </li>
-        <li>
-          <form id="search" class="relative shadow-sm">
-            <input
-              type="text"
-              id="searchTerm"
-              class="form-control block w-full rounded-lg border-0 py-1.5 pl-4 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-inset focus:ring-blue-500 transition-all sm:text-sm h-8"
-              placeholder="Search issues"
-            />
-            <div class="absolute inset-y-0 right-0 flex items-center">
-              <label for="send" class="sr-only">Github issues</label>
-              <button
-                id="send"
-                name="send"
-                type="submit"
-                class="h-full py-0 pl-2 pr-4 text-gray-500 bg-transparent border-0 rounded-md focus:ring-2 focus:ring-inset focus:ring-blue-500 sm:text-sm"
-              >
-                Search
-              </button>
-            </div>
-          </form>
-        </li>
-      </ul>
-      <!-- End menu items -->
-    </nav>
-    <!-- End navbar -->
-    <section class="">
-      <div class="gradient-background -z-10"></div>
-
-      <h1
-        class="mt-40 mb-20 text-6xl font-semibold tracking-tighter text-center text-gray-800 sm:text-7xl"
-      >
-        Explore the examples
-      </h1>
-      <p
-        class="mt-8 mb-8 text-lg font-light tracking-tight text-gray-600 sm:text-xl"
-      >
-        Gridstack.js is a modern pure Typescript library, with no external
-        dependencies, that can work with any framework. Here are some examples
-        of how to use Gridstack.js with various frameworks such as React, Vue,
-        Angular, and more.
-        <br />
-        <br />
-        Explore in all the examples below the full capabilities of Gridstack.js
-        with plain HTML and JavaScript.
-      </p>
-      <ul
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 demo-grid gap-2 sm:gap-6 [&>li]:tracking-tighter [&>li]:text-lg *:transition-all duration-500 transition-all *:duration-500 [&_a]:transition-all p-4 bg-white/40 border-white border rounded-xl"
-      >
-        <li>
-          <a href="anijs.html">AniJS</a>
-        </li>
-        <li><a href="cell-height.html">Cell Height</a></li>
-        <li><a href="column.html">Column</a></li>
-        <!-- <li><a href="esmodule.html">ES Module test</a></li> -->
-        <li><a href="float.html">Float grid</a></li>
-        <li><a href="knockout.html">Knockout.js</a></li>
-        <li>
-          <a href="mobile.html">
-            <p class="badge gray">Mobile</p>
-
-            Mobile touch</a
-          >
-        </li>
-        <li>
-          <a href="nested.html">
-            <p class="badge gray">Nested</p>
-            Nested grids</a
-          >
-        </li>
-        <li>
-          <a href="nested_advanced.html">
-            <p class="badge gray">Nested</p>
-
-            Nested Advanced grids</a
-          >
-        </li>
-        <li>
-          <a href="nested_constraint.html">
-            <p class="badge gray">Nested</p>
-
-            Nested Constraint grids</a
-          >
-        </li>
-        <li>
-          <a href="react-hooks-controlled-multiple.html">
-            <p class="badge sky">ReactJS</p>
-            ReactJS multiple grid, controlled
-            <p class="text-sm tracking-normal text-gray-500">
-              This is not the ideal way to use Gridstack with React.
-            </p>
-          </a>
-        </li>
-        <li>
-          <a href="react-hooks.html">
-            <p class="badge sky">ReactJS</p>
-            ReactJS with Hooks</a
-          >
-        </li>
-        <li>
-          <a href="react.html">
-            <p class="badge sky">ReactJS</p>
-            ReactJS</a
-          >
-        </li>
-        <li>
-          <a href="responsive.html">
-            <p class="badge gray">Responsive</p>
-            Responsive: by column size</a
-          >
-        </li>
-        <li>
-          <a href="responsive_break.html">
-            <p class="badge gray">Responsive</p>
-
-            Responsive: using breakpoints</a
-          >
-        </li>
-        <li><a href="right-to-left(rtl).html">Right-To-Left (RTL)</a></li>
-        <li><a href="serialization.html">Serialization</a></li>
-        <li><a href="sizeToContent.html">Size To Content</a></li>
-        <li><a href="static.html">Static</a></li>
-        <li><a href="title_drag.html">Title drag</a></li>
-        <li><a href="transform.html">Transform (scale+offset)</a></li>
-        <li><a href="two.html">Two grids</a></li>
-        <li><a href="two_vertical.html">Two grids Vertical</a></li>
-        <li>
-          <a href="vue2js.html">
-            <p class="badge green">Vue</p>
-            Vue2.js
-          </a>
-        </li>
-        <li>
-          <a href="vue3js.html">
-            <p class="badge green">Vue</p>
-            Vue3.js</a
-          >
-        </li>
-        <li>
-          <a href="vue3js_dynamic-render_grid-item-content.html">
-            <p class="badge green">Vue</p>
-            Vue3: Gridstack Controls Vue Rendering Grid Item Content
-            <p class="text-sm tracking-normal text-gray-500">
-              Use Vue3 render functions to dynamically render only the grid item
-              content.
-            </p>
-          </a>
-        </li>
-        <li>
-          <a href="vue3js_dynamic-render_grid-item.html">
-            <p class="badge green">Vue</p>
-
-            Vue3: Gridstack Controls Vue Rendering Grid Item
-            <p class="text-sm tracking-normal text-gray-500">
-              Use Vue3 render functions to dynamically render only the grid item
-              content.
-            </p>
-          </a>
-        </li>
-        <li>
-          <a href="vue3js_v-for.html">
-            <p class="badge green">Vue</p>
-
-            Vue3 with v-for
-            <p class="text-sm tracking-normal text-gray-500">
-              As a basic example, check this component's mounted hook.
-            </p>
-          </a>
-        </li>
-        <li><a href="web-comp.html">Web Component</a></li>
-        <li><a href="web1.html">Website demo 1</a></li>
-        <li><a href="web2.html">Website demo 2</a></li>
-      </ul>
-    </section>
-
-    <section class="pt-40 mx-auto max-w-7xl">
-      <p
-        class="inline px-4 py-1 text-sm tracking-tight text-red-700 rounded-lg bg-red-500/15"
-      >
-        Angular
-      </p>
-      <h2 class="mt-4 text-4xl font-medium">Angular Wrapper</h2>
-      <p class="mt-4 font-light">
-        Gridstack.js is a modern pure Typescript library, with no external
-        dependencies, that can work with any framework. It comes bundled with an
-        Angular wrapper, and include many React|Vue examples (wrapper coming
-        soon) as well as others.
-      </p>
-      <p class="mt-4 font-light">
-        We now ship an
-        <a
-          class="text-indigo-500 transition-colors hover:text-indigo-600"
-          href="https://github.com/gridstack/gridstack.js/tree/master/angular/"
-          target="_blank"
-          >Angular Component</a
-        >
-        to make it supper easy for that framework (Vue and React examples are
-        above)
-      </p>
-      <p class="mt-4 font-light">
-        These are complete Angular projects with multiple options. use
-        <code> `yarn` </code> and
-        <code> `yarn start` </code>
-        in
-        <a
-          class="text-indigo-500 transition-colors hover:text-indigo-600"
-          href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo"
-          target="_blank"
-          >angular demo</a
-        >
-        sub-project to run them
-      </p>
-      <ol
-        class="grid grid-cols-1 sm:grid-cols-2 demo-grid gap-2 sm:gap-6 [&>li]:tracking-tighter [&>li]:text-lg *:transition-all duration-500 transition-all *:duration-500 [&_a]:transition-all"
-      >
-        <li>
-          <a
-            href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/simple.ts"
-          >
-            <p class="badge red">Angular</p>
-            simple.ts</a
-          >
-        </li>
-        <li>
-          <a
-            class="link"
-            href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/ngFor.ts"
-          >
-            <p class="badge red">Angular</p>
-            ngFor.ts</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/ngFor_cmd.ts"
-          >
-            <p class="badge red">Angular</p>
-            ngFor with command
-            <p class="text-sm tracking-normal text-gray-500">
-              (not recommended)
-            </p>
-          </a>
-        </li>
-        <li class="p-2 border-2 rounded-lg">
-          <p class="badge red">Angular</p>
-          <a
-            href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/lib/src/lib/gridstack.component.ts"
-            >gridstack.component.ts</a
-          >
-          <a
-            href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/lib/src/lib/gridstack-item.component.ts"
-            >gridstack-item.component.ts</a
-          >
-          <p class="text-sm tracking-normal text-gray-500">
-            This is the best option to use Gridstack with Angular.
-          </p>
-        </li>
-      </ol>
-    </section>
-    <section class="pt-40 mx-auto max-w-7xl">
-      <p
-        class="inline px-4 py-1 text-sm tracking-tight text-gray-700 rounded-lg bg-gray-500/15"
-      >
-        Deprecated JQuery
-      </p>
-      <h2 class="mt-4 text-4xl font-medium">Old v5.1.1 Jquery Demos</h2>
-      <p class="mt-4 font-light">
-        Note: those are no longer supported, and use an old version of the lib
-        to compare functionality.
-      </p>
-      <ul
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 demo-grid gap-2 sm:gap-6 [&>li]:tracking-tighter [&>li]:text-lg *:transition-all duration-500 transition-all *:duration-500 [&_a]:transition-all"
-      >
-        <li><a href="old_two-jq.html">Two grids</a></li>
-        <li><a href="old_nested-jq.html">Nested grids</a></li>
-      </ul>
-    </section>
-    <footer class="mt-40 border-t">
-      <div class="px-8 py-12 mx-auto md:px-12 lg:px-32 max-w-7xl">
-        <div class="xl:grid xl:grid-cols-3 xl:gap-8">
-          <div>
-            <p class="text-2xl font-bold uppercase">Gridstack.JS</p>
-            <p class="mt-2 text-sm font-medium text-gray-500 lg:w-4/5">
-              Create beautiful draggable, resizable, responsive layouts in
-              minutes.
-            </p>
-          </div>
-          <div
-            class="grid grid-cols-2 gap-8 mt-12 text-sm font-medium text-gray-500 lg:grid-cols-3 lg:mt-0 xl:col-span-2"
-          >
-            <div>
-              <h3 class="text-base text-black">Contribute</h3>
-              <ul role="list" class="mt-4 space-y-2">
-                <li>
-                  <a
-                    href="https://github.com/gridstack/gridstack.js"
-                    target="_blank"
-                    class="inline-flex items-center gap-1 hover:text-indigo-600"
-                  >
-                    <svg
-                      class="size-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-github"
-                    >
-                      <path
-                        d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
-                      />
-                      <path d="M9 18c-4.51 2-5-2-7-2" />
-                    </svg>
-                    GitHub
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 class="text-base text-black">Main maintainer</h3>
-              <ul role="list" class="mt-4 space-y-2">
-                <li>
-                  <a
-                    href="https://github.com/adumesny"
-                    target="_blank"
-                    class="hover:text-indigo-600"
-                  >
-                    @Alain Dumesny
-                  </a>
-                </li>
-              </ul>
-              <h3 class="mt-4 text-base text-black">Website</h3>
-              <ul role="list" class="mt-4 space-y-2">
-                <li>
-                  <a
-                    href="https://github.com/damien-schneider"
-                    target="_blank"
-                    class="hover:text-indigo-600"
-                  >
-                    @Damien Schneider
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div class="mt-12 md:mt-0">
-              <h3 class="text-base text-black">Join the community</h3>
-              <ul role="list" class="mt-4 space-y-2">
-                <li>
-                  <a
-                    href="https://join.slack.com/t/gridstackjs/shared_invite/zt-27q0rwf80-5vCt81Z_hfVgpRW7L17MnQ"
-                    target="_blank"
-                    class="inline-flex items-center gap-1 hover:text-indigo-600"
-                  >
-                    <svg
-                      class="size-4"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-slack"
-                    >
-                      <rect width="3" height="8" x="13" y="2" rx="1.5" />
-                      <path d="M19 8.5V10h1.5A1.5 1.5 0 1 0 19 8.5" />
-                      <rect width="3" height="8" x="8" y="14" rx="1.5" />
-                      <path d="M5 15.5V14H3.5A1.5 1.5 0 1 0 5 15.5" />
-                      <rect width="8" height="3" x="14" y="13" rx="1.5" />
-                      <path d="M15.5 19H14v1.5a1.5 1.5 0 1 0 1.5-1.5" />
-                      <rect width="8" height="3" x="2" y="8" rx="1.5" />
-                      <path d="M8.5 5H10V3.5A1.5 1.5 0 1 0 8.5 5" />
-                    </svg>
-                    Slack
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div
-          class="flex flex-col pt-12 md:flex-row md:items-center md:justify-between"
-        >
-          <span class="text-sm font-medium text-gray-500">
-            Copyright ©2019-2024 gridstack.js is open source software
-            maintained by
-            <a
-              aria-label="Gridstack.js team"
-              href="https://github.com/gridstack/gridstack.js#the-team"
-              target="_blank"
-              class="text-indigo-500 hover:text-indigo-600"
-            >
-              the gridstack.js team
-            </a>
-            but wouldn't be possible without the help of developers everywhere.
-          </span>
-        </div>
-      </div>
-    </footer>
-  </body>
 </html>
