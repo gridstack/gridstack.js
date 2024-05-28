@@ -1,75 +1,194 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      Gridstack.js Examples: Integrating with React, Vue, Angular, and More
+    </title>
+    <link rel="stylesheet" href="../src/styles/globals.css" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta
+      name="description"
+      content="Explore detailed examples of Gridstack.js with frameworks like React, Vue, and Angular, and enhance your web development skills."
+    />
+    <meta
+      name="keywords"
+      content="Gridstack.js, JavaScript grid, UI grid, React, Vue, Angular, web development, interactive UIs"
+    />
+    <link rel="canonical" href="https://gridstackjs.com/demo" />
+    <meta
+      property="og:title"
+      content="Gridstack.js Examples: Integrating with React, Vue, Angular, and More"
+    />
+    <meta
+      property="og:description"
+      content="Learn to integrate Gridstack.js with frameworks like React, Vue, and Angular through comprehensive examples. Start building interactive UIs today."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gridstackjs.com/demo" />
 
-<head>
-  <meta charset="utf-8">
-  <title>Demo</title>
-</head>
+    <meta property="og:site_name" content="Gridstack.js Examples Site" />
+    <meta property="og:locale" content="en_US" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-<body>
-  <h1>Demos</h1>
-  <ul>
-    <li><a href="anijs.html">AniJS</a></li>
-    <li><a href="cell-height.html">Cell Height</a></li>
-    <li><a href="column.html">Column</a></li>
-    <!-- <li><a href="esmodule.html">ES Module test</a></li> -->
-    <li><a href="float.html">Float grid</a></li>
-    <li><a href="knockout.html">Knockout.js</a></li>
-    <li><a href="mobile.html">Mobile touch</a></li>
-    <li><a href="nested.html">Nested grids</a></li>
-    <li><a href="nested_advanced.html">Nested Advanced grids</a></li>
-    <li><a href="nested_constraint.html">Nested Constraint grids</a></li>
-    <li><a href="react-hooks-controlled-multiple.html">ReactJS (Hooks), multiple grid, controlled (NOT Ideal)</a></li>
-    <li><a href="react-hooks.html">ReactJS (Hooks)</a></li>
-    <li><a href="react.html">ReactJS</a></li>
-    <li><a href="responsive.html">Responsive: by column size</a></li>
-    <li><a href="responsive_break.html">Responsive: using breakpoints</a></li>
-    <li><a href="right-to-left(rtl).html">Right-To-Left (RTL)</a></li>
-    <li><a href="serialization.html">Serialization</a></li>
-    <li><a href="sizeToContent.html">Size To Content</a></li>
-    <li><a href="static.html">Static</a></li>
-    <li><a href="title_drag.html">Title drag</a></li>
-    <li><a href="transform.html">Transform (scale+offset)</a></li>
-    <li><a href="two.html">Two grids</a></li>
-    <li><a href="two_vertical.html">Two grids Vertical</a></li>
-    <li><a href="vue2js.html">Vue2.js</a></li>
-    <li><a href="vue3js.html">Vue3.js</a></li>
-    <li><a href="vue3js_dynamic-render_grid-item-content.html">Vue3: Gridstack Controls Vue Rendering Grid Item
-        Content</a></li>
-    <li><a href="vue3js_dynamic-render_grid-item.html">Vue3: Gridstack Controls Vue Rendering Grid Item</a></li>
-    <li><a href="vue3js_v-for.html">Vue3 with v-for</a></li>
-    <li><a href="web-comp.html">Web Component</a></li>
-    <li><a href="web1.html">Website demo 1</a></li>
-    <li><a href="web2.html">Website demo 2</a></li>
-  </ul>
-  <h1>Angular wrapper</h1>
-  <p>We now ship an <a href="https://github.com/gridstack/gridstack.js/tree/master/angular/" target="_blank">Angular
-      Component</a>
-    to make it supper easy for that framework (Vue and React examples are above)</p>
-  <p>These are complete Angular projects with multiple options. use `yarn` and `yarn start` in <a
-      href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo" target="_blank">angular
-      demo</a> sub-project to run them</p>
-  <ol>
-    <li><a
-        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/simple.ts">simple.ts</a>
-    </li>
-    <li><a
-        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/ngFor.ts">ngFor.ts</a>
-    </li>
-    <li><a href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/ngFor_cmd.ts">ngFor
-        with command</a> (not recommended)</li>
-    <li><a
-        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/lib/src/lib/gridstack.component.ts">gridstack.component.ts</a>
-      and <a
-        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/lib/src/lib/gridstack-item.component.ts">gridstack-item.component.ts</a>
-      (BEST)</li>
-  </ol>
-  <h1>Old v5.1.1 Jquery Demos</h1>
-  Note: those are no longer supported, and use an old version of the lib to compare functionality.
-  <ul>
-    <li><a href="old_two-jq.html">Two grids</a></li>
-    <li><a href="old_nested-jq.html">Nested grids</a></li>
-  </ul>
-</body>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Gridstack.js Examples: Integrating with React, Vue, Angular, and More"
+    />
+    <meta
+      name="twitter:description"
+      content="Dive into Gridstack.js through interactive examples with React, Vue, and Angular. Perfect your web development skills."
+    />
 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Gridstack.js",
+        "applicationCategory": "DeveloperSoftware",
+        "operatingSystem": "All",
+        "url": "https://gridstackjs.com/demo",
+        "description": "Examples of Gridstack use cases allowing to build interactive JavaScript dynamic grid layout and responsive dashboards in minutes."
+      }
+    </script>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Urbanist:wght@100;200;300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind Typography Plugin -->
+    <script>
+      tailwind.config = {
+        corePlugins: {
+          preflight: false,
+        },
+        important: true,
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Lexend', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+  </head>
+
+  <body class="font-sans">
+    <h1>Demos</h1>
+    <ul>
+      <li><a href="anijs.html">AniJS</a></li>
+      <li><a href="cell-height.html">Cell Height</a></li>
+      <li><a href="column.html">Column</a></li>
+      <!-- <li><a href="esmodule.html">ES Module test</a></li> -->
+      <li><a href="float.html">Float grid</a></li>
+      <li><a href="knockout.html">Knockout.js</a></li>
+      <li><a href="mobile.html">Mobile touch</a></li>
+      <li><a href="nested.html">Nested grids</a></li>
+      <li><a href="nested_advanced.html">Nested Advanced grids</a></li>
+      <li><a href="nested_constraint.html">Nested Constraint grids</a></li>
+      <li>
+        <a href="react-hooks-controlled-multiple.html"
+          >ReactJS (Hooks), multiple grid, controlled (NOT Ideal)</a
+        >
+      </li>
+      <li><a href="react-hooks.html">ReactJS (Hooks)</a></li>
+      <li><a href="react.html">ReactJS</a></li>
+      <li><a href="responsive.html">Responsive: by column size</a></li>
+      <li><a href="responsive_break.html">Responsive: using breakpoints</a></li>
+      <li><a href="right-to-left(rtl).html">Right-To-Left (RTL)</a></li>
+      <li><a href="serialization.html">Serialization</a></li>
+      <li><a href="sizeToContent.html">Size To Content</a></li>
+      <li><a href="static.html">Static</a></li>
+      <li><a href="title_drag.html">Title drag</a></li>
+      <li><a href="transform.html">Transform (scale+offset)</a></li>
+      <li><a href="two.html">Two grids</a></li>
+      <li><a href="two_vertical.html">Two grids Vertical</a></li>
+      <li><a href="vue2js.html">Vue2.js</a></li>
+      <li><a href="vue3js.html">Vue3.js</a></li>
+      <li>
+        <a href="vue3js_dynamic-render_grid-item-content.html"
+          >Vue3: Gridstack Controls Vue Rendering Grid Item Content</a
+        >
+      </li>
+      <li>
+        <a href="vue3js_dynamic-render_grid-item.html"
+          >Vue3: Gridstack Controls Vue Rendering Grid Item</a
+        >
+      </li>
+      <li><a href="vue3js_v-for.html">Vue3 with v-for</a></li>
+      <li><a href="web-comp.html">Web Component</a></li>
+      <li><a href="web1.html">Website demo 1</a></li>
+      <li><a href="web2.html">Website demo 2</a></li>
+    </ul>
+    <h1>Angular wrapper</h1>
+    <p>
+      We now ship an
+      <a
+        href="https://github.com/gridstack/gridstack.js/tree/master/angular/"
+        target="_blank"
+        >Angular Component</a
+      >
+      to make it supper easy for that framework (Vue and React examples are
+      above)
+    </p>
+    <p>
+      These are complete Angular projects with multiple options. use `yarn` and
+      `yarn start` in
+      <a
+        href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo"
+        target="_blank"
+        >angular demo</a
+      >
+      sub-project to run them
+    </p>
+    <ol>
+      <li>
+        <a
+          href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/simple.ts"
+          >simple.ts</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/ngFor.ts"
+          >ngFor.ts</a
+        >
+      </li>
+      <li>
+        <a
+          href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/demo/src/app/ngFor_cmd.ts"
+          >ngFor with command</a
+        >
+        (not recommended)
+      </li>
+      <li>
+        <a
+          href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/lib/src/lib/gridstack.component.ts"
+          >gridstack.component.ts</a
+        >
+        and
+        <a
+          href="https://github.com/gridstack/gridstack.js/tree/master/angular/projects/lib/src/lib/gridstack-item.component.ts"
+          >gridstack-item.component.ts</a
+        >
+        (BEST)
+      </li>
+    </ol>
+    <h1>Old v5.1.1 Jquery Demos</h1>
+    Note: those are no longer supported, and use an old version of the lib to
+    compare functionality.
+    <ul>
+      <li><a href="old_two-jq.html">Two grids</a></li>
+      <li><a href="old_nested-jq.html">Nested grids</a></li>
+    </ul>
+  </body>
 </html>
