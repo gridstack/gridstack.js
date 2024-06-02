@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [10.1.2-dev (TBD)](#1012-dev-tbd)
+- [10.2.0 (2024-06-02)](#1020-2024-06-02)
 - [10.1.2 (2024-03-30)](#1012-2024-03-30)
 - [10.1.1 (2024-03-03)](#1011-2024-03-03)
 - [10.1.0 (2024-02-04)](#1010-2024-02-04)
@@ -109,7 +109,7 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 10.1.2-dev (TBD)
+## 10.2.0 (2024-06-02)
 * feat: [#2682](https://github.com/gridstack/gridstack.js/pull/2682) You can now press 'Esc' to cancel a move|resize, 'r' to rotate during a drag. added `GridStack.rotate()` as well - Thank you John B. for this feature sponsor.
 * fix: [#2672](https://github.com/gridstack/gridstack.js/pull/2672) dropping into full grid JS error
 * fix: [#2676](https://github.com/gridstack/gridstack.js/issues/2676) handle minW resizing when column count is less
