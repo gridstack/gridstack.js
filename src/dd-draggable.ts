@@ -6,7 +6,7 @@
 import { DDManager } from './dd-manager';
 import { DragTransform, Utils } from './utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
-import { GridItemHTMLElement, DDUIData } from './types';
+import { GridItemHTMLElement, DDUIData, GridStackNode, GridStackPosition } from './types';
 import { DDElementHost } from './dd-element';
 import { isTouch, touchend, touchmove, touchstart, pointerdown } from './dd-touch';
 
@@ -33,6 +33,10 @@ interface DragOffset {
   offsetTop: number;
 }
 
+interface GridStackNodeRotate extends GridStackNode {
+  _origRotate?: GridStackPosition;
+}
+
 type DDDragEvent = 'drag' | 'dragstart' | 'dragstop';
 
 // make sure we are not clicking on known object that handles mouseDown
@@ -53,6 +57,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected dragEl: HTMLElement;
   /** @internal true while we are dragging an item around */
   protected dragging: boolean;
+  /** @internal last drag event */
+  protected lastDrag: DragEvent;
   /** @internal */
   protected parentOriginStylePosition: string;
   /** @internal */
@@ -69,7 +75,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     yOffset: 0
   };
 
-  constructor(public el: HTMLElement, public option: DDDraggableOpt = {}) {
+  constructor(public el: GridItemHTMLElement, public option: DDDraggableOpt = {}) {
     super();
 
     // get the element that is actually supposed to be dragged by
@@ -79,6 +85,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this._mouseDown = this._mouseDown.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
     this._mouseUp = this._mouseUp.bind(this);
+    this._keyEvent = this._keyEvent.bind(this);
     this.enable();
   }
 
@@ -184,6 +191,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _mouseMove(e: DragEvent): boolean {
     // console.log(`${count++} move ${e.x},${e.y}`)
     let s = this.mouseDownEvent;
+    this.lastDrag = e;
 
     if (this.dragging) {
       this._dragFollow(e);
@@ -202,7 +210,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.dragging = true;
       DDManager.dragElement = this;
       // if we're dragging an actual grid item, set the current drop as the grid (to detect enter/leave)
-      let grid = (this.el as GridItemHTMLElement).gridstackNode?.grid;
+      let grid = this.el.gridstackNode?.grid;
       if (grid) {
         DDManager.dropElement = (grid.el as DDElementHost).ddElement.ddDroppable;
       } else {
@@ -210,17 +218,17 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       }
       this.helper = this._createHelper(e);
       this._setupHelperContainmentStyle();
-      this.dragTransform = Utils.getValuesFromTransformedElement(
-        this.helperContainment
-      );
+      this.dragTransform = Utils.getValuesFromTransformedElement(this.helperContainment);
       this.dragOffset = this._getDragOffset(e, this.el, this.helperContainment);
-      const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
-
       this._setupHelperStyle(e);
+
+      const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dragstart' });
       if (this.option.start) {
         this.option.start(ev, this.ui());
       }
       this.triggerEvent('dragstart', ev);
+      // now track keyboard events to cancel or rotate
+      document.addEventListener('keydown', this._keyEvent);
     }
     // e.preventDefault(); // passive = true. OLD: was needed otherwise we get text sweep text selection as we drag around
     return true;
@@ -236,6 +244,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     if (this.dragging) {
       delete this.dragging;
+      delete (this.el.gridstackNode as GridStackNodeRotate)?._origRotate;
+      document.removeEventListener('keydown', this._keyEvent);
 
       // reset the drop target if dragging over ourself (already parented, just moving during stop callback below)
       if (DDManager.dropElement?.el === this.el.parentElement) {
@@ -265,6 +275,37 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     delete DDManager.dropElement;
     delete DDManager.mouseHandled;
     e.preventDefault();
+  }
+
+  /** @internal call when keys are being pressed - use Esc to cancel, R to rotate */
+  protected _keyEvent(e: KeyboardEvent): void {
+    const n = this.el.gridstackNode as GridStackNodeRotate;
+    if (!n) return;
+    const grid = n.grid;
+
+    if (e.key === 'Escape') {
+      if (n._origRotate) {
+        n._orig = n._origRotate;
+        delete n._origRotate;
+      }
+      grid.engine.restoreInitial();
+      this._mouseUp(this.mouseDownEvent);
+    } else if (e.key === 'r' || e.key === 'R') {
+      if (n.w === n.h) return;
+      n._origRotate = n._origRotate || {...n._orig}; // store the real orig size in case we Esc after doing rotation
+      delete n._moving; // force rotate to happen (move waits for >50% coverage otherwise)
+      grid.setAnimation(false) // immediate rotate so _getDragOffset() gets the right dom size below
+        .rotate(n.el, {top: -this.dragOffset.offsetTop, left: -this.dragOffset.offsetLeft})
+        .setAnimation();
+      n._moving = true;
+      this.dragOffset = this._getDragOffset(this.lastDrag, n.el, this.helperContainment);
+      this.helper.style.width = this.dragOffset.width + 'px';
+      this.helper.style.height = this.dragOffset.height + 'px';
+      function swap(o: unknown, a: string, b: string): void { const tmp = o[a]; o[a] = o[b]; o[b] = tmp; }
+      swap(n._orig, 'w', 'h');
+      delete n._rect;
+      this._mouseMove(this.lastDrag);
+    }
   }
 
   /** @internal create a clone copy (or user defined method) of the original drag item if set */

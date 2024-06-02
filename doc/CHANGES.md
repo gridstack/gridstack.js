@@ -110,6 +110,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 10.1.2-dev (TBD)
+* feat: [#2682](https://github.com/gridstack/gridstack.js/pull/2682) You can now press 'Esc' to cancel a move|resize, 'r' to rotate during a drag. added `GridStack.rotate()` as well - Thank you John B. for this feature sponsor.
 * fix: [#2672](https://github.com/gridstack/gridstack.js/pull/2672) dropping into full grid JS error
 * fix: [#2676](https://github.com/gridstack/gridstack.js/issues/2676) handle minW resizing when column count is less
 * fix: [#2677](https://github.com/gridstack/gridstack.js/issues/2677) allow button as handle dragging

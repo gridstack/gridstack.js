@@ -10,7 +10,8 @@ import { Utils, HeightData, obsolete, DragTransform } from './utils';
 import {
   gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler
+  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler,
+  Position
 } from './types';
 
 /*
@@ -224,7 +225,7 @@ export class GridStack {
   public _isTemp?: boolean;
 
   /** @internal create placeholder DIV as needed */
-  public get placeholder(): HTMLElement {
+  public get placeholder(): GridItemHTMLElement {
     if (!this._placeholder) {
       let placeholderChild = document.createElement('div'); // child so padding match item-content
       placeholderChild.className = 'placeholder-content';
@@ -426,7 +427,7 @@ export class GridStack {
     }
 
     // if (this.engine.nodes.length) this._updateStyles(); // update based on # of children. done in engine onChange CB
-    this.setAnimation(opts.animate);
+    this.setAnimation();
 
     // dynamic grids require pausing during drag to detect over to nest vs push
     if (opts.subGridDynamic && !DDManager.pauseDrag) DDManager.pauseDrag = true;
@@ -794,8 +795,8 @@ export class GridStack {
     delete this._ignoreLayoutsNodeChange;
     delete this._insertNotAppend;
     prevCB ? GridStack.addRemoveCB = prevCB : delete GridStack.addRemoveCB;
-    // delay adding animation back, but check to make sure grid (opt) is still around
-    if (noAnim && this.opts?.animate) setTimeout(() => { if (this.opts) this.setAnimation(this.opts.animate) });
+    // delay adding animation back
+    if (noAnim && this.opts?.animate) this.setAnimation(this.opts.animate, true);
     return this;
   }
 
@@ -1255,15 +1256,20 @@ export class GridStack {
   /**
    * Toggle the grid animation state.  Toggles the `grid-stack-animate` class.
    * @param doAnimate if true the grid will animate.
+   * @param delay if true setting will be set on next event loop.
    */
-  public setAnimation(doAnimate: boolean): GridStack {
-    if (doAnimate) {
+  public setAnimation(doAnimate = this.opts.animate, delay?: boolean): GridStack {
+    if (delay) {
+      // delay, but check to make sure grid (opt) is still around
+      setTimeout(() => { if (this.opts) this.setAnimation(doAnimate) });
+    } else if (doAnimate) {
       this.el.classList.add('grid-stack-animate');
     } else {
       this.el.classList.remove('grid-stack-animate');
     }
     return this;
   }
+
   /** @internal */
   private hasAnimationCSS(): boolean { return this.el.classList.contains('grid-stack-animate') }
 
@@ -1370,12 +1376,14 @@ export class GridStack {
   }
 
   private moveNode(n: GridStackNode, m: GridStackMoveOpts) {
-    this.engine.cleanNodes()
-      .beginUpdate(n)
-      .moveNode(n, m);
+    const wasUpdating = n._updating;
+    if (!wasUpdating) this.engine.cleanNodes().beginUpdate(n);
+    this.engine.moveNode(n, m);
     this._updateContainerHeight();
-    this._triggerChangeEvent();
-    this.engine.endUpdate();
+    if (!wasUpdating) {
+      this._triggerChangeEvent();
+      this.engine.endUpdate();
+    }
   }
 
   /**
@@ -1433,6 +1441,27 @@ export class GridStack {
   private resizeToContentCBCheck(el: GridItemHTMLElement) {
     if (GridStack.resizeToContentCB) GridStack.resizeToContentCB(el);
     else this.resizeToContent(el);
+  }
+
+  /** rotate (by swapping w & h) the passed in node - called when user press 'r' during dragging
+   * @param els  widget or selector of objects to modify
+   * @param relative optional pixel coord relative to upper/left corner to rotate around (will keep that cell under cursor)
+   */
+  public rotate(els: GridStackElement, relative?: Position): GridStack {
+    GridStack.getElements(els).forEach(el => {
+      let n = el.gridstackNode;
+      if (!n || n.w === n.h) return;
+      const rot: GridStackWidget = { w: n.h, h: n.w, minH: n.minW, minW: n.minH, maxH: n.maxW, maxW: n.maxH };
+      // if given an offset, adjust x/y by column/row bounds when user presses 'r' during dragging
+      if (relative) {
+        let pivotX = relative.left > 0 ? Math.floor(relative.left / this.cellWidth()) : 0;
+        let pivotY = relative.top > 0 ? Math.floor(relative.top / (this.opts.cellHeight as number)) : 0;
+        rot.x = n.x + pivotX - (n.h - (pivotY+1));
+        rot.y = (n.y + pivotY) - pivotX;
+      }
+      this.update(el, rot);
+    });
+    return this;
   }
 
   /**
@@ -2289,8 +2318,8 @@ export class GridStack {
           this._gsEventHandler['dropped']({ ...event, type: 'dropped' }, origNode && origNode.grid ? origNode : undefined, node);
         }
 
-        // delay adding animation back, but check to make sure grid (opt) is still around
-        if (noAnim) setTimeout(() => { if (this.opts) this.setAnimation(this.opts.animate) });
+        // delay adding animation back
+        if (noAnim) this.setAnimation(this.opts.animate, true);
 
         return false; // prevent parent from receiving msg (which may be grid as well)
       });
@@ -2435,6 +2464,7 @@ export class GridStack {
     // @ts-ignore
     this._writePosAttr(this.placeholder, node)
     this.el.appendChild(this.placeholder);
+    this.placeholder.gridstackNode = node;
     // console.log('_onStartMoving placeholder') // TEST
 
     // if the element is inside a grid, it has already been scaled
