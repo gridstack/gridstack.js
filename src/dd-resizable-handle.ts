@@ -4,6 +4,7 @@
  */
 
 import { isTouch, pointerdown, touchend, touchmove, touchstart } from './dd-touch';
+import { GridItemHTMLElement } from './gridstack';
 
 export interface DDResizableHandleOpt {
   start?: (event) => void;
@@ -21,11 +22,12 @@ export class DDResizableHandle {
   /** @internal */
   protected static prefix = 'ui-resizable-';
 
-  constructor(protected host: HTMLElement, protected dir: string, protected option: DDResizableHandleOpt) {
+  constructor(protected host: GridItemHTMLElement, protected dir: string, protected option: DDResizableHandleOpt) {
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
     this._mouseUp = this._mouseUp.bind(this);
+    this._keyEvent = this._keyEvent.bind(this);
 
     this._init();
   }
@@ -84,6 +86,8 @@ export class DDResizableHandle {
       this.moving = true;
       this._triggerEvent('start', this.mouseDownEvent);
       this._triggerEvent('move', e);
+      // now track keyboard events to cancel
+      document.addEventListener('keydown', this._keyEvent);
     }
     e.stopPropagation();
     // e.preventDefault(); passive = true
@@ -93,6 +97,7 @@ export class DDResizableHandle {
   protected _mouseUp(e: MouseEvent): void {
     if (this.moving) {
       this._triggerEvent('stop', e);
+      document.removeEventListener('keydown', this._keyEvent);
     }
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp, true);
@@ -106,6 +111,16 @@ export class DDResizableHandle {
     e.preventDefault();
   }
 
+  /** @internal call when keys are being pressed - use Esc to cancel */
+  protected _keyEvent(e: KeyboardEvent): void {
+    if (e.key === 'Escape') {
+      this.host.gridstackNode?.grid?.engine.restoreInitial();
+      this._mouseUp(this.mouseDownEvent);
+    }
+  }
+    
+  
+  
   /** @internal */
   protected _triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
     if (this.option[name]) this.option[name](event);

@@ -60,6 +60,7 @@ gridstack.js API
   - [`removeAll(removeDOM = true)`](#removeallremovedom--true)
   - [`resizable(el, val)`](#resizableel-val)
   - [`resizeToContent(el: GridItemHTMLElement, useAttrSize = false)`](#resizetocontentel-griditemhtmlelement-useattrsize--false)
+  - [`rotate(els: GridStackElement, relative?: Position)`](#rotateels-gridstackelement-relative-position)
   - [`save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions`](#savesavecontent--true-savegridopt--false-gridstackwidget--gridstackoptions)
   - [`setAnimation(doAnimate)`](#setanimationdoanimate)
   - [`setStatic(staticValue)`](#setstaticstaticvalue)
@@ -582,6 +583,12 @@ Enables/Disables user resizing of specific grid element. If you want all items, 
 Updates widget height to match the content height to avoid v-scrollbar or dead space.
 Note: this assumes only 1 child under `resizeToContentParent='.grid-stack-item-content'` (sized to gridItem minus padding) that is at the entire content size wanted.
 - `useAttrSize` set to `true` if GridStackNode.h should be used instead of actual container height when we don't need to wait for animation to finish to get actual DOM heights
+
+### `rotate(els: GridStackElement, relative?: Position)`
+rotate (by swapping w & h) the passed in node - called when user press 'r' during dragging
+
+- `els` - widget or selector of objects to modify
+- `relative` - optional pixel coord relative to upper/left corner to rotate around (will keep that cell under cursor)
 
 ### `save(saveContent = true, saveGridOpt = false): GridStackWidget[] | GridStackOptions`
 
