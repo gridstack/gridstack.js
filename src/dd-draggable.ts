@@ -301,8 +301,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.dragOffset = this._getDragOffset(this.lastDrag, n.el, this.helperContainment);
       this.helper.style.width = this.dragOffset.width + 'px';
       this.helper.style.height = this.dragOffset.height + 'px';
-      function swap(o: unknown, a: string, b: string): void { const tmp = o[a]; o[a] = o[b]; o[b] = tmp; }
-      swap(n._orig, 'w', 'h');
+      Utils.swap(n._orig, 'w', 'h');
       delete n._rect;
       this._mouseMove(this.lastDrag);
     }
