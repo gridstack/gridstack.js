@@ -589,6 +589,9 @@ export class Utils {
     }
   }
 
+  /** swap the given object 2 field values */
+  public static swap(o: unknown, a: string, b: string): void { const tmp = o[a]; o[a] = o[b]; o[b] = tmp; }
+
   /** returns true if event is inside the given element rectangle */
   // Note: Safari Mac has null event.relatedTarget which causes #1684 so check if DragEvent is inside the coordinates instead
   //    this.el.contains(event.relatedTarget as HTMLElement)
