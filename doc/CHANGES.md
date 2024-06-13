@@ -112,6 +112,7 @@ Change log
 
 ## 10.2.0-dev (TBD)
 * fix: [#2683](https://github.com/gridstack/gridstack.js/issues/2683) check for fixed grid maxRow during resize
+* fix: [#2694](https://github.com/gridstack/gridstack.js/issues/2694) prevent 'r' rotation to items that can't resize (locked, noResize, fixed sizes)
 
 ## 10.2.0 (2024-06-02)
 * feat: [#2682](https://github.com/gridstack/gridstack.js/pull/2682) You can now press 'Esc' to cancel a move|resize, 'r' to rotate during a drag. added `GridStack.rotate()` as well - Thank you John B. for this feature sponsor.
