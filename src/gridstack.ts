@@ -1450,7 +1450,7 @@ export class GridStack {
   public rotate(els: GridStackElement, relative?: Position): GridStack {
     GridStack.getElements(els).forEach(el => {
       let n = el.gridstackNode;
-      if (!n || n.w === n.h) return;
+      if (!n || n.w === n.h || n.locked || n.noResize || n.grid?.opts.disableResize || (n.minW && n.minW === n.maxW) || (n.minH && n.minH === n.maxH)) return;
       const rot: GridStackWidget = { w: n.h, h: n.w, minH: n.minW, minW: n.minH, maxH: n.maxW, maxW: n.maxH };
       // if given an offset, adjust x/y by column/row bounds when user presses 'r' during dragging
       if (relative) {
