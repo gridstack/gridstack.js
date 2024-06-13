@@ -280,7 +280,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal call when keys are being pressed - use Esc to cancel, R to rotate */
   protected _keyEvent(e: KeyboardEvent): void {
     const n = this.el.gridstackNode as GridStackNodeRotate;
-    if (!n) return;
+    if (!n?.grid) return;
     const grid = n.grid;
 
     if (e.key === 'Escape') {
