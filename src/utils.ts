@@ -604,4 +604,9 @@ export class Utils {
   //   }
   //   return el.contains(target);
   // }
+
+  /** true if the item can be rotated (checking for prop, not space available) */
+  public static canBeRotated(n: GridStackNode): boolean {
+    return !(!n || n.w === n.h || n.locked || n.noResize || n.grid?.opts.disableResize || (n.minW && n.minW === n.maxW) || (n.minH && n.minH === n.maxH));
+  }
 }

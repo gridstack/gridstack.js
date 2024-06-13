@@ -291,7 +291,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       grid.engine.restoreInitial();
       this._mouseUp(this.mouseDownEvent);
     } else if (e.key === 'r' || e.key === 'R') {
-      if (n.w === n.h) return;
+      if (!Utils.canBeRotated(n)) return;
       n._origRotate = n._origRotate || {...n._orig}; // store the real orig size in case we Esc after doing rotation
       delete n._moving; // force rotate to happen (move waits for >50% coverage otherwise)
       grid.setAnimation(false) // immediate rotate so _getDragOffset() gets the right dom size below
