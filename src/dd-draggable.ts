@@ -54,8 +54,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected dragElementOriginStyle: Array<string>;
   /** @internal */
-  protected dragEl: HTMLElement;
-  /** @internal */
   protected dragEls: HTMLElement[];
   /** @internal true while we are dragging an item around */
   protected dragging: boolean;
@@ -152,7 +150,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (e.button !== 0) return true; // only left click
 
     // make sure we are not clicking on known object that handles mouseDown, or ones supplied by the user
-    if (e.target !== this.dragEl && (e.target as HTMLElement).closest(skipMouseDown)) return true;
+    if (!this.dragEls.find(el => el === e.target) && (e.target as HTMLElement).closest(skipMouseDown)) return true;
     if (this.option.cancel) {
       if ((e.target as HTMLElement).closest(this.option.cancel)) return true;
     }
@@ -173,8 +171,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     document.addEventListener('mousemove', this._mouseMove, { capture: true, passive: true }); // true=capture, not bubble
     document.addEventListener('mouseup', this._mouseUp, true);
     if (isTouch) {
-      this.dragEl.addEventListener('touchmove', touchmove);
-      this.dragEl.addEventListener('touchend', touchend);
+      e.target.addEventListener('touchmove', touchmove);
+      e.target.addEventListener('touchend', touchend);
     }
 
     e.preventDefault();
@@ -248,8 +246,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp, true);
     if (isTouch) {
-      this.dragEl.removeEventListener('touchmove', touchmove, true);
-      this.dragEl.removeEventListener('touchend', touchend, true);
+      e.target.removeEventListener('touchmove', touchmove, true);
+      e.target.removeEventListener('touchend', touchend, true);
     }
     if (this.dragging) {
       delete this.dragging;
