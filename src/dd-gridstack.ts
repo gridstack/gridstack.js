@@ -79,7 +79,7 @@ export class DDGridStack {
         dEl.setupDraggable({
           ...grid.opts.draggable,
           ...{
-            // containment: (grid.parentGridItem && !grid.opts.dragOut) ? grid.el.parentElement : (grid.opts.draggable.containment || null),
+            // containment: (grid.parentGridItem && grid.opts.dragOut === false) ? grid.el.parentElement : (grid.opts.draggable.containment || null),
             start: opts.start,
             stop: opts.stop,
             drag: opts.drag
