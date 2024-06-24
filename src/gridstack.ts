@@ -1363,6 +1363,7 @@ export class GridStack {
         const widthChanged = (m.w !== undefined && m.w !== n.w);
         this.moveNode(n, m);
         this.resizeToContentCheck(widthChanged, n); // wait for animation if we changed width
+        delete n._orig; // clear out original position now that we moved #2669
       }
       if (m || changed) {
         this._writeAttr(el, n);
