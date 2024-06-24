@@ -55,6 +55,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected dragElementOriginStyle: Array<string>;
   /** @internal */
   protected dragEl: HTMLElement;
+  /** @internal */
+  protected dragEls: HTMLElement[];
   /** @internal true while we are dragging an item around */
   protected dragging: boolean;
   /** @internal last drag event */
@@ -80,7 +82,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
     // get the element that is actually supposed to be dragged by
     let handleName = option.handle.substring(1);
-    this.dragEl = el.classList.contains(handleName) ? el : el.querySelector(option.handle) || el;
+    this.dragEls = el.classList.contains(handleName) ? [el] : Array.from(el.querySelectorAll(option.handle));
+    if (this.dragEls.length === 0) {
+      this.dragEls = [el];
+    }
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
@@ -100,23 +105,27 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   public enable(): void {
     if (this.disabled === false) return;
     super.enable();
-    this.dragEl.addEventListener('mousedown', this._mouseDown);
-    if (isTouch) {
-      this.dragEl.addEventListener('touchstart', touchstart);
-      this.dragEl.addEventListener('pointerdown', pointerdown);
-      // this.dragEl.style.touchAction = 'none'; // not needed unlike pointerdown doc comment
-    }
+    this.dragEls.forEach(dragEl => {
+      dragEl.addEventListener('mousedown', this._mouseDown);
+      if (isTouch) {
+        dragEl.addEventListener('touchstart', touchstart);
+        dragEl.addEventListener('pointerdown', pointerdown);
+        // dragEl.style.touchAction = 'none'; // not needed unlike pointerdown doc comment
+      }
+    });
     this.el.classList.remove('ui-draggable-disabled');
   }
 
   public disable(forDestroy = false): void {
     if (this.disabled === true) return;
     super.disable();
-    this.dragEl.removeEventListener('mousedown', this._mouseDown);
-    if (isTouch) {
-      this.dragEl.removeEventListener('touchstart', touchstart);
-      this.dragEl.removeEventListener('pointerdown', pointerdown);
-    }
+    this.dragEls.forEach(dragEl => {
+      dragEl.removeEventListener('mousedown', this._mouseDown);
+      if (isTouch) {
+        dragEl.removeEventListener('touchstart', touchstart);
+        dragEl.removeEventListener('pointerdown', pointerdown);
+      }
+    });
     if (!forDestroy) this.el.classList.add('ui-draggable-disabled');
   }
 
@@ -161,7 +170,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     delete DDManager.dragElement;
     delete DDManager.dropElement;
     // document handler so we can continue receiving moves as the item is 'fixed' position, and capture=true so WE get a first crack
-    document.addEventListener('mousemove', this._mouseMove, { capture: true, passive: true}); // true=capture, not bubble
+    document.addEventListener('mousemove', this._mouseMove, { capture: true, passive: true }); // true=capture, not bubble
     document.addEventListener('mouseup', this._mouseUp, true);
     if (isTouch) {
       this.dragEl.addEventListener('touchmove', touchmove);
@@ -292,10 +301,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this._mouseUp(this.mouseDownEvent);
     } else if (e.key === 'r' || e.key === 'R') {
       if (!Utils.canBeRotated(n)) return;
-      n._origRotate = n._origRotate || {...n._orig}; // store the real orig size in case we Esc after doing rotation
+      n._origRotate = n._origRotate || { ...n._orig }; // store the real orig size in case we Esc after doing rotation
       delete n._moving; // force rotate to happen (move waits for >50% coverage otherwise)
       grid.setAnimation(false) // immediate rotate so _getDragOffset() gets the right dom size below
-        .rotate(n.el, {top: -this.dragOffset.offsetTop, left: -this.dragOffset.offsetLeft})
+        .rotate(n.el, { top: -this.dragOffset.offsetTop, left: -this.dragOffset.offsetLeft })
         .setAnimation();
       n._moving = true;
       this.dragOffset = this._getDragOffset(this.lastDrag, n.el, this.helperContainment);
