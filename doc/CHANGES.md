@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [10.2.0-dev (TBD)](#1020-dev-tbd)
+- [10.2.1 (2024-06-23)](#1021-2024-06-23)
 - [10.2.0 (2024-06-02)](#1020-2024-06-02)
 - [10.1.2 (2024-03-30)](#1012-2024-03-30)
 - [10.1.1 (2024-03-03)](#1011-2024-03-03)
@@ -111,7 +111,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 10.2.0-dev (TBD)
+## 10.2.1 (2024-06-23)
 * fix: [#2683](https://github.com/gridstack/gridstack.js/issues/2683) check for fixed grid maxRow during resize
 * fix: [#2694](https://github.com/gridstack/gridstack.js/issues/2694) prevent 'r' rotation to items that can't resize (locked, noResize, fixed sizes)
 * fix: [#2709](https://github.com/gridstack/gridstack.js/pull/2709) support for multiple drag targets - Thank you [nickfulcher](https://github.com/nickfulcher)
