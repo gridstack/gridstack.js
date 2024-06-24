@@ -700,6 +700,9 @@ export class GridStack {
     items = Utils.cloneDeep(items); // so we can mod
     const column = this.getColumn();
 
+    // make sure size 1x1 (default) is present as it may need to override current sizes
+    items.forEach(n => { n.w = n.w || 1; n.h = n.h || 1 });
+
     // if we have a mix of new items without coordinates and existing items, separate them out so they can be added after #2639
     let addAfter = items.filter(n => (n.x === undefined || n.y === undefined) && !Utils.find(this.engine.nodes, n.id));
     if (addAfter.length && addAfter.length !== items.length) {
