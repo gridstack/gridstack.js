@@ -101,7 +101,6 @@ gridstack.js API
 - `disableDrag` - disallows dragging of widgets (default: `false`).
 - `disableResize` - disallows resizing of widgets (default: `false`).
 - `draggable` - allows to override draggable options - see `DDDragOpt`. (default: `{handle: '.grid-stack-item-content', appendTo: 'body', scroll: true}`)
-- `dragOut` to let user drag nested grid items out of a parent or not (default false) See [example](http://gridstackjs.com/demo/nested.html)
 - `engineClass` - the type of engine to create (so you can subclass) default to GridStackEngine
 - `sizeToContent`: boolean - make gridItems size themselves to their content, calling `resizeToContent(el)` whenever the grid or item is resized.
 - `float` - enable floating widgets (default: `false`) See [example](http://gridstackjs.com/demo/float.html)
