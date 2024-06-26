@@ -18,6 +18,8 @@
 <body>
   <div class="container-fluid">
     <h1>Two grids demo</h1>
+    <p>Two grids, one floating one not, showing drag&drop from sidebar and between grids.
+    <br>New v10.2: use 'Esc' to cancel any move/resize. Use 'r' to rotate as you drag.</p>
 
     <div class="row">
       <div class="col-md-3">
@@ -71,11 +73,13 @@
 
     let items = [
       {x: 0, y: 0, w: 2, h: 2},
-      {x: 3, y: 1, h: 2},
-      {x: 4, y: 1},
-      {x: 2, y: 3, w: 3, maxW: 3, id: 'special', content: 'has maxW=3'},
+      {x: 1, y: 1, h: 2}, // intentional overlap to test collision on load
+      {x: 1, y: 1}, // intentional overlap to test collision on load
+      {x: 3, y: 1},
+      {x: 2, y: 3, w: 3, maxW: 3, content: 'has maxW=3'},
       {x: 2, y: 5}
     ];
+    items.forEach((item, i) => item.content = item.content || String(i));
 
     grids.forEach(function (grid, i) {
       addEvents(grid, i);
