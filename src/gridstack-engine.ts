@@ -39,6 +39,8 @@ export class GridStackEngine {
   protected _prevFloat: boolean;
   /** @internal cached layouts of difference column count so we can restore back (eg 12 -> 1 -> 12) */
   protected _layouts?: GridStackNode[][]; // maps column # to array of values nodes
+  /** @internal set during loading (which is sorted) so item gets added AFTER collision nodes */
+  public _loading?: boolean
   /** @internal true while we are resizing widgets during column resize to skip certain parts */
   protected _inColumnResize?: boolean;
   /** @internal true if we have some items locked */
@@ -91,7 +93,7 @@ export class GridStackEngine {
 
     // during while() collisions MAKE SURE to check entire row so larger items don't leap frog small ones (push them all down starting last in grid)
     let area = nn;
-    if (this._useEntireRowArea(node, nn)) {
+    if (!this._loading && this._useEntireRowArea(node, nn)) {
       area = {x: 0, w: this.column, y: nn.y, h: nn.h};
       collide = this.collide(node, area, opt.skip); // force new hit
     }
@@ -100,14 +102,14 @@ export class GridStackEngine {
     let newOpt: GridStackMoveOpts = {nested: true, pack: false};
     while (collide = collide || this.collide(node, area, opt.skip)) { // could collide with more than 1 item... so repeat for each
       let moved: boolean;
-      // if colliding with a locked item OR moving down with top gravity (and collide could move up) -> skip past the collide,
+      // if colliding with a locked item OR loading (move after) OR moving down with top gravity (and collide could move up) -> skip past the collide,
       // but remember that skip down so we only do this once (and push others otherwise).
-      if (collide.locked || node._moving && !node._skipDown && nn.y > node.y && !this.float &&
+      if (collide.locked || this._loading || node._moving && !node._skipDown && nn.y > node.y && !this.float &&
         // can take space we had, or before where we're going
         (!this.collide(collide, {...collide, y: node.y}, node) || !this.collide(collide, {...collide, y: nn.y - collide.h}, node))) {
         node._skipDown = (node._skipDown || nn.y > node.y);
         moved = this.moveNode(node, {...nn, y: collide.y + collide.h, ...newOpt});
-        if (collide.locked && moved) {
+        if ((collide.locked || this._loading) && moved) {
           Utils.copyPos(nn, node); // moving after lock become our new desired location
         } else if (!collide.locked && moved && opt.pack) {
           // we moved after and will pack: do it now and keep the original drop location, but past the old collide to see what else we might push way

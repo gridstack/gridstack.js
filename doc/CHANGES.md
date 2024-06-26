@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [10.2.1-dev (TBD)](#1021-dev-tbd)
 - [10.2.1 (2024-06-23)](#1021-2024-06-23)
 - [10.2.0 (2024-06-02)](#1020-2024-06-02)
 - [10.1.2 (2024-03-30)](#1012-2024-03-30)
@@ -110,6 +111,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 10.2.1-dev (TBD)
+* fix: [#2717](https://github.com/gridstack/gridstack.js/pull/2717) load() now creates in order
 
 ## 10.2.1 (2024-06-23)
 * fix: [#2683](https://github.com/gridstack/gridstack.js/issues/2683) check for fixed grid maxRow during resize

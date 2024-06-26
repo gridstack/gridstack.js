@@ -252,8 +252,6 @@ export class GridStack {
   protected _sizeThrottle: () => void;
   /** @internal limit auto cell resizing method */
   protected prevWidth: number;
-  /** @internal true when loading items to insert first rather than append */
-  protected _insertNotAppend: boolean;
   /** @internal extra row added when dragging at the bottom of the grid */
   protected _extraDragRow = 0;
   /** @internal true if nested grid should get column count from our width */
@@ -421,7 +419,7 @@ export class GridStack {
 
     // load any passed in children as well, which overrides any DOM layout done above
     if (opts.children) {
-      let children = opts.children;
+      const children = opts.children;
       delete opts.children;
       if (children.length) this.load(children); // don't load empty
     }
@@ -495,11 +493,7 @@ export class GridStack {
     node = this.engine.prepareNode(options);
     this._writeAttr(el, options);
 
-    if (this._insertNotAppend) {
-      this.el.prepend(el);
-    } else {
-      this.el.appendChild(el);
-    }
+    this.el.appendChild(el);
 
     this.makeWidget(el, options);
 
@@ -703,22 +697,16 @@ export class GridStack {
     // make sure size 1x1 (default) is present as it may need to override current sizes
     items.forEach(n => { n.w = n.w || 1; n.h = n.h || 1 });
 
-    // if we have a mix of new items without coordinates and existing items, separate them out so they can be added after #2639
-    let addAfter = items.filter(n => (n.x === undefined || n.y === undefined) && !Utils.find(this.engine.nodes, n.id));
-    if (addAfter.length && addAfter.length !== items.length) {
-      items = items.filter(n => !Utils.find(addAfter, n.id));
-    } else addAfter = [];
-
-    // if passed list has coordinates, use them (insert from end to beginning for conflict resolution) else keep widget order
-    const haveCoord = items.some(w => w.x !== undefined || w.y !== undefined);
-    if (haveCoord) items = Utils.sort(items, -1);
-    this._insertNotAppend = haveCoord; // if we create in reverse order...
+    // sort items. those without coord will be appended last
+    items = Utils.sort(items);
 
     // if we're loading a layout into for example 1 column and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
-    if (items.some(n => ((n.x || 0) + (n.w || 1)) > column)) {
+    let maxColumn = 0;
+    items.forEach(n => { maxColumn = Math.max(maxColumn, (n.x || 0) + n.w) });
+    if (maxColumn > column) {
       this._ignoreLayoutsNodeChange = true; // skip layout update
-      this.engine.cacheLayout(items, 12, true); // TODO: 12 is arbitrary. use max value in layout ?
+      this.engine.cacheLayout(items, maxColumn, true);
     }
 
     // if given a different callback, temporally set it as global option so creating will use it
@@ -728,19 +716,18 @@ export class GridStack {
     let removed: GridStackNode[] = [];
     this.batchUpdate();
 
-    // if we are blank (loading into empty like startup) temp remove animation
-    const noAnim = !this.engine.nodes.length;
-    if (noAnim) this.setAnimation(false);
+    // if we are loading from empty temporarily remove animation
+    const blank = !this.engine.nodes.length;
+    if (blank) this.setAnimation(false);
 
     // see if any items are missing from new layout and need to be removed first
-    if (addRemove) {
+    if (!blank && addRemove) {
       let copyNodes = [...this.engine.nodes]; // don't loop through array you modify
       copyNodes.forEach(n => {
         if (!n.id) return;
         let item = Utils.find(items, n.id);
         if (!item) {
-          if (GridStack.addRemoveCB)
-            GridStack.addRemoveCB(this.el, n, false, false);
+          if (GridStack.addRemoveCB) GridStack.addRemoveCB(this.el, n, false, false);
           removed.push(n); // batch keep track
           this.removeWidget(n.el, true, false);
         }
@@ -749,6 +736,7 @@ export class GridStack {
 
     // now add/update the widgets - starting with removing items in the new layout we will reposition
     // to reduce collision and add no-coord ones at next available spot
+    this.engine._loading = true; // help with collision
     let updateNodes: GridStackWidget[] = [];
     this.engine.nodes = this.engine.nodes.filter(n => {
       if (Utils.find(items, n.id)) { updateNodes.push(n); return false; } // remove if found from list
@@ -778,7 +766,6 @@ export class GridStack {
           let sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
           if (sub && sub.gridstack) {
             sub.gridstack.load(w.subGridOpts.children); // TODO: support updating grid options ?
-            this._insertNotAppend = true; // got reset by above call
           }
         }
       } else if (addRemove) {
@@ -786,20 +773,15 @@ export class GridStack {
       }
     });
 
-    // finally append any separate ones that didn't have explicit coordinates last so they can find next empty spot
-    if (addRemove) {
-      addAfter.forEach(w => this.addWidget(w))
-    }
-
+    delete this.engine._loading; // done loading
     this.engine.removedNodes = removed;
     this.batchUpdate(false);
 
     // after commit, clear that flag
     delete this._ignoreLayoutsNodeChange;
-    delete this._insertNotAppend;
     prevCB ? GridStack.addRemoveCB = prevCB : delete GridStack.addRemoveCB;
     // delay adding animation back
-    if (noAnim && this.opts?.animate) this.setAnimation(this.opts.animate, true);
+    if (blank && this.opts?.animate) this.setAnimation(this.opts.animate, true);
     return this;
   }
 
