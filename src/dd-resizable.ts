@@ -1,5 +1,5 @@
 /**
- * dd-resizable.ts 10.2.1-dev
+ * dd-resizable.ts 10.3.0
  * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
  */
 

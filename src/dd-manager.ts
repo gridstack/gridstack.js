@@ -1,5 +1,5 @@
 /**
- * dd-manager.ts 10.2.1-dev
+ * dd-manager.ts 10.3.0
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
