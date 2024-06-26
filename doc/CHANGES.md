@@ -113,7 +113,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 10.2.1-dev (TBD)
-* fix: [#2717](https://github.com/gridstack/gridstack.js/pull/2717) load() now creates in order
+* fix: [#2720](https://github.com/gridstack/gridstack.js/pull/2720) load() now creates in order
 
 ## 10.2.1 (2024-06-23)
 * fix: [#2683](https://github.com/gridstack/gridstack.js/issues/2683) check for fixed grid maxRow during resize
