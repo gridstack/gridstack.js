@@ -413,7 +413,9 @@ export class GridStack {
 
     if (opts.auto) {
       this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
+      this.engine._loading = true; // loading collision check
       this.getGridItems().forEach(el => this._prepareElement(el));
+      delete this.engine._loading;
       this.batchUpdate(false);
     }
 
