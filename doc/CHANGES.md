@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [10.3.0-dev (TBD)](#1030-dev-tbd)
 - [10.3.0 (2024-06-26)](#1030-2024-06-26)
 - [10.2.1 (2024-06-23)](#1021-2024-06-23)
 - [10.2.0 (2024-06-02)](#1020-2024-06-02)
@@ -111,6 +112,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 10.3.0-dev (TBD)
+* fix: [#2734](https://github.com/gridstack/gridstack.js/bug/2734) rotate() JS error
 
 ## 10.3.0 (2024-06-26)
 * fix: [#2720](https://github.com/gridstack/gridstack.js/pull/2720) load() now creates widgets in order (used to be reverse due to old collision code)

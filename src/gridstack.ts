@@ -1447,7 +1447,10 @@ export class GridStack {
         rot.x = n.x + pivotX - (n.h - (pivotY+1));
         rot.y = (n.y + pivotY) - pivotX;
       }
+      Object.keys(rot).forEach(k => { if (rot[k] === undefined) delete rot[k]; });
+      const _orig = n._orig;
       this.update(el, rot);
+      n._orig = _orig; // restore as move() will delete it
     });
     return this;
   }
