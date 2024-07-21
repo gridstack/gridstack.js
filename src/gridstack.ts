@@ -1401,10 +1401,16 @@ export class GridStack {
     if (n.subGrid) {
       // sub-grid - use their actual row count * their cell height
       wantedH = n.subGrid.getRow() * n.subGrid.getCellHeight(true);
+    } else if (n.subGridOpts?.children?.length) {
+      // not sub-grid just yet (case above) wait until we do
+      return;
     } else {
       // NOTE: clientHeight & getBoundingClientRect() is undefined for text and other leaf nodes. use <div> container!
       const child = item.firstElementChild;
-      if (!child) { console.error(`Error: GridStack.resizeToContent() widget id:${n.id} '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`); return; }
+      if (!child) {
+        console.error(`Error: GridStack.resizeToContent() widget id:${n.id} '${GridStack.resizeToContentParent}'.firstElementChild is null, make sure to have a div like container. Skipping sizing.`);
+        return;
+      }
       wantedH = child.getBoundingClientRect().height || itemH;
     }
     if (itemH === wantedH) return;

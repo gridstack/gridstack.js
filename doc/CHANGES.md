@@ -115,6 +115,7 @@ Change log
 
 ## 10.3.0-dev (TBD)
 * fix: [#2734](https://github.com/gridstack/gridstack.js/bug/2734) rotate() JS error
+* fix: [#2739](https://github.com/gridstack/gridstack.js/pull/2739) resizeToContent JS error with nested grid
 
 ## 10.3.0 (2024-06-26)
 * fix: [#2720](https://github.com/gridstack/gridstack.js/pull/2720) load() now creates widgets in order (used to be reverse due to old collision code)
