@@ -16,7 +16,9 @@ export interface DDResizableOpt {
   autoHide?: boolean;
   handles?: string;
   maxHeight?: number;
+  maxHeightMoveUp?: number;
   maxWidth?: number;
+  maxWidthMoveLeft?: number;
   minHeight?: number;
   minWidth?: number;
   start?: (event: Event, ui: DDUIData) => void;
@@ -254,20 +256,24 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
     const offsetX = event.clientX - oEvent.clientX;
     const offsetY = this.sizeToContent ? 0 : event.clientY - oEvent.clientY; // prevent vert resize
+    let moveLeft: boolean;
+    let moveUp: boolean;
 
     if (dir.indexOf('e') > -1) {
       newRect.width += offsetX;
     } else if (dir.indexOf('w') > -1) {
       newRect.width -= offsetX;
       newRect.left += offsetX;
+      moveLeft = true;
     }
     if (dir.indexOf('s') > -1) {
       newRect.height += offsetY;
     } else if (dir.indexOf('n') > -1) {
       newRect.height -= offsetY;
       newRect.top += offsetY
+      moveUp = true;
     }
-    const constrain = this._constrainSize(newRect.width, newRect.height);
+    const constrain = this._constrainSize(newRect.width, newRect.height, moveLeft, moveUp);
     if (Math.round(newRect.width) !== Math.round(constrain.width)) { // round to ignore slight round-off errors
       if (dir.indexOf('w') > -1) {
         newRect.left += newRect.width - constrain.width;
@@ -284,11 +290,12 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal constrain the size to the set min/max values */
-  protected _constrainSize(oWidth: number, oHeight: number): Size {
-    const maxWidth = this.option.maxWidth || Number.MAX_SAFE_INTEGER;
-    const minWidth = this.option.minWidth / this.rectScale.x || oWidth;
-    const maxHeight = this.option.maxHeight || Number.MAX_SAFE_INTEGER;
-    const minHeight = this.option.minHeight / this.rectScale.y || oHeight;
+  protected _constrainSize(oWidth: number, oHeight: number, moveLeft: boolean, moveUp: boolean): Size {
+    const o = this.option;
+    const maxWidth = (moveLeft ? o.maxWidthMoveLeft : o.maxWidth) || Number.MAX_SAFE_INTEGER;
+    const minWidth = o.minWidth / this.rectScale.x || oWidth;
+    const maxHeight = (moveUp ? o.maxHeightMoveUp : o.maxHeight) || Number.MAX_SAFE_INTEGER;
+    const minHeight = o.minHeight / this.rectScale.y || oHeight;
     const width = Math.min(maxWidth, Math.max(minWidth, oWidth));
     const height = Math.min(maxHeight, Math.max(minHeight, oHeight));
     return { width, height };
