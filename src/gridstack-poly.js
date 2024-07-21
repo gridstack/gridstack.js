@@ -1,5 +1,5 @@
 /**
- * gridstack-poly.ts 10.3.1 used for IE and older browser support (not supported in v2-v4.3.1, but again in v4.4)
+ * gridstack-poly.ts 10.3.1-dev used for IE and older browser support (not supported in v2-v4.3.1, but again in v4.4)
  * Copyright (c) 2021 Alain Dumesny - see GridStack root license
  */
 
