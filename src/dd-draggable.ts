@@ -79,8 +79,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     super();
 
     // get the element that is actually supposed to be dragged by
-    let handleName = option.handle.substring(1);
-    this.dragEls = el.classList.contains(handleName) ? [el] : Array.from(el.querySelectorAll(option.handle));
+    const handleName = option.handle.substring(1);
+    const n = el.gridstackNode;
+    this.dragEls = el.classList.contains(handleName) ? [el] : (n?.subGrid ? [el.querySelector(option.handle) || el] : Array.from(el.querySelectorAll(option.handle)));
     if (this.dragEls.length === 0) {
       this.dragEls = [el];
     }
