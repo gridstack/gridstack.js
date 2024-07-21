@@ -530,10 +530,6 @@ export class Utils {
       cancelable: true,
       target: info.target ? info.target : e.target
     };
-    // don't check for `instanceof DragEvent` as Safari use MouseEvent #1540
-    if ((e as DragEvent).dataTransfer) {
-      evt['dataTransfer'] = (e as DragEvent).dataTransfer; // workaround 'readonly' field.
-    }
     ['altKey','ctrlKey','metaKey','shiftKey'].forEach(p => evt[p] = e[p]); // keys
     ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = e[p]); // point info
     return {...evt, ...obj} as unknown as T;
