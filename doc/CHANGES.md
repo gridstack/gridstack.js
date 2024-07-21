@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [10.3.0-dev (TBD)](#1030-dev-tbd)
+- [10.3.1 (2024-07-21)](#1031-2024-07-21)
 - [10.3.0 (2024-06-26)](#1030-2024-06-26)
 - [10.2.1 (2024-06-23)](#1021-2024-06-23)
 - [10.2.0 (2024-06-02)](#1020-2024-06-02)
@@ -113,7 +113,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 10.3.0-dev (TBD)
+## 10.3.1 (2024-07-21)
 * fix: [#2734](https://github.com/gridstack/gridstack.js/bug/2734) rotate() JS error
 * fix: [#2741](https://github.com/gridstack/gridstack.js/pull/2741) resizeToContent JS error with nested grid
 * fix: [#2740](https://github.com/gridstack/gridstack.js/bug/2740) nested grid drag fix
