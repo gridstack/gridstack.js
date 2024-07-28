@@ -14,9 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return response.json()
     })
     .then((data) => {
-      // Update the document title to the name of the latest release
-      document.title = data.name
-
       // Update the content of the <span> element with id "release-version"
       const releaseVersionElement = document.getElementById('release-version')
       releaseVersionElement.textContent = data.name
