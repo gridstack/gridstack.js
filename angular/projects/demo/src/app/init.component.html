@@ -1,0 +1,9 @@
+<label>
+  <input type="checkbox" [(ngModel)]="isSwitchedOn"> {{ isSwitchedOn ? 'EDIT' : 'VIEW' }}
+</label>
+<div *ngIf="isSwitchedOn; else elseBlock">
+  <app-root></app-root>
+</div>
+<ng-template #elseBlock>
+  <app-root></app-root>
+</ng-template>

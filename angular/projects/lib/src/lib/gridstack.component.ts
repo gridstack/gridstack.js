@@ -186,18 +186,18 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   private hookEvents(grid?: GridStack) {
     if (!grid) return;
     grid
-    .on('added', (event: Event, nodes: GridStackNode[]) => { this.checkEmpty(); this.addedCB.emit({event, nodes}); })
-    .on('change', (event: Event, nodes: GridStackNode[]) => this.changeCB.emit({event, nodes}))
-    .on('disable', (event: Event) => this.disableCB.emit({event}))
-    .on('drag', (event: Event, el: GridItemHTMLElement) => this.dragCB.emit({event, el}))
-    .on('dragstart', (event: Event, el: GridItemHTMLElement) => this.dragStartCB.emit({event, el}))
-    .on('dragstop', (event: Event, el: GridItemHTMLElement) => this.dragStopCB.emit({event, el}))
-    .on('dropped', (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => this.droppedCB.emit({event, previousNode, newNode}))
-    .on('enable', (event: Event) => this.enableCB.emit({event}))
-    .on('removed', (event: Event, nodes: GridStackNode[]) => { this.checkEmpty(); this.removedCB.emit({event, nodes}); })
-    .on('resize', (event: Event, el: GridItemHTMLElement) => this.resizeCB.emit({event, el}))
-    .on('resizestart', (event: Event, el: GridItemHTMLElement) => this.resizeStartCB.emit({event, el}))
-    .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.resizeStopCB.emit({event, el}))
+      .on('added', (event: Event, nodes: GridStackNode[]) => { this.checkEmpty(); this.addedCB.emit({event, nodes}); })
+      .on('change', (event: Event, nodes: GridStackNode[]) => this.changeCB.emit({event, nodes}))
+      .on('disable', (event: Event) => this.disableCB.emit({event}))
+      .on('drag', (event: Event, el: GridItemHTMLElement) => this.dragCB.emit({event, el}))
+      .on('dragstart', (event: Event, el: GridItemHTMLElement) => this.dragStartCB.emit({event, el}))
+      .on('dragstop', (event: Event, el: GridItemHTMLElement) => this.dragStopCB.emit({event, el}))
+      .on('dropped', (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => this.droppedCB.emit({event, previousNode, newNode}))
+      .on('enable', (event: Event) => this.enableCB.emit({event}))
+      .on('removed', (event: Event, nodes: GridStackNode[]) => { this.checkEmpty(); this.removedCB.emit({event, nodes}); })
+      .on('resize', (event: Event, el: GridItemHTMLElement) => this.resizeCB.emit({event, el}))
+      .on('resizestart', (event: Event, el: GridItemHTMLElement) => this.resizeStartCB.emit({event, el}))
+      .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.resizeStopCB.emit({event, el}))
   }
 }
 

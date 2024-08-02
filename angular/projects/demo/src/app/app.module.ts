@@ -5,35 +5,36 @@ import { AppComponent } from './app.component';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
-import { AComponent, BComponent, CComponent } from './dummy.component';
+import { AComponent } from './a.component';
 
 // local testing
 // import { GridstackModule } from './gridstack.module';
 // import { GridstackComponent } from './gridstack.component';
 import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
+import { InitComponent } from './init.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     BrowserModule,
     GridstackModule,
+    FormsModule
   ],
   declarations: [
-      AngularNgForCmdTestComponent,
-      AngularNgForTestComponent,
-      AngularSimpleComponent,
-      AppComponent,
-      AComponent,
-      BComponent,
-      CComponent,
+    AngularNgForCmdTestComponent,
+    AngularNgForTestComponent,
+    AngularSimpleComponent,
+    AppComponent,
+    AComponent,
+    InitComponent
   ],
   exports: [
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [InitComponent]
 })
 export class AppModule {
   constructor() {
     // register all our dynamic components created in the grid
-    GridstackComponent.addComponentToSelectorType([AComponent, BComponent, CComponent]);
   }
 }
