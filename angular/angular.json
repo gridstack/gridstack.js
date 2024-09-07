@@ -54,14 +54,15 @@
               "projects/demo/src/assets"
             ],
             "styles": [
+              "node_modules/gridstack/dist/gridstack.min.css",
+              "node_modules/gridstack/dist/gridstack-extra.min.css",
               "projects/demo/src/styles.css"
             ],
             "scripts": []
           },
           "configurations": {
             "production": {
-              "budgets": [
-                {
+              "budgets": [{
                   "type": "initial",
                   "maximumWarning": "500kb",
                   "maximumError": "1mb"
@@ -72,12 +73,10 @@
                   "maximumError": "4kb"
                 }
               ],
-              "fileReplacements": [
-                {
-                  "replace": "projects/demo/src/environments/environment.ts",
-                  "with": "projects/demo/src/environments/environment.prod.ts"
-                }
-              ],
+              "fileReplacements": [{
+                "replace": "projects/demo/src/environments/environment.ts",
+                "with": "projects/demo/src/environments/environment.prod.ts"
+              }],
               "outputHashing": "all"
             },
             "development": {
@@ -121,6 +120,8 @@
               "projects/demo/src/assets"
             ],
             "styles": [
+              "node_modules/gridstack/dist/gridstack.min.css",
+              "node_modules/gridstack/dist/gridstack-extra.min.css",
               "projects/demo/src/styles.css"
             ],
             "scripts": []
