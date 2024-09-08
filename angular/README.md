@@ -109,8 +109,9 @@ public gridOptions: NgGridStackOptions = {
   minRow: 1, // make space for empty message
   children: [ // or call load()/addWidget() with same data
     {x:0, y:0, minW:2, selector:'app-a'},
-    {x:1, y:0, selector:'app-b'},
-    {x:0, y:1, content:'plain html content'},
+    {x:1, y:0, minW:2, selector:'app-a', input: { text: 'bar' }}, // custom input that works using BaseWidget.deserialize() Object.assign(this, w.input)
+    {x:2, y:0, selector:'app-b'},
+    {x:3, y:0, content:'plain html'},
   ]
 }
 
