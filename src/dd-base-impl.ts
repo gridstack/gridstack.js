@@ -1,6 +1,6 @@
 /**
  * dd-base-impl.ts 10.3.1-dev
- * Copyright (c) 2021-2022 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2024  Alain Dumesny - see GridStack root license
  */
 
 export type EventCallback = (event: Event) => boolean|void;
