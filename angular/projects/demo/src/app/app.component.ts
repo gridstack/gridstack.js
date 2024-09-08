@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
     cellHeight: 70,
     columnOpts: { breakpoints: [{w:768, c:1}] },
   }
-  private sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-a', input: {text: 'bar'}}, {x:1, y:1, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
+  public sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-a', input: {text: 'bar'}}, {x:1, y:1, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
   public gridOptionsFull: NgGridStackOptions = {
     ...this.gridOptions,
     children: this.sub0,
@@ -53,8 +53,8 @@ export class AppComponent implements OnInit {
     acceptWidgets: true, // will accept .grid-stack-item by default
     margin: 5,
   };
-  private sub1: NgGridStackWidget[] = [ {x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-b'}, {x:2, y:0, selector:'app-c'}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
-  private sub2: NgGridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
+  public sub1: NgGridStackWidget[] = [ {x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-b'}, {x:2, y:0, selector:'app-c'}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
+  public sub2: NgGridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
   private subChildren: NgGridStackWidget[] = [
     {x:0, y:0, content: 'regular item'},
     {x:1, y:0, w:4, h:4, subGridOpts: {children: this.sub1, class: 'sub1', ...this.subOptions}},
@@ -176,6 +176,9 @@ export class AppComponent implements OnInit {
       // {x:2, y:1, id:'3'}, // delete item
       {x:3, y:0, w:2, content:'new item'}, // new item
     ]);
+  }
+  public load(layout: GridStackWidget[]) {
+    this.gridComp?.grid?.load(layout);
   }
 
   /**
