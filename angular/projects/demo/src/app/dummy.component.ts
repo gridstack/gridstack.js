@@ -1,6 +1,6 @@
 /**
  * gridstack.component.ts 8.2.1
- * Copyright (c) 2022 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
 // dummy testing component that will be grid items content

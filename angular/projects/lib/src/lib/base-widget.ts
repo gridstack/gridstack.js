@@ -1,6 +1,6 @@
 /**
  * gridstack-item.component.ts 10.3.1-dev
- * Copyright (c) 2022 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
 /**

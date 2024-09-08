@@ -2,7 +2,7 @@
  * GridStack 10.3.1-dev
  * https://gridstackjs.com/
  *
- * Copyright (c) 2021-2022 Alain Dumesny
+ * Copyright (c) 2021-2024  Alain Dumesny
  * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
  */
 import { GridStackEngine } from './gridstack-engine';
@@ -1191,6 +1191,8 @@ export class GridStack {
    * @param triggerEvent if `false` (quiet mode) element will not be added to removed list and no 'removed' callbacks will be called (Default? true).
    */
   public removeWidget(els: GridStackElement, removeDOM = true, triggerEvent = true): GridStack {
+    if (!els) { console.error('Error: GridStack.removeWidget(undefined) called'); return this; }
+    
     GridStack.getElements(els).forEach(el => {
       if (el.parentElement && el.parentElement !== this.el) return; // not our child!
       let node = el.gridstackNode;
