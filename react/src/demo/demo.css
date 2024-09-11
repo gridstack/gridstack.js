@@ -1,0 +1,17 @@
+.grid-stack-item {
+  background-color: rgba(0, 0, 0, 0.125);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+  padding: 10px;
+
+}
+.grid-stack {
+  background-color: rgba(0, 0, 0, 0.125);
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+}
+.grid-stack-placeholder-custom {
+  background-color: rgba(0, 0, 0, 0.125);
+  border: 1px dashed rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+}
