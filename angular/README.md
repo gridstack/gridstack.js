@@ -172,6 +172,14 @@ Code ship starting with v8.1.2+ in `dist/angular` for people to use directly and
   - gridstack v8 to run as it needs the latest changes (use older version that matches GS versions)
   - Angular 13+ for dynamic createComponent() API
 
+NOTE: if you are on Angular 12 or below: copy the wrapper code over (or patch it - see main page example) and change `createComponent()` calls to use old API instead:
+```ts
+protected resolver: ComponentFactoryResolver,
+...
+const factory = this.resolver.resolveComponentFactory(GridItemComponent);
+const gridItemRef = grid.container.createComponent(factory) as ComponentRef<GridItemComponent>;
+```
+
 ## ngFor Caveats
 
 - This wrapper handles well ngFor loops, but if you're using a trackBy function (as I would recommend) and no element id change after an update,
