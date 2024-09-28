@@ -11,7 +11,7 @@ import {
   gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
   dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler,
-  Position
+  Position, RenderFcn
 } from './types';
 
 /*
@@ -164,10 +164,7 @@ export class GridStack {
       if (GridStack.addRemoveCB) {
         el = GridStack.addRemoveCB(parent, opt, true, true);
       } else {
-        let doc = document.implementation.createHTMLDocument(''); // IE needs a param
-        doc.body.innerHTML = `<div class="grid-stack ${opt.class || ''}"></div>`;
-        el = doc.body.children[0] as HTMLElement;
-        parent.appendChild(el);
+        el = Utils.createDiv(['grid-stack', opt.class], parent);
       }
     }
 
@@ -198,6 +195,12 @@ export class GridStack {
    * callback during saving to application can inject extra data for each widget, on top of the grid layout properties
    */
   public static saveCB?: SaveFcn;
+
+  /**
+   * callback to create the content of widgets so the app can control how to store and restore it
+   * By default this lib will do 'el.textContent = w.content' forcing text only support for avoiding potential XSS issues.
+   */
+  public static renderCB?: RenderFcn = (el: HTMLElement, w: GridStackNode) => { if (el && w?.content) el.textContent = w.content; };
 
   /** callback to use for resizeToContent instead of the built in one */
   public static resizeToContentCB?: ResizeToContentFcn;
@@ -230,7 +233,7 @@ export class GridStack {
       let placeholderChild = document.createElement('div'); // child so padding match item-content
       placeholderChild.className = 'placeholder-content';
       if (this.opts.placeholderText) {
-        placeholderChild.innerHTML = this.opts.placeholderText;
+        placeholderChild.textContent = this.opts.placeholderText;
       }
       this._placeholder = document.createElement('div');
       this._placeholder.classList.add(this.opts.placeholderClass, gridDefaults.itemClass, this.opts.itemClass);
@@ -443,41 +446,27 @@ export class GridStack {
    *
    * Widget will be always placed even if result height is more than actual grid height.
    * You need to use `willItFit()` before calling addWidget for additional check.
-   * See also `makeWidget()`.
+   * See also `makeWidget(el)` for DOM element.
    *
    * @example
    * let grid = GridStack.init();
    * grid.addWidget({w: 3, content: 'hello'});
-   * grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {w: 3});
    *
-   * @param el  GridStackWidget (which can have content string as well), html element, or string definition to add
+   * @param w GridStackWidget definition. used MakeWidget(el) if you have dom element instead.
    * @param options widget position/size options (optional, and ignore if first param is already option) - see GridStackWidget
    */
-  public addWidget(els?: GridStackWidget | GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
-    function isGridStackWidget(w: GridStackNode): w is GridStackNode { // https://medium.com/ovrsea/checking-the-type-of-an-object-in-typescript-the-type-guards-24d98d9119b0
-      return w.el !== undefined || w.x !== undefined || w.y !== undefined || w.w !== undefined || w.h !== undefined || w.content !== undefined ? true : false;
-    }
+  public addWidget(w: GridStackWidget): GridItemHTMLElement {
+    if (typeof w === 'string') { console.error('V11: GridStack.addWidget() does not support string anymore. see #2736'); return; }
+    if ((w as HTMLElement).ELEMENT_NODE) { console.error('V11: GridStack.addWidget() does not support HTMLElement anymore. use makeWidget()'); return this.makeWidget(w as HTMLElement); }
 
     let el: GridItemHTMLElement;
-    let node: GridStackNode;
-    if (typeof els === 'string') {
-      let doc = document.implementation.createHTMLDocument(''); // IE needs a param
-      doc.body.innerHTML = els;
-      el = doc.body.children[0] as HTMLElement;
-    } else if (arguments.length === 0 || arguments.length === 1 && isGridStackWidget(els)) {
-      node = options = els;
-      if (node?.el) {
-        el = node.el; // re-use element stored in the node
-      } else if (GridStack.addRemoveCB) {
-        el = GridStack.addRemoveCB(this.el, options, true, false);
-      } else {
-        let content = options?.content || '';
-        let doc = document.implementation.createHTMLDocument(''); // IE needs a param
-        doc.body.innerHTML = `<div class="grid-stack-item ${this.opts.itemClass || ''}"><div class="grid-stack-item-content">${content}</div></div>`;
-        el = doc.body.children[0] as HTMLElement;
-      }
+    let node: GridStackNode = w;
+    if (node?.el) {
+      el = node.el; // re-use element stored in the node
+    } else if (GridStack.addRemoveCB) {
+      el = GridStack.addRemoveCB(this.el, w, true, false);
     } else {
-      el = els as HTMLElement;
+      el = Utils.createWidgetDivs(this.opts.itemClass, w);
     }
 
     if (!el) return;
@@ -490,14 +479,13 @@ export class GridStack {
     // as the actual value are filled in when _prepareElement() calls el.getAttribute('gs-xyz') before adding the node.
     // So make sure we load any DOM attributes that are not specified in passed in options (which override)
     let domAttr = this._readAttr(el);
-    options = Utils.cloneDeep(options) || {};  // make a copy before we modify in case caller re-uses it
-    Utils.defaults(options, domAttr);
-    node = this.engine.prepareNode(options);
-    this._writeAttr(el, options);
+    Utils.defaults(w, domAttr);
+    this.engine.prepareNode(w);
+    this._writeAttr(el, w);
 
     this.el.appendChild(el);
 
-    this.makeWidget(el, options);
+    this.makeWidget(el, w);
 
     return el;
   }
@@ -553,13 +541,9 @@ export class GridStack {
       if (GridStack.addRemoveCB) {
         newItem = GridStack.addRemoveCB(this.el, newItemOpt, true, false);
       } else {
-        let doc = document.implementation.createHTMLDocument(''); // IE needs a param
-        doc.body.innerHTML = `<div class="grid-stack-item"></div>`;
-        newItem = doc.body.children[0] as HTMLElement;
+        newItem = Utils.createDiv(['grid-stack-item']);
         newItem.appendChild(content);
-        doc.body.innerHTML = `<div class="grid-stack-item-content"></div>`;
-        content = doc.body.children[0] as HTMLElement;
-        node.el.appendChild(content);
+        content = Utils.createDiv(['grid-stack-item-content'], node.el);
       }
       this._prepareDragDropByNode(node); // ... and restore original D&D
     }
@@ -580,7 +564,7 @@ export class GridStack {
 
     // add the original content back as a child of hte newly created grid
     if (saveContent) {
-      subGrid.addWidget(newItem, newItemOpt);
+      subGrid.makeWidget(newItem, newItemOpt);
     }
 
     // now add any additional node
@@ -589,7 +573,7 @@ export class GridStack {
         // create an artificial event even for the just created grid to receive this item
         window.setTimeout(() => Utils.simulateMouseEvent(nodeToAdd._event, 'mouseenter', subGrid.el), 0);
       } else {
-        subGrid.addWidget(node.el, node);
+        subGrid.makeWidget(node.el, node);
       }
     }
     return subGrid;
@@ -609,7 +593,7 @@ export class GridStack {
       // migrate any children over and offsetting by our location
       n.x += this.parentGridItem.x;
       n.y += this.parentGridItem.y;
-      pGrid.addWidget(n.el, n);
+      pGrid.makeWidget(n.el, n);
     });
     pGrid.batchUpdate(false);
     if (this.parentGridItem) delete this.parentGridItem.subGrid;
@@ -637,8 +621,8 @@ export class GridStack {
     // check for HTML content and nested grids
     list.forEach(n => {
       if (saveContent && n.el && !n.subGrid && !saveCB) { // sub-grid are saved differently, not plain content
-        let sub = n.el.querySelector('.grid-stack-item-content');
-        n.content = sub ? sub.innerHTML : undefined;
+        const itemContent = n.el.querySelector('.grid-stack-item-content');
+        n.content = itemContent?.innerHTML;
         if (!n.content) delete n.content;
       } else {
         if (!saveContent && !saveCB) { delete n.content; }
@@ -1084,6 +1068,8 @@ export class GridStack {
    */
   public makeWidget(els: GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
     let el = GridStack.getElement(els);
+    if (!el) return;
+    if (!el.parentElement) this.el.appendChild(el);
     this._prepareElement(el, true, options);
     const node = el.gridstackNode;
 
@@ -1141,7 +1127,7 @@ export class GridStack {
       if (noData) {
         this._gsEventHandler[name] = (event: Event) => (callback as GridStackEventHandler)(event);
       } else {
-        this._gsEventHandler[name] = (event: CustomEvent) => (callback as GridStackNodesHandler)(event, event.detail);
+        this._gsEventHandler[name] = (event: CustomEvent) => {if (event.detail) (callback as GridStackNodesHandler)(event, event.detail)};
       }
       this.el.addEventListener(name, this._gsEventHandler[name]);
     } else if (name === 'drag' || name === 'dragstart' || name === 'dragstop' || name === 'resizestart' || name === 'resize'
@@ -1323,9 +1309,9 @@ export class GridStack {
 
       // check for content changing
       if (w.content !== undefined) {
-        const itemContent = el.querySelector('.grid-stack-item-content');
-        if (itemContent && itemContent.innerHTML !== w.content) {
-          itemContent.innerHTML = w.content;
+        const itemContent = el.querySelector('.grid-stack-item-content') as HTMLElement;
+        if (itemContent && itemContent.textContent !== w.content) {
+          GridStack.renderCB(itemContent, w);
           // restore any sub-grid back
           if (n.subGrid?.el) {
             itemContent.appendChild(n.subGrid.el);

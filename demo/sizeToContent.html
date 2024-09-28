@@ -61,6 +61,11 @@
 
   </div>
   <script type="text/javascript">
+    // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+    GridStack.renderCB = function(el, w) {
+      el.innerHTML = w.content;
+    };
+
     let text ='some very large content that will normally not fit in the window.'
     text = text + text;
     let count = 0;

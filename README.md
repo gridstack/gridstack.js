@@ -47,6 +47,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Migrating to v8](#migrating-to-v8)
   - [Migrating to v9](#migrating-to-v9)
   - [Migrating to v10](#migrating-to-v10)
+  - [Migrating to v11](#migrating-to-v11)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [The Team](#the-team)
@@ -459,6 +460,21 @@ breaking change:
 * `disableOneColumnMode`, `oneColumnSize` have been removed (thought we temporary convert if you have them). use `columnOpts: { breakpoints: [{w:768, c:1}] }` for the same behavior.
 * 1 column mode switch is no longer by default (`columnOpts` is not defined) as too many new users had issues. Instead set it explicitly (see above).
 * `oneColumnModeDomSort` has been removed. Planning to support per column layouts at some future times. TBD
+
+## Migrating to v11
+
+All instances of `el.innerHTML = 'some content'` have been removed for security reason as it opens up some potential for accidental XSS. we now create DIV directly or use `el.textContent = w.content` for `GridStackWidget.content` field.
+
+breaking change:
+* if you code relies on `GridStackWidget.content` with real HTML (like a few demos) it is up to you to do this:
+```ts
+// NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+GridStack.renderCB = function(el, w) {
+  el.innerHTML = w.content;
+};
+```
+* V11 add new `GridStack.renderCB` that is called for you to create the widget content (entire GridStackWidget is passed so you can use id or some other field as logic) while GS creates the 2 needed parent divs + classes, unlike `GridStack.addRemoveCB` which doesn't create anything for you. Both can be handy for Angular/React/Vue frameworks.
+* `addWidget(w: GridStackWidget)` is now the only supported format, no more string content passing. You will need to create content yourself (`Util.createWidgetDivs()` can be used to create parent divs) then call `makeWidget(el)` instead.
 
 # jQuery Application
 
