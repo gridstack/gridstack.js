@@ -336,6 +336,10 @@
   <!-- /.container -->
 
   <script type="text/javascript">
+    // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+    GridStack.renderCB = function(el, w) {
+      el.innerHTML = w.content;
+    };
     var simple = [
       {x: 0, y: 0, w: 4, h: 2, content: '1'},
       {x: 4, y: 0, w: 4, h: 4, content: '2'},

@@ -5,94 +5,44 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Right-To-Left (RTL) demo</title>
-
-  <link rel="stylesheet" href="demo.css"/>
   <style type="text/css">
+    /* don't include demo.css as that has some forced text aligment */
+    @import "../dist/gridstack.css";
+    .grid-stack {
+      background: #FAFAD2;
+    }
     .grid-stack-item-content {
-      text-align: right; /* override demo.css */
+      background-color: #18bc9c;
     }
   </style>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.0/knockout-min.js"></script>
   <script src="../dist/gridstack-all.js"></script>
 </head>
 <body>
-  <div class="container-fluid">
-    <h1>RTL Demo</h1>
-    <div>
-      <a class="btn btn-primary" data-bind="click: addNewWidget">Add Widget</a>
-    </div>
-    <br>
-    <div data-bind="component: {name: 'dashboard-grid', params: $data}"></div>
+  <h1>RTL Demo</h1>
+  <div>
+    <button onClick="addWidget()">Add Widget</button>
   </div>
+  <br>
+  <div class="grid-stack"></div>
 
   <script type="text/javascript">
-    ko.components.register('dashboard-grid', {
-      viewModel: {
-        createViewModel: function (controller, componentInfo) {
-          let ViewModel = function (controller, componentInfo) {
-            let grid = null;
+    let items = [
+      {x: 0, y: 0, w: 2, h: 1},
+      {x: 2, y: 0, w: 4, h: 1},
+      {x: 6, y: 0, w: 2, h: 2},
+    ];
+    items.forEach((item, i) => item.content = 'item ' + i);
+    let grid = GridStack.init({rtl: true, children: items});
 
-            this.widgets = controller.widgets;
-
-            this.afterAddWidget = function (items) {
-              if (!grid) {
-                grid = GridStack.init({auto: false});
-              }
-
-              let item = items.find(function (i) { return i.nodeType == 1 });
-              grid.addWidget(item);
-              ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
-                grid.removeWidget(item);
-              });
-            };
-          };
-
-          return new ViewModel(controller, componentInfo);
-        }
-      },
-      template:
-        [
-          '<div class="grid-stack" data-bind="foreach: {data: widgets, afterRender: afterAddWidget}">',
-          '   <div class="grid-stack-item" data-bind="attr: {\'gs-x\': $data.x, \'gs-y\': $data.y, \'gs-w\': $data.w, \'gs-h\': $data.h, \'gs-auto-position\': $data.auto_position}">',
-          '     <div class="grid-stack-item-content"><center><button data-bind="click: $root.deleteWidget">Delete me</button><br><h5 data-bind="text: index" /></center><br><p>lorem ipsum</p></div>',
-          '   </div>',
-          '</div> '
-        ].join('')
-    });
-
-    let Controller = function (widgets) {
-      let self = this;
-
-      this.widgets = ko.observableArray(widgets);
-
-      this.addNewWidget = function () {
-        this.widgets.push({
-          x: 0,
-          y: 0,
-          w: Math.floor(1 + 3 * Math.random()),
-          h: Math.floor(1 + 3 * Math.random()),
-          auto_position: true,
-          index: 'auto'
-        });
-        return false;
+    function addWidget() {
+      let w = {
+        w: Math.round(1 + 3 * Math.random()),
+        h: Math.round(1 + 3 * Math.random()),
+        content: 'new item',
       };
-
-      this.deleteWidget = function (item) {
-        self.widgets.remove(item);
-        return false;
-      };
+      grid.addWidget(w);
     };
 
-    let widgets = [
-      {x: 0, y: 0, w: 2, h: 2, index: 1},
-      {x: 2, y: 0, w: 4, h: 2, index: 2},
-      {x: 6, y: 0, w: 2, h: 4, index: 3},
-      {x: 1, y: 2, w: 4, h: 2, index: 4}
-    ];
-
-    let controller = new Controller(widgets);
-    ko.applyBindings(controller);
   </script>
 </body>
 </html>

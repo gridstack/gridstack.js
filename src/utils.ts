@@ -3,6 +3,7 @@
  * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 
+import { GridStack } from './gridstack';
 import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
 
 export interface HeightData {
@@ -107,6 +108,22 @@ export class Utils {
       return el as HTMLElement;
     }
     return els;
+  }
+
+  /** create the default grid item divs */
+  static createWidgetDivs(itemClass?: string, w?: GridStackWidget): HTMLElement {
+    const el = Utils.createDiv(['grid-stack-item', itemClass]);
+    Utils.createDiv(['grid-stack-item-content'], el, w);
+    return el;
+  }
+
+  /** create a div (possibly 2) with the given classes */
+  static createDiv(classes: string[], parent?: HTMLElement, w?: GridStackWidget): HTMLElement {
+    let el = document.createElement('div');
+    classes.forEach(c => {if (c) el.classList.add(c)});
+    parent?.appendChild(el);
+    if (w) GridStack.renderCB(el, w);
+    return el;
   }
 
   /** true if we should resize to content. strict=true when only 'sizeToContent:true' and not a number which lets user adjust */

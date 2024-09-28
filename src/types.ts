@@ -83,6 +83,9 @@ export type AddRemoveFcn = (parent: HTMLElement, w: GridStackWidget, add: boolea
 /** optional function called during save() to let the caller add additional custom data to the GridStackWidget structure that will get returned */
 export type SaveFcn = (node: GridStackNode, w: GridStackWidget) => void;
 
+/** optional function called during load()/addWidget() to let the caller create custom content other than plan text */
+export type RenderFcn = (el: HTMLElement, w: GridStackWidget) => void;
+
 export type ResizeToContentFcn = (el: GridItemHTMLElement) => void;
 
 /** describes the responsive nature of the grid. NOTE: make sure to have correct extra CSS to support this. */
@@ -250,7 +253,7 @@ export interface GridStackOptions {
 
   /**
    * if true turns grid to RTL. Possible values are true, false, 'auto' (default?: 'auto')
-   * See [example](http://gridstack.github.io/gridstack.js/demo/rtl.html)
+   * See [example](http://gridstack.github.io/gridstack.js/demo/right-to-left(rtl).html)
    */
   rtl?: boolean | 'auto';
 
