@@ -33,7 +33,7 @@ gridstack.js API
   - [`setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root = HTMLElement | Document)`](#setupdragindragin-string--htmlelement-draginoptions-dddraginopt-root--htmlelement--document)
   - [`GridStack.registerEngine(engineClass: typeof GridStackEngine)`](#gridstackregisterengineengineclass-typeof-gridstackengine)
 - [API](#api)
-  - [`addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`](#addwidgetel-gridstackwidget--gridstackelement-options-gridstackwidget)
+  - [`addWidget(w: GridStackWidget): GridItemHTMLElement`](#addwidgetw-gridstackwidget-griditemhtmlelement)
   - [`batchUpdate(flag = true)`](#batchupdateflag--true)
   - [`compact(layout: CompactOptions = 'compact', doSort = true)`](#compactlayout-compactoptions--compact-dosort--true)
   - [`cellHeight(val: number, update = true)`](#cellheightval-number-update--true)
@@ -355,14 +355,13 @@ but you will probably also want `helper: 'clone'` or your own callback function)
 * call to specify global custom engine subclass - see instead `GridStackOptions.engineClass` if you only need to replace just one instance.
 ## API
 
-### `addWidget(el?: GridStackWidget | GridStackElement, options?: GridStackWidget)`
+### `addWidget(w: GridStackWidget): GridItemHTMLElement`
 
-Creates new widget and returns it. Options is an object containing the fields x,y,width,height,etc...
+Creates new widget and returns it.
 
 Parameters:
 
-- `el`: GridStackWidget | GridStackElement -  html element, or string definition, or GridStackWidget (which can have content string as well) to add
-- `options`: GridStackWidget - widget position/size options (optional, and ignore if first param is already option) - see GridStackWidget
+- `w`: GridStackWidget - widget position/size options - see GridStackWidget
 
 Widget will be always placed even if result height is more than actual grid height. You need to use `willItFit` method
 before calling `addWidget` for additional check.
@@ -370,8 +369,6 @@ before calling `addWidget` for additional check.
 ```js
 let grid = GridStack.init();
 grid.addWidget({w: 3, content: 'hello'});
-// or
-grid.addWidget('<div class="grid-stack-item"><div class="grid-stack-item-content">hello</div></div>', {w: 3});
 ```
 
 ### `batchUpdate(flag = true)`

@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [11.0.0 (TBD)](#1100-tbd)
 - [10.3.1 (2024-07-21)](#1031-2024-07-21)
 - [10.3.0 (2024-06-26)](#1030-2024-06-26)
 - [10.2.1 (2024-06-23)](#1021-2024-06-23)
@@ -112,6 +113,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 11.0.0 (TBD)
+* fix: [#2736](https://github.com/gridstack/gridstack.js/bug/2736) safe practices around GridStackWidget.content no longer setting innerHTML
 
 ## 10.3.1 (2024-07-21)
 * fix: [#2734](https://github.com/gridstack/gridstack.js/bug/2734) rotate() JS error

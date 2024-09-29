@@ -162,22 +162,23 @@ public identify(index: number, w: GridStackWidget) {
 
 You can see a fuller example at [app.component.ts](projects/demo/src/app/app.component.ts)
 
-to build the demo, go to [angular/projects/demo](projects/demo/) and run `yarn` + `yarn start` and navigate to `http://localhost:4200/`
+to build the demo, go to [angular/projects/demo](projects/demo/) and run `yarn` + `yarn upgrade` (ng18 seem to have introduced some conflicts) + `yarn start` and navigate to `http://localhost:4200/`
 
-Code ship starting with v8.1.2+ in `dist/angular` for people to use directly and is an angular module! (source code under `dist/angular/src`)
+Code started shipping with v8.1.2+ in `dist/angular` for people to use directly and is an angular module! (source code under `dist/angular/src`)
 
 ## Caveats
 
 - This wrapper needs:
   - gridstack v8 to run as it needs the latest changes (use older version that matches GS versions)
-  - Angular 13+ for dynamic createComponent() API
+  - Angular 14+ for dynamic `createComponent()` API
 
-NOTE: if you are on Angular 12 or below: copy the wrapper code over (or patch it - see main page example) and change `createComponent()` calls to use old API instead:
+NOTE: if you are on Angular 13 or below: copy the wrapper code over (or patch it - see main page example) and change `createComponent()` calls to use old API instead:
 ```ts
 protected resolver: ComponentFactoryResolver,
 ...
 const factory = this.resolver.resolveComponentFactory(GridItemComponent);
 const gridItemRef = grid.container.createComponent(factory) as ComponentRef<GridItemComponent>;
+// ...do the same for widget selector...
 ```
 
 ## ngFor Caveats
