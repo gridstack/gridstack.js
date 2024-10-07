@@ -6,6 +6,10 @@
 // dummy testing component that will be grid items content
 
 import { Component, OnDestroy, Input } from '@angular/core';
+
+// local testing
+// import { BaseWidget } from './base-widget';
+// import { NgCompInputs } from './gridstack.component';
 import { BaseWidget, NgCompInputs } from 'gridstack/dist/angular';
 
 @Component({

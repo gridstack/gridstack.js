@@ -101,11 +101,11 @@
 </div>
 
 <div *ngIf="show===8">
-  <p>load() memory leak test</p>
+  <p>load() + clear() to memory leak test between the two</p>
   <button (click)="clearGrid()">Clear</button>
-  <button (click)="load(sub0)">load 0</button>
+  <button (click)="load(sub0)">load</button>
   <button (click)="load(sub2)">load 2</button>
-  <gridstack [options]="gridOptionsFull"></gridstack>
+  <gridstack [options]="gridOptions"></gridstack>
 </div>
 
 <div class="grid-container"></div>
