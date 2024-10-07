@@ -72,7 +72,10 @@ export class GridstackItemComponent implements OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    delete this.ref;
+    this.clearOptions();
+    delete this.childWidget
     delete this.el._gridItemComp;
+    delete this.container;
+    delete this.ref;
   }
 }

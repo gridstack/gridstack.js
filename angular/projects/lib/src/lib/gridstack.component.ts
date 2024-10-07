@@ -5,8 +5,7 @@
 
 import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, Input,
   OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType, ComponentRef } from '@angular/core';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
 
 import { GridItemCompHTMLElement, GridstackItemComponent } from './gridstack-item.component';
@@ -119,8 +118,8 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
 
   private _options?: GridStackOptions;
   private _grid?: GridStack;
+  private _sub: Subscription | undefined;
   private loaded?: boolean;
-  private ngUnsubscribe: Subject<void> = new Subject();
 
   constructor(
     // private readonly zone: NgZone,
@@ -142,21 +141,20 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /** wait until after all DOM is ready to init gridstack children (after angular ngFor and sub-components run first) */
   public ngAfterContentInit(): void {
     // track whenever the children list changes and update the layout...
-    this.gridstackItems?.changes
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(() => this.updateAll());
+    this._sub = this.gridstackItems?.changes.subscribe(() => this.updateAll());
     // ...and do this once at least unless we loaded children already
     if (!this.loaded) this.updateAll();
     this.hookEvents(this.grid);
   }
 
   public ngOnDestroy(): void {
-    delete this.ref;
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
-    this.grid?.destroy();
+    this.unhookEvents(this._grid);
+    this._sub?.unsubscribe();
+    this._grid?.destroy();
     delete this._grid;
     delete this.el._gridComp;
+    delete this.container;
+    delete this.ref;
   }
 
   /**
@@ -198,6 +196,11 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
       .on('resize', (event: Event, el: GridItemHTMLElement) => this.resizeCB.emit({event, el}))
       .on('resizestart', (event: Event, el: GridItemHTMLElement) => this.resizeStartCB.emit({event, el}))
       .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.resizeStopCB.emit({event, el}))
+  }
+
+  private unhookEvents(grid?: GridStack) {
+    if (!grid) return;
+    grid.off('added change disable drag dragstart dragstop dropped enable removed resize resizestart resizestop');
   }
 }
 
