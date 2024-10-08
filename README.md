@@ -519,6 +519,13 @@ As for events, you can still use `$(".grid-stack").on(...)` for the version that
 
 View our change log [here](https://github.com/gridstack/gridstack.js/tree/master/doc/CHANGES.md).
 
+# Usage Trend
+
+[Usage Trend of gridstack](https://npm-compare.com/gridstack#timeRange=THREE_YEARS)
+  
+<a href="https://npm-compare.com/gridstack#timeRange=THREE_YEARS" target="_blank">
+  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/gridstack.png" width="70%" alt="NPM Usage Trend of gridstack" />
+</a>
 
 # The Team
 
