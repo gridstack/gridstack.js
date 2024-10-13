@@ -31,7 +31,7 @@
 <body>
   <h1>Advanced Demo</h1>
   <div class="row">
-    <div class="col-md-2 d-none d-md-block">
+    <div class="sidepanel col-md-2 d-none d-md-block">
       <div id="trash" style="padding: 5px; margin-bottom: 15px;" class="text-center">
         <div>
           <ion-icon name="trash" style="font-size: 300%"></ion-icon>
@@ -40,7 +40,7 @@
           <span>Drop here to remove!</span>
         </div>
       </div>
-      <div class="newWidget grid-stack-item">
+      <div class="grid-stack-item" gs-h="2">
         <div class="grid-stack-item-content" style="padding: 5px;">
           <div>
             <ion-icon name="add-circle" style="font-size: 300%"></ion-icon>
@@ -67,7 +67,7 @@
       acceptWidgets: true,
       removable: '#trash', // drag-out delete class
     });
-    GridStack.setupDragIn('.newWidget', { appendTo: 'body', helper: 'clone' });
+    GridStack.setupDragIn('.sidepanel>.grid-stack-item');
 
     let items = [
       {x: 0, y: 0, w: 4, h: 2, content: '1'},

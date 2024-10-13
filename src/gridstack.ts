@@ -2294,19 +2294,20 @@ export class GridStack {
         Utils.removePositioningStyles(el);
 
         // give the user a chance to alter the widget that will get inserted if new sidebar item
-        if (wasSidebar) {
-          if (GridStack.addRemoveCB) el = GridStack.addRemoveCB(this.el, node, true, false);
-          else if (node.content || node.subGridOpts) el = Utils.createWidgetDivs(undefined, node); // calls GridStack.renderCB()
+        if (wasSidebar && (node.content || node.subGridOpts || GridStack.addRemoveCB)) {
+          delete node.el;
+          el = this.addWidget(node);
+        } else {
+          this._prepareElement(el, true, node);
+          this.el.appendChild(el);
+          // resizeToContent is skipped in _prepareElement() until node is visible (clientHeight=0) so call it now
+          this.resizeToContentCheck(false, node);
+          if (subGrid) {
+            subGrid.parentGridItem = node;
+            if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
+          }
+          this._updateContainerHeight();
         }
-        this._prepareElement(el, true, node);
-        this.el.appendChild(el);
-        if (subGrid) {
-          subGrid.parentGridItem = node;
-          if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
-        } else if (wasSidebar && node.subGridOpts) {
-          this.makeSubGrid(node.el, undefined, undefined, !!node.content);
-        }
-        this._updateContainerHeight();
         this.engine.addedNodes.push(node);
         this._triggerAddEvent();
         this._triggerChangeEvent();

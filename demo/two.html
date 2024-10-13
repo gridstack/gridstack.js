@@ -23,7 +23,7 @@
 
     <div class="row">
       <div class="col-md-8">
-        <!-- NOTE: add .grid-stack-item for acceptWidgets:true, but not needed for function which handles .sidebar-item -->
+        <!-- NOTE: add .grid-stack-item for acceptWidgets:true, but not needed for function which handles .sidebar-item (anything) -->
         <div class="sidebar">
           <!-- will size to match content. Also see sidebarContent -->
           <div class="sidebar-item">Drag me</div>
@@ -73,7 +73,7 @@
     ];
     items.forEach((item, i) => item.content = item.content || String(i));
 
-    // sidebar content to create when we get dropped, instead of inserting the clone version
+    // sidebar content (just 2, rest is other behavior) to create when we get dropped, instead of inserting the clone version
     let sidebarContent = [
       {content: 'dropped'},
       {content: 'max=3', w:2, h:1, maxW: 3},
@@ -85,9 +85,10 @@
       cellHeight: 70,
       float: true,
       removable: '.trash', // true or drag-out delete class
+      /** accepts everything fcn, not just .grid-stack-item (true case) but can also be: true | false | '.someClass' value */
+      acceptWidgets: function(el) { return true },
       children: items,
       // itemClass: 'with-lines', // test a custom additional class #2110
-      acceptWidgets: function(el) { return true } // function example, but can also be: true | false | '.someClass' value
     };
     let grids = GridStack.initAll(options);
     grids[1].float(false);
