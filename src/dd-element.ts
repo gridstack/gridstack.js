@@ -4,8 +4,8 @@
  */
 
 import { DDResizable, DDResizableOpt } from './dd-resizable';
-import { GridItemHTMLElement } from './types';
-import { DDDraggable, DDDraggableOpt } from './dd-draggable';
+import { DDDragOpt, GridItemHTMLElement } from './types';
+import { DDDraggable } from './dd-draggable';
 import { DDDroppable, DDDroppableOpt } from './dd-droppable';
 
 export interface DDElementHost extends GridItemHTMLElement {
@@ -47,7 +47,7 @@ export class DDElement {
     return this;
   }
 
-  public setupDraggable(opts: DDDraggableOpt): DDElement {
+  public setupDraggable(opts: DDDragOpt): DDElement {
     if (!this.ddDraggable) {
       this.ddDraggable = new DDDraggable(this.el, opts);
     } else {

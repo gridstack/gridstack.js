@@ -39,14 +39,6 @@ export const gridDefaults: GridStackOptions = {
   //removable
 };
 
-/** default dragIn options */
-export const dragInDefaultOptions: DDDragInOpt = {
-  handle: '.grid-stack-item-content',
-  appendTo: 'body',
-  // revert: 'invalid',
-  // scroll: false,
-};
-
 /**
  * different layout options when changing # of columns, including a custom function that takes new/old column count, and array of new/old positions
  * Note: new list may be partially already filled if we have a cache of the layout at that size and new items were added later.
@@ -379,14 +371,13 @@ export interface DDDragOpt {
   scroll?: boolean;
   /** prevents dragging from starting on specified elements, listed as comma separated selectors (eg: '.no-drag'). default built in is 'input,textarea,button,select,option' */
   cancel?: string;
-}
-export interface DDDragInOpt extends DDDragOpt {
   /** helper function when dropping: 'clone' or your own method */
-  helper?: 'clone' | ((event: Event) => HTMLElement);
-  /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
-  // revert?: string | ((event: Event) => HTMLElement);
+  helper?: 'clone' | ((el: HTMLElement) => HTMLElement);
+  /** callbacks */
+  start?: (event: Event, ui: DDUIData) => void;
+  stop?: (event: Event) => void;
+  drag?: (event: Event, ui: DDUIData) => void;
 }
-
 export interface Size {
   width: number;
   height: number;
