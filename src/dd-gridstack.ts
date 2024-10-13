@@ -4,7 +4,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GridItemHTMLElement, GridStackElement, DDDragInOpt } from './types';
+import { GridItemHTMLElement, GridStackElement, DDDragOpt } from './types';
 import { Utils } from './utils';
 import { DDManager } from './dd-manager';
 import { DDElement, DDElementHost } from './dd-element';
@@ -90,7 +90,7 @@ export class DDGridStack {
     return this;
   }
 
-  public dragIn(el: GridStackElement, opts: DDDragInOpt): DDGridStack {
+  public dragIn(el: GridStackElement, opts: DDDragOpt): DDGridStack {
     this._getDDElements(el).forEach(dEl => dEl.setupDraggable(opts));
     return this;
   }

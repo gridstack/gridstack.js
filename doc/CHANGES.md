@@ -116,6 +116,8 @@ Change log
 
 ## 11.0.0 (TBD)
 * fix: [#2736](https://github.com/gridstack/gridstack.js/bug/2736) safe practices around GridStackWidget.content no longer setting innerHTML
+* fix: [#2231](https://github.com/gridstack/gridstack.js/bug/2231),[#1840](https://github.com/gridstack/gridstack.js/bug/1840),[#2354](https://github.com/gridstack/gridstack.js/bug/2354)
+big overall to how we do sidepanel drag&drop helper. see release notes.
 
 ## 10.3.1 (2024-07-21)
 * fix: [#2734](https://github.com/gridstack/gridstack.js/bug/2734) rotate() JS error

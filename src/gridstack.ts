@@ -9,8 +9,8 @@ import { GridStackEngine } from './gridstack-engine';
 import { Utils, HeightData, obsolete, DragTransform } from './utils';
 import {
   gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
-  GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragInOpt, GridStackPosition, GridStackOptions,
-  dragInDefaultOptions, GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler,
+  GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragOpt, GridStackPosition, GridStackOptions,
+  GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler,
   Position, RenderFcn
 } from './types';
 
@@ -1935,19 +1935,21 @@ export class GridStack {
    * call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
    * Called during GridStack.init() as options, but can also be called directly (last param are used) in case the toolbar
    * is dynamically create and needs to be set later.
-   * @param dragIn string selector (ex: '.sidebar .grid-stack-item') or list of dom elements
-   * @param dragInOptions options - see DDDragInOpt. (default: {handle: '.grid-stack-item-content', appendTo: 'body'}
-   * @param root optional root which defaults to document (for shadow dom pas the parent HTMLDocument)
+   * @param dragIn string selector (ex: '.sidebar-item') or list of dom elements
+   * @param dragInOptions options - see DDDragOpt. (default: {handle: '.grid-stack-item-content', appendTo: 'body'}
+   * @param widgets GridStackWidget def to assign to each element which defines what to create on drop
+   * @param root optional root which defaults to document (for shadow dom pass the parent HTMLDocument)
    */
-  public static setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragInOpt, root: HTMLElement | Document = document): void {
+  public static setupDragIn(dragIn?: string | HTMLElement[], dragInOptions?: DDDragOpt, widgets?: GridStackWidget[], root: HTMLElement | Document = document): void {
     if (dragInOptions?.pause !== undefined) {
       DDManager.pauseDrag = dragInOptions.pause;
     }
 
-    dragInOptions = { ...dragInDefaultOptions, ...(dragInOptions || {}) };
-    let els: HTMLElement[] = (typeof dragIn === 'string') ? Utils.getElements(dragIn, root) : dragIn;
-    if (els.length) els?.forEach(el => {
+    dragInOptions = { appendTo: 'body', helper: 'clone', ...(dragInOptions || {}) }; // default to handle:undefined = drag by the whole item
+    const els = (typeof dragIn === 'string') ? Utils.getElements(dragIn, root) : dragIn;
+    els.forEach((el, i) => {
       if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions);
+      if (widgets?.[i]) (el as GridItemHTMLElement).gridstackNode = widgets[i];
     });
   }
 
@@ -2069,10 +2071,9 @@ export class GridStack {
     let cellHeight: number, cellWidth: number;
 
     let onDrag = (event: DragEvent, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
-      let node = el.gridstackNode;
-      if (!node) return;
-
       helper = helper || el;
+      const node = helper.gridstackNode;
+      if (!node) return;
 
       // if the element is being dragged from outside, scale it down to match the grid's scale
       // and slightly adjust its position relative to the mouse
@@ -2086,10 +2087,10 @@ export class GridStack {
         helper.style.transformOrigin = `0px 0px`
       }
 
-      let parent = this.el.getBoundingClientRect();
       let { top, left } = helper.getBoundingClientRect();
-      left -= parent.left;
-      top -= parent.top;
+      let rect = this.el.getBoundingClientRect();
+      left -= rect.left;
+      top -= rect.top;
       let ui: DDUIData = {
         position: {
           top: top * this.dragTransform.xScale,
@@ -2152,7 +2153,7 @@ export class GridStack {
        */
       .on(this.el, 'dropover', (event: Event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
         // console.log(`over ${this.el.gridstack.opts.id} ${count++}`); // TEST
-        let node = el.gridstackNode;
+        let node = helper?.gridstackNode || el.gridstackNode;
         // ignore drop enter on ourself (unless we temporarily removed) which happens on a simple drag of our item
         if (node?.grid === this && !node._temporaryRemoved) {
           // delete node._added; // reset this to track placeholder again in case we were over other grid #1484 (dropout doesn't always clear)
@@ -2165,22 +2166,31 @@ export class GridStack {
           let otherGrid = node.grid;
           otherGrid._leave(el, helper);
         }
+        helper = helper || el;
 
         // cache cell dimensions (which don't change), position can animate if we removed an item in otherGrid that affects us...
         cellWidth = this.cellWidth();
         cellHeight = this.getCellHeight(true);
 
-        // load any element attributes if we don't have a node
+        // sidebar items: load any element attributes if we don't have a node
         if (!node) {
-          node = this._readAttr(el, false); // don't wipe external (e.g. drag toolbar) attr #2354
+          if (helper.hasAttribute('gridstacknode')) {
+            try {
+              node = JSON.parse(helper.getAttribute('gridstacknode'));
+            } catch (error) {
+              console.error("Gridstack dropover: Bad JSON format: ", helper.getAttribute('gridstacknode'));
+            }
+            helper.removeAttribute('gridstacknode');
+          }
+          if (!node) node = this._readAttr(helper); // used to pass false for #2354, but now we clone top level node
         }
-        if (!node.grid) {
+        if (!node.grid) { // sidebar item
+          if (!node.el) node = {...node}; // clone first time we're coming from sidebar (since 'clone' doesn't copy vars)
           node._isExternal = true;
-          el.gridstackNode = node;
+          helper.gridstackNode = node;
         }
 
         // calculate the grid size based on element outer size
-        helper = helper || el;
         let w = node.w || Math.round(helper.offsetWidth / cellWidth) || 1;
         let h = node.h || Math.round(helper.offsetHeight / cellHeight) || 1;
 
@@ -2199,7 +2209,8 @@ export class GridStack {
             node._isExternal =  // DOM needs to be re-parented on a drop
             node._temporaryRemoved = true; // so it can be inserted onDrag below
         } else {
-          node.w = w; node.h = h;
+          node.w = w;
+          node.h = h;
           node._temporaryRemoved = true; // so we can insert it
         }
 
@@ -2216,7 +2227,7 @@ export class GridStack {
        */
       .on(this.el, 'dropout', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
         // console.log(`out ${this.el.gridstack.opts.id} ${count++}`); // TEST
-        let node = el.gridstackNode;
+        let node = helper?.gridstackNode || el.gridstackNode;
         if (!node) return false;
         // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)
         // so skip this one if we're not the active grid really..
@@ -2233,11 +2244,12 @@ export class GridStack {
        * end - releasing the mouse
        */
       .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
-        let node = el.gridstackNode;
+        let node = helper?.gridstackNode || el.gridstackNode;
         // ignore drop on ourself from ourself that didn't come from the outside - dragend will handle the simple move instead
         if (node?.grid === this && !node._isExternal) return false;
 
         const wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
+        const wasSidebar = node._isExternal;
         this.placeholder.remove();
 
         // disable animation when replacing a placeholder (already positioned) with actual content
@@ -2268,34 +2280,33 @@ export class GridStack {
         }
         delete node.grid?._isTemp;
         dd.off(el, 'drag');
-        // if we made a copy ('helper' which is temp) of the original node then insert a copy, else we move the original node (#1102)
-        // as the helper will be nuked by jquery-ui otherwise. TODO: update old code path
+        // if we made a copy insert that instead of the original (sidebar item)
         if (helper !== el) {
           helper.remove();
-          el.gridstackNode = origNode; // original item (left behind) is re-stored to pre dragging as the node now has drop info
-          if (wasAdded) {
-            el = el.cloneNode(true) as GridItemHTMLElement;
-          }
+          el = helper;
         } else {
           el.remove(); // reduce flicker as we change depth here, and size further down
-          this._removeDD(el);
         }
+        this._removeDD(el);
         if (!wasAdded) return false;
-        el.gridstackNode = node;
-        node.el = el;
         let subGrid = node.subGrid?.el?.gridstack; // set when actual sub-grid present
-        // @ts-ignore
         Utils.copyPos(node, this._readAttr(this.placeholder)); // placeholder values as moving VERY fast can throw things off #1578
-        Utils.removePositioningStyles(el);// @ts-ignore
-        this.el.appendChild(el);// @ts-ignore // TODO: now would be ideal time to _removeHelperStyle() overriding floating styles (native only)
+        Utils.removePositioningStyles(el);
+
+        // give the user a chance to alter the widget that will get inserted if new sidebar item
+        if (wasSidebar) {
+          if (GridStack.addRemoveCB) el = GridStack.addRemoveCB(this.el, node, true, false);
+          else if (node.content) el = Utils.createWidgetDivs(undefined, node); // calls GridStack.renderCB()
+        }
         this._prepareElement(el, true, node);
+        this.el.appendChild(el);
         if (subGrid) {
           subGrid.parentGridItem = node;
           if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
         }
         this._updateContainerHeight();
-        this.engine.addedNodes.push(node);// @ts-ignore
-        this._triggerAddEvent();// @ts-ignore
+        this.engine.addedNodes.push(node);
+        this._triggerAddEvent();
         this._triggerChangeEvent();
 
         this.engine.endUpdate();
@@ -2313,6 +2324,7 @@ export class GridStack {
 
   /** @internal mark item for removal */
   private static _itemRemoving(el: GridItemHTMLElement, remove: boolean) {
+    if (!el) return;
     const node = el ? el.gridstackNode : undefined;
     if (!node?.grid || el.classList.contains(node.grid.opts.removableOptions.decline)) return;
     remove ? node._isAboutToRemove = true : delete node._isAboutToRemove;
@@ -2594,12 +2606,12 @@ export class GridStack {
    * our item to start with else restore prev node values from prev grid it came from.
    */
   protected _leave(el: GridItemHTMLElement, helper?: GridItemHTMLElement): void {
-    let node = el.gridstackNode;
+    helper = helper || el;
+    let node = helper.gridstackNode;
     if (!node) return;
 
-    helper = helper || el;
-    // restore the scale of the helper on leave
-    helper.style.transform = 'scale(1)';
+    // remove the scale of the helper on leave
+    helper.style.transform = helper.style.transformOrigin = null;
     dd.off(el, 'drag'); // no need to track while being outside
 
     // this gets called when cursor leaves and shape is outside, so only do this once
@@ -2608,6 +2620,7 @@ export class GridStack {
 
     this.engine.removeNode(node); // remove placeholder as well, otherwise it's a sign node is not in our list, which is a bigger issue
     node.el = node._isExternal && helper ? helper : el; // point back to real item being dragged
+    if (node._isExternal) this.engine.cleanupNode(node);
 
     if (this.opts.removable === true) { // boolean vs a class string
       // item leaving us and we are supposed to remove on leave (no need to drag onto trash) mark it so
@@ -2620,10 +2633,7 @@ export class GridStack {
       el.gridstackNode = el._gridstackNodeOrig;
       delete el._gridstackNodeOrig;
     } else if (node._isExternal) {
-      // item came from outside (like a toolbar) so nuke any node info
-      delete node.el;
-      delete el.gridstackNode;
-      // and restore all nodes back to original
+      // item came from outside restore all nodes back to original
       this.engine.restoreInitial();
     }
   }

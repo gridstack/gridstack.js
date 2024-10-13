@@ -78,7 +78,10 @@
     })
 
     // setup drag drop behavior
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
+    let sidebarContent = [
+     { w:2, h:2, subGridOpts: { children: [{content: 'nest 1'}, {content: 'nest 2'}]}}
+    ];
+    GridStack.setupDragIn('.sidebar .grid-stack-item', undefined, sidebarContent);
 
     function addWidget() {
       grid.addWidget({x:0, y:100, content:"new item"});
@@ -113,15 +116,7 @@
       n.el.querySelector('.grid-stack-item-content').innerHTML = '';
       let nodeToAdd = { children: [{content: 'nest 1'}, {content: 'nest 2'}]};
       let subgrid = n.grid.makeSubGrid(n.el, nodeToAdd, undefined, false);
-      
-      // add a listener to the subgrid to allow widgets to be added into this newly created nested widget
-      subgrid.on('dropped', droppedHandler);
     }
-    // add listener to the main grid and subgrids
-    grid.on('dropped', droppedHandler);
-    document.querySelectorAll('.grid-stack-nested').forEach((subGrid) => {
-      subGrid.gridstack.on('dropped', droppedHandler);
-    });
 
     //--- end of Drag and Drop Nested widget logic
 
@@ -142,7 +137,6 @@
     function load(full = true) {
       if (full) {
         grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
-        grid.on('dropped', droppedHandler);
       } else {
         grid.load(options);
       }
