@@ -2249,7 +2249,7 @@ export class GridStack {
         if (node?.grid === this && !node._isExternal) return false;
 
         const wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
-        const wasSidebar = node._isExternal;
+        const wasSidebar = el !== helper;
         this.placeholder.remove();
 
         // disable animation when replacing a placeholder (already positioned) with actual content
@@ -2296,13 +2296,15 @@ export class GridStack {
         // give the user a chance to alter the widget that will get inserted if new sidebar item
         if (wasSidebar) {
           if (GridStack.addRemoveCB) el = GridStack.addRemoveCB(this.el, node, true, false);
-          else if (node.content) el = Utils.createWidgetDivs(undefined, node); // calls GridStack.renderCB()
+          else if (node.content || node.subGridOpts) el = Utils.createWidgetDivs(undefined, node); // calls GridStack.renderCB()
         }
         this._prepareElement(el, true, node);
         this.el.appendChild(el);
         if (subGrid) {
           subGrid.parentGridItem = node;
           if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
+        } else if (wasSidebar && node.subGridOpts) {
+          this.makeSubGrid(node.el, undefined, undefined, !!node.content);
         }
         this._updateContainerHeight();
         this.engine.addedNodes.push(node);
