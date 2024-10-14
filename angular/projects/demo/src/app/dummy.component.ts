@@ -34,5 +34,6 @@ export class BComponent extends BaseWidget implements OnDestroy {
   selector: 'app-c',
   template: 'Comp C',
 })
-export class CComponent extends BaseWidget {
+export class CComponent extends BaseWidget implements OnDestroy {
+  ngOnDestroy() { console.log('Comp C destroyed'); }
 }

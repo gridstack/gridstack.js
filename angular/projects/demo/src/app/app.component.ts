@@ -46,6 +46,12 @@ export class AppComponent implements OnInit {
     children: this.sub0,
   }
 
+  // sidebar content to create storing the Widget description to be used on drop
+  public sidebarContent: NgGridStackWidget[] = [
+    {selector: 'app-a'},
+    {selector: 'app-b', w:2, maxW: 3},
+  ];
+
   // nested grid options
   private subOptions: GridStackOptions = {
     cellHeight: 50, // should be 50 - top/bottom
@@ -76,8 +82,8 @@ export class AppComponent implements OnInit {
     acceptWidgets: true,
     float: true,
     children: [
-      {x: 0, y: 0, w: 2, h: 2},
-      {x: 3, y: 1, h: 2},
+      {x: 0, y: 0, w: 2, h: 2, selector: 'app-a'},
+      {x: 3, y: 1, h: 2, selector: 'app-b'},
       {x: 4, y: 1},
       {x: 2, y: 3, w: 3, maxW: 3, id: 'special', content: 'has maxW=3'},
     ]
@@ -128,7 +134,7 @@ export class AppComponent implements OnInit {
         case 5: data = this.gridOptionsFull; break;
         case 6: data = this.nestedGridOptions; break;
         case 7: data = this.twoGridOpt1;
-          GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
+          GridStack.setupDragIn('.sidebar>.grid-stack-item', undefined, this.sidebarContent);
           break;
       }
       if (this.origTextEl) this.origTextEl.nativeElement.value = JSON.stringify(data, null, '  ');
