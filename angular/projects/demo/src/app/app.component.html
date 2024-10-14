@@ -71,21 +71,15 @@
 </div>
 
 <div *ngIf="show===7">
-  <p><b>two.html</b>: shows multiple grids and outside drag&drop</p>
+  <p><b>two.html</b>: shows multiple grids, sidebar creating Components</p>
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-6">
       <div class="sidebar">
-        <!-- will size to match content -->
-        <div class="grid-stack-item">
-          <div class="grid-stack-item-content">Drag me</div>
-        </div>
-        <!-- manually force a drop size of 2x1 -->
-        <div class="grid-stack-item" gs-w="2" gs-h="1" gs-max-w="3">
-          <div class="grid-stack-item-content">2x1, max=3</div>
-        </div>
+        <div class="sidebar-item grid-stack-item">will be A</div>
+        <div class="sidebar-item grid-stack-item">will be B max=3</div>
       </div>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-6">
       <div class="trash" id="trash">
       </div>
     </div>
