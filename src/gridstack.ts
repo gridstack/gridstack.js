@@ -1690,7 +1690,7 @@ export class GridStack {
     this._writePosAttr(el, node);
 
     let attrs /*: GridStackWidget but strings */ = { // remaining attributes
-      autoPosition: 'gs-auto-position',
+      // autoPosition: 'gs-auto-position', // no need to write out as already in node and doesn't affect CSS
       noResize: 'gs-no-resize',
       noMove: 'gs-no-move',
       locked: 'gs-locked',
