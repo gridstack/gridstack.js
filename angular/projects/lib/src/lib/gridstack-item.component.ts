@@ -57,7 +57,7 @@ export class GridstackItemComponent implements OnDestroy {
     return this.el.gridstackNode || this._options || {el: this.el};
   }
 
-  private _options?: GridStackNode;
+  protected _options?: GridStackNode;
 
   /** return the native element that contains grid specific fields as well */
   public get el(): GridItemCompHTMLElement { return this.elementRef.nativeElement; }
@@ -67,7 +67,7 @@ export class GridstackItemComponent implements OnDestroy {
     delete this._options;
   }
 
-  constructor(private readonly elementRef: ElementRef<GridItemHTMLElement>) {
+  constructor(protected readonly elementRef: ElementRef<GridItemCompHTMLElement>) {
     this.el._gridItemComp = this;
   }
 

@@ -27,6 +27,10 @@ import { NgCompInputs, NgGridStackWidget } from './gridstack.component';
    * things that are not mapped directly into @Input() fields for example.
    */
   public deserialize(w: NgGridStackWidget)  {
+    // save full description for meta data
+    this.widgetItem = w;
+    if (!w) return;
+
     if (w.input)  Object.assign(this, w.input);
   }
  }
