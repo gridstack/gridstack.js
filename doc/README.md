@@ -522,10 +522,9 @@ Used to add a subgrid into an existing grid.
 const grid = Gridstack.init()
 grid.el.appendChild(`
 <div id="gsi-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true">
-      <div class="grid-stack" id="nested-grid">
-          <div id="gsi-2" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true">
-          </div>
-      </div>
+  <div class="grid-stack" id="nested-grid">
+    <div id="gsi-2" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true"></div>
+  </div>
 </div>`)
 grid.makeSubGrid(grid.el.getElementById('nested-grid'))
 ```
