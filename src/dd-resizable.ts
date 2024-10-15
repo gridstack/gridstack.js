@@ -96,8 +96,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public updateOption(opts: DDResizableOpt): DDResizable {
-    let updateHandles = (opts.handles && opts.handles !== this.option.handles);
-    let updateAutoHide = (opts.autoHide && opts.autoHide !== this.option.autoHide);
+    const updateHandles = (opts.handles && opts.handles !== this.option.handles);
+    const updateAutoHide = (opts.autoHide && opts.autoHide !== this.option.autoHide);
     Object.keys(opts).forEach(key => this.option[key] = opts[key]);
     if (updateHandles) {
       this._removeHandlers();

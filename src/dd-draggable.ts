@@ -176,7 +176,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal called when the main page (after successful mousedown) receives a move event to drag the item around the screen */
   protected _mouseMove(e: DragEvent): boolean {
     // console.log(`${count++} move ${e.x},${e.y}`)
-    let s = this.mouseDownEvent;
+    const s = this.mouseDownEvent;
     this.lastDrag = e;
 
     if (this.dragging) {
@@ -196,7 +196,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.dragging = true;
       DDManager.dragElement = this;
       // if we're dragging an actual grid item, set the current drop as the grid (to detect enter/leave)
-      let grid = this.el.gridstackNode?.grid;
+      const grid = this.el.gridstackNode?.grid;
       if (grid) {
         DDManager.dropElement = (grid.el as DDElementHost).ddElement.ddDroppable;
       } else {
@@ -330,16 +330,16 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal restore back the original style before dragging */
   protected _removeHelperStyle(): DDDraggable {
     this.helper.classList.remove('ui-draggable-dragging');
-    let node = (this.helper as GridItemHTMLElement)?.gridstackNode;
+    const node = (this.helper as GridItemHTMLElement)?.gridstackNode;
     // don't bother restoring styles if we're gonna remove anyway...
     if (!node?._isAboutToRemove && this.dragElementOriginStyle) {
-      let helper = this.helper;
+      const helper = this.helper;
       // don't animate, otherwise we animate offseted when switching back to 'absolute' from 'fixed'.
       // TODO: this also removes resizing animation which doesn't have this issue, but others.
       // Ideally both would animate ('move' would immediately restore 'absolute' and adjust coordinate to match,
       // then trigger a delay (repaint) to restore to final dest with animate) but then we need to make sure 'resizestop'
       // is called AFTER 'transitionend' event is received (see https://github.com/gridstack/gridstack.js/issues/2033)
-      let transition = this.dragElementOriginStyle['transition'] || null;
+      const transition = this.dragElementOriginStyle['transition'] || null;
       helper.style.transition = this.dragElementOriginStyle['transition'] = 'none'; // can't be NULL #1973
       DDDraggable.originStyleProp.forEach(prop => helper.style[prop] = this.dragElementOriginStyle[prop] || null);
       setTimeout(() => helper.style.transition = transition, 50); // recover animation from saved vars after a pause (0 isn't enough #1973)
@@ -350,7 +350,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal updates the top/left position to follow the mouse */
   protected _dragFollow(e: DragEvent): void {
-    let containmentRect = { left: 0, top: 0 };
+    const containmentRect = { left: 0, top: 0 };
     // if (this.helper.style.position === 'absolute') { // we use 'fixed'
     //   const { left, top } = this.helperContainment.getBoundingClientRect();
     //   containmentRect = { left, top };

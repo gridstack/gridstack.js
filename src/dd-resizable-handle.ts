@@ -78,7 +78,7 @@ export class DDResizableHandle {
 
   /** @internal */
   protected _mouseMove(e: MouseEvent): void {
-    let s = this.mouseDownEvent;
+    const s = this.mouseDownEvent;
     if (this.moving) {
       this._triggerEvent('move', e);
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 2) {
