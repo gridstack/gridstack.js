@@ -150,9 +150,9 @@ export class DDGridStack {
 
   /** @internal returns a list of DD elements, creating them on the fly by default */
   protected _getDDElements(els: GridStackElement, create = true): DDElement[] {
-    let hosts = Utils.getElements(els) as DDElementHost[];
+    const hosts = Utils.getElements(els) as DDElementHost[];
     if (!hosts.length) return [];
-    let list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));
+    const list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));
     if (!create) { list.filter(d => d); } // remove nulls
     return list;
   }
