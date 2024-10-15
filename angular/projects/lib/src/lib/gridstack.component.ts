@@ -21,8 +21,12 @@ export type NgCompInputs = {[key: string]: any};
 
 /** extends to store Ng Component selector, instead/inAddition to content */
 export interface NgGridStackWidget extends GridStackWidget {
-  selector?: string; // component type to create as content
-  input?: NgCompInputs; // serialized data for the component input fields
+  /** Angular tag selector for this component to create at runtime */
+  selector?: string;
+  /** serialized data for the component input fields */
+  input?: NgCompInputs;
+  /** nested grid options */
+  subGridOpts?: NgGridStackOptions;
 }
 export interface NgGridStackNode extends GridStackNode {
   selector?: string; // component type to create as content
@@ -116,15 +120,15 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
     return reflectComponentType(type)!.selector;
   }
 
-  private _options?: GridStackOptions;
-  private _grid?: GridStack;
-  private _sub: Subscription | undefined;
-  private loaded?: boolean;
+  protected _options?: GridStackOptions;
+  protected _grid?: GridStack;
+  protected _sub: Subscription | undefined;
+  protected loaded?: boolean;
 
   constructor(
-    // private readonly zone: NgZone,
-    // private readonly cd: ChangeDetectorRef,
-    private readonly elementRef: ElementRef<GridCompHTMLElement>,
+    // protected readonly zone: NgZone,
+    // protected readonly cd: ChangeDetectorRef,
+    protected readonly elementRef: ElementRef<GridCompHTMLElement>,
   ) {
     this.el._gridComp = this;
   }
@@ -181,7 +185,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   /** get all known events as easy to use Outputs for convenience */
-  private hookEvents(grid?: GridStack) {
+  protected hookEvents(grid?: GridStack) {
     if (!grid) return;
     grid
       .on('added', (event: Event, nodes: GridStackNode[]) => { this.checkEmpty(); this.addedCB.emit({event, nodes}); })
@@ -198,7 +202,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
       .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.resizeStopCB.emit({event, el}))
   }
 
-  private unhookEvents(grid?: GridStack) {
+  protected unhookEvents(grid?: GridStack) {
     if (!grid) return;
     grid.off('added change disable drag dragstart dragstop dropped enable removed resize resizestart resizestop');
   }
@@ -214,13 +218,17 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
     //
     if (!host) return;
     if (isGrid) {
-      const container = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp?.container;
       // TODO: figure out how to create ng component inside regular Div. need to access app injectors...
       // if (!container) {
       //   const hostElement: Element = host;
       //   const environmentInjector: EnvironmentInjector;
       //   grid = createComponent(GridstackComponent, {environmentInjector, hostElement})?.instance;
       // }
+
+      const gridItemCom = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp;
+      if (!gridItemCom) return;
+      // check if gridItem has a child component with 'container' exposed to create under..
+      const container = (gridItemCom.childWidget as any)?.container || gridItemCom.container;
       const gridRef = container?.createComponent(GridstackComponent);
       const grid = gridRef?.instance;
       if (!grid) return;
@@ -234,17 +242,15 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
       if (!gridItem) return;
       gridItem.ref = gridItemRef
 
-      // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
-      if (!w.subGridOpts) {
-        const selector = (w as NgGridStackWidget).selector;
-        const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
-        if (type) {
-          const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
-          // if proper BaseWidget subclass, save it and load additional data
-          if (childWidget && typeof childWidget.serialize === 'function' && typeof childWidget.deserialize === 'function') {
-            gridItem.childWidget = childWidget;
-            childWidget.deserialize(w);
-          }
+      // define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
+      const selector = (w as NgGridStackWidget).selector;
+      const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
+      if (type) {
+        const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
+        // if proper BaseWidget subclass, save it and load additional data
+        if (childWidget && typeof childWidget.serialize === 'function' && typeof childWidget.deserialize === 'function') {
+          gridItem.childWidget = childWidget;
+          childWidget.deserialize(w);
         }
       }
 
@@ -271,7 +277,7 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
 
 /**
  * called for each item in the grid - check if additional information needs to be saved.
- * Note: since this is options minus gridstack private members using Utils.removeInternalForSave(),
+ * Note: since this is options minus gridstack protected members using Utils.removeInternalForSave(),
  * this typically doesn't need to do anything. However your custom Component @Input() are now supported
  * using BaseWidget.serialize()
  */
