@@ -12,6 +12,10 @@ import { NgCompInputs, NgGridStackWidget } from './gridstack.component';
 
  @Injectable()
  export abstract class BaseWidget {
+
+  /** variable that holds the complete definition of this widgets (with selector,x,y,w,h) */
+  public widgetItem?: NgGridStackWidget;
+
   /**
    * REDEFINE to return an object representing the data needed to re-create yourself, other than `selector` already handled.
    * This should map directly to the @Input() fields of this objects on create, so a simple apply can be used on read

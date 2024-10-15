@@ -217,7 +217,7 @@ export class GridStack {
   public engine: GridStackEngine;
 
   /** point to a parent grid item if we're nested (inside a grid-item in between 2 Grids) */
-  public parentGridItem?: GridStackNode;
+  public parentGridNode?: GridStackNode;
 
   protected static engineClass: typeof GridStackEngine;
   protected resizeObserver: ResizeObserver;
@@ -357,13 +357,13 @@ export class GridStack {
     }
 
     // check if we're been nested, and if so update our style and keep pointer around (used during save)
-    const grandParent: GridItemHTMLElement = this.el.parentElement?.parentElement;
-    let parentGridItem = grandParent?.classList.contains(gridDefaults.itemClass) ? grandParent.gridstackNode : undefined;
-    if (parentGridItem) {
-      parentGridItem.subGrid = this;
-      this.parentGridItem = parentGridItem;
+    const parentGridItem: GridItemHTMLElement = this.el.closest('.' + gridDefaults.itemClass);
+    let parentNode = parentGridItem?.gridstackNode;
+    if (parentNode) {
+      parentNode.subGrid = this;
+      this.parentGridNode = parentNode;
       this.el.classList.add('grid-stack-nested');
-      parentGridItem.el.classList.add('grid-stack-sub-grid');
+      parentNode.el.classList.add('grid-stack-sub-grid');
     }
 
     this._isAutoCellHeight = (opts.cellHeight === 'auto');
@@ -511,7 +511,7 @@ export class GridStack {
     let grid: GridStack = this;
     while (grid && !subGridTemplate) {
       subGridTemplate = grid.opts?.subGridOpts;
-      grid = grid.parentGridItem?.grid;
+      grid = grid.parentGridNode?.grid;
     }
     //... and set the create options
     ops = Utils.cloneDeep({ ...(subGridTemplate || {}), children: undefined, ...(ops || node.subGridOpts || {}) });
@@ -584,20 +584,20 @@ export class GridStack {
    * to the original grid-item. Also called to remove empty sub-grids when last item is dragged out (since re-creating is simple)
    */
   public removeAsSubGrid(nodeThatRemoved?: GridStackNode): void {
-    let pGrid = this.parentGridItem?.grid;
+    let pGrid = this.parentGridNode?.grid;
     if (!pGrid) return;
 
     pGrid.batchUpdate();
-    pGrid.removeWidget(this.parentGridItem.el, true, true);
+    pGrid.removeWidget(this.parentGridNode.el, true, true);
     this.engine.nodes.forEach(n => {
       // migrate any children over and offsetting by our location
-      n.x += this.parentGridItem.x;
-      n.y += this.parentGridItem.y;
+      n.x += this.parentGridNode.x;
+      n.y += this.parentGridNode.y;
       pGrid.makeWidget(n.el, n);
     });
     pGrid.batchUpdate(false);
-    if (this.parentGridItem) delete this.parentGridItem.subGrid;
-    delete this.parentGridItem;
+    if (this.parentGridNode) delete this.parentGridNode.subGrid;
+    delete this.parentGridNode;
 
     // create an artificial event for the original grid now that this one is gone (got a leave, but won't get enter)
     if (nodeThatRemoved) {
@@ -979,8 +979,8 @@ export class GridStack {
       this.el.parentNode.removeChild(this.el);
     }
     this._removeStylesheet();
-    if (this.parentGridItem) delete this.parentGridItem.subGrid;
-    delete this.parentGridItem;
+    if (this.parentGridNode) delete this.parentGridNode.subGrid;
+    delete this.parentGridNode;
     delete this.opts;
     delete this._placeholder;
     delete this.engine;
@@ -1623,7 +1623,7 @@ export class GridStack {
   /** @internal */
   protected _updateContainerHeight(): GridStack {
     if (!this.engine || this.engine.batchMode) return this;
-    const parent = this.parentGridItem;
+    const parent = this.parentGridNode;
     let row = this.getRow() + this._extraDragRow; // this checks for minRow already
     const cellHeight = this.opts.cellHeight as number;
     const unit = this.opts.cellHeightUnit;
@@ -1776,9 +1776,9 @@ export class GridStack {
 
     // see if we're nested and take our column count from our parent....
     let columnChanged = false;
-    if (this._autoColumn && this.parentGridItem) {
-      if (this.opts.column !== this.parentGridItem.w) {
-        this.column(this.parentGridItem.w, 'none');
+    if (this._autoColumn && this.parentGridNode) {
+      if (this.opts.column !== this.parentGridNode.w) {
+        this.column(this.parentGridNode.w, 'none');
         columnChanged = true;
       }
     } else {
@@ -1828,7 +1828,7 @@ export class GridStack {
   protected _updateResizeEvent(forceRemove = false): GridStack {
     // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting dynamic column (i.e. doing work)
     // or supporting new sizeToContent option.
-    const trackSize = !this.parentGridItem && (this._isAutoCellHeight || this.opts.sizeToContent || this.opts.columnOpts
+    const trackSize = !this.parentGridNode && (this._isAutoCellHeight || this.opts.sizeToContent || this.opts.columnOpts
       || this.engine.nodes.find(n => n.sizeToContent));
 
     if (!forceRemove && trackSize && !this.resizeObserver) {
@@ -2266,7 +2266,7 @@ export class GridStack {
           oGrid.engine.removedNodes.push(origNode);
           oGrid._triggerRemoveEvent()._triggerChangeEvent();
           // if it's an empty sub-grid that got auto-created, nuke it
-          if (oGrid.parentGridItem && !oGrid.engine.nodes.length && oGrid.opts.subGridDynamic) {
+          if (oGrid.parentGridNode && !oGrid.engine.nodes.length && oGrid.opts.subGridDynamic) {
             oGrid.removeAsSubGrid();
           }
         }
@@ -2303,7 +2303,7 @@ export class GridStack {
           // resizeToContent is skipped in _prepareElement() until node is visible (clientHeight=0) so call it now
           this.resizeToContentCheck(false, node);
           if (subGrid) {
-            subGrid.parentGridItem = node;
+            subGrid.parentGridNode = node;
             if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
           }
           this._updateContainerHeight();

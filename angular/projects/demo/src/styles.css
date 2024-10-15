@@ -63,7 +63,8 @@ h1 {
 }
 .grid-stack.grid-stack-nested {
   background: none;
-  /* background-color: red; */
+}
+.grid-stack-item-content>.grid-stack.grid-stack-nested {
   /* take entire space */
   position: absolute;
   inset: 0; /* TODO change top: if you have content in nested grid */

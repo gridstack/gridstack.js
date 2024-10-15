@@ -118,6 +118,7 @@ Change log
 * fix: [#2736](https://github.com/gridstack/gridstack.js/bug/2736) safe practices around GridStackWidget.content no longer setting innerHTML
 * fix: [#2231](https://github.com/gridstack/gridstack.js/bug/2231),[#1840](https://github.com/gridstack/gridstack.js/bug/1840),[#2354](https://github.com/gridstack/gridstack.js/bug/2354)
 big overall to how we do sidepanel drag&drop helper. see release notes.
+* feat: [#2818](https://github.com/gridstack/gridstack.js/pull/2818) support for Angular Component hosting true sub-grids (that size according to parent) without requring them to be only child of grid-item-content.
 
 ## 10.3.1 (2024-07-21)
 * fix: [#2734](https://github.com/gridstack/gridstack.js/bug/2734) rotate() JS error
