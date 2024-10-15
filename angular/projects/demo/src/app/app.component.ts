@@ -4,7 +4,7 @@ import { AngularSimpleComponent } from './simple';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 
-// NOTE: local testing of file
+// TEST: local testing of file
 // import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from './gridstack.component';
 import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from 'gridstack/dist/angular';
 
@@ -46,12 +46,6 @@ export class AppComponent implements OnInit {
     children: this.sub0,
   }
 
-  // sidebar content to create storing the Widget description to be used on drop
-  public sidebarContent: NgGridStackWidget[] = [
-    {selector: 'app-a'},
-    {selector: 'app-b', w:2, maxW: 3},
-  ];
-
   // nested grid options
   private subOptions: GridStackOptions = {
     cellHeight: 50, // should be 50 - top/bottom
@@ -61,17 +55,20 @@ export class AppComponent implements OnInit {
   };
   public sub1: NgGridStackWidget[] = [ {x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-b'}, {x:2, y:0, selector:'app-c'}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
   public sub2: NgGridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
+  public sub3: NgGridStackWidget = { selector: 'app-n', w:2, h:2, subGridOpts: { children: [{selector: 'app-a'}, {selector: 'app-b', y:0, x:1}]}};
   private subChildren: NgGridStackWidget[] = [
     {x:0, y:0, content: 'regular item'},
-    {x:1, y:0, w:4, h:4, subGridOpts: {children: this.sub1, class: 'sub1', ...this.subOptions}},
-    {x:5, y:0, w:3, h:4, subGridOpts: {children: this.sub2, class: 'sub2', ...this.subOptions}},
+    {x:1, y:0, w:4, h:4, subGridOpts: {children: this.sub1}},
+    // {x:5, y:0, w:3, h:4, subGridOpts: {children: this.sub2}},
+    this.sub3,
   ]
   public nestedGridOptions: NgGridStackOptions = { // main grid options
     cellHeight: 50,
     margin: 5,
     minRow: 2, // don't collapse when empty
     acceptWidgets: true,
-    children: this.subChildren
+    subGridOpts: this.subOptions, // all sub grids will default to those
+    children: this.subChildren,
   };
   public twoGridOpt1: NgGridStackOptions = {
     column: 6,
@@ -91,11 +88,20 @@ export class AppComponent implements OnInit {
   public twoGridOpt2: NgGridStackOptions = { ...this.twoGridOpt1, float: false }
   private serializedData?: NgGridStackOptions;
 
+  // sidebar content to create storing the Widget description to be used on drop
+  public sidebarContent6: NgGridStackWidget[] = [
+    { w:2, h:2, subGridOpts: { children: [{content: 'nest 1'}, {content: 'nest 2'}]}},
+    this.sub3,
+  ];
+  public sidebarContent7: NgGridStackWidget[] = [
+    {selector: 'app-a'},
+    {selector: 'app-b', w:2, maxW: 3},
+  ];
+
   constructor() {
     // give them content and unique id to make sure we track them during changes below...
     [...this.items, ...this.subChildren, ...this.sub1, ...this.sub2, ...this.sub0].forEach((w: NgGridStackWidget) => {
-      if (!w.selector && !w.content && !w.subGridOpts) w.content = `item ${ids}`;
-      w.id = String(ids++);
+      if (!w.selector && !w.content && !w.subGridOpts) w.content = `item ${ids++}`;
     });
   }
 
@@ -132,9 +138,11 @@ export class AppComponent implements OnInit {
         case 3: data = this.gridComp?.grid?.save(true, true); break;
         case 4: data = this.items; break;
         case 5: data = this.gridOptionsFull; break;
-        case 6: data = this.nestedGridOptions; break;
+        case 6: data = this.nestedGridOptions;
+          GridStack.setupDragIn('.sidebar-item', undefined, this.sidebarContent6);
+          break;
         case 7: data = this.twoGridOpt1;
-          GridStack.setupDragIn('.sidebar>.grid-stack-item', undefined, this.sidebarContent);
+          GridStack.setupDragIn('.sidebar-item', undefined, this.sidebarContent7);
           break;
       }
       if (this.origTextEl) this.origTextEl.nativeElement.value = JSON.stringify(data, null, '  ');

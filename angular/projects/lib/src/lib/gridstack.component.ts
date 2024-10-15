@@ -23,6 +23,7 @@ export type NgCompInputs = {[key: string]: any};
 export interface NgGridStackWidget extends GridStackWidget {
   selector?: string; // component type to create as content
   input?: NgCompInputs; // serialized data for the component input fields
+  subGridOpts?: NgGridStackOptions; // nested grid options
 }
 export interface NgGridStackNode extends GridStackNode {
   selector?: string; // component type to create as content
@@ -214,13 +215,17 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
     //
     if (!host) return;
     if (isGrid) {
-      const container = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp?.container;
       // TODO: figure out how to create ng component inside regular Div. need to access app injectors...
       // if (!container) {
       //   const hostElement: Element = host;
       //   const environmentInjector: EnvironmentInjector;
       //   grid = createComponent(GridstackComponent, {environmentInjector, hostElement})?.instance;
       // }
+
+      const gridItemCom = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp;
+      if (!gridItemCom) return;
+      // check if gridItem has a child component with 'container' exposed to create under..
+      const container = (gridItemCom.childWidget as any)?.container || gridItemCom.container;
       const gridRef = container?.createComponent(GridstackComponent);
       const grid = gridRef?.instance;
       if (!grid) return;
@@ -234,17 +239,16 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
       if (!gridItem) return;
       gridItem.ref = gridItemRef
 
-      // IFF we're not a subGrid, define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
-      if (!w.subGridOpts) {
-        const selector = (w as NgGridStackWidget).selector;
-        const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
-        if (type) {
-          const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
-          // if proper BaseWidget subclass, save it and load additional data
-          if (childWidget && typeof childWidget.serialize === 'function' && typeof childWidget.deserialize === 'function') {
-            gridItem.childWidget = childWidget;
-            childWidget.deserialize(w);
-          }
+      // define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
+      const selector = (w as NgGridStackWidget).selector;
+      const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
+      if (type) {
+        const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
+        // if proper BaseWidget subclass, save it and load additional data
+        if (childWidget && typeof childWidget.serialize === 'function' && typeof childWidget.deserialize === 'function') {
+          gridItem.childWidget = childWidget;
+          childWidget.widgetItem = w;
+          childWidget.deserialize(w);
         }
       }
 

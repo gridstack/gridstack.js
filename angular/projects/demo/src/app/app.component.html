@@ -64,6 +64,10 @@
   <button (click)="saveGrid()">Save</button>
   <button (click)="clearGrid()">Clear</button>
   <button (click)="loadGrid()">Load</button>
+  <!-- add .grid-stack-item for acceptWidgets:true -->
+  <div class="sidebar-item grid-stack-item">Drag nested</div>
+  <div class="sidebar-item grid-stack-item">Comp N nested</div>
+
   <!-- TODO: addGrid() in code for testing instead ? -->
   <gridstack [options]="nestedGridOptions" (changeCB)="onChange($event)" (resizeStopCB)="onResizeStop($event)">
     <div empty-content>Add items here or reload the grid</div>
