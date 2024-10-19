@@ -191,6 +191,9 @@ export interface GridStackOptions {
   /** additional widget class (default?: 'grid-stack-item') */
   itemClass?: string;
 
+  /** true when widgets are only created when they scroll into view (visible) */
+  lazyLoad?: boolean;
+
   /**
    * gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below
    *  an integer (px)
@@ -331,6 +334,8 @@ export interface GridStackWidget extends GridStackPosition {
   id?: string;
   /** html to append inside as content */
   content?: string;
+  /** true when widgets are only created when they scroll into view (visible) */
+  lazyLoad?: boolean;
   /** local (vs grid) override - see GridStackOptions.
    * Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) */
   sizeToContent?: boolean | number;
@@ -447,4 +452,6 @@ export interface GridStackNode extends GridStackWidget {
   _removeDOM?: boolean;
   /** @internal had drag&drop been initialized */
   _initDD?: boolean;
+  /** @internal  allow delay creation when visible */
+  _visibleObservable?: IntersectionObserver;
 }

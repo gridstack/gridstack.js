@@ -106,6 +106,7 @@ gridstack.js API
 - `handle` - draggable handle selector (default: `'.grid-stack-item-content'`)
 - `handleClass` - draggable handle class (e.g. `'grid-stack-item-content'`). If set `handle` is ignored (default: `null`)
 - `itemClass` - widget class (default: `'grid-stack-item'`)
+- `lazyLoad?`: boolean - true when widgets are only created when they scroll into view (visible). also overridable per widget in `GridStackWidget`
 - `margin` - gap size around grid item and content (default: `10`). Can be:
   * an integer (px)
   * a string (ex: '2em', '20px', '2rem')
@@ -155,7 +156,7 @@ most of the above options are also available as HTML attributes using the `gs-` 
 Extras:
 - `gs-current-row` - (internal) current rows amount. Set by the library only. Can be used by the CSS rules.
 
-## Item Options
+## Item Options - GridStackWidget
 
 options you can pass when calling `addWidget()`, `update()`, `load()` and many others
 
@@ -174,6 +175,7 @@ You need to add `noResize` and `noMove` attributes to completely lock the widget
 Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar)
 - `subGrid`?: GridStackOptions - optional nested grid options and list of children
 - `subGridDynamic`?: boolean - enable/disable the creation of sub-grids on the fly by dragging items completely over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that.
+- `lazyLoad?`: boolean - true when widgets are only created when they scroll into view (visible). also optin on entire grid.
 
 ## Item attributes
 
