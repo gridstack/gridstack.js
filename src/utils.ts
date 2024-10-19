@@ -110,19 +110,29 @@ export class Utils {
     return els;
   }
 
-  /** create the default grid item divs */
-  static createWidgetDivs(itemClass?: string, w?: GridStackWidget): HTMLElement {
+  /** create the default grid item divs, and content possibly lazy loaded calling GridStack.renderCB */
+  static createWidgetDivs(itemClass: string, n: GridStackNode): HTMLElement {
     const el = Utils.createDiv(['grid-stack-item', itemClass]);
-    Utils.createDiv(['grid-stack-item-content'], el, w);
+    const cont = Utils.createDiv(['grid-stack-item-content'], el);
+
+    const lazyLoad = n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
+    if (lazyLoad) {
+      n._visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
+        n._visibleObservable.disconnect();
+        delete n._visibleObservable;
+        GridStack.renderCB(cont, n)
+      }});
+      window.setTimeout(() => n._visibleObservable.observe(el)); // wait until callee sets position attributes
+    } else GridStack.renderCB(cont, n);
+
     return el;
   }
 
-  /** create a div (possibly 2) with the given classes */
-  static createDiv(classes: string[], parent?: HTMLElement, w?: GridStackWidget): HTMLElement {
+  /** create a div with the given classes */
+  static createDiv(classes: string[], parent?: HTMLElement): HTMLElement {
     const el = document.createElement('div');
     classes.forEach(c => {if (c) el.classList.add(c)});
     parent?.appendChild(el);
-    if (w) GridStack.renderCB(el, w);
     return el;
   }
 

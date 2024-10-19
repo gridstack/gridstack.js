@@ -461,12 +461,13 @@ export class GridStack {
 
     let el: GridItemHTMLElement;
     let node: GridStackNode = w;
+    node.grid = this;
     if (node?.el) {
       el = node.el; // re-use element stored in the node
     } else if (GridStack.addRemoveCB) {
       el = GridStack.addRemoveCB(this.el, w, true, false);
     } else {
-      el = Utils.createWidgetDivs(this.opts.itemClass, w);
+      el = Utils.createWidgetDivs(this.opts.itemClass, node);
     }
 
     if (!el) return;
