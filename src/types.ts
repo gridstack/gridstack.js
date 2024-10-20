@@ -418,6 +418,8 @@ export interface GridStackNode extends GridStackWidget {
   grid?: GridStack;
   /** actual sub-grid instance */
   subGrid?: GridStack;
+  /** allow delay creation when visible */
+  visibleObservable?: IntersectionObserver;
   /** @internal internal id used to match when cloning engines or saving column layouts */
   _id?: number;
   /** @internal does the node attr ned to be updated due to changed x,y,w,h values */
@@ -452,6 +454,4 @@ export interface GridStackNode extends GridStackWidget {
   _removeDOM?: boolean;
   /** @internal had drag&drop been initialized */
   _initDD?: boolean;
-  /** @internal  allow delay creation when visible */
-  _visibleObservable?: IntersectionObserver;
 }

@@ -44,9 +44,10 @@ export class GridstackItemComponent implements OnDestroy {
 
   /** list of options for creating/updating this item */
   @Input() public set options(val: GridStackNode) {
-    if (this.el.gridstackNode?.grid) {
+    const grid = this.el.gridstackNode?.grid;
+    if (grid) {
       // already built, do an update...
-      this.el.gridstackNode.grid.update(this.el, val);
+      grid.update(this.el, val);
     } else {
       // store our custom element in options so we can update it and not re-create a generic div!
       this._options = {...val, el: this.el};

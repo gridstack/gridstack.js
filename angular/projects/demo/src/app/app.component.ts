@@ -46,6 +46,13 @@ export class AppComponent implements OnInit {
     children: this.sub0,
   }
 
+  public lazyChildren: NgGridStackWidget[] = [];
+  public gridOptionsDelay: NgGridStackOptions = {
+    ...this.gridOptions,
+    lazyLoad: true,
+    children: this.lazyChildren,
+  }
+
   // nested grid options
   private subOptions: GridStackOptions = {
     cellHeight: 50, // should be 50 - top/bottom
@@ -99,6 +106,8 @@ export class AppComponent implements OnInit {
   ];
 
   constructor() {
+    for (let y = 0; y <= 5; y++) this.lazyChildren.push({x:0, y, id:String(y), selector: y%2 ? 'app-b' : 'app-a'});
+
     // give them content and unique id to make sure we track them during changes below...
     [...this.items, ...this.subChildren, ...this.sub1, ...this.sub2, ...this.sub0].forEach((w: NgGridStackWidget) => {
       if (!w.selector && !w.content && !w.subGridOpts) w.content = `item ${ids++}`;
