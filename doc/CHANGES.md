@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [11.0.0 (TBD)](#1100-tbd)
+- [11.0.0 (2024-10-20)](#1100-2024-10-20)
 - [10.3.1 (2024-07-21)](#1031-2024-07-21)
 - [10.3.0 (2024-06-26)](#1030-2024-06-26)
 - [10.2.1 (2024-06-23)](#1021-2024-06-23)
@@ -114,7 +114,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 11.0.0 (TBD)
+## 11.0.0 (2024-10-20)
 * fix: [#2736](https://github.com/gridstack/gridstack.js/bug/2736) safe practices around GridStackWidget.content no longer setting innerHTML
 * fix: [#2231](https://github.com/gridstack/gridstack.js/bug/2231),[#1840](https://github.com/gridstack/gridstack.js/bug/1840),[#2354](https://github.com/gridstack/gridstack.js/bug/2354)
 big overall to how we do sidepanel drag&drop helper. see release notes.
