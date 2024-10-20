@@ -468,7 +468,9 @@ breaking change:
 
 * Side panel drag&drop complete rewrite.
 
-**breaking change:**
+* new lazy loading option
+
+**Breaking change:**
 
 * if you code relies on `GridStackWidget.content` with real HTML (like a few demos) it is up to you to do this:
 ```ts
@@ -479,6 +481,8 @@ GridStack.renderCB = function(el, w) {
 ```
 * V11 add new `GridStack.renderCB` that is called for you to create the widget content (entire GridStackWidget is passed so you can use id or some other field as logic) while GS creates the 2 needed parent divs + classes, unlike `GridStack.addRemoveCB` which doesn't create anything for you. Both can be handy for Angular/React/Vue frameworks.
 * `addWidget(w: GridStackWidget)` is now the only supported format, no more string content passing. You will need to create content yourself (`Util.createWidgetDivs()` can be used to create parent divs) then call `makeWidget(el)` instead.
+
+**Potential breaking change:**
 
 * BIG overall to how sidepanel helper drag&drop is done:
 1. `clone()` helper is now passed full HTML element dragged, not an event on `grid-stack-item-content` so can clone or set attr at the top.
