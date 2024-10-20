@@ -50,6 +50,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Migrating to v11](#migrating-to-v11)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
+- [Usage Trend](#usage-trend)
 - [The Team](#the-team)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -529,6 +530,9 @@ As for events, you can still use `$(".grid-stack").on(...)` for the version that
 
 View our change log [here](https://github.com/gridstack/gridstack.js/tree/master/doc/CHANGES.md).
 
+# Usage Trend
+
+  <img src="https://npm-compare.com/img/npm-trend/THREE_YEARS/gridstack.png" width="70%" alt="NPM Usage Trend of gridstack" />
 
 # The Team
 
