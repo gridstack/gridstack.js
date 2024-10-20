@@ -211,7 +211,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
 /**
  * can be used when a new item needs to be created, which we do as a Angular component, or deleted (skip)
  **/
-export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w: NgGridStackWidget | GridStackNode, add: boolean, isGrid: boolean): HTMLElement | undefined {
+export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, n: NgGridStackNode, add: boolean, isGrid: boolean): HTMLElement | undefined {
   if (add) {
     //
     // create the component dynamically - see https://angular.io/docs/ts/latest/cookbook/dynamic-component-loader.html
@@ -225,15 +225,15 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
       //   grid = createComponent(GridstackComponent, {environmentInjector, hostElement})?.instance;
       // }
 
-      const gridItemCom = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp;
-      if (!gridItemCom) return;
+      const gridItemComp = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp;
+      if (!gridItemComp) return;
       // check if gridItem has a child component with 'container' exposed to create under..
-      const container = (gridItemCom.childWidget as any)?.container || gridItemCom.container;
+      const container = (gridItemComp.childWidget as any)?.container || gridItemComp.container;
       const gridRef = container?.createComponent(GridstackComponent);
       const grid = gridRef?.instance;
       if (!grid) return;
       grid.ref = gridRef;
-      grid.options = w as GridStackOptions;
+      grid.options = n;
       return grid.el;
     } else {
       const gridComp = (host as GridCompHTMLElement)._gridComp;
@@ -243,15 +243,30 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
       gridItem.ref = gridItemRef
 
       // define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
-      const selector = (w as NgGridStackWidget).selector;
+      const selector = n.selector;
       const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
       if (type) {
-        const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
-        // if proper BaseWidget subclass, save it and load additional data
-        if (childWidget && typeof childWidget.serialize === 'function' && typeof childWidget.deserialize === 'function') {
-          gridItem.childWidget = childWidget;
-          childWidget.deserialize(w);
+        // shared code to create our selector component
+        const createComp = () => {
+          const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
+          // if proper BaseWidget subclass, save it and load additional data
+          if (childWidget && typeof childWidget.serialize === 'function' && typeof childWidget.deserialize === 'function') {
+            gridItem.childWidget = childWidget;
+            childWidget.deserialize(n);
+          }
         }
+
+        const lazyLoad = n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
+        if (lazyLoad) {
+          if (!n.visibleObservable) {
+            n.visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
+              n.visibleObservable?.disconnect();
+              delete n.visibleObservable;
+              createComp();
+            }});
+            window.setTimeout(() => n.visibleObservable?.observe(gridItem.el)); // wait until callee sets position attributes
+          }
+        } else createComp();
       }
 
       return gridItem.el;
@@ -261,7 +276,6 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, w:
     // REMOVE - have to call ComponentRef:destroy() for dynamic objects to correctly remove themselves
     // Note: this will destroy all children dynamic components as well: gridItem -> childWidget
     //
-    const n = w as GridStackNode;
     if (isGrid) {
       const grid = (n.el as GridCompHTMLElement)?._gridComp;
       if (grid?.ref) grid.ref.destroy();

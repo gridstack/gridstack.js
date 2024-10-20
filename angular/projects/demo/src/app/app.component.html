@@ -9,7 +9,8 @@
   <button (click)="onShow(5)" [class.active]="show===5">Component Dynamic</button>
   <button (click)="onShow(6)" [class.active]="show===6">Nested Grid</button>
   <button (click)="onShow(7)" [class.active]="show===7">Two Grids + sidebar</button>
-  <button (click)="onShow(8)" [class.active]="show===8">Leak Test</button>
+  <button (click)="onShow(8)" [class.active]="show===8">Lazy Load</button>
+  <button (click)="onShow(9)" [class.active]="show===9">Leak Test</button>
 </div>
 
 <div class="test-container">
@@ -99,6 +100,13 @@
 </div>
 
 <div *ngIf="show===8">
+  <p>delay loading of components</p>
+  <div style="height: 120px; overflow-y: auto">
+    <gridstack [options]="gridOptionsDelay"></gridstack>
+  </div>
+</div>
+
+<div *ngIf="show===9">
   <p>load() + clear() to memory leak test between the two</p>
   <button (click)="clearGrid()">Clear</button>
   <button (click)="load(sub0)">load</button>

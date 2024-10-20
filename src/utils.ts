@@ -117,12 +117,14 @@ export class Utils {
 
     const lazyLoad = n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
     if (lazyLoad) {
-      n._visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
-        n._visibleObservable.disconnect();
-        delete n._visibleObservable;
-        GridStack.renderCB(cont, n)
-      }});
-      window.setTimeout(() => n._visibleObservable.observe(el)); // wait until callee sets position attributes
+      if (!n.visibleObservable) {
+        n.visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
+          n.visibleObservable?.disconnect();
+          delete n.visibleObservable;
+          GridStack.renderCB(cont, n)
+        }});
+        window.setTimeout(() => n.visibleObservable?.observe(el)); // wait until callee sets position attributes
+      }
     } else GridStack.renderCB(cont, n);
 
     return el;

@@ -19,6 +19,7 @@ import { BaseWidget, NgCompInputs } from 'gridstack/dist/angular';
 export class AComponent extends BaseWidget implements OnDestroy {
   @Input() text: string = 'foo'; // test custom input data
   public override serialize(): NgCompInputs | undefined  { return this.text ? {text: this.text} : undefined; }
+  constructor() { super(); console.log('Comp A created'); }
   ngOnDestroy() { console.log('Comp A destroyed'); } // test to make sure cleanup happens
 }
 
@@ -27,6 +28,7 @@ export class AComponent extends BaseWidget implements OnDestroy {
   template: 'Comp B',
 })
 export class BComponent extends BaseWidget implements OnDestroy {
+  constructor() { super(); console.log('Comp B created'); }
   ngOnDestroy() { console.log('Comp B destroyed'); }
 }
 

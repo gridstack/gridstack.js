@@ -10,7 +10,7 @@ gridstack.js API
     - [Breakpoint](#breakpoint)
   - [DDDragOpt](#dddragopt)
 - [Grid attributes](#grid-attributes)
-- [Item Options](#item-options)
+- [Item Options - GridStackWidget](#item-options---gridstackwidget)
 - [Item attributes](#item-attributes)
 - [Events](#events)
   - [added(event, items)](#addedevent-items)
