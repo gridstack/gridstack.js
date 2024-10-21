@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [11.0.1 (2024-10-21)](#1101-2024-10-21)
 - [11.0.0 (2024-10-20)](#1100-2024-10-20)
 - [10.3.1 (2024-07-21)](#1031-2024-07-21)
 - [10.3.0 (2024-06-26)](#1030-2024-06-26)
@@ -113,6 +114,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 11.0.1 (2024-10-21)
+* fix: [#2834](https://github.com/gridstack/gridstack.js/pull/2834) v11 angular missing package.json
+* fix: [#2835](https://github.com/gridstack/gridstack.js/bug/2835) make sure we have unique USER id
 
 ## 11.0.0 (2024-10-20)
 * feat: [#2826](https://github.com/gridstack/gridstack.js/pull/2826) Lazy loading of widget content until visible (`GridStackOptions.lazyLoad` and `GridStackWidget.lazyLoad`)

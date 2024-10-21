@@ -352,6 +352,15 @@ export class GridStackEngine {
   public prepareNode(node: GridStackNode, resizing?: boolean): GridStackNode {
     node._id = node._id ?? GridStackEngine._idSeq++;
 
+    // make sure USER supplied id are unique in our list, else assign a new one as it will create issues during load/update/etc...
+    const id = node.id;
+    if (id) {
+      let count = 1; // append nice _n rather than some random number
+      while (this.nodes.find(n => n.id === node.id && n !== node)) {
+        node.id = id + '_' + (count++);
+      }
+    }
+
     // if we're missing position, have the grid position us automatically (before we set them to 0,0)
     if (node.x === undefined || node.y === undefined || node.x === null || node.y === null) {
       node.autoPosition = true;
