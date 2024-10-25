@@ -20,19 +20,20 @@ let ids = 1;
       <!-- using angular templating to create DOM, otherwise an easier way is to simply call grid.load(items)
       NOTE: this example is NOT complete as there are many more properties than listed (minW, maxW, etc....)
       -->
-      <div *ngFor="let n of items; trackBy: identify"
-        class="grid-stack-item"
-        [attr.gs-id]="n.id"
-        [attr.gs-x]="n.x"
-        [attr.gs-y]="n.y"
-        [attr.gs-w]="n.w"
-        [attr.gs-h]="n.h"
-        #gridStackItem
-      >
-        <div class="grid-stack-item-content">item {{ n.id }}</div>
-      </div>
+      @for (n of items; track n.id) {
+        <div
+          class="grid-stack-item"
+          [attr.gs-id]="n.id"
+          [attr.gs-x]="n.x"
+          [attr.gs-y]="n.y"
+          [attr.gs-w]="n.w"
+          [attr.gs-h]="n.h"
+          #gridStackItem>
+          <div class="grid-stack-item-content">item {{ n.id }}</div>
+        </div>
+      }
     </div>
-  `,
+    `,
   // gridstack.min.css and other custom styles should be included in global styles.scss or here
 })
 export class AngularNgForTestComponent implements AfterViewInit {
@@ -122,10 +123,5 @@ export class AngularNgForTestComponent implements AfterViewInit {
       // {x:2, y:1, id:3}, // delete item
       {x:3, y:0, w:3}, // new item
     ];
-  }
-
-  // ngFor unique node id to have correct match between our items used and GS
-  identify(index: number, w: GridStackWidget) {
-    return w.id;
   }
 }
