@@ -129,6 +129,11 @@ HTML
 
 ```html
 <gridstack [options]="gridOptions" (changeCB)="onChange($event)">
+  <!-- Angular 17+ -->
+   @for (n of items; track n.id) {
+    <gridstack-item [options]="n">Item {{n.id}}</gridstack-item>
+  }
+  <!-- Angular 16 -->
   <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n"> Item {{n.id}} </gridstack-item>
 </gridstack>
 ```
