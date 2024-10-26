@@ -91,7 +91,7 @@
     grid.load(items); // test loading after
     GridStack.init({...opts, children:undefined}, '#grid2');
 
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
+    GridStack.setupDragIn('.sidebar>.grid-stack-item');
 
     function clearGrid() {
       grid.removeAll();
@@ -109,10 +109,7 @@
       grid.addWidget({content: `<div>New: ${text}</div>`});
     }
     function makeWidget() {
-      let doc = document.implementation.createHTMLDocument();
-      doc.body.innerHTML = `<div class="item"><div class="grid-stack-item-content"><div>New Make: ${text}</div></div></div>`;
-      let el = doc.body.children[0];
-      grid.el.appendChild(el);
+      let el = GridStack.Utils.createWidgetDivs(undefined, {content: `<div>New Make: ${text}</div>`}, grid.el)
       grid.makeWidget(el, {w:2});
     }
     function more() {

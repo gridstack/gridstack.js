@@ -1,5 +1,5 @@
 /**
- * types.ts 10.3.1-dev
+ * types.ts 11.0.1
  * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -37,14 +37,6 @@ export const gridDefaults: GridStackOptions = {
   // staticGrid: false,
   // styleInHead: false,
   //removable
-};
-
-/** default dragIn options */
-export const dragInDefaultOptions: DDDragInOpt = {
-  handle: '.grid-stack-item-content',
-  appendTo: 'body',
-  // revert: 'invalid',
-  // scroll: false,
 };
 
 /**
@@ -199,6 +191,9 @@ export interface GridStackOptions {
   /** additional widget class (default?: 'grid-stack-item') */
   itemClass?: string;
 
+  /** true when widgets are only created when they scroll into view (visible) */
+  lazyLoad?: boolean;
+
   /**
    * gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below
    *  an integer (px)
@@ -339,6 +334,8 @@ export interface GridStackWidget extends GridStackPosition {
   id?: string;
   /** html to append inside as content */
   content?: string;
+  /** true when widgets are only created when they scroll into view (visible) */
+  lazyLoad?: boolean;
   /** local (vs grid) override - see GridStackOptions.
    * Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) */
   sizeToContent?: boolean | number;
@@ -379,14 +376,13 @@ export interface DDDragOpt {
   scroll?: boolean;
   /** prevents dragging from starting on specified elements, listed as comma separated selectors (eg: '.no-drag'). default built in is 'input,textarea,button,select,option' */
   cancel?: string;
-}
-export interface DDDragInOpt extends DDDragOpt {
   /** helper function when dropping: 'clone' or your own method */
-  helper?: 'clone' | ((event: Event) => HTMLElement);
-  /** used when dragging item from the outside, and canceling (ex: 'invalid' or your own method)*/
-  // revert?: string | ((event: Event) => HTMLElement);
+  helper?: 'clone' | ((el: HTMLElement) => HTMLElement);
+  /** callbacks */
+  start?: (event: Event, ui: DDUIData) => void;
+  stop?: (event: Event) => void;
+  drag?: (event: Event, ui: DDUIData) => void;
 }
-
 export interface Size {
   width: number;
   height: number;
@@ -422,6 +418,8 @@ export interface GridStackNode extends GridStackWidget {
   grid?: GridStack;
   /** actual sub-grid instance */
   subGrid?: GridStack;
+  /** allow delay creation when visible */
+  visibleObservable?: IntersectionObserver;
   /** @internal internal id used to match when cloning engines or saving column layouts */
   _id?: number;
   /** @internal does the node attr ned to be updated due to changed x,y,w,h values */

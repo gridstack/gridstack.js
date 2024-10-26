@@ -1,5 +1,5 @@
 /**
- * gridstack-item.component.ts 10.3.1-dev
+ * gridstack-item.component.ts 11.0.1
  * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -12,6 +12,10 @@ import { NgCompInputs, NgGridStackWidget } from './gridstack.component';
 
  @Injectable()
  export abstract class BaseWidget {
+
+  /** variable that holds the complete definition of this widgets (with selector,x,y,w,h) */
+  public widgetItem?: NgGridStackWidget;
+
   /**
    * REDEFINE to return an object representing the data needed to re-create yourself, other than `selector` already handled.
    * This should map directly to the @Input() fields of this objects on create, so a simple apply can be used on read
@@ -23,6 +27,10 @@ import { NgCompInputs, NgGridStackWidget } from './gridstack.component';
    * things that are not mapped directly into @Input() fields for example.
    */
   public deserialize(w: NgGridStackWidget)  {
+    // save full description for meta data
+    this.widgetItem = w;
+    if (!w) return;
+
     if (w.input)  Object.assign(this, w.input);
   }
  }

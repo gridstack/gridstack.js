@@ -1,10 +1,10 @@
 /**
- * dd-gridstack.ts 10.3.1-dev
+ * dd-gridstack.ts 11.0.1
  * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { GridItemHTMLElement, GridStackElement, DDDragInOpt } from './types';
+import { GridItemHTMLElement, GridStackElement, DDDragOpt } from './types';
 import { Utils } from './utils';
 import { DDManager } from './dd-manager';
 import { DDElement, DDElementHost } from './dd-element';
@@ -79,7 +79,7 @@ export class DDGridStack {
         dEl.setupDraggable({
           ...grid.opts.draggable,
           ...{
-            // containment: (grid.parentGridItem && grid.opts.dragOut === false) ? grid.el.parentElement : (grid.opts.draggable.containment || null),
+            // containment: (grid.parentGridNode && grid.opts.dragOut === false) ? grid.el.parentElement : (grid.opts.draggable.containment || null),
             start: opts.start,
             stop: opts.stop,
             drag: opts.drag
@@ -90,7 +90,7 @@ export class DDGridStack {
     return this;
   }
 
-  public dragIn(el: GridStackElement, opts: DDDragInOpt): DDGridStack {
+  public dragIn(el: GridStackElement, opts: DDDragOpt): DDGridStack {
     this._getDDElements(el).forEach(dEl => dEl.setupDraggable(opts));
     return this;
   }
@@ -150,9 +150,9 @@ export class DDGridStack {
 
   /** @internal returns a list of DD elements, creating them on the fly by default */
   protected _getDDElements(els: GridStackElement, create = true): DDElement[] {
-    let hosts = Utils.getElements(els) as DDElementHost[];
+    const hosts = Utils.getElements(els) as DDElementHost[];
     if (!hosts.length) return [];
-    let list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));
+    const list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));
     if (!create) { list.filter(d => d); } // remove nulls
     return list;
   }

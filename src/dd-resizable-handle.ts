@@ -1,5 +1,5 @@
 /**
- * dd-resizable-handle.ts 10.3.1-dev
+ * dd-resizable-handle.ts 11.0.1
  * Copyright (c) 2021-2024  Alain Dumesny - see GridStack root license
  */
 
@@ -78,7 +78,7 @@ export class DDResizableHandle {
 
   /** @internal */
   protected _mouseMove(e: MouseEvent): void {
-    let s = this.mouseDownEvent;
+    const s = this.mouseDownEvent;
     if (this.moving) {
       this._triggerEvent('move', e);
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 2) {

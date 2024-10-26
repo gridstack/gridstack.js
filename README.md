@@ -50,6 +50,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Migrating to v11](#migrating-to-v11)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
+- [Usage Trend](#usage-trend)
 - [The Team](#the-team)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -463,9 +464,14 @@ breaking change:
 
 ## Migrating to v11
 
-All instances of `el.innerHTML = 'some content'` have been removed for security reason as it opens up some potential for accidental XSS. we now create DIV directly or use `el.textContent = w.content` for `GridStackWidget.content` field.
+* All instances of `el.innerHTML = 'some content'` have been removed for security reason as it opens up some potential for accidental XSS.
 
-breaking change:
+* Side panel drag&drop complete rewrite.
+
+* new lazy loading option
+
+**Breaking change:**
+
 * if you code relies on `GridStackWidget.content` with real HTML (like a few demos) it is up to you to do this:
 ```ts
 // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
@@ -475,6 +481,15 @@ GridStack.renderCB = function(el, w) {
 ```
 * V11 add new `GridStack.renderCB` that is called for you to create the widget content (entire GridStackWidget is passed so you can use id or some other field as logic) while GS creates the 2 needed parent divs + classes, unlike `GridStack.addRemoveCB` which doesn't create anything for you. Both can be handy for Angular/React/Vue frameworks.
 * `addWidget(w: GridStackWidget)` is now the only supported format, no more string content passing. You will need to create content yourself (`Util.createWidgetDivs()` can be used to create parent divs) then call `makeWidget(el)` instead.
+
+**Potential breaking change:**
+
+* BIG overall to how sidepanel helper drag&drop is done:
+1. `clone()` helper is now passed full HTML element dragged, not an event on `grid-stack-item-content` so can clone or set attr at the top.
+2. use any class/structure you want for side panel items (see two.html)
+3. `GridStack.setupDragIn()` now support associating a `GridStackWidget` for each sidepanel that will be used to define what to create on drop!
+4. if no `GridStackWidget` is defined, the helper will now be inserted as is, and NOT original sidepanel item.
+5. support DOM gs- attr as well as gridstacknode JSON (see two.html) alternatives.
 
 # jQuery Application
 

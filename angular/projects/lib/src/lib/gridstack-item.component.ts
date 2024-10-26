@@ -1,5 +1,5 @@
 /**
- * gridstack-item.component.ts 10.3.1-dev
+ * gridstack-item.component.ts 11.0.1
  * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -44,9 +44,10 @@ export class GridstackItemComponent implements OnDestroy {
 
   /** list of options for creating/updating this item */
   @Input() public set options(val: GridStackNode) {
-    if (this.el.gridstackNode?.grid) {
+    const grid = this.el.gridstackNode?.grid;
+    if (grid) {
       // already built, do an update...
-      this.el.gridstackNode.grid.update(this.el, val);
+      grid.update(this.el, val);
     } else {
       // store our custom element in options so we can update it and not re-create a generic div!
       this._options = {...val, el: this.el};
@@ -57,7 +58,7 @@ export class GridstackItemComponent implements OnDestroy {
     return this.el.gridstackNode || this._options || {el: this.el};
   }
 
-  private _options?: GridStackNode;
+  protected _options?: GridStackNode;
 
   /** return the native element that contains grid specific fields as well */
   public get el(): GridItemCompHTMLElement { return this.elementRef.nativeElement; }
@@ -67,7 +68,7 @@ export class GridstackItemComponent implements OnDestroy {
     delete this._options;
   }
 
-  constructor(private readonly elementRef: ElementRef<GridItemHTMLElement>) {
+  constructor(protected readonly elementRef: ElementRef<GridItemCompHTMLElement>) {
     this.el._gridItemComp = this;
   }
 

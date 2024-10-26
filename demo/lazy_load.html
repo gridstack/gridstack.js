@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lazy loading demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div>
+    <h1>Lazy loading demo</h1>
+    <p>New V11 GridStackWidget.lazyLoad feature. open console and see widget content (or angular components) created as they become visible.</p>
+    <div style="height: 300px; overflow-y: auto">
+      <div class="grid-stack"></div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    // print when widgets are created
+    GridStack.renderCB = function(el, w) {
+      el.textContent = w.content;
+      console.log('created node id ', w.id);
+    };
+    let children = [];
+    for (let y = 0; y <= 5; y++) children.push({x:0, y, id:String(y), content: String(y)});
+    let grid = GridStack.init({
+      cellHeight: 200,
+      children,
+      lazyLoad: true,  // delay creation until visible
+    });
+  </script>
+</body>
+</html>

@@ -5,9 +5,9 @@ import { AppComponent } from './app.component';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
-import { AComponent, BComponent, CComponent } from './dummy.component';
+import { AComponent, BComponent, CComponent, NComponent } from './dummy.component';
 
-// local testing
+// TEST local testing
 // import { GridstackModule } from './gridstack.module';
 // import { GridstackComponent } from './gridstack.component';
 import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
@@ -25,6 +25,7 @@ import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
     AComponent,
     BComponent,
     CComponent,
+    NComponent,
   ],
   exports: [
   ],
@@ -34,6 +35,6 @@ import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
 export class AppModule {
   constructor() {
     // register all our dynamic components created in the grid
-    GridstackComponent.addComponentToSelectorType([AComponent, BComponent, CComponent]);
+    GridstackComponent.addComponentToSelectorType([AComponent, BComponent, CComponent, NComponent]);
   }
 }

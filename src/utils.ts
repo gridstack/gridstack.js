@@ -1,5 +1,5 @@
 /**
- * utils.ts 10.3.1-dev
+ * utils.ts 11.0.1
  * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -21,7 +21,7 @@ export interface DragTransform {
 /** checks for obsolete method names */
 // eslint-disable-next-line
 export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
-  let wrapper = (...args) => {
+  const wrapper = (...args) => {
     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
     'with `' + newName + '`. It will be **removed** in a future release');
     return f.apply(self, args);
@@ -48,7 +48,7 @@ export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: st
 
 /** checks for obsolete Jquery element attributes */
 export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string): void {
-  let oldAttr = el.getAttribute(oldName);
+  const oldAttr = el.getAttribute(oldName);
   if (oldAttr !== null) {
     el.setAttribute(newName, oldAttr);
     console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
@@ -110,19 +110,31 @@ export class Utils {
     return els;
   }
 
-  /** create the default grid item divs */
-  static createWidgetDivs(itemClass?: string, w?: GridStackWidget): HTMLElement {
+  /** create the default grid item divs, and content possibly lazy loaded calling GridStack.renderCB */
+  static createWidgetDivs(itemClass: string, n: GridStackNode): HTMLElement {
     const el = Utils.createDiv(['grid-stack-item', itemClass]);
-    Utils.createDiv(['grid-stack-item-content'], el, w);
+    const cont = Utils.createDiv(['grid-stack-item-content'], el);
+
+    const lazyLoad = n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
+    if (lazyLoad) {
+      if (!n.visibleObservable) {
+        n.visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
+          n.visibleObservable?.disconnect();
+          delete n.visibleObservable;
+          GridStack.renderCB(cont, n)
+        }});
+        window.setTimeout(() => n.visibleObservable?.observe(el)); // wait until callee sets position attributes
+      }
+    } else GridStack.renderCB(cont, n);
+
     return el;
   }
 
-  /** create a div (possibly 2) with the given classes */
-  static createDiv(classes: string[], parent?: HTMLElement, w?: GridStackWidget): HTMLElement {
-    let el = document.createElement('div');
+  /** create a div with the given classes */
+  static createDiv(classes: string[], parent?: HTMLElement): HTMLElement {
+    const el = document.createElement('div');
     classes.forEach(c => {if (c) el.classList.add(c)});
     parent?.appendChild(el);
-    if (w) GridStack.renderCB(el, w);
     return el;
   }
 
@@ -145,11 +157,11 @@ export class Utils {
 
   /** returns the area a and b overlap */
   static areaIntercept(a: GridStackPosition, b: GridStackPosition): number {
-    let x0 = (a.x > b.x) ? a.x : b.x;
-    let x1 = (a.x+a.w < b.x+b.w) ? a.x+a.w : b.x+b.w;
+    const x0 = (a.x > b.x) ? a.x : b.x;
+    const x1 = (a.x+a.w < b.x+b.w) ? a.x+a.w : b.x+b.w;
     if (x1 <= x0) return 0; // no overlap
-    let y0 = (a.y > b.y) ? a.y : b.y;
-    let y1 = (a.y+a.h < b.y+b.h) ? a.y+a.h : b.y+b.h;
+    const y0 = (a.y > b.y) ? a.y : b.y;
+    const y1 = (a.y+a.h < b.y+b.h) ? a.y+a.h : b.y+b.h;
     if (y1 <= y0) return 0; // no overlap
     return (x1-x0) * (y1-y0);
   }
@@ -167,7 +179,7 @@ export class Utils {
   static sort(nodes: GridStackNode[], dir: 1 | -1 = 1): GridStackNode[] {
     const und = 10000;
     return nodes.sort((a, b) => {
-      let diffY = dir * ((a.y ?? und) - (b.y ?? und));
+      const diffY = dir * ((a.y ?? und) - (b.y ?? und));
       if (diffY === 0) return dir * ((a.x ?? und) - (b.x ?? und));
       return diffY;
     });
@@ -185,7 +197,7 @@ export class Utils {
    * if none supplied it will be appended to the document head instead.
    */
   static createStylesheet(id: string, parent?: HTMLElement, options?: { nonce?: string }): CSSStyleSheet {
-    let style: HTMLStyleElement = document.createElement('style');
+    const style: HTMLStyleElement = document.createElement('style');
     const nonce = options?.nonce
     if (nonce) style.nonce = nonce
     style.setAttribute('type', 'text/css');
@@ -210,7 +222,7 @@ export class Utils {
   /** removed the given stylesheet id */
   static removeStylesheet(id: string, parent?: HTMLElement): void {
     const target = parent || document;
-    let el = target.querySelector('STYLE[gs-style-id=' + id + ']');
+    const el = target.querySelector('STYLE[gs-style-id=' + id + ']');
     if (el && el.parentNode) el.remove();
   }
 
@@ -245,7 +257,7 @@ export class Utils {
     if (typeof val === 'string') {
       if (val === 'auto' || val === '') h = 0;
       else {
-        let match = val.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw|%|cm|mm)?$/);
+        const match = val.match(/^(-[0-9]+\.[0-9]+|[0-9]*\.[0-9]+|-[0-9]+|[0-9]+)(px|em|rem|vh|vw|%|cm|mm)?$/);
         if (!match) {
           throw new Error(`Invalid height val = ${val}`);
         }
@@ -368,7 +380,7 @@ export class Utils {
   }
 
   static removePositioningStyles(el: HTMLElement): void {
-    let style = el.style;
+    const style = el.style;
     if (style.position) {
       style.removeProperty('position');
     }
@@ -402,19 +414,19 @@ export class Utils {
   /** @internal */
   static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
     // is widget in view?
-    let rect = el.getBoundingClientRect();
-    let innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
+    const rect = el.getBoundingClientRect();
+    const innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
     if (rect.top < 0 ||
       rect.bottom > innerHeightOrClientHeight
     ) {
       // set scrollTop of first parent that scrolls
       // if parent is larger than el, set as low as possible
       // to get entire widget on screen
-      let offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
-      let offsetDiffUp = rect.top;
-      let scrollEl = this.getScrollElement(el);
+      const offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
+      const offsetDiffUp = rect.top;
+      const scrollEl = this.getScrollElement(el);
       if (scrollEl !== null) {
-        let prevScroll = scrollEl.scrollTop;
+        const prevScroll = scrollEl.scrollTop;
         if (rect.top < 0 && distance < 0) {
           // moving up
           if (el.offsetHeight > innerHeightOrClientHeight) {
@@ -613,7 +625,7 @@ export class Utils {
   //    this.el.contains(event.relatedTarget as HTMLElement)
   // public static inside(e: MouseEvent, el: HTMLElement): boolean {
   //   // srcElement, toElement, target: all set to placeholder when leaving simple grid, so we can't use that (Chrome)
-  //   let target: HTMLElement = e.relatedTarget || (e as any).fromElement;
+  //   const target: HTMLElement = e.relatedTarget || (e as any).fromElement;
   //   if (!target) {
   //     const { bottom, left, right, top } = el.getBoundingClientRect();
   //     return (e.x < right && e.x > left && e.y < bottom && e.y > top);

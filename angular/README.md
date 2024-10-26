@@ -129,6 +129,11 @@ HTML
 
 ```html
 <gridstack [options]="gridOptions" (changeCB)="onChange($event)">
+  <!-- Angular 17+ -->
+   @for (n of items; track n.id) {
+    <gridstack-item [options]="n">Item {{n.id}}</gridstack-item>
+  }
+  <!-- Angular 16 -->
   <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n"> Item {{n.id}} </gridstack-item>
 </gridstack>
 ```
@@ -162,7 +167,7 @@ public identify(index: number, w: GridStackWidget) {
 
 You can see a fuller example at [app.component.ts](projects/demo/src/app/app.component.ts)
 
-to build the demo, go to [angular/projects/demo](projects/demo/) and run `yarn` + `yarn upgrade` (ng18 seem to have introduced some conflicts) + `yarn start` and navigate to `http://localhost:4200/`
+to build the demo, go to [angular/projects/demo](projects/demo/) and run `yarn` + `yarn start` and navigate to `http://localhost:4200/`
 
 Code started shipping with v8.1.2+ in `dist/angular` for people to use directly and is an angular module! (source code under `dist/angular/src`)
 

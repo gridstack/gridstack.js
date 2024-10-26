@@ -1,5 +1,5 @@
 /**
- * dd-resizable.ts 10.3.1-dev
+ * dd-resizable.ts 11.0.1
  * Copyright (c) 2021-2024  Alain Dumesny - see GridStack root license
  */
 
@@ -96,8 +96,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public updateOption(opts: DDResizableOpt): DDResizable {
-    let updateHandles = (opts.handles && opts.handles !== this.option.handles);
-    let updateAutoHide = (opts.autoHide && opts.autoHide !== this.option.autoHide);
+    const updateHandles = (opts.handles && opts.handles !== this.option.handles);
+    const updateAutoHide = (opts.autoHide && opts.autoHide !== this.option.autoHide);
     Object.keys(opts).forEach(key => this.option[key] = opts[key]);
     if (updateHandles) {
       this._removeHandlers();
