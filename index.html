@@ -543,7 +543,7 @@
         </p>
         <div class="grid grid-cols-2 gap-8 mt-8">
           <div
-            class="flex flex-col items-center justify-center p-1 mx-auto transition-colors rounded-lg cursor-pointer bg-green-500/15 hover:bg-green-500/30 size-40 grid-stack-item-content grid-stack-item newWidget"
+            class="flex flex-col items-center justify-center p-1 mx-auto transition-colors rounded-lg cursor-pointer bg-green-500/15 hover:bg-green-500/30 size-40 grid-stack-item newWidget"
           >
             <svg
               class="text-green-700 size-8"
@@ -896,11 +896,7 @@
       var simple = [
         { x: 0, y: 0, w: 4, h: 2, content: '1' },
         { x: 4, y: 0, w: 4, h: 4, content: '2' },
-        {
-          x: 8,
-          y: 0,
-          w: 2,
-          h: 2,
+        { x: 8, y: 0, w: 2, h: 2,
           content: `<div class="flex flex-col items-center justify-center w-full h-full text-indigo-600">
           <svg class="size-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hand">
             <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
@@ -920,29 +916,16 @@
       ]
       var advanced = [
         { x: 0, y: 0, w: 4, h: 2, content: '1' },
-        {
-          x: 4,
-          y: 0,
-          w: 4,
-          h: 4,
-          noMove: true,
-          noResize: true,
-          locked: true,
+        { x: 4, y: 0, w: 4, h: 4, noMove: true, noResize: true, locked: true,
           content: `<div class="flex flex-col items-center justify-center w-full h-full gap-2 text-red-600">
           <svg class="text-red-600 size-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-keyhole">
             <circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/>
             <path d="M7 10V7a5 5 0 0 1 10 0v3"/>
           </svg>
-          <p>Can't be moved or dragged</p>
+          <p>Can't be moved or dragged, nor pushed by others</p>
         </div>`,
         },
-        {
-          x: 8,
-          y: 0,
-          w: 2,
-          h: 2,
-          minW: 2,
-          noResize: true,
+        { x: 8, y: 0, w: 2, h: 2, minW: 2, noResize: true,
           content: `<div class="flex flex-col items-center justify-center w-full h-full gap-2 text-red-600">
           <svg class="size-8" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scaling">
             <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
@@ -963,31 +946,21 @@
 
       // Setup Grids without jQuery
       document.addEventListener('DOMContentLoaded', function () {
-        var simpleGrid = GridStack.init(
-          {
-            margin: 5,
-            disableOneColumnMode: true,
-          },
-          '#simple-grid'
-        )
-        simpleGrid.load(simple)
+        var simpleGrid = GridStack.init( { margin: 5,  children: simple }, '#simple-grid' )
 
         var advGrid = GridStack.init(
           {
             margin: 5,
-            disableOneColumnMode: true,
             acceptWidgets: true,
             removable: '#trash',
             removeTimeout: 100,
+            children: advanced
           },
           '#advanced-grid'
         )
-        advGrid.load(advanced)
 
-        GridStack.setupDragIn('.newWidget', {
-          appendTo: 'body',
-          helper: 'clone',
-        })
+        var insert = [ {h: 2, content: 'new item'}];
+        GridStack.setupDragIn('.newWidget', undefined, insert);
 
         document
           .getElementById('search')
