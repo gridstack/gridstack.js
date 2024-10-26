@@ -61,6 +61,11 @@
 
   </div>
   <script type="text/javascript">
+    // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+    GridStack.renderCB = function(el, w) {
+      el.innerHTML = w.content;
+    };
+
     let text ='some very large content that will normally not fit in the window.'
     text = text + text;
     let count = 0;
@@ -86,7 +91,7 @@
     grid.load(items); // test loading after
     GridStack.init({...opts, children:undefined}, '#grid2');
 
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
+    GridStack.setupDragIn('.sidebar>.grid-stack-item');
 
     function clearGrid() {
       grid.removeAll();
@@ -104,10 +109,7 @@
       grid.addWidget({content: `<div>New: ${text}</div>`});
     }
     function makeWidget() {
-      let doc = document.implementation.createHTMLDocument();
-      doc.body.innerHTML = `<div class="item"><div class="grid-stack-item-content"><div>New Make: ${text}</div></div></div>`;
-      let el = doc.body.children[0];
-      grid.el.appendChild(el);
+      let el = GridStack.Utils.createWidgetDivs(undefined, {content: `<div>New Make: ${text}</div>`}, grid.el)
       grid.makeWidget(el, {w:2});
     }
     function more() {

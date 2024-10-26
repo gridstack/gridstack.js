@@ -21,12 +21,8 @@
       <a class="btn btn-primary" onClick="addNewWidget('.sub1')" href="#">Add Widget Grid1</a>
       <a class="btn btn-primary" onClick="addNewWidget('.sub2')" href="#">Add Widget Grid2</a>
       <a class="btn btn-primary" onClick="addNested()" href="#">Add Nested Grid</a>
-      <div class="sidebar" style="height:50px; padding: 0">
-        <!-- manually force a drop size of 2x2 for nested size -->
-        <div class="grid-stack-item" gs-w="2" gs-h="2">
-          <div class="grid-stack-item-content">Drag nested</div>
-        </div>
-      </div>  
+      <!-- add .grid-stack-item for acceptWidgets:true -->
+      <div class="sidebar-item grid-stack-item">Drag nested</div>
     </div>
     <br />
     <span>entire save/re-create:</span>
@@ -78,7 +74,10 @@
     })
 
     // setup drag drop behavior
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: 'clone' });
+    let sidebarContent = [
+     { w:2, h:2, subGridOpts: { children: [{content: 'nest 1'}, {content: 'nest 2'}]}}
+    ];
+    GridStack.setupDragIn('.sidebar-item', undefined, sidebarContent);
 
     function addWidget() {
       grid.addWidget({x:0, y:100, content:"new item"});
@@ -104,25 +103,6 @@
       return false;
     };
 
-    // listener on drop event: every time the sidebar item is dropped create a new subgrid
-    function droppedHandler(event, prevNode, n) {
-      // if we don't have a prevNode that means it came from toolbar, which today is the only nested case (else check for some node.el.getAttribute or some custom field...)
-      if (prevNode) return;
-
-      // clear the content then make it a subgrid
-      n.el.querySelector('.grid-stack-item-content').innerHTML = '';
-      let nodeToAdd = { children: [{content: 'nest 1'}, {content: 'nest 2'}]};
-      let subgrid = n.grid.makeSubGrid(n.el, nodeToAdd, undefined, false);
-      
-      // add a listener to the subgrid to allow widgets to be added into this newly created nested widget
-      subgrid.on('dropped', droppedHandler);
-    }
-    // add listener to the main grid and subgrids
-    grid.on('dropped', droppedHandler);
-    document.querySelectorAll('.grid-stack-nested').forEach((subGrid) => {
-      subGrid.gridstack.on('dropped', droppedHandler);
-    });
-
     //--- end of Drag and Drop Nested widget logic
 
     function save(content = true, full = true) {
@@ -142,7 +122,6 @@
     function load(full = true) {
       if (full) {
         grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
-        grid.on('dropped', droppedHandler);
       } else {
         grid.load(options);
       }

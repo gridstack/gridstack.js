@@ -23,6 +23,11 @@
   <div class="grid-stack"></div>
 
   <script type="text/javascript">
+    // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+    GridStack.renderCB = function(el, w) {
+      el.innerHTML = w.content;
+    };
+
     let grid = GridStack.init({
       cellHeight: 70,
     });

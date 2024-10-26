@@ -24,6 +24,11 @@
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
+    // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+    GridStack.renderCB = function(el, w) {
+      el.innerHTML = w.content;
+    };
+
     let serializedData = [
       {x: 0, y: 0, w: 2, h: 2},
       {x: 2, y: 1, w: 2, h: 3, 

@@ -22,19 +22,27 @@
     <br>New v10.2: use 'Esc' to cancel any move/resize. Use 'r' to rotate as you drag.</p>
 
     <div class="row">
-      <div class="col-md-3">
+      <div class="col-md-8">
+        <!-- NOTE: add .grid-stack-item for acceptWidgets:true, but not needed for function which handles .sidebar-item (anything) -->
         <div class="sidebar">
-          <!-- will size to match content -->
-          <div class="grid-stack-item">
-            <div class="grid-stack-item-content">Drag me</div>
+          <!-- will size to match content. Also see sidebarContent -->
+          <div class="sidebar-item">Drag me</div>
+          <!-- constrained in code using GridStackWidget[] sidebarContent -->
+          <div class="sidebar-item">2x1, max=3</div>
+          <!-- DOM JSON spelling GridStackWidget. NOTE: require content:'xyz' to work and RenderCB() to render -->
+          <div class="sidebar-item" gridstacknode='{"w":3, "content":"w:3"}'>w:3</div>
+          <!-- DOM id handled by myClone() case -->
+          <div class="sidebar-item" gs-id="manual">gs-id case</div>
+          <!-- DOM require proper GS format to be dropped as is without GridStackWidget above -->
+          <div class="grid-stack-item" gs-w="3">
+            <div class="grid-stack-item-content">DOM gs-w:3</div>
           </div>
-          <!-- manually force a drop size of 2x1 -->
-          <div class="grid-stack-item" gs-w="2" gs-h="1" gs-max-w="3">
-            <div class="grid-stack-item-content">2x1, max=3</div>
+          <div class="grid-stack-item" gridstacknode='{"w":2}'>
+            <div class="grid-stack-item-content">DOM w:2</div>
           </div>
         </div>
       </div>
-      <div class="col-md-9">
+      <div class="col-md-4">
         <div class="trash" id="trash">
         </div>
       </div>
@@ -55,22 +63,6 @@
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
-    let options = {
-      column: 6,
-      minRow: 1, // don't collapse when empty
-      cellHeight: 70,
-      float: true,
-      removable: '.trash', // true or drag-out delete class
-      // itemClass: 'with-lines', // test a custom additional class #2110
-      acceptWidgets: function(el) { return true } // function example, but can also be: true | false | '.someClass' value
-    };
-    let grids = GridStack.initAll(options);
-    grids[1].float(false);
-
-    // new 4.x static method instead of setting up options on every grid (never been per grid really)
-    GridStack.setupDragIn('.sidebar .grid-stack-item', { appendTo: 'body', helper: myClone });
-    // GridStack.setupDragIn(); // second call will now work (cache last values)
-
     let items = [
       {x: 0, y: 0, w: 2, h: 2},
       {x: 1, y: 1, h: 2}, // intentional overlap to test collision on load
@@ -81,15 +73,45 @@
     ];
     items.forEach((item, i) => item.content = item.content || String(i));
 
+    // sidebar content (just 2, rest is other behavior) to create when we get dropped, instead of inserting the clone version
+    let sidebarContent = [
+      {content: 'dropped', id: 'dup_id'}, // test to make sure unique ids are created when dropped mutliple times...
+      {content: 'max=3', w:2, h:1, maxW: 3},
+    ];
+
+    let options = {
+      column: 6,
+      minRow: 1, // don't collapse when empty
+      cellHeight: 70,
+      float: true,
+      removable: '.trash', // true or drag-out delete class
+      /** accepts everything fcn, not just .grid-stack-item (true case) but can also be: true | false | '.someClass' value */
+      acceptWidgets: function(el) { return true },
+      children: items,
+      // itemClass: 'with-lines', // test a custom additional class #2110
+    };
+    let grids = GridStack.initAll(options);
+    grids[1].float(false);
+
+    // new v4 static method instead of setting up options on every grid (never been per grid really)
+    // new v11 method takes GridStackWidget[] to specify what to create on drop
+    // NOTE: helper:'clone' is default and typically used but have custom logic here to showcase
+    // NOTE2: handle not set to drag entire self.
+    GridStack.setupDragIn('.sidebar-item, .sidebar>.grid-stack-item', { helper: myClone }, sidebarContent);
+    // GridStack.setupDragIn(); // second call will now work (cache last values)
+
     grids.forEach(function (grid, i) {
       addEvents(grid, i);
-      grid.load(items);
     });
 
-    // decide what the dropped item will be - for now just a clone but can be anything
-    function myClone(event) {
-      const el = event.target.cloneNode(true);
-      el.setAttribute('gs-id', 'foo'); // TEST why clone element is not used directly on drop #2231
+    // clone the sidepanel item so we drag a copy, and in some case ('manual') create the final widget, else sidebarContent will be used.
+    function myClone(el) {
+      if (el.getAttribute('gs-id') === 'manual') {
+        return GridStack.Utils.createWidgetDivs(undefined, {w:2, content:'manual'}); // RenderCB() will be called
+      }
+      el = el.cloneNode(true);
+      // el.setAttribute('gs-id', 'foo'); // help debug #2231
+      // el.innerHTML = 'cloned'; // help debug
       return el;
     }
 
