@@ -4,6 +4,7 @@ dist_save
 *.tgz
 *.zip
 angular/
+react/
 
 !node_modules/
 node_modules/*

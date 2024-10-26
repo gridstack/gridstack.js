@@ -1,6 +1,6 @@
 /**
  * default to generate [2-11] columns as 1 (oneColumnMode) and 12 (default) are in the main css
- * Copyright (c) 2021 Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 .gs-2 > .grid-stack-item {
   width: 50%;

@@ -36,7 +36,7 @@
               }
 
               let item = items.find(function (i) { return i.nodeType == 1 });
-              grid.addWidget(item);
+              grid.makeWidget(item);
               ko.utils.domNodeDisposal.addDisposeCallback(item, function () {
                 grid.removeWidget(item);
               });
