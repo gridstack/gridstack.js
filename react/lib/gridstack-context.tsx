@@ -1,61 +1,86 @@
-// gridstack-context.tsx
-"use client";
-
-import * as React from "react";
-import type { GridStack } from "gridstack";
-import "gridstack/dist/gridstack-extra.css";
-import "gridstack/dist/gridstack.css";
-import type { ItemRefType } from "./gridstack-item";
+import { GridStack, GridStackWidget,GridStackOptions } from 'gridstack';
+import React, {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import isEqual from 'react-fast-compare';
 
 type GridStackContextType = {
-  grid: GridStack | null | undefined;
-  setGrid: React.Dispatch<React.SetStateAction<GridStack | null>>;
-  addItemRefToList: (id: string, ref: ItemRefType) => void;
-  removeItemRefFromList: (id: string) => void;
-  itemRefList: ItemRefListType;
-  getItemRefFromListById: (id: string) => ItemRefType | null;
+  getWidgetContent: (widgetId: string) => HTMLElement | null;
 };
 
-type ItemRefListType = {
-  id: string;
-  ref: ItemRefType;
-}[];
+interface GridstackProviderProps extends PropsWithChildren {
+  options: GridStackOptions;
+}
 
-export const GridstackContext = React.createContext<GridStackContextType | null>(null);
+export const GridstackContext = createContext<GridStackContextType | null>(null);
 
-export const GridstackProvider = ({ children }: { children: React.ReactNode }) => {
-  const [grid, setGrid] = React.useState<GridStack | null>(null);
-  const [itemRefList, setItemRefList] = React.useState<ItemRefListType>([]);
+export const GridstackProvider = ({ children, options }: GridstackProviderProps) => {
+  const widgetContentRef = useRef<Record<string, HTMLElement>>({});
+  const containerRef = useRef<HTMLDivElement>(null);
+  const optionsRef = useRef<GridStackOptions>(options);
 
-  const addItemRefToList = React.useCallback((id: string, ref: ItemRefType) => {
-    setItemRefList((prev) => [...prev, { id, ref }]);
+  const [parentGrid, setParentGrid] = useState<GridStack | null>(null);
+
+  const renderCBFn = useCallback((element: HTMLElement, widget: GridStackWidget) => {
+    if (widget.id) {
+      widgetContentRef.current[widget.id] = element;
+    }
   }, []);
 
-  const removeItemRefFromList = React.useCallback((id: string) => {
-    setItemRefList((prev) => prev.filter((item) => item.id !== id));
+  const getWidgetContent = useCallback((widgetId: string) => {
+    return widgetContentRef.current[widgetId] || null;
   }, []);
 
-  const getItemRefFromListById = React.useCallback((id: string) => {
-    const item = itemRefList.find((item) => item.id === id);
-    return item?.ref ?? null;
-  }, [itemRefList]);
+  const initGrid = useCallback(() => {
+    if (containerRef.current) {
+      GridStack.renderCB = renderCBFn;
+      return GridStack.init(optionsRef.current, containerRef.current);
+    }
+    return null;
+  }, [renderCBFn]);
 
-  // Memoize the context value to prevent unnecessary re-renders
-  const value = React.useMemo(
+  useLayoutEffect(() => {
+    if (!isEqual(options, optionsRef.current) && parentGrid) {
+      try {
+        parentGrid.removeAll(false);
+        parentGrid.destroy(false);
+        widgetContentRef.current = {};
+        optionsRef.current = options;
+
+        setParentGrid(initGrid());
+      } catch (e) {
+        console.error("Error reinitializing gridstack", e);
+      }
+    }
+  }, [options, parentGrid, initGrid]);
+
+  useLayoutEffect(() => {
+    if (!parentGrid) {
+      try {
+        setParentGrid(initGrid());
+      } catch (e) {
+        console.error("Error initializing gridstack", e);
+      }
+    }
+  }, [parentGrid, initGrid]);
+
+  const value = useMemo(
     () => ({
-      grid,
-      setGrid,
-      addItemRefToList,
-      removeItemRefFromList,
-      itemRefList,
-      getItemRefFromListById,
+      getWidgetContent,
     }),
-    [grid, itemRefList, addItemRefToList, removeItemRefFromList, getItemRefFromListById]
+    // parentGrid is required to reinitialize the grid when the options change
+    [getWidgetContent, parentGrid],
   );
 
   return (
     <GridstackContext.Provider value={value}>
-      {children}
+      <div ref={containerRef}>{parentGrid ? children : null}</div>
     </GridstackContext.Provider>
   );
 };
