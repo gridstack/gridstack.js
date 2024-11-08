@@ -1,11 +1,11 @@
-import './App.css'
-import {GridstackDemo} from './demo/demo'
+import { GridStackDemo } from './demo/demo'
+
 function App() {
 
   return (
     <>
-      <h1>Gridstack React wrapper demo</h1>
-      <GridstackDemo />
+      <h1>Gridstack React Wrapper Demo</h1>
+      <GridStackDemo />
     </>
   )
 }
