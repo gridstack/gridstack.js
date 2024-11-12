@@ -515,19 +515,20 @@ Parameters:
 
 ```js
 let grid = GridStack.init();
-grid.el.appendChild('<div id="gsi-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true"></div>')
-grid.makeWidget('#gsi-1');
+// ...create some html content, possibly looking like: 
+// <div id="item-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2"></div>'
+grid.makeWidget('#item-1');
 ```
 ### `makeSubGrid(el)`
 Used to add a subgrid into an existing grid.
 ```js
 const grid = Gridstack.init()
-grid.el.appendChild(`
-<div id="gsi-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true">
-  <div class="grid-stack" id="nested-grid">
-    <div id="gsi-2" gs-x="0" gs-y="0" gs-w="3" gs-h="2" gs-auto-position="true"></div>
-  </div>
-</div>`)
+// ...create some html content, possibly looking like: 
+// <div id="gsi-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2">
+//  <div class="grid-stack" id="nested-grid">
+//    <div id="gsi-2" gs-w="3" gs-h="2"></div>
+//  </div>
+//</div>
 grid.makeSubGrid(grid.el.getElementById('nested-grid'))
 ```
 Make sure that the subgrid is inside of a grid item. It is important to remember that subgrids are themselves grid items capable of containing other grid items.

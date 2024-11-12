@@ -1062,8 +1062,7 @@ export class GridStack {
    *
    * @example
    * const grid = GridStack.init();
-   * grid.el.appendChild('<div id="1" gs-w="3"></div>');
-   * grid.el.appendChild('<div id="2"></div>');
+   * grid.el.innerHtml = '<div id="1" gs-w="3"></div><div id="2"></div>';
    * grid.makeWidget('1');
    * grid.makeWidget('2', {w:2, content: 'hello'});
    */
