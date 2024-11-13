@@ -15,9 +15,6 @@
     "strict": false,
     "target": "ES2020"
   }, 
-  "exclude": [
-    "./src/**/*.spec.ts",
-  ],
   "include": [
     "./src/**/*.ts"
   ],

@@ -146,21 +146,21 @@ describe('gridstack engine', function() {
     beforeAll(function() {
       engine = new GridStackEngine({float:true});
       engine.nodes = [
-        engine.prepareNode({x: 0, y: 0, id: 1, _dirty: true}),
-        engine.prepareNode({x: 3, y: 2, w: 3, h: 2, id: 2, _dirty: true}),
-        engine.prepareNode({x: 3, y: 7, w: 3, h: 2, id: 3})
+        engine.prepareNode({x: 0, y: 0, id: "1", _dirty: true}),
+        engine.prepareNode({x: 3, y: 2, w: 3, h: 2, id: "2", _dirty: true}),
+        engine.prepareNode({x: 3, y: 7, w: 3, h: 2, id: "3"})
       ];
     });
 
     beforeEach(function() {
-      delete engine.batchMode;
+      delete (engine as any).batchMode;
     });
 
     it('should return all dirty nodes', function() {
       let nodes = engine.getDirtyNodes();
       expect(nodes.length).toEqual(2);
-      expect(nodes[0].id).toEqual(1);
-      expect(nodes[1].id).toEqual(2);
+      expect(nodes[0].id).toEqual("1");
+      expect(nodes[1].id).toEqual("2");
     });
 
     it('should\'n clean nodes if batchMode true', function() {
@@ -230,9 +230,9 @@ describe('gridstack engine', function() {
       spyOn(spy, 'callback');
       engine = new GridStackEngine({float:true, onChange: spy.callback});
       engine.nodes = [
-        engine.prepareNode({x: 0, y: 0, id: 1, _dirty: true}),
-        engine.prepareNode({x: 3, y: 2, w: 3, h: 2, id: 2, _dirty: true}),
-        engine.prepareNode({x: 3, y: 7, w: 3, h: 2, id: 3})
+        engine.prepareNode({x: 0, y: 0, id: "1", _dirty: true}),
+        engine.prepareNode({x: 3, y: 2, w: 3, h: 2, id: "2", _dirty: true}),
+        engine.prepareNode({x: 3, y: 7, w: 3, h: 2, id: "3"})
       ];
     });
 
@@ -262,7 +262,7 @@ describe('gridstack engine', function() {
 
       it('shouldn\'t pack one node with y coord eq 0', function() {
         engine.nodes = [
-          {x: 0, y: 0, w:1, h:1, id: 1},
+          {x: 0, y: 0, w:1, h:1, id: "1"},
         ];
         (engine as any)._packNodes();
         expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, h: 1}));
@@ -271,7 +271,7 @@ describe('gridstack engine', function() {
 
       it('should pack one node correctly', function() {
         engine.nodes = [
-          {x: 0, y: 1, w:1, h:1, id: 1},
+          {x: 0, y: 1, w:1, h:1, id: "1"},
         ];
         (engine as any)._packNodes();
         expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
@@ -279,8 +279,8 @@ describe('gridstack engine', function() {
 
       it('should pack nodes correctly', function() {
         engine.nodes = [
-          {x: 0, y: 1, w:1, h:1, id: 1},
-          {x: 0, y: 5, w:1, h:1, id: 2},
+          {x: 0, y: 1, w:1, h:1, id: "1"},
+          {x: 0, y: 5, w:1, h:1, id: "2"},
         ];
         (engine as any)._packNodes();
         expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
@@ -289,8 +289,8 @@ describe('gridstack engine', function() {
   
       it('should pack nodes correctly', function() {
         engine.nodes = [
-          {x: 0, y: 5, w:1, h:1, id: 1},
-          {x: 0, y: 1, w:1, h:1, id: 2},
+          {x: 0, y: 5, w:1, h:1, id: "1"},
+          {x: 0, y: 1, w:1, h:1, id: "2"},
         ];
         (engine as any)._packNodes();
         expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
@@ -299,8 +299,8 @@ describe('gridstack engine', function() {
   
       it('should respect locked nodes', function() {
         engine.nodes = [
-          {x: 0, y: 1, w:1, h:1, id: 1, locked: true},
-          {x: 0, y: 5, w:1, h:1, id: 2},
+          {x: 0, y: 1, w:1, h:1, id: "1", locked: true},
+          {x: 0, y: 5, w:1, h:1, id: "2"},
         ];
         (engine as any)._packNodes();
         expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 1, h: 1}));
@@ -342,8 +342,8 @@ describe('gridstack engine', function() {
     });
     it('should add widgets around locked one', function() {
       let nodes: GridStackNode[] = [
-        {x: 0, y: 1, w: 12, h: 1, locked: true, noMove: true, noResize: true, id: 0},
-        {x: 1, y: 0, w: 2, h: 3, id: 1}
+        {x: 0, y: 1, w: 12, h: 1, locked: true, noMove: true, noResize: true, id: "0"},
+        {x: 1, y: 0, w: 2, h: 3, id: "1"}
       ];
       // add locked item
       engine.addNode(nodes[0])
