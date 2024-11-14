@@ -1626,16 +1626,16 @@ export class GridStack {
    * In addition, updates the inline top/height inline style as well
    * @internal
    */
-  protected _writePosAttr(el: HTMLElement, n: GridStackNode): GridStack {
-    if (n.x !== undefined && n.x !== null) { el.setAttribute('gs-x', String(n.x)); }
-    if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
-    n.w > 1 ? el.setAttribute('gs-w', String(n.w)) : el.removeAttribute('gs-w');
-    n.h > 1 ? el.setAttribute('gs-h', String(n.h)) : el.removeAttribute('gs-h');
+  protected _writePosAttr(el: HTMLElement, node: GridStackNode): GridStack {
+    if (node.x !== undefined && node.x !== null) { el.setAttribute('gs-x', String(node.x)); }
+    if (node.y !== undefined && node.y !== null) { el.setAttribute('gs-y', String(node.y)); }
+    node.w > 1 ? el.setAttribute('gs-w', String(node.w)) : el.removeAttribute('gs-w');
+    node.h > 1 ? el.setAttribute('gs-h', String(node.h)) : el.removeAttribute('gs-h');
     // Set inline style
-    if (!n._moving) {
+    if (!node._moving) {
       // Refer CSS variables
-      el.style.top = `calc(${n.y} * var(--gs-cell-height))`;
-      el.style.height = `calc(${n.h} * var(--gs-cell-height))`;
+      el.style.top = `calc(${node.y} * var(--gs-cell-height))`;
+      el.style.height = `calc(${node.h} * var(--gs-cell-height))`;
     }
     return this;
   }
@@ -2447,7 +2447,7 @@ export class GridStack {
     node.el = this.placeholder;
     node._lastUiPosition = ui.position;
     node._prevYPix = ui.position.top;
-    node._moving = (event.type === 'dragstart'); // 'dropover' are not initially moving so they can go exactly where they enter (will push stuff out of the way)
+    node._moving = (event.type === 'dragstart' || event.type === 'resizestart'); // 'dropover' are not initially moving so they can go exactly where they enter (will push stuff out of the way)
     delete node._lastTried;
 
     if (event.type === 'dropover' && node._temporaryRemoved) {
