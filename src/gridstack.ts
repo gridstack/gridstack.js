@@ -1631,9 +1631,9 @@ export class GridStack {
     if (node.y !== undefined && node.y !== null) { el.setAttribute('gs-y', String(node.y)); }
     node.w > 1 ? el.setAttribute('gs-w', String(node.w)) : el.removeAttribute('gs-w');
     node.h > 1 ? el.setAttribute('gs-h', String(node.h)) : el.removeAttribute('gs-h');
-    // Set inline style
-    if (!node._moving) {
-      // Refer CSS variables
+    // Avoid overwriting the inline style of the draggable element, but update the placeholder
+    if (!node._moving || this._placeholder === el) {
+      // Set inline style, refer CSS variables
       el.style.top = `calc(${node.y} * var(--gs-cell-height))`;
       el.style.height = `calc(${node.h} * var(--gs-cell-height))`;
     }
