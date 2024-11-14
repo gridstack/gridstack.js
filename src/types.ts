@@ -35,7 +35,6 @@ export const gridDefaults: GridStackOptions = {
   // handleClass: null,
   // removable: false,
   // staticGrid: false,
-  // styleInHead: false,
   //removable
 };
 
@@ -263,7 +262,9 @@ export interface GridStackOptions {
    */
   staticGrid?: boolean;
 
-  /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
+  /**
+   * @deprecated Not used anymore, styles are now implemented with local CSS variables
+   */
   styleInHead?: boolean;
 
   /** list of differences in options for automatically created sub-grids under us (inside our grid-items) */

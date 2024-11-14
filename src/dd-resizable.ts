@@ -201,12 +201,13 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected _resizeStop(event: MouseEvent): DDResizable {
     const ev = Utils.initEvent<MouseEvent>(event, { type: 'resizestop', target: this.el });
+    // Remove style attr now, so the stop handler can rebuild style attrs
+    this._cleanHelper();
     if (this.option.stop) {
       this.option.stop(ev); // Note: ui() not used by gridstack so don't pass
     }
     this.el.classList.remove('ui-resizable-resizing');
     this.triggerEvent('resizestop', ev);
-    this._cleanHelper();
     delete this.startEvent;
     delete this.originalRect;
     delete this.temporalRect;

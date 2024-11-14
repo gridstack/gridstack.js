@@ -1370,41 +1370,24 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should add STYLE to parent node as a default', function() {
-      var options = {
+    it('should not add STYLE to parent node', function() {
+      const options = {
         cellHeight: 80,
         verticalMargin: 10,
         float: false,
       };
-      var grid = GridStack.init(options);
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV'); // any to access private _styles
+      GridStack.init(options);
+      expect(document.querySelector("style")).toBe(null);
     });
-    it('should add STYLE to HEAD if styleInHead === true', function() {
-      var options = {
+    it('should not add STYLE to HEAD if styleInHead === true', function() {
+      const options = {
         cellHeight: 80,
         verticalMargin: 10,
         float: false,
         styleInHead: true
       };
-      var grid = GridStack.init(options);
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD'); // any to access private _styles
-    });
-  });
-
-  describe('grid.opts.styleInHead', function() {
-    beforeEach(function() {
-      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
-    });
-    afterEach(function() {
-      document.body.removeChild(document.getElementById('gs-cont'));
-    });
-    it('should add STYLE to parent node as a default', function() {
-      var grid = GridStack.init();
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV');
-    });
-    it('should add STYLE to HEAD if styleInHead === true', function() {
-      var grid = GridStack.init({styleInHead: true});
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD');
+      GridStack.init(options);
+      expect(document.querySelector("style")).toBe(null);
     });
   });
 
