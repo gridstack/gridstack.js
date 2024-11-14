@@ -51,10 +51,6 @@ export interface CellPosition {
   y: number;
 }
 
-interface GridHTMLStyleElement extends HTMLStyleElement {
-  _max?: number; // internal tracker of the max # of rows we created
-}
-
 // extend with internal fields we need - TODO: move other items in here
 interface InternalGridStackOptions extends GridStackOptions {
   _alwaysShowResizeHandle?: true | false | 'mobile'; // so we can restore for save
@@ -247,8 +243,6 @@ export class GridStack {
   protected _ignoreLayoutsNodeChange: boolean;
   /** @internal */
   public _gsEventHandler = {};
-  /** @internal */
-  protected _styles: GridHTMLStyleElement;
   /** @internal flag to keep cells square during resize */
   protected _isAutoCellHeight: boolean;
   /** @internal limit auto cell resizing method */
@@ -396,8 +390,6 @@ export class GridStack {
       float: opts.float,
       maxRow: opts.maxRow,
       onChange: (cbNodes) => {
-        let maxH = 0;
-        this.engine.nodes.forEach(n => { maxH = Math.max(maxH, n.y + n.h) });
         cbNodes.forEach(n => {
           const el = n.el;
           if (!el) return;
@@ -408,12 +400,12 @@ export class GridStack {
             this._writePosAttr(el, n);
           }
         });
-        this._updateStyles(false, maxH); // false = don't recreate, just append if need be
+        this._updateStyles();
       }
     });
 
     // create initial global styles BEFORE loading children so resizeToContent margin can be calculated correctly
-    this._updateStyles(false, 0);
+    this._updateStyles();
 
     if (opts.auto) {
       this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
@@ -894,7 +886,7 @@ export class GridStack {
     this.resizeToContentCheck();
 
     if (update) {
-      this._updateStyles(true); // true = force re-create for current # of rows
+      this._updateStyles();
     }
     return this;
   }
@@ -1014,8 +1006,7 @@ export class GridStack {
     } else {
       this.el.parentNode.removeChild(this.el);
     }
-    this._removeStylesheet();
-    delete this.parentGridNode?.subGrid;
+    if (this.parentGridNode) delete this.parentGridNode.subGrid;
     delete this.parentGridNode;
     delete this.opts;
     delete this._placeholder?.gridstackNode;
@@ -1369,7 +1360,7 @@ export class GridStack {
           // restore any sub-grid back
           if (n.subGrid?.el) {
             itemContent.appendChild(n.subGrid.el);
-            if (!n.subGrid.opts.styleInHead) n.subGrid._updateStyles(true); // force create
+            n.subGrid._updateStyles();
           }
         }
         delete w.content;
@@ -1527,7 +1518,7 @@ export class GridStack {
     this.opts.marginTop = this.opts.marginBottom = this.opts.marginLeft = this.opts.marginRight = undefined;
     this._initMargin();
 
-    this._updateStyles(true); // true = force re-create
+    this._updateStyles();
 
     return this;
   }
@@ -1607,25 +1598,16 @@ export class GridStack {
     return this;
   }
 
-  /** @internal called to delete the current dynamic style sheet used for our layout */
-  protected _removeStylesheet(): GridStack {
-
-    if (this._styles) {
-      const styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
-      Utils.removeStylesheet(this._styleSheetClass, styleLocation);
-      delete this._styles;
-    }
-    return this;
+  private setVar(el: HTMLElement, varName: string, varValue: string) {
+    el.style.setProperty(varName, varValue);
   }
 
-  /** @internal updated/create the CSS styles for row based layout and initial margin setting */
-  protected _updateStyles(forceUpdate = false, maxH?: number): GridStack {
-    // call to delete existing one if we change cellHeight / margin
-    if (forceUpdate) {
-      this._removeStylesheet();
-    }
-
-    if (maxH === undefined) maxH = this.getRow();
+  /**
+   * Updates the CSS variables (used in CSS and inline style) for row based layout and initial margin setting,
+   * Variables are scoped in DOM so they works for nested grids as well
+   * @internal
+   */
+  protected _updateStyles(): GridStack {
     this._updateContainerHeight();
 
     // if user is telling us they will handle the CSS themselves by setting heights to 0. Do we need this opts really ??
@@ -1633,52 +1615,14 @@ export class GridStack {
       return this;
     }
 
-    const cellHeight = this.opts.cellHeight as number;
-    const cellHeightUnit = this.opts.cellHeightUnit;
-    const prefix = `.${this._styleSheetClass} > .${this.opts.itemClass}`;
+    // Set CSS var of cell height
+    this.setVar(this.el, "--gs-cell-height", `${this.opts.cellHeight}${this.opts.cellHeightUnit}`);
+    // content margins
+    this.setVar(this.el, "--gs-item-margin-top", `${this.opts.marginTop}${this.opts.marginUnit}`);
+    this.setVar(this.el, "--gs-item-margin-bottom", `${this.opts.marginBottom}${this.opts.marginUnit}`);
+    this.setVar(this.el, "--gs-item-margin-right", `${this.opts.marginRight}${this.opts.marginUnit}`);
+    this.setVar(this.el, "--gs-item-margin-left", `${this.opts.marginLeft}${this.opts.marginUnit}`);
 
-    // create one as needed
-    if (!this._styles) {
-      // insert style to parent (instead of 'head' by default) to support WebComponent
-      const styleLocation = this.opts.styleInHead ? undefined : this.el.parentNode as HTMLElement;
-      this._styles = Utils.createStylesheet(this._styleSheetClass, styleLocation, {
-        nonce: this.opts.nonce,
-      });
-      if (!this._styles) return this;
-      this._styles._max = 0;
-
-      // these are done once only
-      Utils.addCSSRule(this._styles, prefix, `height: ${cellHeight}${cellHeightUnit}`);
-      // content margins
-      const top: string = this.opts.marginTop + this.opts.marginUnit;
-      const bottom: string = this.opts.marginBottom + this.opts.marginUnit;
-      const right: string = this.opts.marginRight + this.opts.marginUnit;
-      const left: string = this.opts.marginLeft + this.opts.marginUnit;
-      const content = `${prefix} > .grid-stack-item-content`;
-      const placeholder = `.${this._styleSheetClass} > .grid-stack-placeholder > .placeholder-content`;
-      Utils.addCSSRule(this._styles, content, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
-      Utils.addCSSRule(this._styles, placeholder, `top: ${top}; right: ${right}; bottom: ${bottom}; left: ${left};`);
-      // resize handles offset (to match margin)
-      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-n`, `top: ${top};`);
-      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-s`, `bottom: ${bottom}`);
-      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-ne`, `right: ${right}; top: ${top}`);
-      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-e`, `right: ${right}`);
-      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-se`, `right: ${right}; bottom: ${bottom}`);
-      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-nw`, `left: ${left}; top: ${top}`);
-      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-w`, `left: ${left}`);
-      Utils.addCSSRule(this._styles, `${prefix} > .ui-resizable-sw`, `left: ${left}; bottom: ${bottom}`);
-    }
-
-    // now update the height specific fields
-    maxH = maxH || this._styles._max;
-    if (maxH > this._styles._max) {
-      const getHeight = (rows: number): string => (cellHeight * rows) + cellHeightUnit;
-      for (let i = this._styles._max + 1; i <= maxH; i++) { // start at 1
-        Utils.addCSSRule(this._styles, `${prefix}[gs-y="${i}"]`, `top: ${getHeight(i)}`);
-        Utils.addCSSRule(this._styles, `${prefix}[gs-h="${i + 1}"]`, `height: ${getHeight(i + 1)}`); // start at 2
-      }
-      this._styles._max = maxH;
-    }
     return this;
   }
 
@@ -1738,17 +1682,28 @@ export class GridStack {
     return this;
   }
 
-  /** @internal call to write position x,y,w,h attributes back to element */
-  protected _writePosAttr(el: HTMLElement, n: GridStackPosition): GridStack {
+  /**
+   * Call to write position x,y,w,h attributes back to element
+   * In addition, updates the inline top/height inline style as well
+   * @internal
+   */
+  protected _writePosAttr(el: HTMLElement, n: GridStackNode): GridStack {
     if (n.x !== undefined && n.x !== null) { el.setAttribute('gs-x', String(n.x)); }
     if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
     n.w > 1 ? el.setAttribute('gs-w', String(n.w)) : el.removeAttribute('gs-w');
     n.h > 1 ? el.setAttribute('gs-h', String(n.h)) : el.removeAttribute('gs-h');
+    // Avoid overwriting the inline style of the element during drag/resize, but always update the placeholder
+    if ((!n._moving && !n._resizing) || this._placeholder === el) {
+      // Set inline style, refer CSS variables
+      el.style.top = `calc(${n.y} * var(--gs-cell-height))`;
+      // height is set to --gs-cell-height by default in the main CSS, so no need to set inline style when h = 1
+      el.style.height = n.h > 1 ? `calc(${n.h} * var(--gs-cell-height))` : undefined;
+    }
     return this;
   }
 
   /** @internal call to write any default attributes back to element */
-  protected _writeAttr(el: HTMLElement, node: GridStackWidget): GridStack {
+  protected _writeAttr(el: HTMLElement, node: GridStackNode): GridStack {
     if (!node) return this;
     this._writePosAttr(el, node);
 
@@ -2400,7 +2355,7 @@ export class GridStack {
           this.resizeToContentCheck(false, node);
           if (subGrid) {
             subGrid.parentGridNode = node;
-            if (!subGrid.opts.styleInHead) subGrid._updateStyles(true); // re-create sub-grid styles now that we've moved
+            subGrid._updateStyles(); // re-create sub-grid styles now that we've moved
           }
           this._updateContainerHeight();
         }
@@ -2498,6 +2453,7 @@ export class GridStack {
         this.placeholder.remove();
         delete this.placeholder.gridstackNode;
         delete node._moving;
+        delete node._resizing;
         delete node._event;
         delete node._lastTried;
         const widthChanged = node.w !== node._orig.w;
@@ -2597,6 +2553,7 @@ export class GridStack {
     node._lastUiPosition = ui.position;
     node._prevYPix = ui.position.top;
     node._moving = (event.type === 'dragstart'); // 'dropover' are not initially moving so they can go exactly where they enter (will push stuff out of the way)
+    node._resizing = (event.type === 'resizestart');
     delete node._lastTried;
 
     if (event.type === 'dropover' && node._temporaryRemoved) {
