@@ -1556,12 +1556,12 @@ export class GridStack {
     }
 
     // Set CSS var of cell height
-    this.setVar(this.el.parentElement, "--gs-cell-height", `${this.opts.cellHeight}${this.opts.cellHeightUnit}`);
+    this.setVar(this.el, "--gs-cell-height", `${this.opts.cellHeight}${this.opts.cellHeightUnit}`);
     // content margins
-    this.setVar(this.el.parentElement, "--gs-item-margin-top", `${this.opts.marginTop}${this.opts.marginUnit}`);
-    this.setVar(this.el.parentElement, "--gs-item-margin-bottom", `${this.opts.marginBottom}${this.opts.marginUnit}`);
-    this.setVar(this.el.parentElement, "--gs-item-margin-right", `${this.opts.marginRight}${this.opts.marginUnit}`);
-    this.setVar(this.el.parentElement, "--gs-item-margin-left", `${this.opts.marginLeft}${this.opts.marginUnit}`);
+    this.setVar(this.el, "--gs-item-margin-top", `${this.opts.marginTop}${this.opts.marginUnit}`);
+    this.setVar(this.el, "--gs-item-margin-bottom", `${this.opts.marginBottom}${this.opts.marginUnit}`);
+    this.setVar(this.el, "--gs-item-margin-right", `${this.opts.marginRight}${this.opts.marginUnit}`);
+    this.setVar(this.el, "--gs-item-margin-left", `${this.opts.marginLeft}${this.opts.marginUnit}`);
 
     return this;
   }
