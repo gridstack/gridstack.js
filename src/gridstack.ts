@@ -1626,16 +1626,16 @@ export class GridStack {
    * In addition, updates the inline top/height inline style as well
    * @internal
    */
-  protected _writePosAttr(el: HTMLElement, node: GridStackNode): GridStack {
-    if (node.x !== undefined && node.x !== null) { el.setAttribute('gs-x', String(node.x)); }
-    if (node.y !== undefined && node.y !== null) { el.setAttribute('gs-y', String(node.y)); }
-    node.w > 1 ? el.setAttribute('gs-w', String(node.w)) : el.removeAttribute('gs-w');
-    node.h > 1 ? el.setAttribute('gs-h', String(node.h)) : el.removeAttribute('gs-h');
+  protected _writePosAttr(el: HTMLElement, n: GridStackNode): GridStack {
+    if (n.x !== undefined && n.x !== null) { el.setAttribute('gs-x', String(n.x)); }
+    if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
+    n.w > 1 ? el.setAttribute('gs-w', String(n.w)) : el.removeAttribute('gs-w');
+    n.h > 1 ? el.setAttribute('gs-h', String(n.h)) : el.removeAttribute('gs-h');
     // Avoid overwriting the inline style of the draggable element, but update the placeholder
-    if (!node._moving || this._placeholder === el) {
+    if (!n._moving || this._placeholder === el) {
       // Set inline style, refer CSS variables
-      el.style.top = `calc(${node.y} * var(--gs-cell-height))`;
-      el.style.height = `calc(${node.h} * var(--gs-cell-height))`;
+      el.style.top = `calc(${n.y} * var(--gs-cell-height))`;
+      el.style.height = `calc(${n.h} * var(--gs-cell-height))`;
     }
     return this;
   }
