@@ -48,23 +48,6 @@ describe('gridstack utils', function() {
     });
   });
 
-  describe('test createStylesheet/removeStylesheet', function() {
-
-    it('should create/remove style DOM', function() {
-      let _id = 'test-123';
-      Utils.createStylesheet(_id);
-
-      let style = document.querySelector('STYLE[gs-style-id=' + _id + ']');
-      expect(style).not.toBe(null);
-      // expect(style.prop('tagName')).toEqual('STYLE');
-
-      Utils.removeStylesheet(_id)
-      style = document.querySelector('STYLE[gs-style-id=' + _id + ']');
-      expect(style).toBe(null);
-    });
-
-  });
-
   describe('test parseHeight', function() {
 
     it('should parse height value', function() {
