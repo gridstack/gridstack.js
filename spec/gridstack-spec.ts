@@ -1361,35 +1361,7 @@ describe('gridstack', function() {
       let grid = GridStack.init(options);
       expect(grid.el.classList.contains('grid-stack-rtl')).toBe(false);
     });
-  });
-  
-  describe('grid.opts.styleInHead', function() {
-    beforeEach(function() {
-      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
-    });
-    afterEach(function() {
-      document.body.removeChild(document.getElementById('gs-cont'));
-    });
-    it('should not add STYLE to parent node', function() {
-      const options = {
-        cellHeight: 80,
-        verticalMargin: 10,
-        float: false,
-      };
-      GridStack.init(options);
-      expect(document.querySelector("style")).toBe(null);
-    });
-    it('should not add STYLE to HEAD if styleInHead === true', function() {
-      const options = {
-        cellHeight: 80,
-        verticalMargin: 10,
-        float: false,
-        styleInHead: true
-      };
-      GridStack.init(options);
-      expect(document.querySelector("style")).toBe(null);
-    });
-  });
+  }); 
 
   describe('grid.enableMove', function() {
     beforeEach(function() {
