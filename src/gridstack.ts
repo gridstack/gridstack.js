@@ -1631,8 +1631,8 @@ export class GridStack {
     if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
     n.w > 1 ? el.setAttribute('gs-w', String(n.w)) : el.removeAttribute('gs-w');
     n.h > 1 ? el.setAttribute('gs-h', String(n.h)) : el.removeAttribute('gs-h');
-    // Avoid overwriting the inline style of the draggable element, but update the placeholder
-    if (!n._moving || this._placeholder === el) {
+    // Avoid overwriting the inline style of the element during drag/resize, but always update the placeholder
+    if ((!n._moving && !n._resizing) || this._placeholder === el) {
       // Set inline style, refer CSS variables
       el.style.top = `calc(${n.y} * var(--gs-cell-height))`;
       el.style.height = `calc(${n.h} * var(--gs-cell-height))`;
@@ -2349,6 +2349,7 @@ export class GridStack {
       const onEndMoving = (event: Event) => {
         this.placeholder.remove();
         delete node._moving;
+        delete node._resizing;
         delete node._event;
         delete node._lastTried;
         const widthChanged = node.w !== node._orig.w;
@@ -2447,7 +2448,8 @@ export class GridStack {
     node.el = this.placeholder;
     node._lastUiPosition = ui.position;
     node._prevYPix = ui.position.top;
-    node._moving = (event.type === 'dragstart' || event.type === 'resizestart'); // 'dropover' are not initially moving so they can go exactly where they enter (will push stuff out of the way)
+    node._moving = (event.type === 'dragstart'); // 'dropover' are not initially moving so they can go exactly where they enter (will push stuff out of the way)
+    node._resizing = (event.type === 'resizestart');
     delete node._lastTried;
 
     if (event.type === 'dropover' && node._temporaryRemoved) {
