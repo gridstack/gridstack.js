@@ -41,6 +41,7 @@ $animation_speed: .3s !default;
 .grid-stack > .grid-stack-item {
   position: absolute;
   padding: 0;
+  height: var(--gs-cell-height);
 
   > .grid-stack-item-content {
     margin: 0;
@@ -52,8 +53,6 @@ $animation_speed: .3s !default;
   &.size-to-content:not(.size-to-content-max) > .grid-stack-item-content {
     overflow-y: hidden;
   }
-
-  height: var(--gs-cell-height);
 }
 
 .grid-stack-item {
@@ -103,13 +102,19 @@ $animation_speed: .3s !default;
   > .ui-resizable-n {
     top: var(--gs-item-margin-top);
   }
-  > .ui-resizable-s, > .ui-resizable-se, > .ui-resizable-sw {
+  > .ui-resizable-s
+  , > .ui-resizable-se
+  , > .ui-resizable-sw {
     bottom: var(--gs-item-margin-bottom);
   }
-  > .ui-resizable-ne, > .ui-resizable-e, > .ui-resizable-se {
+  > .ui-resizable-ne,
+  > .ui-resizable-e,
+  > .ui-resizable-se {
     right: var(--gs-item-margin-right);
   }
-  > .ui-resizable-nw, > .ui-resizable-w, > .ui-resizable-sw {
+  > .ui-resizable-nw,
+  > .ui-resizable-w,
+  > .ui-resizable-sw {
     left: var(--gs-item-margin-left);
   }
   
@@ -172,7 +177,8 @@ $animation_speed: .3s !default;
 }
 
 .grid-stack {
-  > .grid-stack-item > .grid-stack-item-content, > .grid-stack-placeholder > .placeholder-content {
+  > .grid-stack-item > .grid-stack-item-content, 
+  > .grid-stack-placeholder > .placeholder-content {
     top: var(--gs-item-margin-top);
     right: var(--gs-item-margin-right);
     bottom: var(--gs-item-margin-bottom);
