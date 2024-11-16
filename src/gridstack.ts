@@ -1178,7 +1178,7 @@ export class GridStack {
    */
   public removeWidget(els: GridStackElement, removeDOM = true, triggerEvent = true): GridStack {
     if (!els) { console.error('Error: GridStack.removeWidget(undefined) called'); return this; }
-    
+
     GridStack.getElements(els).forEach(el => {
       if (el.parentElement && el.parentElement !== this.el) return; // not our child!
       let node = el.gridstackNode;

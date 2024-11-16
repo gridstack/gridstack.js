@@ -118,9 +118,9 @@ export class DDResizableHandle {
       this._mouseUp(this.mouseDownEvent);
     }
   }
-    
-  
-  
+
+
+
   /** @internal */
   protected _triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
     if (this.option[name]) this.option[name](event);
