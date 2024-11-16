@@ -1635,12 +1635,8 @@ export class GridStack {
     if ((!n._moving && !n._resizing) || this._placeholder === el) {
       // Set inline style, refer CSS variables
       el.style.top = `calc(${n.y} * var(--gs-cell-height))`;
-      if (n.h !== 1) {
-        el.style.height = `calc(${n.h} * var(--gs-cell-height))`;
-      } else {
-        // height is set to --gs-cell-height by default
-        delete el.style.height;
-      }
+      // height is set to --gs-cell-height by default in the main CSS, so no need to set inline style when h = 1
+      el.style.height = n.h > 1 ? `calc(${n.h} * var(--gs-cell-height))` : undefined;
     }
     return this;
   }
