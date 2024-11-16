@@ -8,8 +8,8 @@ describe('gridstack engine', function() {
   let e: any = GridStackEngine;
   let w: any = window;
 
-  let findNode = function(engine, id) {
-    return engine.nodes.find((i) => i.id === id);
+  let findNode = function(engine: GridStackEngine, id: string) {
+    return engine.nodes.find(i => i.id === id);
   };
 
   it('should exist setup function.', function() {
@@ -23,9 +23,9 @@ describe('gridstack engine', function() {
       engine = new GridStackEngine();
       expect(engine.column).toEqual(12);
       expect(engine.float).toEqual(false);
-      expect(engine.maxRow).toEqual(undefined);
+      expect(engine.maxRow).toEqual(undefined!);
       expect(engine.nodes).toEqual([]);
-      expect(engine.batchMode).toEqual(undefined);
+      expect(engine.batchMode).toEqual(undefined!);
       expect((engine as any).onChange).toEqual(undefined);
     });
 
@@ -146,21 +146,21 @@ describe('gridstack engine', function() {
     beforeAll(function() {
       engine = new GridStackEngine({float:true});
       engine.nodes = [
-        engine.prepareNode({x: 0, y: 0, id: 1, _dirty: true}),
-        engine.prepareNode({x: 3, y: 2, w: 3, h: 2, id: 2, _dirty: true}),
-        engine.prepareNode({x: 3, y: 7, w: 3, h: 2, id: 3})
+        engine.prepareNode({x: 0, y: 0, id: "1", _dirty: true}),
+        engine.prepareNode({x: 3, y: 2, w: 3, h: 2, id: "2", _dirty: true}),
+        engine.prepareNode({x: 3, y: 7, w: 3, h: 2, id: "3"})
       ];
     });
 
     beforeEach(function() {
-      delete engine.batchMode;
+      delete (engine as any).batchMode;
     });
 
     it('should return all dirty nodes', function() {
       let nodes = engine.getDirtyNodes();
       expect(nodes.length).toEqual(2);
-      expect(nodes[0].id).toEqual(1);
-      expect(nodes[1].id).toEqual(2);
+      expect(nodes[0].id).toEqual("1");
+      expect(nodes[1].id).toEqual("2");
     });
 
     it('should\'n clean nodes if batchMode true', function() {
@@ -230,9 +230,9 @@ describe('gridstack engine', function() {
       spyOn(spy, 'callback');
       engine = new GridStackEngine({float:true, onChange: spy.callback});
       engine.nodes = [
-        engine.prepareNode({x: 0, y: 0, id: 1, _dirty: true}),
-        engine.prepareNode({x: 3, y: 2, w: 3, h: 2, id: 2, _dirty: true}),
-        engine.prepareNode({x: 3, y: 7, w: 3, h: 2, id: 3})
+        engine.prepareNode({x: 0, y: 0, id: "1", _dirty: true}),
+        engine.prepareNode({x: 3, y: 2, w: 3, h: 2, id: "2", _dirty: true}),
+        engine.prepareNode({x: 3, y: 7, w: 3, h: 2, id: "3"})
       ];
     });
 
@@ -262,50 +262,50 @@ describe('gridstack engine', function() {
 
       it('shouldn\'t pack one node with y coord eq 0', function() {
         engine.nodes = [
-          {x: 0, y: 0, w:1, h:1, id: 1},
+          {x: 0, y: 0, w:1, h:1, id: "1"},
         ];
         (engine as any)._packNodes();
-        expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, h: 1}));
-        expect(findNode(engine, 1)._dirty).toBeFalsy();
+        expect(findNode(engine, "1")).toEqual(jasmine.objectContaining({x: 0, y: 0, h: 1}));
+        expect(findNode(engine, "1")!._dirty).toBeFalsy();
       });
 
       it('should pack one node correctly', function() {
         engine.nodes = [
-          {x: 0, y: 1, w:1, h:1, id: 1},
+          {x: 0, y: 1, w:1, h:1, id: "1"},
         ];
         (engine as any)._packNodes();
-        expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
+        expect(findNode(engine, "1")).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
       });
 
       it('should pack nodes correctly', function() {
         engine.nodes = [
-          {x: 0, y: 1, w:1, h:1, id: 1},
-          {x: 0, y: 5, w:1, h:1, id: 2},
+          {x: 0, y: 1, w:1, h:1, id: "1"},
+          {x: 0, y: 5, w:1, h:1, id: "2"},
         ];
         (engine as any)._packNodes();
-        expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
-        expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 1, _dirty: true}));
+        expect(findNode(engine, "1")).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
+        expect(findNode(engine, "2")).toEqual(jasmine.objectContaining({x: 0, y: 1, _dirty: true}));
       });
   
       it('should pack nodes correctly', function() {
         engine.nodes = [
-          {x: 0, y: 5, w:1, h:1, id: 1},
-          {x: 0, y: 1, w:1, h:1, id: 2},
+          {x: 0, y: 5, w:1, h:1, id: "1"},
+          {x: 0, y: 1, w:1, h:1, id: "2"},
         ];
         (engine as any)._packNodes();
-        expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
-        expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 1, _dirty: true}));
+        expect(findNode(engine, "2")).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
+        expect(findNode(engine, "1")).toEqual(jasmine.objectContaining({x: 0, y: 1, _dirty: true}));
       });
   
       it('should respect locked nodes', function() {
         engine.nodes = [
-          {x: 0, y: 1, w:1, h:1, id: 1, locked: true},
-          {x: 0, y: 5, w:1, h:1, id: 2},
+          {x: 0, y: 1, w:1, h:1, id: "1", locked: true},
+          {x: 0, y: 5, w:1, h:1, id: "2"},
         ];
         (engine as any)._packNodes();
-        expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 0, y: 1, h: 1}));
-        expect(findNode(engine, 1)._dirty).toBeFalsy();
-        expect(findNode(engine, 2)).toEqual(jasmine.objectContaining({x: 0, y: 2, _dirty: true}));
+        expect(findNode(engine, "1")).toEqual(jasmine.objectContaining({x: 0, y: 1, h: 1}));
+        expect(findNode(engine, "1")!._dirty).toBeFalsy();
+        expect(findNode(engine, "2")).toEqual(jasmine.objectContaining({x: 0, y: 2, _dirty: true}));
       });
     });
   });
@@ -342,31 +342,31 @@ describe('gridstack engine', function() {
     });
     it('should add widgets around locked one', function() {
       let nodes: GridStackNode[] = [
-        {x: 0, y: 1, w: 12, h: 1, locked: true, noMove: true, noResize: true, id: 0},
-        {x: 1, y: 0, w: 2, h: 3, id: 1}
+        {x: 0, y: 1, w: 12, h: 1, locked: true, noMove: true, noResize: true, id: "0"},
+        {x: 1, y: 0, w: 2, h: 3, id: "1"}
       ];
       // add locked item
       engine.addNode(nodes[0])
-      expect(findNode(engine, 0)).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
+      expect(findNode(engine, "0")).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
       // add item that moves past locked one
       engine.addNode(nodes[1])
-      expect(findNode(engine, 0)).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
-      expect(findNode(engine, 1)).toEqual(jasmine.objectContaining({x: 1, y: 2, h: 3}));
+      expect(findNode(engine, "0")).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
+      expect(findNode(engine, "1")).toEqual(jasmine.objectContaining({x: 1, y: 2, h: 3}));
       // locked item can still be moved directly (what user does)
-      let node0 = findNode(engine, 0);
-      expect(engine.moveNode(node0, {y:6})).toEqual(true);
-      expect(findNode(engine, 0)).toEqual(jasmine.objectContaining({x: 0, y: 6, h: 1, locked: true}));
+      let node0 = findNode(engine, "0");
+      expect(engine.moveNode(node0!, {y:6})).toEqual(true);
+      expect(findNode(engine, "0")).toEqual(jasmine.objectContaining({x: 0, y: 6, h: 1, locked: true}));
       // but moves regular one past it
-      let node1 = findNode(engine, 1);
-      expect(engine.moveNode(node1, {x:6, y:6})).toEqual(true);
+      let node1 = findNode(engine, "1");
+      expect(engine.moveNode(node1!, {x:6, y:6})).toEqual(true);
       expect(node1).toEqual(jasmine.objectContaining({x: 6, y: 7, w: 2, h: 3}));
       // but moves regular one before (gravity ON)
       engine.float = false;
-      expect(engine.moveNode(node1, {x:7, y:3})).toEqual(true);
+      expect(engine.moveNode(node1!, {x:7, y:3})).toEqual(true);
       expect(node1).toEqual(jasmine.objectContaining({x: 7, y: 0, w: 2, h: 3}));
       // but moves regular one before (gravity OFF)
       engine.float = true;
-      expect(engine.moveNode(node1, {x:7, y:3})).toEqual(true);
+      expect(engine.moveNode(node1!, {x:7, y:3})).toEqual(true);
       expect(node1).toEqual(jasmine.objectContaining({x: 7, y: 3, w: 2, h: 3}));
     });
   });

@@ -79,7 +79,7 @@ describe('gridstack utils', function() {
       expect(Utils.parseHeight('12.5cm')).toEqual(jasmine.objectContaining({h: 12.5, unit: 'cm'}));
       expect(Utils.parseHeight('12.5mm')).toEqual(jasmine.objectContaining({h: 12.5, unit: 'mm'}));
       expect(Utils.parseHeight('12.5')).toEqual(jasmine.objectContaining({h: 12.5, unit: 'px'}));
-      expect(function() { Utils.parseHeight('12.5 df'); }).toThrowError('Invalid height');
+      expect(function() { Utils.parseHeight('12.5 df'); }).toThrowError('Invalid height val = 12.5 df');
     });
 
     it('should parse negative height value', function() {
@@ -94,7 +94,7 @@ describe('gridstack utils', function() {
       expect(Utils.parseHeight('-12.3cm')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'cm'}));
       expect(Utils.parseHeight('-12.3mm')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'mm'}));
       expect(Utils.parseHeight('-12.5')).toEqual(jasmine.objectContaining({h: -12.5, unit: 'px'}));
-      expect(function() { Utils.parseHeight('-12.5 df'); }).toThrowError('Invalid height');
+      expect(function() { Utils.parseHeight('-12.5 df'); }).toThrowError('Invalid height val = -12.5 df');
     });
   });
 

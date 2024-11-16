@@ -100,7 +100,11 @@ export class GridStackEngine {
 
     let didMove = false;
     const newOpt: GridStackMoveOpts = {nested: true, pack: false};
+    let counter = 0;
     while (collide = collide || this.collide(node, area, opt.skip)) { // could collide with more than 1 item... so repeat for each
+      if (counter++ > this.nodes.length * 2) {
+        throw new Error("Infinite collide check");
+      }
       let moved: boolean;
       // if colliding with a locked item OR loading (move after) OR moving down with top gravity (and collide could move up) -> skip past the collide,
       // but remember that skip down so we only do this once (and push others otherwise).

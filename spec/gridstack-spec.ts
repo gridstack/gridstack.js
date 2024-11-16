@@ -330,7 +330,7 @@ describe('gridstack', function() {
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
       // add default 1x1 item to the end (1 column)
-      let el3 = grid.addWidget();
+      let el3 = grid.addWidget({ });
       expect(el3).not.toBe(null);
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(6);
@@ -747,7 +747,7 @@ describe('gridstack', function() {
       expect(grid.engine.nodes.length).toEqual(0);
       expect(document.getElementById('item2')).toBe(null);
 
-      let el3 = grid.addWidget(widgetHTML);
+      let el3 = grid.makeWidget(widgetHTML);
       expect(el3).not.toBe(null);
       grid.removeWidget(el3, false);
       expect(grid.engine.nodes.length).toEqual(0);
@@ -903,7 +903,7 @@ describe('gridstack', function() {
     });
     it('should autoPosition (empty options)', function() {
       let grid = GridStack.init();
-      let widget = grid.addWidget();
+      let widget = grid.addWidget({ });
       
       expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
       expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
@@ -933,7 +933,7 @@ describe('gridstack', function() {
     it('null options should clear x position', function() {
       let grid = GridStack.init({float: true});
       let HTML = '<div class="grid-stack-item" gs-x="9"><div class="grid-stack-item-content"></div></div>';
-      let widget = grid.addWidget(HTML, {x:null, y:null, w:undefined});
+      let widget = grid.makeWidget(HTML, {x:null, y:null, w:undefined});
       
       expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
       expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
@@ -941,7 +941,7 @@ describe('gridstack', function() {
     it('width attr should be retained', function() { // #1276
       let grid = GridStack.init({float: true});
       let HTML = '<div class="grid-stack-item" gs-w="3" gs-max-w="4" gs-id="foo"><div class="grid-stack-item-content"></div></div>';
-      let widget = grid.addWidget(HTML, {x: 1, y: 5});
+      let widget = grid.makeWidget(HTML, {x: 1, y: 5});
       expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(1);
       expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(5);
       expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(3);
