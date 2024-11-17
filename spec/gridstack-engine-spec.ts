@@ -5,8 +5,7 @@ describe('gridstack engine:', function() {
  'use strict';
   let e: GridStackEngine;
   let ePriv: any; // cast engine for private vars access
-
-  let findNode = function(e: GridStackEngine, id: string) {
+  let findNode = function(id: string) {
     return e.nodes.find(n => n.id === id);
   };
 
@@ -247,8 +246,8 @@ describe('gridstack engine:', function() {
           e.prepareNode({x: 0, y: 0, w:1, h:1, id: '1'}),
         ];
         ePriv._packNodes();
-        expect(findNode(e, '1')).toEqual(jasmine.objectContaining({x: 0, y: 0, h: 1}));
-        expect(findNode(e, '1')!._dirty).toBeFalsy();
+        expect(findNode('1')).toEqual(jasmine.objectContaining({x: 0, y: 0, h: 1}));
+        expect(findNode('1')!._dirty).toBeFalsy();
       });
 
       it('should pack one node correctly', function() {
@@ -256,7 +255,7 @@ describe('gridstack engine:', function() {
           e.prepareNode({x: 0, y: 1, w:1, h:1, id: '1'}),
         ];
         ePriv._packNodes();
-        expect(findNode(e, '1')).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
+        expect(findNode('1')).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
       });
 
       it('should pack nodes correctly', function() {
@@ -265,8 +264,8 @@ describe('gridstack engine:', function() {
           e.prepareNode({x: 0, y: 5, w:1, h:1, id: '2'}),
         ];
         ePriv._packNodes();
-        expect(findNode(e, '1')).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
-        expect(findNode(e, '2')).toEqual(jasmine.objectContaining({x: 0, y: 1, _dirty: true}));
+        expect(findNode('1')).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
+        expect(findNode('2')).toEqual(jasmine.objectContaining({x: 0, y: 1, _dirty: true}));
       });
   
       it('should pack reverse nodes correctly', function() {
@@ -275,8 +274,8 @@ describe('gridstack engine:', function() {
           e.prepareNode({x: 0, y: 1, w:1, h:1, id: '2'}),
         ];
         ePriv._packNodes();
-        expect(findNode(e, '2')).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
-        expect(findNode(e, '1')).toEqual(jasmine.objectContaining({x: 0, y: 1, _dirty: true}));
+        expect(findNode('2')).toEqual(jasmine.objectContaining({x: 0, y: 0, _dirty: true}));
+        expect(findNode('1')).toEqual(jasmine.objectContaining({x: 0, y: 1, _dirty: true}));
       });
   
       it('should respect locked nodes', function() {
@@ -285,9 +284,9 @@ describe('gridstack engine:', function() {
           e.prepareNode({x: 0, y: 5, w:1, h:1, id: '2'}),
         ];
         ePriv._packNodes();
-        expect(findNode(e, '1')).toEqual(jasmine.objectContaining({x: 0, y: 1, h: 1}));
-        expect(findNode(e, '1')!._dirty).toBeFalsy();
-        expect(findNode(e, '2')).toEqual(jasmine.objectContaining({x: 0, y: 2, _dirty: true}));
+        expect(findNode('1')).toEqual(jasmine.objectContaining({x: 0, y: 1, h: 1}));
+        expect(findNode('1')!._dirty).toBeFalsy();
+        expect(findNode('2')).toEqual(jasmine.objectContaining({x: 0, y: 2, _dirty: true}));
       });
     });
   });
@@ -329,17 +328,17 @@ describe('gridstack engine:', function() {
       ];
       // add locked item
       e.addNode(nodes[0])
-      expect(findNode(e, '0')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
+      expect(findNode('0')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
       // add item that moves past locked one
       e.addNode(nodes[1])
-      expect(findNode(e, '0')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
-      expect(findNode(e, '1')).toEqual(jasmine.objectContaining({x: 1, y: 2, h: 3}));
+      expect(findNode('0')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12, h: 1, locked: true}));
+      expect(findNode('1')).toEqual(jasmine.objectContaining({x: 1, y: 2, h: 3}));
       // locked item can still be moved directly (what user does)
-      let node0 = findNode(e, '0');
+      let node0 = findNode('0');
       expect(e.moveNode(node0!, {y:6})).toEqual(true);
-      expect(findNode(e, '0')).toEqual(jasmine.objectContaining({x: 0, y: 6, h: 1, locked: true}));
+      expect(findNode('0')).toEqual(jasmine.objectContaining({x: 0, y: 6, h: 1, locked: true}));
       // but moves regular one past it
-      let node1 = findNode(e, '1');
+      let node1 = findNode('1');
       expect(e.moveNode(node1!, {x:6, y:6})).toEqual(true);
       expect(node1).toEqual(jasmine.objectContaining({x: 6, y: 7, w: 2, h: 3}));
       // but moves regular one before (gravity ON)
@@ -361,42 +360,42 @@ describe('gridstack engine:', function() {
       // Add two side-by-side components 6+6 = 12 columns
       e.addNode({ x: 0, y: 0, w: 6, h: 1, id: 'left' });
       e.addNode({ x: 6, y: 0, w: 6, h: 1, id: 'right' });
-      e.save().forEach(node => e.nodeBoundFix(findNode(e, node.id!)!));
-      expect(findNode(e, 'left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
-      expect(findNode(e, 'right')).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
+      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
+      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
+      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
       // Resize to 1 column
       e.column = 1;
       e.columnChanged(12, 1);
-      e.save().forEach(node => e.nodeBoundFix(findNode(e, node.id!)!));
-      expect(findNode(e, 'left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
-      expect(findNode(e, 'right')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
+      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
+      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
+      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
       // Resize back to 12 column
       e.column = 12;
       e.columnChanged(1, 12);
-      e.save().forEach(node => e.nodeBoundFix(findNode(e, node.id!)!));
-      expect(findNode(e, 'left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
-      expect(findNode(e, 'right')).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
+      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
+      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
+      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
     });
     it('wont\'t break layouts with more than 12 columns', function() {
       ePriv = e = new GridStackEngine({ column: 24 });
       // Add two side-by-side components 12+12 = 24 columns
       e.addNode({ x: 0, y: 0, w: 12, h: 1, id: 'left' });
       e.addNode({ x: 12, y: 0, w: 12, h: 1, id: 'right' });
-      e.save().forEach(node => e.nodeBoundFix(findNode(e, node.id!)!));
-      expect(findNode(e, 'left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
-      expect(findNode(e, 'right')).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
+      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
+      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
+      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
       // Resize to 1 column
       e.column = 1;
       e.columnChanged(24, 1);
-      e.save().forEach(node => e.nodeBoundFix(findNode(e, node.id!)!));
-      expect(findNode(e, 'left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
-      expect(findNode(e, 'right')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
+      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
+      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
+      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
       // Resize back to 24 column
       e.column = 24;
       e.columnChanged(1, 24);
-      e.save().forEach(node => e.nodeBoundFix(findNode(e, node.id!)!));
-      expect(findNode(e, 'left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
-      expect(findNode(e, 'right')).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
+      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
+      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
+      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
     });
   });
 

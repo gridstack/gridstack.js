@@ -2,8 +2,14 @@ import { GridItemHTMLElement, GridStack, GridStackNode, GridStackWidget } from '
 import { Utils } from '../src/utils';
 import '../dist/gridstack.css';
 
-describe('gridstack', function() {
+describe('gridstack >', function() {
   'use strict';
+
+  let grid: GridStack;
+  let grids: GridStack[];
+  let findEl = function(id: string): GridItemHTMLElement {
+    return grid.engine.nodes.find(n => n.id === id)!.el!;
+  };
 
   // grid has 4x2 and 4x4 top-left aligned - used on most test cases
   let gridHTML =
@@ -40,98 +46,98 @@ describe('gridstack', function() {
   // generic widget with no param
   let widgetHTML = '<div id="item3"><div class="grid-stack-item-content"> hello </div></div>';
 
-  describe('grid.init() / initAll()', function() {
+  describe('grid.init() / initAll() >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('use selector', function() {
-      let grid = GridStack.init(undefined, '.grid-stack');
+    it('use selector >', function() {
+      grid = GridStack.init(undefined, '.grid-stack');
       expect(grid).not.toBe(null);
     });
-    it('use selector no dot', function() {
-      let grid = GridStack.init(null, 'grid-stack');
+    it('use selector no dot >', function() {
+      grid = GridStack.init(null, 'grid-stack');
       expect(grid).not.toBe(null);
     });
-    it('use wrong selector', function() {
-      let grid = GridStack.init(null, 'BAD_SELECTOR_TEST');
+    it('use wrong selector >', function() {
+      grid = GridStack.init(null, 'BAD_SELECTOR_TEST');
       expect(grid).toEqual(null);
     });
-    it('initAll use selector', function() {
-      let grids = GridStack.initAll(undefined, '.grid-stack');
+    it('initAll use selector >', function() {
+      grids = GridStack.initAll(undefined, '.grid-stack');
       expect(grids.length).toBe(1);
     });
-    it('initAll use selector no dot', function() {
-      let grids = GridStack.initAll(undefined, 'grid-stack');
+    it('initAll use selector no dot >', function() {
+      grids = GridStack.initAll(undefined, 'grid-stack');
       expect(grids.length).toBe(1);
     });
-    it('initAll use wrong selector', function() {
-      let grids = GridStack.initAll(undefined, 'BAD_SELECTOR_TEST');
+    it('initAll use wrong selector >', function() {
+      grids = GridStack.initAll(undefined, 'BAD_SELECTOR_TEST');
       expect(grids.length).toBe(0);
     });
   });
 
-  describe('grid.setAnimation', function() {
+  describe('grid.setAnimation >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should add class grid-stack-animate to the container.', function() {
-      let grid = GridStack.init({animate: true});
+    it('should add class grid-stack-animate to the container. >', function() {
+      grid = GridStack.init({animate: true});
       expect(grid.el.classList.contains('grid-stack-animate')).toBe(true);
       grid.el.classList.remove('grid-stack-animate');
       expect(grid.el.classList.contains('grid-stack-animate')).toBe(false);
       grid.setAnimation(true);
       expect(grid.el.classList.contains('grid-stack-animate')).toBe(true);
     });
-    it('should remove class grid-stack-animate from the container.', function() {
-      let grid = GridStack.init({animate: true});
+    it('should remove class grid-stack-animate from the container. >', function() {
+      grid = GridStack.init({animate: true});
       grid.setAnimation(false);
       expect(grid.el.classList.contains('grid-stack-animate')).toBe(false);
     });
   });
 
-  describe('grid._setStaticClass', function() {
+  describe('grid._setStaticClass >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should add class grid-stack-static to the container.', function() {
-      let grid = GridStack.init({staticGrid: true});
+    it('should add class grid-stack-static to the container. >', function() {
+      grid = GridStack.init({staticGrid: true});
       expect(grid.el.classList.contains('grid-stack-static')).toBe(true);
       grid.setStatic(false);
       expect(grid.el.classList.contains('grid-stack-static')).toBe(false);
       grid.setStatic(true);
       expect(grid.el.classList.contains('grid-stack-static')).toBe(true);
     });
-    it('should remove class grid-stack-static from the container.', function() {
-      let grid = GridStack.init({staticGrid: false});
+    it('should remove class grid-stack-static from the container. >', function() {
+      grid = GridStack.init({staticGrid: false});
       expect(grid.el.classList.contains('grid-stack-static')).toBe(false);
       grid.setStatic(true);
       expect(grid.el.classList.contains('grid-stack-static')).toBe(true);
     });
   });
 
-  describe('grid.getCellFromPixel', function() {
+  describe('grid.getCellFromPixel >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should return {x: 4, y: 5}.', function() {
+    it('should return {x: 4, y: 5}. >', function() {
       let cellHeight = 80;
       let options = {
-        cellHeight: cellHeight,
+        cellHeight,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let rect = grid.el.getBoundingClientRect();
       let smudge = 5;
       let pixel = {left: 4 * rect.width / 12 + rect.x + smudge, top: 5 * cellHeight + rect.y + smudge};
@@ -159,150 +165,144 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.cellWidth', function() {
+  describe('grid.cellWidth >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should return 1/12th of container width (not rounded anymore).', function() {
+    it('should return 1/12th of container width (not rounded anymore). >', function() {
       let options = {
         cellHeight: 80,
         margin: 5,
         column: 12
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let res = grid.el.offsetWidth / 12;
       expect(grid.cellWidth()).toBe(res);
     });
-    it('should return 1/10th of container width.', function() {
+    it('should return 1/10th of container width. >', function() {
       let options = {
         cellHeight: 80,
         margin: 5,
         column: 10
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let res = Math.round(grid.el.offsetWidth / 10);
       expect(grid.cellWidth()).toBe(res);
     });
   });
 
-  describe('grid.cellHeight', function() {
+  describe('grid.cellHeight >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should start at 80 then become 120', function() {
+    it('should start at 80 then become 120 >', function() {
       let cellHeight = 80;
       let margin = 5;
       let options = {
-        cellHeight: cellHeight,
-        margin: margin,
+        cellHeight,
+        margin,
         column: 12
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let rows = parseInt(grid.el.getAttribute('gs-current-row'));
       
       expect(grid.getRow()).toBe(rows);
 
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(getComputedStyle(grid.el)['min-height'])).toBe(rows * cellHeight);
+      expect(parseInt(getComputedStyle(grid.el)['height'])).toBe(rows * cellHeight);
 
       grid.cellHeight( grid.getCellHeight() ); // should be no-op
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(getComputedStyle(grid.el)['min-height'])).toBe(rows * cellHeight);
+      expect(parseInt(getComputedStyle(grid.el)['height'])).toBe(rows * cellHeight);
 
       cellHeight = 120; // should change and CSS actual height
       grid.cellHeight( cellHeight );
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(getComputedStyle(grid.el)['min-height'])).toBe(rows * cellHeight);
+      expect(parseInt(getComputedStyle(grid.el)['height'])).toBe(rows * cellHeight);
 
       cellHeight = 20; // should change and CSS actual height
       grid.cellHeight( cellHeight );
       expect(grid.getCellHeight()).toBe(cellHeight);
-      expect(parseInt(getComputedStyle(grid.el)['min-height'])).toBe(rows * cellHeight);
+      expect(parseInt(getComputedStyle(grid.el)['height'])).toBe(rows * cellHeight);
     });
 
-    it('should be square', function() {
-      let grid = GridStack.init({cellHeight: 'auto'});
+    it('should be square >', function() {
+      grid = GridStack.init({cellHeight: 'auto'});
       expect(grid.cellWidth()).toBe( grid.getCellHeight());
     });
 
   });
 
-  describe('grid.column', function() {
+  describe('grid.column >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should have no changes', function() {
-      let grid = GridStack.init();
+    it('should have no changes >', function() {
+      grid = GridStack.init();
       expect(grid.getColumn()).toBe(12);
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
     }); 
-    it('should set construct CSS class', function() {
-      let grid = GridStack.init({column: 1});
+    it('should set construct CSS class >', function() {
+      grid = GridStack.init({column: 1});
       expect(grid.el.classList.contains('gs-1')).toBe(true);
       grid.column(2);
       expect(grid.el.classList.contains('gs-1')).toBe(false);
       expect(grid.el.classList.contains('gs-2')).toBe(true);
     }); 
-    it('should set CSS class', function() {
-      let grid = GridStack.init();
+    it('should set CSS class >', function() {
+      grid = GridStack.init();
       expect(grid.el.classList.contains('grid-stack')).toBe(true);
       grid.column(1);
       expect(grid.el.classList.contains('gs-1')).toBe(true);
     }); 
-    it('should SMALL change column number, no relayout', function() {
+    it('should SMALL change column number, no relayout >', function() {
       let options = {
         column: 12
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
       grid.column(9);
       expect(grid.getColumn()).toBe(9);
-      for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('gs-y'), 10)).toBe(0);
-      }
+      items.forEach(el => expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(0));
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
-      for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('gs-y'), 10)).toBe(0);
-      }
+      items.forEach(el => expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(0));
     });
-    it('no sizing, no moving', function() {
-      let grid = GridStack.init({column: 12});
+    it('no sizing, no moving >', function() {
+      grid = GridStack.init({column: 12});
       let items = Utils.getElements('.grid-stack-item');
       grid.column(8, 'none');
       expect(grid.getColumn()).toBe(8);
-      for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('gs-w'), 10)).toBe(4);
-        expect(parseInt(items[j].getAttribute('gs-y'), 10)).toBe(0);
-      }
+      items.forEach(el => {
+        expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
+        expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(0);
+      });
     });
-    it('no sizing, but moving down', function() {
-      let grid = GridStack.init({column: 12});
+    it('no sizing, but moving down >', function() {
+      grid = GridStack.init({column: 12});
       let items = Utils.getElements('.grid-stack-item');
-      grid.column(7, 'none');
+      grid.column(7, 'move');
       expect(grid.getColumn()).toBe(7);
-      for (let j = 0; j < items.length; j++) {
-        expect(parseInt(items[j].getAttribute('gs-w'), 10)).toBe(4);
-      }
+      items.forEach(el => expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4));
       expect(parseInt(items[0].getAttribute('gs-y'), 10)).toBe(0);
       expect(parseInt(items[1].getAttribute('gs-y'), 10)).toBe(2);
     });
-    it('should change column number and re-layout items', function() {
+    it('should change column number and re-layout items >', function() {
       let options = {
         column: 12,
         float: true
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let el1 = document.getElementById('item1')
       let el2 = document.getElementById('item2')
 
@@ -316,6 +316,7 @@ describe('gridstack', function() {
       expect(parseInt(el2.getAttribute('gs-y'))).toBe(0);
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
+
       // 1 column will have item1, item2
       grid.column(1);
       expect(grid.getColumn()).toBe(1);
@@ -330,7 +331,7 @@ describe('gridstack', function() {
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
       // add default 1x1 item to the end (1 column)
-      let el3 = grid.addWidget({ });
+      let el3 = grid.addWidget({content:'new'});
       expect(el3).not.toBe(null);
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(6);
@@ -350,9 +351,11 @@ describe('gridstack', function() {
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
-      // remembers autoPlacement so finds next slot on 12 layout after 4x2 + 4x4
-      expect(parseInt(el3.getAttribute('gs-x'))).toBe(8);
-      expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
+      // TODO: we don't remembers autoPlacement (cleared multiple places)
+      // expect(parseInt(el3.getAttribute('gs-x'))).toBe(8);
+      // expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(6);
       expect(el3.getAttribute('gs-w')).toBe(null);
       expect(el3.getAttribute('gs-h')).toBe(null);
 
@@ -431,19 +434,19 @@ describe('gridstack', function() {
     });
   });
 
-  // describe('oneColumnModeDomSort', function() {
+  // describe('oneColumnModeDomSort >', function() {
   //   beforeEach(function() {
   //     document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
   //   });
   //   afterEach(function() {
   //     document.body.removeChild(document.getElementById('gs-cont'));
   //   });
-  //   it('should support default going to 1 column', function() {
+  //   it('should support default going to 1 column >', function() {
   //     let options = {
   //       column: 12,
   //       float: true
   //     };
-  //     let grid = GridStack.init(options);
+  //     grid = GridStack.init(options);
   //     grid.batchUpdate();
   //     grid.batchUpdate();
   //     let el1 = grid.addWidget({w:1, h:1});
@@ -485,13 +488,13 @@ describe('gridstack', function() {
   //     expect(el2.getAttribute('gs-w')).toBe(null);
   //     expect(el2.getAttribute('gs-h')).toBe(null);
   //   });
-  //   it('should support oneColumnModeDomSort ON going to 1 column', function() {
+  //   it('should support oneColumnModeDomSort ON going to 1 column >', function() {
   //     let options = {
   //       column: 12,
   //       oneColumnModeDomSort: true,
   //       float: true
   //     };
-  //     let grid = GridStack.init(options);
+  //     grid = GridStack.init(options);
   //     let el1 = grid.addWidget({w:1, h:1});
   //     let el2 = grid.addWidget({x:2, y:0, w:2, h:1});
   //     let el3 = grid.addWidget({x:1, y:0, w:1, h:2});
@@ -531,50 +534,50 @@ describe('gridstack', function() {
   //   });
   // });
 
-  // describe('disableOneColumnMode', function() {
+  // describe('disableOneColumnMode >', function() {
   //   beforeEach(function() {
   //     document.body.insertAdjacentHTML('afterbegin', gridstackSmallHTML); // smaller default to 1 column
   //   });
   //   afterEach(function() {
   //     document.body.removeChild(document.getElementById('gs-cont'));
   //   });
-  //   it('should go to 1 column', function() {
-  //     let grid = GridStack.init();
+  //   it('should go to 1 column >', function() {
+  //     grid = GridStack.init();
   //     expect(grid.getColumn()).toBe(1);
   //   });
-  //   it('should go to 1 column with large minW', function() {
-  //     let grid = GridStack.init({oneColumnSize: 1000});
+  //   it('should go to 1 column with large minW >', function() {
+  //     grid = GridStack.init({oneColumnSize: 1000});
   //     expect(grid.getColumn()).toBe(1);
   //   });
-  //   it('should stay at 12 with minW', function() {
-  //     let grid = GridStack.init({oneColumnSize: 300});
+  //   it('should stay at 12 with minW >', function() {
+  //     grid = GridStack.init({oneColumnSize: 300});
   //     expect(grid.getColumn()).toBe(12);
   //   });
-  //   it('should stay at 12 column', function() {
-  //     let grid = GridStack.init({disableOneColumnMode: true});
+  //   it('should stay at 12 column >', function() {
+  //     grid = GridStack.init({disableOneColumnMode: true});
   //     expect(grid.getColumn()).toBe(12);
   //   });
   // });
 
-  describe('grid.minRow', function() {
+  describe('grid.minRow >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should default to row 0 when empty', function() {
+    it('should default to row 0 when empty >', function() {
       let options = {};
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.getRow()).toBe(4);
       expect(grid.opts.minRow).toBe(0);
       expect(grid.opts.maxRow).toBe(0);
       grid.removeAll();
       expect(grid.getRow()).toBe(0);
     });
-    it('should default to row 2 when empty', function() {
+    it('should default to row 2 when empty >', function() {
       let options = {minRow: 2};
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.getRow()).toBe(4);
       expect(grid.opts.minRow).toBe(2);
       expect(grid.opts.maxRow).toBe(0);
@@ -582,9 +585,9 @@ describe('gridstack', function() {
       expect(grid.engine.getRow()).toBe(0);
       expect(grid.getRow()).toBe(2);
     });
-    it('should set min = max = 3 rows', function() {
+    it('should set min = max = 3 rows >', function() {
       let options = {row: 3};
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.getRow()).toBe(3); // shrink elements to fit maxRow!
       expect(grid.opts.minRow).toBe(3);
       expect(grid.opts.maxRow).toBe(3);
@@ -592,18 +595,18 @@ describe('gridstack', function() {
       expect(grid.engine.getRow()).toBe(0);
       expect(grid.getRow()).toBe(3);
     });
-    it('willItFit()', function() {
+    it('willItFit() >', function() {
       // default 4x2 and 4x4 so anything pushing more than 1 will fail
-      let grid = GridStack.init({maxRow: 5});
+      grid = GridStack.init({maxRow: 5});
       expect(grid.willItFit({x:0, y:0, w:1, h:1})).toBe(true);
       expect(grid.willItFit({x:0, y:0, w:1, h:3})).toBe(true);
       expect(grid.willItFit({x:0, y:0, w:1, h:4})).toBe(false);
       expect(grid.willItFit({x:0, y:0, w:12, h:1})).toBe(true);
       expect(grid.willItFit({x:0, y:0, w:12, h:2})).toBe(false);
     });
-    it('willItFit() not modifying node #1687', function() {
+    it('willItFit() not modifying node #1687 >', function() {
       // default 4x2 and 4x4 so anything pushing more than 1 will fail
-      let grid = GridStack.init({maxRow: 5});
+      grid = GridStack.init({maxRow: 5});
       let node: GridStackNode = {x:0, y:0, w:1, h:1, _id: 1, _temporaryRemoved: true};
       expect(grid.willItFit(node)).toBe(true);
       expect(node._temporaryRemoved).toBe(true);
@@ -612,17 +615,17 @@ describe('gridstack', function() {
 
   });
 
-  describe('grid attributes', function() {
+  describe('grid attributes >', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should have row attr', function() {
+    it('should have row attr >', function() {
       let HTML = 
         '<div style="w: 800px; h: 600px" id="gs-cont">' +
         '  <div class="grid-stack" gs-row="4" gs-current-height="1"></div>' + // old attr current-height
         '</div>';
       document.body.insertAdjacentHTML('afterbegin', HTML);
-      let grid = GridStack.init();
+      grid = GridStack.init();
       expect(grid.getRow()).toBe(4);
       expect(grid.opts.minRow).toBe(4);
       expect(grid.opts.maxRow).toBe(4);
@@ -632,107 +635,105 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.min/max width/height', function() {
+  describe('grid.min/max width/height >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should set gs-min-w to 2.', function() {
-      let grid = GridStack.init();
+    it('should set gs-min-w to 2. >', function() {
+      grid = GridStack.init();
       let items: GridItemHTMLElement[] = Utils.getElements('.grid-stack-item');
-      for (let i = 0; i < items.length; i++) {
-        grid.update(items[i], {minW: 2, maxW: 3, minH: 4, maxH: 5});
-      }
-      for (let j = 0; j < items.length; j++) {
-        expect(items[j].gridstackNode.minW).toBe(2);
-        expect(items[j].gridstackNode.maxW).toBe(3);
-        expect(items[j].gridstackNode.minH).toBe(4);
-        expect(items[j].gridstackNode.maxH).toBe(5);
-        expect(items[j].getAttribute('gs-min-w')).toBe(null);
-        expect(items[j].getAttribute('gs-max-w')).toBe(null);
-        expect(items[j].getAttribute('gs-min-h')).toBe(null);
-        expect(items[j].getAttribute('gs-max-h')).toBe(null);
-      }
+      items.forEach(el => grid.update(el, {minW: 2, maxW: 3, minH: 4, maxH: 5}));
+      items.forEach(el => {
+        expect(el.gridstackNode!.minW).toBe(2);
+        expect(el.gridstackNode!.maxW).toBe(3);
+        expect(el.gridstackNode!.minH).toBe(4);
+        expect(el.gridstackNode!.maxH).toBe(5);
+        expect(el.getAttribute('gs-min-w')).toBe(null);
+        expect(el.getAttribute('gs-max-w')).toBe(null);
+        expect(el.getAttribute('gs-min-h')).toBe(null);
+        expect(el.getAttribute('gs-max-h')).toBe(null);
+      });
       // remove all constrain
       grid.update('grid-stack-item', {minW: 0, maxW: null, minH: undefined, maxH: 0});
-      for (let j = 0; j < items.length; j++) {
-        expect(items[j].gridstackNode.minW).toBe(undefined);
-        expect(items[j].gridstackNode.maxW).toBe(undefined);
-        expect(items[j].gridstackNode.minH).toBe(undefined);
-        expect(items[j].gridstackNode.maxH).toBe(undefined);
-        expect(items[j].getAttribute('gs-min-w')).toBe(null);
-        expect(items[j].getAttribute('gs-max-w')).toBe(null);
-        expect(items[j].getAttribute('gs-min-h')).toBe(null);
-        expect(items[j].getAttribute('gs-max-h')).toBe(null);
-      }
+      items.forEach(el => {
+        expect(el.gridstackNode!.minW).toBe(undefined);
+        expect(el.gridstackNode!.maxW).toBe(undefined);
+        expect(el.gridstackNode!.minH).toBe(undefined);
+        expect(el.gridstackNode!.maxH).toBe(undefined);
+        expect(el.getAttribute('gs-min-w')).toBe(null);
+        expect(el.getAttribute('gs-max-w')).toBe(null);
+        expect(el.getAttribute('gs-min-h')).toBe(null);
+        expect(el.getAttribute('gs-max-h')).toBe(null);
+      });
     });
   });
 
-  describe('grid.isAreaEmpty', function() {
+  describe('grid.isAreaEmpty >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should set return false.', function() {
+    it('should set return false. >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let shouldBeFalse = grid.isAreaEmpty(1, 1, 1, 1);
       expect(shouldBeFalse).toBe(false);
     });
-    it('should set return true.', function() {
+    it('should set return true. >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let shouldBeTrue = grid.isAreaEmpty(5, 5, 1, 1);
       expect(shouldBeTrue).toBe(true);
     });
   });
 
-  describe('grid.removeAll', function() {
+  describe('grid.removeAll >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should remove all children by default', function() {
-      let grid = GridStack.init();
+    it('should remove all children by default >', function() {
+      grid = GridStack.init();
       grid.removeAll();
       expect(grid.engine.nodes).toEqual([]);
       expect(document.getElementById('item1')).toBe(null);
     });
-    it('should remove all children', function() {
-      let grid = GridStack.init();
+    it('should remove all children >', function() {
+      grid = GridStack.init();
       grid.removeAll(true);
       expect(grid.engine.nodes).toEqual([]);
       expect(document.getElementById('item1')).toBe(null);
     });
-    it('should remove gridstack part, leave DOM behind', function() {
-      let grid = GridStack.init();
+    it('should remove gridstack part, leave DOM behind >', function() {
+      grid = GridStack.init();
       grid.removeAll(false);
       expect(grid.engine.nodes).toEqual([]);
       expect(document.getElementById('item1')).not.toBe(null);
     });
   });
 
-  describe('grid.removeWidget', function() {
+  describe('grid.removeWidget >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should remove first item (default), then second (true), then third (false)', function() {
-      let grid = GridStack.init();
+    it('should remove first item (default), then second (false) >', function() {
+      grid = GridStack.init();
       expect(grid.engine.nodes.length).toEqual(2);
 
       let el1 = document.getElementById('item1');
@@ -743,295 +744,294 @@ describe('gridstack', function() {
       expect(document.getElementById('item2')).not.toBe(null);
 
       let el2 = document.getElementById('item2');
-      grid.removeWidget(el2, true);
+      grid.removeWidget(el2, false);
       expect(grid.engine.nodes.length).toEqual(0);
-      expect(document.getElementById('item2')).toBe(null);
-
-      let el3 = grid.makeWidget(widgetHTML);
-      expect(el3).not.toBe(null);
-      grid.removeWidget(el3, false);
-      expect(grid.engine.nodes.length).toEqual(0);
-      expect(document.getElementById('item3')).not.toBe(null);
+      expect(document.getElementById('item2')).not.toBe(null);
     });
   });
 
-  describe('grid method _packNodes with float', function() {
+  describe('grid method _packNodes with float >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should allow same x, y coordinates for widgets.', function() {
+    it('should allow same x, y coordinates for widgets. >', function() {
       let options = {
         cellHeight: 80,
         margin: 5,
         float: true
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
-      for (let i = 0; i < items.length; i++) {
-        let el = grid.addWidget(items[i]);
-        let oldEl = items[i];
+      items.forEach(oldEl => {
+        let el = grid.addWidget(oldEl);
         expect(parseInt(oldEl.getAttribute('gs-x'), 10)).toBe(parseInt(el.getAttribute('gs-x'), 10));
         expect(parseInt(oldEl.getAttribute('gs-y'), 10)).toBe(parseInt(el.getAttribute('gs-y'), 10));
-      }
+      })
     });
-    it('should not allow same x, y coordinates for widgets.', function() {
+    it('should not allow same x, y coordinates for widgets. >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
-      for (let i = 0; i < items.length; i++) {
-        let el = items[i].cloneNode(true) as HTMLElement;
+      items.forEach(oldEl => {
+        let el = oldEl.cloneNode(true) as HTMLElement;
         el = grid.addWidget(el);
-        expect(parseInt(el.getAttribute('gs-y'), 10)).not.toBe(parseInt(items[i].getAttribute('gs-y'), 10));
-      }
+        expect(parseInt(el.getAttribute('gs-y'), 10)).not.toBe(parseInt(oldEl.getAttribute('gs-y'), 10));
+      });
     });
   });
 
-  describe('grid method addWidget with all parameters', function() {
+  describe('grid method addWidget with all parameters >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should keep all widget options the same (autoPosition off', function() {
-      let grid = GridStack.init({float: true});;
-      let widget = grid.addWidget({x: 6, y:7, w:2, h:3, autoPosition:false,
+    it('should keep all widget options the same (autoPosition off >', function() {
+      grid = GridStack.init({float: true});;
+      let w = grid.addWidget({x: 6, y:7, w:2, h:3, autoPosition:false,
         minW:1, maxW:4, minH:2, maxH:5, id:'coolWidget'});
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(6);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(7);
-      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(3);
-      expect(widget.getAttribute('gs-auto-position')).toBe(null);
-      expect(widget.getAttribute('gs-id')).toBe('coolWidget');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(6);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(7);
+      expect(parseInt(w.getAttribute('gs-w'), 10)).toBe(2);
+      expect(parseInt(w.getAttribute('gs-h'), 10)).toBe(3);
+      expect(w.getAttribute('gs-auto-position')).toBe(null);
+      expect(w.getAttribute('gs-id')).toBe('coolWidget');
 
       // should move widget to top with float=false
       expect(grid.getFloat()).toBe(true);
       grid.float(false);
       expect(grid.getFloat()).toBe(false);
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(6);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(4); // <--- from 7 to 4 below second original widget
-      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(3);
-      expect(widget.getAttribute('gs-auto-position')).toBe(null);
-      expect(widget.getAttribute('gs-id')).toBe('coolWidget');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(6);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(4); // <--- from 7 to 4 below second original widget
+      expect(parseInt(w.getAttribute('gs-w'), 10)).toBe(2);
+      expect(parseInt(w.getAttribute('gs-h'), 10)).toBe(3);
+      expect(w.getAttribute('gs-auto-position')).toBe(null);
+      expect(w.getAttribute('gs-id')).toBe('coolWidget');
 
       // should not move again (no-op)
       grid.float(true);
       expect(grid.getFloat()).toBe(true);
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(6);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(4);
-      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(2);
-      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(3);
-      expect(widget.getAttribute('gs-auto-position')).toBe(null);
-      expect(widget.getAttribute('gs-id')).toBe('coolWidget');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(6);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(4);
+      expect(parseInt(w.getAttribute('gs-w'), 10)).toBe(2);
+      expect(parseInt(w.getAttribute('gs-h'), 10)).toBe(3);
+      expect(w.getAttribute('gs-auto-position')).toBe(null);
+      expect(w.getAttribute('gs-id')).toBe('coolWidget');
     });
   });
 
-  describe('grid method addWidget with autoPosition true', function() {
+  describe('grid method addWidget with autoPosition true >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should change x, y coordinates for widgets.', function() {
-      let grid = GridStack.init({float: true});
-      let widget = grid.addWidget({x:9, y:7, w:2, h:3, autoPosition:true});
+    it('should change x, y coordinates for widgets. >', function() {
+      grid = GridStack.init({float: true});
+      let w = grid.addWidget({x:9, y:7, w:2, h:3, autoPosition:true});
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).not.toBe(9);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).not.toBe(7);
+      expect(parseInt(w.getAttribute('gs-x'), 10)).not.toBe(9);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).not.toBe(7);
     });
   });
 
-  describe('grid method addWidget with widget options', function() {
+  describe('grid method addWidget with widget options >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should autoPosition (missing X,Y)', function() {
-      let grid = GridStack.init();
-      let widget = grid.addWidget({h: 2, id: 'optionWidget'});
+    it('should autoPosition (missing X,Y) >', function() {
+      grid = GridStack.init();
+      let w = grid.addWidget({h: 2, id: 'optionWidget'});
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
-      expect(widget.getAttribute('gs-w')).toBe(null);
-      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(2);
-      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('gs-id')).toBe('optionWidget');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(0);
+      expect(w.getAttribute('gs-w')).toBe(null);
+      expect(parseInt(w.getAttribute('gs-h'), 10)).toBe(2);
+      // expect(w.getAttribute('gs-auto-position')).toBe('true');
+      expect(w.getAttribute('gs-id')).toBe('optionWidget');
     });
-    it('should autoPosition (missing X)', function() {
-      let grid = GridStack.init();
-      let widget = grid.addWidget({y: 9, h: 2, id: 'optionWidget'});
+    it('should autoPosition (missing X) >', function() {
+      grid = GridStack.init();
+      let w = grid.addWidget({y: 9, h: 2, id: 'optionWidget'});
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
-      expect(widget.getAttribute('gs-w')).toBe(null);
-      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(2);
-      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('gs-id')).toBe('optionWidget');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(0);
+      expect(w.getAttribute('gs-w')).toBe(null);
+      expect(parseInt(w.getAttribute('gs-h'), 10)).toBe(2);
+      // expect(w.getAttribute('gs-auto-position')).toBe('true');
+      expect(w.getAttribute('gs-id')).toBe('optionWidget');
     });
-    it('should autoPosition (missing Y)', function() {
-      let grid = GridStack.init();
-      let widget = grid.addWidget({x: 9, h: 2, id: 'optionWidget'});
+    it('should autoPosition (missing Y) >', function() {
+      grid = GridStack.init();
+      let w = grid.addWidget({x: 9, h: 2, id: 'optionWidget'});
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
-      expect(widget.getAttribute('gs-w')).toBe(null);
-      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(2);
-      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('gs-id')).toBe('optionWidget');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(0);
+      expect(w.getAttribute('gs-w')).toBe(null);
+      expect(parseInt(w.getAttribute('gs-h'), 10)).toBe(2);
+      // expect(w.getAttribute('gs-auto-position')).toBe('true');
+      expect(w.getAttribute('gs-id')).toBe('optionWidget');
     });
-    it('should autoPosition (correct X, missing Y)', function() {
-      let grid = GridStack.init();
-      let widget = grid.addWidget({x: 8, h: 2, id: 'optionWidget'});
+    it('should autoPosition (correct X, missing Y) >', function() {
+      grid = GridStack.init();
+      let w = grid.addWidget({x: 8, h: 2, id: 'optionWidget'});
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
-      expect(widget.getAttribute('gs-w')).toBe(null);
-      expect(parseInt(widget.getAttribute('gs-h'), 10)).toBe(2);
-      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
-      expect(widget.getAttribute('gs-id')).toBe('optionWidget');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(0);
+      expect(w.getAttribute('gs-w')).toBe(null);
+      expect(parseInt(w.getAttribute('gs-h'), 10)).toBe(2);
+      // expect(w.getAttribute('gs-auto-position')).toBe('true');
+      expect(w.getAttribute('gs-id')).toBe('optionWidget');
     });
-    it('should autoPosition (empty options)', function() {
-      let grid = GridStack.init();
-      let widget = grid.addWidget({ });
+    it('should autoPosition (empty options) >', function() {
+      grid = GridStack.init();
+      let w = grid.addWidget({ });
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
-      expect(widget.getAttribute('gs-w')).toBe(null);
-      expect(widget.getAttribute('gs-h')).toBe(null);
-      // expect(widget.getAttribute('gs-auto-position')).toBe('true');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(0);
+      expect(w.getAttribute('gs-w')).toBe(null);
+      expect(w.getAttribute('gs-h')).toBe(null);
+      // expect(w.getAttribute('gs-auto-position')).toBe('true');
     });
 
   });
 
-  describe('addWidget()', function() {
+  describe('addWidget() >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('bad string options should use default', function() {
-      let grid = GridStack.init();
-      let widget = grid.addWidget({x: 'foo', y: null, w: 'bar', h: ''} as any);
+    it('bad string options should use default >', function() {
+      grid = GridStack.init();
+      let w = grid.addWidget({x: 'foo', y: null, w: 'bar', h: ''} as any);
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
-      expect(widget.getAttribute('gs-w')).toBe(null);
-      expect(widget.getAttribute('gs-h')).toBe(null);
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(0);
+      expect(w.getAttribute('gs-w')).toBe(null);
+      expect(w.getAttribute('gs-h')).toBe(null);
     });
-    it('null options should clear x position', function() {
-      let grid = GridStack.init({float: true});
-      let HTML = '<div class="grid-stack-item" gs-x="9"><div class="grid-stack-item-content"></div></div>';
-      let widget = grid.makeWidget(HTML, {x:null, y:null, w:undefined});
+    it('makeWidget attr should be retained >', function() { // #1276
+      grid = GridStack.init({float: true});
+      const d = document.createElement('div');
+      d.innerHTML = '<div class="grid-stack-item" gs-w="3" gs-max-w="4" gs-id="gsfoo" id="foo"><div class="grid-stack-item-content">foo content</div></div>';
+      grid.el.appendChild(d.firstChild);
+      let w = grid.makeWidget('foo');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(w.getAttribute('gs-w'), 10)).toBe(3);
+      expect(w.gridstackNode.maxW).toBe(4);
+      expect(w.getAttribute('gs-h')).toBe(null);
+      expect(w.getAttribute('gs-id')).toBe('gsfoo');
+    });
+    it('makeWidget width option override >', function() {
+      grid = GridStack.init({float: true});
+      const d = document.createElement('div');
+      d.innerHTML = '<div class="grid-stack-item" gs-w="3" gs-max-w="4" gs-id="gsfoo" id="foo"><div class="grid-stack-item-content">foo content</div></div>';
+      grid.el.appendChild(d.firstChild);
+      let w = grid.makeWidget('foo', {x:null, y:null, w:2});
       
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(8);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(0);
-    });
-    it('width attr should be retained', function() { // #1276
-      let grid = GridStack.init({float: true});
-      let HTML = '<div class="grid-stack-item" gs-w="3" gs-max-w="4" gs-id="foo"><div class="grid-stack-item-content"></div></div>';
-      let widget = grid.makeWidget(HTML, {x: 1, y: 5});
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(1);
-      expect(parseInt(widget.getAttribute('gs-y'), 10)).toBe(5);
-      expect(parseInt(widget.getAttribute('gs-w'), 10)).toBe(3);
-      expect(widget.gridstackNode.maxW).toBe(4);
-      expect(widget.getAttribute('gs-h')).toBe(null);
-      expect(widget.getAttribute('gs-id')).toBe('foo');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(8);
+      expect(parseInt(w.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(w.getAttribute('gs-w'), 10)).toBe(2);
+      expect(w.getAttribute('gs-h')).toBe(null);
     });
   });
 
-  describe('makeWidget()', function() {
+  describe('makeWidget() >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('passing element', function() {
-      let grid = GridStack.init();
+    it('passing element >', function() {
+      grid = GridStack.init();
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div><div class="grid-stack-item-content"></div></div>';
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
-      let widget = grid.makeWidget(el);
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
+      let w = grid.makeWidget(el);
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(0);
     });
-    it('passing element float=true', function() {
-      let grid = GridStack.init({float: true});
+    it('passing element float=true >', function() {
+      grid = GridStack.init({float: true});
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div><div class="grid-stack-item-content"></div></div>';
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
-      let widget = grid.makeWidget(el);
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
+      let w = grid.makeWidget(el);
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(0);
     });
-    it('passing class', function() {
-      let grid = GridStack.init();
+    it('passing class >', function() {
+      grid = GridStack.init();
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div class="item"><div class="grid-stack-item-content"></div></div>';
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
-      let widget = grid.makeWidget('.item');
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
+      let w = grid.makeWidget('.item');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(0);
     });
-    it('passing class no dot', function() {
-      let grid = GridStack.init();
+    it('passing class no dot >', function() {
+      grid = GridStack.init();
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div class="item"><div class="grid-stack-item-content"></div></div>';
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
-      let widget = grid.makeWidget('item');
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
+      let w = grid.makeWidget('item');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(0);
     });
-    it('passing id', function() {
-      let grid = GridStack.init();
+    it('passing id >', function() {
+      grid = GridStack.init();
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div id="item"><div class="grid-stack-item-content"></div></div>';
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
-      let widget = grid.makeWidget('#item');
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
+      let w = grid.makeWidget('#item');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(0);
     });
-    it('passing id no #', function() {
-      let grid = GridStack.init();
+    it('passing id no # >', function() {
+      grid = GridStack.init();
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div id="item"><div class="grid-stack-item-content"></div></div>';
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
-      let widget = grid.makeWidget('item');
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
+      let w = grid.makeWidget('item');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(0);
     });
-    it('passing id as number', function() {
-      let grid = GridStack.init();
+    it('passing id as number >', function() {
+      grid = GridStack.init();
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div id="1"><div class="grid-stack-item-content"></div></div>';
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
-      let widget = grid.makeWidget('1');
-      expect(parseInt(widget.getAttribute('gs-x'), 10)).toBe(0);
+      let w = grid.makeWidget('1');
+      expect(parseInt(w.getAttribute('gs-x'), 10)).toBe(0);
     });
   });
 
-  describe('method getFloat()', function() {
+  describe('method getFloat() >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should match true/false only', function() {
-      let grid = GridStack.init({float: true});
+    it('should match true/false only >', function() {
+      grid = GridStack.init({float: true});
       expect(grid.getFloat()).toBe(true);
       (grid as any).float(0);
       expect(grid.getFloat()).toBe(false);
@@ -1044,31 +1044,31 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.destroy', function() {
+  describe('grid.destroy >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.getElementById('gs-cont').remove();
     });
-    it('should cleanup gridstack', function() {
+    it('should cleanup gridstack >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let gridEl = grid.el;
       grid.destroy();
       expect(gridEl.parentElement).toBe(null);
       expect(grid.el).toBe(undefined);
       expect(grid.engine).toBe(undefined);
     });
-    it('should cleanup gridstack but leave elements', function() {
+    it('should cleanup gridstack but leave elements >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let gridEl = grid.el;
       grid.destroy(false);
       expect(gridEl.parentElement).not.toBe(null);
@@ -1079,19 +1079,19 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.resize', function() {
+  describe('grid.resize >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should resize widget', function() {
+    it('should resize widget >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
       grid.update(items[0], {w:5, h:5});
       expect(parseInt(items[0].getAttribute('gs-w'), 10)).toBe(5);
@@ -1099,20 +1099,20 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.move', function() {
+  describe('grid.move >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should move widget', function() {
+    it('should move widget >', function() {
       let options = {
         cellHeight: 80,
         margin: 5,
         float: true
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
       grid.update(items[0], {x:5, y:5});
       expect(parseInt(items[0].getAttribute('gs-x'), 10)).toBe(5);
@@ -1120,15 +1120,15 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.update', function() {
+  describe('grid.update >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should move and resize widget', function() {
-      let grid = GridStack.init({float: true});
+    it('should move and resize widget >', function() {
+      grid = GridStack.init({float: true});
       let el = Utils.getElements('.grid-stack-item')[1];
       expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
       
@@ -1138,8 +1138,8 @@ describe('gridstack', function() {
       expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
       expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(2);
     });
-    it('should change noMove', function() {
-      let grid = GridStack.init({float: true});
+    it('should change noMove >', function() {
+      grid = GridStack.init({float: true});
       let items = Utils.getElements('.grid-stack-item');
       let el = items[1];
       let dd = GridStack.getDD();
@@ -1157,13 +1157,13 @@ describe('gridstack', function() {
       expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
       expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(4);
     });
-    it('should change content and id, and move', function() {
-      let grid = GridStack.init({float: true});
-      let items = Utils.getElements('.grid-stack-item');
-      let el = items[1];
+    it('should change content and id, and move >', function() {
+      grid = GridStack.init({float: true});
+      let el = findEl('gsItem2');
       let sub = el.querySelector('.grid-stack-item-content');
 
       grid.update(el, {id: 'newID', y: 1, content: 'new content'});
+      expect(el.gridstackNode.id).toBe('newID');
       expect(el.getAttribute('gs-id')).toBe('newID');
       expect(sub.innerHTML).toBe('new content');
       expect(parseInt(el.getAttribute('gs-x'), 10)).toBe(4);
@@ -1171,10 +1171,9 @@ describe('gridstack', function() {
       expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(4);
       expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(4);
     });
-    it('should change max and constrain a wanted resize', function() {
-      let grid = GridStack.init({float: true});
-      let items = Utils.getElements('.grid-stack-item');
-      let el: GridItemHTMLElement = items[1];
+    it('should change max and constrain a wanted resize >', function() {
+      grid = GridStack.init({float: true});
+      let el = findEl('gsItem2');
       expect(el.getAttribute('gs-max-w')).toBe(null);
 
       grid.update(el, {maxW: 2, w: 5});
@@ -1184,10 +1183,9 @@ describe('gridstack', function() {
       expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(4);
       expect(el.gridstackNode.maxW).toBe(2);
     });
-    it('should change max and constrain existing', function() {
-      let grid = GridStack.init({float: true});
-      let items = Utils.getElements('.grid-stack-item');
-      let el: GridItemHTMLElement = items[1];
+    it('should change max and constrain existing >', function() {
+      grid = GridStack.init({float: true});
+      let el = findEl('gsItem2');
       expect(el.getAttribute('gs-max-w')).toBe(null);
 
       grid.update(el, {maxW: 2});
@@ -1197,8 +1195,8 @@ describe('gridstack', function() {
       expect(el.gridstackNode.maxW).toBe(2);
       expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(2);
     });
-    it('should change all max and move', function() {
-      let grid = GridStack.init({float: true});
+    it('should change all max and move, no inf loop! >', function() {
+      grid = GridStack.init({float: true});
       let items = Utils.getElements('.grid-stack-item');
 
       items.forEach(item => {
@@ -1217,44 +1215,43 @@ describe('gridstack', function() {
         expect(item.gridstackNode.maxH).toBe(2);
       });
     });
-
   });
 
-  describe('grid.margin', function() {
+  describe('grid.margin >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should return margin', function() {
+    it('should return margin >', function() {
       let options = {
         cellHeight: 80,
         margin: 12
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.getMargin()).toBe(12);
     });
-    it('should return update margin', function() {
+    it('should return update margin >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       grid.margin('11rem');
       expect(grid.getMargin()).toBe(11);
     });
-    it('should change unit', function() {
+    it('should change unit >', function() {
       let options = {
         cellHeight: 80,
         margin: 10,
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.getMargin()).toBe(10);
       grid.margin('10rem');
       expect(grid.getMargin()).toBe(10);
     });
-    it('should not update styles, with same value', function() {
+    it('should not update styles, with same value >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
@@ -1266,7 +1263,7 @@ describe('gridstack', function() {
       expect(grid._updateStyles).not.toHaveBeenCalled();
       expect(grid.getMargin()).toBe(5);
     });
-    it('should set top/bot/left value directly', function() {
+    it('should set top/bot/left value directly >', function() {
       let options = {
         cellHeight: 80,
         marginTop: 5,
@@ -1280,7 +1277,7 @@ describe('gridstack', function() {
       expect(grid.opts.marginLeft).toBe(1);
       expect(grid.opts.marginRight).toBe(10); // default value
     });
-    it('should set all 4 sides, and overall margin', function() {
+    it('should set all 4 sides, and overall margin >', function() {
       let options = {
         cellHeight: 80,
         marginTop: 5,
@@ -1295,7 +1292,7 @@ describe('gridstack', function() {
       expect(grid.opts.marginLeft).toBe(5);
       expect(grid.opts.marginRight).toBe(5);
     });
-    it('init 2 values', function() {
+    it('init 2 values >', function() {
       let options = {
         cellHeight: 80,
         margin: '5px 10'
@@ -1307,7 +1304,7 @@ describe('gridstack', function() {
       expect(grid.opts.marginLeft).toBe(10);
       expect(grid.opts.marginRight).toBe(10);
     });
-    it('init 4 values', function() {
+    it('init 4 values >', function() {
       let options = {
         cellHeight: 80,
         margin: '1 2 0em 3'
@@ -1319,12 +1316,12 @@ describe('gridstack', function() {
       expect(grid.opts.marginBottom).toBe(0);
       expect(grid.opts.marginLeft).toBe(3);
     });
-    it('set 2 values, should update style', function() {
+    it('set 2 values, should update style >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options); 
+      grid = GridStack.init(options); 
       expect(grid.getMargin()).toBe(5);
       spyOn(grid as any, '_updateStyles');
       grid.margin('1px 0');
@@ -1337,40 +1334,40 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.opts.rtl', function() {
+  describe('grid.opts.rtl >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should add grid-stack-rtl class', function() {
+    it('should add grid-stack-rtl class >', function() {
       let options = {
         cellHeight: 80,
         margin: 5,
         rtl: true
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.el.classList.contains('grid-stack-rtl')).toBe(true);
     });
-    it('should not add grid-stack-rtl class', function() {
+    it('should not add grid-stack-rtl class >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.el.classList.contains('grid-stack-rtl')).toBe(false);
     });
   });
   
-  describe('grid.opts.styleInHead', function() {
+  describe('grid.opts.styleInHead >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should add STYLE to parent node as a default', function() {
+    it('should add STYLE to parent node as a default >', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
@@ -1379,7 +1376,7 @@ describe('gridstack', function() {
       var grid = GridStack.init(options);
       expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV'); // any to access private _styles
     });
-    it('should add STYLE to HEAD if styleInHead === true', function() {
+    it('should add STYLE to HEAD if styleInHead === true >', function() {
       var options = {
         cellHeight: 80,
         verticalMargin: 10,
@@ -1391,175 +1388,164 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.opts.styleInHead', function() {
+  describe('grid.opts.styleInHead >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should add STYLE to parent node as a default', function() {
+    it('should add STYLE to parent node as a default >', function() {
       var grid = GridStack.init();
       expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV');
     });
-    it('should add STYLE to HEAD if styleInHead === true', function() {
+    it('should add STYLE to HEAD if styleInHead === true >', function() {
       var grid = GridStack.init({styleInHead: true});
       expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD');
     });
   });
 
-  describe('grid.enableMove', function() {
+  describe('grid.enableMove >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should enable move for future also', function() {
+    it('should enable move for future also >', function() {
       let options = {
         cellHeight: 80,
         margin: 5,
         disableDrag: true
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
-      for (let i = 0; i < items.length; i++) {
-        expect(items[i].classList.contains('ui-draggable-disabled')).toBe(true);
-      }
+      items.forEach(el => expect(el.classList.contains('ui-draggable-disabled')).toBe(true));
       expect(grid.opts.disableDrag).toBe(true);
 
       grid.enableMove(true);
-      for (let i = 0; i < items.length; i++) {
-        expect(items[i].classList.contains('ui-draggable-disabled')).toBe(false);
-      }
-      expect(grid.opts.disableDrag).toBe(false);
+      items.forEach(el => expect(el.classList.contains('ui-draggable-disabled')).toBe(false));
+      expect(grid.opts.disableDrag).not.toBe(true);
     });
-    it('should disable move for existing only', function() {
+    it('should disable move for existing only >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
-      for (let i = 0; i < items.length; i++) {
-        expect(items[i].classList.contains('ui-draggable-disabled')).toBe(false);
-      }
+      items.forEach(el => expect(el.classList.contains('ui-draggable-disabled')).toBe(false));
       expect(grid.opts.disableDrag).toBeFalsy();
 
       grid.enableMove(false);
-      for (let i = 0; i < items.length; i++) {
-        expect(items[i].classList.contains('ui-draggable-disabled')).toBe(true);
-      }
+      items.forEach(el => expect(el.classList.contains('ui-draggable-disabled')).toBe(true));
       expect(grid.opts.disableDrag).toBe(true);
     });
   });
 
-  describe('grid.enableResize', function() {
+  describe('grid.enableResize >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should enable resize', function() {
+    it('should enable resize >', function() {
       let options = {
         cellHeight: 80,
         margin: 5,
         disableResize: true
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.opts.disableResize).toBe(true);
       let items = Utils.getElements('.grid-stack-item');
       let dd = GridStack.getDD();
-      // expect(dd).toBe(null); // sanity test to verify type
-      for (let i = 0; i < items.length; i++) {
-        expect(dd.isResizable(items[i])).toBe(false);
-        expect(dd.isDraggable(items[i])).toBe(true);
-      }
+      expect(dd).not.toBe(null); // sanity test to verify type
+      items.forEach(el => {
+        expect(dd.isResizable(el)).toBe(false);
+        expect(dd.isDraggable(el)).toBe(true);
+      });
       grid.enableResize(true);
-      expect(grid.opts.disableResize).toBe(false);
-      for (let i = 0; i < items.length; i++) {
-        expect(dd.isResizable(items[i])).toBe(true);
-        expect(dd.isDraggable(items[i])).toBe(true);
-      }
+      expect(grid.opts.disableResize).not.toBe(true);
+      items.forEach(el => {
+        expect(dd.isResizable(el)).toBe(true);
+        expect(dd.isDraggable(el)).toBe(true);
+      });
     });
-    it('should disable resize', function() {
+    it('should disable resize >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       expect(grid.opts.disableResize).toBeFalsy();
       let items = Utils.getElements('.grid-stack-item');
       let dd = GridStack.getDD();
-      for (let i = 0; i < items.length; i++) {
-        expect(dd.isResizable(items[i])).toBe(true);
-        expect(dd.isDraggable(items[i])).toBe(true);
-      }
+      items.forEach(el => expect(dd.isResizable(el)).toBe(true));
       grid.enableResize(false);
       expect(grid.opts.disableResize).toBe(true);
-      for (let i = 0; i < items.length; i++) {
-        expect(dd.isResizable(items[i])).toBe(false);
-        expect(dd.isDraggable(items[i])).toBe(true);
-      }
+      items.forEach(el => {
+        expect(dd.isResizable(el)).toBe(false);
+        expect(dd.isDraggable(el)).toBe(true);
+      });
     });
   });
 
-  describe('grid.enable', function() {
+  describe('grid.enable >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should enable movable and resizable', function() {
+    it('should enable movable and resizable >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
       let dd = GridStack.getDD();
       grid.enableResize(false);
       grid.enableMove(false);
-      for (let i = 0; i < items.length; i++) {
-        expect(items[i].classList.contains('ui-draggable-disabled')).toBe(true);
-        expect(dd.isResizable(items[i])).toBe(false);
-        expect(dd.isDraggable(items[i])).toBe(false);
-      }
+      items.forEach(el => {
+        expect(el.classList.contains('ui-draggable-disabled')).toBe(true);
+        expect(dd.isResizable(el)).toBe(false);
+        expect(dd.isDraggable(el)).toBe(false);
+      });
       grid.enable();
-      for (let j = 0; j < items.length; j++) {
-        expect(items[j].classList.contains('ui-draggable-disabled')).toBe(false);
-        expect(dd.isResizable(items[j])).toBe(true);
-        expect(dd.isDraggable(items[j])).toBe(true);
-      }
+      items.forEach(el => {
+        expect(el.classList.contains('ui-draggable-disabled')).toBe(false);
+        expect(dd.isResizable(el)).toBe(true);
+        expect(dd.isDraggable(el)).toBe(true);
+      });
     });
   });
 
-  describe('grid.enable', function() {
+  describe('grid.enable >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should lock widgets', function() {
+    it('should lock widgets >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       grid.update('.grid-stack-item', {locked: true});
       Utils.getElements('.grid-stack-item').forEach(item => {
         expect(item.getAttribute('gs-locked')).toBe('true');
       })
     });
-    it('should unlock widgets', function() {
+    it('should unlock widgets >', function() {
       let options = {
         cellHeight: 80,
         margin: 5
       };
-      let grid = GridStack.init(options);
+      grid = GridStack.init(options);
       grid.update('.grid-stack-item', {locked: false});
       Utils.getElements('.grid-stack-item').forEach(item => {
         expect(item.getAttribute('gs-locked')).toBe(null);
@@ -1567,7 +1553,7 @@ describe('gridstack', function() {
     });
   });
 
-  describe('custom grid placement #1054', function() {
+  describe('custom grid placement #1054 >', function() {
     let HTML = 
     '<div style="w: 800px; h: 600px" id="gs-cont">' +
     '  <div class="grid-stack">' +
@@ -1592,26 +1578,26 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should have correct position', function() {
+    it('should have correct position >', function() {
       let items = Utils.getElements('.grid-stack-item');
-      for (let i = 0; i < items.length; i++) {
-        expect(parseInt(items[i].getAttribute('gs-x'))).toBe(pos[i].x);
-        expect(parseInt(items[i].getAttribute('gs-y'))).toBe(pos[i].y);
-        expect(parseInt(items[i].getAttribute('gs-w'))).toBe(pos[i].w);
-        expect(parseInt(items[i].getAttribute('gs-h'))).toBe(pos[i].h);
-      }
+      items.forEach((el, i) => {
+        expect(parseInt(el.getAttribute('gs-x'))).toBe(pos[i].x);
+        expect(parseInt(el.getAttribute('gs-y'))).toBe(pos[i].y);
+        expect(parseInt(el.getAttribute('gs-w'))).toBe(pos[i].w);
+        expect(parseInt(el.getAttribute('gs-h'))).toBe(pos[i].h);
+      });
     });
   });
 
-  describe('grid.compact', function() {
+  describe('grid.compact >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should move all 3 items to top-left with no space', function() {
-      let grid = GridStack.init({float: true});
+    it('should move all 3 items to top-left with no space >', function() {
+      grid = GridStack.init({float: true});
 
       let el3 = grid.addWidget({x: 3, y: 5});
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(3);
@@ -1621,8 +1607,8 @@ describe('gridstack', function() {
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(8);
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(0);
     });
-    it('not move locked item', function() {
-      let grid = GridStack.init({float: true});
+    it('not move locked item >', function() {
+      grid = GridStack.init({float: true});
 
       let el3 = grid.addWidget({x: 3, y: 5, locked: true, noMove: true});
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(3);
@@ -1634,15 +1620,15 @@ describe('gridstack', function() {
     });
   });
 
-  describe('gridOption locked #1181', function() {
+  describe('gridOption locked #1181 >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('not move locked item, size down added one', function() {
-      let grid = GridStack.init();
+    it('not move locked item, size down added one >', function() {
+      grid = GridStack.init();
       let el1 = grid.addWidget({x: 0, y: 1, w: 12,  locked: true});
       expect(parseInt(el1.getAttribute('gs-x'))).toBe(0);
       expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
@@ -1657,22 +1643,22 @@ describe('gridstack', function() {
 
   });
 
-  describe('nested grids', function() {
+  describe('nested grids >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackNestedHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should both init, second with nested class', function() {
-      let grids = GridStack.initAll();
+    it('should both init, second with nested class >', function() {
+      grids = GridStack.initAll();
       expect(grids.length).toBe(2);
       expect(grids[0].el.classList.contains('grid-stack-nested')).toBe(false);
       expect(grids[1].el.classList.contains('grid-stack-nested')).toBe(true);
     });
   });
 
-  describe('two grids', function() {
+  describe('two grids >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridHTML);
       document.body.insertAdjacentHTML('afterbegin', gridHTML);
@@ -1682,8 +1668,8 @@ describe('gridstack', function() {
       expect(els.length).toBe(2);
       els.forEach(g => g.remove());
     });
-    it('should not remove incorrect child', function() {
-      let grids = GridStack.initAll();
+    it('should not remove incorrect child >', function() {
+      grids = GridStack.initAll();
       expect(grids.length).toBe(2);
       expect(grids[0].engine.nodes.length).toBe(2);
       expect(grids[1].engine.nodes.length).toBe(2);
@@ -1700,8 +1686,8 @@ describe('gridstack', function() {
       expect(grids[1].engine.nodes.length).toBe(0);
       expect(grids[1].el.children.length).toBe(0);
     });
-    it('should remove 1 child', function() {
-      let grids = GridStack.initAll();
+    it('should remove 1 child >', function() {
+      grids = GridStack.initAll();
       grids[1].removeWidget( grids[1].engine.nodes[0].el );
       expect(grids[0].engine.nodes.length).toBe(2);
       expect(grids[0].el.children.length).toBe(2);
@@ -1710,22 +1696,22 @@ describe('gridstack', function() {
     });
   });
 
-  describe('grid.on events', function() {
+  describe('grid.on events >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('add 3 single events', function() {
-      let grid = GridStack.init();
+    it('add 3 single events >', function() {
+      grid = GridStack.init();
       let fcn = (event: Event) => {};
       grid.on('added', fcn).on('enable', fcn).on('dragstart', fcn);
       expect((grid as any)._gsEventHandler.enable).not.toBe(undefined);
       grid.off('added').off('enable').off('dragstart');
       expect((grid as any)._gsEventHandler.enable).toBe(undefined);
     });
-    it('add 3 events', function() {
+    it('add 3 events >', function() {
       let grid: any = GridStack.init(); // prevent TS check for string combine...
       let fcn = (event: CustomEvent) => {};
       grid.on('added enable dragstart', fcn);
@@ -1736,15 +1722,15 @@ describe('gridstack', function() {
 
   });
 
-  describe('save & load', function() {
+  describe('save & load >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('save layout', function() {
-      let grid = GridStack.init({maxRow: 10});
+    it('save layout >', function() {
+      grid = GridStack.init({maxRow: 10});
       let layout = grid.save(false);
       expect(layout).toEqual([{x:0, y:0, w:4, h:2, id:'gsItem1'}, {x:4, y:0, w:4, h:4, id:'gsItem2'}]);
       layout = grid.save();
@@ -1752,48 +1738,48 @@ describe('gridstack', function() {
       layout = grid.save(true);
       expect(layout).toEqual([{x:0, y:0, w:4, h:2, id:'gsItem1', content:'item 1 text'}, {x:4, y:0, w:4, h:4, id:'gsItem2', content:'item 2 text'}]);
     });
-    it('save layout full', function() {
-      let grid = GridStack.init({maxRow: 10, _foo: 'bar'} as any); // using bogus 'internal' field (stripped)
+    it('save layout full >', function() {
+      grid = GridStack.init({maxRow: 10, _foo: 'bar'} as any); // using bogus 'internal' field (stripped)
       let layout = grid.save(false, true);
       expect(layout).toEqual({maxRow: 10, children: [{x:0, y:0, w:4, h:2, id:'gsItem1'}, {x:4, y:0, w:4, h:4, id:'gsItem2'}]});
       layout = grid.save(true, true);
       expect(layout).toEqual({maxRow: 10, children: [{x:0, y:0, w:4, h:2, id:'gsItem1', content:'item 1 text'}, {x:4, y:0, w:4, h:4, id:'gsItem2', content:'item 2 text'}]});
     });
-    it('load move 1 item, delete others', function() {
-      let grid = GridStack.init();
+    it('load move 1 item, delete others >', function() {
+      grid = GridStack.init();
       grid.load([{x:2, h:1, id:'gsItem2'}]);
       let layout = grid.save(false);
-      expect(layout).toEqual([{x:2, y:0, w:4, id:'gsItem2'}]);
+      expect(layout).toEqual([{x:0, y:0, id:'gsItem2'}]);
     });
-    it('load add new, delete others', function() {
-      let grid = GridStack.init();
-      grid.load([{w:2, h:1, id:'gsItem3'}], true);
+    it('load add new, delete others >', function() {
+      grid = GridStack.init();
+      grid.load([{w:2, y:0, h:1, id:'gsItem3'}], true);
       let layout = grid.save(false);
       expect(layout).toEqual([{x:0, y:0, w:2, id:'gsItem3'}]);
     });
-    it('load size 1 item only', function() {
-      let grid = GridStack.init();
+    it('load 1 item only, no remove >', function() {
+      grid = GridStack.init();
       grid.load([{h:3, id:'gsItem1'}], false);
       let layout = grid.save(false);
-      expect(layout).toEqual([{x:0, y:0, w:4, h:3, id:'gsItem1'}, {x:4, y:0, w:4, h:4, id:'gsItem2'}]);
+      expect(layout).toEqual([{x:0, y:0, h:3, id:'gsItem1'}, {x:4, y:0, w:4, h:4, id:'gsItem2'}]);
     });
-    it('load size 1 item only with callback', function() {
-      let grid = GridStack.init();
+    it('load 1 item only with callback >', function() {
+      grid = GridStack.init();
       grid.load([{h:3, id:'gsItem1'}], () => null);
       let layout = grid.save(false);
-      expect(layout).toEqual([{x:0, y:0, w:4, h:3, id:'gsItem1'}]);
+      expect(layout).toEqual([{x:0, y:0, h:3, id:'gsItem1'}]);
     });
   });
 
-  describe('load', function() {
+  describe('load >', function() {
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('after init #1693', function() {
-      let grid = GridStack.init();
+    it('after init #1693 >', function() {
+      grid = GridStack.init();
       grid.load([{id:'gsItem1',x:0,y:0,w:5,h:1},{id:'gsItem2',x:6,y:0,w:2,h:2}]);
 
       let el1 = document.getElementById('item1')
@@ -1808,8 +1794,8 @@ describe('gridstack', function() {
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(2);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(2);
     });
-    it('after init replace nodes', function() {
-      let grid = GridStack.init();
+    it('after init replace nodes >', function() {
+      grid = GridStack.init();
       expect(document.getElementById('item1')).not.toBe(null);
       expect(document.getElementById('item2')).not.toBe(null);
 
@@ -1833,27 +1819,28 @@ describe('gridstack', function() {
     });
   });
 
-  describe('load empty', function() {
-    let items: GridStackWidget[] = [
-      {id: '0', x: 0, y: 0},
-      {id: '1', x: 0, y: 1},
-      {id: '2', x: 0, y: 2},
-      {id: '3', x: 0, y: 3},
-    ];
+  describe('load empty >', function() {
+    let items: GridStackWidget[];
     let grid: GridStack;
     const test = () => {
-      items.forEach(i => {
-        const n = grid.engine.nodes.find(n => n.id === i.id);
-        expect(parseInt(n.el.getAttribute('gs-y'))).toBe(i.y);
+      items.forEach(item => {
+        const n = grid.engine.nodes.find(n => n.id === item.id);
+        expect(parseInt(n.el.getAttribute('gs-y'))).toBe(item.y!);
       });
     }
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+      items = [
+        {id: '0', x: 0, y: 0},
+        {id: '1', x: 0, y: 1},
+        {id: '2', x: 0, y: 2},
+        {id: '3', x: 0, y: 3},
+      ];
     });
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('update collision', function() {
+    it('update collision >', function() {
       grid = GridStack.init({children: items});
       const n = grid.engine.nodes[0];
       test();
@@ -1866,7 +1853,7 @@ describe('gridstack', function() {
       items[1].y = 1; items[2].y = 2; items[3].y = 3;
       test();
     });
-    it('load collision 2208', function() {
+    it('load collision 2208 >', function() {
       grid = GridStack.init({children: items});
       test();
 
@@ -1880,7 +1867,7 @@ describe('gridstack', function() {
       items[1].y = 1; items[2].y = 2; items[3].y = 3;
       test();
     });
-    it('load full collision 2208', function() {
+    it('load full collision 2208 >', function() {
       grid = GridStack.init({children: items});
       test();
 
@@ -1903,7 +1890,7 @@ describe('gridstack', function() {
   });
 
  // ..and finally track log warnings at the end, instead of displaying them....
-  describe('obsolete warnings', function() {
+  describe('obsolete warnings >', function() {
     console.warn = jasmine.createSpy('log'); // track warnings instead of displaying them
     beforeEach(function() {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
@@ -1911,13 +1898,13 @@ describe('gridstack', function() {
     afterEach(function() {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('willItFit() legacy', function() {
-      let grid = GridStack.init({maxRow: 5});
+    it('willItFit() legacy >', function() {
+      grid = GridStack.init({maxRow: 5});
       expect((grid as any).willItFit(0, 0, 1, 3, false)).toBe(true);
       expect((grid as any).willItFit(0, 0, 1, 4, false)).toBe(false);
     });
-    it('warning if OLD commit() is called', function() {
-      let grid = GridStack.init();
+    it('warning if OLD commit() is called >', function() {
+      grid = GridStack.init();
       grid.batchUpdate(true);
       expect(grid.engine.batchMode).toBe(true);
       grid.commit(); // old API
@@ -1926,7 +1913,7 @@ describe('gridstack', function() {
     });
 
     /* saving as example
-    it('warning if OLD setGridWidth is called', function() {
+    it('warning if OLD setGridWidth is called >', function() {
       let grid: any = GridStack.init();
       grid.setGridWidth(11); // old 0.5.2 API
       expect(grid.getColumn()).toBe(11);

@@ -6,16 +6,17 @@ export const BREAKPOINTS = [
   { c: 6, w: 950 },
   { c: 8, w: 1100 },
 ];
+const cellHeight = 50;
 
 export const SUB_GRID_OPTIONS: GridStackOptions = {
   acceptWidgets: true,
-  column: 12,
   columnOpts: {
     breakpoints: BREAKPOINTS,
     layout: 'moveScale',
   },
   margin: 8,
   minRow: 2,
+  cellHeight,
 } as const;
 
 export const GRID_OPTIONS: GridStackOptions = {
@@ -25,7 +26,7 @@ export const GRID_OPTIONS: GridStackOptions = {
     breakpoints: BREAKPOINTS,
     layout: 'moveScale',
   },
-  float: false,
   margin: 8,
+  cellHeight,
   subGridOpts: SUB_GRID_OPTIONS,
 } as const;

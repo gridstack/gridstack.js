@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [11.0.1-dev (TBD)](#1101-dev-tbd)
 - [11.0.1 (2024-10-21)](#1101-2024-10-21)
 - [11.0.0 (2024-10-20)](#1100-2024-10-20)
 - [10.3.1 (2024-07-21)](#1031-2024-07-21)
@@ -114,6 +115,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 11.0.1-dev (TBD)
+* fix: [#2859](https://github.com/gridstack/gridstack.js/pull/2859) re-enabled tests and fix numerous issues found (see CL). Also thank you [lmartorella](https://github.com/lmartorella) for getting me going and starting it.
+* fix: [#2851](https://github.com/gridstack/gridstack.js/pull/2851) added support for custom max layout saving - Thank you [lmartorella](https://github.com/lmartorella)
 
 ## 11.0.1 (2024-10-21)
 * fix: [#2834](https://github.com/gridstack/gridstack.js/pull/2834) v11 angular missing package.json
