@@ -577,6 +577,10 @@ export class GridStack {
         subGrid.makeWidget(node.el, node);
       }
     }
+
+    // if sizedToContent, we need to re-calc the size of ourself
+    this.resizeToContentCheck(false, node);
+
     return subGrid;
   }
 
