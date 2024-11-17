@@ -14,7 +14,7 @@ describe('gridstack engine:', function() {
     expect(typeof GridStackEngine).toBe('function');
   });
 
-  describe('test constructor,', function() {
+  describe('test constructor >', function() {
   
     it('should be setup properly', function() {
       ePriv = e = new GridStackEngine();
@@ -49,7 +49,7 @@ describe('gridstack engine:', function() {
     });
   });  
 
-  describe('test prepareNode,', function() {
+  describe('test prepareNode >', function() {
 
     beforeAll(function() {
       ePriv = e = new GridStackEngine();
@@ -72,7 +72,7 @@ describe('gridstack engine:', function() {
     });
   });
 
-  describe('sorting of nodes,', function() {
+  describe('sorting of nodes >', function() {
     beforeAll(function() {
       ePriv = e = new GridStackEngine();
       e.nodes = [{x: 7, y: 0}, {x: 4, y: 4}, {x: 9, y: 0}, {x: 0, y: 1}];
@@ -102,7 +102,7 @@ describe('gridstack engine:', function() {
   
   });
   
-  describe('test isAreaEmpty,', function() {
+  describe('test isAreaEmpty >', function() {
 
     beforeAll(function() {
       ePriv = e = new GridStackEngine({float:true});
@@ -122,7 +122,7 @@ describe('gridstack engine:', function() {
     });
   });
 
-  describe('test cleanNodes/getDirtyNodes,', function() {
+  describe('test cleanNodes/getDirtyNodes >', function() {
 
     beforeAll(function() {
       ePriv = e = new GridStackEngine({float:true});
@@ -156,7 +156,7 @@ describe('gridstack engine:', function() {
     });
   });
 
-  describe('test batchUpdate/commit,', function() {
+  describe('test batchUpdate/commit >', function() {
     beforeAll(function() {
       ePriv = e = new GridStackEngine();
     });
@@ -184,7 +184,7 @@ describe('gridstack engine:', function() {
     });
   });
 
-  describe('test batchUpdate/commit,', function() {
+  describe('test batchUpdate/commit >', function() {
 
     beforeAll(function() {
       ePriv = e = new GridStackEngine({float:true});
@@ -201,7 +201,7 @@ describe('gridstack engine:', function() {
     });
   });
 
-  describe('test _notify,', function() {
+  describe('test _notify >', function() {
     let spy;
 
     beforeEach(function() {
@@ -235,8 +235,8 @@ describe('gridstack engine:', function() {
     });
   });
 
-  describe('test _packNodes,', function() {
-    describe('using float:false mode,', function() {
+  describe('test _packNodes >', function() {
+    describe('using float:false mode >', function() {
       beforeEach(function() {
         ePriv = e = new GridStackEngine({float:false});
       });
@@ -291,7 +291,7 @@ describe('gridstack engine:', function() {
     });
   });
 
-  describe('test changedPos,', function() {
+  describe('test changedPos >', function() {
     beforeAll(function() {
       ePriv = e = new GridStackEngine();
     });
@@ -317,7 +317,7 @@ describe('gridstack engine:', function() {
     });
   });
 
-  describe('test locked widget,', function() {
+  describe('test locked widget >', function() {
     beforeAll(function() {
       ePriv = e = new GridStackEngine();
     });
@@ -352,54 +352,48 @@ describe('gridstack engine:', function() {
     });
   });
   
-  describe('test columnChanged and save,', function() {
+  describe('test columnChanged >', function() {
     beforeAll(function() {
     });
-    it('wont\'t break layouts with 12 columns', function() {
+    it('12 to 1 and back', function() {
       ePriv = e = new GridStackEngine({ column: 12 });
       // Add two side-by-side components 6+6 = 12 columns
-      e.addNode({ x: 0, y: 0, w: 6, h: 1, id: 'left' });
-      e.addNode({ x: 6, y: 0, w: 6, h: 1, id: 'right' });
-      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
-      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
-      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
+      const left = e.addNode({ x: 0, y: 0, w: 6, h: 1, id: 'left' });
+      const right = e.addNode({ x: 6, y: 0, w: 6, h: 1, id: 'right' });
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
+      expect(right).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
       // Resize to 1 column
       e.column = 1;
       e.columnChanged(12, 1);
-      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
-      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
-      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
+      expect(right).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
       // Resize back to 12 column
       e.column = 12;
       e.columnChanged(1, 12);
-      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
-      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
-      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6, h: 1}));
+      expect(right).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6, h: 1}));
     });
-    it('wont\'t break layouts with more than 12 columns', function() {
+    it('24 column to 1 and back', function() {
       ePriv = e = new GridStackEngine({ column: 24 });
       // Add two side-by-side components 12+12 = 24 columns
-      e.addNode({ x: 0, y: 0, w: 12, h: 1, id: 'left' });
-      e.addNode({ x: 12, y: 0, w: 12, h: 1, id: 'right' });
-      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
-      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
-      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
+      const left = e.addNode({ x: 0, y: 0, w: 12, h: 1, id: 'left' });
+      const right = e.addNode({ x: 12, y: 0, w: 12, h: 1, id: 'right' });
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
+      expect(right).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
       // Resize to 1 column
       e.column = 1;
       e.columnChanged(24, 1);
-      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
-      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
-      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1, h: 1}));
+      expect(right).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1, h: 1}));
       // Resize back to 24 column
       e.column = 24;
       e.columnChanged(1, 24);
-      e.save().forEach(node => e.nodeBoundFix(findNode(node.id!)!));
-      expect(findNode('left')).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
-      expect(findNode('right')).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12, h: 1}));
+      expect(right).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12, h: 1}));
     });
   });
 
-  describe('test compact,', function() {
+  describe('test compact >', function() {
     beforeAll(function() {
       ePriv = e = new GridStackEngine();
     });

@@ -6,8 +6,11 @@ describe('gridstack >', function() {
 
   let grid: GridStack;
   let grids: GridStack[];
+  let find = function(id: string): GridStackNode {
+    return grid.engine.nodes.find(n => n.id === id)!;
+  };
   let findEl = function(id: string): GridItemHTMLElement {
-    return grid.engine.nodes.find(n => n.id === id)!.el!;
+    return find(id).el!;
   };
 
   // grid has 4x2 and 4x4 top-left aligned - used on most test cases
@@ -427,6 +430,69 @@ describe('gridstack >', function() {
       expect(el2.getAttribute('gs-w')).toBe(null);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
     });
+  });
+
+  describe('grid.column larger layout >', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    it('24 layout in 12 column to 1 back 12 then 24 >', function() {
+      const children: GridStackWidget[] = [{ x: 0, y: 0, w: 12, h: 1, id: 'left' }, { x: 12, y: 0, w: 12, h: 1, id: 'right' }];
+      children.forEach(c => c.content = c.id);
+
+      grid = GridStack.init({children});
+      const left = find('left');
+      const right = find('right');
+
+      // side-by-side components 12+12 = 24 columns but only have 12!
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12}));
+      expect(right).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12}));
+      // Resize to 1 column
+      grid.column(1);
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1}));
+      expect(right).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1}));
+      // Resize back to 12 column
+      grid.column(12);
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12}));
+      expect(right).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 12}));
+      // Resize to 24 column
+      grid.column(24);
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12}));
+      expect(right).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12}));
+    });
+    it('24 column to 12, 1 back 12,24 >', function() {
+      const children: GridStackWidget[] = [{ x: 0, y: 0, w: 12, h: 1, id: 'left' }, { x: 12, y: 0, w: 12, h: 1, id: 'right' }];
+      children.forEach(c => c.content = c.id);
+
+      grid = GridStack.init({column:24, children});
+      const left = find('left');
+      const right = find('right');
+
+      // side-by-side components 12+12 = 24 columns
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12}));
+      expect(right).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12}));
+      // Resize to 12 column
+      grid.column(12);
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6}));
+      expect(right).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6}));
+      // Resize to 1 column
+      grid.column(1);
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 1}));
+      expect(right).toEqual(jasmine.objectContaining({x: 0, y: 1, w: 1}));
+      // back to 12 column
+      grid.column(12);
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 6}));
+      expect(right).toEqual(jasmine.objectContaining({x: 6, y: 0, w: 6}));
+      // back to 24 column
+      grid.column(24);
+      expect(left).toEqual(jasmine.objectContaining({x: 0, y: 0, w: 12}));
+      expect(right).toEqual(jasmine.objectContaining({x: 12, y: 0, w: 12}));
+    });
+
   });
 
   // describe('oneColumnModeDomSort >', function() {
