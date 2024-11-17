@@ -270,7 +270,7 @@ export class GridStack {
    */
   public constructor(public el: GridHTMLElement, public opts: GridStackOptions = {}) {
     el.gridstack = this;
-    opts = opts || {}; // handles null/undefined/0
+    this.opts = opts = opts || {}; // handles null/undefined/0
 
     if (!el.classList.contains('grid-stack')) {
       this.el.classList.add('grid-stack');
@@ -482,7 +482,7 @@ export class GridStack {
     const domAttr = this._readAttr(el);
     Utils.defaults(w, domAttr);
     this.engine.prepareNode(w);
-    this._writeAttr(el, w);
+    // this._writeAttr(el, w); why write possibly incorrect values back when makeWidget() will ?
 
     this.el.appendChild(el);
 
@@ -746,6 +746,7 @@ export class GridStack {
         this.engine.nodes.push(item);
         if (Utils.samePos(item, w)) {
           this.moveNode(item, { ...w, forceCollide: true });
+          Utils.copyPos(w, item);
         }
 
         this.update(item.el, w);
@@ -1291,7 +1292,6 @@ export class GridStack {
       const w = Utils.cloneDeep(opt); // make a copy we can modify in case they re-use it or multiple items
       this.engine.nodeBoundFix(w);
       delete w.autoPosition;
-      delete w.id;
 
       // move/resize widget if anything changed
       const keys = ['x', 'y', 'w', 'h'];

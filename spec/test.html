@@ -5,19 +5,32 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Grid Spec test</title>
+  <link rel="stylesheet" href="../demo/demo.css"/>
   <script src="../dist/gridstack-all.js"></script>
 </head>
 <body>
   <h1>Grid Spec test</h1>
-  <div class="grid-stack"></div>
+  <a class="btn btn-primary" onClick="step1()" href="#">step1</a>
+  <a class="btn btn-primary" onClick="step2()" href="#">step2</a>
+  <div class="grid-stack">
+    <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="4" gs-h="2" gs-id="gsItem1" id="item1">
+      <div class="grid-stack-item-content">item 1 text</div>
+    </div>
+    <div class="grid-stack-item" gs-x="4" gs-y="0" gs-w="4" gs-h="4" gs-id="gsItem2" id="item2">
+      <div class="grid-stack-item-content">item 2 text</div>
+    </div>
+    </div>
   <script type="text/javascript">
     // test for spec file debugging
-    let grid = GridStack.init();
-    grid.engine.nodes = [
-      {x: 0, y: 1, w:1, h:1, _id: 0, id: '0'},
-      {x: 0, y: 5, w:1, h:1, _id: 1, id: '1'},
-    ];
-    grid.engine._packNodes();
+    let grid = GridStack.init({float: true, cellHeight:50, margin:5});
+
+    step1 = function() {
+      grid.column(1);
+      grid.addWidget({content:'new'});
+    }
+    step2 = function() {
+      grid.column(12);
+    }
   </script>
 </body>
 </html>
