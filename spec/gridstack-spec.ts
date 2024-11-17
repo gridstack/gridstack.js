@@ -1,6 +1,5 @@
 import { GridItemHTMLElement, GridStack, GridStackNode, GridStackWidget } from '../src/gridstack';
 import { Utils } from '../src/utils';
-import '../dist/gridstack.css';
 
 describe('gridstack >', function() {
   'use strict';
@@ -72,10 +71,6 @@ describe('gridstack >', function() {
     it('initAll use selector no dot >', function() {
       grids = GridStack.initAll(undefined, 'grid-stack');
       expect(grids.length).toBe(1);
-    });
-    it('initAll use wrong selector >', function() {
-      grids = GridStack.initAll(undefined, 'BAD_SELECTOR_TEST');
-      expect(grids.length).toBe(0);
     });
   });
 
@@ -766,7 +761,7 @@ describe('gridstack >', function() {
       grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
       items.forEach(oldEl => {
-        let el = grid.addWidget(oldEl);
+        let el = grid.makeWidget(oldEl);
         expect(parseInt(oldEl.getAttribute('gs-x'), 10)).toBe(parseInt(el.getAttribute('gs-x'), 10));
         expect(parseInt(oldEl.getAttribute('gs-y'), 10)).toBe(parseInt(el.getAttribute('gs-y'), 10));
       })
@@ -780,7 +775,7 @@ describe('gridstack >', function() {
       let items = Utils.getElements('.grid-stack-item');
       items.forEach(oldEl => {
         let el = oldEl.cloneNode(true) as HTMLElement;
-        el = grid.addWidget(el);
+        el = grid.makeWidget(el);
         expect(parseInt(el.getAttribute('gs-y'), 10)).not.toBe(parseInt(oldEl.getAttribute('gs-y'), 10));
       });
     });

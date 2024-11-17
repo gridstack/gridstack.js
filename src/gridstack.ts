@@ -744,12 +744,13 @@ export class GridStack {
 
         // add back to current list BUT force a collision check if it 'appears' we didn't change to make sure we don't overlap others now
         this.engine.nodes.push(item);
-        if (Utils.samePos(item, w)) {
+        if (Utils.samePos(item, w) && this.engine.nodes.length > 1) {
           this.moveNode(item, { ...w, forceCollide: true });
-          Utils.copyPos(w, item);
+          Utils.copyPos(w, item); // use possily updated values before update() is called next (no-op since already moved)
         }
 
         this.update(item.el, w);
+
         if (w.subGridOpts?.children) { // update any sub grid as well
           const sub = item.el.querySelector('.grid-stack') as GridHTMLElement;
           if (sub && sub.gridstack) {
@@ -1312,6 +1313,7 @@ export class GridStack {
       if (w.content !== undefined) {
         const itemContent = el.querySelector('.grid-stack-item-content') as HTMLElement;
         if (itemContent && itemContent.textContent !== w.content) {
+          n.content = w.content;
           GridStack.renderCB(itemContent, w);
           // restore any sub-grid back
           if (n.subGrid?.el) {

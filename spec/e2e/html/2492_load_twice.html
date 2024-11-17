@@ -24,7 +24,7 @@
     ];
     let count = 0;
     items.forEach(n => n.id = String(count++)); // TEST loading with ids
-    let grid = GridStack.init({cellHeight: 70, margin: 5}).load(items)
+    let grid = GridStack.init({cellHeight: 70, margin: 5, children: items})
     items.forEach(n => n.content += '*')
     grid.load(items);
   </script>

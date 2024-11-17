@@ -112,8 +112,12 @@ export class GridStackEngine {
       if (collide.locked || this._loading || node._moving && !node._skipDown && nn.y > node.y && !this.float &&
         // can take space we had, or before where we're going
         (!this.collide(collide, {...collide, y: node.y}, node) || !this.collide(collide, {...collide, y: nn.y - collide.h}, node))) {
+
         node._skipDown = (node._skipDown || nn.y > node.y);
-        moved = this.moveNode(node, {...nn, y: collide.y + collide.h, ...newOpt});
+        const newNN = {...nn, y: collide.y + collide.h, ...newOpt};
+        // pretent we moved to where we are now so we can continue any collision checks #2492
+        moved = this._loading && Utils.samePos(node, newNN) ? true : this.moveNode(node, newNN);
+
         if ((collide.locked || this._loading) && moved) {
           Utils.copyPos(nn, node); // moving after lock become our new desired location
         } else if (!collide.locked && moved && opt.pack) {
@@ -127,7 +131,9 @@ export class GridStackEngine {
         // move collide down *after* where we will be, ignoring where we are now (don't collide with us)
         moved = this.moveNode(collide, {...collide, y: nn.y + nn.h, skip: node, ...newOpt});
       }
-      if (!moved) { return didMove; } // break inf loop if we couldn't move after all (ex: maxRow, fixed)
+
+      if (!moved) return didMove; // break inf loop if we couldn't move after all (ex: maxRow, fixed)
+
       collide = undefined;
     }
     return didMove;
@@ -720,7 +726,7 @@ export class GridStackEngine {
     }
 
     // now move (to the original ask vs the collision version which might differ) and repack things
-    if (needToMove) {
+    if (needToMove && !Utils.samePos(node, nn)) {
       node._dirty = true;
       Utils.copyPos(node, nn);
     }
