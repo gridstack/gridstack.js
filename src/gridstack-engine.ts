@@ -51,6 +51,7 @@ export class GridStackEngine {
 
   public constructor(opts: GridStackEngineOptions = {}) {
     this.column = opts.column || this.defaultColumn;
+    if (this.column > this.defaultColumn) this.defaultColumn = this.column;
     this.maxRow = opts.maxRow;
     this._float = opts.float;
     this.nodes = opts.nodes || [];

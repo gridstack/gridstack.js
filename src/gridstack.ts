@@ -691,6 +691,7 @@ export class GridStack {
     // the original wanted layout so we can scale back up correctly #1471
     let maxColumn = 0;
     items.forEach(n => { maxColumn = Math.max(maxColumn, (n.x || 0) + n.w) });
+    if (maxColumn > this.engine.defaultColumn) this.engine.defaultColumn = maxColumn;
     if (maxColumn > column) {
       this._ignoreLayoutsNodeChange = true; // skip layout update
       this.engine.cacheLayout(items, maxColumn, true);
