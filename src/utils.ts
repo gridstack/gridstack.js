@@ -190,51 +190,6 @@ export class Utils {
     return id ? nodes.find(n => n.id === id) : undefined;
   }
 
-  /**
-   * creates a style sheet with style id under given parent
-   * @param id will set the 'gs-style-id' attribute to that id
-   * @param parent to insert the stylesheet as first child,
-   * if none supplied it will be appended to the document head instead.
-   */
-  static createStylesheet(id: string, parent?: HTMLElement, options?: { nonce?: string }): CSSStyleSheet {
-    const style: HTMLStyleElement = document.createElement('style');
-    const nonce = options?.nonce
-    if (nonce) style.nonce = nonce
-    style.setAttribute('type', 'text/css');
-    style.setAttribute('gs-style-id', id);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((style as any).styleSheet) { // TODO: only CSSImportRule have that and different beast ??
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (style as any).styleSheet.cssText = '';
-    } else {
-      style.appendChild(document.createTextNode('')); // WebKit hack
-    }
-    if (!parent) {
-      // default to head
-      parent = document.getElementsByTagName('head')[0];
-      parent.appendChild(style);
-    } else {
-      parent.insertBefore(style, parent.firstChild);
-    }
-    return style.sheet as CSSStyleSheet;
-  }
-
-  /** removed the given stylesheet id */
-  static removeStylesheet(id: string, parent?: HTMLElement): void {
-    const target = parent || document;
-    const el = target.querySelector('STYLE[gs-style-id=' + id + ']');
-    if (el && el.parentNode) el.remove();
-  }
-
-  /** inserts a CSS rule */
-  static addCSSRule(sheet: CSSStyleSheet, selector: string, rules: string): void {
-    if (typeof sheet.addRule === 'function') {
-      sheet.addRule(selector, rules);
-    } else if (typeof sheet.insertRule === 'function') {
-      sheet.insertRule(`${selector}{${rules}}`);
-    }
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static toBool(v: unknown): boolean {
     if (typeof v === 'boolean') {

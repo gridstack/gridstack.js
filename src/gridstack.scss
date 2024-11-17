@@ -41,6 +41,7 @@ $animation_speed: .3s !default;
 .grid-stack > .grid-stack-item {
   position: absolute;
   padding: 0;
+  height: var(--gs-cell-height);
 
   > .grid-stack-item-content {
     margin: 0;
@@ -98,6 +99,25 @@ $animation_speed: .3s !default;
   > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px;}
   > .ui-resizable-w  { cursor: w-resize;  width: 10px; top: 15px; bottom: 15px; }
 
+  > .ui-resizable-n {
+    top: var(--gs-item-margin-top);
+  }
+  > .ui-resizable-s
+  , > .ui-resizable-se
+  , > .ui-resizable-sw {
+    bottom: var(--gs-item-margin-bottom);
+  }
+  > .ui-resizable-ne,
+  > .ui-resizable-e,
+  > .ui-resizable-se {
+    right: var(--gs-item-margin-right);
+  }
+  > .ui-resizable-nw,
+  > .ui-resizable-w,
+  > .ui-resizable-sw {
+    left: var(--gs-item-margin-left);
+  }
+  
   &.ui-draggable-dragging {
     &> .ui-resizable-handle {
       display: none !important;
@@ -155,3 +175,14 @@ $animation_speed: .3s !default;
 .gs-1 > .grid-stack-item {
   width: 100%;
 }
+
+.grid-stack {
+  > .grid-stack-item > .grid-stack-item-content, 
+  > .grid-stack-placeholder > .placeholder-content {
+    top: var(--gs-item-margin-top);
+    right: var(--gs-item-margin-right);
+    bottom: var(--gs-item-margin-bottom);
+    left: var(--gs-item-margin-left);
+  }
+}
+
