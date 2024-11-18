@@ -76,14 +76,14 @@ $animation_speed: .3s !default;
   }
 
   > .ui-resizable-ne {
-    @include vendor(transform, translate(0, 10px) rotate(45deg));
+    @include vendor(transform, rotate(45deg));
   }
   > .ui-resizable-sw {
     @include vendor(transform, rotate(45deg));
   }
 
   > .ui-resizable-nw {
-    @include vendor(transform, translate(0, 10px) rotate(-45deg));
+    @include vendor(transform, rotate(-45deg));
   }
   > .ui-resizable-se {
     @include vendor(transform, rotate(-45deg));
