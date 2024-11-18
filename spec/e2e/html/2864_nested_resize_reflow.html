@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Grid Spec test</title>
-  <link rel="stylesheet" href="../demo/demo.css"/>
-  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
-  <script src="../dist/gridstack-all.js"></script>
+  <title>2864 nest grid resize</title>
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <link rel="stylesheet" href="../../../dist/gridstack-extra.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
 </head>
 <body>
-  <h1>Grid Spec test</h1>
-  <a class="btn btn-primary" onClick="step1()" href="#">step1</a>
-  <a class="btn btn-primary" onClick="step2()" href="#">step2</a>
+  <h1>2864 nest grid resize</h1>
+  <p>Test for nested grid resize reflowing content (manually and API)</p>
+  <a class="btn btn-primary" onClick="step1()" href="#">resize</a>
   <div class="grid-stack">
     <!-- <div class="grid-stack-item" gs-x="0" gs-y="0" gs-w="4" gs-h="2" gs-id="gsItem1" id="item1">
       <div class="grid-stack-item-content">item 1 text</div>
@@ -36,8 +36,6 @@
 
     step1 = function() {
       grid.update(grid.engine.nodes[0].el, {w:2});
-    }
-    step2 = function() {
     }
   </script>
 </body>

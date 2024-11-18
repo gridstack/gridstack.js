@@ -7,6 +7,10 @@ describe('regression >', function() {
   let findEl = function(id: string): GridItemHTMLElement {
     return grid.engine.nodes.find(n => n.id === id)!.el!;
   };
+  let findSubEl = function(id: string, index = 0): GridItemHTMLElement {
+    return grid.engine.nodes[index].subGrid?.engine.nodes.find(n => n.id === id)!.el!;
+  };
+
 
   // empty grid
   let gridstackEmptyHTML =
@@ -53,6 +57,53 @@ describe('regression >', function() {
       expect(parseInt(el1.getAttribute('gs-y'), 10)).toBe(1);
       expect(parseInt(el2.getAttribute('gs-x'), 10)).toBe(2);
       expect(parseInt(el2.getAttribute('gs-y'), 10)).toBe(0);
+    });
+  });
+
+  describe('2865 nested grid resize >', function() {
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('', function() {
+      let children: GridStackWidget[] = [{},{},{}];
+      let items: GridStackWidget[] = [
+        {x: 0, y: 0, w:3, h:3, sizeToContent: true, subGridOpts: {children, column: 'auto'}}
+      ];
+      let count = 0;
+      [...items, ...children].forEach(n => n.id = String(count++));
+      grid = GridStack.init({cellHeight: 70, margin: 5, children: items});
+
+      let nested = findEl('0');
+      let el1 = findSubEl('1');
+      let el2 = findSubEl('2');
+      let el3 = findSubEl('3');
+      expect(parseInt(nested.getAttribute('gs-x'), 10)).toBe(0);
+      expect(parseInt(nested.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(nested.getAttribute('gs-w'), 10)).toBe(3);
+      expect(nested.getAttribute('gs-h')).toBe(null); // sizeToContent 3 -> 1 which is null
+      expect(parseInt(el1.getAttribute('gs-x'), 10)).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-x'), 10)).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-x'), 10)).toBe(2);
+      expect(parseInt(el3.getAttribute('gs-y'), 10)).toBe(0);
+
+      // now resize the nested grid to 2 -> should reflow el3
+      grid.update(nested, {w:2});
+      expect(parseInt(nested.getAttribute('gs-x'), 10)).toBe(0);
+      expect(parseInt(nested.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(nested.getAttribute('gs-w'), 10)).toBe(2);
+      expect(nested.getAttribute('gs-h')).toBe(null); // sizeToContent not called until some delay
+      expect(parseInt(el1.getAttribute('gs-x'), 10)).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el2.getAttribute('gs-x'), 10)).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-y'), 10)).toBe(0);
+      // 3rd item pushed to next row
+      expect(parseInt(el3.getAttribute('gs-x'), 10)).toBe(0);
+      expect(parseInt(el3.getAttribute('gs-y'), 10)).toBe(1);
     });
   });
 });

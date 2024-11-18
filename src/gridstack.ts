@@ -219,6 +219,9 @@ export class GridStack {
   /** point to a parent grid item if we're nested (inside a grid-item in between 2 Grids) */
   public parentGridNode?: GridStackNode;
 
+  /** time to wait for animation (if enabled) to be done so content sizing can happen */
+  public animationDelay = 300 + 10;
+
   protected static engineClass: typeof GridStackEngine;
   protected resizeObserver: ResizeObserver;
 
@@ -1345,7 +1348,12 @@ export class GridStack {
       if (m) {
         const widthChanged = (m.w !== undefined && m.w !== n.w);
         this.moveNode(n, m);
-        this.resizeToContentCheck(widthChanged, n); // wait for animation if we changed width
+        if (widthChanged && n.subGrid) {
+          // if we're animating the client size hasn't changed yet, so force a change (not exact size)
+          n.subGrid.onResize(this.hasAnimationCSS() ? n.w : undefined);
+        } else {
+          this.resizeToContentCheck(widthChanged, n);
+        }
         delete n._orig; // clear out original position now that we moved #2669
       }
       if (m || changed) {
@@ -1774,11 +1782,11 @@ export class GridStack {
    * and remember the prev columns we used, or get our count from parent, as well as check for cellHeight==='auto' (square)
    * or `sizeToContent` gridItem options.
    */
-  public onResize(): GridStack {
-    if (!this.el?.clientWidth) return; // return if we're gone or no size yet (will get called again)
-    if (this.prevWidth === this.el.clientWidth) return; // no-op
-    this.prevWidth = this.el.clientWidth
-    // console.log('onResize ', this.el.clientWidth);
+  public onResize(clientWidth = this.el?.clientWidth): GridStack {
+    if (!clientWidth) return; // return if we're gone or no size yet (will get called again)
+    if (this.prevWidth === clientWidth) return; // no-op
+    this.prevWidth = clientWidth
+    // console.log('onResize ', clientWidth);
 
     this.batchUpdate();
 
@@ -1786,7 +1794,7 @@ export class GridStack {
     let columnChanged = false;
     if (this._autoColumn && this.parentGridNode) {
       if (this.opts.column !== this.parentGridNode.w) {
-        this.column(this.parentGridNode.w, this.opts.layout || 'none');
+        this.column(this.parentGridNode.w, this.opts.layout || 'list');
         columnChanged = true;
       }
     } else {
@@ -1816,7 +1824,7 @@ export class GridStack {
 
     // update any gridItem height with sizeToContent, but wait for DOM $animation_speed to settle if we changed column count
     // TODO: is there a way to know what the final (post animation) size of the content will be so we can animate the column width and height together rather than sequentially ?
-    if (delay && this.hasAnimationCSS()) return setTimeout(() => this.resizeToContentCheck(false, n), 300 + 10);
+    if (delay && this.hasAnimationCSS()) return setTimeout(() => this.resizeToContentCheck(false, n), this.animationDelay);
 
     if (n) {
       if (Utils.shouldSizeToContent(n)) this.resizeToContentCBCheck(n.el);
