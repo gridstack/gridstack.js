@@ -120,6 +120,7 @@ Change log
 * fix: [#2859](https://github.com/gridstack/gridstack.js/pull/2859) re-enabled tests and fix numerous issues found (see CL). Also thank you [lmartorella](https://github.com/lmartorella) for getting me going and starting it.
 * fix: [#2851](https://github.com/gridstack/gridstack.js/pull/2851) added support for custom max layout saving - Thank you [lmartorella](https://github.com/lmartorella)
 * fix: [#2492](https://github.com/gridstack/gridstack.js/issues/2492) loading same layout with overlapping widget fix. v10.3.0 regression.
+* fix: [#2864](https://github.com/gridstack/gridstack.js/issues/2864) added `GridStackOptions.layout` for nested grid reflow during resize. default to 'list'.
 
 ## 11.0.1 (2024-10-21)
 * fix: [#2834](https://github.com/gridstack/gridstack.js/pull/2834) v11 angular missing package.json
