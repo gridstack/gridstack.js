@@ -191,6 +191,9 @@ export interface GridStackOptions {
   /** additional widget class (default?: 'grid-stack-item') */
   itemClass?: string;
 
+  /** re-layout mode when we're a subgrid and we are being resized. default to 'list' */
+  layout?: ColumnOptions;
+
   /** true when widgets are only created when they scroll into view (visible) */
   lazyLoad?: boolean;
 

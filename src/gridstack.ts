@@ -1786,7 +1786,7 @@ export class GridStack {
     let columnChanged = false;
     if (this._autoColumn && this.parentGridNode) {
       if (this.opts.column !== this.parentGridNode.w) {
-        this.column(this.parentGridNode.w, 'none');
+        this.column(this.parentGridNode.w, this.opts.layout || 'none');
         columnChanged = true;
       }
     } else {
