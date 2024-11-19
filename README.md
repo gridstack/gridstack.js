@@ -182,7 +182,7 @@ grid.printCount();
 You can now (5.1+) easily create your own layout engine to further customize your usage. Here is a typescript example
 
 ```ts
-import { GridStack, GridStackEngine, GridStackNod, GridStackMoveOpts } from 'gridstack';
+import { GridStack, GridStackEngine, GridStackNode, GridStackMoveOpts } from 'gridstack';
 
 class CustomEngine extends GridStackEngine {
 
