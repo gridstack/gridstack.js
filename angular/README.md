@@ -29,32 +29,30 @@ CSS
 }
 ```
 
-in your module Code
-
-```ts
-import { GridstackModule } from 'gridstack/dist/angular';
-
-@NgModule({
-  imports: [GridstackModule, ...]
-  ...
-  bootstrap: [AppComponent]
-})
-export class AppModule { }
-```
-
 Component Code
 
 ```ts
 import { GridStackOptions } from 'gridstack';
+import { GridstackComponent, GridstackItemComponent } from 'gridstack/dist/angular';
 
-// sample grid options + items to load...
-public gridOptions: GridStackOptions = {
-  margin: 5,
-  children: [ // or call load()/addWidget() with same data
-    {x:0, y:0, minW:2, content:'Item 1'},
-    {x:1, y:0, content:'Item 2'},
-    {x:0, y:1, content:'Item 3'},
+@Component({
+  imports: [
+    GridstackComponent,
+    GridstackItemComponent
   ]
+  ...
+ })
+export class MyComponent {
+  // sample grid options + items to load...
+  public gridOptions: GridStackOptions = {
+    margin: 5,
+    children: [ // or call load()/addWidget() with same data
+      {x:0, y:0, minW:2, content:'Item 1'},
+      {x:1, y:0, content:'Item 2'},
+      {x:0, y:1, content:'Item 3'},
+    ]
+  }
+
 }
 ```
 
@@ -97,11 +95,16 @@ export class AComponent extends BaseWidget implements OnDestroy {
 export class BComponent extends BaseWidget {
 }
 
-// .... in your module for example
-constructor() {
-  // register all our dynamic components types created by the grid
-  GridstackComponent.addComponentToSelectorType([AComponent, BComponent]);
-}
+// in your app.config for example
+export const appConfig: ApplicationConfig = {
+  providers: [
+    ...
+    provideEnvironmentInitializer(() => {
+      // register all our dynamic components created in the grid
+      GridstackComponent.addComponentToSelectorType([AComponent, BComponent]);
+    })
+  ]
+};
 
 // now our content will use Components instead of dummy html content
 public gridOptions: NgGridStackOptions = {
@@ -175,7 +178,7 @@ Code started shipping with v8.1.2+ in `dist/angular` for people to use directly 
 
 - This wrapper needs:
   - gridstack v8 to run as it needs the latest changes (use older version that matches GS versions)
-  - Angular 14+ for dynamic `createComponent()` API
+  - Angular 14+ for dynamic `createComponent()` API and Standalone Components
 
 NOTE: if you are on Angular 13 or below: copy the wrapper code over (or patch it - see main page example) and change `createComponent()` calls to use old API instead:
 ```ts

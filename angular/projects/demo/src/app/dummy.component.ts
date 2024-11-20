@@ -14,8 +14,7 @@ import { BaseWidget, NgCompInputs } from 'gridstack/dist/angular';
 
 @Component({
   selector: 'app-a',
-  template: 'Comp A {{text}}',
-  standalone: false
+  template: 'Comp A {{text}}'
 })
 export class AComponent extends BaseWidget implements OnDestroy {
   @Input() text: string = 'foo'; // test custom input data
@@ -26,8 +25,7 @@ export class AComponent extends BaseWidget implements OnDestroy {
 
 @Component({
   selector: 'app-b',
-  template: 'Comp B',
-  standalone: false
+  template: 'Comp B'
 })
 export class BComponent extends BaseWidget implements OnDestroy {
   constructor() { super(); console.log('Comp B created'); }
@@ -36,8 +34,7 @@ export class BComponent extends BaseWidget implements OnDestroy {
 
 @Component({
   selector: 'app-c',
-  template: 'Comp C',
-  standalone: false
+  template: 'Comp C'
 })
 export class CComponent extends BaseWidget implements OnDestroy {
   ngOnDestroy() { console.log('Comp C destroyed'); }
@@ -54,8 +51,7 @@ export class CComponent extends BaseWidget implements OnDestroy {
   styles: [`
     :host { height: 100%; display: flex; flex-direction: column; }
     ::ng-deep .grid-stack.grid-stack-nested { flex: 1; }
-  `],
-  standalone: false
+  `]
 })
 export class NComponent extends BaseWidget implements OnDestroy {
   /** this is where the dynamic nested grid will be hosted. gsCreateNgComponents() looks for 'container' like GridstackItemComponent */

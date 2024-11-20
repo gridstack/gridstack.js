@@ -51,7 +51,9 @@ export type SelectorToType = {[key: string]: Type<Object>};
   selector: 'gridstack',
   template: `
     <!-- content to show when when grid is empty, like instructions on how to add widgets -->
-    <ng-content select="[empty-content]" *ngIf="isEmpty"></ng-content>
+    @if (isEmpty) {
+      <ng-content select="[empty-content]"></ng-content>
+    }
     <!-- where dynamic items go -->
     <ng-template #container></ng-template>
     <!-- where template items go -->
@@ -60,7 +62,6 @@ export type SelectorToType = {[key: string]: Type<Object>};
   styles: [`
     :host { display: block; }
   `],
-  standalone: false
   // changeDetection: ChangeDetectionStrategy.OnPush, // IFF you want to optimize and control when ChangeDetection needs to happen...
 })
 export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
@@ -131,6 +132,13 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
     // protected readonly cd: ChangeDetectorRef,
     protected readonly elementRef: ElementRef<GridCompHTMLElement>,
   ) {
+    // set globally our method to create the right widget type
+    if (!GridStack.addRemoveCB) {
+      GridStack.addRemoveCB = gsCreateNgComponents;
+    }
+    if (!GridStack.saveCB) {
+      GridStack.saveCB = gsSaveAdditionalNgInfo;
+    }
     this.el._gridComp = this;
   }
 

@@ -6,7 +6,7 @@ import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 
 // TEST: local testing of file
 // import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from './gridstack.component';
-import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from 'gridstack/dist/angular';
+import { GridstackComponent, GridstackItemComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from 'gridstack/dist/angular';
 
 // unique ids sets for each item for correct ngFor updating
 let ids = 1;
@@ -14,7 +14,13 @@ let ids = 1;
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  standalone: false
+  imports: [
+    AngularSimpleComponent,
+    AngularNgForTestComponent,
+    AngularNgForCmdTestComponent,
+    GridstackComponent,
+    GridstackItemComponent
+  ]
 })
 export class AppComponent implements OnInit {
 
