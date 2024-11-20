@@ -14,6 +14,7 @@
      <button (click)="change()">modify item</button>
      <div class="grid-stack"></div>
      `,
+   standalone: false,
    // gridstack.min.css and other custom styles should be included in global styles.scss
  })
  export class AngularSimpleComponent implements OnInit {

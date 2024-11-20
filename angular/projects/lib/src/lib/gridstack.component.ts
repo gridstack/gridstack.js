@@ -60,6 +60,7 @@ export type SelectorToType = {[key: string]: Type<Object>};
   styles: [`
     :host { display: block; }
   `],
+  standalone: false
   // changeDetection: ChangeDetectionStrategy.OnPush, // IFF you want to optimize and control when ChangeDetection needs to happen...
 })
 export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {

@@ -32,6 +32,7 @@ import { GridItemHTMLElement, GridStack, GridStackWidget } from 'gridstack';
       }
     </div>
     `,
+  standalone: false,
   // gridstack.min.css and other custom styles should be included in global styles.scss or here
 })
 export class AngularNgForCmdTestComponent implements AfterViewInit {
