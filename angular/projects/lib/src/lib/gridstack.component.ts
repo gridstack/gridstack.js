@@ -5,6 +5,7 @@
 
 import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, Input,
   OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType, ComponentRef } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
 
@@ -51,9 +52,7 @@ export type SelectorToType = {[key: string]: Type<Object>};
   selector: 'gridstack',
   template: `
     <!-- content to show when when grid is empty, like instructions on how to add widgets -->
-    @if (isEmpty) {
-      <ng-content select="[empty-content]"></ng-content>
-    }
+    <ng-content select="[empty-content]" *ngIf="isEmpty"></ng-content>
     <!-- where dynamic items go -->
     <ng-template #container></ng-template>
     <!-- where template items go -->
@@ -62,6 +61,7 @@ export type SelectorToType = {[key: string]: Type<Object>};
   styles: [`
     :host { display: block; }
   `],
+  imports: [NgIf]
   // changeDetection: ChangeDetectionStrategy.OnPush, // IFF you want to optimize and control when ChangeDetection needs to happen...
 })
 export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
