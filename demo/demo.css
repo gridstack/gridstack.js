@@ -44,11 +44,17 @@ h1 {
 .grid-stack {
   background: #FAFAD2;
 }
+.grid-stack.grid-stack-static {
+  background: #eee;
+}
 
 .sidebar > .grid-stack-item,
 .grid-stack-item-content {
   text-align: center;
   background-color: #18bc9c;
+}
+.ui-draggable-disabled.ui-resizable-disabled > .grid-stack-item-content {
+  background-color: #777;
 }
 
 .grid-stack-item-removing {
