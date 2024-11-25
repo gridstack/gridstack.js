@@ -518,7 +518,12 @@ export class GridStack {
       grid = grid.parentGridNode?.grid;
     }
     //... and set the create options
-    ops = Utils.cloneDeep({ ...(subGridTemplate || {}), children: undefined, ...(ops || node.subGridOpts || {}) });
+    ops = Utils.cloneDeep({
+      // by default sub-grid inherit from us | parent, other than id, children, etc...
+      ...this.opts, id: undefined, children: undefined, column: 'auto', columnOpts: undefined, layout: 'list', subGridOpts: undefined,
+      ...(subGridTemplate || {}),
+      ...(ops || node.subGridOpts || {})
+    });
     node.subGridOpts = ops;
 
     // if column special case it set, remember that flag and set default
