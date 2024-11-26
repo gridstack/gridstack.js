@@ -832,10 +832,10 @@ graphemer@^1.4.0:
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
 
-gridstack@^11.1.0:
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-11.1.0.tgz#37dc2d15ae950cdcc72a45e82c38299f68f846e7"
-  integrity sha512-+znlk7IzXRfdWejaZk3AYZMPKtgyAeu7AKrBFZqfCaJxwro5l6Ql2CtazWv3ejDXs1J1ku2x0OXNWDG3QnlLQA==
+gridstack@^11.1.1:
+  version "11.1.1"
+  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-11.1.1.tgz#50f6c7a46f703a5c92a9819a607b22a6e8bd9703"
+  integrity sha512-St50Ra3FlxxERrMcnRAmxQKE8paXOIwQ88zpafUkzdOYg9Sn/3/Vf4EqCWv8P/hkNIlfW/8VYsk8fk+3DQPVxQ==
 
 has-flag@^4.0.0:
   version "4.0.0"
