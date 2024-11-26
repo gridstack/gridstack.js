@@ -1408,8 +1408,11 @@ export class GridStack {
     const itemH = n.h ? n.h * cell - padding : item.clientHeight; // calculated to what cellHeight is or will become (rather than actual to prevent waiting for animation to finish)
     let wantedH: number;
     if (n.subGrid) {
-      // sub-grid - use their actual row count * their cell height
+      // sub-grid - use their actual row count * their cell height, BUT append any content outside of the grid (eg: above text)
       wantedH = n.subGrid.getRow() * n.subGrid.getCellHeight(true);
+      const subRec = n.subGrid.el.getBoundingClientRect();
+      const parentRec = n.subGrid.el.parentElement.getBoundingClientRect();
+      wantedH += subRec.top - parentRec.top;
     } else if (n.subGridOpts?.children?.length) {
       // not sub-grid just yet (case above) wait until we do
       return;

@@ -118,7 +118,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 11.1.0-dev (TBD)
-* fix: [#2877](https://github.com/gridstack/gridstack.js/pull/2877) make sure sub-grid inherit parent opts by default, with subgrid defaults.
+* fix: [#2878](https://github.com/gridstack/gridstack.js/pull/2878) make sure sub-grid inherit parent opts by default, with subgrid defaults.
+* fix: [#2879](https://github.com/gridstack/gridstack.js/pull/2879) sub-grid item `sizeToContent:true` now handle content above/below sub grid.
 
 ## 11.1.0 (2024-11-17)
 * feat: [#2864](https://github.com/gridstack/gridstack.js/issues/2864) added `GridStackOptions.layout` for nested grid reflow during resize. default to 'list'.
