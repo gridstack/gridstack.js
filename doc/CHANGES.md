@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [11.1.0-dev (TBD)](#1110-dev-tbd)
+- [11.1.1 (2024-11-26)](#1111-2024-11-26)
 - [11.1.0 (2024-11-17)](#1110-2024-11-17)
 - [11.0.1 (2024-10-21)](#1101-2024-10-21)
 - [11.0.0 (2024-10-20)](#1100-2024-10-20)
@@ -117,7 +117,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 11.1.0-dev (TBD)
+## 11.1.1 (2024-11-26)
 * fix: [#2878](https://github.com/gridstack/gridstack.js/pull/2878) make sure sub-grid inherit parent opts by default, with subgrid defaults.
 * fix: [#2879](https://github.com/gridstack/gridstack.js/pull/2879) sub-grid item `sizeToContent:true` now handle content above/below sub grid.
 
