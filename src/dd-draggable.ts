@@ -224,7 +224,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _mouseUp(e: MouseEvent): void {
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp, true);
-    if (isTouch) {
+    if (isTouch && e.currentTarget) { // destroy() during nested grid call us again wit fake _mouseUp
       e.currentTarget.removeEventListener('touchmove', touchmove, true);
       e.currentTarget.removeEventListener('touchend', touchend, true);
     }
