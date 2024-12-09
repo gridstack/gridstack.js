@@ -333,6 +333,7 @@ export class GridStack {
       minRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-min-row')) || gridDefaults.minRow,
       maxRow: rowAttr ? rowAttr : Utils.toNumber(el.getAttribute('gs-max-row')) || gridDefaults.maxRow,
       staticGrid: Utils.toBool(el.getAttribute('gs-static')) || gridDefaults.staticGrid,
+      sizeToContent: Utils.toBool(el.getAttribute('gs-size-to-content')) || undefined,
       draggable: {
         handle: (opts.handleClass ? '.' + opts.handleClass : (opts.handle ? opts.handle : '')) || gridDefaults.draggable.handle,
       },
@@ -1719,6 +1720,7 @@ export class GridStack {
       noMove: 'gs-no-move',
       locked: 'gs-locked',
       id: 'gs-id',
+      sizeToContent: 'gs-size-to-content',
     };
     for (const key in attrs) {
       if (node[key]) { // 0 is valid for x,y only but done above already and not in list anyway
@@ -1741,6 +1743,7 @@ export class GridStack {
     n.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
     n.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
     n.locked = Utils.toBool(el.getAttribute('gs-locked'));
+    n.sizeToContent = Utils.toBool(el.getAttribute('gs-size-to-content'));
     n.id = el.getAttribute('gs-id');
 
     // read but never written out
