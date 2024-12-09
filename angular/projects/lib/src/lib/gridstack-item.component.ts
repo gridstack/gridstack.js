@@ -29,6 +29,7 @@ export interface GridItemCompHTMLElement extends GridItemHTMLElement {
   styles: [`
     :host { display: block; }
   `],
+  standalone: true,
   // changeDetection: ChangeDetectionStrategy.OnPush, // IFF you want to optimize and control when ChangeDetection needs to happen...
 })
 export class GridstackItemComponent implements OnDestroy {

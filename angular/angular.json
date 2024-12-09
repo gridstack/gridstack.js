@@ -42,15 +42,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": {
-              "base": "dist/demo"
-            },
+            "outputPath": "dist/demo",
             "index": "projects/demo/src/index.html",
-            "polyfills": [
-              "projects/demo/src/polyfills.ts"
-            ],
+            "main": "projects/demo/src/main.ts",
+            "polyfills": "projects/demo/src/polyfills.ts",
             "tsConfig": "projects/demo/tsconfig.app.json",
             "assets": [
               "projects/demo/src/favicon.ico",
@@ -61,8 +58,7 @@
               "node_modules/gridstack/dist/gridstack-extra.min.css",
               "projects/demo/src/styles.css"
             ],
-            "scripts": [],
-            "browser": "projects/demo/src/main.ts"
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -84,7 +80,9 @@
               "outputHashing": "all"
             },
             "development": {
+              "buildOptimizer": false,
               "optimization": false,
+              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -96,10 +94,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "demo:build:production"
+              "browserTarget": "demo:build:production"
             },
             "development": {
-              "buildTarget": "demo:build:development"
+              "browserTarget": "demo:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -107,7 +105,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "demo:build"
+            "browserTarget": "demo:build"
           }
         },
         "test": {
