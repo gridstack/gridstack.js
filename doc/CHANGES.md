@@ -121,6 +121,7 @@ Change log
 ## 11.1.1-dev (TBD)
 * fix: [#2877](https://github.com/gridstack/gridstack.js/pull/2877) angular wrapper uses standalone, while now being compatible down to ng14. thanks to [andre-steudel](https://github.com/andre-steudel)
 * fix: [#2886](https://github.com/gridstack/gridstack.js/issues/2886) added `gs-size-to-content` support
+* fix: [#2887](https://github.com/gridstack/gridstack.js/issues/2887) mobile nested grid TypeError: e.currentTarget is null
 
 ## 11.1.1 (2024-11-26)
 * fix: [#2878](https://github.com/gridstack/gridstack.js/pull/2878) make sure sub-grid inherit parent opts by default, with subgrid defaults.
