@@ -17,21 +17,20 @@ import { GridItemHTMLElement, GridStack, GridStackWidget } from 'gridstack';
     <button (click)="modify()">modify item</button>
     <div class="grid-stack">
       <!-- using angular templating to create DOM, otherwise an easier way is to simply call grid.load(items) -->
-      @for (n of items; track n.id; let i = $index) {
-        <div
-          [id]="i"
-          class="grid-stack-item"
-          [attr.gs-x]="n.x"
-          [attr.gs-y]="n.y"
-          [attr.gs-w]="n.w"
-          [attr.gs-h]="n.h"
-          #gridStackItem
-          >
-          <div class="grid-stack-item-content">item {{ i }}</div>
-        </div>
-      }
+      <div
+        *ngFor="let n of items; let i = index; trackBy: identify"
+        [id]="i"
+        class="grid-stack-item"
+        [attr.gs-x]="n.x"
+        [attr.gs-y]="n.y"
+        [attr.gs-w]="n.w"
+        [attr.gs-h]="n.h"
+        #gridStackItem
+      >
+        <div class="grid-stack-item-content">item {{ i }}</div>
+      </div>
     </div>
-    `,
+  `,
   // gridstack.min.css and other custom styles should be included in global styles.scss or here
 })
 export class AngularNgForCmdTestComponent implements AfterViewInit {

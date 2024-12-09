@@ -61,6 +61,7 @@ export type SelectorToType = {[key: string]: Type<Object>};
   styles: [`
     :host { display: block; }
   `],
+  standalone: true,
   imports: [NgIf]
   // changeDetection: ChangeDetectionStrategy.OnPush, // IFF you want to optimize and control when ChangeDetection needs to happen...
 })

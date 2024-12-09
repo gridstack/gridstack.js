@@ -29,14 +29,15 @@ CSS
 }
 ```
 
-Component Code
+
+Standalone Component Code
 
 ```ts
 import { GridStackOptions } from 'gridstack';
 import { GridstackComponent, GridstackItemComponent } from 'gridstack/dist/angular';
 
 @Component({
-  imports: [
+  imports: [ // SKIP if doing module import instead (next)
     GridstackComponent,
     GridstackItemComponent
   ]
@@ -54,6 +55,19 @@ export class MyComponent {
   }
 
 }
+```
+
+IF doing module import instead of standalone, you will also need this:
+
+```ts
+import { GridstackModule } from 'gridstack/dist/angular';
+
+@NgModule({
+  imports: [GridstackModule, ...]
+  ...
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
 ```
 
 # More Complete example
@@ -95,16 +109,11 @@ export class AComponent extends BaseWidget implements OnDestroy {
 export class BComponent extends BaseWidget {
 }
 
-// in your app.config for example
-export const appConfig: ApplicationConfig = {
-  providers: [
-    ...
-    provideEnvironmentInitializer(() => {
-      // register all our dynamic components created in the grid
-      GridstackComponent.addComponentToSelectorType([AComponent, BComponent]);
-    })
-  ]
-};
+// ...in your module (classic), OR your ng19 app.config provideEnvironmentInitializer call this:
+constructor() {
+  // register all our dynamic components types created by the grid
+  GridstackComponent.addComponentToSelectorType([AComponent, BComponent]) ;
+}
 
 // now our content will use Components instead of dummy html content
 public gridOptions: NgGridStackOptions = {
@@ -177,10 +186,11 @@ Code started shipping with v8.1.2+ in `dist/angular` for people to use directly 
 ## Caveats
 
 - This wrapper needs:
-  - gridstack v8 to run as it needs the latest changes (use older version that matches GS versions)
-  - Angular 14+ for dynamic `createComponent()` API and Standalone Components
+  - gridstack v8+ to run as it needs the latest changes (use older version that matches GS versions)
+  - <b>Angular 14+</b> for dynamic `createComponent()` API and Standalone Components (verified against 19+)
 
 NOTE: if you are on Angular 13 or below: copy the wrapper code over (or patch it - see main page example) and change `createComponent()` calls to use old API instead:
+NOTE2: now that we're using standalone, you will also need to remove `standalone: true` and `imports` on each component so you will to copy those locally (or use <11.1.2 version)
 ```ts
 protected resolver: ComponentFactoryResolver,
 ...

@@ -28,7 +28,7 @@
     "build": "yarn --no-progress && yarn build:ng && grunt && yarn build:es6 && yarn build:es5 && yarn doc",
     "build:es6": "webpack && tsc --stripInternal",
     "build:es5": "webpack --config es5/webpack.config.js && tsc --stripInternal --project es5/tsconfig.json",
-    "build:ng": "cd angular && yarn --no-progress && yarn build lib && rm ../dist/angular/.npmignore",
+    "build:ng": "cd angular && yarn --no-progress && yarn build lib",
     "w": "webpack",
     "t": "rm -rf dist/* && grunt && tsc --stripInternal",
     "doc": "doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
