@@ -1,5 +1,5 @@
 /*!
- * GridStack 11.1.0-dev
+ * GridStack 11.1.1-dev
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2024  Alain Dumesny
@@ -518,7 +518,12 @@ export class GridStack {
       grid = grid.parentGridNode?.grid;
     }
     //... and set the create options
-    ops = Utils.cloneDeep({ ...(subGridTemplate || {}), children: undefined, ...(ops || node.subGridOpts || {}) });
+    ops = Utils.cloneDeep({
+      // by default sub-grid inherit from us | parent, other than id, children, etc...
+      ...this.opts, id: undefined, children: undefined, column: 'auto', columnOpts: undefined, layout: 'list', subGridOpts: undefined,
+      ...(subGridTemplate || {}),
+      ...(ops || node.subGridOpts || {})
+    });
     node.subGridOpts = ops;
 
     // if column special case it set, remember that flag and set default
@@ -1403,8 +1408,11 @@ export class GridStack {
     const itemH = n.h ? n.h * cell - padding : item.clientHeight; // calculated to what cellHeight is or will become (rather than actual to prevent waiting for animation to finish)
     let wantedH: number;
     if (n.subGrid) {
-      // sub-grid - use their actual row count * their cell height
+      // sub-grid - use their actual row count * their cell height, BUT append any content outside of the grid (eg: above text)
       wantedH = n.subGrid.getRow() * n.subGrid.getCellHeight(true);
+      const subRec = n.subGrid.el.getBoundingClientRect();
+      const parentRec = n.subGrid.el.parentElement.getBoundingClientRect();
+      wantedH += subRec.top - parentRec.top;
     } else if (n.subGridOpts?.children?.length) {
       // not sub-grid just yet (case above) wait until we do
       return;
@@ -1934,7 +1942,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '11.1.0-dev';
+  static GDRev = '11.1.1-dev';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
