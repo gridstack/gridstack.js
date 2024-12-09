@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [11.1.1-dev (TBD)](#1111-dev-tbd)
+- [11.1.2 (2024-12-08)](#1112-2024-12-08)
 - [11.1.1 (2024-11-26)](#1111-2024-11-26)
 - [11.1.0 (2024-11-17)](#1110-2024-11-17)
 - [11.0.1 (2024-10-21)](#1101-2024-10-21)
@@ -118,7 +118,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 11.1.1-dev (TBD)
+## 11.1.2 (2024-12-08)
 * fix: [#2877](https://github.com/gridstack/gridstack.js/pull/2877) angular wrapper uses standalone, while now being compatible down to ng14. thanks to [andre-steudel](https://github.com/andre-steudel)
 * fix: [#2886](https://github.com/gridstack/gridstack.js/issues/2886) added `gs-size-to-content` support
 * fix: [#2887](https://github.com/gridstack/gridstack.js/issues/2887) mobile nested grid TypeError: e.currentTarget is null
