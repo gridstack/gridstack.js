@@ -5,6 +5,7 @@
 
 import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, Input,
   OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType, ComponentRef } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
 
@@ -60,6 +61,7 @@ export type SelectorToType = {[key: string]: Type<Object>};
   styles: [`
     :host { display: block; }
   `],
+  imports: [NgIf]
   // changeDetection: ChangeDetectionStrategy.OnPush, // IFF you want to optimize and control when ChangeDetection needs to happen...
 })
 export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
@@ -130,6 +132,13 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
     // protected readonly cd: ChangeDetectorRef,
     protected readonly elementRef: ElementRef<GridCompHTMLElement>,
   ) {
+    // set globally our method to create the right widget type
+    if (!GridStack.addRemoveCB) {
+      GridStack.addRemoveCB = gsCreateNgComponents;
+    }
+    if (!GridStack.saveCB) {
+      GridStack.saveCB = gsSaveAdditionalNgInfo;
+    }
     this.el._gridComp = this;
   }
 
