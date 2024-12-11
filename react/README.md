@@ -1,50 +1,120 @@
-# React + TypeScript + Vite
+# React GridStack Wrapper Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React wrapper component for GridStack that provides better TypeScript support and React integration experience.
 
-Currently, two official plugins are available:
+## TODO
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [x] Component mapping
+- [x] SubGrid support
+- [ ] Save and restore layout
+- [ ] Publish to npm
 
-## Expanding the ESLint configuration
+## Basic Usage
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+This is not an npm package, it's just a demo project. Please copy the relevant code to your project to use it.
 
-- Configure the top-level `parserOptions` property like this:
+```tsx
+import {
+  GridStackProvider,
+  GridStackRender,
+  GridStackRenderProvider,
+} from "path/to/lib";
+import "gridstack/dist/gridstack.css";
+import "gridstack/dist/gridstack-extra.css";
+import "path/to/demo.css";
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
+function Text({ content }: { content: string }) {
+  return <div>{content}</div>;
+}
+
+const COMPONENT_MAP = {
+  Text,
+  // ... other components
+};
+
+// Grid options
+const gridOptions = {
+  acceptWidgets: true,
+  margin: 8,
+  cellHeight: 50,
+  children: [
+    {
+      id: "item1",
+      h: 2,
+      w: 2,
+      content: JSON.stringify({
+        name: "Text",
+        props: { content: "Item 1" },
+      }),
     },
-  },
-})
+    // ... other grid items
+  ],
+};
+
+function App() {
+  return (
+    <GridStackProvider initialOptions={gridOptions}>
+      <!-- Maybe a toolbar here. Access to addWidget and addSubGrid by useGridStackContext() -->
+
+      <!-- Grid Stack Root Element -->
+      <GridStackRenderProvider>
+        <!-- Grid Stack Default Render -->
+        <GridStackRender componentMap={COMPONENT_MAP} />
+      </GridStackRenderProvider>
+
+      <!-- Maybe other UI here -->
+    </GridStackProvider>
+  );
+}
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Advanced Features
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Toolbar Operations
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+Provide APIs to add new components and sub-grids:
+
+```tsx
+function Toolbar() {
+  const { addWidget, addSubGrid } = useGridStackContext();
+
+  return (
+    <div>
+      <button onClick={() => addWidget(/* ... */)}>Add Component</button>
+      <button onClick={() => addSubGrid(/* ... */)}>Add SubGrid</button>
+    </div>
+  );
+}
 ```
+
+### Layout Saving
+
+Get the current layout:
+
+```tsx
+const { saveOptions } = useGridStackContext();
+
+const currentLayout = saveOptions();
+```
+
+## API Reference
+
+### GridStackProvider
+
+The main context provider, accepts the following properties:
+
+- `initialOptions`: Initial configuration options for GridStack
+
+### GridStackRender
+
+The core component for rendering the grid, accepts the following properties:
+
+- `componentMap`: A mapping from component names to actual React components
+
+### Hooks
+
+- `useGridStackContext()`: Access GridStack context and operations
+  - `addWidget`: Add a new component
+  - `addSubGrid`: Add a new sub-grid
+  - `saveOptions`: Save current layout
+  - `initialOptions`: Initial configuration options
