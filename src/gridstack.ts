@@ -457,7 +457,6 @@ export class GridStack {
    * grid.addWidget({w: 3, content: 'hello'});
    *
    * @param w GridStackWidget definition. used MakeWidget(el) if you have dom element instead.
-   * @param options widget position/size options (optional, and ignore if first param is already option) - see GridStackWidget
    */
   public addWidget(w: GridStackWidget): GridItemHTMLElement {
     if (typeof w === 'string') { console.error('V11: GridStack.addWidget() does not support string anymore. see #2736'); return; }
