@@ -1982,4 +1982,24 @@ describe('gridstack >', function() {
     });
     */
   });
+
+  describe('stylesheet', function() {
+    let grid: GridStack;
+    let root: HTMLElement;
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+      grid = GridStack.init({ cellHeight: 30 });
+      root = document.getElementById('gs-cont')!;
+    });
+    afterEach(function() {
+      document.body.removeChild(root);
+    });
+    it('not getting lost in case of node detach/attach', function() {
+      expect(window.getComputedStyle(grid.el.querySelector("#item1")!).height).toBe("60px");
+      const oldParent = root.parentElement;
+      root.remove();
+      oldParent!.appendChild(root);
+      expect(window.getComputedStyle(grid.el.querySelector("#item1")!).height).toBe("60px");
+    });
+  });
 });
