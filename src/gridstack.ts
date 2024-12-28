@@ -2200,12 +2200,14 @@ export class GridStack {
 
         // sidebar items: load any element attributes if we don't have a node
         if (!node) {
-          if (helper.hasAttribute('gridstacknode')) {
+          const attr = helper.getAttribute('data-gs-widget') || helper.getAttribute('gridstacknode'); // TBD: temp support for old V11.0.0 attribute 
+          if (attr) {
             try {
-              node = JSON.parse(helper.getAttribute('gridstacknode'));
+              node = JSON.parse(attr);
             } catch (error) {
-              console.error("Gridstack dropover: Bad JSON format: ", helper.getAttribute('gridstacknode'));
+              console.error("Gridstack dropover: Bad JSON format: ", attr);
             }
+            helper.removeAttribute('data-gs-widget');
             helper.removeAttribute('gridstacknode');
           }
           if (!node) node = this._readAttr(helper); // used to pass false for #2354, but now we clone top level node
