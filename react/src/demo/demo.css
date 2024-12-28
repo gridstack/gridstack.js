@@ -1,47 +1,7 @@
-.btn-primary {
-  color: #fff;
-  background-color: #007bff;
-}
-
-.btn {
-  display: inline-block;
-  padding: .375rem .75rem;
-  line-height: 1.5;
-  border-radius: .25rem;
-}
-
-a {
-  text-decoration: none;
-}
-
-h1 {
-  font-size: 2.5rem;
-  margin-bottom: .5rem;
-}
-
-.sidebar {
-  background: rgb(215, 243, 215);
-  padding: 25px 0;
-  height: 100px;
-  text-align: center;
-}
-.sidebar > .grid-stack-item,
-.sidebar-item {
-  width: 100px;
-  height: 50px;
-  border: 2px dashed green;
-  text-align: center;
-  line-height: 35px;
-  background: rgb(192, 231, 192);
-  cursor: default;
-  display: inline-block;
-}
-
 .grid-stack {
   background: #FAFAD2;
 }
 
-.sidebar > .grid-stack-item,
 .grid-stack-item-content {
   text-align: center;
   background-color: #18bc9c;
@@ -58,7 +18,7 @@ h1 {
 /* make nested grid have slightly darker bg take almost all space (need some to tell them apart) so items inside can have similar to external size+margin */
 .grid-stack > .grid-stack-item.grid-stack-sub-grid > .grid-stack-item-content {
   background: rgba(0,0,0,0.1);
-  inset: 0 2px;
+  inset: 8px 8px;
 }
 .grid-stack.grid-stack-nested {
   background: none;
