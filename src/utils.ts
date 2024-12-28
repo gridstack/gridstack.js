@@ -196,7 +196,7 @@ export class Utils {
    * @param parent to insert the stylesheet as first child,
    * if none supplied it will be appended to the document head instead.
    */
-  static createStylesheet(id: string, parent?: HTMLElement, options?: { nonce?: string }): CSSStyleSheet {
+  static createStylesheet(id: string, parent?: HTMLElement, options?: { nonce?: string }): HTMLStyleElement {
     const style: HTMLStyleElement = document.createElement('style');
     const nonce = options?.nonce
     if (nonce) style.nonce = nonce
@@ -216,7 +216,7 @@ export class Utils {
     } else {
       parent.insertBefore(style, parent.firstChild);
     }
-    return style.sheet as CSSStyleSheet;
+    return style;
   }
 
   /** removed the given stylesheet id */
@@ -227,12 +227,10 @@ export class Utils {
   }
 
   /** inserts a CSS rule */
-  static addCSSRule(sheet: CSSStyleSheet, selector: string, rules: string): void {
-    if (typeof sheet.addRule === 'function') {
-      sheet.addRule(selector, rules);
-    } else if (typeof sheet.insertRule === 'function') {
-      sheet.insertRule(`${selector}{${rules}}`);
-    }
+  static addCSSRule(sheet: HTMLStyleElement, selector: string, rules: string): void {
+    // Rather than using sheet.insertRule, use text since it supports 
+    // gridstack node reparenting around in the DOM
+    sheet.textContent += `${selector} { ${rules} } `;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
