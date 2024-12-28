@@ -30,14 +30,14 @@
           <!-- constrained in code using GridStackWidget[] sidebarContent -->
           <div class="sidebar-item">2x1, max=3</div>
           <!-- DOM JSON spelling GridStackWidget. NOTE: require content:'xyz' to work and RenderCB() to render -->
-          <div class="sidebar-item" gridstacknode='{"w":3, "content":"w:3"}'>w:3</div>
+          <div class="sidebar-item" data-gs-widget='{"w":3, "content":"drop w:3"}'>w:3</div>
           <!-- DOM id handled by myClone() case -->
           <div class="sidebar-item" gs-id="manual">gs-id case</div>
           <!-- DOM require proper GS format to be dropped as is without GridStackWidget above -->
           <div class="grid-stack-item" gs-w="3">
             <div class="grid-stack-item-content">DOM gs-w:3</div>
           </div>
-          <div class="grid-stack-item" gridstacknode='{"w":2}'>
+          <div class="grid-stack-item" data-gs-widget='{"w":2}'>
             <div class="grid-stack-item-content">DOM w:2</div>
           </div>
         </div>
