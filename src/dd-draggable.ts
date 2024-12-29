@@ -9,6 +9,7 @@ import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { GridItemHTMLElement, DDUIData, GridStackNode, GridStackPosition, DDDragOpt } from './types';
 import { DDElementHost } from './dd-element';
 import { isTouch, touchend, touchmove, touchstart, pointerdown } from './dd-touch';
+import { GridHTMLElement } from './gridstack';
 
 interface DragOffset {
   left: number;
@@ -264,17 +265,16 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal call when keys are being pressed - use Esc to cancel, R to rotate */
   protected _keyEvent(e: KeyboardEvent): void {
     const n = this.el.gridstackNode as GridStackNodeRotate;
-    if (!n?.grid) return;
-    const grid = n.grid;
+    const grid = n?.grid || (DDManager.dropElement?.el as GridHTMLElement)?.gridstack;
 
     if (e.key === 'Escape') {
-      if (n._origRotate) {
+      if (n && n._origRotate) {
         n._orig = n._origRotate;
         delete n._origRotate;
       }
-      grid.engine.restoreInitial();
+      grid?.cancelDrag();
       this._mouseUp(this.mouseDownEvent);
-    } else if (e.key === 'r' || e.key === 'R') {
+    } else if (n && grid && (e.key === 'r' || e.key === 'R')) {
       if (!Utils.canBeRotated(n)) return;
       n._origRotate = n._origRotate || { ...n._orig }; // store the real orig size in case we Esc after doing rotation
       delete n._moving; // force rotate to happen (move waits for >50% coverage otherwise)

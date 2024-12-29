@@ -506,7 +506,7 @@ export class GridStackEngine {
   /** @internal restore all the nodes back to initial values (called when we leave) */
   public restoreInitial(): GridStackEngine {
     this.nodes.forEach(n => {
-      if (Utils.samePos(n, n._orig)) return;
+      if (!n._orig || Utils.samePos(n, n._orig)) return;
       Utils.copyPos(n, n._orig);
       n._dirty = true;
     });
