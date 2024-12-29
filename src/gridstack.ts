@@ -2084,7 +2084,7 @@ export class GridStack {
       // restore any temp removed (dragged over trash)
       GridStack._itemRemoving(n.el, false);
     }
-    
+
     this.engine.restoreInitial();
   }
 
@@ -2214,7 +2214,7 @@ export class GridStack {
 
         // sidebar items: load any element attributes if we don't have a node
         if (!node) {
-          const attr = helper.getAttribute('data-gs-widget') || helper.getAttribute('gridstacknode'); // TBD: temp support for old V11.0.0 attribute 
+          const attr = helper.getAttribute('data-gs-widget') || helper.getAttribute('gridstacknode'); // TBD: temp support for old V11.0.0 attribute
           if (attr) {
             try {
               node = JSON.parse(attr);
