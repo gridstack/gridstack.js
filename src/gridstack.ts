@@ -233,19 +233,16 @@ export class GridStack {
   /** @internal create placeholder DIV as needed */
   public get placeholder(): GridItemHTMLElement {
     if (!this._placeholder) {
-      const placeholderChild = document.createElement('div'); // child so padding match item-content
-      placeholderChild.className = 'placeholder-content';
+      this._placeholder = Utils.createDiv([this.opts.placeholderClass, gridDefaults.itemClass, this.opts.itemClass]);
+      const placeholderChild = Utils.createDiv(['placeholder-content'], this._placeholder);
       if (this.opts.placeholderText) {
         placeholderChild.textContent = this.opts.placeholderText;
       }
-      this._placeholder = document.createElement('div');
-      this._placeholder.classList.add(this.opts.placeholderClass, gridDefaults.itemClass, this.opts.itemClass);
-      this.placeholder.appendChild(placeholderChild);
     }
     return this._placeholder;
   }
   /** @internal */
-  protected _placeholder: HTMLElement;
+  protected _placeholder: GridItemHTMLElement;
   /** @internal prevent cached layouts from being updated when loading into small column layouts */
   protected _ignoreLayoutsNodeChange: boolean;
   /** @internal */
@@ -998,6 +995,7 @@ export class GridStack {
     if (this.parentGridNode) delete this.parentGridNode.subGrid;
     delete this.parentGridNode;
     delete this.opts;
+    delete this._placeholder.gridstackNode;
     delete this._placeholder;
     delete this.engine;
     delete this.el.gridstack; // remove circular dependency that would prevent a freeing
@@ -2074,6 +2072,22 @@ export class GridStack {
     return this;
   }
 
+  /** @internal call when drag (and drop) needs to be cancelled (Esc key) */
+  public cancelDrag() {
+    const n = this._placeholder?.gridstackNode;
+    if (!n) return;
+    if (n._isExternal) {
+      // remove any newly inserted nodes (from outside)
+      n._isAboutToRemove = true;
+      this.engine.removeNode(n);
+    } else if (n._isAboutToRemove) {
+      // restore any temp removed (dragged over trash)
+      GridStack._itemRemoving(n.el, false);
+    }
+    
+    this.engine.restoreInitial();
+  }
+
   /** @internal removes any drag&drop present (called during destroy) */
   protected _removeDD(el: DDElementHost): GridStack {
     dd.draggable(el, 'destroy').resizable(el, 'destroy');
@@ -2279,6 +2293,7 @@ export class GridStack {
         const wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
         const wasSidebar = el !== helper;
         this.placeholder.remove();
+        delete this.placeholder.gridstackNode;
 
         // disable animation when replacing a placeholder (already positioned) with actual content
         const noAnim = wasAdded && this.opts.animate;
@@ -2420,6 +2435,7 @@ export class GridStack {
       /** called when the item stops moving/resizing */
       const onEndMoving = (event: Event) => {
         this.placeholder.remove();
+        delete this.placeholder.gridstackNode;
         delete node._moving;
         delete node._event;
         delete node._lastTried;

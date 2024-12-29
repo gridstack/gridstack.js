@@ -120,7 +120,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 11.1.2-dev (TBD)
-* fix: [#2852](https://github.com/gridstack/gridstack.js/pull/2852) better React example. Thank you [CNine](https://github.com/Aysnine)
+* feat: [#2695](https://github.com/gridstack/gridstack.js/issues/2695) 'Esc' to cancel now works on sidebar external items, also works dragging over trash.
+* feat: [#2852](https://github.com/gridstack/gridstack.js/pull/2852) better React example. Thank you [CNine](https://github.com/Aysnine)
 * fix: [#2852](https://github.com/gridstack/gridstack.js/pull/2852) grid in tabs correctly handles CSS. Thank you [Luciano Martorella](https://github.com/lmartorella)
 * fix: [#2900](https://github.com/gridstack/gridstack.js/issues/2900) use attr `data-gs-widget` instead of `gridstacknode` (supported as well for backward compatibility)
 
