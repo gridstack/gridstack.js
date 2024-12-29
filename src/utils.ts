@@ -228,7 +228,7 @@ export class Utils {
 
   /** inserts a CSS rule */
   static addCSSRule(sheet: HTMLStyleElement, selector: string, rules: string): void {
-    // Rather than using sheet.insertRule, use text since it supports 
+    // Rather than using sheet.insertRule, use text since it supports
     // gridstack node reparenting around in the DOM
     sheet.textContent += `${selector} { ${rules} } `;
   }
