@@ -347,6 +347,7 @@ Called during `GridStack.init()` as options, but can also be called directly (la
 * @param `dragIn` string selector (ex: `'.sidebar-item'`) or list of dom elements
 * @param `dragInOptions` options - see `DDDragOpt`. default: `{appendTo: 'body', helper: 'clone'}`
 * @param `widgets` GridStackWidget def to assign to each element which defines what to create on drop
+Note: you can instead use DOM attr `data-gs-widget` for complete JSON string of that GridStackWidget.
 * @param `root` optional root which defaults to document (for shadow dom pass the parent HTMLDocument)
 
 ### `GridStack.registerEngine(engineClass: typeof GridStackEngine)`
