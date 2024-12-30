@@ -992,10 +992,10 @@ export class GridStack {
       this.el.parentNode.removeChild(this.el);
     }
     this._removeStylesheet();
-    if (this.parentGridNode) delete this.parentGridNode.subGrid;
+    delete this.parentGridNode?.subGrid;
     delete this.parentGridNode;
     delete this.opts;
-    delete this._placeholder.gridstackNode;
+    delete this._placeholder?.gridstackNode;
     delete this._placeholder;
     delete this.engine;
     delete this.el.gridstack; // remove circular dependency that would prevent a freeing
