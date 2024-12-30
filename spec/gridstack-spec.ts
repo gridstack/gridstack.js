@@ -1435,7 +1435,7 @@ describe('gridstack >', function() {
         float: false,
       };
       var grid = GridStack.init(options);
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV'); // any to access private _styles
+      expect((grid as any)._styles.parentElement.tagName).toBe('DIV'); // any to access private _styles
     });
     it('should add STYLE to HEAD if styleInHead === true >', function() {
       var options = {
@@ -1445,7 +1445,7 @@ describe('gridstack >', function() {
         styleInHead: true
       };
       var grid = GridStack.init(options);
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD'); // any to access private _styles
+      expect((grid as any)._styles.parentElement.tagName).toBe('HEAD'); // any to access private _styles
     });
   });
 
@@ -1458,11 +1458,11 @@ describe('gridstack >', function() {
     });
     it('should add STYLE to parent node as a default >', function() {
       var grid = GridStack.init();
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('DIV');
+      expect((grid as any)._styles.parentElement.tagName).toBe('DIV');
     });
     it('should add STYLE to HEAD if styleInHead === true >', function() {
       var grid = GridStack.init({styleInHead: true});
-      expect((grid as any)._styles.ownerNode.parentNode.tagName).toBe('HEAD');
+      expect((grid as any)._styles.parentElement.tagName).toBe('HEAD');
     });
   });
 
