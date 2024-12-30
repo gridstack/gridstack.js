@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [11.1.2-dev (TBD)](#1112-dev-tbd)
+- [11.2.0 (2024-12-29)](#1120-2024-12-29)
 - [11.1.2 (2024-12-08)](#1112-2024-12-08)
 - [11.1.1 (2024-11-26)](#1111-2024-11-26)
 - [11.1.0 (2024-11-17)](#1110-2024-11-17)
@@ -119,7 +119,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 11.1.2-dev (TBD)
+## 11.2.0 (2024-12-29)
 * feat: [#2695](https://github.com/gridstack/gridstack.js/issues/2695) 'Esc' to cancel now works on sidebar external items, also works dragging over trash.
 * feat: [#2852](https://github.com/gridstack/gridstack.js/pull/2852) better React example. Thank you [CNine](https://github.com/Aysnine)
 * fix: [#2852](https://github.com/gridstack/gridstack.js/pull/2852) grid in tabs correctly handles CSS. Thank you [Luciano Martorella](https://github.com/lmartorella)
