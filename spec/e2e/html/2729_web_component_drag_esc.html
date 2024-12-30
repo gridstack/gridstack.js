@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Custom element test</title>
+    <link rel="stylesheet" href="../../../demo/demo.css" />
+    <script src="../../../dist/gridstack-all.js"></script>
+  </head>
+  <body>
+    <p> cancel:".no-drag" does not work when placed within a web component (case 2)</p>
+    <div class="grid-stack"></div>
+    <script type="text/javascript">
+      // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+      GridStack.renderCB = function (el, w) {
+        el.innerHTML = w.content;
+      };
+
+      class CustomElement extends HTMLElement {
+        constructor(name) {
+          super();
+          this.subject = name || "World";
+          // create a Shadow DOM
+          this.root = this.attachShadow({ mode: "open" });
+        }
+        // run some code when the component is ready
+        connectedCallback() {
+          this.root.innerHTML = this.getTemplate();
+        }
+        // create templates that interpolate variables and HTML!
+        getTemplate() {
+          return `<div>web component case:</div><button onclick=\"alert('clicked!')\">Press me</button><div>text area</div><div><textarea></textarea></div><div>Input Field</div><input type="text"><div contenteditable=\"true\">Editable Div</div><div class=\"no-drag\">SHOULD be no drag</div>`;
+        }
+      }
+      customElements.define("custom-element", CustomElement);
+
+      var children = [
+        { content: "0" },
+        { w: 2, h: 3, content: `<button onclick=\"alert('clicked!')\">Press me</button><div>text area</div><div><textarea></textarea></div><div>Input Field</div><input type="text"><div contenteditable=\"true\">Editable Div</div><div class=\"no-drag\">no drag</div>` },
+        { w: 2, h: 3, content: `<custom-element></custom-element>` },
+      ];
+
+      var options = {
+        // put in gridstack options here
+        cellHeight: 80,
+        children,
+        draggable: {
+          cancel: ".no-drag",
+        }, // example of additional custom elements to skip drag on
+      };
+      var grid = GridStack.init(options);
+    </script>
+  </body>
+</html>
