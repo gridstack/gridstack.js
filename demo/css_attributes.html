@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSS & attributes demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Demo showcasing how to use gridstack.js attributes in CSS</h1>
+    <p>The center of the widget shows its dimensions by purely using CSS, no JavaScript involved.</p>
+    <div>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+    </div>
+    <br><br>
+    <div class="grid-stack show-dimensions"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let grid = GridStack.init({
+      float: true,
+      resizable: { handles: 'all'}
+    });
+    addEvents(grid);
+
+    let items = [
+      {x: 1, y: 1},
+      {x: 2, y: 2, w: 3},
+      {x: 4, y: 2},
+      {x: 3, y: 1, h: 2},
+      {x: 0, y: 6, w: 2, h: 2}
+    ];
+    let count = 0;
+
+    getNode = function() {
+      let n = items[count] || {
+        x: Math.round(12 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        w: Math.round(1 + 3 * Math.random()),
+        h: Math.round(1 + 3 * Math.random())
+      };
+      n.content = n.content || String(count);
+      count++;
+      return n;
+    };
+
+    addNewWidget = function() {
+      grid.addWidget(getNode());
+    };
+
+    addNewWidget();
+  </script>
+</body>
+</html>
