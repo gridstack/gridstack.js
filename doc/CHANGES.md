@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [11.2.0-dev (TBD)](#1120-dev-tbd)
 - [11.2.0 (2024-12-29)](#1120-2024-12-29)
 - [11.1.2 (2024-12-08)](#1112-2024-12-08)
 - [11.1.1 (2024-11-26)](#1111-2024-11-26)
@@ -118,6 +119,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 11.2.0-dev (TBD)
+* feat: added `isIgnoreChangeCB()` if changeCB should be ignored due to column change, sizeToContent, loading, etc...
 
 ## 11.2.0 (2024-12-29)
 * feat: [#2695](https://github.com/gridstack/gridstack.js/issues/2695) 'Esc' to cancel now works on sidebar external items, also works dragging over trash.
