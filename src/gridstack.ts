@@ -974,6 +974,9 @@ export class GridStack {
       .filter((el: HTMLElement) => el.matches('.' + this.opts.itemClass) && !el.matches('.' + this.opts.placeholderClass)) as GridItemHTMLElement[];
   }
 
+  /** true if changeCB should be ignored due to column change, sizeToContent, loading, etc... which caller can ignore for dirty flag case */
+  public isIgnoreChangeCB(): boolean { return this._ignoreLayoutsNodeChange; }
+
   /**
    * Destroys a grid instance. DO NOT CALL any methods or access any vars after this as it will free up members.
    * @param removeDOM if `false` grid and items HTML elements will not be removed from the DOM (Optional. Default `true`).
