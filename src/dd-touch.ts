@@ -11,15 +11,15 @@ import { DDManager } from './dd-manager';
  * /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
  */
 export const isTouch: boolean = typeof window !== 'undefined' && typeof document !== 'undefined' &&
-( 'ontouchstart' in document
-  || 'ontouchstart' in window
-  // || !!window.TouchEvent // true on Windows 10 Chrome desktop so don't use this
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  || ((window as any).DocumentTouch && document instanceof (window as any).DocumentTouch)
-  || navigator.maxTouchPoints > 0
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  || (navigator as any).msMaxTouchPoints > 0
-);
+  ( 'ontouchstart' in document
+    || 'ontouchstart' in window
+    // || !!window.TouchEvent // true on Windows 10 Chrome desktop so don't use this
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    || ((window as any).DocumentTouch && document instanceof (window as any).DocumentTouch)
+    || navigator.maxTouchPoints > 0
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    || (navigator as any).msMaxTouchPoints > 0
+  );
 
 // interface TouchCoord {x: number, y: number};
 
@@ -51,26 +51,23 @@ function simulateMouseEvent(e: TouchEvent, simulatedType: string) {
   // Prevent "Ignored attempt to cancel a touchmove event with cancelable=false" errors
   if (e.cancelable) e.preventDefault();
 
-  const touch = e.changedTouches[0], simulatedEvent = document.createEvent('MouseEvents');
-
-  // Initialize the simulated mouse event using the touch event's coordinates
-  simulatedEvent.initMouseEvent(
-    simulatedType,    // type
-    true,             // bubbles
-    true,             // cancelable
-    window,           // view
-    1,                // detail
-    touch.screenX,    // screenX
-    touch.screenY,    // screenY
-    touch.clientX,    // clientX
-    touch.clientY,    // clientY
-    false,            // ctrlKey
-    false,            // altKey
-    false,            // shiftKey
-    false,            // metaKey
-    0,                // button
-    null              // relatedTarget
-  );
+  const touch = e.changedTouches[0], simulatedEvent = new MouseEvent(simulatedType, {
+    bubbles: true,
+    composed: true,
+    cancelable: true,
+    view: window,
+    detail: 1,
+    screenX: touch.screenX,
+    screenY: touch.screenY,
+    clientX: touch.clientX,
+    clientY: touch.clientY,
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    metaKey: false,
+    button: 0,
+    relatedTarget: null
+  });
 
   // Dispatch the simulated event to the target element
   e.target.dispatchEvent(simulatedEvent);
