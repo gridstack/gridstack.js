@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Responsive layout:'none'</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <link rel="stylesheet" href="../dist/gridstack-extra.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Responsive layout:'none'</h1>
+    <p>show loading a fixed (<b>layout:'none'</b>) but still responsive design (150px columns) with items w:2-4</p>
+    <p>showing how it will not change the layout unless it doesn't fit. loading into small view remembers the full layout (column:6)</p>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let children = [ {}, {}, {}];
+    children.forEach((w, i) => { 
+      w.x=i, w.y=i, // comment out to have autoPosition:true which behaves differently
+      w.w=i+2, w.content = `${i} w:${w.w}`})
+    
+    GridStack.init({
+      children,
+      column: 6,
+      cellHeight: 100,
+      columnOpts: {
+        columnWidth: 150,
+        columnMax: 12,
+        layout: 'none',
+      },
+    });
+  </script>
+</body>
+</html>

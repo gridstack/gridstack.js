@@ -696,15 +696,14 @@ export class GridStack {
     // sort items. those without coord will be appended last
     items = Utils.sort(items);
 
+    this.engine.skipCacheUpdate = this._ignoreLayoutsNodeChange = true; // skip layout update
+
     // if we're loading a layout into for example 1 column and items don't fit, make sure to save
     // the original wanted layout so we can scale back up correctly #1471
     let maxColumn = 0;
     items.forEach(n => { maxColumn = Math.max(maxColumn, (n.x || 0) + n.w) });
     if (maxColumn > this.engine.defaultColumn) this.engine.defaultColumn = maxColumn;
-    if (maxColumn > column) {
-      this._ignoreLayoutsNodeChange = true; // skip layout update
-      this.engine.cacheLayout(items, maxColumn, true);
-    }
+    if (maxColumn > column) this.engine.cacheLayout(items, maxColumn, true);
 
     // if given a different callback, temporally set it as global option so creating will use it
     const prevCB = GridStack.addRemoveCB;
@@ -778,6 +777,7 @@ export class GridStack {
 
     // after commit, clear that flag
     delete this._ignoreLayoutsNodeChange;
+    delete this.engine.skipCacheUpdate;
     prevCB ? GridStack.addRemoveCB = prevCB : delete GridStack.addRemoveCB;
     // delay adding animation back
     if (blank && this.opts?.animate) this.setAnimation(this.opts.animate, true);
@@ -1098,12 +1098,13 @@ export class GridStack {
 
     // if we're adding an item into 1 column make sure
     // we don't override the larger 12 column layout that was already saved. #1985
-    if (this.opts.column === 1) {
-      this._ignoreLayoutsNodeChange = true;
+    let resetIgnoreLayoutsNodeChange: boolean;
+    if (this.opts.column === 1 && !this._ignoreLayoutsNodeChange) {
+      resetIgnoreLayoutsNodeChange = this._ignoreLayoutsNodeChange = true;
     }
     this._triggerAddEvent();
     this._triggerChangeEvent();
-    delete this._ignoreLayoutsNodeChange;
+    if (resetIgnoreLayoutsNodeChange) delete this._ignoreLayoutsNodeChange;
 
     return el;
   }
