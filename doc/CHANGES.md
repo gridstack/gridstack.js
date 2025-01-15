@@ -122,6 +122,7 @@ Change log
 
 ## 11.2.0-dev (TBD)
 * feat: added `isIgnoreChangeCB()` if changeCB should be ignored due to column change, sizeToContent, loading, etc...
+* feat: added `responsive_none.html` demo and fixed layout:'none' to bound check the layout (no-op unless it must change)
 
 ## 11.2.0 (2024-12-29)
 * feat: [#2695](https://github.com/gridstack/gridstack.js/issues/2695) 'Esc' to cancel now works on sidebar external items, also works dragging over trash.

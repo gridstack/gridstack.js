@@ -44,6 +44,8 @@ export class GridStackEngine {
   public _loading?: boolean
   /** @internal true while we are resizing widgets during column resize to skip certain parts */
   protected _inColumnResize?: boolean;
+  /** true when grid.load() already cached the layout and can skip out of bound caching info */
+  public skipCacheUpdate?: boolean;
   /** @internal true if we have some items locked */
   protected _hasLocked: boolean;
   /** @internal unique global internal _id counter */
@@ -415,7 +417,7 @@ export class GridStackEngine {
     // remember it's position & width so we can restore back (1 -> 12 column) #1655 #1985
     // IFF we're not in the middle of column resizing!
     const saveOrig = (node.x || 0) + (node.w || 1) > this.column;
-    if (saveOrig && this.column < this.defaultColumn && !this._inColumnResize && node._id && this.findCacheLayout(node, this.defaultColumn) === -1) {
+    if (saveOrig && this.column < this.defaultColumn && !this._inColumnResize && !this.skipCacheUpdate && node._id && this.findCacheLayout(node, this.defaultColumn) === -1) {
       const copy = {...node}; // need _id + positions
       if (copy.autoPosition || copy.x === undefined) { delete copy.x; delete copy.y; }
       else copy.x = Math.min(this.defaultColumn - 1, copy.x);
@@ -829,9 +831,6 @@ export class GridStackEngine {
   public columnChanged(prevColumn: number, column: number, layout: ColumnOptions = 'moveScale'): GridStackEngine {
     if (!this.nodes.length || !column || prevColumn === column) return this;
 
-    // in this mode no layout is done whatsoever, up to the caller to handle it
-    if (layout === 'none') return this;
-
     // simpler shortcuts layouts
     const doCompact = layout === 'compact' || layout === 'list';
     if (doCompact) {
@@ -900,7 +899,7 @@ export class GridStackEngine {
         if (typeof layout === 'function') {
           layout(column, prevColumn, newNodes, nodes);
         } else {
-          const ratio = doCompact ? 1 : column / prevColumn;
+          const ratio = (doCompact || layout === 'none') ? 1 : column / prevColumn;
           const move = (layout === 'move' || layout === 'moveScale');
           const scale = (layout === 'scale' || layout === 'moveScale');
           nodes.forEach(node => {
