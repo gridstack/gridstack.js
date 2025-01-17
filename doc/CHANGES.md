@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [11.2.0-dev (TBD)](#1120-dev-tbd)
+- [11.3.0 (2025-01-26)](#1130-2025-01-26)
 - [11.2.0 (2024-12-29)](#1120-2024-12-29)
 - [11.1.2 (2024-12-08)](#1112-2024-12-08)
 - [11.1.1 (2024-11-26)](#1111-2024-11-26)
@@ -120,7 +120,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 11.2.0-dev (TBD)
+## 11.3.0 (2025-01-26)
 * feat: added `isIgnoreChangeCB()` if changeCB should be ignored due to column change, sizeToContent, loading, etc...
 * feat: added `responsive_none.html` demo and fixed layout:'none' to bound check the layout (no-op unless it must change)
 
