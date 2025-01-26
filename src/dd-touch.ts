@@ -4,6 +4,7 @@
  */
 
 import { DDManager } from './dd-manager';
+import { Utils } from './gridstack';
 
 /**
  * Detect touch support - Windows Surface devices and other touch devices
@@ -51,26 +52,8 @@ function simulateMouseEvent(e: TouchEvent, simulatedType: string) {
   // Prevent "Ignored attempt to cancel a touchmove event with cancelable=false" errors
   if (e.cancelable) e.preventDefault();
 
-  const touch = e.changedTouches[0], simulatedEvent = new MouseEvent(simulatedType, {
-    bubbles: true,
-    composed: true,
-    cancelable: true,
-    view: window,
-    detail: 1,
-    screenX: touch.screenX,
-    screenY: touch.screenY,
-    clientX: touch.clientX,
-    clientY: touch.clientY,
-    ctrlKey: false,
-    altKey: false,
-    shiftKey: false,
-    metaKey: false,
-    button: 0,
-    relatedTarget: null
-  });
-
   // Dispatch the simulated event to the target element
-  e.target.dispatchEvent(simulatedEvent);
+  Utils.simulateMouseEvent(e.changedTouches[0], simulatedType);
 }
 
 /**
@@ -83,29 +66,8 @@ function simulatePointerMouseEvent(e: PointerEvent, simulatedType: string) {
   // Prevent "Ignored attempt to cancel a touchmove event with cancelable=false" errors
   if (e.cancelable) e.preventDefault();
 
-  const simulatedEvent = document.createEvent('MouseEvents');
-
-  // Initialize the simulated mouse event using the touch event's coordinates
-  simulatedEvent.initMouseEvent(
-    simulatedType,    // type
-    true,             // bubbles
-    true,             // cancelable
-    window,           // view
-    1,                // detail
-    e.screenX,    // screenX
-    e.screenY,    // screenY
-    e.clientX,    // clientX
-    e.clientY,    // clientY
-    false,            // ctrlKey
-    false,            // altKey
-    false,            // shiftKey
-    false,            // metaKey
-    0,                // button
-    null              // relatedTarget
-  );
-
   // Dispatch the simulated event to the target element
-  e.target.dispatchEvent(simulatedEvent);
+  Utils.simulateMouseEvent(e, simulatedType);
 }
 
 

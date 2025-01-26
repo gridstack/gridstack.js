@@ -562,26 +562,27 @@ export class Utils {
     return {...evt, ...obj} as unknown as T;
   }
 
-  /** copies the MouseEvent properties and sends it as another event to the given target */
-  public static simulateMouseEvent(e: MouseEvent, simulatedType: string, target?: EventTarget): void {
-    const simulatedEvent = document.createEvent('MouseEvents');
-    simulatedEvent.initMouseEvent(
-      simulatedType, // type
-      true,         // bubbles
-      true,         // cancelable
-      window,       // view
-      1,            // detail
-      e.screenX,    // screenX
-      e.screenY,    // screenY
-      e.clientX,    // clientX
-      e.clientY,    // clientY
-      e.ctrlKey,    // ctrlKey
-      e.altKey,     // altKey
-      e.shiftKey,   // shiftKey
-      e.metaKey,    // metaKey
-      0,            // button
-      e.target      // relatedTarget
-    );
+  /** copies the MouseEvent (or convert Touch) properties and sends it as another event to the given target */
+  public static simulateMouseEvent(e: MouseEvent | Touch, simulatedType: string, target?: EventTarget): void {
+    const me = e as MouseEvent;
+    const simulatedEvent = new MouseEvent(simulatedType, {
+      bubbles: true,
+      composed: true,
+      cancelable: true,
+      view: window,
+      detail: 1,
+      screenX: e.screenX,
+      screenY: e.screenY,
+      clientX: e.clientX,
+      clientY: e.clientY,
+      ctrlKey: me.ctrlKey??false,
+      altKey: me.altKey??false,
+      shiftKey: me.shiftKey??false,
+      metaKey: me.metaKey??false,
+      button: 0,
+      relatedTarget: e.target
+    });
+  
     (target || e.target).dispatchEvent(simulatedEvent);
   }
 
