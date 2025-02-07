@@ -18,31 +18,35 @@ Welcome to give any suggestions and ideas, you can submit an issue or contact me
 
 ## Usage
 
+This is not an npm package, it's just a demo project. Please copy the `src/lib` code to your project to use it.
+
 **Simple**
 
 Render item with widget id selector.
 
+Code here: [src/examples/001-simple/index.tsx](src/examples/001-simple/index.tsx)
+
 ```tsx
-function App() {
-  const [uncontrolledInitialOptions] = useState<GridStackOptions>({
-    // ...
+function Simple() {
+  const [uncontrolledInitialOptions] = useState<GridStackOptions>(() => ({
+    ...defaultGridOptions,
     children: [
       { id: "item1", h: 2, w: 2, x: 0, y: 0 },
       { id: "item2", h: 2, w: 2, x: 2, y: 0 },
     ],
-  });
+  }));
 
   return (
     <GridStackProvider initialOptions={uncontrolledInitialOptions}>
       <Toolbar />
 
-      <GridStackRender>
+      <GridStackRender renderRawContent>
         <GridStackItem id="item1">
-          <div>hello</div>
+          <div style={{ color: "yellow" }}>hello</div>
         </GridStackItem>
 
         <GridStackItem id="item2">
-          <div>grid</div>
+          <div style={{ color: "blue" }}>grid</div>
         </GridStackItem>
       </GridStackRender>
     </GridStackProvider>
@@ -56,20 +60,59 @@ Render item with widget map component info.
 
 _ComponentInfoMap is just an example, you can use any way you want to store and retrieve component information._
 
+Code here: [src/examples/009-advanced/index.tsx](src/examples/009-advanced/index.tsx)
+
 ```tsx
-function App() {
-  const [uncontrolledInitialOptions] = useState<GridStackOptions>({
-    // ...
+function Advanced() {
+  // Data about layout by gridstack option
+  const [uncontrolledInitialOptions] = useState<GridStackOptions>(() => ({
+    ...defaultGridOptions,
     children: [
       { id: "item1", h: 2, w: 2, x: 0, y: 0 },
       { id: "item2", h: 2, w: 2, x: 2, y: 0 },
+      {
+        id: "sub-grid-1",
+        h: 5,
+        sizeToContent: true,
+        subGridOpts: {
+          children: [
+            {
+              id: "sub-grid-1-title",
+              locked: true,
+              noMove: true,
+              noResize: true,
+              w: 12,
+              x: 0,
+              y: 0,
+              content: "Sub Grid 1",
+            },
+            { id: "item3", h: 2, w: 2, x: 0, y: 1 },
+            { id: "item4", h: 2, w: 2, x: 2, y: 0 },
+          ],
+        },
+        w: 4,
+        x: 0,
+        y: 2,
+      },
+      { id: "item5", w: 4, h: 4, x: 0, y: 2 },
     ],
-  });
+  }));
 
+  // Data about every content
   const [initialComponentInfoMap] = useState<Record<string, ComponentInfo>>(
     () => ({
       item1: { component: "Text", serializableProps: { content: "Text" } },
-      item2: {
+      item2: { component: "Text", serializableProps: { content: "Text" } },
+      "sub-grid-1-title": {
+        component: "Text",
+        serializableProps: { content: "Sub Grid 1" },
+      },
+      item3: { component: "Text", serializableProps: { content: "Text" } },
+      item4: {
+        component: "Counter",
+        serializableProps: { label: "Click me" },
+      },
+      item5: {
         component: "ComplexCard",
         serializableProps: { title: "Complex Card", color: "red" },
       },
@@ -89,7 +132,7 @@ function App() {
   );
 }
 
-export function DynamicGridStackItems() {
+function DynamicGridStackItems() {
   const { componentInfoMap } = useComponentInfoMap();
 
   return (
@@ -117,6 +160,8 @@ export function DynamicGridStackItems() {
             );
           }
 
+          // ... more render conditions here
+
           return (
             <GridStackItem key={widgetId} id={widgetId}>
               <Component {...props} key={`component-${widgetId}`} />
@@ -133,14 +178,32 @@ export function DynamicGridStackItems() {
 
 Render item with custom handle.
 
+Code here: [src/examples/003-custom-handle/index.tsx](src/examples/003-custom-handle/index.tsx)
+
 ```tsx
-<GridStackItem id="xxx">
-  <GridStackHandleReInitializer>
-    <button className={CUSTOM_DRAGGABLE_HANDLE_CLASSNAME}>
-      Handle ONLY HERE
-    </button>
-  </GridStackHandleReInitializer>
-</GridStackItem>
+function CustomHandle() {
+  const [uncontrolledInitialOptions] = useState<GridStackOptions>(() => ({
+    ...defaultGridOptions,
+    children: [{ id: "item1", h: 2, w: 2, x: 0, y: 0 }],
+  }));
+
+  return (
+    <GridStackProvider initialOptions={uncontrolledInitialOptions}>
+      <GridStackRender renderRawContent>
+        <GridStackItem id="item1">
+          <div>Custom Handle</div>
+
+          {/* Experimental: Render item with custom handle */}
+          <GridStackHandleReInitializer>
+            <button className={CUSTOM_DRAGGABLE_HANDLE_CLASSNAME}>
+              Handle ONLY HERE
+            </button>
+          </GridStackHandleReInitializer>
+        </GridStackItem>
+      </GridStackRender>
+    </GridStackProvider>
+  );
+}
 ```
 
 ## API Reference
