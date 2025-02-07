@@ -2,119 +2,280 @@
 
 A React wrapper component for GridStack that provides better TypeScript support and React integration experience.
 
+Open in [CodeSandbox](https://codesandbox.io/p/sandbox/github/gridstack/gridstack.js/tree/master/react?file=/src/App.tsx)
+
 ## TODO
 
-- [x] Component mapping
-- [x] SubGrid support
-- [ ] Save and restore layout
-- [ ] Publish to npm
+- [x] Add Widgets
+- [x] Add Sub Grid
+- [x] Nested Sub Grid
+- [x] Remove Widget
+- [x] Copy(Duplicate) Widget
+- [x] Custom handle
+- [ ] Drag between two grid stacks
 
-## Basic Usage
+Welcome to give any suggestions and ideas, you can submit an issue or contact me by email. :)
 
-This is not an npm package, it's just a demo project. Please copy the relevant code to your project to use it.
+## Usage
+
+**Simple**
+
+Render item with widget id selector.
 
 ```tsx
-import {
-  GridStackProvider,
-  GridStackRender,
-  GridStackRenderProvider,
-} from "path/to/lib";
-import "gridstack/dist/gridstack.css";
-import "gridstack/dist/gridstack-extra.css";
-import "path/to/demo.css";
-
-function Text({ content }: { content: string }) {
-  return <div>{content}</div>;
-}
-
-const COMPONENT_MAP = {
-  Text,
-  // ... other components
-};
-
-// Grid options
-const gridOptions = {
-  acceptWidgets: true,
-  margin: 8,
-  cellHeight: 50,
-  children: [
-    {
-      id: "item1",
-      h: 2,
-      w: 2,
-      content: JSON.stringify({
-        name: "Text",
-        props: { content: "Item 1" },
-      }),
-    },
-    // ... other grid items
-  ],
-};
-
 function App() {
+  const [uncontrolledInitialOptions] = useState<GridStackOptions>({
+    // ...
+    children: [
+      { id: "item1", h: 2, w: 2, x: 0, y: 0 },
+      { id: "item2", h: 2, w: 2, x: 2, y: 0 },
+    ],
+  });
+
   return (
-    <GridStackProvider initialOptions={gridOptions}>
-      <!-- Maybe a toolbar here. Access to addWidget and addSubGrid by useGridStackContext() -->
+    <GridStackProvider initialOptions={uncontrolledInitialOptions}>
+      <Toolbar />
 
-      <!-- Grid Stack Root Element -->
-      <GridStackRenderProvider>
-        <!-- Grid Stack Default Render -->
-        <GridStackRender componentMap={COMPONENT_MAP} />
-      </GridStackRenderProvider>
+      <GridStackRender>
+        <GridStackItem id="item1">
+          <div>hello</div>
+        </GridStackItem>
 
-      <!-- Maybe other UI here -->
+        <GridStackItem id="item2">
+          <div>grid</div>
+        </GridStackItem>
+      </GridStackRender>
     </GridStackProvider>
   );
 }
 ```
 
-## Advanced Features
+**Advanced**
 
-### Toolbar Operations
+Render item with widget map component info.
 
-Provide APIs to add new components and sub-grids:
+_ComponentInfoMap is just an example, you can use any way you want to store and retrieve component information._
 
 ```tsx
-function Toolbar() {
-  const { addWidget, addSubGrid } = useGridStackContext();
+function App() {
+  const [uncontrolledInitialOptions] = useState<GridStackOptions>({
+    // ...
+    children: [
+      { id: "item1", h: 2, w: 2, x: 0, y: 0 },
+      { id: "item2", h: 2, w: 2, x: 2, y: 0 },
+    ],
+  });
+
+  const [initialComponentInfoMap] = useState<Record<string, ComponentInfo>>(
+    () => ({
+      item1: { component: "Text", serializableProps: { content: "Text" } },
+      item2: {
+        component: "ComplexCard",
+        serializableProps: { title: "Complex Card", color: "red" },
+      },
+    })
+  );
 
   return (
-    <div>
-      <button onClick={() => addWidget(/* ... */)}>Add Component</button>
-      <button onClick={() => addSubGrid(/* ... */)}>Add SubGrid</button>
-    </div>
+    <ComponentInfoMapProvider initialComponentInfoMap={initialComponentInfoMap}>
+      <GridStackProvider initialOptions={uncontrolledInitialOptions}>
+        <Toolbar />
+
+        <GridStackRender>
+          <DynamicGridStackItems />
+        </GridStackRender>
+      </GridStackProvider>
+    </ComponentInfoMapProvider>
+  );
+}
+
+export function DynamicGridStackItems() {
+  const { componentInfoMap } = useComponentInfoMap();
+
+  return (
+    <>
+      {Array.from(componentInfoMap.entries()).map(
+        ([widgetId, componentInfo]) => {
+          const Component = COMPONENT_MAP[componentInfo.component];
+          if (!Component) {
+            throw new Error(`Component ${componentInfo.component} not found`);
+          }
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const props = componentInfo.serializableProps as any;
+
+          if (componentInfo.component === "ComplexCard") {
+            return (
+              <GridStackItem key={widgetId} id={widgetId}>
+                <ComplexCardEditableWrapper
+                  key={`complex-card-editable-wrapper-${widgetId}`}
+                  serializableProps={componentInfo.serializableProps}
+                >
+                  <Component {...props} key={`component-${widgetId}`} />
+                </ComplexCardEditableWrapper>
+              </GridStackItem>
+            );
+          }
+
+          return (
+            <GridStackItem key={widgetId} id={widgetId}>
+              <Component {...props} key={`component-${widgetId}`} />
+            </GridStackItem>
+          );
+        }
+      )}
+    </>
   );
 }
 ```
 
-### Layout Saving
+**Experimental**
 
-Get the current layout:
+Render item with custom handle.
 
 ```tsx
-const { saveOptions } = useGridStackContext();
-
-const currentLayout = saveOptions();
+<GridStackItem id="xxx">
+  <GridStackHandleReInitializer>
+    <button className={CUSTOM_DRAGGABLE_HANDLE_CLASSNAME}>
+      Handle ONLY HERE
+    </button>
+  </GridStackHandleReInitializer>
+</GridStackItem>
 ```
 
 ## API Reference
 
-### GridStackProvider
+### Components
 
-The main context provider, accepts the following properties:
+#### GridStackProvider
 
-- `initialOptions`: Initial configuration options for GridStack
+Top-level component that provides GridStack context.
 
-### GridStackRender
+```typescript
+type GridStackProviderProps = {
+  initialOptions: GridStackOptions; // GridStack initialization options
+  children: React.ReactNode;
+};
+```
 
-The core component for rendering the grid, accepts the following properties:
+#### GridStackRender
 
-- `componentMap`: A mapping from component names to actual React components
+Render GridStack root container component.
+
+```typescript
+type GridStackRenderProps = {
+  children: React.ReactNode;
+};
+```
+
+#### GridStackItem
+
+Component representing a single grid item.
+
+```typescript
+type GridStackItemProps = {
+  id: string; // Grid item unique identifier
+  children: React.ReactNode;
+};
+```
+
+#### GridStackHandleReInitializer
+
+Experimental component for reinitializing the drag handle of a grid item.
+
+```typescript
+type GridStackHandleReInitializerProps = {
+  children: React.ReactNode;
+};
+```
+
+### Contexts
+
+#### GridStackContext
+
+Provide GridStack core functionality context.
+
+```typescript
+interface GridStackContextType {
+  initialOptions: GridStackOptions;
+  addWidget: (widget: GridStackWidget) => void;
+  removeWidget: (el: GridStackElement) => void;
+  saveOptions: () => ReturnType<GridStack["save"]> | undefined;
+
+  _gridStack: {
+    value: GridStack | null;
+    set: React.Dispatch<React.SetStateAction<GridStack | null>>;
+  };
+}
+```
+
+#### GridStackItemContext
+
+Provide single grid item functionality context.
+
+```typescript
+type GridStackItemContextType = {
+  id: string;
+  // Native methods
+  remove: () => void;
+  update: (opt: GridStackWidget) => void;
+
+  // Extended methods
+  getBounds: () => {
+    current: { x?: number; y?: number; w?: number; h?: number };
+    original: { x?: number; y?: number; w?: number; h?: number };
+  } | null;
+  setSize: (size: { w: number; h: number }) => void;
+  setPosition: (position: { x: number; y: number }) => void;
+};
+```
+
+#### GridStackRenderContext
+
+Provide rendering related functionality context.
+
+```typescript
+type GridStackRenderContextType = {
+  getWidgetContainer: (widgetId: string) => HTMLElement | null;
+};
+```
 
 ### Hooks
 
-- `useGridStackContext()`: Access GridStack context and operations
-  - `addWidget`: Add a new component
-  - `addSubGrid`: Add a new sub-grid
-  - `saveOptions`: Save current layout
-  - `initialOptions`: Initial configuration options
+#### useGridStackContext
+
+Get GridStack context.
+
+```typescript
+function useGridStackContext(): GridStackContextType;
+```
+
+#### useGridStackItemContext
+
+Get grid item context.
+
+```typescript
+function useGridStackItemContext(): GridStackItemContextType;
+```
+
+#### useGridStackRenderContext
+
+Get rendering context.
+
+```typescript
+function useGridStackRenderContext(): GridStackRenderContextType;
+```
+
+### Type Exports
+
+```typescript
+export type {
+  GridStackContextType,
+  GridStackProviderProps,
+  GridStackRenderContextType,
+  GridStackRenderProps,
+  GridStackItemProps,
+  GridStackItemContextType,
+  GridStackHandleReInitializerProps,
+};
+```
