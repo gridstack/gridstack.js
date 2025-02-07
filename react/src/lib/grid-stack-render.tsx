@@ -3,9 +3,14 @@ import { useGridStackContext } from "./grid-stack-context";
 import { GridStack, GridStackOptions, GridStackWidget } from "gridstack";
 import { GridStackRenderContext } from "./grid-stack-render-context";
 
-export type GridStackRenderProps = PropsWithChildren;
+export type GridStackRenderProps = PropsWithChildren<{
+  renderRawContent?: boolean;
+}>;
 
-export function GridStackRender({ children }: GridStackRenderProps) {
+export function GridStackRender({
+  children,
+  renderRawContent = false,
+}: GridStackRenderProps) {
   const {
     _gridStack: { value: gridStack, set: setGridStack },
     initialOptions,
@@ -21,11 +26,18 @@ export function GridStackRender({ children }: GridStackRenderProps) {
         if (widget.id) {
           widgetContainersRef.current.set(widget.id, element);
         }
+
+        // ! Only as a fallback, if content is not set in the widget
+        if (renderRawContent) {
+          if (widget.content) {
+            element.innerHTML = widget.content;
+          }
+        }
       };
       return GridStack.init(optionsRef.current, containerRef.current);
     }
     return null;
-  }, []);
+  }, [renderRawContent]);
 
   useLayoutEffect(() => {
     if (!gridStack) {
