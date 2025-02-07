@@ -12,7 +12,7 @@ Open in [CodeSandbox](https://codesandbox.io/p/sandbox/github/gridstack/gridstac
 - [x] Remove Widget
 - [x] Copy(Duplicate) Widget
 - [x] Custom handle
-- [ ] Drag between two grid stacks
+- [x] Drag between two grid stacks
 
 Welcome to give any suggestions and ideas, you can submit an issue or contact me by email. :)
 
@@ -164,6 +164,8 @@ Render GridStack root container component.
 
 ```typescript
 type GridStackRenderProps = {
+  renderRawContent?: boolean;
+
   children: React.ReactNode;
 };
 ```

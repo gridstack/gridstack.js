@@ -3,9 +3,9 @@ import {
   GridStackHandleReInitializer,
   useGridStackContext,
   useGridStackItemContext,
-} from "../lib";
-import { newId } from "../utils";
-import { CUSTOM_DRAGGABLE_HANDLE_CLASSNAME } from "../default-grid-options";
+} from "../../../lib";
+import { newId } from "../../../utils";
+import { CUSTOM_DRAGGABLE_HANDLE_CLASSNAME } from "../../../default-grid-options";
 import { useComponentInfoMap } from "./component-info-map";
 
 type ComplexCardProps = {
