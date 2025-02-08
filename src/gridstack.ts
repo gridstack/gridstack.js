@@ -1697,7 +1697,8 @@ export class GridStack {
     sizeToContent ? el.classList.add('size-to-content') : el.classList.remove('size-to-content');
     if (sizeToContent) this.resizeToContentCheck(false, node);
 
-    this._prepareDragDropByNode(node);
+    if (!Utils.lazyLoad(node)) this._prepareDragDropByNode(node);
+
     return this;
   }
 

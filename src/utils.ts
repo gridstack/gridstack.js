@@ -110,18 +110,24 @@ export class Utils {
     return els;
   }
 
+  /** true if widget (or grid) makes this item lazyLoad */
+  static lazyLoad(n: GridStackNode): boolean {
+    return n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
+  }
+
   /** create the default grid item divs, and content possibly lazy loaded calling GridStack.renderCB */
   static createWidgetDivs(itemClass: string, n: GridStackNode): HTMLElement {
     const el = Utils.createDiv(['grid-stack-item', itemClass]);
     const cont = Utils.createDiv(['grid-stack-item-content'], el);
 
-    const lazyLoad = n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
-    if (lazyLoad) {
+    if (Utils.lazyLoad(n)) {
       if (!n.visibleObservable) {
         n.visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
           n.visibleObservable?.disconnect();
           delete n.visibleObservable;
-          GridStack.renderCB(cont, n)
+          GridStack.renderCB(cont, n);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (n.grid as any)?._prepareDragDropByNode(n); // access protected method. TODO: do we expose that for React to call too (after dom is ready)
         }});
         window.setTimeout(() => n.visibleObservable?.observe(el)); // wait until callee sets position attributes
       }
@@ -582,7 +588,7 @@ export class Utils {
       button: 0,
       relatedTarget: e.target
     });
-  
+
     (target || e.target).dispatchEvent(simulatedEvent);
   }
 
