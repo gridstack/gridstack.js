@@ -1,3 +1,6 @@
+export type { GridStackContainerProps } from "./grid-stack-container";
+export { GridStackContainer } from "./grid-stack-container";
+
 export type { GridStackContextType } from "./grid-stack-context";
 export { GridStackContext, useGridStackContext } from "./grid-stack-context";
 
