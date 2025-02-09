@@ -8,6 +8,7 @@ import { GridItemHTMLElement, GridStackElement, DDDragOpt } from './types';
 import { Utils } from './utils';
 import { DDManager } from './dd-manager';
 import { DDElement, DDElementHost } from './dd-element';
+import { GridHTMLElement } from './gridstack';
 
 /** Drag&Drop drop options */
 export type DDDropOpt = {
@@ -32,7 +33,7 @@ export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: Grid
 export class DDGridStack {
 
   public resizable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): DDGridStack {
-    this._getDDElements(el).forEach(dEl => {
+    this._getDDElements(el, opts).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
         dEl.ddResizable && dEl.ddResizable[opts](); // can't create DD as it requires options for setupResizable()
       } else if (opts === 'destroy') {
@@ -67,7 +68,7 @@ export class DDGridStack {
   }
 
   public draggable(el: GridItemHTMLElement, opts: DDOpts, key?: DDKey, value?: DDValue): DDGridStack {
-    this._getDDElements(el).forEach(dEl => {
+    this._getDDElements(el, opts).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
         dEl.ddDraggable && dEl.ddDraggable[opts](); // can't create DD as it requires options for setupDraggable()
       } else if (opts === 'destroy') {
@@ -100,13 +101,11 @@ export class DDGridStack {
       opts._accept = opts.accept;
       opts.accept = (el) => opts._accept(el);
     }
-    this._getDDElements(el).forEach(dEl => {
+    this._getDDElements(el, opts).forEach(dEl => {
       if (opts === 'disable' || opts === 'enable') {
         dEl.ddDroppable && dEl.ddDroppable[opts]();
       } else if (opts === 'destroy') {
-        if (dEl.ddDroppable) { // error to call destroy if not there
-          dEl.cleanDroppable();
-        }
+        dEl.ddDroppable && dEl.cleanDroppable();
       } else if (opts === 'option') {
         dEl.setupDroppable({ [key]: value });
       } else {
@@ -148,12 +147,13 @@ export class DDGridStack {
     return this;
   }
 
-  /** @internal returns a list of DD elements, creating them on the fly by default */
-  protected _getDDElements(els: GridStackElement, create = true): DDElement[] {
+  /** @internal returns a list of DD elements, creating them on the fly by default unless option is to destroy or disable */
+  protected _getDDElements(els: GridStackElement, opts?: DDOpts): DDElement[] {
+    // don't force create if we're going to destroy it, unless it's a grid which is used as drop target for it's children
+    const create = (els as GridHTMLElement).gridstack ||  opts !== 'destroy' && opts !== 'disable';
     const hosts = Utils.getElements(els) as DDElementHost[];
     if (!hosts.length) return [];
-    const list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null));
-    if (!create) { list.filter(d => d); } // remove nulls
+    const list = hosts.map(e => e.ddElement || (create ? DDElement.init(e) : null)).filter(d => d); // remove nulls
     return list;
   }
 }
