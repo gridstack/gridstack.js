@@ -8,13 +8,13 @@ this is the recommended way if you are going to have multiple grids (alow drag&d
 
 I.E. don't use Angular templating to create grid items as that is harder to sync when gridstack will also add/remove items.
 
-HTML
+MyComponent HTML
 
 ```html
 <gridstack [options]="gridOptions"></gridstack>
 ```
 
-CSS
+MyComponent CSS
 
 ```css
 @import "gridstack/dist/gridstack.min.css";
@@ -30,7 +30,7 @@ CSS
 ```
 
 
-Standalone Component Code
+Standalone MyComponent Code
 
 ```ts
 import { GridStackOptions } from 'gridstack';
@@ -47,7 +47,7 @@ export class MyComponent {
   // sample grid options + items to load...
   public gridOptions: GridStackOptions = {
     margin: 5,
-    children: [ // or call load()/addWidget() with same data
+    children: [ // or call load(children) or addWidget(children[0]) with same data
       {x:0, y:0, minW:2, content:'Item 1'},
       {x:1, y:0, content:'Item 2'},
       {x:0, y:1, content:'Item 3'},
