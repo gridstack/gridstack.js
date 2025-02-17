@@ -346,8 +346,6 @@ export class GridStack {
     opts = Utils.defaults(opts, defaults);
     this._initMargin(); // part of settings defaults...
 
-    // Now check if we're loading into 1 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
-    this.checkDynamicColumn();
     this.el.classList.add('gs-' + opts.column);
 
     if (opts.rtl === 'auto') {
@@ -440,6 +438,9 @@ export class GridStack {
     this._setupRemoveDrop();
     this._setupAcceptWidget();
     this._updateResizeEvent();
+
+    // To ensure that the grid is resized to the current screen width when the grid is initialized
+    this.onResize()
   }
 
   /**
