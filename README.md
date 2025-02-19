@@ -472,10 +472,10 @@ breaking change:
 
 **Breaking change:**
 
-* if you code relies on `GridStackWidget.content` with real HTML (like a few demos) it is up to you to do this:
+* if your code relies on `GridStackWidget.content` with real HTML (like a few demos) it is up to you to do this:
 ```ts
 // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
-GridStack.renderCB = function(el, w) {
+GridStack.renderCB = function(el: HTMLElement, w: GridStackNode) {
   el.innerHTML = w.content;
 };
 ```
@@ -485,7 +485,7 @@ GridStack.renderCB = function(el, w) {
 **Potential breaking change:**
 
 * BIG overall to how sidepanel helper drag&drop is done:
-1. `clone()` helper is now passed full HTML element dragged, not an event on `grid-stack-item-content` so can clone or set attr at the top.
+1. `clone()` helper is now passed full HTML element dragged, not an event on `grid-stack-item-content` so you can clone or set attr at the top.
 2. use any class/structure you want for side panel items (see two.html)
 3. `GridStack.setupDragIn()` now support associating a `GridStackWidget` for each sidepanel that will be used to define what to create on drop!
 4. if no `GridStackWidget` is defined, the helper will now be inserted as is, and NOT original sidepanel item.
