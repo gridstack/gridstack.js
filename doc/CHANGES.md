@@ -124,6 +124,7 @@ Change log
 ## 11.3.0-dev (TBD)
 * fix: [#2921](https://github.com/gridstack/gridstack.js/pull/2921) replace initMouseEvent with MouseEvent constructor and added composed: true
 * fix: [#2939](https://github.com/gridstack/gridstack.js/issues/2939) custom drag handle not working with LazyLoad
+* fix: [#2955](https://github.com/gridstack/gridstack.js/issues/2955) angular circular dependency
 
 ## 11.3.0 (2025-01-26)
 * feat: added `isIgnoreChangeCB()` if changeCB should be ignored due to column change, sizeToContent, loading, etc...

@@ -5,18 +5,18 @@
 
 import { NgModule } from "@angular/core";
 
-import { GridstackComponent } from "./gridstack.component";
 import { GridstackItemComponent } from "./gridstack-item.component";
+import { GridstackComponent } from "./gridstack.component";
 
 // @deprecated use GridstackComponent and GridstackItemComponent as standalone components
 @NgModule({
   imports: [
-    GridstackComponent,
     GridstackItemComponent,
+    GridstackComponent,
   ],
   exports: [
-    GridstackComponent,
     GridstackItemComponent,
+    GridstackComponent,
   ],
 })
 export class GridstackModule {}

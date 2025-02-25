@@ -9,33 +9,15 @@ import { NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
 
-import { GridItemCompHTMLElement, GridstackItemComponent } from './gridstack-item.component';
+import { NgGridStackNode, NgGridStackWidget } from './types';
 import { BaseWidget } from './base-widget';
+import { GridItemCompHTMLElement, GridstackItemComponent } from './gridstack-item.component';
 
 /** events handlers emitters signature for different events */
 export type eventCB = {event: Event};
 export type elementCB = {event: Event, el: GridItemHTMLElement};
 export type nodesCB = {event: Event, nodes: GridStackNode[]};
 export type droppedCB = {event: Event, previousNode: GridStackNode, newNode: GridStackNode};
-
-export type NgCompInputs = {[key: string]: any};
-
-/** extends to store Ng Component selector, instead/inAddition to content */
-export interface NgGridStackWidget extends GridStackWidget {
-  /** Angular tag selector for this component to create at runtime */
-  selector?: string;
-  /** serialized data for the component input fields */
-  input?: NgCompInputs;
-  /** nested grid options */
-  subGridOpts?: NgGridStackOptions;
-}
-export interface NgGridStackNode extends GridStackNode {
-  selector?: string; // component type to create as content
-}
-export interface NgGridStackOptions extends GridStackOptions {
-  children?: NgGridStackWidget[];
-  subGridOpts?: NgGridStackOptions;
-}
 
 /** store element to Ng Class pointer back */
 export interface GridCompHTMLElement extends GridHTMLElement {
