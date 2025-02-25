@@ -8,7 +8,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { NgCompInputs, NgGridStackWidget } from './gridstack.component';
+import { NgCompInputs, NgGridStackWidget } from './types';
 
  @Injectable()
  export abstract class BaseWidget {
