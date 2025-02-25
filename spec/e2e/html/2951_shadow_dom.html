@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shadow DOM dragging</title>
+    <script src="../../../dist/gridstack-all.js"></script>
+  </head>
+  <body>
+    <h2>Inside Custom Element with Shadow DOM</h2>
+    <demo-gridstack></demo-gridstack>
+    <script type="text/javascript">
+      class HTMLDemoGridStack extends HTMLElement {
+        constructor() {
+          super();
+          this.attachShadow({
+            mode: "open",
+          });
+        }
+
+        connectedCallback() {
+          const styleBlocks = `
+<link href="https://unpkg.com/gridstack@11.3.0/dist/gridstack.min.css" rel="stylesheet" />
+<style type="text/css">
+*, *::before, *::after {
+box-sizing: border-box;
+}
+:host { display: block; }
+
+.grid-stack {
+background-color: #fafad2;
+}
+.grid-stack-item-content {
+background-color: #18bc9c;
+}
+</style>
+`;
+
+          this.shadowRoot.innerHTML = `${styleBlocks}<div class="grid-stack"></div>`;
+          const gridEl = this.shadowRoot.querySelector("div");
+          const items = [
+            {
+              content: "my first widget",
+            }, // will default to location (0,0) and 1x1
+            {
+              w: 2,
+              content: "another longer widget!",
+            }, // will be placed next at (1,0) and 2x1
+            {
+              content: "3rd Widget",
+            },
+          ];
+          const grid = GridStack.init(
+            {
+              disableOneColumnMode: true,
+              draggable: {
+                appendTo: "parent",
+              },
+              cellHeight: 100,
+            },
+            gridEl
+          );
+          grid.load(items);
+        }
+      }
+
+      customElements.define("demo-gridstack", HTMLDemoGridStack);
+    </script>
+  </body>
+</html>
