@@ -408,10 +408,10 @@ export class GridStackEngine {
 
     const before = node._orig || Utils.copyPos({}, node);
 
-    if (node.maxW && node.w) { node.w = Math.min(node.w, node.maxW); }
-    if (node.maxH && node.h) { node.h = Math.min(node.h, node.maxH); }
-    if (node.minW && node.w && node.minW <= this.column) { node.w = Math.max(node.w, node.minW); }
-    if (node.minH && node.h) { node.h = Math.max(node.h, node.minH); }
+    if (node.maxW) { node.w = Math.min(node.w || 1, node.maxW); }
+    if (node.maxH) { node.h = Math.min(node.h || 1, node.maxH); }
+    if (node.minW) { node.w = Math.max(node.w || 1, node.minW); }
+    if (node.minH) { node.h = Math.max(node.h || 1, node.minH); }
 
     // if user loaded a larger than allowed widget for current # of columns,
     // remember it's position & width so we can restore back (1 -> 12 column) #1655 #1985

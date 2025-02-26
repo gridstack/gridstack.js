@@ -126,6 +126,7 @@ Change log
 * fix: [#2939](https://github.com/gridstack/gridstack.js/issues/2939) custom drag handle not working with LazyLoad
 * fix: [#2955](https://github.com/gridstack/gridstack.js/issues/2955) angular circular dependency
 * fix: [#2951](https://github.com/gridstack/gridstack.js/issues/2951) shadow DOM dragging re-appending fix
+* fix: [#2964](https://github.com/gridstack/gridstack.js/pull/2964) minW larger than column fix
 
 ## 11.3.0 (2025-01-26)
 * feat: added `isIgnoreChangeCB()` if changeCB should be ignored due to column change, sizeToContent, loading, etc...
