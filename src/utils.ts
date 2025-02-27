@@ -3,7 +3,6 @@
  * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 
-import { GridStack } from './gridstack';
 import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
 
 export interface HeightData {
@@ -113,26 +112,6 @@ export class Utils {
   /** true if widget (or grid) makes this item lazyLoad */
   static lazyLoad(n: GridStackNode): boolean {
     return n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
-  }
-
-  /** create the default grid item divs, and content possibly lazy loaded calling GridStack.renderCB */
-  static createWidgetDivs(itemClass: string, n: GridStackNode): HTMLElement {
-    const el = Utils.createDiv(['grid-stack-item', itemClass]);
-    const cont = Utils.createDiv(['grid-stack-item-content'], el);
-
-    if (Utils.lazyLoad(n)) {
-      if (!n.visibleObservable) {
-        n.visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
-          n.visibleObservable?.disconnect();
-          delete n.visibleObservable;
-          GridStack.renderCB(cont, n);
-          n.grid?.prepareDragDrop(n.el);
-        }});
-        window.setTimeout(() => n.visibleObservable?.observe(el)); // wait until callee sets position attributes
-      }
-    } else GridStack.renderCB(cont, n);
-
-    return el;
   }
 
   /** create a div with the given classes */

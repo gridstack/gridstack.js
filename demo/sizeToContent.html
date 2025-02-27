@@ -109,7 +109,7 @@
       grid.addWidget({content: `<div>New: ${text}</div>`});
     }
     function makeWidget() {
-      let el = GridStack.Utils.createWidgetDivs(undefined, {content: `<div>New Make: ${text}</div>`}, grid.el)
+      let el = GridStack.createWidgetDivs(undefined, {content: `<div>New Make: ${text}</div>`}, grid.el)
       grid.makeWidget(el, {w:2});
     }
     function more() {
