@@ -1252,9 +1252,9 @@ describe('gridstack >', function() {
       grid.update(el, {maxW: 2});
       expect(parseInt(el.getAttribute('gs-x'), 10)).toBe(4);
       expect(parseInt(el.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(2);
       expect(parseInt(el.getAttribute('gs-h'), 10)).toBe(4);
       expect(el.gridstackNode.maxW).toBe(2);
-      expect(parseInt(el.getAttribute('gs-w'), 10)).toBe(2);
     });
     it('should change all max and move, no inf loop! >', function() {
       grid = GridStack.init({float: true});
