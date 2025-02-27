@@ -107,7 +107,7 @@
     // clone the sidepanel item so we drag a copy, and in some case ('manual') create the final widget, else sidebarContent will be used.
     function myClone(el) {
       if (el.getAttribute('gs-id') === 'manual') {
-        return GridStack.Utils.createWidgetDivs(undefined, {w:2, content:'manual'}); // RenderCB() will be called
+        return GridStack.createWidgetDivs(undefined, {w:2, content:'manual'}); // RenderCB() will be called
       }
       el = el.cloneNode(true);
       // el.setAttribute('gs-id', 'foo'); // help debug #2231
