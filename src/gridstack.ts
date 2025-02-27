@@ -510,7 +510,7 @@ export class GridStack {
 
     return el;
   }
-  
+
   /**
    * Convert an existing gridItem element into a sub-grid with the given (optional) options, else inherit them
    * from the parent's subGrid options.
@@ -1312,20 +1312,10 @@ export class GridStack {
    */
   public update(els: GridStackElement, opt: GridStackWidget): GridStack {
 
-    // support legacy call for now ?
-    if (arguments.length > 2) {
-      console.warn('gridstack.ts: `update(el, x, y, w, h)` is deprecated. Use `update(el, {x, w, content, ...})`. It will be removed soon');
-      // eslint-disable-next-line prefer-rest-params
-      const a = arguments;
-      let i = 1;
-      opt = { x: a[i++], y: a[i++], w: a[i++], h: a[i++] };
-      return this.update(els, opt);
-    }
-
     GridStack.getElements(els).forEach(el => {
       const n = el?.gridstackNode;
       if (!n) return;
-      const w = Utils.cloneDeep(opt); // make a copy we can modify in case they re-use it or multiple items
+      const w = {...Utils.copyPos({}, n), ...Utils.cloneDeep(opt)}; // make a copy we can modify in case they re-use it or multiple items
       this.engine.nodeBoundFix(w);
       delete w.autoPosition;
 
