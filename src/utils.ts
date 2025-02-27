@@ -126,8 +126,7 @@ export class Utils {
           n.visibleObservable?.disconnect();
           delete n.visibleObservable;
           GridStack.renderCB(cont, n);
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (n.grid as any)?._prepareDragDropByNode(n); // access protected method. TODO: do we expose that for React to call too (after dom is ready)
+          n.grid?.prepareDragDrop(n.el);
         }});
         window.setTimeout(() => n.visibleObservable?.observe(el)); // wait until callee sets position attributes
       }

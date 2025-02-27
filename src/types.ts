@@ -153,7 +153,7 @@ export interface GridStackOptions {
 
   /** number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns.
    * Note: for nested grids, it is recommended to use 'auto' which will always match the container grid-item current width (in column) to keep inside and outside
-   * items always to same. flag is not supported for regular non-nested grids.
+   * items always the same. flag is NOT supported for regular non-nested grids.
    */
   column?: number | 'auto';
 
