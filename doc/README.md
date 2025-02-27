@@ -50,7 +50,7 @@ gridstack.js API
   - [`getGridItems(): GridItemHTMLElement[]`](#getgriditems-griditemhtmlelement)
   - [`getMargin()`](#getmargin)
   - [`isAreaEmpty(x, y, width, height)`](#isareaemptyx-y-width-height)
-  - [`load(layout: GridStackWidget[], boolean | ((w: GridStackWidget, add: boolean) => void)  = true)`](#loadlayout-gridstackwidget-boolean--w-gridstackwidget-add-boolean--void---true)
+  - [`load(items: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true)`](#loaditems-gridstackwidget-addremove-boolean--addremovefcn--gridstackaddremovecb--true)
   - [`makeWidget(el)`](#makewidgetel)
   - [`makeSubGrid(el)`](#makesubgridel)
   - [`margin(value: numberOrString)`](#marginvalue-numberorstring)
@@ -496,13 +496,13 @@ returns current margin value (undefined if all 4 sides don't match).
 
 Checks if specified area is empty.
 
-### `load(layout: GridStackWidget[], boolean | ((w: GridStackWidget, add: boolean) => void)  = true)`
+### `load(items: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true)`
 
 - load the widgets from a list (see `save()`). This will call `update()` on each (matching by id) or add/remove widgets that are not there.
-- Optional `addAndRemove` boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving the user control of insertion.
+- Optional `addRemove` boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving the user control of insertion.
 
 - used to restore a grid layout for a saved layout list (see `save()`).
-- `addAndRemove` boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving the user control of insertion.
+- `addRemove` boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving the user control of insertion.
 - see [example](http://gridstackjs.com/demo/serialization.html)
 
 ### `makeWidget(el)`

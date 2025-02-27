@@ -699,8 +699,8 @@ export class GridStack {
   /**
    * load the widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
    *
-   * @param layout list of widgets definition to update/create
-   * @param addAndRemove boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving
+   * @param items list of widgets definition to update/create
+   * @param addRemove boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving
    * the user control of insertion.
    *
    * @example
