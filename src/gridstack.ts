@@ -173,26 +173,6 @@ export class GridStack {
     return grid;
   }
 
-  /** create the default grid item divs, and content possibly lazy loaded calling GridStack.renderCB */
-  static createWidgetDivs(itemClass: string, n: GridStackNode): HTMLElement {
-    const el = Utils.createDiv(['grid-stack-item', itemClass]);
-    const cont = Utils.createDiv(['grid-stack-item-content'], el);
-
-    if (Utils.lazyLoad(n)) {
-      if (!n.visibleObservable) {
-        n.visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
-          n.visibleObservable?.disconnect();
-          delete n.visibleObservable;
-          GridStack.renderCB(cont, n);
-          n.grid?.prepareDragDrop(n.el);
-        }});
-        window.setTimeout(() => n.visibleObservable?.observe(el)); // wait until callee sets position attributes
-      }
-    } else GridStack.renderCB(cont, n);
-
-    return el;
-  }
-
   /** call this method to register your engine instead of the default one.
    * See instead `GridStackOptions.engineClass` if you only need to
    * replace just one instance.
@@ -487,7 +467,7 @@ export class GridStack {
     } else if (GridStack.addRemoveCB) {
       el = GridStack.addRemoveCB(this.el, w, true, false);
     } else {
-      el = GridStack.createWidgetDivs(this.opts.itemClass, node);
+      el = this.createWidgetDivs(node);
     }
 
     if (!el) return;
@@ -511,6 +491,26 @@ export class GridStack {
     return el;
   }
 
+  /** create the default grid item divs, and content (possibly lazy loaded) by using GridStack.renderCB() */
+  public createWidgetDivs(n: GridStackNode): HTMLElement {
+    const el = Utils.createDiv(['grid-stack-item', this.opts.itemClass]);
+    const cont = Utils.createDiv(['grid-stack-item-content'], el);
+
+    if (Utils.lazyLoad(n)) {
+      if (!n.visibleObservable) {
+        n.visibleObservable = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) {
+          n.visibleObservable?.disconnect();
+          delete n.visibleObservable;
+          GridStack.renderCB(cont, n);
+          n.grid?.prepareDragDrop(n.el);
+        }});
+        window.setTimeout(() => n.visibleObservable?.observe(el)); // wait until callee sets position attributes
+      }
+    } else GridStack.renderCB(cont, n);
+
+    return el;
+  }
+  
   /**
    * Convert an existing gridItem element into a sub-grid with the given (optional) options, else inherit them
    * from the parent's subGrid options.
