@@ -551,7 +551,7 @@ export class GridStack {
         newItem.appendChild(content);
         content = Utils.createDiv(['grid-stack-item-content'], node.el);
       }
-      this._prepareDragDropByNode(node); // ... and restore original D&D
+      this.prepareDragDrop(node.el); // ... and restore original D&D
     }
 
     // if we're adding an additional item, make the container large enough to have them both
@@ -1278,7 +1278,7 @@ export class GridStack {
     this._setupRemoveDrop();
     this._setupAcceptWidget();
     this.engine.nodes.forEach(n => {
-      this._prepareDragDropByNode(n); // either delete or init Drag&drop
+      this.prepareDragDrop(n.el); // either delete or init Drag&drop
       if (n.subGrid && recurse) n.subGrid.setStatic(val, updateClass, recurse);
     });
     if (updateClass) { this._setStaticClass(); }
@@ -1367,7 +1367,7 @@ export class GridStack {
         this._writeAttr(el, n);
       }
       if (ddChanged) {
-        this._prepareDragDropByNode(n);
+        this.prepareDragDrop(n.el);
       }
     });
 
@@ -1697,7 +1697,7 @@ export class GridStack {
     sizeToContent ? el.classList.add('size-to-content') : el.classList.remove('size-to-content');
     if (sizeToContent) this.resizeToContentCheck(false, node);
 
-    if (!Utils.lazyLoad(node)) this._prepareDragDropByNode(node);
+    if (!Utils.lazyLoad(node)) this.prepareDragDrop(node.el);
 
     return this;
   }
@@ -1994,7 +1994,7 @@ export class GridStack {
       const n = el.gridstackNode;
       if (!n) return;
       val ? delete n.noMove : n.noMove = true;
-      this._prepareDragDropByNode(n); // init DD if need be, and adjust
+      this.prepareDragDrop(n.el); // init DD if need be, and adjust
     });
     return this;
   }
@@ -2010,7 +2010,7 @@ export class GridStack {
       const n = el.gridstackNode;
       if (!n) return;
       val ? delete n.noResize : n.noResize = true;
-      this._prepareDragDropByNode(n); // init DD if need be, and adjust
+      this.prepareDragDrop(n.el); // init DD if need be, and adjust
     });
     return this;
   }
@@ -2057,7 +2057,7 @@ export class GridStack {
     if (this.opts.staticGrid) return this; // can't move a static grid!
     doEnable ? delete this.opts.disableDrag : this.opts.disableDrag = true; // FIRST before we update children as grid overrides #1658
     this.engine.nodes.forEach(n => {
-      this._prepareDragDropByNode(n);
+      this.prepareDragDrop(n.el);
       if (n.subGrid && recurse) n.subGrid.enableMove(doEnable, recurse);
     });
     return this;
@@ -2071,7 +2071,7 @@ export class GridStack {
     if (this.opts.staticGrid) return this; // can't size a static grid!
     doEnable ? delete this.opts.disableResize : this.opts.disableResize = true; // FIRST before we update children as grid overrides #1658
     this.engine.nodes.forEach(n => {
-      this._prepareDragDropByNode(n);
+      this.prepareDragDrop(n.el);
       if (n.subGrid && recurse) n.subGrid.enableResize(doEnable, recurse);
     });
     return this;
@@ -2399,9 +2399,9 @@ export class GridStack {
     return this;
   }
 
-  /** @internal prepares the element for drag&drop */
-  protected _prepareDragDropByNode(node: GridStackNode): GridStack {
-    const el = node.el;
+  /** prepares the element for drag&drop - this is normally called by makeWiget() unless are are delay loading */
+  public prepareDragDrop(el: GridItemHTMLElement): GridStack {
+    const node = el.gridstackNode;
     const noMove = node.noMove || this.opts.disableDrag;
     const noResize = node.noResize || this.opts.disableResize;
 

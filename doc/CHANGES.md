@@ -127,6 +127,7 @@ Change log
 * fix: [#2955](https://github.com/gridstack/gridstack.js/issues/2955) angular circular dependency
 * fix: [#2951](https://github.com/gridstack/gridstack.js/issues/2951) shadow DOM dragging re-appending fix
 * fix: [#2964](https://github.com/gridstack/gridstack.js/pull/2964) minW larger than column fix
+* feat: [#2965](https://github.com/gridstack/gridstack.js/pull/2965) internal `_prepareDragDropByNode(n)` is now public as `prepareDragDrop(el)` so Angular, React, and others can call once the DOM content elements have been added (the outside griditem divs are always created for content)
 
 ## 11.3.0 (2025-01-26)
 * feat: added `isIgnoreChangeCB()` if changeCB should be ignored due to column change, sizeToContent, loading, etc...
