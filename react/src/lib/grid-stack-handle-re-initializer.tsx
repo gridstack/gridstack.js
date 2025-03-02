@@ -44,9 +44,16 @@ export function GridStackHandleReInitializer(
 
           // https://github.com/gridstack/gridstack.js/blob/a917afcada4bd2892963678c8b1bde7630bb9528/src/gridstack.ts#L2402
           const g = gridStack as GridStack & {
-            _prepareDragDropByNode: (node: GridStackNode) => void;
+            _prepareDragDropByNode?: (node: GridStackNode) => void;
           };
-          g._prepareDragDropByNode(node);
+          if (g._prepareDragDropByNode) {
+            g._prepareDragDropByNode(node);
+          } else {
+            // https://github.com/gridstack/gridstack.js/blob/90a014d5f396ac335962c4192d6aa434f04bf223/src/gridstack.ts#L2413
+            if (g.prepareDragDrop) {
+              g.prepareDragDrop(element);
+            }
+          }
         }
       }
     }
