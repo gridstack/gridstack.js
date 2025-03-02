@@ -2409,20 +2409,25 @@ export class GridStack {
     return this;
   }
 
-  /** prepares the element for drag&drop - this is normally called by makeWiget() unless are are delay loading */
-  public prepareDragDrop(el: GridItemHTMLElement): GridStack {
+  /**
+   * prepares the element for drag&drop - this is normally called by makeWiget() unless are are delay loading
+   * @param el GridItemHTMLElement of the widget
+   * @param [force=false] 
+   * */
+  public prepareDragDrop(el: GridItemHTMLElement, force = false): GridStack {
     const node = el.gridstackNode;
     const noMove = node.noMove || this.opts.disableDrag;
     const noResize = node.noResize || this.opts.disableResize;
 
     // check for disabled grid first
-    if (this.opts.staticGrid || (noMove && noResize)) {
+    const disable = this.opts.staticGrid || (noMove && noResize);
+    if (force || disable) {
       if (node._initDD) {
         this._removeDD(el); // nukes everything instead of just disable, will add some styles back next
         delete node._initDD;
       }
-      el.classList.add('ui-draggable-disabled', 'ui-resizable-disabled'); // add styles one might depend on #1435
-      return this;
+      if (disable) el.classList.add('ui-draggable-disabled', 'ui-resizable-disabled'); // add styles one might depend on #1435
+      if (!force) return this;
     }
 
     if (!node._initDD) {

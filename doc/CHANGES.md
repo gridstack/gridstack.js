@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [11.4.0-dev (TBD)](#1140-dev-tbd)
 - [11.4.0 (2025-02-27)](#1140-2025-02-27)
 - [11.3.0 (2025-01-26)](#1130-2025-01-26)
 - [11.2.0 (2024-12-29)](#1120-2024-12-29)
@@ -120,6 +121,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 11.4.0-dev (TBD)
+* feat: [#2960](https://github.com/gridstack/gridstack.js/pull/2960) `prepareDragDrop(el, force)` option to force re-creation of the drag&drop event binding
 
 ## 11.4.0 (2025-02-27)
 * fix: [#2921](https://github.com/gridstack/gridstack.js/pull/2921) replace initMouseEvent with MouseEvent constructor and added composed: true
