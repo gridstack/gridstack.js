@@ -1,13 +1,13 @@
 import { createContext, useContext } from "react";
 
 export type GridStackRenderContextType = {
-  getWidgetContainer: (widgetId: string) => HTMLElement | null;
+  getContainerByWidgetId: (widgetId: string) => HTMLElement | null;
 };
 
 export const GridStackRenderContext = createContext<GridStackRenderContextType>(
   {
-    getWidgetContainer: () => {
-      console.error("getWidgetContainer not implemented");
+    getContainerByWidgetId: () => {
+      console.error("getContainerByWidgetId not implemented");
       return null;
     },
   }

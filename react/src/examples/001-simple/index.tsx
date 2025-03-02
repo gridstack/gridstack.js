@@ -13,8 +13,8 @@ export function Simple() {
   const [uncontrolledInitialOptions] = useState<GridStackOptions>(() => ({
     ...defaultGridOptions,
     children: [
-      { id: "item1", h: 2, w: 2, x: 0, y: 0 },
-      { id: "item2", h: 2, w: 2, x: 2, y: 0 },
+      { id: "001-item1", h: 2, w: 2, x: 0, y: 0 },
+      { id: "001-item2", h: 2, w: 2, x: 2, y: 0 },
     ],
   }));
 
@@ -22,12 +22,12 @@ export function Simple() {
     <GridStackProvider initialOptions={uncontrolledInitialOptions}>
       <Toolbar />
 
-      <GridStackRender renderRawContent>
-        <GridStackItem id="item1">
+      <GridStackRender>
+        <GridStackItem id="001-item1">
           <div style={{ color: "yellow" }}>hello</div>
         </GridStackItem>
 
-        <GridStackItem id="item2">
+        <GridStackItem id="001-item2">
           <div style={{ color: "blue" }}>grid</div>
         </GridStackItem>
       </GridStackRender>

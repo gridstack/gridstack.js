@@ -1,43 +1,32 @@
-import { PropsWithChildren, useCallback, useLayoutEffect, useRef } from "react";
+import {
+  ComponentProps,
+  PropsWithChildren,
+  useCallback,
+  useLayoutEffect,
+  useRef,
+} from "react";
 import { useGridStackContext } from "./grid-stack-context";
-import { GridStack, GridStackOptions, GridStackWidget } from "gridstack";
+import { GridStack, GridStackOptions } from "gridstack";
 import { GridStackRenderContext } from "./grid-stack-render-context";
+import { widgetContainers } from "./global";
 
-export type GridStackRenderProps = PropsWithChildren<{
-  renderRawContent?: boolean;
-}>;
+export type GridStackRenderProps = PropsWithChildren<ComponentProps<"div">>;
 
-export function GridStackRender({
-  children,
-  renderRawContent = false,
-}: GridStackRenderProps) {
+export function GridStackRender({ children, ...props }: GridStackRenderProps) {
   const {
     _gridStack: { value: gridStack, set: setGridStack },
     initialOptions,
   } = useGridStackContext();
 
-  const widgetContainersRef = useRef<Map<string, HTMLElement>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<GridStackOptions>(initialOptions);
 
   const initGrid = useCallback(() => {
     if (containerRef.current) {
-      GridStack.renderCB = (element: HTMLElement, widget: GridStackWidget) => {
-        if (widget.id) {
-          widgetContainersRef.current.set(widget.id, element);
-        }
-
-        // ! Only as a fallback, if content is not set in the widget
-        if (renderRawContent) {
-          if (widget.content) {
-            element.innerHTML = widget.content;
-          }
-        }
-      };
       return GridStack.init(optionsRef.current, containerRef.current);
     }
     return null;
-  }, [renderRawContent]);
+  }, []);
 
   useLayoutEffect(() => {
     if (!gridStack) {
@@ -49,13 +38,18 @@ export function GridStackRender({
     }
   }, [gridStack, initGrid, setGridStack]);
 
-  const getWidgetContainer = useCallback((widgetId: string) => {
-    return widgetContainersRef.current.get(widgetId) || null;
+  const getContainerByWidgetId = useCallback((widgetId: string) => {
+    return (
+      widgetContainers.find((container) => container.initWidget.id === widgetId)
+        ?.element || null
+    );
   }, []);
 
   return (
-    <GridStackRenderContext.Provider value={{ getWidgetContainer }}>
-      <div ref={containerRef}>{gridStack ? children : null}</div>
+    <GridStackRenderContext.Provider value={{ getContainerByWidgetId }}>
+      <div ref={containerRef} {...props}>
+        {gridStack ? children : null}
+      </div>
     </GridStackRenderContext.Provider>
   );
 }

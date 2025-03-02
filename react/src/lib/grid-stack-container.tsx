@@ -5,19 +5,15 @@ import { GridStackRender } from "./grid-stack-render";
 
 export type GridStackContainerProps = PropsWithChildren<{
   initialOptions: GridStackOptions;
-  renderRawContent?: boolean;
 }>;
 
 export function GridStackContainer({
   children,
   initialOptions,
-  renderRawContent,
 }: GridStackContainerProps) {
   return (
     <GridStackProvider initialOptions={initialOptions}>
-      <GridStackRender renderRawContent={renderRawContent}>
-        {children}
-      </GridStackRender>
+      <GridStackRender>{children}</GridStackRender>
     </GridStackProvider>
   );
 }

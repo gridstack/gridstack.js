@@ -27,3 +27,6 @@ export {
 
 export type { GridStackHandleReInitializerProps } from "./grid-stack-handle-re-initializer";
 export { GridStackHandleReInitializer } from "./grid-stack-handle-re-initializer";
+
+export type { GridStackDragInItemProps } from "./grid-stack-drag-in-item";
+export { GridStackDragInItem } from "./grid-stack-drag-in-item";

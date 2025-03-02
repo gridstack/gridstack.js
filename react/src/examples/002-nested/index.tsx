@@ -13,16 +13,16 @@ export function Nested() {
   const [uncontrolledInitialOptions] = useState<GridStackOptions>(() => ({
     ...defaultGridOptions,
     children: [
-      { id: "item1", h: 2, w: 2, x: 0, y: 0 },
-      { id: "item2", h: 2, w: 2, x: 2, y: 0 },
+      { id: "002-item1", h: 2, w: 2, x: 0, y: 0 },
+      { id: "002-item2", h: 2, w: 2, x: 2, y: 0 },
       {
-        id: "sub-grid-1",
+        id: "002-sub-grid-1",
         h: 5,
         sizeToContent: true,
         subGridOpts: {
           children: [
             {
-              id: "sub-grid-1-title",
+              id: "002-sub-grid-1-title",
               locked: true,
               noMove: true,
               noResize: true,
@@ -31,8 +31,8 @@ export function Nested() {
               y: 0,
               content: "Sub Grid 1",
             },
-            { id: "item3", h: 2, w: 2, x: 0, y: 1 },
-            { id: "item4", h: 2, w: 2, x: 2, y: 0 },
+            { id: "002-item3", h: 2, w: 2, x: 0, y: 1 },
+            { id: "002-item4", h: 2, w: 2, x: 2, y: 0 },
           ],
         },
         w: 12,
@@ -46,20 +46,20 @@ export function Nested() {
     <GridStackProvider initialOptions={uncontrolledInitialOptions}>
       <Toolbar />
 
-      <GridStackRender renderRawContent>
-        <GridStackItem id="item1">
+      <GridStackRender>
+        <GridStackItem id="002-item1">
           <div style={{ color: "yellow" }}>hello</div>
         </GridStackItem>
 
-        <GridStackItem id="item2">
+        <GridStackItem id="002-item2">
           <div style={{ color: "blue" }}>grid</div>
         </GridStackItem>
 
-        <GridStackItem id="item3">
+        <GridStackItem id="002-item3">
           <div style={{ color: "brown" }}>nested one</div>
         </GridStackItem>
 
-        <GridStackItem id="item4">
+        <GridStackItem id="002-item4">
           <div style={{ color: "purple" }}>nested two</div>
         </GridStackItem>
       </GridStackRender>

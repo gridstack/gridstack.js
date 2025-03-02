@@ -35,10 +35,7 @@ function Simple() {
   }));
 
   return (
-    <GridStackContainer
-      initialOptions={uncontrolledInitialOptions}
-      renderRawContent
-    >
+    <GridStackContainer initialOptions={uncontrolledInitialOptions}>
       <GridStackItem id="item1">
         <div style={{ color: "yellow" }}>hello</div>
       </GridStackItem>
@@ -70,7 +67,7 @@ function Simple() {
       {/* Custom toolbar component. Access to grid stack context by useGridStackContext hook. */}
       <Toolbar />
 
-      <GridStackRender renderRawContent>
+      <GridStackRender>
         <GridStackItem id="item1">
           <div style={{ color: "yellow" }}>hello</div>
         </GridStackItem>
@@ -80,6 +77,61 @@ function Simple() {
         </GridStackItem>
       </GridStackRender>
     </GridStackProvider>
+  );
+}
+```
+
+**Drag In**
+
+Drag items from outside into the grid.
+
+Code here: [src/examples/004-drag-in/index.tsx](src/examples/004-drag-in/index.tsx)
+
+```tsx
+function DragIn() {
+  const [uncontrolledInitialOptions] = useState<GridStackOptions>(() => ({
+    ...defaultGridOptions,
+    children: [
+      { id: "004-item1", h: 2, w: 2, x: 0, y: 0 },
+      { id: "004-item2", h: 2, w: 2, x: 2, y: 0 },
+    ],
+  }));
+
+  return (
+    <div>
+      <div
+        style={{
+          padding: "10px",
+          display: "flex",
+          flexDirection: "row",
+          gap: "10px",
+          border: "1px solid gray",
+          marginBottom: "10px",
+        }}
+      >
+        <GridStackDragInItem widget={{ h: 2, w: 2 }}>
+          <div
+            style={{
+              border: "1px dashed green ",
+              backgroundColor: "lime",
+              padding: "0 10px",
+            }}
+          >
+            Drag me add to the grid
+          </div>
+        </GridStackDragInItem>
+      </div>
+
+      <GridStackContainer initialOptions={uncontrolledInitialOptions}>
+        <GridStackItem id="004-item1">
+          <div style={{ color: "yellow" }}>hello</div>
+        </GridStackItem>
+
+        <GridStackItem id="004-item2">
+          <div style={{ color: "blue" }}>grid</div>
+        </GridStackItem>
+      </GridStackContainer>
+    </div>
   );
 }
 ```
@@ -219,7 +271,7 @@ function CustomHandle() {
 
   return (
     <GridStackProvider initialOptions={uncontrolledInitialOptions}>
-      <GridStackRender renderRawContent>
+      <GridStackRender>
         <GridStackItem id="item1">
           <div>Custom Handle</div>
 
@@ -268,8 +320,6 @@ Render GridStack root container component.
 
 ```typescript
 type GridStackRenderProps = {
-  renderRawContent?: boolean;
-
   children: React.ReactNode;
 };
 ```
@@ -292,6 +342,20 @@ Experimental component for reinitializing the drag handle of a grid item.
 ```typescript
 type GridStackHandleReInitializerProps = {
   children: React.ReactNode;
+};
+```
+
+#### GridStackDragInItem
+
+Experimental component for dragging items from outside into the grid.
+
+```typescript
+type GridStackDragInItemProps = {
+  widget: Omit<GridStackWidget, "content">; // Widget configuration without content
+  dragOptions?: DDDragOpt; // Drag options
+  content?: ReactNode; // Optional content to render in the dragged clone
+  children: React.ReactNode;
+  // Plus other div props
 };
 ```
 
@@ -342,7 +406,7 @@ Provide rendering related functionality context.
 
 ```typescript
 type GridStackRenderContextType = {
-  getWidgetContainer: (widgetId: string) => HTMLElement | null;
+  getContainerByWidgetId: (widgetId: string) => HTMLElement | null;
 };
 ```
 
@@ -383,5 +447,6 @@ export type {
   GridStackItemProps,
   GridStackItemContextType,
   GridStackHandleReInitializerProps,
+  GridStackDragInItemProps,
 };
 ```

@@ -14,13 +14,13 @@ import {
 export function CustomHandle() {
   const [uncontrolledInitialOptions] = useState<GridStackOptions>(() => ({
     ...defaultGridOptions,
-    children: [{ id: "item1", h: 2, w: 2, x: 0, y: 0 }],
+    children: [{ id: "003-item1", h: 2, w: 2, x: 0, y: 0 }],
   }));
 
   return (
     <GridStackProvider initialOptions={uncontrolledInitialOptions}>
-      <GridStackRender renderRawContent>
-        <GridStackItem id="item1">
+      <GridStackRender>
+        <GridStackItem id="003-item1">
           <div>Custom Handle</div>
 
           {/* Experimental: Render item with custom handle */}

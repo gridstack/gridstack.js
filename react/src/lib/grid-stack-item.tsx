@@ -11,7 +11,7 @@ export type GridStackItemProps = PropsWithChildren<{
 
 export function GridStackItem(props: GridStackItemProps) {
   const renderContext = useGridStackRenderContext();
-  const widgetContainer = renderContext.getWidgetContainer(props.id);
+  const widgetContainer = renderContext.getContainerByWidgetId(props.id);
 
   const { removeWidget, _gridStack } = useGridStackContext();
 

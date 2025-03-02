@@ -23,11 +23,11 @@ export function GridStackHandleReInitializer(
     _gridStack: { value: gridStack },
   } = useGridStackContext();
   const { id: widgetId } = useGridStackItemContext();
-  const { getWidgetContainer } = useGridStackRenderContext();
+  const { getContainerByWidgetId } = useGridStackRenderContext();
 
   useLayoutEffect(() => {
     if (gridStack) {
-      const widgetContainer = getWidgetContainer(widgetId);
+      const widgetContainer = getContainerByWidgetId(widgetId);
       if (widgetContainer) {
         const element = Utils.getElement(
           widgetContainer.parentElement!
@@ -50,7 +50,7 @@ export function GridStackHandleReInitializer(
         }
       }
     }
-  }, [getWidgetContainer, gridStack, widgetId]);
+  }, [getContainerByWidgetId, gridStack, widgetId]);
 
   return <>{props.children}</>;
 }
