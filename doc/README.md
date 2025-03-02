@@ -25,6 +25,7 @@ gridstack.js API
   - [resizestart(event, el)](#resizestartevent-el)
   - [resize(event, el)](#resizeevent-el)
   - [resizestop(event, el)](#resizestopevent-el)
+  - [prepareDragDrop(el: GridItemHTMLElement, force = false) : GridStack](#preparedragdropel-griditemhtmlelement-force--false--gridstack)
 - [API Global (static)](#api-global-static)
   - [`init(options: GridStackOptions = {}, elOrString: GridStackElement = '.grid-stack'): GridStack`](#initoptions-gridstackoptions---elorstring-gridstackelement--grid-stack-gridstack)
   - [`initAll(options: GridStackOptions = {}, selector = '.grid-stack'): GridStack[]`](#initalloptions-gridstackoptions---selector--grid-stack-gridstack)
@@ -306,6 +307,11 @@ grid.on('resizestop', function(event: Event, el: GridItemHTMLElement) {
   let node: GridStackNode = el.gridstackNode; // {x, y, width, height, id, ....}
 });
 ```
+
+### prepareDragDrop(el: GridItemHTMLElement, force = false) : GridStack
+prepares the element for drag&drop - this is normally called by makeWiget() unless are are delay loading
+* @param el GridItemHTMLElement of the widget
+* @param [force=false] 
 
 
 ## API Global (static)
