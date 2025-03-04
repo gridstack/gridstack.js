@@ -4,7 +4,7 @@
  */
 
 import { DDManager } from './dd-manager';
-import { Utils } from './gridstack';
+import { Utils } from './utils';
 
 /**
  * Detect touch support - Windows Surface devices and other touch devices
