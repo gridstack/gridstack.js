@@ -25,7 +25,7 @@
 
 "@angular-devkit/architect@0.1402.13":
   version "0.1402.13"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular-devkit/architect/-/architect-0.1402.13.tgz#5f60669f32dd94da24b54f38a2fe740146a00428"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.1402.13.tgz#5f60669f32dd94da24b54f38a2fe740146a00428"
   integrity sha512-n0ISBuvkZHoOpAzuAZql1TU9VLHUE9e/a9g4VNOPHewjMzpN02VqeGKvJfOCKtzkCs6gVssIlILm2/SXxkIFxQ==
   dependencies:
     "@angular-devkit/core" "14.2.13"
@@ -33,7 +33,7 @@
 
 "@angular-devkit/build-angular@^14":
   version "14.2.13"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular-devkit/build-angular/-/build-angular-14.2.13.tgz#cbe89e8e9b11ba4a7984cb224db212c386aa4e77"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-angular/-/build-angular-14.2.13.tgz#cbe89e8e9b11ba4a7984cb224db212c386aa4e77"
   integrity sha512-FJZKQ3xYFvEJ807sxVy4bCVyGU2NMl3UUPNfLIdIdzwwDEP9tx/cc+c4VtVPEZZfU8jVenu8XOvL6L0vpjt3yg==
   dependencies:
     "@ampproject/remapping" "2.2.0"
@@ -103,7 +103,7 @@
 
 "@angular-devkit/build-webpack@0.1402.13":
   version "0.1402.13"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular-devkit/build-webpack/-/build-webpack-0.1402.13.tgz#20d0059848ef79c8799572fa9856edc96cda262e"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-webpack/-/build-webpack-0.1402.13.tgz#20d0059848ef79c8799572fa9856edc96cda262e"
   integrity sha512-K27aJmuw86ZOdiu5PoGeGDJ2v7g2ZCK0bGwc8jzkjTLRfvd4FRKIIZumGv3hbQ3vQRLikiU6WMDRTFyCZky/EA==
   dependencies:
     "@angular-devkit/architect" "0.1402.13"
@@ -111,7 +111,7 @@
 
 "@angular-devkit/core@14.2.13":
   version "14.2.13"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular-devkit/core/-/core-14.2.13.tgz#6c9e3420df7fa7fd2bafbf07405b0abfdcf0dac4"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-14.2.13.tgz#6c9e3420df7fa7fd2bafbf07405b0abfdcf0dac4"
   integrity sha512-aIefeZcbjghQg/V6U9CTLtyB5fXDJ63KwYqVYkWP+i0XriS5A9puFgq2u/OVsWxAfYvqpDqp5AdQ0g0bi3CAsA==
   dependencies:
     ajv "8.11.0"
@@ -122,7 +122,7 @@
 
 "@angular-devkit/schematics@14.2.13":
   version "14.2.13"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular-devkit/schematics/-/schematics-14.2.13.tgz#c60a1e320e920ff7efc199b7bce2d644ce280d06"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-14.2.13.tgz#c60a1e320e920ff7efc199b7bce2d644ce280d06"
   integrity sha512-2zczyeNzeBcrT2HOysv52X9SH3tZoHfWJvVf6H0SIa74rfDKEl7hFpKNXnh3x8sIMLj5mZn05n5RCqGxCczcIg==
   dependencies:
     "@angular-devkit/core" "14.2.13"
@@ -133,14 +133,14 @@
 
 "@angular/animations@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/animations/-/animations-14.3.0.tgz#71e22cc1bdfcefc7d8d38cc3bb300b768940f816"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-14.3.0.tgz#71e22cc1bdfcefc7d8d38cc3bb300b768940f816"
   integrity sha512-QoBcIKy1ZiU+4qJsAh5Ls20BupWiXiZzKb0s6L9/dntPt5Msr4Ao289XR2P6O1L+kTsCprH9Kt41zyGQ/bkRqg==
   dependencies:
     tslib "^2.3.0"
 
 "@angular/cli@^14":
   version "14.2.13"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/cli/-/cli-14.2.13.tgz#0c61dce5cc27d330d157bece52d0a1f40e70b607"
+  resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-14.2.13.tgz#0c61dce5cc27d330d157bece52d0a1f40e70b607"
   integrity sha512-I5EepRem2CCyS3GDzQxZ2ZrqQwVqoGoLY+ZQhsK1QGWUnUyFOjbv3OlUGxRUYwcedu19V1EBAKjmQ96HzMIcVQ==
   dependencies:
     "@angular-devkit/architect" "0.1402.13"
@@ -166,14 +166,14 @@
 
 "@angular/common@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/common/-/common-14.3.0.tgz#dcf675e1db3016cdb605a05be6182a8cea71e139"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-14.3.0.tgz#dcf675e1db3016cdb605a05be6182a8cea71e139"
   integrity sha512-pV9oyG3JhGWeQ+TFB0Qub6a1VZWMNZ6/7zEopvYivdqa5yDLLDSBRWb6P80RuONXyGnM1pa7l5nYopX+r/23GQ==
   dependencies:
     tslib "^2.3.0"
 
 "@angular/compiler-cli@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/compiler-cli/-/compiler-cli-14.3.0.tgz#e9c4760cf4473c53217f6cf3a27365954438e7a6"
+  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-14.3.0.tgz#e9c4760cf4473c53217f6cf3a27365954438e7a6"
   integrity sha512-eoKpKdQ2X6axMgzcPUMZVYl3bIlTMzMeTo5V29No4BzgiUB+QoOTYGNJZkGRyqTNpwD9uSBJvmT2vG9+eC4ghQ==
   dependencies:
     "@babel/core" "^7.17.2"
@@ -189,42 +189,42 @@
 
 "@angular/compiler@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/compiler/-/compiler-14.3.0.tgz#106d3ef296700ab7021a52b2e09d8da1384d086a"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-14.3.0.tgz#106d3ef296700ab7021a52b2e09d8da1384d086a"
   integrity sha512-E15Rh0t3vA+bctbKnBCaDmLvc3ix+ZBt6yFZmhZalReQ+KpOlvOJv+L9oiFEgg+rYVl2QdvN7US1fvT0PqswLw==
   dependencies:
     tslib "^2.3.0"
 
 "@angular/core@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/core/-/core-14.3.0.tgz#7f44c59b6e866fa4cee7221495040c1ead433895"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-14.3.0.tgz#7f44c59b6e866fa4cee7221495040c1ead433895"
   integrity sha512-wYiwItc0Uyn4FWZ/OAx/Ubp2/WrD3EgUJ476y1XI7yATGPF8n9Ld5iCXT08HOvc4eBcYlDfh90kTXR6/MfhzdQ==
   dependencies:
     tslib "^2.3.0"
 
 "@angular/forms@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/forms/-/forms-14.3.0.tgz#f8659269c9ddef557f04fb782942f5983c5e4556"
+  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-14.3.0.tgz#f8659269c9ddef557f04fb782942f5983c5e4556"
   integrity sha512-fBZZC2UFMom2AZPjGQzROPXFWO6kvCsPDKctjJwClVC8PuMrkm+RRyiYRdBbt2qxWHEqOZM2OCQo73xUyZOYHw==
   dependencies:
     tslib "^2.3.0"
 
 "@angular/platform-browser-dynamic@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/platform-browser-dynamic/-/platform-browser-dynamic-14.3.0.tgz#56b24d0408a0f0d29b84f95ab39ed31774607cbd"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-14.3.0.tgz#56b24d0408a0f0d29b84f95ab39ed31774607cbd"
   integrity sha512-rneZiMrIiYRhrkQvdL40E2ErKRn4Zdo6EtjBM9pAmWeyoM8oMnOZb9gz5vhrkNWg06kVMVg0yKqluP5How7j3A==
   dependencies:
     tslib "^2.3.0"
 
 "@angular/platform-browser@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/platform-browser/-/platform-browser-14.3.0.tgz#d0cd6f7a439b862d16ed3fbf78f68295048a6434"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-14.3.0.tgz#d0cd6f7a439b862d16ed3fbf78f68295048a6434"
   integrity sha512-w9Y3740UmTz44T0Egvc+4QV9sEbO61L+aRHbpkLTJdlEGzHByZvxJmJyBYmdqeyTPwc/Zpy7c02frlpfAlyB7A==
   dependencies:
     tslib "^2.3.0"
 
 "@angular/router@^14":
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@angular/router/-/router-14.3.0.tgz#c92f5c4317a65c6fbe27de539af53715811b9006"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-14.3.0.tgz#c92f5c4317a65c6fbe27de539af53715811b9006"
   integrity sha512-uip0V7w7k7xyxxpTPbr7EuMnYLj3FzJrwkLVJSEw3TMMGHt5VU5t4BBa9veGZOta2C205XFrTAHnp8mD+XYY1w==
   dependencies:
     tslib "^2.3.0"
@@ -1504,7 +1504,7 @@
 
 "@ngtools/webpack@14.2.13":
   version "14.2.13"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@ngtools/webpack/-/webpack-14.2.13.tgz#859b38aaa57ffe1351d08f9166724936c9e6b365"
+  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-14.2.13.tgz#859b38aaa57ffe1351d08f9166724936c9e6b365"
   integrity sha512-RQx/rGX7K/+R55x1R6Ax1JzyeHi8cW11dEXpzHWipyuSpusQLUN53F02eMB4VTakXsL3mFNWWy4bX3/LSq8/9w==
 
 "@nodelib/fs.scandir@2.1.5":
@@ -1620,7 +1620,7 @@
 
 "@schematics/angular@14.2.13":
   version "14.2.13"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/@schematics/angular/-/angular-14.2.13.tgz#35ee9120a3ac07077bad169fa74fdf4ce4e193d7"
+  resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-14.2.13.tgz#35ee9120a3ac07077bad169fa74fdf4ce4e193d7"
   integrity sha512-MLxTpTU3E8QACQ/5c0sENMR2gRiMXpGaKeD5IHY+3wyU2fUSJVB0QPU/l1WhoyZbX8N9ospBgf5UEG7taVF9rg==
   dependencies:
     "@angular-devkit/core" "14.2.13"
@@ -4806,7 +4806,7 @@ neo-async@^2.6.2:
 
 ng-packagr@^14:
   version "14.3.0"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/ng-packagr/-/ng-packagr-14.3.0.tgz#517a7c343aa125a7d631097fede16941949fb503"
+  resolved "https://registry.yarnpkg.com/ng-packagr/-/ng-packagr-14.3.0.tgz#517a7c343aa125a7d631097fede16941949fb503"
   integrity sha512-GNIiB5BsYPYF31lV/u5bDCLYc4eiOmZ5ndvWRQ8JjdkBXaHaiZ2x0JLJrF1/hkjxUhakYmx2IHjVyC746cpN5w==
   dependencies:
     "@rollup/plugin-json" "^4.1.0"
@@ -5663,7 +5663,7 @@ postcss-value-parser@^4.0.0, postcss-value-parser@^4.1.0, postcss-value-parser@^
 
 postcss@8.4.31:
   version "8.4.31"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/postcss/-/postcss-8.4.31.tgz#92b451050a9f914da6755af352bdc0192508656d"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.31.tgz#92b451050a9f914da6755af352bdc0192508656d"
   integrity sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==
   dependencies:
     nanoid "^3.3.6"
@@ -6101,7 +6101,7 @@ selfsigned@^2.0.1:
 
 semver@7.5.3:
   version "7.5.3"
-  resolved "https://usw1.packages.broadcom.com/artifactory/api/npm/tis-npm-virtual/semver/-/semver-7.5.3.tgz#161ce8c2c6b4b3bdca6caadc9fa3317a4c4fe88e"
+  resolved "https://registry.yarnpkg.com/semver/-/semver-7.5.3.tgz#161ce8c2c6b4b3bdca6caadc9fa3317a4c4fe88e"
   integrity sha512-QBlUtyVk/5EeHbi7X0fw6liDZc7BBmEaSYn01fMU1OUYbf6GPsbTtd8WmnqbI20SeycoHSeiybkE/q1Q+qlThQ==
   dependencies:
     lru-cache "^6.0.0"
