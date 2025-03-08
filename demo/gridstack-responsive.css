@@ -1,0 +1,11 @@
+.gs-6 > .grid-stack-item {
+    display: block !important;
+    min-width: 100px;
+}
+
+.gs-6 > .grid-stack-item[gs-w="1"] { width: calc(100% / 6 * 1); }
+.gs-6 > .grid-stack-item[gs-w="2"] { width: calc(100% / 6 * 2); }
+.gs-6 > .grid-stack-item[gs-w="3"] { width: calc(100% / 6 * 3); }
+.gs-6 > .grid-stack-item[gs-w="4"] { width: calc(100% / 6 * 4); }
+.gs-6 > .grid-stack-item[gs-w="5"] { width: calc(100% / 6 * 5); }
+.gs-6 > .grid-stack-item[gs-w="6"] { width: 100%; }
