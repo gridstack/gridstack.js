@@ -2215,6 +2215,12 @@ export class GridStack {
           return false; // prevent parent from receiving msg (which may be a grid as well)
         }
 
+        // If sidebar item, restore the sidebar node size to ensure consistent behavior when dragging between grids
+        if (node?._sidebarOrig) {
+          node.w = node._sidebarOrig.w;
+          node.h = node._sidebarOrig.h;
+        }
+
         // fix #1578 when dragging fast, we may not get a leave on the previous grid so force one now
         if (node?.grid && node.grid !== this && !node._temporaryRemoved) {
           // console.log('dropover without leave'); // TEST
@@ -2227,7 +2233,7 @@ export class GridStack {
         cellWidth = this.cellWidth();
         cellHeight = this.getCellHeight(true);
 
-        // sidebar items: load any element attributes if we don't have a node
+        // sidebar items: load any element attributes if we don't have a node on first enter from the sidebar
         if (!node) {
           const attr = helper.getAttribute('data-gs-widget') || helper.getAttribute('gridstacknode'); // TBD: temp support for old V11.0.0 attribute
           if (attr) {
@@ -2240,6 +2246,8 @@ export class GridStack {
             helper.removeAttribute('gridstacknode');
           }
           if (!node) node = this._readAttr(helper); // used to pass false for #2354, but now we clone top level node
+          // On first grid enter from sidebar, set the initial sidebar item size properties for the node
+          node._sidebarOrig = { w: node.w, h: node.h }
         }
         if (!node.grid) { // sidebar item
           if (!node.el) node = {...node}; // clone first time we're coming from sidebar (since 'clone' doesn't copy vars)
@@ -2661,7 +2669,10 @@ export class GridStack {
       this._updateContainerHeight();
 
       const target = event.target as GridItemHTMLElement;// @ts-ignore
-      this._writePosAttr(target, node);
+      // Do not write sidebar item attributes back to the original sidebar el
+      if (!node._sidebarOrig) {
+        this._writePosAttr(target, node);
+      }
       if (this._gsEventHandler[event.type]) {
         this._gsEventHandler[event.type](event, target);
       }
@@ -2687,7 +2698,10 @@ export class GridStack {
 
     this.engine.removeNode(node); // remove placeholder as well, otherwise it's a sign node is not in our list, which is a bigger issue
     node.el = node._isExternal && helper ? helper : el; // point back to real item being dragged
+    const sidebarOrig = node._sidebarOrig;
     if (node._isExternal) this.engine.cleanupNode(node);
+    // Restore sidebar item initial size info to stay consistent when dragging between multiple grids
+    node._sidebarOrig = sidebarOrig;
 
     if (this.opts.removable === true) { // boolean vs a class string
       // item leaving us and we are supposed to remove on leave (no need to drag onto trash) mark it so
