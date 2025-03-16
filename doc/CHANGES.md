@@ -128,6 +128,7 @@ Change log
 * fix: [#2980](https://github.com/gridstack/gridstack.js/issues/2980) dd-touch circular dependency
 * fix: [#2667](https://github.com/gridstack/gridstack.js/issues/2667) sidebar items not honoring gs-w (enter-leave-re-enter)
 * fix: [#2987](https://github.com/gridstack/gridstack.js/issues/2987) gs-size-to-content to support numbers
+* fix: [#2981](https://github.com/gridstack/gridstack.js/issues/2981) Locked not working as expected
 
 ## 11.4.0 (2025-02-27)
 * fix: [#2921](https://github.com/gridstack/gridstack.js/pull/2921) replace initMouseEvent with MouseEvent constructor and added composed: true
