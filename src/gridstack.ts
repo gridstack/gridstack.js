@@ -1781,7 +1781,11 @@ export class GridStack {
     n.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
     n.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
     n.locked = Utils.toBool(el.getAttribute('gs-locked'));
-    n.sizeToContent = Utils.toBool(el.getAttribute('gs-size-to-content'));
+    const attr = el.getAttribute('gs-size-to-content');
+    if (attr) {
+      if (attr === 'true' || attr === 'false') n.sizeToContent = Utils.toBool(attr);
+      else n.sizeToContent = parseInt(attr, 10);
+    }
     n.id = el.getAttribute('gs-id');
 
     // read but never written out
@@ -1800,10 +1804,10 @@ export class GridStack {
       if (n.minH) el.removeAttribute('gs-min-h');
     }
 
-    // remove any key not found (null or false which is default)
+    // remove any key not found (null or false which is default, unless sizeToContent=false override)
     for (const key in n) {
       if (!n.hasOwnProperty(key)) return;
-      if (!n[key] && n[key] !== 0) { // 0 can be valid value (x,y only really)
+      if (!n[key] && n[key] !== 0 && key !== 'gs-size-to-content') { // 0 can be valid value (x,y only really)
         delete n[key];
       }
     }
