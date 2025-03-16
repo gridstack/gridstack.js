@@ -1306,6 +1306,32 @@ export class GridStack {
   }
 
   /**
+   * Updates the passed in options on the grid (similar to update(widget) for for the grid options).
+   * @param options PARTIAL grid options to update - only items specified will be updated.
+   * NOTE: not all options updating are currently supported (lot of code, unlikely to change)
+   */
+  public updateOptions(o: GridStackOptions): GridStack {
+    const opts = this.opts;
+    if (o.acceptWidgets !== undefined) this._setupAcceptWidget();
+    if (o.animate !== undefined) this.setAnimation();
+    if (o.cellHeight) { this.cellHeight(o.cellHeight, true); delete o.cellHeight; }
+    if (o.class && o.class !== opts.class) { if (opts.class) this.el.classList.remove(opts.class); this.el.classList.add(o.class); }
+    if (typeof(o.column) === 'number' && !o.columnOpts) { this.column(o.column); delete o.column; }// responsive column take over actual count
+    if (o.margin !== undefined) this.margin(o.margin);
+    if (o.staticGrid !== undefined) this.setStatic(o.staticGrid);
+    if (o.disableDrag !== undefined && !o.staticGrid) this.enableMove(!o.disableDrag);
+    if (o.disableResize !== undefined && !o.staticGrid) this.enableResize(!o.disableResize);
+    if (o.float !== undefined) this.float(o.float);
+    if (o.row !== undefined) { opts.minRow = opts.maxRow = o.row; }
+    if (o.children?.length) { this.load(o.children); delete o.children; }
+    // TBD if we have a real need for these (more complex code)
+    // alwaysShowResizeHandle, draggable, handle, handleClass, itemClass, layout, placeholderClass, placeholderText, resizable, removable, row,...
+    // rest are just copied over...
+    this.opts = {...this.opts, ...o};
+    return this;
+  }
+
+  /**
    * Updates widget position/size and other info. Note: if you need to call this on all nodes, use load() instead which will update what changed.
    * @param els  widget or selector of objects to modify (note: setting the same x,y for multiple items will be indeterministic and likely unwanted)
    * @param opt new widget options (x,y,w,h, etc..). Only those set will be updated.
@@ -2418,12 +2444,13 @@ export class GridStack {
   }
 
   /**
-   * prepares the element for drag&drop - this is normally called by makeWiget() unless are are delay loading
+   * prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
    * @param el GridItemHTMLElement of the widget
-   * @param [force=false] 
+   * @param [force=false]
    * */
   public prepareDragDrop(el: GridItemHTMLElement, force = false): GridStack {
-    const node = el.gridstackNode;
+    const node = el?.gridstackNode;
+    if (!node) return;
     const noMove = node.noMove || this.opts.disableDrag;
     const noResize = node.noResize || this.opts.disableResize;
 

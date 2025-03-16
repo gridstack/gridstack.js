@@ -49,13 +49,19 @@ export type SelectorToType = {[key: string]: Type<Object>};
 })
 export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
 
-  /** track list of TEMPLATE grid items so we can sync between DOM and GS internals */
+  /** track list of TEMPLATE (not recommended) grid items so we can sync between DOM and GS internals */
   @ContentChildren(GridstackItemComponent) public gridstackItems?: QueryList<GridstackItemComponent>;
-  /** container to append items dynamically */
+  /** container to append items dynamically (recommended way) */
   @ViewChild('container', { read: ViewContainerRef, static: true}) public container?: ViewContainerRef;
 
   /** initial options for creation of the grid */
-  @Input() public set options(val: GridStackOptions) { this._options = val; }
+  @Input() public set options(o: GridStackOptions) {
+    if (this._grid) {
+      // this._grid.updateOptions(o); // new API
+    } else {
+      this._options = o;
+    }
+  }
   /** return the current running options */
   public get options(): GridStackOptions { return this._grid?.opts || this._options || {}; }
 
@@ -110,11 +116,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   protected _sub: Subscription | undefined;
   protected loaded?: boolean;
 
-  constructor(
-    // protected readonly zone: NgZone,
-    // protected readonly cd: ChangeDetectorRef,
-    protected readonly elementRef: ElementRef<GridCompHTMLElement>,
-  ) {
+  constructor(protected readonly elementRef: ElementRef<GridCompHTMLElement>) {
     // set globally our method to create the right widget type
     if (!GridStack.addRemoveCB) {
       GridStack.addRemoveCB = gsCreateNgComponents;
@@ -154,7 +156,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   }
 
   /**
-   * called when the TEMPLATE list of items changes - get a list of nodes and
+   * called when the TEMPLATE (not recommended) list of items changes - get a list of nodes and
    * update the layout accordingly (which will take care of adding/removing items changed by Angular)
    */
   public updateAll() {
@@ -170,10 +172,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /** check if the grid is empty, if so show alternative content */
   public checkEmpty() {
     if (!this.grid) return;
-    const isEmpty = !this.grid.engine.nodes.length;
-    if (isEmpty === this.isEmpty) return;
-    this.isEmpty = isEmpty;
-    // this.cd.detectChanges();
+    this.isEmpty = !this.grid.engine.nodes.length;
   }
 
   /** get all known events as easy to use Outputs for convenience */
