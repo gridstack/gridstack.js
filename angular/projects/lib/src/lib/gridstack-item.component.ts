@@ -19,11 +19,11 @@ export interface GridItemCompHTMLElement extends GridItemHTMLElement {
   selector: 'gridstack-item',
   template: `
     <div class="grid-stack-item-content">
-      <!-- where dynamic items go based on component types, or sub-grids, etc...) -->
+      <!-- where dynamic items go based on component selector (recommended way), or sub-grids, etc...) -->
       <ng-template #container></ng-template>
-      <!-- any static (defined in dom) content goes here -->
+      <!-- any static (defined in DOM - not recommended) content goes here -->
       <ng-content></ng-content>
-      <!-- fallback HTML content from GridStackWidget content field if used instead -->
+      <!-- fallback HTML content from GridStackWidget.content if used instead (not recommended) -->
       {{options.content}}
     </div>`,
   styles: [`

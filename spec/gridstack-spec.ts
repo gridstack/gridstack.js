@@ -2002,4 +2002,34 @@ describe('gridstack >', function() {
       expect(window.getComputedStyle(grid.el.querySelector("#item1")!).height).toBe("60px");
     });
   });
+
+  
+  describe('updateOptions()', function() {
+    let grid: GridStack;
+    beforeEach(function() {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+      grid = GridStack.init({ cellHeight: 30 });
+    });
+    afterEach(function() {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('update all values supported', function() {
+      grid.updateOptions({
+        cellHeight: '40px',
+        margin: 8,
+        column: 11,
+        float: true, 
+        row: 10,
+      });
+      expect(grid.getCellHeight(true)).toBe(40);
+      expect(grid.getMargin()).toBe(8);
+      expect(grid.opts.marginTop).toBe(8);
+      expect(grid.getColumn()).toBe(11);
+      expect(grid.getFloat()).toBe(true);
+      expect(grid.opts.row).toBe(10);
+      expect(grid.opts.minRow).toBe(10);
+      expect(grid.opts.maxRow).toBe(10);
+    });
+  });
+
 });

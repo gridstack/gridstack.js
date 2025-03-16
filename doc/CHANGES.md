@@ -123,7 +123,10 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 11.4.0-dev (TBD)
-* feat: [#2960](https://github.com/gridstack/gridstack.js/pull/2960) `prepareDragDrop(el, force)` option to force re-creation of the drag&drop event binding
+* feat: [#2975](https://github.com/gridstack/gridstack.js/pull/2975) `prepareDragDrop(el, force)` option to force re-creation of the drag&drop event binding
+* feat: [#2989](https://github.com/gridstack/gridstack.js/pull/2989) new `updateOptions(o: GridStackOptions)` to update PARTIAL list of options after grid as been created
+* fix: [#2980](https://github.com/gridstack/gridstack.js/issues/2980) dd-touch circular dependency
+* fix: [#2667](https://github.com/gridstack/gridstack.js/issues/2667) sidebar items not honoring gs-w (enter-leave-re-enter)
 
 ## 11.4.0 (2025-02-27)
 * fix: [#2921](https://github.com/gridstack/gridstack.js/pull/2921) replace initMouseEvent with MouseEvent constructor and added composed: true
