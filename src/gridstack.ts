@@ -2459,14 +2459,16 @@ export class GridStack {
     const noResize = node.noResize || this.opts.disableResize;
 
     // check for disabled grid first
-    const disable = this.opts.staticGrid || (noMove && noResize);
+    const disable = node.locked || this.opts.staticGrid || (noMove && noResize);
     if (force || disable) {
       if (node._initDD) {
         this._removeDD(el); // nukes everything instead of just disable, will add some styles back next
         delete node._initDD;
       }
-      if (disable) el.classList.add('ui-draggable-disabled', 'ui-resizable-disabled'); // add styles one might depend on #1435
-      if (!force) return this;
+      if (disable) {
+        el.classList.add('ui-draggable-disabled', 'ui-resizable-disabled'); // add styles one might depend on #1435
+        return this;
+      }
     }
 
     if (!node._initDD) {
