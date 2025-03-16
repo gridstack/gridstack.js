@@ -456,6 +456,8 @@ export interface GridStackNode extends GridStackWidget {
   _temporaryRemoved?: boolean;
   /** @internal true if we should remove DOM element on _notify() rather than clearing _id (old way) */
   _removeDOM?: boolean;
+  /** @internal original position/size of item if dragged from sidebar */
+  _sidebarOrig?: GridStackPosition;
   /** @internal had drag&drop been initialized */
   _initDD?: boolean;
 }
