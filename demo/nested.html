@@ -54,10 +54,6 @@
     let sub2 = [ {x:0, y:0, h:2}, {x:1, y:1, w:2}];
     let count = 0;
     [...sub1, ...sub2].forEach(d => d.content = String(count++));
-    let subOptions = {
-      // by default we inherit from parent, but you can override any sub-grid options here
-      // column: 'auto', // DEFAULT size to match container. make sure to include gridstack-extra.min.css
-    };
     let options = { // main grid options
       staticGrid, // test - force children to inherit too if we set to true above ^^^
       // disableDrag: true,
@@ -68,7 +64,7 @@
       acceptWidgets: true,
       id: 'main',
       resizable: { handles: 'se,e,s,sw,w'},
-      subGridOpts: subOptions, // all sub grids will default to those
+      // subGridOpts, // options for all subgrids, but defaults to column='auto' now so no need.
       children: [
         {x:0, y:0, content: 'regular item'},
         {x:1, y:0, w:4, h:4, sizeToContent: true, content: '<div>nested grid sizeToContent:true with some header content</div>', subGridOpts: {children: sub1, id:'sub1_grid', class: 'sub1'}},

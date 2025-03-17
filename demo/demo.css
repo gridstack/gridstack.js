@@ -53,6 +53,17 @@ h1 {
   text-align: center;
   background-color: #18bc9c;
 }
+
+.card-header {
+  margin: 0;
+  cursor: move;
+  min-height: 25px;
+  background-color: #16af91;
+}
+.card-header:hover {
+  background-color: #149b80;
+}
+
 .ui-draggable-disabled.ui-resizable-disabled > .grid-stack-item-content {
   background-color: #777;
 }
@@ -73,4 +84,28 @@ h1 {
 .grid-stack.grid-stack-nested {
   background: none;
   inset: 0;
+}
+
+.grid-stack.show-dimensions .grid-stack-item:after {
+   content: '1x1';
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   padding: 2px;
+   color: black;
+   background-color: white;
+   pointer-events: none; /* to not interfere with dragging the item */
+}
+
+.grid-stack.show-dimensions .grid-stack-item[gs-h]::after {
+   content: '1x' attr(gs-h);
+}
+
+.grid-stack.show-dimensions .grid-stack-item[gs-w]::after {
+   content: attr(gs-w) 'x1';
+}
+
+.grid-stack.show-dimensions .grid-stack-item[gs-h][gs-w]::after {
+   content: attr(gs-w) 'x' attr(gs-h);
 }
