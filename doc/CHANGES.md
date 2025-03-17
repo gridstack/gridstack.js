@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [11.4.0-dev (TBD)](#1140-dev-tbd)
+- [11.5.0 (2025-03-16)](#1150-2025-03-16)
 - [11.4.0 (2025-02-27)](#1140-2025-02-27)
 - [11.3.0 (2025-01-26)](#1130-2025-01-26)
 - [11.2.0 (2024-12-29)](#1120-2024-12-29)
@@ -122,7 +122,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 11.4.0-dev (TBD)
+## 11.5.0 (2025-03-16)
 * feat: [#2975](https://github.com/gridstack/gridstack.js/pull/2975) `prepareDragDrop(el, force)` option to force re-creation of the drag&drop event binding
 * feat: [#2989](https://github.com/gridstack/gridstack.js/pull/2989) new `updateOptions(o: GridStackOptions)` to update PARTIAL list of options after grid as been created
 * fix: [#2980](https://github.com/gridstack/gridstack.js/issues/2980) dd-touch circular dependency

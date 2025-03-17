@@ -1,5 +1,5 @@
 /**
- * gridstack.component.ts 11.4.0-dev
+ * gridstack.component.ts 11.5.0
  * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -57,7 +57,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /** initial options for creation of the grid */
   @Input() public set options(o: GridStackOptions) {
     if (this._grid) {
-      // this._grid.updateOptions(o); // new API
+      this._grid.updateOptions(o);
     } else {
       this._options = o;
     }
