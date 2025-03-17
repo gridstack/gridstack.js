@@ -35,7 +35,6 @@ export const gridDefaults: GridStackOptions = {
   // handleClass: null,
   // removable: false,
   // staticGrid: false,
-  // styleInHead: false,
   //removable
 };
 
@@ -267,7 +266,9 @@ export interface GridStackOptions {
    */
   staticGrid?: boolean;
 
-  /** if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`). */
+  /**
+   * @deprecated Not used anymore, styles are now implemented with local CSS variables
+   */
   styleInHead?: boolean;
 
   /** list of differences in options for automatically created sub-grids under us (inside our grid-items) */
@@ -438,6 +439,8 @@ export interface GridStackNode extends GridStackWidget {
   _event?: MouseEvent;
   /** @internal moving vs resizing */
   _moving?: boolean;
+  /** @internal is resizing? */
+  _resizing?: boolean;
   /** @internal true if we jumped down past item below (one time jump so we don't have to totally pass it) */
   _skipDown?: boolean;
   /** @internal original values before a drag/size */

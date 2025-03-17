@@ -127,7 +127,6 @@ GridStack will add it to the `<style>` elements it creates.
 - `row` - fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain)
 - `rtl` - if `true` turns grid to RTL. Possible values are `true`, `false`, `'auto'` (default: `'auto'`) See [example](https://gridstackjs.com/demo/right-to-left(rtl).html)
 - `staticGrid` - removes drag|drop|resize (default `false`). If `true` widgets are not movable/resizable by the user, but code can still move and oneColumnMode will still work. You can use the smaller gridstack-static.js lib. A CSS class `grid-stack-static` is also added to the container.
-- `styleInHead` - if `true` will add style element to `<head>` otherwise will add it to element's parent node (default `false`).
 
 ### Responsive
 v10.x supports a much richer responsive behavior, you can have breakpoints of width:column, or auto column sizing,  where no code is longer needed.
