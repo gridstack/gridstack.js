@@ -55,6 +55,16 @@ $animation_speed: .3s !default;
   }
 }
 
+.grid-stack {
+  > .grid-stack-item > .grid-stack-item-content, 
+  > .grid-stack-placeholder > .placeholder-content {
+    top: var(--gs-item-margin-top);
+    right: var(--gs-item-margin-right);
+    bottom: var(--gs-item-margin-bottom);
+    left: var(--gs-item-margin-left);
+  }
+}
+
 .grid-stack-item {
   > .ui-resizable-handle {
     position: absolute;
@@ -90,34 +100,15 @@ $animation_speed: .3s !default;
     @include vendor(transform, rotate(-45deg));
   }
 
-  > .ui-resizable-nw { cursor: nw-resize; width: 20px; height: 20px; top: 0; }
-  > .ui-resizable-n  { cursor: n-resize;  height: 10px; top: 0; left: 25px; right: 25px; }
-  > .ui-resizable-ne { cursor: ne-resize; width: 20px; height: 20px; top: 0; }
-  > .ui-resizable-e  { cursor: e-resize;  width: 10px; top: 15px; bottom: 15px; }
-  > .ui-resizable-se { cursor: se-resize; width: 20px; height: 20px;}
-  > .ui-resizable-s  { cursor: s-resize;  height: 10px; left: 25px; bottom: 0; right: 25px; }
-  > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px;}
-  > .ui-resizable-w  { cursor: w-resize;  width: 10px; top: 15px; bottom: 15px; }
+  > .ui-resizable-nw { cursor: nw-resize; width: 20px; height: 20px; top: var(--gs-item-margin-top); left: var(--gs-item-margin-left); }
+  > .ui-resizable-n  { cursor: n-resize;  height: 10px; top: var(--gs-item-margin-top); left: 25px; right: 25px; }
+  > .ui-resizable-ne { cursor: ne-resize; width: 20px; height: 20px; top: var(--gs-item-margin-top); right: var(--gs-item-margin-right); }
+  > .ui-resizable-e  { cursor: e-resize;  width: 10px; top: 15px; bottom: 15px; right: var(--gs-item-margin-right);}
+  > .ui-resizable-se { cursor: se-resize; width: 20px; height: 20px; bottom: var(--gs-item-margin-bottom); right: var(--gs-item-margin-right); }
+  > .ui-resizable-s  { cursor: s-resize;  height: 10px; left: 25px; bottom: var(--gs-item-margin-bottom); right: 25px; }
+  > .ui-resizable-sw { cursor: sw-resize; width: 20px; height: 20px; bottom: var(--gs-item-margin-bottom); left: var(--gs-item-margin-left); }
+  > .ui-resizable-w  { cursor: w-resize;  width: 10px; top: 15px; bottom: 15px; left: var(--gs-item-margin-left); }
 
-  > .ui-resizable-n {
-    top: var(--gs-item-margin-top);
-  }
-  > .ui-resizable-s
-  , > .ui-resizable-se
-  , > .ui-resizable-sw {
-    bottom: var(--gs-item-margin-bottom);
-  }
-  > .ui-resizable-ne,
-  > .ui-resizable-e,
-  > .ui-resizable-se {
-    right: var(--gs-item-margin-right);
-  }
-  > .ui-resizable-nw,
-  > .ui-resizable-w,
-  > .ui-resizable-sw {
-    left: var(--gs-item-margin-left);
-  }
-  
   &.ui-draggable-dragging {
     &> .ui-resizable-handle {
       display: none !important;
@@ -174,15 +165,5 @@ $animation_speed: .3s !default;
 
 .gs-1 > .grid-stack-item {
   width: 100%;
-}
-
-.grid-stack {
-  > .grid-stack-item > .grid-stack-item-content, 
-  > .grid-stack-placeholder > .placeholder-content {
-    top: var(--gs-item-margin-top);
-    right: var(--gs-item-margin-right);
-    bottom: var(--gs-item-margin-bottom);
-    left: var(--gs-item-margin-left);
-  }
 }
 
