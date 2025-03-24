@@ -333,7 +333,7 @@ export interface GridStackWidget extends GridStackPosition {
   noResize?: boolean;
   /** prevents direct moving by the user (default?: undefined = un-constrained) */
   noMove?: boolean;
-  /** same as noMove+noResize but also prevents being pushed by other widgets or api (default?: undefined = un-constrained) */
+  /** prevents being pushed by other widgets or api (default?: undefined = un-constrained), which is different from `noMove` (user action only) */
   locked?: boolean;
   /** value for `gs-id` stored on the widget (default?: undefined) */
   id?: string;
