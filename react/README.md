@@ -20,7 +20,6 @@ import {
   GridStackRenderProvider,
 } from "path/to/lib";
 import "gridstack/dist/gridstack.css";
-import "gridstack/dist/gridstack-extra.css";
 import "path/to/demo.css";
 
 function Text({ content }: { content: string }) {

@@ -342,7 +342,7 @@ export class GridStack {
 
     // Now check if we're loading into 1 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
     this.checkDynamicColumn();
-    this.el.classList.add('gs-' + opts.column);
+    this._updateColumnVar(opts);
 
     if (opts.rtl === 'auto') {
       opts.rtl = (el.style.direction === 'rtl');
@@ -430,6 +430,11 @@ export class GridStack {
     this._setupRemoveDrop();
     this._setupAcceptWidget();
     this._updateResizeEvent();
+  }
+
+  private _updateColumnVar(opts: GridStackOptions = this.opts): void {
+    this.el.classList.add('gs-' + opts.column);
+    if (typeof opts.column === 'number') this.el.style.setProperty('--gs-column-width', `${100/opts.column}%`);
   }
 
   /**
@@ -939,8 +944,6 @@ export class GridStack {
   /**
    * set the number of columns in the grid. Will update existing widgets to conform to new number of columns,
    * as well as cache the original layout so you can revert back to previous positions without loss.
-   * Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [2-11],
-   * else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
    * @param column - Integer > 0 (default 12).
    * @param layout specify the type of re-layout that will happen (position, size, etc...).
    * Note: items will never be outside of the current column boundaries. default ('moveScale'). Ignored for 1 column
@@ -954,7 +957,7 @@ export class GridStack {
 
     this.engine.column = column;
     this.el.classList.remove('gs-' + oldColumn);
-    this.el.classList.add('gs-' + column);
+    this._updateColumnVar();
 
     // update the items now, checking if we have a custom children layout
     /*const newChildren = this.opts.columnOpts?.breakpoints?.find(r => r.c === column)?.children;
@@ -1649,23 +1652,21 @@ export class GridStack {
     return this;
   }
 
-  /**
-   * Call to write position x,y,w,h attributes back to element
-   * In addition, updates the inline top/height inline style as well
-   * @internal
-   */
+  /** @internal write position CSS vars and x,y,w,h attributes (not used for CSS but by users) back to element */
   protected _writePosAttr(el: HTMLElement, n: GridStackNode): GridStack {
-    if (n.x !== undefined && n.x !== null) { el.setAttribute('gs-x', String(n.x)); }
-    if (n.y !== undefined && n.y !== null) { el.setAttribute('gs-y', String(n.y)); }
-    n.w > 1 ? el.setAttribute('gs-w', String(n.w)) : el.removeAttribute('gs-w');
-    n.h > 1 ? el.setAttribute('gs-h', String(n.h)) : el.removeAttribute('gs-h');
     // Avoid overwriting the inline style of the element during drag/resize, but always update the placeholder
     if ((!n._moving && !n._resizing) || this._placeholder === el) {
-      // Set inline style, refer CSS variables
-      el.style.top = `calc(${n.y} * var(--gs-cell-height))`;
-      // height is set to --gs-cell-height by default in the main CSS, so no need to set inline style when h = 1
-      el.style.height = n.h > 1 ? `calc(${n.h} * var(--gs-cell-height))` : undefined;
+      // width/height:1 x/y:0 is set by default in the main CSS, so no need to set inlined vars
+      el.style.top = n.y ? (n.y === 1 ? `var(--gs-cell-height)` : `calc(${n.y} * var(--gs-cell-height))`) : null;
+      el.style.left = n.x ? (n.x === 1 ? `var(--gs-column-width)` : `calc(${n.x} * var(--gs-column-width))`) : null;
+      el.style.width = n.w > 1 ? `calc(${n.w} * var(--gs-column-width))` : null;
+      el.style.height = n.h > 1 ? `calc(${n.h} * var(--gs-cell-height))` : null;
     }
+    // NOTE: those are technically not needed anymore (v12+) as we have CSS vars for everything, but some users depends on them to render item size using CSS
+    n.x > 0 ? el.setAttribute('gs-x', String(n.x)) : el.removeAttribute('gs-x');
+    n.y > 0 ? el.setAttribute('gs-y', String(n.y)) : el.removeAttribute('gs-y');
+    n.w > 1 ? el.setAttribute('gs-w', String(n.w)) : el.removeAttribute('gs-w');
+    n.h > 1 ? el.setAttribute('gs-h', String(n.h)) : el.removeAttribute('gs-h');
     return this;
   }
 
@@ -1884,7 +1885,7 @@ export class GridStack {
     if (this.opts.marginTop === this.opts.marginBottom && this.opts.marginLeft === this.opts.marginRight && this.opts.marginTop === this.opts.marginRight) {
       this.opts.margin = this.opts.marginTop; // makes it easier to check for no-ops in setMargin()
     }
-    
+
     // finally Update the CSS margin variables (inside the cell height) */
     const style = this.el.style;
     style.setProperty('--gs-item-margin-top', `${this.opts.marginTop}${this.opts.marginUnit}`);

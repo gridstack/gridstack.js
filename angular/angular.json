@@ -55,7 +55,6 @@
             ],
             "styles": [
               "node_modules/gridstack/dist/gridstack.min.css",
-              "node_modules/gridstack/dist/gridstack-extra.min.css",
               "projects/demo/src/styles.css"
             ],
             "scripts": []
@@ -121,7 +120,6 @@
             ],
             "styles": [
               "node_modules/gridstack/dist/gridstack.min.css",
-              "node_modules/gridstack/dist/gridstack-extra.min.css",
               "projects/demo/src/styles.css"
             ],
             "scripts": []

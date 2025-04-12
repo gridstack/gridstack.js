@@ -3,7 +3,6 @@
  * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 
-$columns: 12 !default;
 $animation_speed: .3s !default;
 
 @function fixed($float) {
@@ -41,6 +40,8 @@ $animation_speed: .3s !default;
 .grid-stack > .grid-stack-item {
   position: absolute;
   padding: 0;
+  top: 0; left: 0; // some default to reduce at least first row/column inline styles
+  width: var(--gs-column-width); // reduce 1x1 items inline styles
   height: var(--gs-cell-height);
 
   > .grid-stack-item-content {
@@ -153,17 +154,5 @@ $animation_speed: .3s !default;
 }
 .grid-stack > .grid-stack-item[gs-x="0"] {
   left: 0%;
-}
-
-.gs-#{$columns} > .grid-stack-item {
-  width: fixed(calc(100% / $columns));
-  @for $i from 1 through ($columns - 1) {
-    &[gs-x='#{$i}'] { left: fixed(calc(100% / $columns) * $i); }
-    &[gs-w='#{$i + 1}'] { width: fixed(calc(100% / $columns) * ($i + 1)); }
-  }
-}
-
-.gs-1 > .grid-stack-item {
-  width: 100%;
 }
 

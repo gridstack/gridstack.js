@@ -405,8 +405,6 @@ Gets current cell width (grid width / # of columns).
 
 set the number of columns in the grid. Will update existing widgets to conform to new number of columns,
 as well as cache the original layout so you can revert back to previous positions without loss.
-Requires `gridstack-extra.css` (or minimized version) for [2-11],
-else you will need to generate correct CSS (see https://github.com/gridstack/gridstack.js#change-grid-columns)
 
 - `column` - Integer > 0 (default 12)
 - `layout` - specify the type of re-layout that will happen (position, size, etc...). Values are: `'list' | 'compact' | 'moveScale' | 'move' | 'scale' | 'none' | ((column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void);`

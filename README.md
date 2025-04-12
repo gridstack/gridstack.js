@@ -32,7 +32,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Extend Library](#extend-library)
   - [Extend Engine](#extend-engine)
   - [Change grid columns](#change-grid-columns)
-  - [Custom columns CSS](#custom-columns-css)
+  - [Custom columns CSS (OLD, not needed with v12+)](#custom-columns-css-old-not-needed-with-v12)
   - [Override resizable/draggable options](#override-resizabledraggable-options)
   - [Touch devices support](#touch-devices-support)
 - [Migrating](#migrating)
@@ -48,6 +48,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Migrating to v9](#migrating-to-v9)
   - [Migrating to v10](#migrating-to-v10)
   - [Migrating to v11](#migrating-to-v11)
+  - [Migrating to v12](#migrating-to-v12)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [Usage Trend](#usage-trend)
@@ -207,6 +208,8 @@ GridStack makes it very easy if you need [1-12] columns out of the box (default 
 GridStack.init( {column: N} );
 ```
 
+NOTE: step 2 is OLD and not needed with v12+ which uses CSS variables instead of classes
+
 2) also include `gridstack-extra.css` if **N < 12** (else custom CSS - see next). Without these, things will not render/work correctly.
 ```html
 <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
@@ -219,7 +222,9 @@ Note: class `.grid-stack-N` will automatically be added and we include `gridstac
 
 See example: [2 grids demo](http://gridstack.github.io/gridstack.js/demo/two.html) with 6 columns
 
-## Custom columns CSS
+## Custom columns CSS (OLD, not needed with v12+)
+
+NOTE: step is OLD and not needed with v12+ which uses CSS variables instead of classes
 
 If you need > 12 columns or want to generate the CSS manually you will need to generate CSS rules for `.grid-stack-item[gs-w="X"]` and `.grid-stack-item[gs-x="X"]`.
 
@@ -490,6 +495,14 @@ GridStack.renderCB = function(el: HTMLElement, w: GridStackNode) {
 3. `GridStack.setupDragIn()` now support associating a `GridStackWidget` for each sidepanel that will be used to define what to create on drop!
 4. if no `GridStackWidget` is defined, the helper will now be inserted as is, and NOT original sidepanel item.
 5. support DOM gs- attr as well as gridstacknode JSON (see two.html) alternatives.
+
+## Migrating to v12
+
+* column and cell height code has been re-writen to use browser CSS variables, and we no longer need a tons of custom CSS classes!
+this fixes a long standing issue where people forget to include the right CSS for non 12 columns layouts, and a big speedup in many cases (many columns, or small cellHeight values).
+
+**Breaking change:**
+* `gridstack-extra.min.css` no longer exist, nor is custom column CSS needed. API/options hasn't changed.
 
 # jQuery Application
 

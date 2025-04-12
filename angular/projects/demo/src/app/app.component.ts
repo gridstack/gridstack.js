@@ -56,7 +56,7 @@ export class AppComponent implements OnInit {
   // nested grid options
   private subOptions: GridStackOptions = {
     cellHeight: 50, // should be 50 - top/bottom
-    column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
+    column: 'auto', // size to match container
     acceptWidgets: true, // will accept .grid-stack-item by default
     margin: 5,
   };

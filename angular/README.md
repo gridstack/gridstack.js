@@ -18,7 +18,6 @@ MyComponent CSS
 
 ```css
 @import "gridstack/dist/gridstack.min.css";
-@import "gridstack/dist/gridstack-extra.min.css"; // if you use 2-11 column
 
 .grid-stack {
   background: #fafad2;
