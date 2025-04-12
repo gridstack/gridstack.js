@@ -21,7 +21,6 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'dist/gridstack.css': 'src/gridstack.scss',
-          'dist/gridstack-extra.css': 'src/gridstack-extra.scss'
         }
       }
     },
@@ -33,7 +32,6 @@ module.exports = function(grunt) {
         },
         files: {
           'dist/gridstack.min.css': ['dist/gridstack.css'],
-          'dist/gridstack-extra.min.css': ['dist/gridstack-extra.css']
         }
       }
     },
@@ -42,7 +40,6 @@ module.exports = function(grunt) {
         files: {
           'dist/es5/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
-          'dist/src/gridstack-extra.scss': ['src/gridstack-extra.scss'],
           'dist/angular/README.md': ['angular/README.md'],
           'dist/angular/src/gridstack.component.ts': ['angular/projects/lib/src/lib/gridstack.component.ts'],
           'dist/angular/src/gridstack-item.component.ts': ['angular/projects/lib/src/lib/gridstack-item.component.ts'],

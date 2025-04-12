@@ -9,7 +9,6 @@ import {
   useGridStackContext,
 } from "../../lib";
 
-import "gridstack/dist/gridstack-extra.css";
 import "gridstack/dist/gridstack.css";
 import "./demo.css";
 

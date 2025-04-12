@@ -39,24 +39,24 @@ describe('regression >', function() {
       let el1 = findEl('1');
       let el2 = findEl('2');
 
-      expect(parseInt(el0.getAttribute('gs-x'), 10)).toBe(0);
-      expect(parseInt(el0.getAttribute('gs-y'), 10)).toBe(0);
+      expect(el0.getAttribute('gs-x')).toBe(null);
+      expect(el0.getAttribute('gs-y')).toBe(null);
       expect(el0.children[0].innerHTML).toBe(items[0].content!);
-      expect(parseInt(el1.getAttribute('gs-x'), 10)).toBe(1);
-      expect(parseInt(el1.getAttribute('gs-y'), 10)).toBe(1);
-      expect(parseInt(el2.getAttribute('gs-x'), 10)).toBe(2);
-      expect(parseInt(el2.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(2);
+      expect(el2.getAttribute('gs-y')).toBe(null);
 
       // loading with changed content should be same positions
       items.forEach(n => n.content += '*')
       grid.load(items);
-      expect(parseInt(el0.getAttribute('gs-x'), 10)).toBe(0);
-      expect(parseInt(el0.getAttribute('gs-y'), 10)).toBe(0);
+      expect(el0.getAttribute('gs-x')).toBe(null);
+      expect(el0.getAttribute('gs-y')).toBe(null);
       expect(el0.children[0].innerHTML).toBe(items[0].content!);
-      expect(parseInt(el1.getAttribute('gs-x'), 10)).toBe(1);
-      expect(parseInt(el1.getAttribute('gs-y'), 10)).toBe(1);
-      expect(parseInt(el2.getAttribute('gs-x'), 10)).toBe(2);
-      expect(parseInt(el2.getAttribute('gs-y'), 10)).toBe(0);
+      expect(parseInt(el1.getAttribute('gs-x'))).toBe(1);
+      expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(2);
+      expect(el2.getAttribute('gs-y')).toBe(null);
     });
   });
 
@@ -80,30 +80,30 @@ describe('regression >', function() {
       let el1 = findSubEl('1');
       let el2 = findSubEl('2');
       let el3 = findSubEl('3');
-      expect(parseInt(nested.getAttribute('gs-x'), 10)).toBe(0);
-      expect(parseInt(nested.getAttribute('gs-y'), 10)).toBe(0);
-      expect(parseInt(nested.getAttribute('gs-w'), 10)).toBe(3);
+      expect(nested.getAttribute('gs-x')).toBe(null);
+      expect(nested.getAttribute('gs-y')).toBe(null);
+      expect(parseInt(nested.getAttribute('gs-w'))).toBe(3);
       expect(nested.getAttribute('gs-h')).toBe(null); // sizeToContent 3 -> 1 which is null
-      expect(parseInt(el1.getAttribute('gs-x'), 10)).toBe(0);
-      expect(parseInt(el1.getAttribute('gs-y'), 10)).toBe(0);
-      expect(parseInt(el2.getAttribute('gs-x'), 10)).toBe(1);
-      expect(parseInt(el2.getAttribute('gs-y'), 10)).toBe(0);
-      expect(parseInt(el3.getAttribute('gs-x'), 10)).toBe(2);
-      expect(parseInt(el3.getAttribute('gs-y'), 10)).toBe(0);
+      expect(el1.getAttribute('gs-x')).toBe(null);
+      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(1);
+      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(parseInt(el3.getAttribute('gs-x'))).toBe(2);
+      expect(el3.getAttribute('gs-y')).toBe(null);
 
       // now resize the nested grid to 2 -> should reflow el3
       grid.update(nested, {w:2});
-      expect(parseInt(nested.getAttribute('gs-x'), 10)).toBe(0);
-      expect(parseInt(nested.getAttribute('gs-y'), 10)).toBe(0);
-      expect(parseInt(nested.getAttribute('gs-w'), 10)).toBe(2);
+      expect(nested.getAttribute('gs-x')).toBe(null);
+      expect(nested.getAttribute('gs-y')).toBe(null);
+      expect(parseInt(nested.getAttribute('gs-w'))).toBe(2);
       expect(nested.getAttribute('gs-h')).toBe(null); // sizeToContent not called until some delay
-      expect(parseInt(el1.getAttribute('gs-x'), 10)).toBe(0);
-      expect(parseInt(el1.getAttribute('gs-y'), 10)).toBe(0);
-      expect(parseInt(el2.getAttribute('gs-x'), 10)).toBe(1);
-      expect(parseInt(el2.getAttribute('gs-y'), 10)).toBe(0);
+      expect(el1.getAttribute('gs-x')).toBe(null);
+      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(parseInt(el2.getAttribute('gs-x'))).toBe(1);
+      expect(el2.getAttribute('gs-y')).toBe(null);
       // 3rd item pushed to next row
-      expect(parseInt(el3.getAttribute('gs-x'), 10)).toBe(0);
-      expect(parseInt(el3.getAttribute('gs-y'), 10)).toBe(1);
+      expect(el3.getAttribute('gs-x')).toBe(null);
+      expect(parseInt(el3.getAttribute('gs-y'))).toBe(1);
     });
   });
 });

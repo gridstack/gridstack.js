@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [11.5.0-dev (TBD)](#1150-dev-tbd)
+- [12-dev (TBD)](#12-dev-tbd)
 - [11.5.1 (2025-03-23)](#1151-2025-03-23)
 - [11.5.0 (2025-03-16)](#1150-2025-03-16)
 - [11.4.0 (2025-02-27)](#1140-2025-02-27)
@@ -123,8 +123,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 11.5.0-dev (TBD)
+## 12-dev (TBD)
 * feat: [#2854](https://github.com/gridstack/gridstack.js/pull/2854) Removed dynamic stylesheet and migrated to CSS vars. Thank you [lmartorella](https://github.com/lmartorella)
+* feat: [#3013](https://github.com/gridstack/gridstack.js/pull/3013) columns no longer require custom classes nor `gridstack-extra.css` as we now use CSS vars.
 
 ## 11.5.1 (2025-03-23)
 * revert: [#2981](https://github.com/gridstack/gridstack.js/issues/2981) Locked was incorrectly changed. fixed doc instead
