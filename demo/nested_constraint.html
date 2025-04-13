@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Constraint nested grids demo</title>
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="../node_modules/gridstack/dist/gridstack-extra.min.css"/>
   <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
   <style type="text/css">
     .grid-stack-item.sub .grid-stack-item-content {
@@ -41,7 +40,7 @@
     [...sub1, ...sub2].forEach(d => d.content = String(count++));
     let subOptions = {
       cellHeight: 50,
-      column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
+      column: 'auto', // size to match container
       itemClass: 'sub', // style sub items differently and use to prevent dragging in/out
       acceptWidgets: '.grid-stack-item.sub', // only pink sub items can be inserted
       margin: 2,

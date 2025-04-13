@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Advance Nested grids demo</title>
   <link rel="stylesheet" href="demo.css"/>
-  <link rel="stylesheet" href="../node_modules/gridstack/dist/gridstack-extra.min.css"/>
   <!-- test using CSS rather than minRow -->
   <style type="text/css">
     .container-fluid > .grid-stack { min-height: 250px}
@@ -19,7 +18,6 @@
     <p>Create sub-grids (darker background) on the fly, by dragging items completely over others (nest) vs partially (push) using
       the new v7 API <code>GridStackOptions.subGridDynamic=true</code></p>
     <p>This will use the new delay drag&drop option <code>DDDragOpt.pause</code> to tell the gesture difference</p>
-    <p>Note: <code>gridstack-extra.min.css</code> is required for [2-11] column of sub-grids</p>
     <a class="btn btn-primary" onClick="addMainWidget()" href="#">Add Widget</a>
     <a class="btn btn-primary" onClick="addNewWidget(0)" href="#">Add W Grid0</a>
     <a class="btn btn-primary" onClick="addNewWidget(1)" href="#">Add W Grid1</a>
@@ -41,7 +39,7 @@
   <script type="text/javascript">
     let subOptions = {
       cellHeight: 50, // should be 50 - top/bottom
-      column: 'auto', // size to match container. make sure to include gridstack-extra.min.css
+      column: 'auto', // size to match container
       acceptWidgets: true, // will accept .grid-stack-item by default
       margin: 5,
       subGridDynamic: true, // make it recursive for all future sub-grids
