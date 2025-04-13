@@ -3752,10 +3752,10 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.4, 
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.11.tgz#4183e4e8bf08bb6e05bbb2f7d2e0c8f712ca40e3"
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
-gridstack@^11.5.0:
-  version "11.5.0"
-  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-11.5.0.tgz#ecd507776db857f3308d37a8fd67d6a24c7fdd74"
-  integrity sha512-SE1a/aC2K8VKQr5cqV7gSJ+r/xIYghijIjHzkZ3Xo3aS1/4dvwIgPYT7QqgV1z+d7XjKYUPEizcgVQ5HhdFTng==
+gridstack@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-12.0.0.tgz#cb824410436573f480fc9e62c2e3fdf2fa536a9e"
+  integrity sha512-Wjfu7BtTb4NZqLpSEAJx+b9lBnfnXNgG2jUTVSD2g8NrHITrWgfk9eeHBqtDLVl2vtKQTzsSyy5lSyHAMcW2tA==
 
 handle-thing@^2.0.0:
   version "2.0.1"
