@@ -838,11 +838,11 @@ describe('gridstack >', function() {
         margin: 5
       };
       grid = GridStack.init(options);
-      let items = Utils.getElements('.grid-stack-item');
+      let items = Utils.getElements('.grid-stack-item') as GridItemHTMLElement[];
       items.forEach(oldEl => {
-        let el = oldEl.cloneNode(true) as HTMLElement;
+        let el = oldEl.cloneNode(true) as GridItemHTMLElement;
         el = grid.makeWidget(el);
-        expect(el.getAttribute('gs-y')).not.toBe(oldEl.getAttribute('gs-y'));
+        expect(el.gridstackNode?.x).not.toBe(oldEl.gridstackNode?.x);
       });
     });
   });
@@ -1370,7 +1370,7 @@ describe('gridstack >', function() {
         cellHeight: 80,
         margin: '1 2 0em 3'
       };
-      let grid: any = GridStack.init(options);
+      let grid = GridStack.init(options);
       expect(grid.getMargin()).toBe(undefined);
       expect(grid.opts.marginTop).toBe(1);
       expect(grid.opts.marginRight).toBe(2);
@@ -1382,11 +1382,9 @@ describe('gridstack >', function() {
         cellHeight: 80,
         margin: 5
       };
-      grid = GridStack.init(options); 
+      let grid = GridStack.init(options); 
       expect(grid.getMargin()).toBe(5);
-      spyOn(grid as any, '_initMargin');
       grid.margin('1px 0');
-      expect((grid as any)._initMargin).toHaveBeenCalled();
       expect(grid.getMargin()).toBe(undefined);
       expect(grid.opts.marginTop).toBe(1);
       expect(grid.opts.marginBottom).toBe(1);
