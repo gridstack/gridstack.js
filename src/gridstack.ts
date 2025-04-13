@@ -221,8 +221,6 @@ export class GridStack {
   protected static engineClass: typeof GridStackEngine;
   protected resizeObserver: ResizeObserver;
 
-  /** @internal unique class name for our generated CSS style sheet */
-  protected _styleSheetClass?: string;
   /** @internal true if we got created by drag over gesture, so we can removed on drag out (temporary) */
   public _isTemp?: boolean;
 
@@ -380,9 +378,6 @@ export class GridStack {
     if (opts.alwaysShowResizeHandle === 'mobile') {
       opts.alwaysShowResizeHandle = isTouch;
     }
-
-    this._styleSheetClass = 'gs-id-' + GridStackEngine._idSeq++;
-    this.el.classList.add(this._styleSheetClass);
 
     this._setStaticClass();
 
@@ -1001,7 +996,6 @@ export class GridStack {
     this.setAnimation(false);
     if (!removeDOM) {
       this.removeAll(removeDOM);
-      this.el.classList.remove(this._styleSheetClass);
       this.el.removeAttribute('gs-current-row');
     } else {
       this.el.parentNode.removeChild(this.el);
@@ -1095,7 +1089,7 @@ export class GridStack {
    */
   public makeWidget(els: GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
     const el = GridStack.getElement(els);
-    if (!el) return;
+    if (!el || el.gridstackNode) return el;
     if (!el.parentElement) this.el.appendChild(el);
     this._prepareElement(el, true, options);
     const node = el.gridstackNode;
