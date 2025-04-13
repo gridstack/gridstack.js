@@ -126,6 +126,8 @@ Change log
 ## 12-dev (TBD)
 * feat: [#2854](https://github.com/gridstack/gridstack.js/pull/2854) Removed dynamic stylesheet and migrated to CSS vars. Thank you [lmartorella](https://github.com/lmartorella)
 * feat: [#3013](https://github.com/gridstack/gridstack.js/pull/3013) columns no longer require custom classes nor `gridstack-extra.css` as we now use CSS vars.
+* fix: [#2978](https://github.com/gridstack/gridstack.js/issues/2978) Very slow operation in 11.2.0 and higher with large blocks
+* fix: [#2947](https://github.com/gridstack/gridstack.js/issues/2947) loading responsive `layout:'list'` into smaller screen doesn't layout correctly.
 
 ## 11.5.1 (2025-03-23)
 * revert: [#2981](https://github.com/gridstack/gridstack.js/issues/2981) Locked was incorrectly changed. fixed doc instead

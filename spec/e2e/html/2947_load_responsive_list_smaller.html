@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<head>
+  <title>Responsive column</title>
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+</head>
+<body>
+  <h1>Responsive: load into smaller size</h1>
+  <span>Number of Columns:</span> <span id="column-text"></span>
+  <div class="grid-stack">
+  
+  <script type="text/javascript">
+    let children = [ // our initial 12 column layout
+      {x: 0, y: 0, w: 12},
+      {x: 0, y: 1, w: 3},
+      {x: 3, y: 1, w: 3},
+      {x: 6, y: 1, w: 3},
+      {x: 9, y: 1, w: 3},
+    ];
+    children.forEach((n, i) => {n.id = i; n.content = String(i)});
+
+    let grid = GridStack.init({
+      cellHeight: 80,
+      columnOpts: {
+        breakpoints: [
+          { c: 8, w: 1200 },
+          { c: 6, w: 996 },
+          { c: 3, w: 768 },
+          { c: 1, w: 480 },
+        ],
+        layout: "list",
+      },
+      children})
+    .on('change', (ev, gsItems) => text.innerHTML = grid.getColumn());
+
+    let text = document.querySelector('#column-text');
+    text.innerHTML = grid.getColumn();
+  </script>
+</body>
+</html>
