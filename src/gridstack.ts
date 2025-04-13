@@ -253,6 +253,7 @@ export class GridStack {
   protected _autoColumn?: boolean;
   /** @internal meant to store the scale of the active grid */
   protected dragTransform: DragTransform = { xScale: 1, yScale: 1, xOffset: 0, yOffset: 0 };
+  protected responseLayout: ColumnOptions;
   private _skipInitialResize: boolean;
 
   /**
@@ -338,7 +339,7 @@ export class GridStack {
     opts = Utils.defaults(opts, defaults);
     this._initMargin(); // part of settings defaults...
 
-    // Now check if we're loading into 1 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
+    // Now check if we're loading into !12 column mode FIRST so we don't do un-necessary work (like cellHeight = width / 12 then go 1 column)
     this.checkDynamicColumn();
     this._updateColumnVar(opts);
 
@@ -713,7 +714,16 @@ export class GridStack {
     let maxColumn = 0;
     items.forEach(n => { maxColumn = Math.max(maxColumn, (n.x || 0) + n.w) });
     if (maxColumn > this.engine.defaultColumn) this.engine.defaultColumn = maxColumn;
-    if (maxColumn > column) this.engine.cacheLayout(items, maxColumn, true);
+    if (maxColumn > column) {
+      // if we're loading (from empty) into a smaller column, check for special responsive layout
+      if (this.engine.nodes.length === 0 && this.responseLayout) {
+        this.engine.nodes = items;
+        this.engine.columnChanged(maxColumn, column, this.responseLayout);
+        items = this.engine.nodes;
+        this.engine.nodes = [];
+        delete this.responseLayout;
+      } else this.engine.cacheLayout(items, maxColumn, true);
+    }
 
     // if given a different callback, temporally set it as global option so creating will use it
     const prevCB = GridStack.addRemoveCB;
@@ -948,16 +958,18 @@ export class GridStack {
 
     const oldColumn = this.getColumn();
     this.opts.column = column;
-    if (!this.engine) return this; // called in constructor, noting else to do
+    if (!this.engine) {
+      // called in constructor, noting else to do but remember that breakpoint layout
+      this.responseLayout = layout;
+      return this;
+    }
 
     this.engine.column = column;
     this.el.classList.remove('gs-' + oldColumn);
     this._updateColumnVar();
 
-    // update the items now, checking if we have a custom children layout
-    /*const newChildren = this.opts.columnOpts?.breakpoints?.find(r => r.c === column)?.children;
-    if (newChildren) this.load(newChildren);
-    else*/ this.engine.columnChanged(oldColumn, column, layout);
+    // update the items now
+    this.engine.columnChanged(oldColumn, column, layout);
     if (this._isAutoCellHeight) this.cellHeight();
 
     this.resizeToContentCheck(true); // wait for width resizing
