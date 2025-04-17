@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [12.0.0-dev (TBD)](#1200-dev-tbd)
 - [12.0.0 (2025-04-12)](#1200-2025-04-12)
 - [11.5.1 (2025-03-23)](#1151-2025-03-23)
 - [11.5.0 (2025-03-16)](#1150-2025-03-16)
@@ -123,6 +124,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 12.0.0-dev (TBD)
+* removed ES5 support (IE doesn't support CSS vars needed now)
+
 ## 12.0.0 (2025-04-12)
 * feat: [#2854](https://github.com/gridstack/gridstack.js/pull/2854) Removed dynamic stylesheet and migrated to CSS vars. Thank you [lmartorella](https://github.com/lmartorella)
 * feat: [#3013](https://github.com/gridstack/gridstack.js/pull/3013) columns no longer require custom classes nor `gridstack-extra.css` as we now use CSS vars.

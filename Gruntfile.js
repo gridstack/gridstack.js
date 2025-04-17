@@ -38,7 +38,6 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         files: {
-          'dist/es5/gridstack-poly.js': ['src/gridstack-poly.js'],
           'dist/src/gridstack.scss': ['src/gridstack.scss'],
           'dist/angular/README.md': ['angular/README.md'],
           'dist/angular/src/gridstack.component.ts': ['angular/projects/lib/src/lib/gridstack.component.ts'],
