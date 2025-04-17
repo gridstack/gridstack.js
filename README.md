@@ -88,7 +88,7 @@ Alternatively (single combined file, notice the -all.js) in html
 <script src="node_modules/gridstack/dist/gridstack-all.js"></script>
 ```
 
-**Note**: IE support was dropped in v2, but restored in v4.4 by an external contributor (I have no interest in testing+supporting obsolete browser so this likely will break again in the future).
+**Note**: IE support was dropped in v2, but restored in v4.4 by an external contributor (I have no interest in testing+supporting obsolete browser so this likely will break again in the future) and DROPPED again in v12 (css variable needed).
 You can use the es5 files and polyfill (larger) for older browser instead. For example:
 ```html
 <link href="node_modules/gridstack/dist/gridstack.min.css" rel="stylesheet"/>
