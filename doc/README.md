@@ -148,6 +148,7 @@ v10.x supports a much richer responsive behavior, you can have breakpoints of wi
 - `scroll`?: boolean - default to 'true', enable or disable the scroll when an element is dragged on bottom or top of the grid.
 - `cancel`?: string - prevents dragging from starting on specified elements, listed as comma separated selectors (eg: '.no-drag'). default built in is 'input,textarea,button,select,option'
 - `helper`?: 'clone' | ((el: HTMLElement) => HTMLElement) - helper function when dragging side panel items that need to be cloned before dropping (ex: 'clone' or your own method)
+- `dragElements`?: HTMLElement[] - references to the elements (outside the grid item) to be used for dragging grid item
 
 ## Grid attributes
 

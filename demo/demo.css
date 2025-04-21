@@ -59,6 +59,16 @@ h1 {
   cursor: move;
   min-height: 25px;
   background-color: #16af91;
+  &.outside {
+    display: none;
+    width: fit-content;
+    position: absolute;
+    cursor: move;
+    z-index: 99999;
+    &:hover {
+      display: block;
+    }
+  }
 }
 .card-header:hover {
   background-color: #149b80;

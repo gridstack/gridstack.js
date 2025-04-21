@@ -434,7 +434,7 @@ export class Utils {
    */
   static cloneDeep<T>(obj: T): T {
     // list of fields we will skip during cloneDeep (nested objects, other internal)
-    const skipFields = ['parentGrid', 'el', 'grid', 'subGrid', 'engine'];
+    const skipFields = ['parentGrid', 'el', 'grid', 'subGrid', 'engine', 'dragElements'];
     // return JSON.parse(JSON.stringify(obj)); // doesn't work with date format ?
     const ret = Utils.clone(obj);
     for (const key in ret) {

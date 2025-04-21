@@ -40,8 +40,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected dragOffset: DragOffset;
   /** @internal */
   protected dragElementOriginStyle: Array<string>;
-  /** @internal */
-  protected dragEls: HTMLElement[];
   /** @internal true while we are dragging an item around */
   protected dragging: boolean;
   /** @internal last drag event */
@@ -65,19 +63,35 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   constructor(public el: GridItemHTMLElement, public option: DDDragOpt = {}) {
     super();
 
-    // get the element that is actually supposed to be dragged by
-    const handleName = option?.handle?.substring(1);
-    const n = el.gridstackNode;
-    this.dragEls = !handleName || el.classList.contains(handleName) ? [el] : (n?.subGrid ? [el.querySelector(option.handle) || el] : Array.from(el.querySelectorAll(option.handle)));
-    if (this.dragEls.length === 0) {
-      this.dragEls = [el];
-    }
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
     this._mouseUp = this._mouseUp.bind(this);
     this._keyEvent = this._keyEvent.bind(this);
     this.enable();
+  }
+
+  /** @intenal */
+  protected get dragEls(): HTMLElement[] {
+    // get the element that is actually supposed to be dragged by
+    const handleName = this.option?.handle?.substring(1);
+    let dragEls: HTMLElement[] = [];
+    if (!handleName || this.el.classList.contains(handleName)) {
+      dragEls = [this.el];
+    } else {
+      const n = this.el.gridstackNode;
+      dragEls = n?.subGrid ? [this.el.querySelector(this.option.handle) || this.el] : Array.from(this.el.querySelectorAll(this.option.handle));
+    }
+
+    if (this.option.dragElements?.length) {
+      dragEls = this.option.dragElements;
+    }
+
+    if (dragEls.length === 0) {
+      dragEls = [this.el];
+    }
+
+    return dragEls;
   }
 
   public on(event: DDDragEvent, callback: (event: DragEvent) => void): void {

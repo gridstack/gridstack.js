@@ -383,6 +383,8 @@ export interface DDDragOpt {
   cancel?: string;
   /** helper function when dropping: 'clone' or your own method */
   helper?: 'clone' | ((el: HTMLElement) => HTMLElement);
+  /** references to the elements (outside the grid item) to be used for dragging grid item */
+  dragElements?: HTMLElement[];
   /** callbacks */
   start?: (event: Event, ui: DDUIData) => void;
   stop?: (event: Event) => void;
