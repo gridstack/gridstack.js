@@ -7,11 +7,11 @@
  * Base interface that all widgets need to implement in order for GridstackItemComponent to correctly save/load/delete/..
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal } from '@angular/core';
 import { NgCompInputs, NgGridStackWidget } from './types';
 
- @Injectable()
- export abstract class BaseWidget {
+@Injectable()
+export abstract class BaseWidget {
 
   /** variable that holds the complete definition of this widgets (with selector,x,y,w,h) */
   public widgetItem?: NgGridStackWidget;
@@ -20,17 +20,25 @@ import { NgCompInputs, NgGridStackWidget } from './types';
    * REDEFINE to return an object representing the data needed to re-create yourself, other than `selector` already handled.
    * This should map directly to the @Input() fields of this objects on create, so a simple apply can be used on read
    */
-  public serialize(): NgCompInputs | undefined  { return; }
+  public serialize(): NgCompInputs | undefined { return; }
 
   /**
    * REDEFINE this if your widget needs to read from saved data and transform it to create itself - you do this for
    * things that are not mapped directly into @Input() fields for example.
    */
-  public deserialize(w: NgGridStackWidget)  {
-    // save full description for meta data
+  public deserialize(w: NgGridStackWidget) {
     this.widgetItem = w;
-    if (!w) return;
 
-    if (w.input)  Object.assign(this, w.input);
+    if (!w?.input) return;
+
+    for (const [key, value] of Object.entries(w.input)) {
+      const prop = (this as any)[key];
+
+      if (typeof prop === 'function' && 'set' in prop) {
+        (prop as WritableSignal<unknown>).set(value);
+      } else {
+        (this as any)[key] = value;
+      }
+    }
   }
- }
+}

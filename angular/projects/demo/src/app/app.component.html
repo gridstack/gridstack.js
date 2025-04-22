@@ -10,6 +10,7 @@
   <button (click)="onShow(7)" [class.active]="show===7">Two Grids + sidebar</button>
   <button (click)="onShow(8)" [class.active]="show===8">Lazy Load</button>
   <button (click)="onShow(9)" [class.active]="show===9">Leak Test</button>
+  <button (click)="onShow(10)" [class.active]="show===10">Signal Parameters</button>
 </div>
 
 <div class="test-container">
@@ -118,4 +119,5 @@
     <textarea #textArea cols="50" rows="50" readonly="readonly"></textarea>
   </div>
 
+  <angular-signal-test *ngIf="show===10"></angular-signal-test>
 </div>

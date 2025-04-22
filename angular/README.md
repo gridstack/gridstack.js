@@ -11,6 +11,7 @@ I.E. don't use Angular templating to create grid items as that is harder to sync
 MyComponent HTML
 
 ```html
+
 <gridstack [options]="gridOptions"></gridstack>
 ```
 
@@ -22,12 +23,12 @@ MyComponent CSS
 .grid-stack {
   background: #fafad2;
 }
+
 .grid-stack-item-content {
   text-align: center;
   background-color: #18bc9c;
 }
 ```
-
 
 Standalone MyComponent Code
 
@@ -41,15 +42,15 @@ import { GridstackComponent, GridstackItemComponent } from 'gridstack/dist/angul
     GridstackItemComponent
   ]
   ...
- })
+})
 export class MyComponent {
   // sample grid options + items to load...
   public gridOptions: GridStackOptions = {
     margin: 5,
     children: [ // or call load(children) or addWidget(children[0]) with same data
-      {x:0, y:0, minW:2, content:'Item 1'},
-      {x:1, y:0, content:'Item 2'},
-      {x:0, y:1, content:'Item 3'},
+      {x: 0, y: 0, minW: 2, content: 'Item 1'},
+      {x: 1, y: 0, content: 'Item 2'},
+      {x: 0, y: 1, content: 'Item 3'},
     ]
   }
 
@@ -64,9 +65,12 @@ import { GridstackModule } from 'gridstack/dist/angular';
 @NgModule({
   imports: [GridstackModule, ...]
   ...
-  bootstrap: [AppComponent]
+    bootstrap:
+[AppComponent]
 })
-export class AppModule { }
+
+export class AppModule {
+}
 ```
 
 # More Complete example
@@ -76,6 +80,7 @@ In this example (build on previous one) will use your actual custom angular comp
 HTML
 
 ```html
+
 <gridstack [options]="gridOptions" (changeCB)="onChange($event)">
   <div empty-content>message when grid is empty</div>
 </gridstack>
@@ -95,7 +100,8 @@ import { GridstackComponent, gsCreateNgComponents, NgGridStackWidget, nodesCB, B
 })
 export class AComponent extends BaseWidget implements OnDestroy {
   @Input() text: string = 'foo'; // test custom input data
-  public override serialize(): NgCompInputs | undefined  { return this.text ? {text: this.text} : undefined; }
+  public override serialize(): NgCompInputs | undefined { return this.text ? {text: this.text} : undefined; }
+
   ngOnDestroy() {
     console.log('Comp A destroyed'); // test to make sure cleanup happens
   }
@@ -109,25 +115,32 @@ export class BComponent extends BaseWidget {
 }
 
 // ...in your module (classic), OR your ng19 app.config provideEnvironmentInitializer call this:
-constructor() {
+constructor()
+{
   // register all our dynamic components types created by the grid
-  GridstackComponent.addComponentToSelectorType([AComponent, BComponent]) ;
+  GridstackComponent.addComponentToSelectorType([AComponent, BComponent]);
 }
 
 // now our content will use Components instead of dummy html content
-public gridOptions: NgGridStackOptions = {
+public
+gridOptions: NgGridStackOptions = {
   margin: 5,
   minRow: 1, // make space for empty message
   children: [ // or call load()/addWidget() with same data
-    {x:0, y:0, minW:2, selector:'app-a'},
-    {x:1, y:0, minW:2, selector:'app-a', input: { text: 'bar' }}, // custom input that works using BaseWidget.deserialize() Object.assign(this, w.input)
-    {x:2, y:0, selector:'app-b'},
-    {x:3, y:0, content:'plain html'},
+    {x: 0, y: 0, minW: 2, selector: 'app-a'},
+    {x: 1, y: 0, minW: 2, selector: 'app-a', input: {text: 'bar'}}, // custom input that works using BaseWidget.deserialize() Object.assign(this, w.input)
+    {x: 2, y: 0, selector: 'app-b'},
+    {x: 3, y: 0, content: 'plain html'},
   ]
 }
 
 // called whenever items change size/position/etc.. see other events
-public onChange(data: nodesCB) {
+public
+onChange(data
+:
+nodesCB
+)
+{
   console.log('change ', data.nodes.length > 1 ? data.nodes : data.nodes[0]);
 }
 ```
@@ -139,13 +152,14 @@ For simple case where you control the children creation (gridstack doesn't do cr
 HTML
 
 ```html
+
 <gridstack [options]="gridOptions" (changeCB)="onChange($event)">
   <!-- Angular 17+ -->
-   @for (n of items; track n.id) {
-    <gridstack-item [options]="n">Item {{n.id}}</gridstack-item>
+  @for (n of items; track n.id) {
+  <gridstack-item [options]="n">Item {{n.id}}</gridstack-item>
   }
   <!-- Angular 16 -->
-  <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n"> Item {{n.id}} </gridstack-item>
+  <gridstack-item *ngFor="let n of items; trackBy: identify" [options]="n"> Item {{n.id}}</gridstack-item>
 </gridstack>
 ```
 
@@ -156,22 +170,77 @@ import { GridStackOptions, GridStackWidget } from 'gridstack';
 import { nodesCB } from 'gridstack/dist/angular';
 
 /** sample grid options and items to load... */
-public gridOptions: GridStackOptions = { margin: 5 }
-public items: GridStackWidget[] = [
-  {x:0, y:0, minW:2, id:'1'}, // must have unique id used for trackBy
-  {x:1, y:0, id:'2'},
-  {x:0, y:1, id:'3'},
+public
+gridOptions: GridStackOptions = {margin: 5}
+public
+items: GridStackWidget[] = [
+  {x: 0, y: 0, minW: 2, id: '1'}, // must have unique id used for trackBy
+  {x: 1, y: 0, id: '2'},
+  {x: 0, y: 1, id: '3'},
 ];
 
 // called whenever items change size/position/etc..
-public onChange(data: nodesCB) {
+public
+onChange(data
+:
+nodesCB
+)
+{
   console.log('change ', data.nodes.length > 1 ? data.nodes : data.nodes[0]);
 }
 
 // ngFor unique node id to have correct match between our items used and GS
-public identify(index: number, w: GridStackWidget) {
+public
+identify(index
+:
+number, w
+:
+GridStackWidget
+)
+{
   return w.id; // or use index if no id is set and you only modify at the end...
 }
+```
+
+# Supplying initial values when adding widgets (Angular+17)
+
+When you dynamically add a widget via `grid.addWidget()`, you pass its initial inputs
+in the `input` payload. Since `input<T>()` signals are read‑only, you should define 
+corresponding `model<T>()` fields in your component to receive and update those values.
+
+```typescript
+this.gridComp()?.grid?.addWidget({
+  autoPosition: true,
+  w: 2,
+  h: 4,
+  selector: 'angular-signal-based',
+  input: {
+    title: 'Item #' + id + ' (signal)',
+    x: 'Item #' + id + ' (signal)',
+    id
+  },
+  id: String(this.ids),
+} as NgGridStackWidget);
+```
+Here, each key in input must match a `model<T>()`declaration in your Component, ensuring
+the widget starts with the correct state.
+
+```typescript
+// Component expecting input as signals 
+export class SignalBasedComponent extends BaseWidget {
+  title: ModelSignal<string | undefined> = model<string>();
+  description: ModelSignal<string | undefined> = model<string>();
+  id: ModelSignal<number> = model<number>(0);
+
+  computedValue: Signal<"#FFF" | "#000"> = computed(() => {
+    return this.id() % 2 ? '#FFF' : '#000';
+  })
+}
+```
+In old Angular version you can still using `@Input()`
+
+```typescript
+@Input() title: string;
 ```
 
 ## Demo
@@ -190,8 +259,10 @@ Code started shipping with v8.1.2+ in `dist/angular` for people to use directly 
 
 NOTE: if you are on Angular 13 or below: copy the wrapper code over (or patch it - see main page example) and change `createComponent()` calls to use old API instead:
 NOTE2: now that we're using standalone, you will also need to remove `standalone: true` and `imports` on each component so you will to copy those locally (or use <11.1.2 version)
+
 ```ts
-protected resolver: ComponentFactoryResolver,
+protected
+resolver: ComponentFactoryResolver,
 ...
 const factory = this.resolver.resolveComponentFactory(GridItemComponent);
 const gridItemRef = grid.container.createComponent(factory) as ComponentRef<GridItemComponent>;

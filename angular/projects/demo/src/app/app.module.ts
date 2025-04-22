@@ -6,6 +6,7 @@ import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
 import { AComponent, BComponent, CComponent, NComponent } from './dummy.component';
+import { AngularSignalComponent } from './signals';
 
 // TEST local testing
 // import { GridstackModule } from './gridstack.module';
@@ -21,6 +22,7 @@ import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
     AngularNgForCmdTestComponent,
     AngularNgForTestComponent,
     AngularSimpleComponent,
+    AngularSignalComponent,
     AppComponent,
     AComponent,
     BComponent,
