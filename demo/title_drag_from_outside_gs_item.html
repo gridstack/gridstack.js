@@ -1,44 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Title area drag from outside GridStack item</title>
 
-  <link rel="stylesheet" href="demo.css"/>
+  <link rel="stylesheet" href="demo.css" />
   <script src="../dist/gridstack-all.js"></script>
 </head>
+
 <body>
   <div class="container-fluid">
     <h1>Title area drag from outside GridStack item</h1>
     <br><br>
     <div class="card-header outside">- Drag here -</div>
     <div class="grid-stack">
-        <div class="grid-stack-item" gs-w="3" gs-h="3"><div class="grid-stack-item-content">
-            <div class="card">Hover on the panel to toggle drag title (which is outside grid-stack-item) visibility. The rest of the panel content doesn't drag.</div>
-      </div></div>
+      <div class="grid-stack-item external" gs-w="3" gs-h="3">
+        <div class="grid-stack-item-content">
+          <div class="card">Hover on the panel to toggle drag title (which is outside grid-stack-item) visibility. The
+            rest of the panel content doesn't drag.</div>
+        </div>
+      </div>
+      <div class="grid-stack-item" gs-w="3" gs-h="3">
+        <div class="grid-stack-item-content">
+          <div class="card-header">- Drag here -</div>
+          <div class="card">This panel has title inside grid item. Only title drags, rest of the panel content doesn't drag.</div>
+        </div>
+      </div>
     </div>
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
-    const title = document.querySelector('.card-header.outside');
-    const gs = document.querySelector('.grid-stack-item');
-    gs.addEventListener('mouseover', () => {
-      title.style.display = 'block';
-      title.style.left = `calc(${gs.getBoundingClientRect().left}px + 10px)`;
-      title.style.top = `calc(${gs.getBoundingClientRect().top}px - 14px)`;
-    });
-    gs.addEventListener('mouseout', () => {
-      title.style.display = '';
-    });
-    let grid = GridStack.init({ draggable: {
-        dragElements: [title]
-    } }); // drag by the header only
+    let grid = GridStack.init({
+      handle: '.card-header'
+    }); // drag by the header only
     addEvents(grid);
+    const itemWithExternalTitle = document.querySelector('.grid-stack-item.external');
+    const externalTitle = document.querySelector('.card-header.outside');
+    grid.update(itemWithExternalTitle, {noResize: true, noMove: true});
+    GridStack.setupDragIn([itemWithExternalTitle], {
+      dragElements: [externalTitle]
+    });
+    grid.update(itemWithExternalTitle, {noResize: false, noMove: false});
+    itemWithExternalTitle.addEventListener('mouseover', () => {
+      externalTitle.style.display = 'block';
+      externalTitle.style.left = `calc(${itemWithExternalTitle.getBoundingClientRect().left}px + 10px)`;
+      externalTitle.style.top = `calc(${itemWithExternalTitle.getBoundingClientRect().top}px - 14px)`;
+    });
+    itemWithExternalTitle.addEventListener('mouseout', () => {
+      externalTitle.style.display = '';
+    });
     grid.on('dragstop', () => {
-      title.style.left = `calc(${gs.getBoundingClientRect().left}px + 10px)`;
+      externalTitle.style.left = `calc(${itemWithExternalTitle.getBoundingClientRect().left}px + 10px)`;
     });
   </script>
 </body>
+
 </html>
