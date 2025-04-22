@@ -47,6 +47,20 @@ describe('gridstack >', function() {
   '</div>';
   // generic widget with no param
   let widgetHTML = '<div id="item3"><div class="grid-stack-item-content"> hello </div></div>';
+  // grid with one grid item which has item title outside grid
+  let gridstackExternalItemTitle = `
+  <div style="width: 800px; height: 600px" id="gs-cont">
+    <div class="title-header">- Drag Here -</div>
+    <div class="grid-stack">
+      <div class="grid-stack-item" gs-w="3" gs-h="3">
+        <div class="grid-stack-item-content">
+          <div class="card">Hover on the panel to toggle drag title (which is outside grid-stack-item) visibility. The
+            rest of the panel content doesn't drag.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  `;
 
   describe('grid.init() / initAll() >', function() {
     beforeEach(function() {
@@ -1983,6 +1997,65 @@ describe('gridstack >', function() {
       expect(grid.opts.row).toBe(10);
       expect(grid.opts.minRow).toBe(10);
       expect(grid.opts.maxRow).toBe(10);
+    });
+  });
+
+  describe("grid.moveExternal >", function () {
+    beforeEach(function () {
+      document.body.insertAdjacentHTML("afterbegin", gridstackExternalItemTitle);
+    });
+    afterEach(function () {
+      document.body.removeChild(document.getElementById("gs-cont"));
+    });
+    it("dragstart event not triggered on external element drag >", function () {
+      let externalTitle = document.querySelector<HTMLElement>(".title-header")!;
+      grid = GridStack.init();
+      let test = 0;
+      grid.on("dragstart", () => {
+        test++;
+      });
+      let mouseDownEvt = new MouseEvent("mousedown", {
+        bubbles: true,
+        cancelable: true,
+        clientX: externalTitle.getBoundingClientRect().x,
+        clientY: externalTitle.getBoundingClientRect().y,
+      });
+      externalTitle?.dispatchEvent(mouseDownEvt);
+      let mousemove_event = new MouseEvent("mousemove", {
+        bubbles: true,
+        cancelable: true,
+        clientX: externalTitle.getBoundingClientRect().x + 5,
+        clientY: externalTitle.getBoundingClientRect().y + 5,
+      });
+      document.dispatchEvent(mousemove_event);
+      expect(test).toBe(0);
+    });
+    it("dragstart event triggered on external element drag >", function () {
+      let externalTitle = document.querySelector<HTMLElement>(".title-header")!;
+      grid = GridStack.init({
+        draggable: {
+          dragElements: [externalTitle],
+        },
+      });
+      let test = 0;
+      grid.on("dragstart", () => {
+        test++;
+      });
+      let mouseDownEvt = new MouseEvent("mousedown", {
+        bubbles: true,
+        cancelable: true,
+        clientX: externalTitle.getBoundingClientRect().x,
+        clientY: externalTitle.getBoundingClientRect().y,
+      });
+      externalTitle?.dispatchEvent(mouseDownEvt);
+      let mousemove_event = new MouseEvent("mousemove", {
+        bubbles: true,
+        cancelable: true,
+        clientX: externalTitle.getBoundingClientRect().x + 5,
+        clientY: externalTitle.getBoundingClientRect().y + 5,
+      });
+      document.dispatchEvent(mousemove_event);
+      expect(test).not.toBe(0);
     });
   });
 
