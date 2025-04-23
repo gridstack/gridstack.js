@@ -25,8 +25,7 @@
     }
   ],
   "scripts": {
-    "build": "yarn --no-progress && yarn build:ng && grunt && yarn build:es6 && yarn doc",
-    "build:es6": "webpack && tsc --stripInternal",
+    "build": "yarn --no-progress && yarn build:ng && grunt && webpack && tsc --stripInternal && yarn doc",
     "build:ng": "cd angular && yarn --no-progress && yarn build lib",
     "w": "webpack",
     "t": "rm -rf dist/* && grunt && tsc --stripInternal",

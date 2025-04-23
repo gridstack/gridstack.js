@@ -277,14 +277,14 @@ export class GridStack {
     // cleanup responsive opts (must have columnWidth | breakpoints) then sort breakpoints by size (so we can match during resize)
     const resp = opts.columnOpts;
     if (resp) {
-      if (!resp.columnWidth && !resp.breakpoints?.length) {
+      const bk = resp.breakpoints;
+      if (!resp.columnWidth && !bk?.length) {
         delete opts.columnOpts;
-        bk = undefined;
       } else {
         resp.columnMax = resp.columnMax || 12;
+        if (bk?.length > 1) bk.sort((a, b) => (b.w || 0) - (a.w || 0));
       }
     }
-    if (bk?.length > 1) bk.sort((a, b) => (b.w || 0) - (a.w || 0));
 
     // elements DOM attributes override any passed options (like CSS style) - merge the two together
     const defaults: GridStackOptions = {
@@ -1246,6 +1246,7 @@ export class GridStack {
     } else {
       this.el.classList.remove('grid-stack-animate');
     }
+    this.opts.animate = doAnimate;
     return this;
   }
 
@@ -1279,22 +1280,32 @@ export class GridStack {
    */
   public updateOptions(o: GridStackOptions): GridStack {
     const opts = this.opts;
-    if (o.acceptWidgets !== undefined) this._setupAcceptWidget();
-    if (o.animate !== undefined) this.setAnimation();
-    if (o.cellHeight) { this.cellHeight(o.cellHeight); delete o.cellHeight; }
-    if (o.class && o.class !== opts.class) { if (opts.class) this.el.classList.remove(opts.class); this.el.classList.add(o.class); }
-    if (typeof(o.column) === 'number' && !o.columnOpts) { this.column(o.column); delete o.column; }// responsive column take over actual count
+    if (o === opts) return this; // nothing to do
+    if (o.acceptWidgets !== undefined) { opts.acceptWidgets = o.acceptWidgets; this._setupAcceptWidget(); }
+    if (o.animate !== undefined) this.setAnimation(o.animate);
+    if (o.cellHeight) this.cellHeight(o.cellHeight);
+    if (o.class !== undefined && o.class !== opts.class) { if (opts.class) this.el.classList.remove(opts.class); if (o.class) this.el.classList.add(o.class); }
+    // responsive column take over actual count (keep what we have now)
+    if (o.columnOpts) {
+      this.opts.columnOpts = o.columnOpts;
+      this.checkDynamicColumn();
+    } else if (o.columnOpts === null && this.opts.columnOpts) {
+      delete this.opts.columnOpts;
+      this._updateResizeEvent();
+    } else if (typeof(o.column) === 'number') this.column(o.column);
     if (o.margin !== undefined) this.margin(o.margin);
     if (o.staticGrid !== undefined) this.setStatic(o.staticGrid);
     if (o.disableDrag !== undefined && !o.staticGrid) this.enableMove(!o.disableDrag);
     if (o.disableResize !== undefined && !o.staticGrid) this.enableResize(!o.disableResize);
     if (o.float !== undefined) this.float(o.float);
-    if (o.row !== undefined) { opts.minRow = opts.maxRow = o.row; }
-    if (o.children?.length) { this.load(o.children); delete o.children; }
+    if (o.row !== undefined) { opts.minRow = opts.maxRow = opts.row = o.row; }
+    else {
+      if (opts.minRow !== undefined) opts.minRow = o.minRow;
+      if (opts.maxRow !== undefined) opts.maxRow = o.maxRow;
+    }
+    if (o.children?.length) this.load(o.children);
     // TBD if we have a real need for these (more complex code)
     // alwaysShowResizeHandle, draggable, handle, handleClass, itemClass, layout, placeholderClass, placeholderText, resizable, removable, row,...
-    // rest are just copied over...
-    this.opts = {...this.opts, ...o};
     return this;
   }
 
