@@ -129,6 +129,7 @@ Change log
 * rem [#3022](https://github.com/gridstack/gridstack.js/pull/3022) removed ES5 support (IE doesn't support CSS vars needed now)
 * rem [#3027](https://github.com/gridstack/gridstack.js/pull/3027) remove legacy code support for disableOneColumnMode, oneColumnSize, oneColumnModeDomSort
 * fix [#3028](https://github.com/gridstack/gridstack.js/pull/3028) `updateOptions()` no longer modifies passed in struct. only field we check are being handled too.
+* fix [#3029](https://github.com/gridstack/gridstack.js/pull/3029) `resizeToContent()` fix for nested grid with content above
 
 ## 12.0.0 (2025-04-12)
 * feat: [#2854](https://github.com/gridstack/gridstack.js/pull/2854) Removed dynamic stylesheet and migrated to CSS vars. Thank you [lmartorella](https://github.com/lmartorella)

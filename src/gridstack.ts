@@ -1427,7 +1427,7 @@ export class GridStack {
       // sub-grid - use their actual row count * their cell height, BUT append any content outside of the grid (eg: above text)
       wantedH = n.subGrid.getRow() * n.subGrid.getCellHeight(true);
       const subRec = n.subGrid.el.getBoundingClientRect();
-      const parentRec = n.subGrid.el.parentElement.getBoundingClientRect();
+      const parentRec = el.getBoundingClientRect();
       wantedH += subRec.top - parentRec.top;
     } else if (n.subGridOpts?.children?.length) {
       // not sub-grid just yet (case above) wait until we do
