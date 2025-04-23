@@ -56,17 +56,6 @@ interface InternalGridStackOptions extends GridStackOptions {
   _alwaysShowResizeHandle?: true | false | 'mobile'; // so we can restore for save
 }
 
-// temporary legacy (<10.x) support
-interface OldOneColumnOpts extends GridStackOptions {
-  /** disables the onColumnMode when the grid width is less (default?: false) */
-  disableOneColumnMode?: boolean;
-  /** minimal width before grid will be shown in one column mode (default?: 768) */
-  oneColumnSize?: number;
-  /** set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column
-   layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: false) */
-  oneColumnModeDomSort?: boolean;
-}
-
 /**
  * Main gridstack class - you will need to call `GridStack.init()` first to initialize your grid.
  * Note: your grid elements MUST have the following classes for the CSS layout to work:
@@ -284,26 +273,7 @@ export class GridStack {
     if (opts.alwaysShowResizeHandle !== undefined) {
       (opts as InternalGridStackOptions)._alwaysShowResizeHandle = opts.alwaysShowResizeHandle;
     }
-    let bk = opts.columnOpts?.breakpoints;
-    // LEGACY: oneColumnMode stuff changed in v10.x - check if user explicitly set something to convert over
-    const oldOpts: OldOneColumnOpts = opts;
-    if (oldOpts.oneColumnModeDomSort) {
-      delete oldOpts.oneColumnModeDomSort;
-      console.log('warning: Gridstack oneColumnModeDomSort no longer supported. Use GridStackOptions.columnOpts instead.')
-    }
-    if (oldOpts.oneColumnSize || oldOpts.disableOneColumnMode === false) {
-      const oneSize = oldOpts.oneColumnSize || 768;
-      delete oldOpts.oneColumnSize;
-      delete oldOpts.disableOneColumnMode;
-      opts.columnOpts = opts.columnOpts || {};
-      bk = opts.columnOpts.breakpoints = opts.columnOpts.breakpoints || [];
-      let oneColumn = bk.find(b => b.c === 1);
-      if (!oneColumn) {
-        oneColumn = { c: 1, w: oneSize };
-        bk.push(oneColumn, { c: 12, w: oneSize + 1 });
-      } else oneColumn.w = oneSize;
-    }
-    //...end LEGACY
+
     // cleanup responsive opts (must have columnWidth | breakpoints) then sort breakpoints by size (so we can match during resize)
     const resp = opts.columnOpts;
     if (resp) {

@@ -126,7 +126,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 12.0.0-dev (TBD)
-* removed ES5 support (IE doesn't support CSS vars needed now)
+* [#3022](https://github.com/gridstack/gridstack.js/pull/3022) removed ES5 support (IE doesn't support CSS vars needed now)
+* [#3024](https://github.com/gridstack/gridstack.js/pull/3024) remove legacy code support for disableOneColumnMode, oneColumnSize, oneColumnModeDomSort
 
 ## 12.0.0 (2025-04-12)
 * feat: [#2854](https://github.com/gridstack/gridstack.js/pull/2854) Removed dynamic stylesheet and migrated to CSS vars. Thank you [lmartorella](https://github.com/lmartorella)
