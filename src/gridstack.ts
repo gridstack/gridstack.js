@@ -1579,7 +1579,11 @@ export class GridStack {
   /** @internal */
   protected _triggerEvent(type: string, data?: GridStackNode[]): GridStack {
     const event = data ? new CustomEvent(type, { bubbles: false, detail: data }) : new Event(type);
-    this.el.dispatchEvent(event);
+    // check if we're nested, and if so call the outermost grid to trigger the event
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let grid: GridStack = this;
+    while (grid.parentGridNode) grid = grid.parentGridNode.grid;
+    grid.el.dispatchEvent(event);
     return this;
   }
 
@@ -2374,9 +2378,7 @@ export class GridStack {
       /** called when item starts moving/resizing */
       const onStartMoving = (event: Event, ui: DDUIData) => {
         // trigger any 'dragstart' / 'resizestart' manually
-        if (this._gsEventHandler[event.type]) {
-          this._gsEventHandler[event.type](event, event.target);
-        }
+        this.triggerEvent(event, event.target as GridItemHTMLElement);
         cellWidth = this.cellWidth();
         cellHeight = this.getCellHeight(true); // force pixels for calculations
 
@@ -2422,9 +2424,7 @@ export class GridStack {
             // move to new placeholder location
             this._writePosAttr(target, node);
           }
-          if (this._gsEventHandler[event.type]) {
-            this._gsEventHandler[event.type](event, target);
-          }
+          this.triggerEvent(event, target);
         }
         // @ts-ignore
         this._extraDragRow = 0;// @ts-ignore
@@ -2603,9 +2603,17 @@ export class GridStack {
       if (!node._sidebarOrig) {
         this._writePosAttr(target, node);
       }
-      if (this._gsEventHandler[event.type]) {
-        this._gsEventHandler[event.type](event, target);
-      }
+      this.triggerEvent(event, target);
+    }
+  }
+
+  /** call given event callback on our main top-most grid (if we're nested) */
+  protected triggerEvent(event: Event, target: GridItemHTMLElement) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let grid: GridStack = this;
+    while (grid.parentGridNode) grid = grid.parentGridNode.grid;
+    if (grid._gsEventHandler[event.type]) {
+      grid._gsEventHandler[event.type](event, target);
     }
   }
 
