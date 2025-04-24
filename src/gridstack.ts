@@ -1797,7 +1797,9 @@ export class GridStack {
       nodes.forEach(n => {
         if (Utils.shouldSizeToContent(n)) this.resizeToContentCBCheck(n.el);
       });
+      this._ignoreLayoutsNodeChange = true; // loop through each node will set/reset around each move, so set it here again
       this.batchUpdate(false);
+      this._ignoreLayoutsNodeChange = false;
     }
     // call this regardless of shouldSizeToContent because widget might need to stretch to take available space after a resize
     if (this._gsEventHandler['resizecontent']) this._gsEventHandler['resizecontent'](null, n ? [n] : this.engine.nodes);
