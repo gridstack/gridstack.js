@@ -40,7 +40,7 @@
     <a class="btn btn-primary" onClick="load(false)" href="#">Load</a>
     <br><br>
     <!-- grid will be added here -->
-  </div>d
+  </div>
   <script src="events.js"></script>
   <script type="text/javascript">
     // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
@@ -74,12 +74,8 @@
     // create and load it all from JSON above
     let grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
 
-    // add debug event handlers to each grid (no global set on parent yet)
-    let gridEls = GridStack.getElements('.grid-stack');
-    gridEls.forEach(gridEl => {
-      let grid = gridEl.gridstack;
-      addEvents(grid, grid.opts.id);
-    })
+    // add debug event handlers to main grid (new v12.1 handles sub-grids too)
+    addEvents(grid);
 
     // setup drag drop behavior
     let sidebarContent = [
