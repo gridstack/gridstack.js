@@ -16,8 +16,3 @@ node_modules/gridstack/dist/*
 !node_modules/gridstack/dist/gridstack-all.js.map
 !node_modules/gridstack/dist/gridstack.css
 !node_modules/gridstack/dist/gridstack.min.css
-!node_modules/gridstack/dist/es5/
-node_modules/gridstack/dist/es5/*
-!node_modules/gridstack/dist/es5/gridstack-poly.js
-!node_modules/gridstack/dist/es5/gridstack-all.js
-!node_modules/gridstack/dist/es5/gridstack-all.js.map
