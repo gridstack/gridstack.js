@@ -1042,7 +1042,7 @@ export class GridStack {
 
   /** returns the current number of rows, which will be at least `minRow` if set */
   public getRow(): number {
-    return Math.max(this.engine.getRow(), this.opts.minRow);
+    return Math.max(this.engine.getRow(), this.opts.minRow || 0);
   }
 
   /**
@@ -1300,8 +1300,8 @@ export class GridStack {
     if (o.float !== undefined) this.float(o.float);
     if (o.row !== undefined) { opts.minRow = opts.maxRow = opts.row = o.row; }
     else {
-      if (opts.minRow !== undefined) opts.minRow = o.minRow;
-      if (opts.maxRow !== undefined) opts.maxRow = o.maxRow;
+      if (o.minRow !== undefined) opts.minRow = o.minRow;
+      if (o.maxRow !== undefined) opts.maxRow = o.maxRow;
     }
     if (o.children?.length) this.load(o.children);
     // TBD if we have a real need for these (more complex code)
