@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [12.1.1 (2024-04-28)](#1211-2024-04-28)
 - [12.1.0 (2024-04-23)](#1210-2024-04-23)
 - [12.0.0 (2025-04-12)](#1200-2025-04-12)
 - [11.5.1 (2025-03-23)](#1151-2025-03-23)
@@ -124,6 +125,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 12.1.1 (2024-04-28)
+* fix [#3038](https://github.com/gridstack/gridstack.js/pull/3038) `updateOptions()` fix opts.minRow being undefined
 
 ## 12.1.0 (2024-04-23)
 * feat [#2671](https://github.com/gridstack/gridstack.js/issues/2671) subgrid now propagate events to topmost grid. Use `el.gridstackNode.grid` to know which (sub) grid.
