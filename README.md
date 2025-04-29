@@ -501,8 +501,10 @@ GridStack.renderCB = function(el: HTMLElement, w: GridStackNode) {
 * column and cell height code has been re-writen to use browser CSS variables, and we no longer need a tons of custom CSS classes!
 this fixes a long standing issue where people forget to include the right CSS for non 12 columns layouts, and a big speedup in many cases (many columns, or small cellHeight values).
 
-**Breaking change:**
-* `gridstack-extra.min.css` no longer exist, nor is custom column CSS needed. API/options hasn't changed.
+**Potential breaking change:**
+* `gridstack-extra.min.css` no longer exist, nor is custom column CSS classes needed. API/options hasn't changed.
+* (v12.1) `ES5` folder content has been removed - was for IE support, which has been dropped.
+* (v12.1) nested grid events are now sent to the main grid. You might have to adjust your workaround of this missing feature. nested.html demo has been adjusted.
 
 # jQuery Application
 

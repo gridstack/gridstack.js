@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.0.0-dev (TBD)](#1200-dev-tbd)
+- [12.1.1 (2024-04-28)](#1211-2024-04-28)
+- [12.1.0 (2024-04-23)](#1210-2024-04-23)
 - [12.0.0 (2025-04-12)](#1200-2025-04-12)
 - [11.5.1 (2025-03-23)](#1151-2025-03-23)
 - [11.5.0 (2025-03-16)](#1150-2025-03-16)
@@ -125,8 +126,16 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 12.0.0-dev (TBD)
-* removed ES5 support (IE doesn't support CSS vars needed now)
+## 12.1.1 (2024-04-28)
+* fix [#3038](https://github.com/gridstack/gridstack.js/pull/3038) `updateOptions()` fix opts.minRow being undefined
+
+## 12.1.0 (2024-04-23)
+* feat [#2671](https://github.com/gridstack/gridstack.js/issues/2671) subgrid now propagate events to topmost grid. Use `el.gridstackNode.grid` to know which (sub) grid.
+* fix [#3028](https://github.com/gridstack/gridstack.js/pull/3028) `updateOptions()` no longer modifies passed in struct. only field we check are being handled too.
+* fix [#3029](https://github.com/gridstack/gridstack.js/pull/3029) `resizeToContent()` fix for nested grid with content above
+* fix [#3030](https://github.com/gridstack/gridstack.js/pull/3030) `resizeToContentCheck()` wasn't blocking _ignoreLayoutsNodeChange at end of the loop
+* rem [#3022](https://github.com/gridstack/gridstack.js/pull/3022) removed ES5 support (IE doesn't support CSS vars needed now)
+* rem [#3027](https://github.com/gridstack/gridstack.js/pull/3027) remove legacy code support for disableOneColumnMode, oneColumnSize, oneColumnModeDomSort
 
 ## 12.0.0 (2025-04-12)
 * feat: [#2854](https://github.com/gridstack/gridstack.js/pull/2854) Removed dynamic stylesheet and migrated to CSS vars. Thank you [lmartorella](https://github.com/lmartorella)

@@ -1,5 +1,5 @@
 /**
- * gridstack.component.ts 12.0.0-dev
+ * gridstack.component.ts 12.1.1
  * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -178,8 +178,14 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /** get all known events as easy to use Outputs for convenience */
   protected hookEvents(grid?: GridStack) {
     if (!grid) return;
+    // nested grids don't have events in v12.1+ so skip
+    if (grid.parentGridNode) return;
     grid
-      .on('added', (event: Event, nodes: GridStackNode[]) => { this.checkEmpty(); this.addedCB.emit({event, nodes}); })
+      .on('added', (event: Event, nodes: GridStackNode[]) => {
+        const gridComp = (nodes[0].grid?.el as GridCompHTMLElement)._gridComp || this;
+        gridComp.checkEmpty();
+        this.addedCB.emit({event, nodes});
+      })
       .on('change', (event: Event, nodes: GridStackNode[]) => this.changeCB.emit({event, nodes}))
       .on('disable', (event: Event) => this.disableCB.emit({event}))
       .on('drag', (event: Event, el: GridItemHTMLElement) => this.dragCB.emit({event, el}))
@@ -187,7 +193,11 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
       .on('dragstop', (event: Event, el: GridItemHTMLElement) => this.dragStopCB.emit({event, el}))
       .on('dropped', (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => this.droppedCB.emit({event, previousNode, newNode}))
       .on('enable', (event: Event) => this.enableCB.emit({event}))
-      .on('removed', (event: Event, nodes: GridStackNode[]) => { this.checkEmpty(); this.removedCB.emit({event, nodes}); })
+      .on('removed', (event: Event, nodes: GridStackNode[]) => {
+        const gridComp = (nodes[0].grid?.el as GridCompHTMLElement)._gridComp || this;
+        gridComp.checkEmpty();
+        this.removedCB.emit({event, nodes});
+      })
       .on('resize', (event: Event, el: GridItemHTMLElement) => this.resizeCB.emit({event, el}))
       .on('resizestart', (event: Event, el: GridItemHTMLElement) => this.resizeStartCB.emit({event, el}))
       .on('resizestop', (event: Event, el: GridItemHTMLElement) => this.resizeStopCB.emit({event, el}))
@@ -195,6 +205,8 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
 
   protected unhookEvents(grid?: GridStack) {
     if (!grid) return;
+    // nested grids don't have events in v12.1+ so skip
+    if (grid.parentGridNode) return;
     grid.off('added change disable drag dragstart dragstop dropped enable removed resize resizestart resizestop');
   }
 }

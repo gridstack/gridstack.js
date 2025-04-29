@@ -1,5 +1,5 @@
 /*!
- * GridStack 12.0.0-dev
+ * GridStack 12.1.1
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2024  Alain Dumesny
@@ -54,17 +54,6 @@ export interface CellPosition {
 // extend with internal fields we need - TODO: move other items in here
 interface InternalGridStackOptions extends GridStackOptions {
   _alwaysShowResizeHandle?: true | false | 'mobile'; // so we can restore for save
-}
-
-// temporary legacy (<10.x) support
-interface OldOneColumnOpts extends GridStackOptions {
-  /** disables the onColumnMode when the grid width is less (default?: false) */
-  disableOneColumnMode?: boolean;
-  /** minimal width before grid will be shown in one column mode (default?: 768) */
-  oneColumnSize?: number;
-  /** set to true if you want oneColumnMode to use the DOM order and ignore x,y from normal multi column
-   layouts during sorting. This enables you to have custom 1 column layout that differ from the rest. (default?: false) */
-  oneColumnModeDomSort?: boolean;
 }
 
 /**
@@ -284,37 +273,18 @@ export class GridStack {
     if (opts.alwaysShowResizeHandle !== undefined) {
       (opts as InternalGridStackOptions)._alwaysShowResizeHandle = opts.alwaysShowResizeHandle;
     }
-    let bk = opts.columnOpts?.breakpoints;
-    // LEGACY: oneColumnMode stuff changed in v10.x - check if user explicitly set something to convert over
-    const oldOpts: OldOneColumnOpts = opts;
-    if (oldOpts.oneColumnModeDomSort) {
-      delete oldOpts.oneColumnModeDomSort;
-      console.log('warning: Gridstack oneColumnModeDomSort no longer supported. Use GridStackOptions.columnOpts instead.')
-    }
-    if (oldOpts.oneColumnSize || oldOpts.disableOneColumnMode === false) {
-      const oneSize = oldOpts.oneColumnSize || 768;
-      delete oldOpts.oneColumnSize;
-      delete oldOpts.disableOneColumnMode;
-      opts.columnOpts = opts.columnOpts || {};
-      bk = opts.columnOpts.breakpoints = opts.columnOpts.breakpoints || [];
-      let oneColumn = bk.find(b => b.c === 1);
-      if (!oneColumn) {
-        oneColumn = { c: 1, w: oneSize };
-        bk.push(oneColumn, { c: 12, w: oneSize + 1 });
-      } else oneColumn.w = oneSize;
-    }
-    //...end LEGACY
+
     // cleanup responsive opts (must have columnWidth | breakpoints) then sort breakpoints by size (so we can match during resize)
     const resp = opts.columnOpts;
     if (resp) {
-      if (!resp.columnWidth && !resp.breakpoints?.length) {
+      const bk = resp.breakpoints;
+      if (!resp.columnWidth && !bk?.length) {
         delete opts.columnOpts;
-        bk = undefined;
       } else {
         resp.columnMax = resp.columnMax || 12;
+        if (bk?.length > 1) bk.sort((a, b) => (b.w || 0) - (a.w || 0));
       }
     }
-    if (bk?.length > 1) bk.sort((a, b) => (b.w || 0) - (a.w || 0));
 
     // elements DOM attributes override any passed options (like CSS style) - merge the two together
     const defaults: GridStackOptions = {
@@ -1072,7 +1042,7 @@ export class GridStack {
 
   /** returns the current number of rows, which will be at least `minRow` if set */
   public getRow(): number {
-    return Math.max(this.engine.getRow(), this.opts.minRow);
+    return Math.max(this.engine.getRow(), this.opts.minRow || 0);
   }
 
   /**
@@ -1276,6 +1246,7 @@ export class GridStack {
     } else {
       this.el.classList.remove('grid-stack-animate');
     }
+    this.opts.animate = doAnimate;
     return this;
   }
 
@@ -1309,22 +1280,32 @@ export class GridStack {
    */
   public updateOptions(o: GridStackOptions): GridStack {
     const opts = this.opts;
-    if (o.acceptWidgets !== undefined) this._setupAcceptWidget();
-    if (o.animate !== undefined) this.setAnimation();
-    if (o.cellHeight) { this.cellHeight(o.cellHeight); delete o.cellHeight; }
-    if (o.class && o.class !== opts.class) { if (opts.class) this.el.classList.remove(opts.class); this.el.classList.add(o.class); }
-    if (typeof(o.column) === 'number' && !o.columnOpts) { this.column(o.column); delete o.column; }// responsive column take over actual count
+    if (o === opts) return this; // nothing to do
+    if (o.acceptWidgets !== undefined) { opts.acceptWidgets = o.acceptWidgets; this._setupAcceptWidget(); }
+    if (o.animate !== undefined) this.setAnimation(o.animate);
+    if (o.cellHeight) this.cellHeight(o.cellHeight);
+    if (o.class !== undefined && o.class !== opts.class) { if (opts.class) this.el.classList.remove(opts.class); if (o.class) this.el.classList.add(o.class); }
+    // responsive column take over actual count (keep what we have now)
+    if (o.columnOpts) {
+      this.opts.columnOpts = o.columnOpts;
+      this.checkDynamicColumn();
+    } else if (o.columnOpts === null && this.opts.columnOpts) {
+      delete this.opts.columnOpts;
+      this._updateResizeEvent();
+    } else if (typeof(o.column) === 'number') this.column(o.column);
     if (o.margin !== undefined) this.margin(o.margin);
     if (o.staticGrid !== undefined) this.setStatic(o.staticGrid);
     if (o.disableDrag !== undefined && !o.staticGrid) this.enableMove(!o.disableDrag);
     if (o.disableResize !== undefined && !o.staticGrid) this.enableResize(!o.disableResize);
     if (o.float !== undefined) this.float(o.float);
-    if (o.row !== undefined) { opts.minRow = opts.maxRow = o.row; }
-    if (o.children?.length) { this.load(o.children); delete o.children; }
+    if (o.row !== undefined) { opts.minRow = opts.maxRow = opts.row = o.row; }
+    else {
+      if (o.minRow !== undefined) opts.minRow = o.minRow;
+      if (o.maxRow !== undefined) opts.maxRow = o.maxRow;
+    }
+    if (o.children?.length) this.load(o.children);
     // TBD if we have a real need for these (more complex code)
     // alwaysShowResizeHandle, draggable, handle, handleClass, itemClass, layout, placeholderClass, placeholderText, resizable, removable, row,...
-    // rest are just copied over...
-    this.opts = {...this.opts, ...o};
     return this;
   }
 
@@ -1446,7 +1427,7 @@ export class GridStack {
       // sub-grid - use their actual row count * their cell height, BUT append any content outside of the grid (eg: above text)
       wantedH = n.subGrid.getRow() * n.subGrid.getCellHeight(true);
       const subRec = n.subGrid.el.getBoundingClientRect();
-      const parentRec = n.subGrid.el.parentElement.getBoundingClientRect();
+      const parentRec = el.getBoundingClientRect();
       wantedH += subRec.top - parentRec.top;
     } else if (n.subGridOpts?.children?.length) {
       // not sub-grid just yet (case above) wait until we do
@@ -1598,7 +1579,11 @@ export class GridStack {
   /** @internal */
   protected _triggerEvent(type: string, data?: GridStackNode[]): GridStack {
     const event = data ? new CustomEvent(type, { bubbles: false, detail: data }) : new Event(type);
-    this.el.dispatchEvent(event);
+    // check if we're nested, and if so call the outermost grid to trigger the event
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let grid: GridStack = this;
+    while (grid.parentGridNode) grid = grid.parentGridNode.grid;
+    grid.el.dispatchEvent(event);
     return this;
   }
 
@@ -1816,7 +1801,9 @@ export class GridStack {
       nodes.forEach(n => {
         if (Utils.shouldSizeToContent(n)) this.resizeToContentCBCheck(n.el);
       });
+      this._ignoreLayoutsNodeChange = true; // loop through each node will set/reset around each move, so set it here again
       this.batchUpdate(false);
+      this._ignoreLayoutsNodeChange = false;
     }
     // call this regardless of shouldSizeToContent because widget might need to stretch to take available space after a resize
     if (this._gsEventHandler['resizecontent']) this._gsEventHandler['resizecontent'](null, n ? [n] : this.engine.nodes);
@@ -1902,7 +1889,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '12.0.0-dev';
+  static GDRev = '12.1.1';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
@@ -2391,9 +2378,7 @@ export class GridStack {
       /** called when item starts moving/resizing */
       const onStartMoving = (event: Event, ui: DDUIData) => {
         // trigger any 'dragstart' / 'resizestart' manually
-        if (this._gsEventHandler[event.type]) {
-          this._gsEventHandler[event.type](event, event.target);
-        }
+        this.triggerEvent(event, event.target as GridItemHTMLElement);
         cellWidth = this.cellWidth();
         cellHeight = this.getCellHeight(true); // force pixels for calculations
 
@@ -2439,9 +2424,7 @@ export class GridStack {
             // move to new placeholder location
             this._writePosAttr(target, node);
           }
-          if (this._gsEventHandler[event.type]) {
-            this._gsEventHandler[event.type](event, target);
-          }
+          this.triggerEvent(event, target);
         }
         // @ts-ignore
         this._extraDragRow = 0;// @ts-ignore
@@ -2620,9 +2603,17 @@ export class GridStack {
       if (!node._sidebarOrig) {
         this._writePosAttr(target, node);
       }
-      if (this._gsEventHandler[event.type]) {
-        this._gsEventHandler[event.type](event, target);
-      }
+      this.triggerEvent(event, target);
+    }
+  }
+
+  /** call given event callback on our main top-most grid (if we're nested) */
+  protected triggerEvent(event: Event, target: GridItemHTMLElement) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let grid: GridStack = this;
+    while (grid.parentGridNode) grid = grid.parentGridNode.grid;
+    if (grid._gsEventHandler[event.type]) {
+      grid._gsEventHandler[event.type](event, target);
     }
   }
 
