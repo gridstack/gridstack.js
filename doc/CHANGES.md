@@ -126,6 +126,10 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 12.1.1-dev (TBD)
+* fix [#3043](https://github.com/gridstack/gridstack.js/issues/3043) fix `opts.animate` again
+
+
 ## 12.1.1 (2024-04-28)
 * fix [#3038](https://github.com/gridstack/gridstack.js/pull/3038) `updateOptions()` fix opts.minRow being undefined
 

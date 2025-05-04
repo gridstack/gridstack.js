@@ -23,7 +23,7 @@ import {
 import { DDGridStack } from './dd-gridstack';
 import { isTouch } from './dd-touch';
 import { DDManager } from './dd-manager';
-import { DDElementHost } from './dd-element';/** global instance */
+import { DDElementHost } from './dd-element'; /** global instance */
 const dd = new DDGridStack;
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -704,7 +704,8 @@ export class GridStack {
 
     // if we are loading from empty temporarily remove animation
     const blank = !this.engine.nodes.length;
-    if (blank) this.setAnimation(false);
+    const noAnim = blank && this.opts.animate;
+    if (noAnim) this.setAnimation(false);
 
     // see if any items are missing from new layout and need to be removed first
     if (!blank && addRemove) {
@@ -769,8 +770,7 @@ export class GridStack {
     delete this._ignoreLayoutsNodeChange;
     delete this.engine.skipCacheUpdate;
     prevCB ? GridStack.addRemoveCB = prevCB : delete GridStack.addRemoveCB;
-    // delay adding animation back
-    if (blank && this.opts?.animate) this.setAnimation(this.opts.animate, true);
+    if (noAnim) this.setAnimation(true, true); // delay adding animation back
     return this;
   }
 
