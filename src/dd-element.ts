@@ -1,5 +1,5 @@
 /**
- * dd-elements.ts 12.1.2
+ * dd-elements.ts 12.1.2-dev
  * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 
