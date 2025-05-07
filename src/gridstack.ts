@@ -1616,7 +1616,7 @@ export class GridStack {
     }
 
     // if we're a nested grid inside an sizeToContent item, tell it to resize itself too
-    if (parent && !parent.grid.engine.batchMode && Utils.shouldSizeToContent(parent)) {
+    if (parent && Utils.shouldSizeToContent(parent)) {
       parent.grid.resizeToContentCBCheck(parent.el);
     }
 
