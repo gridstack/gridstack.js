@@ -2251,9 +2251,11 @@ export class GridStack {
         delete this.placeholder.gridstackNode;
 
         // disable animation when replacing a placeholder (already positioned) with actual content
-        const noAnim = wasAdded && this.opts.animate;
-        if (noAnim) this.setAnimation(false);
-
+        if (wasAdded && this.opts.animate) {
+          this.setAnimation(false);
+          this.setAnimation(true, true); // delay adding back
+        }
+        
         // notify previous grid of removal
         // console.log('drop delete _gridstackNodeOrig') // TEST
         const origNode = el._gridstackNodeOrig;
@@ -2313,9 +2315,6 @@ export class GridStack {
         if (this._gsEventHandler['dropped']) {
           this._gsEventHandler['dropped']({ ...event, type: 'dropped' }, origNode && origNode.grid ? origNode : undefined, node);
         }
-
-        // delay adding animation back
-        if (noAnim) this.setAnimation(this.opts.animate, true);
 
         return false; // prevent parent from receiving msg (which may be grid as well)
       });

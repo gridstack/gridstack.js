@@ -129,7 +129,7 @@ Change log
 
 ## 12.1.1-dev (TBD)
 * fix [#3043](https://github.com/gridstack/gridstack.js/issues/3043) fix `opts.animate` again
-* fix [#3047](https://github.com/gridstack/gridstack.js/pull/3047) nested grid resizeToContentCBCheck() fix
+* fix [#3048](https://github.com/gridstack/gridstack.js/pull/3048) nested grid resizeToContentCBCheck() fix
 
 
 ## 12.1.1 (2024-04-28)
