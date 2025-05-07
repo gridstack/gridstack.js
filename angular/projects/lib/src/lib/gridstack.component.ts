@@ -1,10 +1,12 @@
 /**
- * gridstack.component.ts 12.1.1
+ * gridstack.component.ts 12.1.2
  * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
-import { AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, Input,
-  OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType, ComponentRef } from '@angular/core';
+import {
+    AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, Input,
+    OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType, ComponentRef
+} from '@angular/core';
 import { NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { GridHTMLElement, GridItemHTMLElement, GridStack, GridStackNode, GridStackOptions, GridStackWidget } from 'gridstack';
