@@ -1,5 +1,5 @@
 /*!
- * GridStack 12.1.1
+ * GridStack 12.1.2
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2024  Alain Dumesny
@@ -1889,7 +1889,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '12.1.1';
+  static GDRev = '12.1.2';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
@@ -2255,7 +2255,7 @@ export class GridStack {
           this.setAnimation(false);
           this.setAnimation(true, true); // delay adding back
         }
-        
+
         // notify previous grid of removal
         // console.log('drop delete _gridstackNodeOrig') // TEST
         const origNode = el._gridstackNodeOrig;
