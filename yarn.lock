@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-gridstack@12.1.0:
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-12.1.0.tgz#e6eb42bae61285bfc698b67f773af3fb4bff42f3"
-  integrity sha512-Xs1xWLSniquld8+zdvBWUSuEoCC4Fx+jOhR82EKdTM0eQmRmL3fR8mmrhCb3k3ISFoEwwiaCpA6oIKD4bBJTJQ==
+gridstack@12.1.2:
+  version "12.1.2"
+  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-12.1.2.tgz#784f6d55873bb48fa9230c1284f769c9fbf785a8"
+  integrity sha512-IC1mkm5xonhAnftwIxsG+B3bawxC61ciKWEvX15ExpVQPbNVN7O9aZZhM7Y/eE4JaIR8PXrdkjd12gMnwNYRLQ==
 
 prettier@3.2.5:
   version "3.2.5"
