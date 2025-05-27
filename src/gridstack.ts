@@ -1,5 +1,5 @@
 /*!
- * GridStack 12.1.2-dev
+ * GridStack 12.2.0
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2024  Alain Dumesny
@@ -189,7 +189,7 @@ export class GridStack {
 
   /** called after a widget has been updated (eg: load() into an existing list of children) so application can do extra work */
   public static updateCB?: (w: GridStackNode) => void;
-  
+
   /** callback to use for resizeToContent instead of the built in one */
   public static resizeToContentCB?: ResizeToContentFcn;
   /** parent class for sizing content. defaults to '.grid-stack-item-content' */
@@ -1893,7 +1893,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '12.1.2-dev';
+  static GDRev = '12.2.0';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
