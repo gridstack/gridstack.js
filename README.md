@@ -477,15 +477,18 @@ breaking change:
 
 **Breaking change:**
 
+* V11 add new `GridStack.renderCB` that is called for you to create the widget content (entire GridStackWidget is passed so you can use id or some other field as logic) while GS creates the 2 needed parent divs + classes, unlike `GridStack.addRemoveCB` which doesn't create anything for you. Both can be handy for Angular/React/Vue frameworks.
+* `addWidget(w: GridStackWidget)` is now the only supported format, no more string content passing. You will need to create content yourself as shown below, OR use `GridStack.createWidgetDivs()` to create parent divs, do the innerHtml, then call `makeWidget(el)` instead.
 * if your code relies on `GridStackWidget.content` with real HTML (like a few demos) it is up to you to do this:
 ```ts
 // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
 GridStack.renderCB = function(el: HTMLElement, w: GridStackNode) {
   el.innerHTML = w.content;
 };
+
+// now you can create widgets like this again
+let gridWidget = grid.addWidget({x, y, w, h, content: '<div>My html content</div>'});
 ```
-* V11 add new `GridStack.renderCB` that is called for you to create the widget content (entire GridStackWidget is passed so you can use id or some other field as logic) while GS creates the 2 needed parent divs + classes, unlike `GridStack.addRemoveCB` which doesn't create anything for you. Both can be handy for Angular/React/Vue frameworks.
-* `addWidget(w: GridStackWidget)` is now the only supported format, no more string content passing. You will need to create content yourself (`GridStack.createWidgetDivs()` can be used to create parent divs) then call `makeWidget(el)` instead.
 
 **Potential breaking change:**
 
