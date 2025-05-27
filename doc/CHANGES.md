@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.1.2-dev (2024-05-07)](#1212-dev-2024-05-07)
+- [12.2.0 (2025-05-27)](#1220-2025-05-27)
+- [12.1.2 (2024-05-07)](#1212-2024-05-07)
 - [12.1.1 (2024-04-28)](#1211-2024-04-28)
 - [12.1.0 (2024-04-23)](#1210-2024-04-23)
 - [12.0.0 (2025-04-12)](#1200-2025-04-12)
@@ -127,7 +128,10 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 12.1.2-dev (2024-05-07)
+## 12.2.0 (2025-05-27)
+* feat: [#3061](https://github.com/gridstack/gridstack.js/pull/3061) added `GridStack.updateCB(w)` that gets called after a widget has been updated (eg: load() after initial layout) instead of created
+
+## 12.1.2 (2024-05-07)
 * fix [#3043](https://github.com/gridstack/gridstack.js/issues/3043) fix `opts.animate` again
 * fix [#3048](https://github.com/gridstack/gridstack.js/pull/3048) nested grid resizeToContentCBCheck() fix
 

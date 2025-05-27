@@ -187,6 +187,9 @@ export class GridStack {
    */
   public static renderCB?: RenderFcn = (el: HTMLElement, w: GridStackNode) => { if (el && w?.content) el.textContent = w.content; };
 
+  /** called after a widget has been updated (eg: load() into an existing list of children) so application can do extra work */
+  public static updateCB?: (w: GridStackNode) => void;
+  
   /** callback to use for resizeToContent instead of the built in one */
   public static resizeToContentCB?: ResizeToContentFcn;
   /** parent class for sizing content. defaults to '.grid-stack-item-content' */
@@ -1383,6 +1386,7 @@ export class GridStack {
       if (ddChanged) {
         this.prepareDragDrop(n.el);
       }
+      GridStack.updateCB(n); // call user callback so they know widget got updated
     });
 
     return this;
