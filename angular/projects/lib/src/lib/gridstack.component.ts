@@ -126,6 +126,9 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
     if (!GridStack.saveCB) {
       GridStack.saveCB = gsSaveAdditionalNgInfo;
     }
+    if (!GridStack.updateCB) {
+      GridStack.updateCB = gsUpdateNgComponents;
+    }
     this.el._gridComp = this;
   }
 
@@ -314,4 +317,13 @@ export function gsSaveAdditionalNgInfo(n: NgGridStackNode, w: NgGridStackWidget)
   if (grid) {
     //.... save any custom data
   }
+}
+
+/**
+ * track when widgeta re updated (rather than created) to make sure we de-serialize them as well
+ */
+export function gsUpdateNgComponents(n: NgGridStackNode) {
+  const w: NgGridStackWidget = n;
+  const gridItem = (n.el as GridItemCompHTMLElement)?._gridItemComp;
+  if (gridItem?.childWidget && w.input) gridItem.childWidget.deserialize(w);
 }
