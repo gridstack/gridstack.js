@@ -1,5 +1,5 @@
 /*!
- * GridStack 12.2.0
+ * GridStack 12.2.1
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2024  Alain Dumesny
@@ -1386,7 +1386,7 @@ export class GridStack {
       if (ddChanged) {
         this.prepareDragDrop(n.el);
       }
-      GridStack.updateCB(n); // call user callback so they know widget got updated
+      if (GridStack.updateCB) GridStack.updateCB(n); // call user callback so they know widget got updated
     });
 
     return this;
@@ -1893,7 +1893,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '12.2.0';
+  static GDRev = '12.2.1';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts

@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [12.2.1 (2025-05-28)](#1221-2025-05-28)
 - [12.2.0 (2025-05-27)](#1220-2025-05-27)
 - [12.1.2 (2024-05-07)](#1212-2024-05-07)
 - [12.1.1 (2024-04-28)](#1211-2024-04-28)
@@ -127,6 +128,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 12.2.1 (2025-05-28)
+* fix: [#3064](https://github.com/gridstack/gridstack.js/pull/3064) fix `GridStack.updateCB(w)` crash
 
 ## 12.2.0 (2025-05-27)
 * feat: [#3061](https://github.com/gridstack/gridstack.js/pull/3061) added `GridStack.updateCB(w)` that gets called after a widget has been updated (eg: load() after initial layout) instead of created
