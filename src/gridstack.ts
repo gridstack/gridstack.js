@@ -1725,7 +1725,7 @@ export class GridStack {
     // remove any key not found (null or false which is default, unless sizeToContent=false override)
     for (const key in n) {
       if (!n.hasOwnProperty(key)) return;
-      if (!n[key] && n[key] !== 0 && key !== 'gs-size-to-content') { // 0 can be valid value (x,y only really)
+      if (!n[key] && n[key] !== 0 && key !== 'sizeToContent') { // 0 can be valid value (x,y only really)
         delete n[key];
       }
     }
