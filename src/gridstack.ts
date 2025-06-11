@@ -1633,7 +1633,9 @@ export class GridStack {
     el.gridstackNode = node;
     node.el = el;
     node.grid = this;
+    this.engine._loading = true; // help with collision
     node = this.engine.addNode(node, triggerAddEvent);
+    delete this.engine._loading; // done loading
 
     // write the dom sizes and class
     this._writeAttr(el, node);
