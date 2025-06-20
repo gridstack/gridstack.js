@@ -417,7 +417,7 @@ export class GridStackEngine {
     // remember it's position & width so we can restore back (1 -> 12 column) #1655 #1985
     // IFF we're not in the middle of column resizing!
     const saveOrig = (node.x || 0) + (node.w || 1) > this.column;
-    if (saveOrig && this.column < this.defaultColumn && !this._inColumnResize && !this.skipCacheUpdate && !isNaN(node._id) && this.findCacheLayout(node, this.defaultColumn) === -1) {
+    if (saveOrig && this.column < this.defaultColumn && !this._inColumnResize && !this.skipCacheUpdate && (node._id ?? false) && this.findCacheLayout(node, this.defaultColumn) === -1) {
       const copy = {...node}; // need _id + positions
       if (copy.autoPosition || copy.x === undefined) { delete copy.x; delete copy.y; }
       else copy.x = Math.min(this.defaultColumn - 1, copy.x);
