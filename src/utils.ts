@@ -351,35 +351,45 @@ export class Utils {
   }
 
   /** @internal */
-  static _getScrollAmount(rect: DOMRect, viewportHeight: number, elHeight: number, distance: number): number {
+  static _getScrollAmount(rect: DOMRect, viewportHeight: number, elHeight: number, distance: number, maxScrollSpeed?: number): number {
     const offsetDiffDown = rect.bottom - viewportHeight;
     const offsetDiffUp = rect.top;
     const elementIsLargerThanViewport = elHeight > viewportHeight;
+    let scrollAmount = 0;
 
     if (rect.top < 0 && distance < 0) {
       // moving up
       if (elementIsLargerThanViewport) {
-        return distance;
+        scrollAmount = distance;
       } else {
-        return Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
+        scrollAmount = Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
       }
     } else if (rect.bottom > viewportHeight && distance > 0) {
       // moving down
       if (elementIsLargerThanViewport) {
-        return distance;
+        scrollAmount = distance;
       } else {
-        return offsetDiffDown > distance ? distance : offsetDiffDown;
+        scrollAmount = offsetDiffDown > distance ? distance : offsetDiffDown;
       }
     }
-    return 0;
+
+    if (maxScrollSpeed) {
+      maxScrollSpeed = Math.abs(maxScrollSpeed);
+      if (scrollAmount > maxScrollSpeed) {
+        scrollAmount = maxScrollSpeed;
+      } else if (scrollAmount < -maxScrollSpeed) {
+        scrollAmount = -maxScrollSpeed;
+      }
+    }
+    return scrollAmount;
   }
 
   /** @internal */
-  static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
+  static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number, maxScrollSpeed?: number): void {
     // is widget in view?
     const rect = el.getBoundingClientRect();
     const viewportHeight = (window.innerHeight || document.documentElement.clientHeight);
-    const scrollAmount = this._getScrollAmount(rect, viewportHeight, el.offsetHeight, distance);
+    const scrollAmount = this._getScrollAmount(rect, viewportHeight, el.offsetHeight, distance, maxScrollSpeed);
 
     if (scrollAmount) {
       const scrollEl = this.getScrollElement(el);

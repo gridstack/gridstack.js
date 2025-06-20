@@ -126,6 +126,18 @@ describe('gridstack utils', function() {
       expect(scrollAmount).toBe(0);
     });
 
+    it('should not limit the scroll speed if the user has set maxScrollSpeed to 0', () => {
+      const rect = { top: 220, bottom: 850, left: 0, right: 0, width: 50, height: 50, toJSON: () => '' };
+      const scrollAmount = Utils._getScrollAmount(rect as DOMRect, innerHeight, elHeight, 50);
+      expect(scrollAmount).toBe(50);
+    });
+
+    it('should treat a negative maxScrollSpeed as positive', () => {
+      const rect = { top: 220, bottom: 850, left: 0, right: 0, width: 50, height: 50, toJSON: () => '' };
+      const scrollAmount = Utils._getScrollAmount(rect as DOMRect, innerHeight, elHeight, 50, -4 );
+      expect(scrollAmount).toBe(4);
+    });
+
     describe('scrolling up', () => {
       it('should scroll up', () => {
         const rect = { top: -20, bottom: 580, left: 0, right: 0, width: 50, height: 50, toJSON: () => '' };
@@ -141,6 +153,15 @@ describe('gridstack utils', function() {
         const rect = { top: -20, bottom: 880, left: 0, right: 0, width: 50, height: 50, toJSON: () => '' };
         const scrollAmount = Utils._getScrollAmount(rect as DOMRect, innerHeight, 900, -30);
         expect(scrollAmount).toBe(-30);
+      });
+
+      it('should limit the scroll speed when the expected scroll speed is greater than the maxScrollSpeed', () => {
+        const rect = { top: -30, bottom: 880, left: 0, right: 0, width: 50, height: 50, toJSON: () => '' };
+        const scrollAmountWithoutLimit = Utils._getScrollAmount(rect as DOMRect, innerHeight, elHeight, -30);
+        expect(scrollAmountWithoutLimit).toBe(-30); // be completely sure that the scroll amount should be limited
+
+        const scrollAmount = Utils._getScrollAmount(rect as DOMRect, innerHeight, elHeight, -30, 10);
+        expect(scrollAmount).toBe(-10);
       });
     });
 
@@ -163,6 +184,15 @@ describe('gridstack utils', function() {
       it('should scroll down when dragged element is larger than viewport', () => {
         const rect = { top: -100, bottom: 820, left: 0, right: 0, width: 50, height: 50, toJSON: () => '' };
         const scrollAmount = Utils._getScrollAmount(rect as DOMRect, innerHeight, 920, 10);
+        expect(scrollAmount).toBe(10);
+      });
+
+      it('should limit the scroll speed when the expected scroll speed is greater than the maxScrollSpeed', () => {
+        const rect = { top: 220, bottom: 850, left: 0, right: 0, width: 50, height: 50, toJSON: () => '' };
+        const scrollAmountWithoutLimit = Utils._getScrollAmount(rect as DOMRect, innerHeight, elHeight, 50);
+        expect(scrollAmountWithoutLimit).toBe(50); // be completely sure that the scroll amount should be limited
+
+        const scrollAmount = Utils._getScrollAmount(rect as DOMRect, innerHeight, elHeight, 10, 10);
         expect(scrollAmount).toBe(10);
       });
     });
