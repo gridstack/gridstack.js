@@ -351,37 +351,51 @@ export class Utils {
   }
 
   /** @internal */
-  static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
+  static _getScrollAmount(rect: DOMRect, viewportHeight: number, elHeight: number, distance: number, maxScrollSpeed?: number): number {
+    const offsetDiffDown = rect.bottom - viewportHeight;
+    const offsetDiffUp = rect.top;
+    const elementIsLargerThanViewport = elHeight > viewportHeight;
+    let scrollAmount = 0;
+
+    if (rect.top < 0 && distance < 0) {
+      // moving up
+      if (elementIsLargerThanViewport) {
+        scrollAmount = distance;
+      } else {
+        scrollAmount = Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
+      }
+    } else if (rect.bottom > viewportHeight && distance > 0) {
+      // moving down
+      if (elementIsLargerThanViewport) {
+        scrollAmount = distance;
+      } else {
+        scrollAmount = offsetDiffDown > distance ? distance : offsetDiffDown;
+      }
+    }
+
+    if (maxScrollSpeed) {
+      maxScrollSpeed = Math.abs(maxScrollSpeed);
+      if (scrollAmount > maxScrollSpeed) {
+        scrollAmount = maxScrollSpeed;
+      } else if (scrollAmount < -maxScrollSpeed) {
+        scrollAmount = -maxScrollSpeed;
+      }
+    }
+    return scrollAmount;
+  }
+
+  /** @internal */
+  static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number, maxScrollSpeed?: number): void {
     // is widget in view?
     const rect = el.getBoundingClientRect();
-    const innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
-    if (rect.top < 0 ||
-      rect.bottom > innerHeightOrClientHeight
-    ) {
-      // set scrollTop of first parent that scrolls
-      // if parent is larger than el, set as low as possible
-      // to get entire widget on screen
-      const offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
-      const offsetDiffUp = rect.top;
+    const viewportHeight = (window.innerHeight || document.documentElement.clientHeight);
+    const scrollAmount = this._getScrollAmount(rect, viewportHeight, el.offsetHeight, distance, maxScrollSpeed);
+
+    if (scrollAmount) {
       const scrollEl = this.getScrollElement(el);
-      if (scrollEl !== null) {
+      if (scrollEl) {
         const prevScroll = scrollEl.scrollTop;
-        if (rect.top < 0 && distance < 0) {
-          // moving up
-          if (el.offsetHeight > innerHeightOrClientHeight) {
-            scrollEl.scrollTop += distance;
-          } else {
-            scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
-          }
-        } else if (distance > 0) {
-          // moving down
-          if (el.offsetHeight > innerHeightOrClientHeight) {
-            scrollEl.scrollTop += distance;
-          } else {
-            scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
-          }
-        }
-        // move widget y by amount scrolled
+        scrollEl.scrollTop += scrollAmount;
         position.top += scrollEl.scrollTop - prevScroll;
       }
     }

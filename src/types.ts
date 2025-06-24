@@ -217,6 +217,9 @@ export interface GridStackOptions {
   /** maximum rows amount. Default? is 0 which means no maximum rows */
   maxRow?: number;
 
+  /** maximum scroll speed when dragging items. Any negative value will be converted to the positive value. (default?: 0 = no limit) */
+  maxScrollSpeed?: number;
+
   /** minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute
    * on the grid div in pixels, which will round to the closest row.
    */
