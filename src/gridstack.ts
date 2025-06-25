@@ -2541,7 +2541,7 @@ export class GridStack {
       const distance = ui.position.top - node._prevYPix;
       node._prevYPix = ui.position.top;
       if (this.opts.draggable.scroll !== false) {
-        Utils.updateScrollPosition(el, ui.position, distance);
+        Utils.updateScrollPosition(el, ui.position, distance, this.opts.maxScrollSpeed);
       }
 
       // get new position taking into account the margin in the direction we are moving! (need to pass mid point by margin)

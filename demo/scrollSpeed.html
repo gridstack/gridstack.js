@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scroll Speed Demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Scroll Speed Demo</h1>
+    <p>This demo shows 20 widgets to test scroll speed behavior when dragging items. Try dragging widgets near the top or bottom of the viewport to see the scrolling effect.</p>
+    <div>
+      <label for="maxScrollSpeed">Max Scroll Speed:</label>
+      <input type="number" id="maxScrollSpeed" value="0" min="0" step="1" onchange="updateMaxScrollSpeed()" style="margin-left: 5px; width: 80px;">
+      <small style="margin-left: 10px;">0 = no limit, higher values = slower scrolling</small>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let grid = GridStack.init({
+      float: true,
+      maxScrollSpeed: 0, // default to 0 (no limit)
+      resizable: { handles: 'all'}
+    });
+    addEvents(grid);
+
+    // Create 20 widgets with varied sizes and positions (all sizes between 2-5, no overlaps)
+    let items = [
+      // Row 1
+      {x: 0, y: 0, w: 3, h: 2, content: "Widget 1"},
+      {x: 3, y: 0, w: 4, h: 3, content: "Widget 2"},
+      {x: 7, y: 0, w: 2, h: 2, content: "Widget 3"},
+      {x: 9, y: 0, w: 3, h: 2, content: "Widget 4"},
+      
+      // Row 2
+      {x: 0, y: 2, w: 2, h: 3, content: "Widget 5"},
+      {x: 2, y: 2, w: 5, h: 2, content: "Widget 6"},
+      {x: 9, y: 2, w: 3, h: 3, content: "Widget 7"},
+      
+      // Row 3
+      {x: 0, y: 5, w: 4, h: 2, content: "Widget 8"},
+      {x: 4, y: 5, w: 2, h: 3, content: "Widget 9"},
+      {x: 6, y: 5, w: 3, h: 2, content: "Widget 10"},
+      
+      // Row 4
+      {x: 0, y: 7, w: 3, h: 3, content: "Widget 11"},
+      {x: 3, y: 7, w: 2, h: 2, content: "Widget 12"},
+      {x: 5, y: 7, w: 4, h: 3, content: "Widget 13"},
+      {x: 9, y: 7, w: 3, h: 2, content: "Widget 14"},
+      
+      // Row 5
+      {x: 0, y: 10, w: 5, h: 2, content: "Widget 15"},
+      {x: 5, y: 10, w: 2, h: 3, content: "Widget 16"},
+      {x: 7, y: 10, w: 3, h: 2, content: "Widget 17"},
+      
+      // Row 6
+      {x: 0, y: 12, w: 2, h: 2, content: "Widget 18"},
+      {x: 2, y: 12, w: 4, h: 3, content: "Widget 19"},
+      {x: 6, y: 12, w: 3, h: 2, content: "Widget 20"}
+    ];
+
+    grid.load(items);
+
+    updateMaxScrollSpeed = function() {
+      const value = parseInt(document.getElementById('maxScrollSpeed').value) || 0;
+      grid.opts.maxScrollSpeed = value;
+      console.log('Max scroll speed updated to:', value);
+    };
+  </script>
+</body>
+</html> 

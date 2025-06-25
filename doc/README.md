@@ -116,6 +116,7 @@ gridstack.js API
 - `marginBottom`: numberOrString
 - `marginLeft`: numberOrString
 - `maxRow` - maximum rows amount. Default is `0` which means no max.
+- `maxScrollSpeed` - (number) limits the speed that the user wll scroll up and down in the grid. This is most noticable in large grids. Default: `0` which indicates no limit on the scroll speed. Any value provided here should be positive.
 - `minRow` - minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. You can also do this with `min-height` CSS attribute on the grid div in pixels, which will round to the closest row.
 - `nonce` - If you are using a nonce-based Content Security Policy, pass your nonce here and
 GridStack will add it to the `<style>` elements it creates.
