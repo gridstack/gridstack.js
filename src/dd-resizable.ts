@@ -132,7 +132,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _mouseOver(e: Event): void {
     // console.log(`${count++} pre-enter ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
     // already over a child, ignore. Ideally we just call e.stopPropagation() but see https://github.com/gridstack/gridstack.js/issues/2018
-    if (DDManager.overResizeElement || DDManager.dragElement) return;
+    if (DDManager.overResizeElement === this || DDManager.dragElement) return;
     DDManager.overResizeElement = this;
     // console.log(`${count++} enter ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
     this.el.classList.remove('ui-resizable-autohide');
