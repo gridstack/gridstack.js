@@ -1603,7 +1603,9 @@ export class GridStack {
     if (!cellHeight) return this;
 
     // check for css min height (non nested grid). TODO: support mismatch, say: min % while unit is px.
-    if (!parent) {
+    // If `minRow` was applied, don't override it with this check, and avoid performance issues
+    // (reflows) using `getComputedStyle`
+    if (!parent && !this.opts.minRow) {
       const cssMinHeight = Utils.parseHeight(getComputedStyle(this.el)['minHeight']);
       if (cssMinHeight.h > 0 && cssMinHeight.unit === unit) {
         const minRow = Math.floor(cssMinHeight.h / cellHeight);
