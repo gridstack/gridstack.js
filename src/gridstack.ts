@@ -1301,9 +1301,11 @@ export class GridStack {
     if (o.disableDrag !== undefined && !o.staticGrid) this.enableMove(!o.disableDrag);
     if (o.disableResize !== undefined && !o.staticGrid) this.enableResize(!o.disableResize);
     if (o.float !== undefined) this.float(o.float);
-    if (o.row !== undefined) { opts.minRow = opts.maxRow = opts.row = o.row; }
-    else {
-      if (o.minRow !== undefined) opts.minRow = o.minRow;
+    if (o.row !== undefined) {
+      opts.minRow = opts.maxRow = opts.row = o.row;
+      this._updateContainerHeight();
+    } else {
+      if (o.minRow !== undefined) { opts.minRow = o.minRow; this._updateContainerHeight(); }
       if (o.maxRow !== undefined) opts.maxRow = o.maxRow;
     }
     if (o.children?.length) this.load(o.children);
