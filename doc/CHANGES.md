@@ -133,6 +133,7 @@ Change log
 ## 12.2.1-dev (TBD)
 * fix: [#3070](https://github.com/gridstack/gridstack.js/pull/3070) incorrect property name 'sizeToContent' when cleaning up invalid attributes
 * fix: [#3077](https://github.com/gridstack/gridstack.js/pull/3077) incorrect node._id check
+* fix: [#3054](https://github.com/gridstack/gridstack.js/pull/3054) Avoid reflows via explicitly setting minRow
 * fix: [#3085](https://github.com/gridstack/gridstack.js/issues/3085) `opts.minRow` being updated
 
 ## 12.2.1 (2025-05-28)

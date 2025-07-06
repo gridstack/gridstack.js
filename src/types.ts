@@ -218,7 +218,7 @@ export interface GridStackOptions {
   maxRow?: number;
 
   /** minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`.
-   * When no set set, the `min-height` CSS attribute on the grid div (in pixels) can be used as well, which will round to the closest row.
+   * When no set the `min-height` CSS attribute on the grid div (in pixels) can be used, which will round to the closest row.
    */
   minRow?: number;
 
