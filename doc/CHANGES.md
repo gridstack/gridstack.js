@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.2.1-dev (TBD)](#1221-dev-tbd)
+- [12.2.2 (2025-07-06)](#1222-2025-07-06)
 - [12.2.1 (2025-05-28)](#1221-2025-05-28)
 - [12.2.0 (2025-05-27)](#1220-2025-05-27)
 - [12.1.2 (2024-05-07)](#1212-2024-05-07)
@@ -130,7 +130,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 12.2.1-dev (TBD)
+## 12.2.2 (2025-07-06)
 * fix: [#3070](https://github.com/gridstack/gridstack.js/pull/3070) incorrect property name 'sizeToContent' when cleaning up invalid attributes
 * fix: [#3077](https://github.com/gridstack/gridstack.js/pull/3077) incorrect node._id check
 * fix: [#3054](https://github.com/gridstack/gridstack.js/pull/3054) Avoid reflows via explicitly setting minRow
