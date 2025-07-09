@@ -77,7 +77,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
-    this._mouseKeyDown = this._mouseKeyDown.bind(this);
+    this._keyDown = this._keyDown.bind(this);
     this._keyMove = this._keyMove.bind(this);
     this._keyUp = this._keyUp.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
@@ -98,7 +98,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (this.disabled === false) return;
     super.enable();
     this.dragEls.forEach(dragEl => {
-      dragEl.addEventListener('keydown', this._mouseKeyDown)
+      dragEl.addEventListener('keydown', this._keyDown)
       dragEl.addEventListener('mousedown', this._mouseDown);
       if (isTouch) {
         dragEl.addEventListener('touchstart', touchstart);
@@ -160,26 +160,38 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   protected _elNewCoordinates(event: KeyboardEvent, element: HTMLElement) {
+    const node = this.el.gridstackNode
+    const cellHeight = node.grid.getCellHeight() * node.h
+    const cellWidth = node.grid.cellWidth()
+    const maxColumn = node.grid.opts.column
+
     let coordinates = this._elCoordinates(element)
 
     switch (event.code) {
     case 'ArrowRight':
-      coordinates.clientX = coordinates.clientX + 400
+      if(typeof(maxColumn) == 'number' && node.x === (maxColumn - 1)) { break }
+
+      coordinates.clientX = coordinates.clientX + cellWidth + (cellWidth / 2)
       break
     case 'ArrowLeft':
-      coordinates.clientX = coordinates.clientX - 400
+      if (node.x === 0) { break }
+
+      coordinates.clientX = coordinates.clientX - cellWidth - (cellWidth / 2)
       break
     case 'ArrowUp':
-      coordinates.clientY = coordinates.clientY - 400
+      if (node.y === 0) { break }
+
+      coordinates.clientY = coordinates.clientY - cellHeight
       break
     case 'ArrowDown':
-      coordinates.clientY = coordinates.clientY + 400
+      coordinates.clientY = coordinates.clientY + cellHeight
       break
     }
+
     return coordinates
   }
 
-  protected _mouseKeyDown(e: KeyboardEvent): void {
+  protected _keyDown(e: KeyboardEvent): void {
     if(e.code === 'Space') {
       e.preventDefault()
 
@@ -219,6 +231,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       e.code === 'ArrowLeft' ||
       e.code === 'ArrowUp' ||
       e.code === 'ArrowDown') {
+      e.preventDefault()
+
       e.target.dispatchEvent(new MouseEvent('mousemove', { ...this._elCoordinates(this.keyboardSelected)}))
       e.target.dispatchEvent(new MouseEvent('mousemove', { ...this._elNewCoordinates(e, this.keyboardSelected)}))
       e.target.dispatchEvent(new MouseEvent('mouseup'))
