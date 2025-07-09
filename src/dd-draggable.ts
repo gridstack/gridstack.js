@@ -44,6 +44,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected dragEls: HTMLElement[];
   /** @internal true while we are dragging an item around */
   protected dragging: boolean;
+
+  /** @internal true while we are dragging an item around */
+  protected keyboardSelected: HTMLElement;
   /** @internal last drag event */
   protected lastDrag: DragEvent;
   /** @internal */
@@ -74,6 +77,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
+    this._mouseKeyDown = this._mouseKeyDown.bind(this);
+    this._keyMove = this._keyMove.bind(this);
+    this._keyUp = this._keyUp.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
     this._mouseUp = this._mouseUp.bind(this);
     this._keyEvent = this._keyEvent.bind(this);
@@ -92,6 +98,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (this.disabled === false) return;
     super.enable();
     this.dragEls.forEach(dragEl => {
+      dragEl.addEventListener('keydown', this._mouseKeyDown)
       dragEl.addEventListener('mousedown', this._mouseDown);
       if (isTouch) {
         dragEl.addEventListener('touchstart', touchstart);
@@ -129,6 +136,98 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   public updateOption(opts: DDDragOpt): DDDraggable {
     Object.keys(opts).forEach(key => this.option[key] = opts[key]);
     return this;
+  }
+
+  protected _elCoordinates(element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+    const clientX = rect.left;
+    const clientY = rect.top;
+    const offsetX = element.offsetLeft;
+    const offsetY = element.offsetTop;
+    const pageX = window.scrollX + rect.left;
+    const pageY = window.scrollY + rect.top;
+    const screenX = window.screenX + rect.left;
+    const screenY = window.screenY + rect.top;
+
+    return { clientX: clientX,
+      clientY: clientY,
+      offsetX: offsetX,
+      offsetY: offsetY,
+      pageX: pageX,
+      pageY: pageY,
+      screenX: screenX,
+      screenY: screenY }
+  }
+
+  protected _elNewCoordinates(event: KeyboardEvent, element: HTMLElement) {
+    let coordinates = this._elCoordinates(element)
+
+    switch (event.code) {
+    case 'ArrowRight':
+      coordinates.clientX = coordinates.clientX + 400
+      break
+    case 'ArrowLeft':
+      coordinates.clientX = coordinates.clientX - 400
+      break
+    case 'ArrowUp':
+      coordinates.clientY = coordinates.clientY - 400
+      break
+    case 'ArrowDown':
+      coordinates.clientY = coordinates.clientY + 400
+      break
+    }
+    return coordinates
+  }
+
+  protected _mouseKeyDown(e: KeyboardEvent): void {
+    if(e.code === 'Space') {
+      e.preventDefault()
+
+      const handle = e.target as HTMLElement
+      const item: HTMLElement = handle?.closest('.grid-stack-item')
+      this.keyboardSelected = item
+      item.classList.add('grid-stack-item-selected')
+
+      e.target.dispatchEvent(new MouseEvent('mousedown'))
+      document.addEventListener('keyup', this._keyUp)
+    }
+  }
+
+  protected _keyUp() {
+    document.removeEventListener('keyup', this._keyUp)
+    document.addEventListener('keydown', this._keyMove)
+  }
+
+  protected _selectedItem (element: HTMLElement): HTMLElement {
+    const items = document.querySelectorAll('.grid-stack-item')
+
+    return Array.from(items).filter(item => item === element)[0] as HTMLElement
+  }
+
+  protected _keyMove(e: KeyboardEvent) {
+    if (e.code === 'Space') {
+      e.preventDefault()
+
+      this.keyboardSelected.classList.remove('grid-stack-item-selected')
+      this.keyboardSelected.dispatchEvent(new MouseEvent('mouseup'))
+      document.removeEventListener('keydown', this._keyMove)
+
+      return
+    }
+
+    if (e.code === 'ArrowRight' ||
+      e.code === 'ArrowLeft' ||
+      e.code === 'ArrowUp' ||
+      e.code === 'ArrowDown') {
+      e.target.dispatchEvent(new MouseEvent('mousemove', { ...this._elCoordinates(this.keyboardSelected)}))
+      e.target.dispatchEvent(new MouseEvent('mousemove', { ...this._elNewCoordinates(e, this.keyboardSelected)}))
+      e.target.dispatchEvent(new MouseEvent('mouseup'))
+
+      this.keyboardSelected = this._selectedItem(this.keyboardSelected)
+      const handle: HTMLElement = this.keyboardSelected.querySelector('.grid-item-handle')
+
+      handle?.dispatchEvent(new MouseEvent('mousedown'))
+    }
   }
 
   /** @internal call when mouse goes down before a dragstart happens */

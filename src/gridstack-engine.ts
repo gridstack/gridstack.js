@@ -424,7 +424,7 @@ export class GridStackEngine {
       copy.w = Math.min(this.defaultColumn, copy.w || 1);
       this.cacheOneLayout(copy, this.defaultColumn);
     }
-    
+
     if (node.w > this.column) {
       node.w = this.column;
     } else if (node.w < 1) {
