@@ -238,6 +238,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       e.target.dispatchEvent(new MouseEvent('mouseup'))
 
       this.keyboardSelected = this._selectedItem(this.keyboardSelected)
+      this.keyboardSelected.scrollIntoView({ block: "center" })
+
       const handle: HTMLElement = this.keyboardSelected.querySelector('.grid-item-handle')
 
       handle?.dispatchEvent(new MouseEvent('mousedown'))
