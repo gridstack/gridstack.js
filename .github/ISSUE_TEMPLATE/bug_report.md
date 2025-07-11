@@ -9,7 +9,7 @@ assignees: ''
 
 ## Subject of the issue
 Describe your issue here.
-If unsure if lib bug, use slack channel instead: https://join.slack.com/t/gridstackjs/shared_invite/zt-2qa21lnxz-vw29RdTFet3N6~ABqT9kwA
+If unsure if lib bug, use slack channel instead: https://join.slack.com/t/gridstackjs/shared_invite/zt-3978nsff6-HDNE_N45DydP36NBSV9JFQ
 
 ## Your environment
 * version of gridstack.js - DON'T SAY LATEST as that doesn't mean anything a month/year from now.
