@@ -277,6 +277,11 @@ export interface GridStackOptions {
   /** enable/disable the creation of sub-grids on the fly by dragging items completely
    * over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that. */
   subGridDynamic?: boolean;
+
+  /**
+   * IUNU addition. Delay before start draging outside elements to the grid.
+   */
+  pauseDragInWhileMoving?: number;
 }
 
 /** options used during GridStackEngine.moveNode() */
