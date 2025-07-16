@@ -228,9 +228,74 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }).sort(this._sortByRow).reverse()[0]
   }
 
+  // Find the first item below the selectedNode.
+  // Add the selectedNodes row and its height, this should be the same as the items row, if so, the item is in the row directly
+  // below the selectedNode.
+  // Also check if the item column overlaps the selectedNodes columns and include the items width in this calculation
+  _findItemBelow () {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      const itemNode = this._nodePosition(this._itemNode(item))
+      const row = selectedNode.height + selectedNode.row
+
+      if (itemNode.row !== row) { return false }
+      if (selectedNode.column < itemNode.column) { return false }
+      if (selectedNode.column > (itemNode.column + itemNode.width)) { return false }
+      return item
+    })[0]
+  }
+
+  // When we have not found any items in the row directly below the selectedNode.
+  // Look for the first item it can find below the selectedNodes row.
+  _findFirstItemBelow () {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if (item === this.el) { return false }
+      if (selectedNode.column < itemNode.column) { return false }
+      if (selectedNode.column > (itemNode.column + itemNode.width)) { return false }
+      if (itemNode.row <= selectedNode.row) { return false }
+
+      return item
+    }).sort(this._sortByRow)[0]
+  }
+
+  // When the selected item spans more than one column and the position directly below are all empty.
+  // When this happens we want to look for the first item in the row below which overlap the selected item on the columns.
+  _findFirstRowBelow() {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      if (item === this.el) { return false }
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if (itemNode.row < (selectedNode.row + selectedNode.height)) { return false }
+      return item
+    }).sort(this._sortByRow)[0]
+  }
+
+  // Check if the selectedNode has any siblings to the left or right
+  _findSiblings(itemBelow: Element) {
+    const itemBelowNode = this._nodePosition(this._itemNode(itemBelow))
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if (item === this.el) { return false }
+      if (itemNode.row !== selectedNode.row) { return false }
+
+      if (itemNode.column < itemBelowNode.column) { return false }
+      if (itemNode.column > (itemBelowNode.column + itemBelowNode.width)) { return false }
+      return item
+    })
+  }
+
   protected _elNewCoordinates(event: KeyboardEvent, element: HTMLElement) {
     const selectedNode = this._node();
-    const cellHeight = this._grid().getCellHeight() * selectedNode.h
     let xCoord: number, yCoord: number
 
     switch (event.code) {
@@ -255,8 +320,26 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       yCoord = -(this._itemNode(itemAbove).h * this._grid().getCellHeight())
       break
     case 'ArrowDown':
-      yCoord = cellHeight
-      break
+      let itemBelow = this._findItemBelow()
+
+      if (itemBelow === undefined) { itemBelow = this._findFirstItemBelow() }
+      if (itemBelow === undefined) { itemBelow = this._findFirstRowBelow() }
+
+      const itemBelowNode = this._nodePosition(this._itemNode(itemBelow))
+      const siblings = this._findSiblings(itemBelow)
+
+      if (siblings.length >= 1) {
+        const rowPosition = (itemBelowNode.row - selectedNode.y) * this._grid().getCellHeight();
+
+        yCoord = rowPosition + (itemBelowNode.height * this._grid().getCellHeight())
+      } else if (selectedNode.h < itemBelowNode.height) {
+        yCoord = (itemBelowNode.height * this._grid().getCellHeight())
+      } else {
+        const cellHeight = this._grid().getCellHeight() * selectedNode.h;
+
+        yCoord = (cellHeight + this._grid().getCellHeight())
+      }
+      break;
     }
 
     return this._setCoordinates(element, xCoord, yCoord);
