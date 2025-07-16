@@ -159,36 +159,44 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       screenY: screenY }
   }
 
+  _setCoordinates(element: HTMLElement, x: number, y:number) {
+    let coordinates = this._elCoordinates(element)
+
+    coordinates.clientX += x || 0;
+    coordinates.clientY += y || 0;
+
+    return coordinates
+  }
+
   protected _elNewCoordinates(event: KeyboardEvent, element: HTMLElement) {
     const node = this.el.gridstackNode
     const cellHeight = node.grid.getCellHeight() * node.h
     const cellWidth = node.grid.cellWidth()
     const maxColumn = node.grid.opts.column
-
-    let coordinates = this._elCoordinates(element)
+    let xCoord: number, yCoord: number
 
     switch (event.code) {
     case 'ArrowRight':
       if(typeof(maxColumn) == 'number' && node.x === (maxColumn - 1)) { break }
 
-      coordinates.clientX = coordinates.clientX + cellWidth + (cellWidth / 2)
+      xCoord = cellWidth
       break
     case 'ArrowLeft':
       if (node.x === 0) { break }
 
-      coordinates.clientX = coordinates.clientX - cellWidth - (cellWidth / 2)
+      xCoord = -cellWidth
       break
     case 'ArrowUp':
       if (node.y === 0) { break }
 
-      coordinates.clientY = coordinates.clientY - cellHeight
+      yCoord = -cellHeight
       break
     case 'ArrowDown':
-      coordinates.clientY = coordinates.clientY + cellHeight
+      yCoord = cellHeight
       break
     }
 
-    return coordinates
+    return this._setCoordinates(element, xCoord, yCoord);
   }
 
   protected _keyDown(e: KeyboardEvent): void {
