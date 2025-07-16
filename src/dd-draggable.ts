@@ -83,6 +83,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this._mouseMove = this._mouseMove.bind(this);
     this._mouseUp = this._mouseUp.bind(this);
     this._keyEvent = this._keyEvent.bind(this);
+    this._sortByRow = this._sortByRow.bind(this);
     this.enable();
   }
 
@@ -176,6 +177,57 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this._node().grid
   }
 
+  _itemNode(item) {
+    return item['gridstackNode']
+  }
+
+  _nodePosition(node) {
+    return {
+      width: node.w - 1,
+      height: node.h,
+      column: node.x,
+      row: node.y
+    }
+  }
+
+  _items() {
+    return document.querySelectorAll('.grid-stack-item:not(.grid-stack-placeholder)')
+  }
+
+  _sortByRow(a, b) {
+    return this._itemNode(a).y - this._itemNode(b).y
+  }
+
+  // Find the first item above the selectedNode.
+  // Add the items row and its height, this should be the same as the selectedNodes row, if so, the item is in the row directly
+  // above the selectedNode.
+  // Also check if the item column overlaps the selectedNodes columns and include the items width in this calculation
+  _findItemAbove () {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if ((itemNode.row + itemNode.height) !== selectedNode.row) { return false }
+      if (selectedNode.column < itemNode.column) { return false }
+      if (selectedNode.column > (itemNode.column + itemNode.width)) { return false }
+      return item
+    })[0]
+  }
+
+  // When we have not found any items in the row directly above the selectedNode.
+  // Look for the first item it can find above the selectedNodes row.
+  _findFirstItemAbove () {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      if (item === this.el) { return false }
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if (itemNode.row < selectedNode.row) { return item }
+    }).sort(this._sortByRow).reverse()[0]
+  }
+
   protected _elNewCoordinates(event: KeyboardEvent, element: HTMLElement) {
     const selectedNode = this._node();
     const cellHeight = this._grid().getCellHeight() * selectedNode.h
@@ -197,7 +249,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     case 'ArrowUp':
       if (selectedNode.y === 0) { break }
 
-      yCoord = -cellHeight
+      let itemAbove = this._findItemAbove()
+      if (itemAbove === undefined) { itemAbove = this._findFirstItemAbove() }
+
+      yCoord = -(this._itemNode(itemAbove).h * this._grid().getCellHeight())
       break
     case 'ArrowDown':
       yCoord = cellHeight
