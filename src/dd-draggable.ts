@@ -168,26 +168,34 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return coordinates
   }
 
+  _node() {
+    return this.el.gridstackNode;
+  }
+
+  _grid() {
+    return this._node().grid
+  }
+
   protected _elNewCoordinates(event: KeyboardEvent, element: HTMLElement) {
-    const node = this.el.gridstackNode
-    const cellHeight = node.grid.getCellHeight() * node.h
-    const cellWidth = node.grid.cellWidth()
-    const maxColumn = node.grid.opts.column
+    const selectedNode = this._node();
+    const cellHeight = this._grid().getCellHeight() * selectedNode.h
     let xCoord: number, yCoord: number
 
     switch (event.code) {
     case 'ArrowRight':
-      if(typeof(maxColumn) == 'number' && node.x === (maxColumn - 1)) { break }
+      const maxColumn = this._grid().opts.column
 
-      xCoord = cellWidth
+      if(typeof(maxColumn) == 'number' && selectedNode.x === (maxColumn - 1)) { break }
+
+      xCoord = this._grid().cellWidth()
       break
     case 'ArrowLeft':
-      if (node.x === 0) { break }
+      if (selectedNode.x === 0) { break }
 
-      xCoord = -cellWidth
+      xCoord = -this._grid().cellWidth()
       break
     case 'ArrowUp':
-      if (node.y === 0) { break }
+      if (selectedNode.y === 0) { break }
 
       yCoord = -cellHeight
       break
