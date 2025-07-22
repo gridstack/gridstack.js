@@ -420,13 +420,14 @@ export class GridStack {
    * @param w GridStackWidget definition. used MakeWidget(el) if you have dom element instead.
    */
   public addWidget(w: GridStackWidget): GridItemHTMLElement {
+    if (!w) return;
     if (typeof w === 'string') { console.error('V11: GridStack.addWidget() does not support string anymore. see #2736'); return; }
     if ((w as HTMLElement).ELEMENT_NODE) { console.error('V11: GridStack.addWidget() does not support HTMLElement anymore. use makeWidget()'); return this.makeWidget(w as HTMLElement); }
 
     let el: GridItemHTMLElement;
     let node: GridStackNode = w;
     node.grid = this;
-    if (node?.el) {
+    if (node.el) {
       el = node.el; // re-use element stored in the node
     } else if (GridStack.addRemoveCB) {
       el = GridStack.addRemoveCB(this.el, w, true, false);
