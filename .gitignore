@@ -8,3 +8,4 @@ dist_save
 node_modules
 .vscode
 .idea/
+.DS_Store
