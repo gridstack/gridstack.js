@@ -220,7 +220,7 @@ export class Utils {
           target[key] = source[key];
         } else if (typeof source[key] === 'object' && typeof target[key] === 'object') {
           // property is an object, recursively add it's field over... #1373
-          this.defaults(target[key], source[key]);
+          Utils.defaults(target[key], source[key]);
         }
       }
     });
@@ -346,45 +346,40 @@ export class Utils {
     if (overflowRegex.test(style.overflow + style.overflowY)) {
       return el;
     } else {
-      return this.getScrollElement(el.parentElement);
+      return Utils.getScrollElement(el.parentElement);
     }
   }
 
   /** @internal */
   static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
-    // is widget in view?
-    const rect = el.getBoundingClientRect();
+    const scrollEl = Utils.getScrollElement(el);
+    if (!scrollEl) return;
+
+    const elRect = el.getBoundingClientRect();
+    const scrollRect = scrollEl.getBoundingClientRect();
     const innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
-    if (rect.top < 0 ||
-      rect.bottom > innerHeightOrClientHeight
-    ) {
-      // set scrollTop of first parent that scrolls
-      // if parent is larger than el, set as low as possible
-      // to get entire widget on screen
-      const offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
-      const offsetDiffUp = rect.top;
-      const scrollEl = this.getScrollElement(el);
-      if (scrollEl !== null) {
-        const prevScroll = scrollEl.scrollTop;
-        if (rect.top < 0 && distance < 0) {
-          // moving up
-          if (el.offsetHeight > innerHeightOrClientHeight) {
-            scrollEl.scrollTop += distance;
-          } else {
-            scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
-          }
-        } else if (distance > 0) {
-          // moving down
-          if (el.offsetHeight > innerHeightOrClientHeight) {
-            scrollEl.scrollTop += distance;
-          } else {
-            scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
-          }
-        }
-        // move widget y by amount scrolled
-        position.top += scrollEl.scrollTop - prevScroll;
+
+    const offsetDiffDown = elRect.bottom - Math.min(scrollRect.bottom, innerHeightOrClientHeight);
+    const offsetDiffUp = elRect.top - Math.max(scrollRect.top, 0);
+    const prevScroll = scrollEl.scrollTop;
+
+    if (offsetDiffUp < 0 && distance < 0) {
+      // scroll up
+      if (el.offsetHeight > scrollRect.height) {
+        scrollEl.scrollTop += distance;
+      } else {
+        scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
+      }
+    } else if (offsetDiffDown > 0 && distance > 0) {
+      // scroll down
+      if (el.offsetHeight > scrollRect.height) {
+        scrollEl.scrollTop += distance;
+      } else {
+        scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
       }
     }
+
+    position.top += scrollEl.scrollTop - prevScroll;
   }
 
   /**
@@ -395,13 +390,13 @@ export class Utils {
    * @param distance Distance from the V edges to start scrolling
    */
   static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
-    const scrollEl = this.getScrollElement(el);
+    const scrollEl = Utils.getScrollElement(el);
     const height = scrollEl.clientHeight;
     // #1727 event.clientY is relative to viewport, so must compare this against position of scrollEl getBoundingClientRect().top
     // #1745 Special situation if scrollEl is document 'html': here browser spec states that
     // clientHeight is height of viewport, but getBoundingClientRect() is rectangle of html element;
     // this discrepancy arises because in reality scrollbar is attached to viewport, not html element itself.
-    const offsetTop = (scrollEl === this.getScrollElement()) ? 0 : scrollEl.getBoundingClientRect().top;
+    const offsetTop = (scrollEl === Utils.getScrollElement()) ? 0 : scrollEl.getBoundingClientRect().top;
     const pointerPosY = event.clientY - offsetTop;
     const top = pointerPosY < distance;
     const bottom = pointerPosY > height - distance;
@@ -562,7 +557,7 @@ export class Utils {
 
   /** returns true if event is inside the given element rectangle */
   // Note: Safari Mac has null event.relatedTarget which causes #1684 so check if DragEvent is inside the coordinates instead
-  //    this.el.contains(event.relatedTarget as HTMLElement)
+  //    Utils.el.contains(event.relatedTarget as HTMLElement)
   // public static inside(e: MouseEvent, el: HTMLElement): boolean {
   //   // srcElement, toElement, target: all set to placeholder when leaving simple grid, so we can't use that (Chrome)
   //   const target: HTMLElement = e.relatedTarget || (e as any).fromElement;
