@@ -8,6 +8,7 @@ import {
   GridStackRenderProvider,
   useGridStackContext,
 } from "../../lib";
+// import { GridStackRenderProvider } from "../../lib/grid-stack-render-provider-single";
 
 import "gridstack/dist/gridstack.css";
 import "./demo.css";
@@ -134,17 +135,26 @@ const gridOptions: GridStackOptions = {
 export function GridStackDemo() {
   // ! Uncontrolled
   const [initialOptions] = useState(gridOptions);
+  const [initialOptions2] = useState({});
 
   return (
+    <>
     <GridStackProvider initialOptions={initialOptions}>
       <Toolbar />
-
-      <GridStackRenderProvider>
+       <GridStackRenderProvider>
         <GridStackRender componentMap={COMPONENT_MAP} />
       </GridStackRenderProvider>
-
       <DebugInfo />
     </GridStackProvider>
+
+    <GridStackProvider initialOptions={initialOptions2}>
+      <Toolbar />
+       <GridStackRenderProvider>
+        <GridStackRender componentMap={COMPONENT_MAP} />
+      </GridStackRenderProvider>
+      <DebugInfo />
+    </GridStackProvider>
+    </>
   );
 }
 
