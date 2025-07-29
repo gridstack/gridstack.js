@@ -44,6 +44,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected dragEls: HTMLElement[];
   /** @internal true while we are dragging an item around */
   protected dragging: boolean;
+
+  /** @internal true while we are dragging an item around */
+  protected keyboardSelected: HTMLElement;
   /** @internal last drag event */
   protected lastDrag: DragEvent;
   /** @internal */
@@ -74,9 +77,13 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseDown = this._mouseDown.bind(this);
+    this._keyDown = this._keyDown.bind(this);
+    this._keyMove = this._keyMove.bind(this);
+    this._keyUp = this._keyUp.bind(this);
     this._mouseMove = this._mouseMove.bind(this);
     this._mouseUp = this._mouseUp.bind(this);
     this._keyEvent = this._keyEvent.bind(this);
+    this._sortByRow = this._sortByRow.bind(this);
     this.enable();
   }
 
@@ -92,6 +99,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (this.disabled === false) return;
     super.enable();
     this.dragEls.forEach(dragEl => {
+      dragEl.addEventListener('keydown', this._keyDown)
       dragEl.addEventListener('mousedown', this._mouseDown);
       if (isTouch) {
         dragEl.addEventListener('touchstart', touchstart);
@@ -129,6 +137,267 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   public updateOption(opts: DDDragOpt): DDDraggable {
     Object.keys(opts).forEach(key => this.option[key] = opts[key]);
     return this;
+  }
+
+  protected _elCoordinates(element: HTMLElement) {
+    const rect = element.getBoundingClientRect();
+    const clientX = rect.left;
+    const clientY = rect.top;
+    const offsetX = element.offsetLeft;
+    const offsetY = element.offsetTop;
+    const pageX = window.scrollX + rect.left;
+    const pageY = window.scrollY + rect.top;
+    const screenX = window.screenX + rect.left;
+    const screenY = window.screenY + rect.top;
+
+    return { clientX: clientX,
+      clientY: clientY,
+      offsetX: offsetX,
+      offsetY: offsetY,
+      pageX: pageX,
+      pageY: pageY,
+      screenX: screenX,
+      screenY: screenY }
+  }
+
+  _setCoordinates(element: HTMLElement, x: number, y:number) {
+    let coordinates = this._elCoordinates(element)
+
+    coordinates.clientX += x || 0;
+    coordinates.clientY += y || 0;
+
+    return coordinates
+  }
+
+  _node() {
+    return this.el.gridstackNode;
+  }
+
+  _grid() {
+    return this._node().grid
+  }
+
+  _itemNode(item) {
+    return item['gridstackNode']
+  }
+
+  _nodePosition(node) {
+    return {
+      width: node.w - 1,
+      height: node.h,
+      column: node.x,
+      row: node.y
+    }
+  }
+
+  _items() {
+    return document.querySelectorAll('.grid-stack-item:not(.grid-stack-placeholder)')
+  }
+
+  _sortByRow(a, b) {
+    return this._itemNode(a).y - this._itemNode(b).y
+  }
+
+  // Find the first item above the selectedNode.
+  // Add the items row and its height, this should be the same as the selectedNodes row, if so, the item is in the row directly
+  // above the selectedNode.
+  // Also check if the item column overlaps the selectedNodes columns and include the items width in this calculation
+  _findItemAbove () {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if ((itemNode.row + itemNode.height) !== selectedNode.row) { return false }
+      if (selectedNode.column < itemNode.column) { return false }
+      if (selectedNode.column > (itemNode.column + itemNode.width)) { return false }
+      return item
+    })[0]
+  }
+
+  // When we have not found any items in the row directly above the selectedNode.
+  // Look for the first item it can find above the selectedNodes row.
+  _findFirstItemAbove () {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      if (item === this.el) { return false }
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if (itemNode.row < selectedNode.row) { return item }
+    }).sort(this._sortByRow).reverse()[0]
+  }
+
+  // Find the first item below the selectedNode.
+  // Add the selectedNodes row and its height, this should be the same as the items row, if so, the item is in the row directly
+  // below the selectedNode.
+  // Also check if the item column overlaps the selectedNodes columns and include the items width in this calculation
+  _findItemBelow () {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      const itemNode = this._nodePosition(this._itemNode(item))
+      const row = selectedNode.height + selectedNode.row
+
+      if (itemNode.row !== row) { return false }
+      if (selectedNode.column < itemNode.column) { return false }
+      if (selectedNode.column > (itemNode.column + itemNode.width)) { return false }
+      return item
+    })[0]
+  }
+
+  // When we have not found any items in the row directly below the selectedNode.
+  // Look for the first item it can find below the selectedNodes row.
+  _findFirstItemBelow () {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if (item === this.el) { return false }
+      if (selectedNode.column < itemNode.column) { return false }
+      if (selectedNode.column > (itemNode.column + itemNode.width)) { return false }
+      if (itemNode.row <= selectedNode.row) { return false }
+
+      return item
+    }).sort(this._sortByRow)[0]
+  }
+
+  // When the selected item spans more than one column and the position directly below are all empty.
+  // When this happens we want to look for the first item in the row below which overlap the selected item on the columns.
+  _findFirstRowBelow() {
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      if (item === this.el) { return false }
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if (itemNode.row < (selectedNode.row + selectedNode.height)) { return false }
+      return item
+    }).sort(this._sortByRow)[0]
+  }
+
+  // Check if the selectedNode has any siblings to the left or right
+  _findSiblings(itemBelow: Element) {
+    const itemBelowNode = this._nodePosition(this._itemNode(itemBelow))
+    const selectedNode = this._nodePosition(this._node())
+
+    return Array.from(this._items()).filter(item => {
+      const itemNode = this._nodePosition(this._itemNode(item))
+
+      if (item === this.el) { return false }
+      if (itemNode.row !== selectedNode.row) { return false }
+
+      if (itemNode.column < itemBelowNode.column) { return false }
+      if (itemNode.column > (itemBelowNode.column + itemBelowNode.width)) { return false }
+      return item
+    })
+  }
+
+  protected _elNewCoordinates(event: KeyboardEvent, element: HTMLElement) {
+    const selectedNode = this._node();
+    let xCoord: number, yCoord: number
+
+    switch (event.code) {
+    case 'ArrowRight':
+      const maxColumn = this._grid().opts.column
+
+      if(typeof(maxColumn) == 'number' && selectedNode.x === (maxColumn - 1)) { break }
+
+      xCoord = this._grid().cellWidth()
+      break
+    case 'ArrowLeft':
+      if (selectedNode.x === 0) { break }
+
+      xCoord = -this._grid().cellWidth()
+      break
+    case 'ArrowUp':
+      if (selectedNode.y === 0) { break }
+
+      let itemAbove = this._findItemAbove()
+      if (itemAbove === undefined) { itemAbove = this._findFirstItemAbove() }
+
+      yCoord = -(this._itemNode(itemAbove).h * this._grid().getCellHeight())
+      break
+    case 'ArrowDown':
+      let itemBelow = this._findItemBelow()
+
+      if (itemBelow === undefined) { itemBelow = this._findFirstItemBelow() }
+      if (itemBelow === undefined) { itemBelow = this._findFirstRowBelow() }
+
+      const itemBelowNode = this._nodePosition(this._itemNode(itemBelow))
+      const siblings = this._findSiblings(itemBelow)
+
+      if (siblings.length >= 1) {
+        const rowPosition = (itemBelowNode.row - selectedNode.y) * this._grid().getCellHeight();
+
+        yCoord = rowPosition + (itemBelowNode.height * this._grid().getCellHeight())
+      } else if (selectedNode.h < itemBelowNode.height) {
+        yCoord = (itemBelowNode.height * this._grid().getCellHeight())
+      } else {
+        const cellHeight = this._grid().getCellHeight() * selectedNode.h;
+
+        yCoord = (cellHeight + this._grid().getCellHeight())
+      }
+      break;
+    }
+
+    return this._setCoordinates(element, xCoord, yCoord);
+  }
+
+  protected _keyDown(e: KeyboardEvent): void {
+    if(e.code === 'Space') {
+      e.preventDefault()
+
+      const handle = e.target as HTMLElement
+      const item: HTMLElement = handle?.closest('.grid-stack-item')
+      this.keyboardSelected = item
+      item.classList.add('grid-stack-item-selected')
+
+      e.target.dispatchEvent(new MouseEvent('mousedown'))
+      document.addEventListener('keyup', this._keyUp)
+    }
+  }
+
+  protected _keyUp() {
+    document.removeEventListener('keyup', this._keyUp)
+    document.addEventListener('keydown', this._keyMove)
+  }
+
+  protected _selectedItem (element: HTMLElement): HTMLElement {
+    const items = document.querySelectorAll('.grid-stack-item')
+
+    return Array.from(items).filter(item => item === element)[0] as HTMLElement
+  }
+
+  protected _keyMove(e: KeyboardEvent) {
+    if (e.code === 'Space') {
+      e.preventDefault()
+
+      this.keyboardSelected.classList.remove('grid-stack-item-selected')
+      this.keyboardSelected.dispatchEvent(new MouseEvent('mouseup'))
+      document.removeEventListener('keydown', this._keyMove)
+
+      return
+    }
+
+    if (e.code === 'ArrowRight' ||
+      e.code === 'ArrowLeft' ||
+      e.code === 'ArrowUp' ||
+      e.code === 'ArrowDown') {
+      e.preventDefault()
+
+      e.target.dispatchEvent(new MouseEvent('mousemove', { ...this._elCoordinates(this.keyboardSelected)}))
+      e.target.dispatchEvent(new MouseEvent('mousemove', { ...this._elNewCoordinates(e, this.keyboardSelected)}))
+      e.target.dispatchEvent(new MouseEvent('mouseup'))
+
+      this.keyboardSelected = this._selectedItem(this.keyboardSelected)
+      this.keyboardSelected.scrollIntoView({ block: "center" })
+
+      const handle: HTMLElement = this.keyboardSelected.querySelector('.grid-item-handle')
+
+      handle?.dispatchEvent(new MouseEvent('mousedown'))
+    }
   }
 
   /** @internal call when mouse goes down before a dragstart happens */
