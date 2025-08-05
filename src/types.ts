@@ -1,5 +1,5 @@
 /**
- * types.ts 12.2.1
+ * types.ts 12.2.2
  * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -217,8 +217,8 @@ export interface GridStackOptions {
   /** maximum rows amount. Default? is 0 which means no maximum rows */
   maxRow?: number;
 
-  /** minimum rows amount. Default is `0`. You can also do this with `min-height` CSS attribute
-   * on the grid div in pixels, which will round to the closest row.
+  /** minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`.
+   * When no set the `min-height` CSS attribute on the grid div (in pixels) can be used, which will round to the closest row.
    */
   minRow?: number;
 

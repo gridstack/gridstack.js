@@ -1,5 +1,5 @@
 /*!
- * GridStack 12.2.1
+ * GridStack 12.2.2
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2024  Alain Dumesny
@@ -1305,9 +1305,11 @@ export class GridStack {
     if (o.disableDrag !== undefined && !o.staticGrid) this.enableMove(!o.disableDrag);
     if (o.disableResize !== undefined && !o.staticGrid) this.enableResize(!o.disableResize);
     if (o.float !== undefined) this.float(o.float);
-    if (o.row !== undefined) { opts.minRow = opts.maxRow = opts.row = o.row; }
-    else {
-      if (o.minRow !== undefined) opts.minRow = o.minRow;
+    if (o.row !== undefined) {
+      opts.minRow = opts.maxRow = opts.row = o.row;
+      this._updateContainerHeight();
+    } else {
+      if (o.minRow !== undefined) { opts.minRow = o.minRow; this._updateContainerHeight(); }
       if (o.maxRow !== undefined) opts.maxRow = o.maxRow;
     }
     if (o.children?.length) this.load(o.children);
@@ -1619,7 +1621,9 @@ export class GridStack {
     if (!cellHeight) return this;
 
     // check for css min height (non nested grid). TODO: support mismatch, say: min % while unit is px.
-    if (!parent) {
+    // If `minRow` was applied, don't override it with this check, and avoid performance issues
+    // (reflows) using `getComputedStyle`
+    if (!parent && !this.opts.minRow) {
       const cssMinHeight = Utils.parseHeight(getComputedStyle(this.el)['minHeight']);
       if (cssMinHeight.h > 0 && cssMinHeight.unit === unit) {
         const minRow = Math.floor(cssMinHeight.h / cellHeight);
@@ -1911,7 +1915,7 @@ export class GridStack {
     return this;
   }
 
-  static GDRev = '12.2.1';
+  static GDRev = '12.2.2';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
