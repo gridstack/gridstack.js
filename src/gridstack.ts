@@ -447,9 +447,9 @@ export class GridStack {
     Utils.defaults(w, domAttr);
     this.engine.prepareNode(w);
     // this._writeAttr(el, w); why write possibly incorrect values back when makeWidget() will ?
-
-    this.el.appendChild(el);
-
+    // IUNU removal
+    // this.el.appendChild(el);
+    // ends IUNU removal
     this.makeWidget(el, w);
 
     return el;
@@ -2088,7 +2088,7 @@ export class GridStack {
       // and slightly adjust its position relative to the mouse
       if (!node.grid?.el) {
         // this scales the helper down
-        // IUNU removal. it was altering the styles.
+        // IUNU removal. It alters the styles. No good for our drag and drop system which contains custom css.
         // helper.style.transform = `scale(${1 / this.dragTransform.xScale},${1 / this.dragTransform.yScale})`;
         // Ends IUNU removal
         // this makes it so that the helper is well positioned relative to the mouse after scaling
@@ -2253,7 +2253,7 @@ export class GridStack {
         // fix #1578 when dragging fast, we might get leave after other grid gets enter (which calls us to clean)
         // so skip this one if we're not the active grid really..
         if (!node.grid || node.grid === this) {
-          // IUNU addition
+          // IUNU addition. Stops the timeout if cursos goes out from the grid.
           if (
             this.opts.pauseDragInWhileMoving &&
             !this._delayedPlaceholderActivated
@@ -2262,6 +2262,8 @@ export class GridStack {
               clearTimeout(this._delayedPlaceholderTimer);
             }
           }
+          this._delayedPlaceholderActivated = false;
+
           // Ends IUNU addition
           this._leave(el, helper);
           // if we were created as temporary nested grid, go back to before state
@@ -2286,14 +2288,17 @@ export class GridStack {
           }
           this._leave(el, helper);
         }
-        
+
+        this._delayedPlaceholderActivated = false;
+        // Ends IUNU addition.
+
         const node = helper?.gridstackNode || el.gridstackNode;
         // ignore drop on ourself from ourself that didn't come from the outside - dragend will handle the simple move instead
         if (node?.grid === this && !node._isExternal) return false;
 
         const wasAdded = !!this.placeholder.parentElement; // skip items not actually added to us because of constrains, but do cleanup #1419
         const wasSidebar = el !== helper;
-        // IUNU modification
+        // IUNU modification. Check if parent exists before remove.
         if (this.placeholder.parentElement) {
           this.placeholder.remove();
           delete this.placeholder.gridstackNode;
@@ -2346,6 +2351,7 @@ export class GridStack {
         // give the user a chance to alter the widget that will get inserted if new sidebar item
         if (wasSidebar && (node.content || node.subGridOpts || GridStack.addRemoveCB)) {
           delete node.el;
+          console.log({node})
           el = this.addWidget(node);
         } else {
           this._prepareElement(el, true, node);
@@ -2522,18 +2528,14 @@ export class GridStack {
   }
   protected _delayedPlaceholderTimer: number | null = null;
 
-  // IUNU addition. For re-utilization. Generates a placeholder and place it on the grid.
+  // For re-utilization. Generates a placeholder and place it on the grid.
   protected _showPlaceholderAndAddNode(node: GridStackNode) {
-
     this.el.appendChild(this.placeholder);
     this.placeholder.gridstackNode = node;
-    // if (node._temporaryRemoved) {
-    //   this.engine.addNode(node);
-    //   node._moving = true;
-    // }
   }
 
-  protected _activatePlaceholderMove(el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number){
+  // The content in this method was contained in the _onStartMoving method. It was moved here for reusability.
+  protected _activatePlaceholderMovement(el: GridItemHTMLElement, event: Event, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number){
     const shouldDelayPlaceholder = this.opts.pauseDragInWhileMoving && node._isExternal;
 
     if (node.grid?.el) {
@@ -2581,7 +2583,6 @@ export class GridStack {
         .resizable(el, 'option', 'maxHeightMoveUp', cellHeight * Math.min(node.maxH || Number.MAX_SAFE_INTEGER, node.y+node.h));
     }
   }
-
   // Ends IUNU addition
 
   /** @internal handles actual drag/resize start */
@@ -2596,27 +2597,27 @@ export class GridStack {
     // console.log('_onStartMoving placeholder') // TEST
     // Ends IUNU removal
 
-    // IUNU addition.
-    const isExternalItem = node._isExternal;
-    const shouldDelayPlaceholder = this.opts.pauseDragInWhileMoving && isExternalItem
+    // IUNU addition. Sets in a timeout the placeholder feedback when the option pauseDragInWhileMoving is on.
+    const shouldDelayPlaceholder = this.opts.pauseDragInWhileMoving && node._isExternal
     if (shouldDelayPlaceholder) {
       this._delayedPlaceholderActivated = false;
-
       if (this._delayedPlaceholderTimer) {
         clearTimeout(this._delayedPlaceholderTimer);
       }
-      if (!this._delayedPlaceholderActivated) {
-        this._delayedPlaceholderTimer = window.setTimeout(() => {
-          this._showPlaceholderAndAddNode(node);
-          this._delayedPlaceholderActivated = true;
-          this._activatePlaceholderMove(el, event, ui, node, cellWidth, cellHeight)
-        }, this.opts.pauseDragInWhileMoving);
-      }
+      this._delayedPlaceholderTimer = window.setTimeout(() => {
+        this._showPlaceholderAndAddNode(node);
+        this._delayedPlaceholderActivated = true;
+        this._activatePlaceholderMovement(el, event, ui, node, cellWidth, cellHeight)
+      }, this.opts.pauseDragInWhileMoving);
     } else {
       this._showPlaceholderAndAddNode(node);
-      this._activatePlaceholderMove(el, event, ui, node, cellWidth, cellHeight)
+      this._activatePlaceholderMovement(el, event, ui, node, cellWidth, cellHeight)
     }
-    // End IUNU addition
+    // Ends IUNU addition
+
+    // IUNU removal.
+    // The content in protected _activatePlaceholderMovement used to be here.
+    // Ends IUNU removal
   }
 
   /** @internal handles actual drag/resize */
