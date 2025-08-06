@@ -702,13 +702,52 @@ export class GridStackEngine {
     const prevPos: GridStackPosition = Utils.copyPos({}, node);
 
     // check if we will need to fix collision at our new location
-    const collides = this.collideAll(node, nn, o.skip);
+    // IUNU modification.
+    // const collides = this.collideAll(node, nn, o.skip);
+    let collides = this.collideAll(node, nn, o.skip);
+    // ends IUNU modification.
     let needToMove = true;
     if (collides.length) {
       const activeDrag = node._moving && !o.nested;
       // check to make sure we actually collided over 50% surface area while dragging
       let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
-      // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
+      // IUNU addition
+      // === SAFE RELAXATION: when <50% overlap during active drag (not resizing),
+      // try to slide to a nearby *free* cell instead of allowing overlap.
+      if (activeDrag && !o.resizing && !collide) {
+        // small spiral of nearby candidates
+        const candidates = [
+          {dx: 0, dy: 0},
+          {dx: 1, dy: 0}, {dx: -1, dy: 0}, {dx: 0, dy: 1}, {dx: 0, dy: -1},
+          {dx: 1, dy: 1}, {dx: -1, dy: 1}, {dx: 1, dy: -1}, {dx: -1, dy: -1},
+        ];
+        let placed = false;
+  
+        for (const {dx, dy} of candidates) {
+          const test = Utils.copyPos({}, nn);
+          test.x += dx; test.y += dy;
+          this.nodeBoundFix(test, resizing);
+  
+          if (!this.collideAll(node, test, o.skip).length) {
+            Utils.copyPos(nn, test);
+            placed = true;
+            break;
+          }
+        }
+  
+        if (placed) {
+          // clear blocking so we proceed as "no collision"
+          collide = undefined;
+          collides = [];
+          needToMove = true;
+        } else {
+          // no free neighbor this tick -> don't move into overlap
+          needToMove = false;
+          if (wasUndefinedPack) delete o.pack;
+        }
+      }
+      // ends IUNU addition.
+
       if (activeDrag && collide && node.grid?.opts?.subGridDynamic && !node.grid._isTemp) {
         const over = Utils.areaIntercept(o.rect, collide._rect);
         const a1 = Utils.area(o.rect);
@@ -722,10 +761,13 @@ export class GridStackEngine {
 
       if (collide) {
         needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
-      } else {
-        needToMove = false; // we didn't cover >50% for a move, skip...
-        if (wasUndefinedPack) delete o.pack;
-      }
+      } 
+      // IUNU removal 
+      // else {
+      //   needToMove = false; // we didn't cover >50% for a move, skip...
+      //   if (wasUndefinedPack) delete o.pack;
+      // }
+      // ends IUNU removal.
     }
 
     // now move (to the original ask vs the collision version which might differ) and repack things
