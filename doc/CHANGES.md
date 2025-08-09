@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [12.2.2-dev (TBD)](#1222-dev-tbd)
 - [12.2.2 (2025-07-06)](#1222-2025-07-06)
 - [12.2.1 (2025-05-28)](#1221-2025-05-28)
 - [12.2.0 (2025-05-27)](#1220-2025-05-27)
@@ -129,6 +130,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 12.2.2-dev (TBD)
+* fix: [#3099](https://github.com/gridstack/gridstack.js/issues/3099) scroll take into account ScrollContainer position
+* fix: [#3102](https://github.com/gridstack/gridstack.js/pull/3102) React demo now support multiple grids
 
 ## 12.2.2 (2025-07-06)
 * fix: [#3070](https://github.com/gridstack/gridstack.js/pull/3070) incorrect property name 'sizeToContent' when cleaning up invalid attributes

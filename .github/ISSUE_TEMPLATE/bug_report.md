@@ -17,6 +17,11 @@ If unsure if lib bug, use slack channel instead: https://join.slack.com/t/gridst
 
 ## Steps to reproduce
 You **MUST** provide a working demo - keep it simple and avoid frameworks as that could have issues - you can use 
+
+plain html: https://stackblitz.com/edit/gridstack-angular
+Angular: https://stackblitz.com/edit/gridstack-angular
+
+please don't use jsfiddle.net as my work now blocks that website.
 https://jsfiddle.net/adumesny/jqhkry7g
 
 ## Expected behavior
