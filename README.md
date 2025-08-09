@@ -142,7 +142,7 @@ GridStack.init();
 
 ...or see list of all [API and options](https://github.com/gridstack/gridstack.js/tree/master/doc) available.
 
-see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example too.
+see [stackblitz sample](https://stackblitz.com/edit/gridstack-demo) as running example too.
 
 ## Requirements
 
