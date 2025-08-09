@@ -2,6 +2,8 @@
 
 The Angular [wrapper component](projects/lib/src/lib/gridstack.component.ts) <gridstack> is a <b>better way to use Gridstack</b>, but alternative raw [ngFor](projects/demo/src/app/ngFor.ts) or [simple](projects/demo/src/app/simple.ts) demos are also given.
 
+Running version can be seen here https://stackblitz.com/edit/gridstack-angular
+
 # Dynamic grid items
 
 this is the recommended way if you are going to have multiple grids (alow drag&drop between) or drag from toolbar to create items, or drag to remove items, etc...
