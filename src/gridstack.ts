@@ -553,7 +553,7 @@ export class GridStack {
     if (nodeToAdd?._moving) subGrid._isTemp = true; // prevent re-nesting as we add over
     if (autoColumn) subGrid._autoColumn = true;
 
-    // add the original content back as a child of hte newly created grid
+    // add the original content back as a child of the newly created grid
     if (saveContent) {
       subGrid.makeWidget(newItem, newItemOpt);
     }
@@ -2424,8 +2424,7 @@ export class GridStack {
         } else {
           Utils.removePositioningStyles(target);
           if (node._temporaryRemoved) {
-            // got removed - restore item back to before dragging position
-            Utils.copyPos(node, node._orig);// @ts-ignore
+            // use last position we were at (not _orig as we may have pushed others and moved) and add it back
             this._writePosAttr(target, node);
             this.engine.addNode(node);
           } else {
