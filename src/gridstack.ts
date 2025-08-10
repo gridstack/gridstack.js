@@ -31,6 +31,13 @@ export * from './types';
 export * from './utils';
 export * from './gridstack-engine';
 export * from './dd-gridstack';
+export * from './dd-manager';
+export * from './dd-element';
+export * from './dd-draggable';
+export * from './dd-droppable';
+export * from './dd-resizable';
+export * from './dd-resizable-handle';
+export * from './dd-base-impl';
 
 export interface GridHTMLElement extends HTMLElement {
   gridstack?: GridStack; // grid's parent DOM element points back to grid class
@@ -1898,6 +1905,7 @@ export class GridStack {
     return this;
   }
 
+  /** @internal current version compiled in code */
   static GDRev = '12.2.2-dev';
 
   /* ===========================================================================================
