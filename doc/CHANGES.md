@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.2.2-dev (TBD)](#1222-dev-tbd)
+- [12.3.0 (2025-08-10)](#1230-2025-08-10)
 - [12.2.2 (2025-07-06)](#1222-2025-07-06)
 - [12.2.1 (2025-05-28)](#1221-2025-05-28)
 - [12.2.0 (2025-05-27)](#1220-2025-05-27)
@@ -131,10 +131,10 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 12.2.2-dev (TBD)
+## 12.3.0 (2025-08-10)
+* feat: [#3047](https://github.com/gridstack/gridstack.js/issues/3047) added `.grid-stack-dragging` to grid when child is being dragged so we can set `cursor:grabbing`. Updated demo.
 * fix: [#3099](https://github.com/gridstack/gridstack.js/issues/3099) scroll take into account ScrollContainer position
 * fix: [#3102](https://github.com/gridstack/gridstack.js/pull/3102) React demo now support multiple grids
-* fix: [#3047](https://github.com/gridstack/gridstack.js/issues/3047) added `.grid-stack-dragging` to grid when child is being dragged so we can set cursor:grabbing, updated demo.
 * fix: [#3021](https://github.com/gridstack/gridstack.js/issues/3021) correctly reset widget back (to last known position) when released outside
 
 ## 12.2.2 (2025-07-06)
