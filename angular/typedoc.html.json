@@ -70,7 +70,7 @@
   },
   "sidebarLinks": {
     "Documentation": "https://github.com/gridstack/gridstack.js/tree/master/doc",
-    "Angular Guide": "README.md"
+    "Angular Guide": "index.html"
   },
   "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/angular/",
   "githubPages": true,
