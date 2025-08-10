@@ -53,8 +53,7 @@
     "Demo": "https://gridstackjs.com/demo/"
   },
   "sidebarLinks": {
-    "Documentation": "https://github.com/gridstack/gridstack.js/tree/master/doc",
-    "API Reference": "doc/"
+    "Documentation": "https://github.com/gridstack/gridstack.js/blob/master/README.md",
   },
   "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/",
   "githubPages": true,

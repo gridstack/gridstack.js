@@ -69,7 +69,7 @@
     "Main Library": "../../../doc/html/"
   },
   "sidebarLinks": {
-    "Documentation": "https://github.com/gridstack/gridstack.js/tree/master/doc",
+    "Documentation": "https://github.com/gridstack/gridstack.js/blob/master/README.md",
     "Angular Guide": "index.html"
   },
   "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/angular/",

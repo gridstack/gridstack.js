@@ -44,6 +44,7 @@ module.exports = function(grunt) {
           'dist/angular/src/gridstack-item.component.ts': ['angular/projects/lib/src/lib/gridstack-item.component.ts'],
           'dist/angular/src/base-widget.ts': ['angular/projects/lib/src/lib/base-widget.ts'],
           'dist/angular/src/gridstack.module.ts': ['angular/projects/lib/src/lib/gridstack.module.ts'],
+          'dist/angular/src/types.ts': ['angular/projects/lib/src/lib/types.ts'],
         }
       }
     },
