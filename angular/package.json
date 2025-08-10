@@ -6,7 +6,10 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "doc": "npx typedoc --options typedoc.json && npx typedoc --options typedoc.html.json",
+    "doc:api": "npx typedoc --options typedoc.json",
+    "doc:html": "npx typedoc --options typedoc.html.json"
   },
   "private": true,
   "dependencies": {
