@@ -29,7 +29,7 @@
   "excludePrivate": true,
   "excludeProtected": false,
   "excludeInternal": true,
-  "includeVersion": true,
+  "includeVersion": false,
   "sort": ["source-order"],
   "sortEntryPoints": false,
   "kindSortOrder": [

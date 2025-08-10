@@ -15,7 +15,7 @@
   "excludePrivate": true,
   "excludeProtected": false,
   "excludeInternal": true,
-  "includeVersion": true,
+  "includeVersion": false,
   "sort": ["alphabetical"],
   "kindSortOrder": [
     "Class",
@@ -57,6 +57,7 @@
     "API Reference": "docs/"
   },
   "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/",
+  "githubPages": true,
   "gitRevision": "master",
   "gitRemote": "origin"
 }
