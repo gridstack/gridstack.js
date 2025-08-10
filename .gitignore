@@ -5,6 +5,8 @@ dist_save
 *.zip
 angular/
 react/
+.DS_Store
+doc/.DS_Store
 
 !node_modules/
 node_modules/*
