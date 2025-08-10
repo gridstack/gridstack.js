@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const docsPath = path.join(__dirname, '../docs/api/index.md');
+const docsPath = path.join(__dirname, '../doc/API.md');
 
 if (!fs.existsSync(docsPath)) {
   console.error('Documentation file not found:', docsPath);

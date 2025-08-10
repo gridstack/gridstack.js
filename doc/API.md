@@ -113,7 +113,7 @@ Construct a grid item from the given element and options
 protected _updateResizeEvent(forceRemove): GridStack;
 ```
 
-Defined in: [gridstack.ts:2034](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2034)
+Defined in: [gridstack.ts:2086](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2086)
 
 add or remove the grid element size event handler
 
@@ -133,7 +133,7 @@ add or remove the grid element size event handler
 protected _widthOrContainer(forBreakpoint): number;
 ```
 
-Defined in: [gridstack.ts:924](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L924)
+Defined in: [gridstack.ts:949](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L949)
 
 return our expected width (or parent) , and optionally of window for dynamic column check
 
@@ -207,7 +207,7 @@ grid.addWidget({w: 3, content: 'hello'});
 batchUpdate(flag): GridStack;
 ```
 
-Defined in: [gridstack.ts:803](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L803)
+Defined in: [gridstack.ts:828](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L828)
 
 use before calling a bunch of `addWidget()` to prevent un-necessary relayouts in between (more efficient)
 and get a single event callback. You will see no changes until `batchUpdate(false)` is called.
@@ -228,7 +228,7 @@ and get a single event callback. You will see no changes until `batchUpdate(fals
 cellHeight(val?): GridStack;
 ```
 
-Defined in: [gridstack.ts:874](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L874)
+Defined in: [gridstack.ts:899](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L899)
 
 Update current cell height - see `GridStackOptions.cellHeight` for format by updating eh Browser CSS variable.
 
@@ -260,7 +260,7 @@ grid.cellHeight('auto');  // auto-size based on content
 cellWidth(): number;
 ```
 
-Defined in: [gridstack.ts:920](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L920)
+Defined in: [gridstack.ts:945](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L945)
 
 Gets the current cell width in pixels. This is calculated based on the grid container width divided by the number of columns.
 
@@ -286,7 +286,7 @@ const widgetWidth = width * 3; // For a 3-column wide widget
 protected checkDynamicColumn(): boolean;
 ```
 
-Defined in: [gridstack.ts:930](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L930)
+Defined in: [gridstack.ts:955](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L955)
 
 checks for dynamic column count for our current size, returning true if changed
 
@@ -300,7 +300,7 @@ checks for dynamic column count for our current size, returning true if changed
 column(column, layout): GridStack;
 ```
 
-Defined in: [gridstack.ts:1009](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1009)
+Defined in: [gridstack.ts:1034](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1034)
 
 Set the number of columns in the grid. Will update existing widgets to conform to new number of columns,
 as well as cache the original layout so you can revert back to previous positions without loss.
@@ -341,7 +341,7 @@ grid.column(1);
 commit(): GridStack;
 ```
 
-Defined in: [gridstack.ts:2963](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2963)
+Defined in: [gridstack.ts:3015](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3015)
 
 ###### Returns
 
@@ -353,7 +353,7 @@ Defined in: [gridstack.ts:2963](https://github.com/adumesny/gridstack.js/blob/ma
 compact(layout, doSort): GridStack;
 ```
 
-Defined in: [gridstack.ts:975](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L975)
+Defined in: [gridstack.ts:1000](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1000)
 
 Re-layout grid items to reclaim any empty space. This is useful after removing widgets
 or when you want to optimize the layout.
@@ -419,7 +419,7 @@ const element = grid.createWidgetDivs({ w: 2, h: 1, content: 'Hello World' });
 destroy(removeDOM): GridStack;
 ```
 
-Defined in: [gridstack.ts:1083](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1083)
+Defined in: [gridstack.ts:1108](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1108)
 
 Destroys a grid instance. DO NOT CALL any methods or access any vars after this as it will free up members.
 
@@ -439,7 +439,7 @@ Destroys a grid instance. DO NOT CALL any methods or access any vars after this 
 disable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2235](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2235)
+Defined in: [gridstack.ts:2287](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2287)
 
 Temporarily disables widgets moving/resizing.
 If you want a more permanent way (which freezes up resources) use `setStatic(true)` instead.
@@ -480,7 +480,7 @@ grid.disable(false);
 enable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2262](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2262)
+Defined in: [gridstack.ts:2314](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2314)
 
 Re-enables widgets moving/resizing - see disable().
 Note: This is a no-op for static grids.
@@ -519,7 +519,7 @@ grid.enable(false);
 enableMove(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2288](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2288)
+Defined in: [gridstack.ts:2340](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2340)
 
 Enables/disables widget moving for all widgets. No-op for static grids.
 Note: locally defined items (with noMove property) still override this setting.
@@ -556,7 +556,7 @@ grid.enableMove(true, false);
 enableResize(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2316](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2316)
+Defined in: [gridstack.ts:2368](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2368)
 
 Enables/disables widget resizing for all widgets. No-op for static grids.
 Note: locally defined items (with noResize property) still override this setting.
@@ -593,7 +593,7 @@ grid.enableResize(true, false);
 float(val): GridStack;
 ```
 
-Defined in: [gridstack.ts:1117](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1117)
+Defined in: [gridstack.ts:1142](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1142)
 
 Enable/disable floating widgets (default: `false`). When enabled, widgets can float up to fill empty spaces.
 See [example](http://gridstackjs.com/demo/float.html)
@@ -623,7 +623,7 @@ grid.float(false); // Disable floating (default)
 getCellFromPixel(position, useDocRelative): CellPosition;
 ```
 
-Defined in: [gridstack.ts:1147](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1147)
+Defined in: [gridstack.ts:1172](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1172)
 
 Get the position of the cell under a pixel on screen.
 
@@ -644,7 +644,7 @@ Get the position of the cell under a pixel on screen.
 getCellHeight(forcePixel): number;
 ```
 
-Defined in: [gridstack.ts:827](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L827)
+Defined in: [gridstack.ts:852](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L852)
 
 Gets the current cell height in pixels. This takes into account the unit type and converts to pixels if necessary.
 
@@ -676,7 +676,7 @@ const pixelHeight = grid.getCellHeight(true);
 getColumn(): number;
 ```
 
-Defined in: [gridstack.ts:1046](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1046)
+Defined in: [gridstack.ts:1071](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1071)
 
 Get the number of columns in the grid (default 12).
 
@@ -698,7 +698,7 @@ const columnCount = grid.getColumn(); // returns 12 by default
 static getDD(): DDGridStack;
 ```
 
-Defined in: [gridstack.ts:2132](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2132)
+Defined in: [gridstack.ts:2184](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2184)
 
 Get the global drag & drop implementation instance.
 This provides access to the underlying drag & drop functionality.
@@ -722,7 +722,7 @@ const dd = GridStack.getDD();
 getFloat(): boolean;
 ```
 
-Defined in: [gridstack.ts:1134](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1134)
+Defined in: [gridstack.ts:1159](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1159)
 
 Get the current float mode setting.
 
@@ -745,7 +745,7 @@ console.log('Floating enabled:', isFloating);
 getGridItems(): GridItemHTMLElement[];
 ```
 
-Defined in: [gridstack.ts:1060](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1060)
+Defined in: [gridstack.ts:1085](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1085)
 
 Returns an array of grid HTML elements (no placeholder) - used to iterate through our children in DOM order.
 This method excludes placeholder elements and returns only actual grid items.
@@ -771,7 +771,7 @@ items.forEach(item => {
 getMargin(): number;
 ```
 
-Defined in: [gridstack.ts:1731](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1731)
+Defined in: [gridstack.ts:1783](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1783)
 
 Returns the current margin value as a number (undefined if the 4 sides don't match).
 This only returns a number if all sides have the same margin value.
@@ -799,7 +799,7 @@ if (margin !== undefined) {
 getRow(): number;
 ```
 
-Defined in: [gridstack.ts:1177](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1177)
+Defined in: [gridstack.ts:1202](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1202)
 
 Returns the current number of rows, which will be at least `minRow` if set.
 The row count is based on the highest positioned widget in the grid.
@@ -887,7 +887,7 @@ isAreaEmpty(
    h): boolean;
 ```
 
-Defined in: [gridstack.ts:1196](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1196)
+Defined in: [gridstack.ts:1221](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1221)
 
 Checks if the specified rectangular area is empty (no widgets occupy any part of it).
 
@@ -921,7 +921,7 @@ if (grid.isAreaEmpty(1, 1, 2, 2)) {
 isIgnoreChangeCB(): boolean;
 ```
 
-Defined in: [gridstack.ts:1077](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1077)
+Defined in: [gridstack.ts:1102](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1102)
 
 Returns true if change callbacks should be ignored due to column change, sizeToContent, loading, etc.
 This is useful for callers who want to implement dirty flag functionality.
@@ -947,9 +947,10 @@ if (!grid.isIgnoreChangeCB()) {
 load(items, addRemove): GridStack;
 ```
 
-Defined in: [gridstack.ts:692](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L692)
+Defined in: [gridstack.ts:717](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L717)
 
-load the widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
+Load widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
+Used to restore a grid layout for a saved layout list (see `save()`).
 
 ###### Parameters
 
@@ -962,11 +963,38 @@ load the widgets from a list. This will call update() on each (matching by id) o
 
 [`GridStack`](#gridstack-1)
 
+the grid instance for chaining
+
 ###### Example
 
 ```ts
-see http://gridstackjs.com/demo/serialization.html
+// Basic usage with saved layout
+const savedLayout = grid.save(); // Save current layout
+// ... later restore it
+grid.load(savedLayout);
+
+// Load with custom add/remove callback
+grid.load(layout, (items, grid, add) => {
+  if (add) {
+    // Custom logic for adding new widgets
+    items.forEach(item => {
+      const el = document.createElement('div');
+      el.innerHTML = item.content || '';
+      grid.addWidget(el, item);
+    });
+  } else {
+    // Custom logic for removing widgets
+    items.forEach(item => grid.removeWidget(item.el));
+  }
+});
+
+// Load without adding/removing missing widgets
+grid.load(layout, false);
 ```
+
+###### See
+
+[http://gridstackjs.com/demo/serialization.html](http://gridstackjs.com/demo/serialization.html) for complete example
 
 ##### makeSubGrid()
 
@@ -1004,7 +1032,7 @@ newly created grid
 makeWidget(els, options?): GridItemHTMLElement;
 ```
 
-Defined in: [gridstack.ts:1213](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1213)
+Defined in: [gridstack.ts:1249](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1249)
 
 If you add elements to your grid by hand (or have some framework creating DOM), you have to tell gridstack afterwards to make them widgets.
 If you want gridstack to add the elements for you, use `addWidget()` instead.
@@ -1021,13 +1049,24 @@ Makes the given element a widget and returns it.
 
 [`GridItemHTMLElement`](#griditemhtmlelement)
 
+the converted GridItemHTMLElement
+
 ###### Example
 
 ```ts
 const grid = GridStack.init();
-grid.el.innerHtml = '<div id="1" gs-w="3"></div><div id="2"></div>';
-grid.makeWidget('1');
-grid.makeWidget('2', {w:2, content: 'hello'});
+
+// Create HTML content manually, possibly looking like:
+// <div id="item-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2"></div>
+grid.el.innerHTML = '<div id="item-1" gs-w="3"></div><div id="item-2"></div>';
+
+// Convert existing elements to widgets
+grid.makeWidget('#item-1'); // Uses gs-* attributes from DOM
+grid.makeWidget('#item-2', {w: 2, h: 1, content: 'Hello World'});
+
+// Or pass DOM element directly
+const element = document.getElementById('item-3');
+grid.makeWidget(element, {x: 0, y: 1, w: 4, h: 2});
 ```
 
 ##### margin()
@@ -1036,7 +1075,7 @@ grid.makeWidget('2', {w:2, content: 'hello'});
 margin(value): GridStack;
 ```
 
-Defined in: [gridstack.ts:1702](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1702)
+Defined in: [gridstack.ts:1754](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1754)
 
 Updates the margins which will set all 4 sides at once - see `GridStackOptions.margin` for format options.
 Supports CSS string format of 1, 2, or 4 values or a single number.
@@ -1067,7 +1106,7 @@ grid.margin('5px 10px 15px 20px'); // Different for each side
 movable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2176](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2176)
+Defined in: [gridstack.ts:2228](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2228)
 
 Enables/Disables dragging by the user for specific grid elements. 
 For all items and future items, use enableMove() instead. No-op for static grids.
@@ -1104,7 +1143,7 @@ grid.movable('#fixed-widget', false);
 off(name): GridStack;
 ```
 
-Defined in: [gridstack.ts:1293](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1293)
+Defined in: [gridstack.ts:1345](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1345)
 
 unsubscribe from the 'on' event GridStackEvent
 
@@ -1124,7 +1163,7 @@ unsubscribe from the 'on' event GridStackEvent
 offAll(): GridStack;
 ```
 
-Defined in: [gridstack.ts:1320](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1320)
+Defined in: [gridstack.ts:1372](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1372)
 
 Remove all event handlers from the grid. This is useful for cleanup when destroying a grid.
 
@@ -1148,31 +1187,49 @@ grid.offAll(); // Remove all event listeners
 on(name, callback): GridStack;
 ```
 
-Defined in: [gridstack.ts:1256](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1256)
+Defined in: [gridstack.ts:1308](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1308)
 
-Event handler that extracts our CustomEvent data out automatically for receiving custom
-notifications (see doc for supported events)
+Register event handler for grid events. You can call this on a single event name, or space separated list.
+
+Supported events:
+- `added`: Called when widgets are being added to a grid
+- `change`: Occurs when widgets change their position/size due to constraints or direct changes
+- `disable`: Called when grid becomes disabled
+- `dragstart`: Called when grid item starts being dragged
+- `drag`: Called while grid item is being dragged (for each new row/column value)
+- `dragstop`: Called after user is done moving the item, with updated DOM attributes
+- `dropped`: Called when an item has been dropped and accepted over a grid
+- `enable`: Called when grid becomes enabled
+- `removed`: Called when items are being removed from the grid
+- `resizestart`: Called before user starts resizing an item
+- `resize`: Called while grid item is being resized (for each new row/column value)
+- `resizestop`: Called after user is done resizing the item, with updated DOM attributes
 
 ###### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | `"dropped"` | of the event (see possible values) or list of names space separated |
-| `callback` | [`GridStackDroppedHandler`](#gridstackdroppedhandler) | function called with event and optional second/third param (see README documentation for each signature). |
+| `name` | `"dropped"` | event name(s) to listen for (space separated for multiple) |
+| `callback` | [`GridStackDroppedHandler`](#gridstackdroppedhandler) | function to call when event occurs |
 
 ###### Returns
 
 [`GridStack`](#gridstack-1)
 
+the grid instance for chaining
+
 ###### Example
 
 ```ts
-grid.on('added', function(e, items) { log('added ', items)} );
-or
-grid.on('added removed change', function(e, items) { log(e.type, items)} );
+// Listen to multiple events at once
+grid.on('added removed change', (event, items) => {
+  items.forEach(item => console.log('Item changed:', item));
+});
 
-Note: in some cases it is the same as calling native handler and parsing the event.
-grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
+// Listen to individual events
+grid.on('added', (event, items) => {
+  items.forEach(item => console.log('Added item:', item));
+});
 ```
 
 ###### Call Signature
@@ -1181,31 +1238,49 @@ grid.el.addEventListener('added', function(event) { log('added ', event.detail)}
 on(name, callback): GridStack;
 ```
 
-Defined in: [gridstack.ts:1257](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1257)
+Defined in: [gridstack.ts:1309](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1309)
 
-Event handler that extracts our CustomEvent data out automatically for receiving custom
-notifications (see doc for supported events)
+Register event handler for grid events. You can call this on a single event name, or space separated list.
+
+Supported events:
+- `added`: Called when widgets are being added to a grid
+- `change`: Occurs when widgets change their position/size due to constraints or direct changes
+- `disable`: Called when grid becomes disabled
+- `dragstart`: Called when grid item starts being dragged
+- `drag`: Called while grid item is being dragged (for each new row/column value)
+- `dragstop`: Called after user is done moving the item, with updated DOM attributes
+- `dropped`: Called when an item has been dropped and accepted over a grid
+- `enable`: Called when grid becomes enabled
+- `removed`: Called when items are being removed from the grid
+- `resizestart`: Called before user starts resizing an item
+- `resize`: Called while grid item is being resized (for each new row/column value)
+- `resizestop`: Called after user is done resizing the item, with updated DOM attributes
 
 ###### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | `"enable"` \| `"disable"` | of the event (see possible values) or list of names space separated |
-| `callback` | [`GridStackEventHandler`](#gridstackeventhandler) | function called with event and optional second/third param (see README documentation for each signature). |
+| `name` | `"enable"` \| `"disable"` | event name(s) to listen for (space separated for multiple) |
+| `callback` | [`GridStackEventHandler`](#gridstackeventhandler) | function to call when event occurs |
 
 ###### Returns
 
 [`GridStack`](#gridstack-1)
 
+the grid instance for chaining
+
 ###### Example
 
 ```ts
-grid.on('added', function(e, items) { log('added ', items)} );
-or
-grid.on('added removed change', function(e, items) { log(e.type, items)} );
+// Listen to multiple events at once
+grid.on('added removed change', (event, items) => {
+  items.forEach(item => console.log('Item changed:', item));
+});
 
-Note: in some cases it is the same as calling native handler and parsing the event.
-grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
+// Listen to individual events
+grid.on('added', (event, items) => {
+  items.forEach(item => console.log('Added item:', item));
+});
 ```
 
 ###### Call Signature
@@ -1214,31 +1289,49 @@ grid.el.addEventListener('added', function(event) { log('added ', event.detail)}
 on(name, callback): GridStack;
 ```
 
-Defined in: [gridstack.ts:1258](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1258)
+Defined in: [gridstack.ts:1310](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1310)
 
-Event handler that extracts our CustomEvent data out automatically for receiving custom
-notifications (see doc for supported events)
+Register event handler for grid events. You can call this on a single event name, or space separated list.
+
+Supported events:
+- `added`: Called when widgets are being added to a grid
+- `change`: Occurs when widgets change their position/size due to constraints or direct changes
+- `disable`: Called when grid becomes disabled
+- `dragstart`: Called when grid item starts being dragged
+- `drag`: Called while grid item is being dragged (for each new row/column value)
+- `dragstop`: Called after user is done moving the item, with updated DOM attributes
+- `dropped`: Called when an item has been dropped and accepted over a grid
+- `enable`: Called when grid becomes enabled
+- `removed`: Called when items are being removed from the grid
+- `resizestart`: Called before user starts resizing an item
+- `resize`: Called while grid item is being resized (for each new row/column value)
+- `resizestop`: Called after user is done resizing the item, with updated DOM attributes
 
 ###### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | `"removed"` \| `"change"` \| `"added"` \| `"resizecontent"` | of the event (see possible values) or list of names space separated |
-| `callback` | [`GridStackNodesHandler`](#gridstacknodeshandler) | function called with event and optional second/third param (see README documentation for each signature). |
+| `name` | `"removed"` \| `"change"` \| `"added"` \| `"resizecontent"` | event name(s) to listen for (space separated for multiple) |
+| `callback` | [`GridStackNodesHandler`](#gridstacknodeshandler) | function to call when event occurs |
 
 ###### Returns
 
 [`GridStack`](#gridstack-1)
 
+the grid instance for chaining
+
 ###### Example
 
 ```ts
-grid.on('added', function(e, items) { log('added ', items)} );
-or
-grid.on('added removed change', function(e, items) { log(e.type, items)} );
+// Listen to multiple events at once
+grid.on('added removed change', (event, items) => {
+  items.forEach(item => console.log('Item changed:', item));
+});
 
-Note: in some cases it is the same as calling native handler and parsing the event.
-grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
+// Listen to individual events
+grid.on('added', (event, items) => {
+  items.forEach(item => console.log('Added item:', item));
+});
 ```
 
 ###### Call Signature
@@ -1247,31 +1340,49 @@ grid.el.addEventListener('added', function(event) { log('added ', event.detail)}
 on(name, callback): GridStack;
 ```
 
-Defined in: [gridstack.ts:1259](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1259)
+Defined in: [gridstack.ts:1311](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1311)
 
-Event handler that extracts our CustomEvent data out automatically for receiving custom
-notifications (see doc for supported events)
+Register event handler for grid events. You can call this on a single event name, or space separated list.
+
+Supported events:
+- `added`: Called when widgets are being added to a grid
+- `change`: Occurs when widgets change their position/size due to constraints or direct changes
+- `disable`: Called when grid becomes disabled
+- `dragstart`: Called when grid item starts being dragged
+- `drag`: Called while grid item is being dragged (for each new row/column value)
+- `dragstop`: Called after user is done moving the item, with updated DOM attributes
+- `dropped`: Called when an item has been dropped and accepted over a grid
+- `enable`: Called when grid becomes enabled
+- `removed`: Called when items are being removed from the grid
+- `resizestart`: Called before user starts resizing an item
+- `resize`: Called while grid item is being resized (for each new row/column value)
+- `resizestop`: Called after user is done resizing the item, with updated DOM attributes
 
 ###### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | \| `"resize"` \| `"drag"` \| `"dragstart"` \| `"resizestart"` \| `"resizestop"` \| `"dragstop"` | of the event (see possible values) or list of names space separated |
-| `callback` | [`GridStackElementHandler`](#gridstackelementhandler) | function called with event and optional second/third param (see README documentation for each signature). |
+| `name` | \| `"resize"` \| `"drag"` \| `"dragstart"` \| `"resizestart"` \| `"resizestop"` \| `"dragstop"` | event name(s) to listen for (space separated for multiple) |
+| `callback` | [`GridStackElementHandler`](#gridstackelementhandler) | function to call when event occurs |
 
 ###### Returns
 
 [`GridStack`](#gridstack-1)
 
+the grid instance for chaining
+
 ###### Example
 
 ```ts
-grid.on('added', function(e, items) { log('added ', items)} );
-or
-grid.on('added removed change', function(e, items) { log(e.type, items)} );
+// Listen to multiple events at once
+grid.on('added removed change', (event, items) => {
+  items.forEach(item => console.log('Item changed:', item));
+});
 
-Note: in some cases it is the same as calling native handler and parsing the event.
-grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
+// Listen to individual events
+grid.on('added', (event, items) => {
+  items.forEach(item => console.log('Added item:', item));
+});
 ```
 
 ###### Call Signature
@@ -1280,31 +1391,49 @@ grid.el.addEventListener('added', function(event) { log('added ', event.detail)}
 on(name, callback): GridStack;
 ```
 
-Defined in: [gridstack.ts:1260](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1260)
+Defined in: [gridstack.ts:1312](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1312)
 
-Event handler that extracts our CustomEvent data out automatically for receiving custom
-notifications (see doc for supported events)
+Register event handler for grid events. You can call this on a single event name, or space separated list.
+
+Supported events:
+- `added`: Called when widgets are being added to a grid
+- `change`: Occurs when widgets change their position/size due to constraints or direct changes
+- `disable`: Called when grid becomes disabled
+- `dragstart`: Called when grid item starts being dragged
+- `drag`: Called while grid item is being dragged (for each new row/column value)
+- `dragstop`: Called after user is done moving the item, with updated DOM attributes
+- `dropped`: Called when an item has been dropped and accepted over a grid
+- `enable`: Called when grid becomes enabled
+- `removed`: Called when items are being removed from the grid
+- `resizestart`: Called before user starts resizing an item
+- `resize`: Called while grid item is being resized (for each new row/column value)
+- `resizestop`: Called after user is done resizing the item, with updated DOM attributes
 
 ###### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | `string` | of the event (see possible values) or list of names space separated |
-| `callback` | [`GridStackEventHandlerCallback`](#gridstackeventhandlercallback) | function called with event and optional second/third param (see README documentation for each signature). |
+| `name` | `string` | event name(s) to listen for (space separated for multiple) |
+| `callback` | [`GridStackEventHandlerCallback`](#gridstackeventhandlercallback) | function to call when event occurs |
 
 ###### Returns
 
 [`GridStack`](#gridstack-1)
 
+the grid instance for chaining
+
 ###### Example
 
 ```ts
-grid.on('added', function(e, items) { log('added ', items)} );
-or
-grid.on('added removed change', function(e, items) { log(e.type, items)} );
+// Listen to multiple events at once
+grid.on('added removed change', (event, items) => {
+  items.forEach(item => console.log('Item changed:', item));
+});
 
-Note: in some cases it is the same as calling native handler and parsing the event.
-grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
+// Listen to individual events
+grid.on('added', (event, items) => {
+  items.forEach(item => console.log('Added item:', item));
+});
 ```
 
 ##### onResize()
@@ -1313,7 +1442,7 @@ grid.el.addEventListener('added', function(event) { log('added ', event.detail)}
 onResize(clientWidth): GridStack;
 ```
 
-Defined in: [gridstack.ts:1973](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1973)
+Defined in: [gridstack.ts:2025](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2025)
 
 called when we are being resized - check if the one Column Mode needs to be turned on/off
 and remember the prev columns we used, or get our count from parent, as well as check for cellHeight==='auto' (square)
@@ -1335,7 +1464,7 @@ or `sizeToContent` gridItem options.
 prepareDragDrop(el, force?): GridStack;
 ```
 
-Defined in: [gridstack.ts:2659](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2659)
+Defined in: [gridstack.ts:2711](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2711)
 
 prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
 
@@ -1378,7 +1507,7 @@ replace just one instance.
 removeAll(removeDOM, triggerEvent): GridStack;
 ```
 
-Defined in: [gridstack.ts:1369](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1369)
+Defined in: [gridstack.ts:1421](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1421)
 
 Removes all widgets from the grid.
 
@@ -1423,7 +1552,7 @@ removeWidget(
    triggerEvent): GridStack;
 ```
 
-Defined in: [gridstack.ts:1331](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1331)
+Defined in: [gridstack.ts:1383](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1383)
 
 Removes widget from the grid.
 
@@ -1445,7 +1574,7 @@ Removes widget from the grid.
 resizable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2202](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2202)
+Defined in: [gridstack.ts:2254](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2254)
 
 Enables/Disables user resizing for specific grid elements.
 For all items and future items, use enableResize() instead. No-op for static grids.
@@ -1479,7 +1608,7 @@ grid.resizable('#fixed-size-widget', false);
 resizeToContent(el): void;
 ```
 
-Defined in: [gridstack.ts:1592](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1592)
+Defined in: [gridstack.ts:1644](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1644)
 
 Updates widget height to match the content height to avoid vertical scrollbars or dead space.
 This automatically adjusts the widget height based on its content size.
@@ -1515,7 +1644,7 @@ grid.resizeToContent(widget);
 rotate(els, relative?): GridStack;
 ```
 
-Defined in: [gridstack.ts:1667](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1667)
+Defined in: [gridstack.ts:1719](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1719)
 
 Rotate widgets by swapping their width and height. This is typically called when the user presses 'r' during dragging.
 The rotation swaps the w/h dimensions and adjusts min/max constraints accordingly.
@@ -1579,7 +1708,7 @@ list of widgets or full grid option, including .children list of widgets
 setAnimation(doAnimate, delay?): GridStack;
 ```
 
-Defined in: [gridstack.ts:1388](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1388)
+Defined in: [gridstack.ts:1440](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1440)
 
 Toggle the grid animation state.  Toggles the `grid-stack-animate` class.
 
@@ -1603,7 +1732,7 @@ setStatic(
    recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:1411](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1411)
+Defined in: [gridstack.ts:1463](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1463)
 
 Toggle the grid static state, which permanently removes/add Drag&Drop support, unlike disable()/enable() that just turns it off/on.
 Also toggle the grid-stack-static class.
@@ -1630,7 +1759,7 @@ static setupDragIn(
    root?): void;
 ```
 
-Defined in: [gridstack.ts:2145](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2145)
+Defined in: [gridstack.ts:2197](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2197)
 
 call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
 Called during GridStack.init() as options, but can also be called directly (last param are used) in case the toolbar
@@ -1655,7 +1784,7 @@ is dynamically create and needs to be set later.
 protected triggerEvent(event, target): void;
 ```
 
-Defined in: [gridstack.ts:2913](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2913)
+Defined in: [gridstack.ts:2965](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2965)
 
 call given event callback on our main top-most grid (if we're nested)
 
@@ -1676,7 +1805,7 @@ call given event callback on our main top-most grid (if we're nested)
 update(els, opt): GridStack;
 ```
 
-Defined in: [gridstack.ts:1488](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1488)
+Defined in: [gridstack.ts:1540](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1540)
 
 Updates widget position/size and other info. This is used to change widget properties after creation.
 Can update position, size, content, and other widget properties.
@@ -1721,7 +1850,7 @@ grid.update('#my-widget', {
 updateOptions(o): GridStack;
 ```
 
-Defined in: [gridstack.ts:1429](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1429)
+Defined in: [gridstack.ts:1481](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1481)
 
 Updates the passed in options on the grid (similar to update(widget) for for the grid options).
 
@@ -1741,7 +1870,7 @@ Updates the passed in options on the grid (similar to update(widget) for for the
 willItFit(node): boolean;
 ```
 
-Defined in: [gridstack.ts:1745](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1745)
+Defined in: [gridstack.ts:1797](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1797)
 
 Returns true if the height of the grid will be less than the vertical
 constraint. Always returns true if grid doesn't have height constraint.
@@ -3603,48 +3732,48 @@ Defines the options for a Grid
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="acceptwidgets"></a> `acceptWidgets?` | `string` \| `boolean` \| (`element`) => `boolean` | accept widgets dragged from other grids or from outside (default: `false`). Can be: `true` (uses `'.grid-stack-item'` class filter) or `false`, string for explicit class name, function returning a boolean. See [example](http://gridstack.github.io/gridstack.js/demo/two.html) | [types.ts:191](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L191) |
-| <a id="alwaysshowresizehandle"></a> `alwaysShowResizeHandle?` | `boolean` \| `"mobile"` | possible values (default: `mobile`) - does not apply to non-resizable widgets `false` the resizing handles are only shown while hovering over a widget `true` the resizing handles are always shown 'mobile' if running on a mobile device, default to `true` (since there is no hovering per say), else `false`. See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html) | [types.ts:198](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L198) |
-| <a id="animate"></a> `animate?` | `boolean` | turns animation on (default?: true) | [types.ts:201](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L201) |
-| <a id="auto"></a> `auto?` | `boolean` | if false gridstack will not initialize existing items (default?: true) | [types.ts:204](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L204) |
-| <a id="cellheight-3"></a> `cellHeight?` | [`numberOrString`](#numberorstring) | one cell height (default?: 'auto'). Can be: an integer (px) a string (ex: '100px', '10em', '10rem'). Note: % doesn't work right - see demo/cell-height.html 0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files. 'auto' - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle` 'initial' - similar to 'auto' (start at square cells) but stay that size during window resizing. | [types.ts:214](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L214) |
-| <a id="cellheightthrottle"></a> `cellHeightThrottle?` | `number` | throttle time delay (in ms) used when cellHeight='auto' to improve performance vs usability (default?: 100). A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event! | [types.ts:219](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L219) |
-| <a id="cellheightunit"></a> `cellHeightUnit?` | `string` | (internal) unit for cellHeight (default? 'px') which is set when a string cellHeight with a unit is passed (ex: '10rem') | [types.ts:222](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L222) |
-| <a id="children"></a> `children?` | [`GridStackWidget`](#gridstackwidget)[] | list of children item to create when calling load() or addGrid() | [types.ts:225](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L225) |
-| <a id="class"></a> `class?` | `string` | additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance. Note: only used by addGrid(), else your element should have the needed class | [types.ts:238](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L238) |
-| <a id="column-4"></a> `column?` | `number` \| `"auto"` | number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns. Note: for nested grids, it is recommended to use 'auto' which will always match the container grid-item current width (in column) to keep inside and outside items always the same. flag is NOT supported for regular non-nested grids. | [types.ts:231](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L231) |
-| <a id="columnopts"></a> `columnOpts?` | [`Responsive`](#responsive) | responsive column layout for width:column behavior | [types.ts:234](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L234) |
-| <a id="disabledrag"></a> `disableDrag?` | `boolean` | disallows dragging of widgets (default?: false) | [types.ts:241](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L241) |
-| <a id="disableresize"></a> `disableResize?` | `boolean` | disallows resizing of widgets (default?: false). | [types.ts:244](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L244) |
-| <a id="draggable-3"></a> `draggable?` | [`DDDragOpt`](#dddragopt) | allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', appendTo?: 'body' }) | [types.ts:247](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L247) |
-| <a id="engineclass-1"></a> `engineClass?` | *typeof* [`GridStackEngine`](#gridstackengine-2) | the type of engine to create (so you can subclass) default to GridStackEngine | [types.ts:253](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L253) |
-| <a id="float-4"></a> `float?` | `boolean` | enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) | [types.ts:256](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L256) |
-| <a id="handle-1"></a> `handle?` | `string` | draggable handle selector (default?: '.grid-stack-item-content') | [types.ts:259](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L259) |
-| <a id="handleclass"></a> `handleClass?` | `string` | draggable handle class (e.g. 'grid-stack-item-content'). If set 'handle' is ignored (default?: null) | [types.ts:262](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L262) |
-| <a id="itemclass"></a> `itemClass?` | `string` | additional widget class (default?: 'grid-stack-item') | [types.ts:265](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L265) |
-| <a id="layout-1"></a> `layout?` | [`ColumnOptions`](#columnoptions) | re-layout mode when we're a subgrid and we are being resized. default to 'list' | [types.ts:268](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L268) |
-| <a id="lazyload-1"></a> `lazyLoad?` | `boolean` | true when widgets are only created when they scroll into view (visible) | [types.ts:271](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L271) |
-| <a id="margin-2"></a> `margin?` | [`numberOrString`](#numberorstring) | gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below an integer (px) a string with possible units (ex: '2em', '20px', '2rem') string with space separated values (ex: '5px 10px 0 20px' for all 4 sides, or '5em 10em' for top/bottom and left/right pairs like CSS). Note: all sides must have same units (last one wins, default px) | [types.ts:280](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L280) |
-| <a id="marginbottom-1"></a> `marginBottom?` | [`numberOrString`](#numberorstring) | - | [types.ts:285](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L285) |
-| <a id="marginleft-1"></a> `marginLeft?` | [`numberOrString`](#numberorstring) | - | [types.ts:286](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L286) |
-| <a id="marginright-1"></a> `marginRight?` | [`numberOrString`](#numberorstring) | - | [types.ts:284](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L284) |
-| <a id="margintop-1"></a> `marginTop?` | [`numberOrString`](#numberorstring) | OLD way to optionally set each side - use margin: '5px 10px 0 20px' instead. Used internally to store each side. | [types.ts:283](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L283) |
-| <a id="marginunit"></a> `marginUnit?` | `string` | (internal) unit for margin (default? 'px') set when `margin` is set as string with unit (ex: 2rem') | [types.ts:289](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L289) |
-| <a id="maxrow-2"></a> `maxRow?` | `number` | maximum rows amount. Default? is 0 which means no maximum rows | [types.ts:292](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L292) |
-| <a id="minrow"></a> `minRow?` | `number` | minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. When no set the `min-height` CSS attribute on the grid div (in pixels) can be used, which will round to the closest row. | [types.ts:297](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L297) |
-| <a id="nonce"></a> `nonce?` | `string` | If you are using a nonce-based Content Security Policy, pass your nonce here and GridStack will add it to the <style> elements it creates. | [types.ts:301](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L301) |
-| <a id="placeholderclass"></a> `placeholderClass?` | `string` | class for placeholder (default?: 'grid-stack-placeholder') | [types.ts:304](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L304) |
-| <a id="placeholdertext"></a> `placeholderText?` | `string` | placeholder default content (default?: '') | [types.ts:307](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L307) |
-| <a id="removable"></a> `removable?` | `string` \| `boolean` | if true widgets could be removed by dragging outside of the grid. It could also be a selector string (ex: ".trash"), in this case widgets will be removed by dropping them there (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/two.html) | [types.ts:317](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L317) |
-| <a id="removableoptions"></a> `removableOptions?` | [`DDRemoveOpt`](#ddremoveopt) | allows to override UI removable options. (default?: { accept: '.grid-stack-item' }) | [types.ts:320](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L320) |
-| <a id="resizable-4"></a> `resizable?` | [`DDResizeOpt`](#ddresizeopt) | allows to override UI resizable options. (default?: { handles: 'se' }) | [types.ts:310](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L310) |
-| <a id="row"></a> `row?` | `number` | fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain) | [types.ts:323](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L323) |
-| <a id="rtl"></a> `rtl?` | `boolean` \| `"auto"` | if true turns grid to RTL. Possible values are true, false, 'auto' (default?: 'auto') See [example](http://gridstack.github.io/gridstack.js/demo/right-to-left(rtl).html) | [types.ts:329](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L329) |
-| <a id="sizetocontent-1"></a> `sizeToContent?` | `boolean` | set to true if all grid items (by default, but item can also override) height should be based on content size instead of WidgetItem.h to avoid v-scrollbars. Note: this is still row based, not pixels, so it will use ceil(getBoundingClientRect().height / getCellHeight()) | [types.ts:334](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L334) |
-| <a id="staticgrid"></a> `staticGrid?` | `boolean` | makes grid static (default?: false). If `true` widgets are not movable/resizable. You don't even need draggable/resizable. A CSS class 'grid-stack-static' is also added to the element. | [types.ts:341](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L341) |
-| <a id="styleinhead"></a> ~~`styleInHead?`~~ | `boolean` | **Deprecated** Not used anymore, styles are now implemented with local CSS variables | [types.ts:346](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L346) |
-| <a id="subgriddynamic"></a> `subGridDynamic?` | `boolean` | enable/disable the creation of sub-grids on the fly by dragging items completely over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that. | [types.ts:353](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L353) |
-| <a id="subgridopts-1"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | list of differences in options for automatically created sub-grids under us (inside our grid-items) | [types.ts:349](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L349) |
+| <a id="acceptwidgets"></a> `acceptWidgets?` | `string` \| `boolean` \| (`element`) => `boolean` | Accept widgets dragged from other grids or from outside (default: `false`). Can be: - `true`: will accept HTML elements having 'grid-stack-item' as class attribute - `false`: will not accept any external widgets - string: explicit class name to accept instead of default - function: callback called before an item will be accepted when entering a grid **Example** `// Accept all grid items acceptWidgets: true // Accept only items with specific class acceptWidgets: 'my-draggable-item' // Custom validation function acceptWidgets: (el) => { return el.getAttribute('data-accept') === 'true'; }` **See** [http://gridstack.github.io/gridstack.js/demo/two.html](http://gridstack.github.io/gridstack.js/demo/two.html) for complete example | [types.ts:206](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L206) |
+| <a id="alwaysshowresizehandle"></a> `alwaysShowResizeHandle?` | `boolean` \| `"mobile"` | possible values (default: `mobile`) - does not apply to non-resizable widgets `false` the resizing handles are only shown while hovering over a widget `true` the resizing handles are always shown 'mobile' if running on a mobile device, default to `true` (since there is no hovering per say), else `false`. See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html) | [types.ts:213](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L213) |
+| <a id="animate"></a> `animate?` | `boolean` | turns animation on (default?: true) | [types.ts:216](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L216) |
+| <a id="auto"></a> `auto?` | `boolean` | if false gridstack will not initialize existing items (default?: true) | [types.ts:219](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L219) |
+| <a id="cellheight-3"></a> `cellHeight?` | [`numberOrString`](#numberorstring) | One cell height (default: 'auto'). Can be: - an integer (px): fixed pixel height - a string (ex: '100px', '10em', '10rem'): CSS length value - 0: library will not generate styles for rows (define your own CSS) - 'auto': height calculated for square cells (width / column) and updated live on window resize - 'initial': similar to 'auto' but stays fixed size during window resizing Note: % values don't work correctly - see demo/cell-height.html **Example** `// Fixed 100px height cellHeight: 100 // CSS units cellHeight: '5rem' cellHeight: '100px' // Auto-sizing for square cells cellHeight: 'auto' // No CSS generation (custom styles) cellHeight: 0` | [types.ts:245](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L245) |
+| <a id="cellheightthrottle"></a> `cellHeightThrottle?` | `number` | throttle time delay (in ms) used when cellHeight='auto' to improve performance vs usability (default?: 100). A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event! | [types.ts:250](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L250) |
+| <a id="cellheightunit"></a> `cellHeightUnit?` | `string` | (internal) unit for cellHeight (default? 'px') which is set when a string cellHeight with a unit is passed (ex: '10rem') | [types.ts:253](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L253) |
+| <a id="children"></a> `children?` | [`GridStackWidget`](#gridstackwidget)[] | list of children item to create when calling load() or addGrid() | [types.ts:256](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L256) |
+| <a id="class"></a> `class?` | `string` | additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance. Note: only used by addGrid(), else your element should have the needed class | [types.ts:269](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L269) |
+| <a id="column-4"></a> `column?` | `number` \| `"auto"` | number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns. Note: for nested grids, it is recommended to use 'auto' which will always match the container grid-item current width (in column) to keep inside and outside items always the same. flag is NOT supported for regular non-nested grids. | [types.ts:262](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L262) |
+| <a id="columnopts"></a> `columnOpts?` | [`Responsive`](#responsive) | responsive column layout for width:column behavior | [types.ts:265](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L265) |
+| <a id="disabledrag"></a> `disableDrag?` | `boolean` | disallows dragging of widgets (default?: false) | [types.ts:272](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L272) |
+| <a id="disableresize"></a> `disableResize?` | `boolean` | disallows resizing of widgets (default?: false). | [types.ts:275](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L275) |
+| <a id="draggable-3"></a> `draggable?` | [`DDDragOpt`](#dddragopt) | allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', appendTo?: 'body' }) | [types.ts:278](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L278) |
+| <a id="engineclass-1"></a> `engineClass?` | *typeof* [`GridStackEngine`](#gridstackengine-2) | the type of engine to create (so you can subclass) default to GridStackEngine | [types.ts:284](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L284) |
+| <a id="float-4"></a> `float?` | `boolean` | enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) | [types.ts:287](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L287) |
+| <a id="handle-1"></a> `handle?` | `string` | draggable handle selector (default?: '.grid-stack-item-content') | [types.ts:290](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L290) |
+| <a id="handleclass"></a> `handleClass?` | `string` | draggable handle class (e.g. 'grid-stack-item-content'). If set 'handle' is ignored (default?: null) | [types.ts:293](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L293) |
+| <a id="itemclass"></a> `itemClass?` | `string` | additional widget class (default?: 'grid-stack-item') | [types.ts:296](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L296) |
+| <a id="layout-1"></a> `layout?` | [`ColumnOptions`](#columnoptions) | re-layout mode when we're a subgrid and we are being resized. default to 'list' | [types.ts:299](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L299) |
+| <a id="lazyload-1"></a> `lazyLoad?` | `boolean` | true when widgets are only created when they scroll into view (visible) | [types.ts:302](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L302) |
+| <a id="margin-2"></a> `margin?` | [`numberOrString`](#numberorstring) | gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below an integer (px) a string with possible units (ex: '2em', '20px', '2rem') string with space separated values (ex: '5px 10px 0 20px' for all 4 sides, or '5em 10em' for top/bottom and left/right pairs like CSS). Note: all sides must have same units (last one wins, default px) | [types.ts:311](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L311) |
+| <a id="marginbottom-1"></a> `marginBottom?` | [`numberOrString`](#numberorstring) | - | [types.ts:316](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L316) |
+| <a id="marginleft-1"></a> `marginLeft?` | [`numberOrString`](#numberorstring) | - | [types.ts:317](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L317) |
+| <a id="marginright-1"></a> `marginRight?` | [`numberOrString`](#numberorstring) | - | [types.ts:315](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L315) |
+| <a id="margintop-1"></a> `marginTop?` | [`numberOrString`](#numberorstring) | OLD way to optionally set each side - use margin: '5px 10px 0 20px' instead. Used internally to store each side. | [types.ts:314](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L314) |
+| <a id="marginunit"></a> `marginUnit?` | `string` | (internal) unit for margin (default? 'px') set when `margin` is set as string with unit (ex: 2rem') | [types.ts:320](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L320) |
+| <a id="maxrow-2"></a> `maxRow?` | `number` | maximum rows amount. Default? is 0 which means no maximum rows | [types.ts:323](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L323) |
+| <a id="minrow"></a> `minRow?` | `number` | minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. When no set the `min-height` CSS attribute on the grid div (in pixels) can be used, which will round to the closest row. | [types.ts:328](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L328) |
+| <a id="nonce"></a> `nonce?` | `string` | If you are using a nonce-based Content Security Policy, pass your nonce here and GridStack will add it to the <style> elements it creates. | [types.ts:332](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L332) |
+| <a id="placeholderclass"></a> `placeholderClass?` | `string` | class for placeholder (default?: 'grid-stack-placeholder') | [types.ts:335](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L335) |
+| <a id="placeholdertext"></a> `placeholderText?` | `string` | placeholder default content (default?: '') | [types.ts:338](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L338) |
+| <a id="removable"></a> `removable?` | `string` \| `boolean` | if true widgets could be removed by dragging outside of the grid. It could also be a selector string (ex: ".trash"), in this case widgets will be removed by dropping them there (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/two.html) | [types.ts:348](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L348) |
+| <a id="removableoptions"></a> `removableOptions?` | [`DDRemoveOpt`](#ddremoveopt) | allows to override UI removable options. (default?: { accept: '.grid-stack-item' }) | [types.ts:351](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L351) |
+| <a id="resizable-4"></a> `resizable?` | [`DDResizeOpt`](#ddresizeopt) | allows to override UI resizable options. (default?: { handles: 'se' }) | [types.ts:341](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L341) |
+| <a id="row"></a> `row?` | `number` | fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain) | [types.ts:354](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L354) |
+| <a id="rtl"></a> `rtl?` | `boolean` \| `"auto"` | if true turns grid to RTL. Possible values are true, false, 'auto' (default?: 'auto') See [example](http://gridstack.github.io/gridstack.js/demo/right-to-left(rtl).html) | [types.ts:360](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L360) |
+| <a id="sizetocontent-1"></a> `sizeToContent?` | `boolean` | set to true if all grid items (by default, but item can also override) height should be based on content size instead of WidgetItem.h to avoid v-scrollbars. Note: this is still row based, not pixels, so it will use ceil(getBoundingClientRect().height / getCellHeight()) | [types.ts:365](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L365) |
+| <a id="staticgrid"></a> `staticGrid?` | `boolean` | makes grid static (default?: false). If `true` widgets are not movable/resizable. You don't even need draggable/resizable. A CSS class 'grid-stack-static' is also added to the element. | [types.ts:372](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L372) |
+| <a id="styleinhead"></a> ~~`styleInHead?`~~ | `boolean` | **Deprecated** Not used anymore, styles are now implemented with local CSS variables | [types.ts:377](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L377) |
+| <a id="subgriddynamic"></a> `subGridDynamic?` | `boolean` | enable/disable the creation of sub-grids on the fly by dragging items completely over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that. | [types.ts:384](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L384) |
+| <a id="subgridopts-1"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | list of differences in options for automatically created sub-grids under us (inside our grid-items) | [types.ts:380](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L380) |
 
 ***
 
@@ -5093,7 +5222,7 @@ Defines the position of a cell inside the grid
 <a id="dddragopt"></a>
 ### DDDragOpt
 
-Defined in: [types.ts:447](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L447)
+Defined in: [types.ts:478](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L478)
 
 Drag&Drop dragging options
 
@@ -5101,15 +5230,15 @@ Drag&Drop dragging options
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="appendto"></a> `appendTo?` | `string` | default to 'body' | [types.ts:451](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L451) |
-| <a id="cancel"></a> `cancel?` | `string` | prevents dragging from starting on specified elements, listed as comma separated selectors (eg: '.no-drag'). default built in is 'input,textarea,button,select,option' | [types.ts:457](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L457) |
-| <a id="drag"></a> `drag?` | (`event`, `ui`) => `void` | - | [types.ts:463](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L463) |
-| <a id="handle"></a> `handle?` | `string` | class selector of items that can be dragged. default to '.grid-stack-item-content' | [types.ts:449](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L449) |
-| <a id="helper-1"></a> `helper?` | `"clone"` \| (`el`) => `HTMLElement` | helper function when dropping: 'clone' or your own method | [types.ts:459](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L459) |
-| <a id="pause"></a> `pause?` | `number` \| `boolean` | if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global | [types.ts:453](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L453) |
-| <a id="scroll"></a> `scroll?` | `boolean` | default to `true` | [types.ts:455](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L455) |
-| <a id="start"></a> `start?` | (`event`, `ui`) => `void` | callbacks | [types.ts:461](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L461) |
-| <a id="stop"></a> `stop?` | (`event`) => `void` | - | [types.ts:462](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L462) |
+| <a id="appendto"></a> `appendTo?` | `string` | default to 'body' | [types.ts:482](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L482) |
+| <a id="cancel"></a> `cancel?` | `string` | prevents dragging from starting on specified elements, listed as comma separated selectors (eg: '.no-drag'). default built in is 'input,textarea,button,select,option' | [types.ts:488](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L488) |
+| <a id="drag"></a> `drag?` | (`event`, `ui`) => `void` | - | [types.ts:494](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L494) |
+| <a id="handle"></a> `handle?` | `string` | class selector of items that can be dragged. default to '.grid-stack-item-content' | [types.ts:480](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L480) |
+| <a id="helper-1"></a> `helper?` | `"clone"` \| (`el`) => `HTMLElement` | helper function when dropping: 'clone' or your own method | [types.ts:490](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L490) |
+| <a id="pause"></a> `pause?` | `number` \| `boolean` | if set (true | msec), dragging placement (collision) will only happen after a pause by the user. Note: this is Global | [types.ts:484](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L484) |
+| <a id="scroll"></a> `scroll?` | `boolean` | default to `true` | [types.ts:486](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L486) |
+| <a id="start"></a> `start?` | (`event`, `ui`) => `void` | callbacks | [types.ts:492](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L492) |
+| <a id="stop"></a> `stop?` | (`event`) => `void` | - | [types.ts:493](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L493) |
 
 ***
 
@@ -5153,7 +5282,7 @@ All grid item DOM elements implement this interface to provide access to their g
 <a id="ddremoveopt"></a>
 ### DDRemoveOpt
 
-Defined in: [types.ts:439](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L439)
+Defined in: [types.ts:470](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L470)
 
 Drag&Drop remove options
 
@@ -5161,8 +5290,8 @@ Drag&Drop remove options
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="accept-3"></a> `accept?` | `string` | class that can be removed (default?: opts.itemClass) | [types.ts:441](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L441) |
-| <a id="decline"></a> `decline?` | `string` | class that cannot be removed (default: 'grid-stack-non-removable') | [types.ts:443](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L443) |
+| <a id="accept-3"></a> `accept?` | `string` | class that can be removed (default?: opts.itemClass) | [types.ts:472](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L472) |
+| <a id="decline"></a> `decline?` | `string` | class that cannot be removed (default: 'grid-stack-non-removable') | [types.ts:474](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L474) |
 
 ***
 
@@ -5207,7 +5336,7 @@ Defined in: [dd-resizable.ts:15](https://github.com/adumesny/gridstack.js/blob/m
 <a id="ddresizeopt"></a>
 ### DDResizeOpt
 
-Defined in: [types.ts:428](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L428)
+Defined in: [types.ts:459](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L459)
 
 Drag&Drop resize options
 
@@ -5215,15 +5344,15 @@ Drag&Drop resize options
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="autohide-1"></a> `autoHide?` | `boolean` | do resize handle hide by default until mouse over ? - default: true on desktop, false on mobile | [types.ts:430](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L430) |
-| <a id="handles-1"></a> `handles?` | `string` | sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east) Note: it is not recommended to resize from the top sides as weird side effect may occur. | [types.ts:435](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L435) |
+| <a id="autohide-1"></a> `autoHide?` | `boolean` | do resize handle hide by default until mouse over ? - default: true on desktop, false on mobile | [types.ts:461](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L461) |
+| <a id="handles-1"></a> `handles?` | `string` | sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east) Note: it is not recommended to resize from the top sides as weird side effect may occur. | [types.ts:466](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L466) |
 
 ***
 
 <a id="dduidata"></a>
 ### DDUIData
 
-Defined in: [types.ts:476](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L476)
+Defined in: [types.ts:507](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L507)
 
 data that is passed during drag and resizing callbacks
 
@@ -5231,9 +5360,9 @@ data that is passed during drag and resizing callbacks
 
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="draggable-2"></a> `draggable?` | `HTMLElement` | [types.ts:479](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L479) |
-| <a id="position"></a> `position?` | [`Position`](#position-1) | [types.ts:477](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L477) |
-| <a id="size"></a> `size?` | [`Size`](#size-1) | [types.ts:478](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L478) |
+| <a id="draggable-2"></a> `draggable?` | `HTMLElement` | [types.ts:510](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L510) |
+| <a id="position"></a> `position?` | [`Position`](#position-1) | [types.ts:508](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L508) |
+| <a id="size"></a> `size?` | [`Size`](#size-1) | [types.ts:509](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L509) |
 
 ***
 
@@ -5316,7 +5445,7 @@ options used during creation - similar to GridStackOptions
 <a id="gridstackmoveopts"></a>
 ### GridStackMoveOpts
 
-Defined in: [types.ts:357](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L357)
+Defined in: [types.ts:388](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L388)
 
 options used during GridStackEngine.moveNode()
 
@@ -5328,30 +5457,30 @@ options used during GridStackEngine.moveNode()
 
 | Property | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="cellheight-2"></a> `cellHeight?` | `number` | - | - | [types.ts:366](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L366) |
-| <a id="cellwidth-2"></a> `cellWidth?` | `number` | vars to calculate other cells coordinates | - | [types.ts:365](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L365) |
-| <a id="collide-2"></a> `collide?` | [`GridStackNode`](#gridstacknode-2) | best node (most coverage) we collied with | - | [types.ts:376](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L376) |
-| <a id="forcecollide"></a> `forceCollide?` | `boolean` | for collision check even if we don't move | - | [types.ts:378](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L378) |
-| <a id="h"></a> `h?` | `number` | widget dimension height (default?: 1) | [`GridStackPosition`](#gridstackposition).[`h`](#h-2) | [types.ts:389](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L389) |
-| <a id="marginbottom"></a> `marginBottom?` | `number` | - | - | [types.ts:368](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L368) |
-| <a id="marginleft"></a> `marginLeft?` | `number` | - | - | [types.ts:369](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L369) |
-| <a id="marginright"></a> `marginRight?` | `number` | - | - | [types.ts:370](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L370) |
-| <a id="margintop"></a> `marginTop?` | `number` | - | - | [types.ts:367](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L367) |
-| <a id="nested"></a> `nested?` | `boolean` | true if we are calling this recursively to prevent simple swap or coverage collision - default false | - | [types.ts:363](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L363) |
-| <a id="pack"></a> `pack?` | `boolean` | do we pack (default true) | - | [types.ts:361](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L361) |
-| <a id="rect"></a> `rect?` | [`GridStackPosition`](#gridstackposition) | position in pixels of the currently dragged items (for overlap check) | - | [types.ts:372](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L372) |
-| <a id="resizing"></a> `resizing?` | `boolean` | true if we're live resizing | - | [types.ts:374](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L374) |
-| <a id="skip"></a> `skip?` | [`GridStackNode`](#gridstacknode-2) | node to skip collision | - | [types.ts:359](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L359) |
-| <a id="w-1"></a> `w?` | `number` | widget dimension width (default?: 1) | [`GridStackPosition`](#gridstackposition).[`w`](#w-3) | [types.ts:387](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L387) |
-| <a id="x-1"></a> `x?` | `number` | widget position x (default?: 0) | [`GridStackPosition`](#gridstackposition).[`x`](#x-3) | [types.ts:383](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L383) |
-| <a id="y-1"></a> `y?` | `number` | widget position y (default?: 0) | [`GridStackPosition`](#gridstackposition).[`y`](#y-3) | [types.ts:385](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L385) |
+| <a id="cellheight-2"></a> `cellHeight?` | `number` | - | - | [types.ts:397](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L397) |
+| <a id="cellwidth-2"></a> `cellWidth?` | `number` | vars to calculate other cells coordinates | - | [types.ts:396](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L396) |
+| <a id="collide-2"></a> `collide?` | [`GridStackNode`](#gridstacknode-2) | best node (most coverage) we collied with | - | [types.ts:407](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L407) |
+| <a id="forcecollide"></a> `forceCollide?` | `boolean` | for collision check even if we don't move | - | [types.ts:409](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L409) |
+| <a id="h"></a> `h?` | `number` | widget dimension height (default?: 1) | [`GridStackPosition`](#gridstackposition).[`h`](#h-2) | [types.ts:420](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L420) |
+| <a id="marginbottom"></a> `marginBottom?` | `number` | - | - | [types.ts:399](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L399) |
+| <a id="marginleft"></a> `marginLeft?` | `number` | - | - | [types.ts:400](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L400) |
+| <a id="marginright"></a> `marginRight?` | `number` | - | - | [types.ts:401](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L401) |
+| <a id="margintop"></a> `marginTop?` | `number` | - | - | [types.ts:398](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L398) |
+| <a id="nested"></a> `nested?` | `boolean` | true if we are calling this recursively to prevent simple swap or coverage collision - default false | - | [types.ts:394](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L394) |
+| <a id="pack"></a> `pack?` | `boolean` | do we pack (default true) | - | [types.ts:392](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L392) |
+| <a id="rect"></a> `rect?` | [`GridStackPosition`](#gridstackposition) | position in pixels of the currently dragged items (for overlap check) | - | [types.ts:403](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L403) |
+| <a id="resizing"></a> `resizing?` | `boolean` | true if we're live resizing | - | [types.ts:405](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L405) |
+| <a id="skip"></a> `skip?` | [`GridStackNode`](#gridstacknode-2) | node to skip collision | - | [types.ts:390](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L390) |
+| <a id="w-1"></a> `w?` | `number` | widget dimension width (default?: 1) | [`GridStackPosition`](#gridstackposition).[`w`](#w-3) | [types.ts:418](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L418) |
+| <a id="x-1"></a> `x?` | `number` | widget position x (default?: 0) | [`GridStackPosition`](#gridstackposition).[`x`](#x-3) | [types.ts:414](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L414) |
+| <a id="y-1"></a> `y?` | `number` | widget position y (default?: 0) | [`GridStackPosition`](#gridstackposition).[`y`](#y-3) | [types.ts:416](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L416) |
 
 ***
 
 <a id="gridstacknode-2"></a>
 ### GridStackNode
 
-Defined in: [types.ts:493](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L493)
+Defined in: [types.ts:524](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L524)
 
 internal runtime descriptions describing the widgets in the grid
 
@@ -5363,35 +5492,35 @@ internal runtime descriptions describing the widgets in the grid
 
 | Property | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="autoposition"></a> `autoPosition?` | `boolean` | if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) | [`GridStackWidget`](#gridstackwidget).[`autoPosition`](#autoposition-1) | [types.ts:397](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L397) |
-| <a id="content"></a> `content?` | `string` | html to append inside as content | [`GridStackWidget`](#gridstackwidget).[`content`](#content-1) | [types.ts:415](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L415) |
-| <a id="el-5"></a> `el?` | [`GridItemHTMLElement`](#griditemhtmlelement) | pointer back to HTML element | - | [types.ts:495](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L495) |
-| <a id="grid"></a> `grid?` | [`GridStack`](#gridstack-1) | pointer back to parent Grid instance | - | [types.ts:497](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L497) |
-| <a id="h-1"></a> `h?` | `number` | widget dimension height (default?: 1) | [`GridStackWidget`](#gridstackwidget).[`h`](#h-3) | [types.ts:389](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L389) |
-| <a id="id"></a> `id?` | `string` | value for `gs-id` stored on the widget (default?: undefined) | [`GridStackWidget`](#gridstackwidget).[`id`](#id-1) | [types.ts:413](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L413) |
-| <a id="lazyload"></a> `lazyLoad?` | `boolean` | true when widgets are only created when they scroll into view (visible) | [`GridStackWidget`](#gridstackwidget).[`lazyLoad`](#lazyload-2) | [types.ts:417](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L417) |
-| <a id="locked"></a> `locked?` | `boolean` | prevents being pushed by other widgets or api (default?: undefined = un-constrained), which is different from `noMove` (user action only) | [`GridStackWidget`](#gridstackwidget).[`locked`](#locked-1) | [types.ts:411](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L411) |
-| <a id="maxh"></a> `maxH?` | `number` | maximum height allowed during resize/creation (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`maxH`](#maxh-1) | [types.ts:405](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L405) |
-| <a id="maxw"></a> `maxW?` | `number` | maximum width allowed during resize/creation (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`maxW`](#maxw-1) | [types.ts:401](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L401) |
-| <a id="minh"></a> `minH?` | `number` | minimum height allowed during resize/creation (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`minH`](#minh-1) | [types.ts:403](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L403) |
-| <a id="minw"></a> `minW?` | `number` | minimum width allowed during resize/creation (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`minW`](#minw-1) | [types.ts:399](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L399) |
-| <a id="nomove"></a> `noMove?` | `boolean` | prevents direct moving by the user (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`noMove`](#nomove-1) | [types.ts:409](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L409) |
-| <a id="noresize"></a> `noResize?` | `boolean` | prevent direct resizing by the user (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`noResize`](#noresize-1) | [types.ts:407](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L407) |
-| <a id="resizetocontentparent-1"></a> `resizeToContentParent?` | `string` | local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height | [`GridStackWidget`](#gridstackwidget).[`resizeToContentParent`](#resizetocontentparent-2) | [types.ts:422](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L422) |
-| <a id="sizetocontent"></a> `sizeToContent?` | `number` \| `boolean` | local (vs grid) override - see GridStackOptions. Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) | [`GridStackWidget`](#gridstackwidget).[`sizeToContent`](#sizetocontent-2) | [types.ts:420](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L420) |
-| <a id="subgrid"></a> `subGrid?` | [`GridStack`](#gridstack-1) | actual sub-grid instance | - | [types.ts:499](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L499) |
-| <a id="subgridopts"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | optional nested grid options and list of children, which then turns into actual instance at runtime to get options from | [`GridStackWidget`](#gridstackwidget).[`subGridOpts`](#subgridopts-2) | [types.ts:424](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L424) |
-| <a id="visibleobservable"></a> `visibleObservable?` | `IntersectionObserver` | allow delay creation when visible | - | [types.ts:501](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L501) |
-| <a id="w-2"></a> `w?` | `number` | widget dimension width (default?: 1) | [`GridStackWidget`](#gridstackwidget).[`w`](#w-4) | [types.ts:387](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L387) |
-| <a id="x-2"></a> `x?` | `number` | widget position x (default?: 0) | [`GridStackWidget`](#gridstackwidget).[`x`](#x-4) | [types.ts:383](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L383) |
-| <a id="y-2"></a> `y?` | `number` | widget position y (default?: 0) | [`GridStackWidget`](#gridstackwidget).[`y`](#y-4) | [types.ts:385](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L385) |
+| <a id="autoposition"></a> `autoPosition?` | `boolean` | if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) | [`GridStackWidget`](#gridstackwidget).[`autoPosition`](#autoposition-1) | [types.ts:428](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L428) |
+| <a id="content"></a> `content?` | `string` | html to append inside as content | [`GridStackWidget`](#gridstackwidget).[`content`](#content-1) | [types.ts:446](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L446) |
+| <a id="el-5"></a> `el?` | [`GridItemHTMLElement`](#griditemhtmlelement) | pointer back to HTML element | - | [types.ts:526](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L526) |
+| <a id="grid"></a> `grid?` | [`GridStack`](#gridstack-1) | pointer back to parent Grid instance | - | [types.ts:528](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L528) |
+| <a id="h-1"></a> `h?` | `number` | widget dimension height (default?: 1) | [`GridStackWidget`](#gridstackwidget).[`h`](#h-3) | [types.ts:420](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L420) |
+| <a id="id"></a> `id?` | `string` | value for `gs-id` stored on the widget (default?: undefined) | [`GridStackWidget`](#gridstackwidget).[`id`](#id-1) | [types.ts:444](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L444) |
+| <a id="lazyload"></a> `lazyLoad?` | `boolean` | true when widgets are only created when they scroll into view (visible) | [`GridStackWidget`](#gridstackwidget).[`lazyLoad`](#lazyload-2) | [types.ts:448](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L448) |
+| <a id="locked"></a> `locked?` | `boolean` | prevents being pushed by other widgets or api (default?: undefined = un-constrained), which is different from `noMove` (user action only) | [`GridStackWidget`](#gridstackwidget).[`locked`](#locked-1) | [types.ts:442](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L442) |
+| <a id="maxh"></a> `maxH?` | `number` | maximum height allowed during resize/creation (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`maxH`](#maxh-1) | [types.ts:436](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L436) |
+| <a id="maxw"></a> `maxW?` | `number` | maximum width allowed during resize/creation (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`maxW`](#maxw-1) | [types.ts:432](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L432) |
+| <a id="minh"></a> `minH?` | `number` | minimum height allowed during resize/creation (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`minH`](#minh-1) | [types.ts:434](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L434) |
+| <a id="minw"></a> `minW?` | `number` | minimum width allowed during resize/creation (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`minW`](#minw-1) | [types.ts:430](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L430) |
+| <a id="nomove"></a> `noMove?` | `boolean` | prevents direct moving by the user (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`noMove`](#nomove-1) | [types.ts:440](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L440) |
+| <a id="noresize"></a> `noResize?` | `boolean` | prevent direct resizing by the user (default?: undefined = un-constrained) | [`GridStackWidget`](#gridstackwidget).[`noResize`](#noresize-1) | [types.ts:438](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L438) |
+| <a id="resizetocontentparent-1"></a> `resizeToContentParent?` | `string` | local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height | [`GridStackWidget`](#gridstackwidget).[`resizeToContentParent`](#resizetocontentparent-2) | [types.ts:453](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L453) |
+| <a id="sizetocontent"></a> `sizeToContent?` | `number` \| `boolean` | local (vs grid) override - see GridStackOptions. Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) | [`GridStackWidget`](#gridstackwidget).[`sizeToContent`](#sizetocontent-2) | [types.ts:451](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L451) |
+| <a id="subgrid"></a> `subGrid?` | [`GridStack`](#gridstack-1) | actual sub-grid instance | - | [types.ts:530](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L530) |
+| <a id="subgridopts"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | optional nested grid options and list of children, which then turns into actual instance at runtime to get options from | [`GridStackWidget`](#gridstackwidget).[`subGridOpts`](#subgridopts-2) | [types.ts:455](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L455) |
+| <a id="visibleobservable"></a> `visibleObservable?` | `IntersectionObserver` | allow delay creation when visible | - | [types.ts:532](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L532) |
+| <a id="w-2"></a> `w?` | `number` | widget dimension width (default?: 1) | [`GridStackWidget`](#gridstackwidget).[`w`](#w-4) | [types.ts:418](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L418) |
+| <a id="x-2"></a> `x?` | `number` | widget position x (default?: 0) | [`GridStackWidget`](#gridstackwidget).[`x`](#x-4) | [types.ts:414](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L414) |
+| <a id="y-2"></a> `y?` | `number` | widget position y (default?: 0) | [`GridStackWidget`](#gridstackwidget).[`y`](#y-4) | [types.ts:416](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L416) |
 
 ***
 
 <a id="gridstackposition"></a>
 ### GridStackPosition
 
-Defined in: [types.ts:381](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L381)
+Defined in: [types.ts:412](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L412)
 
 #### Extended by
 
@@ -5402,17 +5531,17 @@ Defined in: [types.ts:381](https://github.com/adumesny/gridstack.js/blob/master/
 
 | Property | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="h-2"></a> `h?` | `number` | widget dimension height (default?: 1) | [types.ts:389](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L389) |
-| <a id="w-3"></a> `w?` | `number` | widget dimension width (default?: 1) | [types.ts:387](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L387) |
-| <a id="x-3"></a> `x?` | `number` | widget position x (default?: 0) | [types.ts:383](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L383) |
-| <a id="y-3"></a> `y?` | `number` | widget position y (default?: 0) | [types.ts:385](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L385) |
+| <a id="h-2"></a> `h?` | `number` | widget dimension height (default?: 1) | [types.ts:420](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L420) |
+| <a id="w-3"></a> `w?` | `number` | widget dimension width (default?: 1) | [types.ts:418](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L418) |
+| <a id="x-3"></a> `x?` | `number` | widget position x (default?: 0) | [types.ts:414](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L414) |
+| <a id="y-3"></a> `y?` | `number` | widget position y (default?: 0) | [types.ts:416](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L416) |
 
 ***
 
 <a id="gridstackwidget"></a>
 ### GridStackWidget
 
-Defined in: [types.ts:395](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L395)
+Defined in: [types.ts:426](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L426)
 
 GridStack Widget creation options
 
@@ -5428,24 +5557,24 @@ GridStack Widget creation options
 
 | Property | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="autoposition-1"></a> `autoPosition?` | `boolean` | if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) | - | [types.ts:397](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L397) |
-| <a id="content-1"></a> `content?` | `string` | html to append inside as content | - | [types.ts:415](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L415) |
-| <a id="h-3"></a> `h?` | `number` | widget dimension height (default?: 1) | [`GridStackPosition`](#gridstackposition).[`h`](#h-2) | [types.ts:389](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L389) |
-| <a id="id-1"></a> `id?` | `string` | value for `gs-id` stored on the widget (default?: undefined) | - | [types.ts:413](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L413) |
-| <a id="lazyload-2"></a> `lazyLoad?` | `boolean` | true when widgets are only created when they scroll into view (visible) | - | [types.ts:417](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L417) |
-| <a id="locked-1"></a> `locked?` | `boolean` | prevents being pushed by other widgets or api (default?: undefined = un-constrained), which is different from `noMove` (user action only) | - | [types.ts:411](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L411) |
-| <a id="maxh-1"></a> `maxH?` | `number` | maximum height allowed during resize/creation (default?: undefined = un-constrained) | - | [types.ts:405](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L405) |
-| <a id="maxw-1"></a> `maxW?` | `number` | maximum width allowed during resize/creation (default?: undefined = un-constrained) | - | [types.ts:401](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L401) |
-| <a id="minh-1"></a> `minH?` | `number` | minimum height allowed during resize/creation (default?: undefined = un-constrained) | - | [types.ts:403](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L403) |
-| <a id="minw-1"></a> `minW?` | `number` | minimum width allowed during resize/creation (default?: undefined = un-constrained) | - | [types.ts:399](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L399) |
-| <a id="nomove-1"></a> `noMove?` | `boolean` | prevents direct moving by the user (default?: undefined = un-constrained) | - | [types.ts:409](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L409) |
-| <a id="noresize-1"></a> `noResize?` | `boolean` | prevent direct resizing by the user (default?: undefined = un-constrained) | - | [types.ts:407](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L407) |
-| <a id="resizetocontentparent-2"></a> `resizeToContentParent?` | `string` | local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height | - | [types.ts:422](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L422) |
-| <a id="sizetocontent-2"></a> `sizeToContent?` | `number` \| `boolean` | local (vs grid) override - see GridStackOptions. Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) | - | [types.ts:420](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L420) |
-| <a id="subgridopts-2"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | optional nested grid options and list of children, which then turns into actual instance at runtime to get options from | - | [types.ts:424](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L424) |
-| <a id="w-4"></a> `w?` | `number` | widget dimension width (default?: 1) | [`GridStackPosition`](#gridstackposition).[`w`](#w-3) | [types.ts:387](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L387) |
-| <a id="x-4"></a> `x?` | `number` | widget position x (default?: 0) | [`GridStackPosition`](#gridstackposition).[`x`](#x-3) | [types.ts:383](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L383) |
-| <a id="y-4"></a> `y?` | `number` | widget position y (default?: 0) | [`GridStackPosition`](#gridstackposition).[`y`](#y-3) | [types.ts:385](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L385) |
+| <a id="autoposition-1"></a> `autoPosition?` | `boolean` | if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) | - | [types.ts:428](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L428) |
+| <a id="content-1"></a> `content?` | `string` | html to append inside as content | - | [types.ts:446](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L446) |
+| <a id="h-3"></a> `h?` | `number` | widget dimension height (default?: 1) | [`GridStackPosition`](#gridstackposition).[`h`](#h-2) | [types.ts:420](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L420) |
+| <a id="id-1"></a> `id?` | `string` | value for `gs-id` stored on the widget (default?: undefined) | - | [types.ts:444](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L444) |
+| <a id="lazyload-2"></a> `lazyLoad?` | `boolean` | true when widgets are only created when they scroll into view (visible) | - | [types.ts:448](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L448) |
+| <a id="locked-1"></a> `locked?` | `boolean` | prevents being pushed by other widgets or api (default?: undefined = un-constrained), which is different from `noMove` (user action only) | - | [types.ts:442](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L442) |
+| <a id="maxh-1"></a> `maxH?` | `number` | maximum height allowed during resize/creation (default?: undefined = un-constrained) | - | [types.ts:436](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L436) |
+| <a id="maxw-1"></a> `maxW?` | `number` | maximum width allowed during resize/creation (default?: undefined = un-constrained) | - | [types.ts:432](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L432) |
+| <a id="minh-1"></a> `minH?` | `number` | minimum height allowed during resize/creation (default?: undefined = un-constrained) | - | [types.ts:434](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L434) |
+| <a id="minw-1"></a> `minW?` | `number` | minimum width allowed during resize/creation (default?: undefined = un-constrained) | - | [types.ts:430](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L430) |
+| <a id="nomove-1"></a> `noMove?` | `boolean` | prevents direct moving by the user (default?: undefined = un-constrained) | - | [types.ts:440](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L440) |
+| <a id="noresize-1"></a> `noResize?` | `boolean` | prevent direct resizing by the user (default?: undefined = un-constrained) | - | [types.ts:438](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L438) |
+| <a id="resizetocontentparent-2"></a> `resizeToContentParent?` | `string` | local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height | - | [types.ts:453](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L453) |
+| <a id="sizetocontent-2"></a> `sizeToContent?` | `number` \| `boolean` | local (vs grid) override - see GridStackOptions. Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) | - | [types.ts:451](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L451) |
+| <a id="subgridopts-2"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | optional nested grid options and list of children, which then turns into actual instance at runtime to get options from | - | [types.ts:455](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L455) |
+| <a id="w-4"></a> `w?` | `number` | widget dimension width (default?: 1) | [`GridStackPosition`](#gridstackposition).[`w`](#w-3) | [types.ts:418](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L418) |
+| <a id="x-4"></a> `x?` | `number` | widget position x (default?: 0) | [`GridStackPosition`](#gridstackposition).[`x`](#x-3) | [types.ts:414](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L414) |
+| <a id="y-4"></a> `y?` | `number` | widget position y (default?: 0) | [`GridStackPosition`](#gridstackposition).[`y`](#y-3) | [types.ts:416](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L416) |
 
 ***
 
@@ -5527,7 +5656,7 @@ Defines the coordinates of an object
 <a id="position-1"></a>
 ### Position
 
-Defined in: [types.ts:469](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L469)
+Defined in: [types.ts:500](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L500)
 
 #### Extended by
 
@@ -5537,15 +5666,15 @@ Defined in: [types.ts:469](https://github.com/adumesny/gridstack.js/blob/master/
 
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="left-1"></a> `left` | `number` | [types.ts:471](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L471) |
-| <a id="top-1"></a> `top` | `number` | [types.ts:470](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L470) |
+| <a id="left-1"></a> `left` | `number` | [types.ts:502](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L502) |
+| <a id="top-1"></a> `top` | `number` | [types.ts:501](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L501) |
 
 ***
 
 <a id="rect-1"></a>
 ### Rect
 
-Defined in: [types.ts:473](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L473)
+Defined in: [types.ts:504](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L504)
 
 #### Extends
 
@@ -5555,10 +5684,10 @@ Defined in: [types.ts:473](https://github.com/adumesny/gridstack.js/blob/master/
 
 | Property | Type | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ |
-| <a id="height"></a> `height` | `number` | [`Size`](#size-1).[`height`](#height-1) | [types.ts:467](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L467) |
-| <a id="left-2"></a> `left` | `number` | [`Position`](#position-1).[`left`](#left-1) | [types.ts:471](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L471) |
-| <a id="top-2"></a> `top` | `number` | [`Position`](#position-1).[`top`](#top-1) | [types.ts:470](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L470) |
-| <a id="width"></a> `width` | `number` | [`Size`](#size-1).[`width`](#width-1) | [types.ts:466](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L466) |
+| <a id="height"></a> `height` | `number` | [`Size`](#size-1).[`height`](#height-1) | [types.ts:498](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L498) |
+| <a id="left-2"></a> `left` | `number` | [`Position`](#position-1).[`left`](#left-1) | [types.ts:502](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L502) |
+| <a id="top-2"></a> `top` | `number` | [`Position`](#position-1).[`top`](#top-1) | [types.ts:501](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L501) |
+| <a id="width"></a> `width` | `number` | [`Size`](#size-1).[`width`](#width-1) | [types.ts:497](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L497) |
 
 ***
 
@@ -5587,7 +5716,7 @@ NOTE: Make sure to include the appropriate CSS (gridstack-extra.css) to support 
 <a id="size-1"></a>
 ### Size
 
-Defined in: [types.ts:465](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L465)
+Defined in: [types.ts:496](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L496)
 
 #### Extended by
 
@@ -5597,8 +5726,8 @@ Defined in: [types.ts:465](https://github.com/adumesny/gridstack.js/blob/master/
 
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="height-1"></a> `height` | `number` | [types.ts:467](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L467) |
-| <a id="width-1"></a> `width` | `number` | [types.ts:466](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L466) |
+| <a id="height-1"></a> `height` | `number` | [types.ts:498](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L498) |
+| <a id="width-1"></a> `width` | `number` | [types.ts:497](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L497) |
 
 ## Variables
 
