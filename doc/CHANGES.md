@@ -134,6 +134,7 @@ Change log
 ## 12.2.2-dev (TBD)
 * fix: [#3099](https://github.com/gridstack/gridstack.js/issues/3099) scroll take into account ScrollContainer position
 * fix: [#3102](https://github.com/gridstack/gridstack.js/pull/3102) React demo now support multiple grids
+* fix: [#3047](https://github.com/gridstack/gridstack.js/issues/3047) added `.grid-stack-dragging` to grid when child is being dragged so we can set cursor:grabbing, updated demo.
 
 ## 12.2.2 (2025-07-06)
 * fix: [#3070](https://github.com/gridstack/gridstack.js/pull/3070) incorrect property name 'sizeToContent' when cleaning up invalid attributes

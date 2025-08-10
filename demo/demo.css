@@ -56,12 +56,15 @@ h1 {
 
 .card-header {
   margin: 0;
-  cursor: move;
+  cursor: grab;
   min-height: 25px;
   background-color: #16af91;
 }
 .card-header:hover {
   background-color: #149b80;
+}
+.grid-stack-dragging {
+  cursor: grabbing;
 }
 
 .ui-draggable-disabled.ui-resizable-disabled > .grid-stack-item-content {

@@ -309,6 +309,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal set the fix position of the dragged item */
   protected _setupHelperStyle(e: DragEvent): DDDraggable {
     this.helper.classList.add('ui-draggable-dragging');
+    this.el.gridstackNode?.grid?.el.classList.add('grid-stack-dragging');
     // TODO: set all at once with style.cssText += ... ? https://stackoverflow.com/questions/3968593
     const style = this.helper.style;
     style.pointerEvents = 'none'; // needed for over items to get enter/leave
@@ -330,6 +331,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal restore back the original style before dragging */
   protected _removeHelperStyle(): DDDraggable {
     this.helper.classList.remove('ui-draggable-dragging');
+    this.el.gridstackNode?.grid?.el.classList.remove('grid-stack-dragging');
     const node = (this.helper as GridItemHTMLElement)?.gridstackNode;
     // don't bother restoring styles if we're gonna remove anyway...
     if (!node?._isAboutToRemove && this.dragElementOriginStyle) {
