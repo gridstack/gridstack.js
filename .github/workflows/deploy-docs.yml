@@ -1,0 +1,96 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches: [ master ]
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    # Only run on pushes to master (not PRs)
+    if: github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'yarn'
+
+    - name: Install main dependencies
+      run: yarn install --frozen-lockfile
+
+    - name: Install Angular dependencies
+      run: |
+        cd angular
+        yarn install --frozen-lockfile
+
+    - name: Build Angular library
+      run: yarn build:ng
+
+    - name: Build main library
+      run: |
+        grunt
+        webpack
+        tsc --stripInternal
+
+    - name: Generate all documentation
+      run: yarn doc:all
+
+    - name: Prepare deployment structure
+      run: |
+        mkdir -p deploy
+        
+        # Create proper directory structure for GitHub Pages
+        mkdir -p deploy/docs/html
+        mkdir -p deploy/angular/docs/html
+        
+        # Copy main library HTML documentation
+        if [ -d "docs/html" ]; then
+          cp -r docs/html/* deploy/docs/html/
+        fi
+        
+        # Copy Angular library HTML documentation  
+        if [ -d "angular/docs/html" ]; then
+          cp -r angular/docs/html/* deploy/angular/docs/html/
+        fi
+        
+        # Copy redirect index.html to root
+        if [ -f "docs/index.html" ]; then
+          cp docs/index.html deploy/
+        fi
+        
+        # Ensure .nojekyll exists to prevent Jekyll processing
+        touch deploy/.nojekyll
+        
+        # Optional: Add a simple index.html at root if none exists
+        if [ ! -f "deploy/index.html" ]; then
+          cat > deploy/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>GridStack.js Documentation</title>
+            <meta http-equiv="refresh" content="0; url=./docs/html/">
+        </head>
+        <body>
+            <h1>GridStack.js Documentation</h1>
+            <p>Redirecting to <a href="./docs/html/">API Documentation</a>...</p>
+        </body>
+        </html>
+        EOF
+        fi
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./deploy
+        keep_files: true
+        commit_message: 'Deploy documentation from ${{ github.sha }}'

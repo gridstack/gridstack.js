@@ -27,7 +27,7 @@
   "excludePrivate": true,
   "excludeProtected": false,
   "excludeInternal": true,
-  "includeVersion": true,
+  "includeVersion": false,
   "sort": ["source-order"],
   "sortEntryPoints": false,
   "kindSortOrder": [
@@ -73,6 +73,7 @@
     "Angular Guide": "README.md"
   },
   "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/angular/",
+  "githubPages": true,
   "gitRevision": "master",
   "gitRemote": "origin",
   "name": "GridStack Angular Library"
