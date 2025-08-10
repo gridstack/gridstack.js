@@ -1,5 +1,5 @@
 /*!
- * GridStack 12.2.2-dev
+ * GridStack 12.3.0
  * https://gridstackjs.com/
  *
  * Copyright (c) 2021-2024  Alain Dumesny
@@ -2111,7 +2111,7 @@ export class GridStack {
   }
 
   /** @internal current version compiled in code */
-  static GDRev = '12.2.2-dev';
+  static GDRev = '12.3.0';
 
   /* ===========================================================================================
    * drag&drop methods that used to be stubbed out and implemented in dd-gridstack.ts
