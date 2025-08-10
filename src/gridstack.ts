@@ -680,14 +680,39 @@ export class GridStack {
   }
 
   /**
-   * load the widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
+   * Load widgets from a list. This will call update() on each (matching by id) or add/remove widgets that are not there.
+   * Used to restore a grid layout for a saved layout list (see `save()`).
    *
    * @param items list of widgets definition to update/create
    * @param addRemove boolean (default true) or callback method can be passed to control if and how missing widgets can be added/removed, giving
    * the user control of insertion.
+   * @returns the grid instance for chaining
    *
    * @example
-   * see http://gridstackjs.com/demo/serialization.html
+   * // Basic usage with saved layout
+   * const savedLayout = grid.save(); // Save current layout
+   * // ... later restore it
+   * grid.load(savedLayout);
+   * 
+   * // Load with custom add/remove callback
+   * grid.load(layout, (items, grid, add) => {
+   *   if (add) {
+   *     // Custom logic for adding new widgets
+   *     items.forEach(item => {
+   *       const el = document.createElement('div');
+   *       el.innerHTML = item.content || '';
+   *       grid.addWidget(el, item);
+   *     });
+   *   } else {
+   *     // Custom logic for removing widgets
+   *     items.forEach(item => grid.removeWidget(item.el));
+   *   }
+   * });
+   * 
+   * // Load without adding/removing missing widgets
+   * grid.load(layout, false);
+   * 
+   * @see {@link http://gridstackjs.com/demo/serialization.html} for complete example
    */
   public load(items: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true): GridStack {
     items = Utils.cloneDeep(items); // so we can mod
@@ -1201,14 +1226,25 @@ export class GridStack {
    * If you add elements to your grid by hand (or have some framework creating DOM), you have to tell gridstack afterwards to make them widgets.
    * If you want gridstack to add the elements for you, use `addWidget()` instead.
    * Makes the given element a widget and returns it.
+   * 
    * @param els widget or single selector to convert.
    * @param options widget definition to use instead of reading attributes or using default sizing values
+   * @returns the converted GridItemHTMLElement
    *
    * @example
    * const grid = GridStack.init();
-   * grid.el.innerHtml = '<div id="1" gs-w="3"></div><div id="2"></div>';
-   * grid.makeWidget('1');
-   * grid.makeWidget('2', {w:2, content: 'hello'});
+   * 
+   * // Create HTML content manually, possibly looking like:
+   * // <div id="item-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2"></div>
+   * grid.el.innerHTML = '<div id="item-1" gs-w="3"></div><div id="item-2"></div>';
+   * 
+   * // Convert existing elements to widgets
+   * grid.makeWidget('#item-1'); // Uses gs-* attributes from DOM
+   * grid.makeWidget('#item-2', {w: 2, h: 1, content: 'Hello World'});
+   * 
+   * // Or pass DOM element directly
+   * const element = document.getElementById('item-3');
+   * grid.makeWidget(element, {x: 0, y: 1, w: 4, h: 2});
    */
   public makeWidget(els: GridStackElement, options?: GridStackWidget): GridItemHTMLElement {
     const el = GridStack.getElement(els);
@@ -1238,20 +1274,36 @@ export class GridStack {
   }
 
   /**
-   * Event handler that extracts our CustomEvent data out automatically for receiving custom
-   * notifications (see doc for supported events)
-   * @param name of the event (see possible values) or list of names space separated
-   * @param callback function called with event and optional second/third param
-   * (see README documentation for each signature).
-   *
+   * Register event handler for grid events. You can call this on a single event name, or space separated list.
+   * 
+   * Supported events:
+   * - `added`: Called when widgets are being added to a grid
+   * - `change`: Occurs when widgets change their position/size due to constraints or direct changes
+   * - `disable`: Called when grid becomes disabled
+   * - `dragstart`: Called when grid item starts being dragged
+   * - `drag`: Called while grid item is being dragged (for each new row/column value)
+   * - `dragstop`: Called after user is done moving the item, with updated DOM attributes
+   * - `dropped`: Called when an item has been dropped and accepted over a grid
+   * - `enable`: Called when grid becomes enabled
+   * - `removed`: Called when items are being removed from the grid
+   * - `resizestart`: Called before user starts resizing an item
+   * - `resize`: Called while grid item is being resized (for each new row/column value)
+   * - `resizestop`: Called after user is done resizing the item, with updated DOM attributes
+   * 
+   * @param name event name(s) to listen for (space separated for multiple)
+   * @param callback function to call when event occurs
+   * @returns the grid instance for chaining
+   * 
    * @example
-   * grid.on('added', function(e, items) { log('added ', items)} );
-   * or
-   * grid.on('added removed change', function(e, items) { log(e.type, items)} );
-   *
-   * Note: in some cases it is the same as calling native handler and parsing the event.
-   * grid.el.addEventListener('added', function(event) { log('added ', event.detail)} );
-   *
+   * // Listen to multiple events at once
+   * grid.on('added removed change', (event, items) => {
+   *   items.forEach(item => console.log('Item changed:', item));
+   * });
+   * 
+   * // Listen to individual events
+   * grid.on('added', (event, items) => {
+   *   items.forEach(item => console.log('Added item:', item));
+   * });
    */
   public on(name: 'dropped', callback: GridStackDroppedHandler): GridStack
   public on(name: 'enable' | 'disable', callback: GridStackEventHandler): GridStack

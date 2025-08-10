@@ -2,7 +2,7 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/gridstack.ts"],
   "excludeExternals": false,
-  "out": "docs/api",
+  "out": "doc",
   "plugin": ["typedoc-plugin-markdown"],
   "theme": "markdown",
   "exclude": [
@@ -68,8 +68,8 @@
   ],
   "outputFileStrategy": "modules",
   "mergeReadme": false,
-  "entryFileName": "index",
-  "cleanOutputDir": true,
+  "entryFileName": "API",
+  "cleanOutputDir": false,
   "excludeReferences": true,
   "gitRevision": "master",
   "gitRemote": "origin"

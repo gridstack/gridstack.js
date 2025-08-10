@@ -183,10 +183,25 @@ export interface Breakpoint {
  */
 export interface GridStackOptions {
   /**
-   * accept widgets dragged from other grids or from outside (default: `false`). Can be:
-   * `true` (uses `'.grid-stack-item'` class filter) or `false`,
-   * string for explicit class name,
-   * function returning a boolean. See [example](http://gridstack.github.io/gridstack.js/demo/two.html)
+   * Accept widgets dragged from other grids or from outside (default: `false`). Can be:
+   * - `true`: will accept HTML elements having 'grid-stack-item' as class attribute
+   * - `false`: will not accept any external widgets
+   * - string: explicit class name to accept instead of default
+   * - function: callback called before an item will be accepted when entering a grid
+   * 
+   * @example
+   * // Accept all grid items
+   * acceptWidgets: true
+   * 
+   * // Accept only items with specific class
+   * acceptWidgets: 'my-draggable-item'
+   * 
+   * // Custom validation function
+   * acceptWidgets: (el) => {
+   *   return el.getAttribute('data-accept') === 'true';
+   * }
+   * 
+   * @see {@link http://gridstack.github.io/gridstack.js/demo/two.html} for complete example
    */
   acceptWidgets?: boolean | string | ((element: Element) => boolean);
 
@@ -204,12 +219,28 @@ export interface GridStackOptions {
   auto?: boolean;
 
   /**
-   * one cell height (default?: 'auto'). Can be:
-   *  an integer (px)
-   *  a string (ex: '100px', '10em', '10rem'). Note: % doesn't work right - see demo/cell-height.html
-   *  0, in which case the library will not generate styles for rows. Everything must be defined in your own CSS files.
-   *  'auto' - height will be calculated for square cells (width / column) and updated live as you resize the window - also see `cellHeightThrottle`
-   *  'initial' - similar to 'auto' (start at square cells) but stay that size during window resizing.
+   * One cell height (default: 'auto'). Can be:
+   * - an integer (px): fixed pixel height
+   * - a string (ex: '100px', '10em', '10rem'): CSS length value
+   * - 0: library will not generate styles for rows (define your own CSS)
+   * - 'auto': height calculated for square cells (width / column) and updated live on window resize
+   * - 'initial': similar to 'auto' but stays fixed size during window resizing
+   * 
+   * Note: % values don't work correctly - see demo/cell-height.html
+   * 
+   * @example
+   * // Fixed 100px height
+   * cellHeight: 100
+   * 
+   * // CSS units
+   * cellHeight: '5rem'
+   * cellHeight: '100px'
+   * 
+   * // Auto-sizing for square cells
+   * cellHeight: 'auto'
+   * 
+   * // No CSS generation (custom styles)
+   * cellHeight: 0
    */
   cellHeight?: numberOrString;
 
