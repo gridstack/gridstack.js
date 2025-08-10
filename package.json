@@ -29,7 +29,8 @@
     "build:ng": "cd angular && yarn --no-progress && yarn build lib",
     "w": "webpack",
     "t": "rm -rf dist/* && grunt && tsc --stripInternal",
-    "doc": "doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md",
+    "doc": "doctoc ./README.md && doctoc ./doc/README.md && doctoc ./doc/CHANGES.md && yarn doc:api",
+    "doc:api": "typedoc",
     "test": "yarn lint && karma start karma.conf.js",
     "lint": "tsc --noEmit && eslint src/*.ts",
     "reset": "rm -rf dist node_modules",
@@ -86,10 +87,16 @@
     "sass": "^1.62.0",
     "serve-static": "^1.15.0",
     "ts-loader": "^9.4.2",
+    "typedoc": "^0.28.9",
+    "typedoc-plugin-markdown": "^4.8.0",
     "typescript": "^5.0.4",
     "webpack": "^5.79.0",
     "webpack-cli": "^5.0.1"
   },
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
-  "files": ["dist","doc"]
+  "files": [
+    "dist",
+    "doc",
+    "docs"
+  ]
 }

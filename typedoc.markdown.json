@@ -1,0 +1,29 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "extends": "./typedoc.json",
+  "out": "docs/markdown",
+  "plugin": ["typedoc-plugin-markdown"],
+  "theme": "markdown",
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "hidePageTitle": false,
+  "disableSources": false,
+  "useCodeBlocks": true,
+  "indexFormat": "table",
+  "parametersFormat": "table",
+  "interfacePropertiesFormat": "table",
+  "classPropertiesFormat": "table",
+  "enumMembersFormat": "table",
+  "typeDeclarationFormat": "table",
+  "propertyMembersFormat": "table",
+  "expandObjects": false,
+  "expandParameters": false,
+  "blockTagsPreserveOrder": [
+    "@param",
+    "@returns",
+    "@throws"
+  ],
+  "outputFileStrategy": "modules",
+  "mergeReadme": true,
+  "entryFileName": "README"
+}
