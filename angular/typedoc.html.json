@@ -66,7 +66,7 @@
   "navigationLinks": {
     "GitHub": "https://github.com/gridstack/gridstack.js",
     "Demo": "https://gridstackjs.com/demo/",
-    "Main Library": "../../../doc/html/"
+    "Main Library": "../../../doc/html/index.html"
   },
   "sidebarLinks": {
     "Documentation": "https://github.com/gridstack/gridstack.js/blob/master/README.md",
