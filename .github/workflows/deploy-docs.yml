@@ -49,22 +49,22 @@ jobs:
         mkdir -p deploy
         
         # Create proper directory structure for GitHub Pages
-        mkdir -p deploy/docs/html
-        mkdir -p deploy/angular/docs/html
+        mkdir -p deploy/doc/html
+        mkdir -p deploy/angular/doc/html
         
         # Copy main library HTML documentation
-        if [ -d "docs/html" ]; then
-          cp -r docs/html/* deploy/docs/html/
+        if [ -d "doc/html" ]; then
+          cp -r doc/html/* deploy/doc/html/
         fi
         
         # Copy Angular library HTML documentation  
-        if [ -d "angular/docs/html" ]; then
-          cp -r angular/docs/html/* deploy/angular/docs/html/
+        if [ -d "angular/doc/html" ]; then
+          cp -r angular/doc/html/* deploy/angular/doc/html/
         fi
         
         # Copy redirect index.html to root
-        if [ -f "docs/index.html" ]; then
-          cp docs/index.html deploy/
+        if [ -f "doc/index.html" ]; then
+          cp doc/index.html deploy/
         fi
         
         # Ensure .nojekyll exists to prevent Jekyll processing
@@ -77,11 +77,11 @@ jobs:
         <html>
         <head>
             <title>GridStack.js Documentation</title>
-            <meta http-equiv="refresh" content="0; url=./docs/html/">
+            <meta http-equiv="refresh" content="0; url=./doc/html/">
         </head>
         <body>
             <h1>GridStack.js Documentation</h1>
-            <p>Redirecting to <a href="./docs/html/">API Documentation</a>...</p>
+            <p>Redirecting to <a href="./doc/html/">API Documentation</a>...</p>
         </body>
         </html>
         EOF

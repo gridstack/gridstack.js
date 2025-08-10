@@ -9,7 +9,7 @@
   ],
   "tsconfig": "tsconfig.doc.json",
   "excludeExternals": false,
-  "out": "docs/api",
+  "out": "doc/api",
   "plugin": ["typedoc-plugin-markdown"],
   "theme": "markdown",
   "exclude": [

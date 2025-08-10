@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const docsPath = path.join(__dirname, '../docs/html/index.html');
+const docsPath = path.join(__dirname, '../doc/html/index.html');
 
 if (!fs.existsSync(docsPath)) {
   console.error('HTML documentation file not found:', docsPath);

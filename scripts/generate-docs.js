@@ -24,7 +24,7 @@ const config = {
     root: 'angular',
     typedocConfig: 'typedoc.json',
     typedocHtmlConfig: 'typedoc.html.json',
-    outputDir: 'docs'
+    outputDir: 'doc'
   },
   
   // Output configuration
@@ -195,8 +195,8 @@ function cleanup() {
   }
   
   // Clean HTML docs
-  if (fs.existsSync('docs/html')) {
-    execCommand(`rm -rf docs/html`, '.', 'Cleaning main library HTML docs');
+  if (fs.existsSync('doc/html')) {
+    execCommand(`rm -rf doc/html`, '.', 'Cleaning main library HTML docs');
   }
   
   // Clean Angular docs
@@ -316,12 +316,12 @@ function main() {
     
     if (!options.angularOnly) {
       console.log(`   📄 Main Library Markdown: doc/API.md`);
-      console.log(`   🌐 Main Library HTML: docs/html/`);
+      console.log(`   🌐 Main Library HTML: doc/html/`);
     }
     
     if (!options.mainOnly) {
-      console.log(`   📄 Angular Library Markdown: angular/docs/api/`);
-      console.log(`   🌐 Angular Library HTML: angular/docs/html/`);
+      console.log(`   📄 Angular Library Markdown: angular/doc/api/`);
+      console.log(`   🌐 Angular Library HTML: angular/doc/html/`);
     }
     
   } catch (error) {

@@ -2,7 +2,7 @@
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/gridstack.ts"],
   "excludeExternals": false,
-  "out": "docs/html",
+  "out": "doc/html",
   "exclude": [
     "**/*.spec.ts",
     "**/*.test.ts",
@@ -54,7 +54,7 @@
   },
   "sidebarLinks": {
     "Documentation": "https://github.com/gridstack/gridstack.js/tree/master/doc",
-    "API Reference": "docs/"
+    "API Reference": "doc/"
   },
   "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/",
   "githubPages": true,
