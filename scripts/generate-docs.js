@@ -191,7 +191,7 @@ function cleanup() {
   // Clean main library docs (API.md and HTML docs)
   const mainDocsPath = path.join(config.mainLib.root, config.mainLib.outputDir);
   if (fs.existsSync(mainDocsPath)) {
-    execCommand(`rm -rf ${mainDocsPath}/API.md ${mainDocsPath}/classes ${mainDocsPath}/interfaces ${mainDocsPath}/type-aliases ${mainDocsPath}/variables`, '.', 'Cleaning main library markdown docs');
+    execCommand(`rm -rf ${mainDocsPath}/classes ${mainDocsPath}/interfaces ${mainDocsPath}/type-aliases ${mainDocsPath}/variables`, '.', 'Cleaning main library markdown docs');
   }
   
   // Clean HTML docs
