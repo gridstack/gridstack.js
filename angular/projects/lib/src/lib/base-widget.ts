@@ -4,27 +4,86 @@
  */
 
 /**
- * Base interface that all widgets need to implement in order for GridstackItemComponent to correctly save/load/delete/..
+ * Abstract base class that all custom widgets should extend.
+ * 
+ * This class provides the interface needed for GridstackItemComponent to:
+ * - Serialize/deserialize widget data
+ * - Save/restore widget state
+ * - Integrate with Angular lifecycle
+ * 
+ * Extend this class when creating custom widgets for dynamic grids.
+ * 
+ * @example
+ * ```typescript
+ * @Component({
+ *   selector: 'my-custom-widget',
+ *   template: '<div>{{data}}</div>'
+ * })
+ * export class MyCustomWidget extends BaseWidget {
+ *   @Input() data: string = '';
+ *   
+ *   serialize() {
+ *     return { data: this.data };
+ *   }
+ * }
+ * ```
  */
 
 import { Injectable } from '@angular/core';
 import { NgCompInputs, NgGridStackWidget } from './types';
 
- @Injectable()
- export abstract class BaseWidget {
+/**
+ * Base widget class for GridStack Angular integration.
+ */
+@Injectable()
+export abstract class BaseWidget {
 
-  /** variable that holds the complete definition of this widgets (with selector,x,y,w,h) */
+  /**
+   * Complete widget definition including position, size, and Angular-specific data.
+   * Populated automatically when the widget is loaded or saved.
+   */
   public widgetItem?: NgGridStackWidget;
 
   /**
-   * REDEFINE to return an object representing the data needed to re-create yourself, other than `selector` already handled.
-   * This should map directly to the @Input() fields of this objects on create, so a simple apply can be used on read
+   * Override this method to return serializable data for this widget.
+   * 
+   * Return an object with properties that map to your component's @Input() fields.
+   * The selector is handled automatically, so only include component-specific data.
+   * 
+   * @returns Object containing serializable component data
+   * 
+   * @example
+   * ```typescript
+   * serialize() {
+   *   return {
+   *     title: this.title,
+   *     value: this.value,
+   *     settings: this.settings
+   *   };
+   * }
+   * ```
    */
   public serialize(): NgCompInputs | undefined  { return; }
 
   /**
-   * REDEFINE this if your widget needs to read from saved data and transform it to create itself - you do this for
-   * things that are not mapped directly into @Input() fields for example.
+   * Override this method to handle widget restoration from saved data.
+   * 
+   * Use this for complex initialization that goes beyond simple @Input() mapping.
+   * The default implementation automatically assigns input data to component properties.
+   * 
+   * @param w The saved widget data including input properties
+   * 
+   * @example
+   * ```typescript
+   * deserialize(w: NgGridStackWidget) {
+   *   super.deserialize(w); // Call parent for basic setup
+   *   
+   *   // Custom initialization logic
+   *   if (w.input?.complexData) {
+   *     this.processComplexData(w.input.complexData);
+   *   }
+   * }
+   * ```
    */
   public deserialize(w: NgGridStackWidget)  {
     // save full description for meta data
