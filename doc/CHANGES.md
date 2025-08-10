@@ -133,6 +133,7 @@ Change log
 
 ## 12.3.0 (2025-08-10)
 * feat: [#3047](https://github.com/gridstack/gridstack.js/issues/3047) added `.grid-stack-dragging` to grid when child is being dragged so we can set `cursor:grabbing`. Updated demo.
+* feat: now using typedoc to generate doc (HTML and markup) from code. improved code examples and comments.
 * fix: [#3099](https://github.com/gridstack/gridstack.js/issues/3099) scroll take into account ScrollContainer position
 * fix: [#3102](https://github.com/gridstack/gridstack.js/pull/3102) React demo now support multiple grids
 * fix: [#3021](https://github.com/gridstack/gridstack.js/issues/3021) correctly reset widget back (to last known position) when released outside
