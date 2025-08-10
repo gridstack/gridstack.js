@@ -6,7 +6,10 @@
 import { GridStack } from './gridstack';
 import { GridStackEngine } from './gridstack-engine';
 
-// default values for grid options - used during init and when saving out
+/**
+ * Default values for grid options - used during initialization and when saving out grid configuration.
+ * These values are applied when options are not explicitly provided.
+ */
 export const gridDefaults: GridStackOptions = {
   alwaysShowResizeHandle: 'mobile',
   animate: true,
@@ -39,47 +42,114 @@ export const gridDefaults: GridStackOptions = {
 };
 
 /**
- * different layout options when changing # of columns, including a custom function that takes new/old column count, and array of new/old positions
- * Note: new list may be partially already filled if we have a cache of the layout at that size and new items were added later.
- * Options are:
- * 'list' - treat items as sorted list, keeping items (un-sized unless too big for column count) sequentially reflowing them
- * 'compact' - similar to list, but using compact() method which will possibly re-order items if an empty slots are available due to a larger item needing to be pushed to next row
- * 'moveScale' - will scale and move items by the ratio new newColumnCount / oldColumnCount
- * 'move' | 'scale' - will only size or move items
- * 'none' will leave items unchanged, unless they don't fit in column count
+ * Different layout options when changing the number of columns.
+ * 
+ * These options control how widgets are repositioned when the grid column count changes.
+ * Note: The new list may be partially filled if there's a cached layout for that size.
+ * 
+ * Options:
+ * - `'list'`: Treat items as a sorted list, keeping them sequentially without resizing (unless too big)
+ * - `'compact'`: Similar to list, but uses compact() method to fill empty slots by reordering
+ * - `'moveScale'`: Scale and move items by the ratio of newColumnCount / oldColumnCount
+ * - `'move'`: Only move items, keep their sizes
+ * - `'scale'`: Only scale items, keep their positions
+ * - `'none'`: Leave items unchanged unless they don't fit in the new column count
+ * - Custom function: Provide your own layout logic
  */
 export type ColumnOptions = 'list' | 'compact' | 'moveScale' | 'move' | 'scale' | 'none' |
   ((column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void);
+/**
+ * Options for the compact() method to reclaim empty space.
+ * - `'list'`: Keep items in order, move them up sequentially
+ * - `'compact'`: Find truly empty spaces, may reorder items for optimal fit
+ */
 export type CompactOptions = 'list' | 'compact';
+/**
+ * Type representing values that can be either numbers or strings (e.g., dimensions with units).
+ * Used for properties like width, height, margins that accept both numeric and string values.
+ */
 export type numberOrString = number | string;
+/**
+ * Extended HTMLElement interface for grid items.
+ * All grid item DOM elements implement this interface to provide access to their grid data.
+ */
 export interface GridItemHTMLElement extends HTMLElement {
-  /** pointer to grid node instance */
+  /** Pointer to the associated grid node instance containing position, size, and other widget data */
   gridstackNode?: GridStackNode;
-  /** @internal */
+  /** @internal Original node data (used for restoring during drag operations) */
   _gridstackNodeOrig?: GridStackNode;
 }
 
+/**
+ * Type representing various ways to specify grid elements.
+ * Can be a CSS selector string, HTMLElement, or GridItemHTMLElement.
+ */
 export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
 
-/** specific and general event handlers for the .on() method */
+/**
+ * Event handler function types for the .on() method.
+ * Different handlers receive different parameters based on the event type.
+ */
+
+/** General event handler that receives only the event */
 export type GridStackEventHandler = (event: Event) => void;
+
+/** Element-specific event handler that receives event and affected element */
 export type GridStackElementHandler = (event: Event, el: GridItemHTMLElement) => void;
+
+/** Node-based event handler that receives event and array of affected nodes */
 export type GridStackNodesHandler = (event: Event, nodes: GridStackNode[]) => void;
+
+/** Drop event handler that receives previous and new node states */
 export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => void;
+
+/** Union type of all possible event handler types */
 export type GridStackEventHandlerCallback = GridStackEventHandler | GridStackElementHandler | GridStackNodesHandler | GridStackDroppedHandler;
 
-/** optional function called during load() to callback the user on new added/remove grid items | grids */
+/**
+ * Optional callback function called during load() operations.
+ * Allows custom handling of widget addition/removal for framework integration.
+ * 
+ * @param parent - The parent HTML element
+ * @param w - The widget definition
+ * @param add - True if adding, false if removing
+ * @param grid - True if this is a grid operation
+ * @returns The created/modified HTML element, or undefined
+ */
 export type AddRemoveFcn = (parent: HTMLElement, w: GridStackWidget, add: boolean, grid: boolean) => HTMLElement | undefined;
 
-/** optional function called during save() to let the caller add additional custom data to the GridStackWidget structure that will get returned */
+/**
+ * Optional callback function called during save() operations.
+ * Allows adding custom data to the saved widget structure.
+ * 
+ * @param node - The internal grid node
+ * @param w - The widget structure being saved (can be modified)
+ */
 export type SaveFcn = (node: GridStackNode, w: GridStackWidget) => void;
 
-/** optional function called during load()/addWidget() to let the caller create custom content other than plan text */
+/**
+ * Optional callback function for custom widget content rendering.
+ * Called during load()/addWidget() to create custom content beyond plain text.
+ * 
+ * @param el - The widget's content container element
+ * @param w - The widget definition with content and other properties
+ */
 export type RenderFcn = (el: HTMLElement, w: GridStackWidget) => void;
 
+/**
+ * Optional callback function for custom resize-to-content behavior.
+ * Called when a widget needs to resize to fit its content.
+ * 
+ * @param el - The grid item element to resize
+ */
 export type ResizeToContentFcn = (el: GridItemHTMLElement) => void;
 
-/** describes the responsive nature of the grid. NOTE: make sure to have correct extra CSS to support this. */
+/**
+ * Configuration for responsive grid behavior.
+ * 
+ * Defines how the grid responds to different screen sizes by changing column counts.
+ * NOTE: Make sure to include the appropriate CSS (gridstack-extra.css) to support responsive behavior.
+ */
 export interface Responsive {
   /** wanted width to maintain (+-50%) to dynamically pick a column count. NOTE: make sure to have correct extra CSS to support this. */
   columnWidth?: number;
@@ -93,14 +163,18 @@ export interface Responsive {
   layout?: ColumnOptions;
 }
 
+/**
+ * Defines a responsive breakpoint for automatic column count changes.
+ * Used with the responsive.breakpoints option.
+ */
 export interface Breakpoint {
-  /** <= width for the breakpoint to trigger */
+  /** Maximum width (in pixels) for this breakpoint to be active */
   w?: number;
-  /** column count */
+  /** Number of columns to use when this breakpoint is active */
   c: number;
-  /** re-layout mode if different from global one */
+  /** Layout mode for this specific breakpoint (overrides global responsive.layout) */
   layout?: ColumnOptions;
-  /** TODO: children layout, which spells out exact locations and could omit/add some children */
+  /** TODO: Future feature - specific children layout for this breakpoint */
   // children?: GridStackWidget[];
 }
 
