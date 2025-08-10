@@ -1,19 +1,29 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/gridstack.ts"],
+  "excludeExternals": false,
   "out": "docs/html",
   "exclude": [
     "**/*.spec.ts",
     "**/*.test.ts",
     "**/spec/**",
     "**/test/**",
+    "**/demo/**",
+    "demo/**",
     "node_modules/**"
   ],
   "excludePrivate": true,
   "excludeProtected": false,
   "excludeInternal": true,
   "includeVersion": true,
-  "sort": ["source-order"],
+  "sort": ["alphabetical"],
+  "kindSortOrder": [
+    "Class",
+    "Interface", 
+    "TypeAlias",
+    "Variable",
+    "Function"
+  ],
   "groupOrder": [
     "Classes",
     "Interfaces",
@@ -31,7 +41,7 @@
     "Types",
     "*"
   ],
-  "readme": "README.md",
+  "readme": "none",
   "theme": "default",
   "hideGenerator": false,
   "searchInComments": true,

@@ -17,7 +17,7 @@ export interface DragTransform {
   yOffset: number;
 }
 
-/** checks for obsolete method names */
+/** @internal checks for obsolete method names */
 // eslint-disable-next-line
 export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
   const wrapper = (...args) => {
@@ -29,7 +29,7 @@ export function obsolete(self, f, oldName: string, newName: string, rev: string)
   return wrapper;
 }
 
-/** checks for obsolete grid options (can be used for any fields, but msg is about options) */
+/** @internal checks for obsolete grid options (can be used for any fields, but msg is about options) */
 export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string): void {
   if (opts[oldName] !== undefined) {
     opts[newName] = opts[oldName];
@@ -38,14 +38,14 @@ export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: s
   }
 }
 
-/** checks for obsolete grid options which are gone */
+/** @internal checks for obsolete grid options which are gone */
 export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string): void {
   if (opts[oldName] !== undefined) {
     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
   }
 }
 
-/** checks for obsolete Jquery element attributes */
+/** @internal checks for obsolete Jquery element attributes */
 export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string): void {
   const oldAttr = el.getAttribute(oldName);
   if (oldAttr !== null) {

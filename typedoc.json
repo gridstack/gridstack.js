@@ -1,19 +1,34 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/gridstack.ts"],
-  "out": "docs",
+  "excludeExternals": false,
+  "out": "docs/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "theme": "markdown",
   "exclude": [
     "**/*.spec.ts",
     "**/*.test.ts",
     "**/spec/**",
     "**/test/**",
+    "**/demo/**",
+    "demo/**",
+    "demo/*",
+    "**/demo/*",
+    "**/*demo*",
     "node_modules/**"
   ],
   "excludePrivate": true,
   "excludeProtected": false,
   "excludeInternal": true,
   "includeVersion": true,
-  "sort": ["source-order"],
+  "sort": ["alphabetical"],
+  "kindSortOrder": [
+    "Class",
+    "Interface", 
+    "TypeAlias",
+    "Variable",
+    "Function"
+  ],
   "groupOrder": [
     "Classes",
     "Interfaces",
@@ -31,22 +46,31 @@
     "Types",
     "*"
   ],
-  "readme": "README.md",
-  "theme": "default",
-  "hideGenerator": false,
-  "searchInComments": true,
-  "searchInDocuments": true,
+  "readme": "none",
+  "hidePageHeader": true,
+  "hideBreadcrumbs": true,
+  "hidePageTitle": false,
+  "disableSources": false,
+  "useCodeBlocks": true,
+  "indexFormat": "table",
+  "parametersFormat": "table",
+  "interfacePropertiesFormat": "table",
+  "classPropertiesFormat": "table",
+  "enumMembersFormat": "table",
+  "typeDeclarationFormat": "table",
+  "propertyMembersFormat": "table",
+  "expandObjects": false,
+  "expandParameters": false,
+  "blockTagsPreserveOrder": [
+    "@param",
+    "@returns",
+    "@throws"
+  ],
+  "outputFileStrategy": "modules",
+  "mergeReadme": false,
+  "entryFileName": "index",
   "cleanOutputDir": true,
-  "titleLink": "https://gridstackjs.com/",
-  "navigationLinks": {
-    "GitHub": "https://github.com/gridstack/gridstack.js",
-    "Demo": "https://gridstackjs.com/demo/"
-  },
-  "sidebarLinks": {
-    "Documentation": "https://github.com/gridstack/gridstack.js/tree/master/doc",
-    "API Reference": "docs/"
-  },
-  "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/",
+  "excludeReferences": true,
   "gitRevision": "master",
   "gitRemote": "origin"
 }
