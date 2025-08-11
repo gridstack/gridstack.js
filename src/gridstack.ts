@@ -625,11 +625,14 @@ export class GridStack {
    * @param saveGridOpt if true (default false), save the grid options itself, so you can call the new GridStack.addGrid()
    * to recreate everything from scratch. GridStackOptions.children would then contain the widget list instead.
    * @param saveCB callback for each node -> widget, so application can insert additional data to be saved into the widget data structure.
+   * @param columnSize if provided, the grid will be saved for the given column size (IFF we have matching internal saved layout, or current layout).
+   * Otherwise it will use the largest possible layout (say 12 even if rendering at 1 column) so we can restore to all layouts.
+   * Note: nested grids will ALWAYS save the container size to match overall layouts (parent + child) to be consistent.
    * @returns list of widgets or full grid option, including .children list of widgets
    */
-  public save(saveContent = true, saveGridOpt = false, saveCB = GridStack.saveCB): GridStackWidget[] | GridStackOptions {
+  public save(saveContent = true, saveGridOpt = false, saveCB = GridStack.saveCB, columnSize?: number): GridStackWidget[] | GridStackOptions {
     // return copied GridStackWidget (with optionally .el) we can modify at will...
-    const list = this.engine.save(saveContent, saveCB);
+    const list = this.engine.save(saveContent, saveCB, columnSize);
 
     // check for HTML content and nested grids
     list.forEach(n => {
@@ -639,9 +642,9 @@ export class GridStack {
         if (!n.content) delete n.content;
       } else {
         if (!saveContent && !saveCB) { delete n.content; }
-        // check for nested grid
+        // check for nested grid - make sure it saves to the given container size to be consistent
         if (n.subGrid?.el) {
-          const listOrOpt = n.subGrid.save(saveContent, saveGridOpt, saveCB);
+          const listOrOpt = n.subGrid.save(saveContent, saveGridOpt, saveCB, n.w);
           n.subGridOpts = (saveGridOpt ? listOrOpt : { children: listOrOpt }) as GridStackOptions;
           delete n.subGrid;
         }
@@ -719,7 +722,7 @@ export class GridStack {
     const column = this.getColumn();
 
     // make sure size 1x1 (default) is present as it may need to override current sizes
-    items.forEach(n => { n.w = n.w || 1; n.h = n.h || 1 });
+    items.forEach(n => { n.w = n.w || n.minW || 1; n.h = n.h || n.minH || 1 });
 
     // sort items. those without coord will be appended last
     items = Utils.sort(items);

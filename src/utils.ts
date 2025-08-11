@@ -515,8 +515,9 @@ export class Utils {
     if (!n.noResize) delete n.noResize;
     if (!n.noMove) delete n.noMove;
     if (!n.locked) delete n.locked;
-    if (n.w === 1 || n.w === n.minW) delete n.w;
-    if (n.h === 1 || n.h === n.minH) delete n.h;
+    // do not optimize for default values as applications might have different defaults for this widget
+    // if (n.w === 1 || n.w === n.minW) delete n.w;
+    // if (n.h === 1 || n.h === n.minH) delete n.h;
   }
 
   /** return the closest parent (or itself) matching the given class */
