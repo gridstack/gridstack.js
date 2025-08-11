@@ -119,9 +119,11 @@ section {
 }
 /* Grid style */
 
-.grid-stack-item {
-  border-radius: 8px;
-  cursor: pointer;
+.grid-stack-item:not(.ui-draggable-disabled) > .grid-stack-item-content {
+  cursor: grab;
+}
+.grid-stack-dragging {
+  cursor: grabbing;
 }
 .grid-stack-item-content {
   display: flex;
