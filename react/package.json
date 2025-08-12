@@ -13,7 +13,7 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "gridstack": "^12.3.1",
+    "gridstack": "^12.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-fast-compare": "^3.2.2",

@@ -15,7 +15,7 @@
   "excludePrivate": true,
   "excludeProtected": false,
   "excludeInternal": true,
-  "includeVersion": false,
+  "includeVersion": true,
   "sort": ["alphabetical"],
   "kindSortOrder": [
     "Class",
