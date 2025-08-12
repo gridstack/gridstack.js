@@ -1008,17 +1008,25 @@ export class GridStackEngine {
     return this;
   }
 
-  /** saves a copy of the largest column layout (eg 12 even when rendering oneColumnMode) so we don't loose orig layout,
-   * returning a list of widgets for serialization
-   * @param columnSize if provided, the grid will be saved for the given column size (IFF we have matching internal saved layout, or current layout).
-   * Otherwise it will use the largest possible layout (say 12 even if rendering at 1 column) so we can restore to all layouts.
-   * Note: nested grids will ALWAYS save the container size to match overall layouts (parent + child) to be consistent.
+  /** saves a copy of the largest column layout (eg 12 even when rendering 1 column) so we don't loose orig layout, unless explicity column
+   * count to use is given. returning a list of widgets for serialization
+   * @param saveElement if true (default), the element will be saved to GridStackWidget.el field, else it will be removed.
+   * @param saveCB callback for each node -> widget, so application can insert additional data to be saved into the widget data structure.
+   * @param column if provided, the grid will be saved for the given column count (IFF we have matching internal saved layout, or current layout).
+   * Note: nested grids will ALWAYS save the container w to match overall layouts (parent + child) to be consistent.
   */
-  public save(saveElement = true, saveCB?: SaveFcn, columnSize?: number): GridStackNode[] {
+  public save(saveElement = true, saveCB?: SaveFcn, column?: number): GridStackNode[] {
     // use the highest layout for any saved info so we can have full detail on reload #1849
-    // unless we're given a column size to match (always set for nested grids)
-    const len = this._layouts?.length;
-    const layout = (columnSize && this._layouts?.find((val, num) => num === columnSize)) || (len && this.column !== (len - 1) ? this._layouts[len - 1] : null) || null;
+    // unless we're given a column to match (always set for nested grids)
+    const len = this._layouts?.length || 0;
+    let layout: GridStackNode[];
+    if (len) {
+      if (column) {
+        if (column !== this.column) layout = this._layouts[column];
+      } else if (this.column !== len - 1) {
+        layout = this._layouts[len - 1];
+      }
+    }
     const list: GridStackNode[] = [];
     this.sortNodes();
     this.nodes.forEach(n => {
