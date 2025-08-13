@@ -2845,7 +2845,7 @@ new Utils(): Utils;
 static addElStyles(el, styles): void;
 ```
 
-Defined in: [utils.ts:690](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L690)
+Defined in: [utils.ts:692](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L692)
 
 ###### Parameters
 
@@ -2864,7 +2864,7 @@ Defined in: [utils.ts:690](https://github.com/adumesny/gridstack.js/blob/master/
 static appendTo(el, parent): void;
 ```
 
-Defined in: [utils.ts:672](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L672)
+Defined in: [utils.ts:674](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L674)
 
 ###### Parameters
 
@@ -2943,7 +2943,7 @@ const overlap = Utils.areaIntercept(
 static canBeRotated(n): boolean;
 ```
 
-Defined in: [utils.ts:793](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L793)
+Defined in: [utils.ts:795](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L795)
 
 true if the item can be rotated (checking for prop, not space available)
 
@@ -2963,7 +2963,7 @@ true if the item can be rotated (checking for prop, not space available)
 static clone<T>(obj): T;
 ```
 
-Defined in: [utils.ts:635](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L635)
+Defined in: [utils.ts:637](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L637)
 
 single level clone, returning a new object with same top fields. This will share sub objects and arrays
 
@@ -2989,7 +2989,7 @@ single level clone, returning a new object with same top fields. This will share
 static cloneDeep<T>(obj): T;
 ```
 
-Defined in: [utils.ts:651](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L651)
+Defined in: [utils.ts:653](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L653)
 
 Recursive clone version that returns a full copy, checking for nested objects and arrays ONLY.
 Note: this will use as-is any key starting with double __ (and not copy inside) some lib have circular dependencies.
@@ -3016,7 +3016,7 @@ Note: this will use as-is any key starting with double __ (and not copy inside) 
 static cloneNode(el): HTMLElement;
 ```
 
-Defined in: [utils.ts:666](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L666)
+Defined in: [utils.ts:668](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L668)
 
 deep clone the given HTML node, removing teh unique id field
 
@@ -3226,7 +3226,7 @@ const fromShadow = Utils.getElements('.item', shadowRoot);
 static getValuesFromTransformedElement(parent): DragTransform;
 ```
 
-Defined in: [utils.ts:750](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L750)
+Defined in: [utils.ts:752](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L752)
 
 defines an element that is used to get the offset and scale from grid transforms
 returns the scale and offsets from said element
@@ -3247,7 +3247,7 @@ returns the scale and offsets from said element
 static initEvent<T>(e, info): T;
 ```
 
-Defined in: [utils.ts:707](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L707)
+Defined in: [utils.ts:709](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L709)
 
 ###### Type Parameters
 
@@ -3420,7 +3420,7 @@ removes field from the first object if same as the second objects (like diffing)
 static removeInternalForSave(n, removeEl): void;
 ```
 
-Defined in: [utils.ts:509](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L509)
+Defined in: [utils.ts:511](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L511)
 
 removes internal fields '_' and default values for saving
 
@@ -3441,7 +3441,7 @@ removes internal fields '_' and default values for saving
 static removePositioningStyles(el): void;
 ```
 
-Defined in: [utils.ts:542](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L542)
+Defined in: [utils.ts:544](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L544)
 
 ###### Parameters
 
@@ -3565,7 +3565,7 @@ static simulateMouseEvent(
    target?): void;
 ```
 
-Defined in: [utils.ts:723](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L723)
+Defined in: [utils.ts:725](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L725)
 
 copies the MouseEvent (or convert Touch) properties and sends it as another event to the given target
 
@@ -3620,7 +3620,7 @@ static swap(
    b): void;
 ```
 
-Defined in: [utils.ts:774](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L774)
+Defined in: [utils.ts:776](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L776)
 
 swap the given object 2 field values
 
@@ -3642,7 +3642,7 @@ swap the given object 2 field values
 static throttle(func, delay): () => void;
 ```
 
-Defined in: [utils.ts:532](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L532)
+Defined in: [utils.ts:534](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L534)
 
 delay calling the given function for given delay, preventing new calls from happening while waiting
 
