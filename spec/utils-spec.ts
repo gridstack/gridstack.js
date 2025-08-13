@@ -225,5 +225,31 @@ describe('gridstack utils', () => {
       expect(f).toEqual({first: 1, _dontskip: {second: 2}});
       expect(z).toEqual({first: 1, _dontskip: {second: 'two'}});
     });
-  });  
+  });
+  describe('removeInternalAndSame', () => {
+    it('should remove internal and same', () => {
+      const a = {first: 1, second: 'text', _skip: {second: 2}, arr: [1, 'second', 3]};
+      const b = {first: 1, second: 'text'};
+      Utils.removeInternalAndSame(a, b);
+      expect(a).toEqual({arr: [1, 'second', 3]});
+    });
+    it('should not remove items in an array', () => {
+      const a = {arr: [1, 2, 3]};
+      const b = {arr: [1, 3]};
+      Utils.removeInternalAndSame(a, b);
+      expect(a).toEqual({arr: [1, 2, 3]});
+    });
+    it('should remove nested object, and make empty', () => {
+      const a = {obj1: {first: 1, nested: {second: 2}}, obj2: {first: 1, second: 2}};
+      const b = {obj1: {first: 1, nested: {second: 2}}, obj2: {first: 1, second: 2}};
+      Utils.removeInternalAndSame(a, b);
+      expect(a).toEqual({});
+    });
+    it('should remove nested object, and make empty - part 2', () => {
+      const a = {obj1: {first: 1, nested: {second: 2}}, obj2: {first: 1, second: 2}};
+      const b = {obj1: {first: 1}, obj2: {first: 1, second: 2}};
+      Utils.removeInternalAndSame(a, b);
+      expect(a).toEqual({obj1: {nested: {second: 2}}});
+    });
+  });
 });

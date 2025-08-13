@@ -493,6 +493,8 @@ export class Utils {
   /** removes field from the first object if same as the second objects (like diffing) and internal '_' for saving */
   static removeInternalAndSame(a: unknown, b: unknown):void {
     if (typeof a !== 'object' || typeof b !== 'object') return;
+    // skip arrays as we don't know how to hydrate them (unlike object spread operator)
+    if (Array.isArray(a) || Array.isArray(b)) return;
     for (let key in a) {
       const aVal = a[key];
       const bVal = b[key];
