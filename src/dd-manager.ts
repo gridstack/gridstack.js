@@ -9,7 +9,7 @@ import { DDResizable } from './dd-resizable';
 
 /**
  * Global state manager for all Drag & Drop instances.
- * 
+ *
  * This class maintains shared state across all drag & drop operations,
  * ensuring proper coordination between multiple grids and drag/drop elements.
  * All properties are static to provide global access throughout the DD system.

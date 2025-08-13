@@ -1108,10 +1108,10 @@ movable(els, val): GridStack;
 
 Defined in: [gridstack.ts:2233](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2233)
 
-Enables/Disables dragging by the user for specific grid elements. 
+Enables/Disables dragging by the user for specific grid elements.
 For all items and future items, use enableMove() instead. No-op for static grids.
 
-Note: If you want to prevent an item from moving due to being pushed around by another 
+Note: If you want to prevent an item from moving due to being pushed around by another
 during collision, use the 'locked' property instead.
 
 ###### Parameters
@@ -1311,7 +1311,7 @@ Supported events:
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | `"removed"` \| `"change"` \| `"added"` \| `"resizecontent"` | event name(s) to listen for (space separated for multiple) |
+| `name` | `"change"` \| `"added"` \| `"removed"` \| `"resizecontent"` | event name(s) to listen for (space separated for multiple) |
 | `callback` | [`GridStackNodesHandler`](#gridstacknodeshandler) | function to call when event occurs |
 
 ###### Returns
@@ -1362,7 +1362,7 @@ Supported events:
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `name` | \| `"resize"` \| `"drag"` \| `"dragstart"` \| `"resizestart"` \| `"resizestop"` \| `"dragstop"` | event name(s) to listen for (space separated for multiple) |
+| `name` | \| `"drag"` \| `"dragstart"` \| `"resize"` \| `"resizestart"` \| `"resizestop"` \| `"dragstop"` | event name(s) to listen for (space separated for multiple) |
 | `callback` | [`GridStackElementHandler`](#gridstackelementhandler) | function to call when event occurs |
 
 ###### Returns
@@ -1613,7 +1613,7 @@ Defined in: [gridstack.ts:1649](https://github.com/adumesny/gridstack.js/blob/ma
 Updates widget height to match the content height to avoid vertical scrollbars or dead space.
 This automatically adjusts the widget height based on its content size.
 
-Note: This assumes only 1 child under resizeToContentParent='.grid-stack-item-content' 
+Note: This assumes only 1 child under resizeToContentParent='.grid-stack-item-content'
 (sized to gridItem minus padding) that represents the entire content size.
 
 ###### Parameters
@@ -1774,7 +1774,7 @@ is dynamically create and needs to be set later.
 | `dragIn?` | `string` \| `HTMLElement`[] | `undefined` | string selector (ex: '.sidebar-item') or list of dom elements |
 | `dragInOptions?` | [`DDDragOpt`](#dddragopt) | `undefined` | options - see DDDragOpt. (default: {handle: '.grid-stack-item-content', appendTo: 'body'} |
 | `widgets?` | [`GridStackWidget`](#gridstackwidget)[] | `undefined` | GridStackWidget def to assign to each element which defines what to create on drop |
-| `root?` | `Document` \| `HTMLElement` | `document` | optional root which defaults to document (for shadow dom pass the parent HTMLDocument) |
+| `root?` | `HTMLElement` \| `Document` | `document` | optional root which defaults to document (for shadow dom pass the parent HTMLDocument) |
 
 ###### Returns
 
@@ -3173,7 +3173,7 @@ Similar to getElements() but returns only the first match.
 | Parameter | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
 | `els` | [`GridStackElement`](#gridstackelement) | `undefined` | selector string or HTMLElement |
-| `root` | `Document` \| `HTMLElement` | `document` | optional root element to search within (defaults to document) |
+| `root` | `HTMLElement` \| `Document` | `document` | optional root element to search within (defaults to document) |
 
 ###### Returns
 
@@ -3204,7 +3204,7 @@ Supports CSS selectors, element references, and special ID handling.
 | Parameter | Type | Default value | Description |
 | ------ | ------ | ------ | ------ |
 | `els` | [`GridStackElement`](#gridstackelement) | `undefined` | selector string, HTMLElement, or array of elements |
-| `root` | `Document` \| `HTMLElement` | `document` | optional root element to search within (defaults to document, useful for shadow DOM) |
+| `root` | `HTMLElement` \| `Document` | `document` | optional root element to search within (defaults to document, useful for shadow DOM) |
 
 ###### Returns
 

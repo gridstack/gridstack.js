@@ -1,6 +1,6 @@
 import { GridItemHTMLElement, GridStack, GridStackWidget } from '../src/gridstack';
 
-describe('regression >', function() {
+describe('regression >', () => {
   'use strict';
 
   let grid: GridStack;
@@ -18,14 +18,14 @@ describe('regression >', function() {
   '  <div class="grid-stack"></div>' +
   '</div>';
 
-  describe('2492 load() twice >', function() {
-    beforeEach(function() {
+  describe('2492 load() twice >', () => {
+    beforeEach(() => {
       document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
     });
-    afterEach(function() {
+    afterEach(() => {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('', function() {
+    it('', () => {
       let items: GridStackWidget[] = [
         {x: 0, y: 0, w:2, content: '0 wide'},
         {x: 1, y: 0, content: '1 over'},
@@ -60,14 +60,14 @@ describe('regression >', function() {
     });
   });
 
-  describe('2865 nested grid resize >', function() {
-    beforeEach(function() {
+  describe('2865 nested grid resize >', () => {
+    beforeEach(() => {
       document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
     });
-    afterEach(function() {
+    afterEach(() => {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('', function() {
+    it('', () => {
       let children: GridStackWidget[] = [{},{},{}];
       let items: GridStackWidget[] = [
         {x: 0, y: 0, w:3, h:5, sizeToContent: true, subGridOpts: {children, column: 'auto'}}

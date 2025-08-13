@@ -20,7 +20,7 @@ export interface DragTransform {
 /**
  * @internal Checks for obsolete method names and provides deprecation warnings.
  * Creates a wrapper function that logs a deprecation warning when called.
- * 
+ *
  * @param self the object context to apply the function to
  * @param f the new function to call
  * @param oldName the deprecated method name
@@ -42,7 +42,7 @@ export function obsolete(self, f, oldName: string, newName: string, rev: string)
 /**
  * @internal Checks for obsolete grid options and migrates them to new names.
  * Automatically copies old option values to new option names and shows deprecation warnings.
- * 
+ *
  * @param opts the options object to check and migrate
  * @param oldName the deprecated option name
  * @param newName the new option name to use instead
@@ -59,7 +59,7 @@ export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: s
 /**
  * @internal Checks for obsolete grid options that have been completely removed.
  * Shows deprecation warnings for options that are no longer supported.
- * 
+ *
  * @param opts the options object to check
  * @param oldName the removed option name
  * @param rev the version when the option was removed
@@ -74,7 +74,7 @@ export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: st
 /**
  * @internal Checks for obsolete HTML element attributes and migrates them.
  * Automatically copies old attribute values to new attribute names and shows deprecation warnings.
- * 
+ *
  * @param el the HTML element to check and migrate
  * @param oldName the deprecated attribute name
  * @param newName the new attribute name to use instead
@@ -99,11 +99,11 @@ export class Utils {
   /**
    * Convert a potential selector into an actual list of HTML elements.
    * Supports CSS selectors, element references, and special ID handling.
-   * 
+   *
    * @param els selector string, HTMLElement, or array of elements
    * @param root optional root element to search within (defaults to document, useful for shadow DOM)
    * @returns array of HTML elements matching the selector
-   * 
+   *
    * @example
    * const elements = Utils.getElements('.grid-item');
    * const byId = Utils.getElements('#myWidget');
@@ -134,11 +134,11 @@ export class Utils {
   /**
    * Convert a potential selector into a single HTML element.
    * Similar to getElements() but returns only the first match.
-   * 
+   *
    * @param els selector string or HTMLElement
    * @param root optional root element to search within (defaults to document)
    * @returns the first HTML element matching the selector, or null if not found
-   * 
+   *
    * @example
    * const element = Utils.getElement('#myWidget');
    * const first = Utils.getElement('.grid-item');
@@ -170,10 +170,10 @@ export class Utils {
 
   /**
    * Check if a widget should be lazy loaded based on node or grid settings.
-   * 
+   *
    * @param n the grid node to check
    * @returns true if the item should be lazy loaded
-   * 
+   *
    * @example
    * if (Utils.lazyLoad(node)) {
    *   // Set up intersection observer for lazy loading
@@ -185,11 +185,11 @@ export class Utils {
 
   /**
    * Create a div element with the specified CSS classes.
-   * 
+   *
    * @param classes array of CSS class names to add
    * @param parent optional parent element to append the div to
    * @returns the created div element
-   * 
+   *
    * @example
    * const div = Utils.createDiv(['grid-item', 'draggable']);
    * const nested = Utils.createDiv(['content'], parentDiv);
@@ -203,11 +203,11 @@ export class Utils {
 
   /**
    * Check if a widget should resize to fit its content.
-   * 
+   *
    * @param n the grid node to check (can be undefined)
    * @param strict if true, only returns true for explicit sizeToContent:true (not numbers)
    * @returns true if the widget should resize to content
-   * 
+   *
    * @example
    * if (Utils.shouldSizeToContent(node)) {
    *   // Trigger content-based resizing
@@ -221,11 +221,11 @@ export class Utils {
 
   /**
    * Check if two grid positions overlap/intersect.
-   * 
+   *
    * @param a first position with x, y, w, h properties
    * @param b second position with x, y, w, h properties
    * @returns true if the positions overlap
-   * 
+   *
    * @example
    * const overlaps = Utils.isIntercepted(
    *   {x: 0, y: 0, w: 2, h: 1},
@@ -238,11 +238,11 @@ export class Utils {
 
   /**
    * Check if two grid positions are touching (edges or corners).
-   * 
+   *
    * @param a first position
    * @param b second position
    * @returns true if the positions are touching
-   * 
+   *
    * @example
    * const touching = Utils.isTouching(
    *   {x: 0, y: 0, w: 2, h: 1},
@@ -255,11 +255,11 @@ export class Utils {
 
   /**
    * Calculate the overlapping area between two grid positions.
-   * 
+   *
    * @param a first position
    * @param b second position
    * @returns the area of overlap (0 if no overlap)
-   * 
+   *
    * @example
    * const overlap = Utils.areaIntercept(
    *   {x: 0, y: 0, w: 3, h: 2},
@@ -278,10 +278,10 @@ export class Utils {
 
   /**
    * Calculate the total area of a grid position.
-   * 
+   *
    * @param a position with width and height
    * @returns the total area (width * height)
-   * 
+   *
    * @example
    * const area = Utils.area({x: 0, y: 0, w: 3, h: 2}); // returns 6
    */
@@ -291,11 +291,11 @@ export class Utils {
 
   /**
    * Sort an array of grid nodes by position (y first, then x).
-   * 
+   *
    * @param nodes array of nodes to sort
    * @param dir sort direction: 1 for ascending (top-left first), -1 for descending
    * @returns the sorted array (modifies original)
-   * 
+   *
    * @example
    * const sorted = Utils.sort(nodes); // Sort top-left to bottom-right
    * const reverse = Utils.sort(nodes, -1); // Sort bottom-right to top-left
@@ -311,11 +311,11 @@ export class Utils {
 
   /**
    * Find a grid node by its ID.
-   * 
+   *
    * @param nodes array of nodes to search
    * @param id the ID to search for
    * @returns the node with matching ID, or undefined if not found
-   * 
+   *
    * @example
    * const node = Utils.find(nodes, 'widget-1');
    * if (node) console.log('Found node at:', node.x, node.y);
@@ -327,10 +327,10 @@ export class Utils {
   /**
    * Convert various value types to boolean.
    * Handles strings like 'false', 'no', '0' as false.
-   * 
+   *
    * @param v value to convert
    * @returns boolean representation
-   * 
+   *
    * @example
    * Utils.toBool('true');  // true
    * Utils.toBool('false'); // false
@@ -351,10 +351,10 @@ export class Utils {
 
   /**
    * Convert a string value to a number, handling null and empty strings.
-   * 
+   *
    * @param value string or null value to convert
    * @returns number value, or undefined for null/empty strings
-   * 
+   *
    * @example
    * Utils.toNumber('42');  // 42
    * Utils.toNumber('');    // undefined
@@ -367,10 +367,10 @@ export class Utils {
   /**
    * Parse a height value with units into numeric value and unit string.
    * Supports px, em, rem, vh, vw, %, cm, mm units.
-   * 
+   *
    * @param val height value as number or string with units
    * @returns object with h (height) and unit properties
-   * 
+   *
    * @example
    * Utils.parseHeight('100px');  // {h: 100, unit: 'px'}
    * Utils.parseHeight('2rem');   // {h: 2, unit: 'rem'}
@@ -398,11 +398,11 @@ export class Utils {
   /**
    * Copy unset fields from source objects to target object (shallow merge with defaults).
    * Similar to Object.assign but only sets undefined/null fields.
-   * 
+   *
    * @param target the object to copy defaults into
    * @param sources one or more source objects to copy defaults from
    * @returns the modified target object
-   * 
+   *
    * @example
    * const config = { width: 100 };
    * Utils.defaults(config, { width: 200, height: 50 });
@@ -429,11 +429,11 @@ export class Utils {
   /**
    * Compare two objects for equality (shallow comparison).
    * Checks if objects have the same fields and values at one level deep.
-   * 
+   *
    * @param a first object to compare
    * @param b second object to compare
    * @returns true if objects have the same values
-   * 
+   *
    * @example
    * Utils.same({x: 1, y: 2}, {x: 1, y: 2}); // true
    * Utils.same({x: 1}, {x: 1, y: 2}); // false
@@ -452,12 +452,12 @@ export class Utils {
   /**
    * Copy position and size properties from one widget to another.
    * Copies x, y, w, h and optionally min/max constraints.
-   * 
+   *
    * @param a target widget to copy to
    * @param b source widget to copy from
    * @param doMinMax if true, also copy min/max width/height constraints
    * @returns the target widget (a)
-   * 
+   *
    * @example
    * Utils.copyPos(widget1, widget2); // Copy position/size
    * Utils.copyPos(widget1, widget2, true); // Also copy constraints

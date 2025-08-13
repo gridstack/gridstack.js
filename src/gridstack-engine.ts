@@ -21,13 +21,13 @@ export interface GridStackEngineOptions {
 /**
  * Defines the GridStack engine that handles all grid layout calculations and node positioning.
  * This is the core engine that performs grid manipulation without any DOM operations.
- * 
+ *
  * The engine manages:
  * - Node positioning and collision detection
  * - Layout algorithms (compact, float, etc.)
  * - Grid resizing and column changes
  * - Widget movement and resizing logic
- * 
+ *
  * NOTE: Values should not be modified directly - use the main GridStack API instead
  * to ensure proper DOM updates and event triggers.
  */
@@ -70,11 +70,11 @@ export class GridStackEngine {
   /**
    * Enable/disable batch mode for multiple operations to optimize performance.
    * When enabled, layout updates are deferred until batch mode is disabled.
-   * 
+   *
    * @param flag true to enable batch mode, false to disable and apply changes
    * @param doPack if true (default), pack/compact nodes when disabling batch mode
    * @returns the engine instance for chaining
-   * 
+   *
    * @example
    * // Start batch mode for multiple operations
    * engine.batchUpdate(true);
@@ -167,12 +167,12 @@ export class GridStackEngine {
   /**
    * Return the first node that intercepts/collides with the given node or area.
    * Used for collision detection during drag and drop operations.
-   * 
+   *
    * @param skip the node to skip in collision detection (usually the node being moved)
    * @param area the area to check for collisions (defaults to skip node's area)
    * @param skip2 optional second node to skip in collision detection
    * @returns the first colliding node, or undefined if no collision
-   * 
+   *
    * @example
    * const colliding = engine.collide(draggedNode, {x: 2, y: 1, w: 2, h: 1});
    * if (colliding) {
@@ -187,12 +187,12 @@ export class GridStackEngine {
   /**
    * Return all nodes that intercept/collide with the given node or area.
    * Similar to collide() but returns all colliding nodes instead of just the first.
-   * 
+   *
    * @param skip the node to skip in collision detection
    * @param area the area to check for collisions (defaults to skip node's area)
    * @param skip2 optional second node to skip in collision detection
    * @returns array of all colliding nodes
-   * 
+   *
    * @example
    * const allCollisions = engine.collideAll(draggedNode);
    * console.log('Colliding with', allCollisions.length, 'nodes');
@@ -273,7 +273,7 @@ export class GridStackEngine {
   /**
    * Cache the pixel rectangles for all nodes used for collision detection during drag operations.
    * This optimization converts grid coordinates to pixel coordinates for faster collision detection.
-   * 
+   *
    * @param w width of a single grid cell in pixels
    * @param h height of a single grid cell in pixels
    * @param top top margin/padding in pixels
@@ -281,7 +281,7 @@ export class GridStackEngine {
    * @param bottom bottom margin/padding in pixels
    * @param left left margin/padding in pixels
    * @returns the engine instance for chaining
-   * 
+   *
    * @internal This is typically called by GridStack during resize events
    */
   public cacheRects(w: number, h: number, top: number, right: number, bottom: number, left: number): GridStackEngine
@@ -300,11 +300,11 @@ export class GridStackEngine {
   /**
    * Attempt to swap the positions of two nodes if they meet swapping criteria.
    * Nodes can swap if they are the same size or in the same column/row, not locked, and touching.
-   * 
+   *
    * @param a first node to swap
    * @param b second node to swap
    * @returns true if swap was successful, false if not possible, undefined if not applicable
-   * 
+   *
    * @example
    * const swapped = engine.swap(nodeA, nodeB);
    * if (swapped) {
@@ -351,13 +351,13 @@ export class GridStackEngine {
 
   /**
    * Check if the specified rectangular area is empty (no nodes occupy any part of it).
-   * 
+   *
    * @param x the x coordinate (column) of the area to check
    * @param y the y coordinate (row) of the area to check
    * @param w the width in columns of the area to check
    * @param h the height in rows of the area to check
    * @returns true if the area is completely empty, false if any node overlaps
-   * 
+   *
    * @example
    * if (engine.isAreaEmpty(2, 1, 3, 2)) {
    *   console.log('Area is available for placement');
@@ -371,17 +371,17 @@ export class GridStackEngine {
   /**
    * Re-layout grid items to reclaim any empty space.
    * This optimizes the grid layout by moving items to fill gaps.
-   * 
+   *
    * @param layout layout algorithm to use:
    *   - 'compact' (default): find truly empty spaces, may reorder items
    *   - 'list': keep the sort order exactly the same, move items up sequentially
    * @param doSort if true (default), sort nodes by position before compacting
    * @returns the engine instance for chaining
-   * 
+   *
    * @example
    * // Compact to fill empty spaces
    * engine.compact();
-   * 
+   *
    * // Compact preserving item order
    * engine.compact('list');
    */
@@ -411,9 +411,9 @@ export class GridStackEngine {
    * Enable/disable floating widgets (default: `false`).
    * When floating is enabled, widgets can move up to fill empty spaces.
    * See [example](http://gridstackjs.com/demo/float.html)
-   * 
+   *
    * @param val true to enable floating, false to disable
-   * 
+   *
    * @example
    * engine.float = true;  // Enable floating
    * engine.float = false; // Disable floating (default)
@@ -428,9 +428,9 @@ export class GridStackEngine {
 
   /**
    * Get the current floating mode setting.
-   * 
+   *
    * @returns true if floating is enabled, false otherwise
-   * 
+   *
    * @example
    * const isFloating = engine.float;
    * console.log('Floating enabled:', isFloating);
@@ -440,10 +440,10 @@ export class GridStackEngine {
   /**
    * Sort the nodes array from first to last, or reverse.
    * This is called during collision/placement operations to enforce a specific order.
-   * 
+   *
    * @param dir sort direction: 1 for ascending (first to last), -1 for descending (last to first)
    * @returns the engine instance for chaining
-   * 
+   *
    * @example
    * engine.sortNodes();    // Sort ascending (default)
    * engine.sortNodes(-1);  // Sort descending
@@ -494,11 +494,11 @@ export class GridStackEngine {
   /**
    * Prepare and validate a node's coordinates and values for the current grid.
    * This ensures the node has valid position, size, and properties before being added to the grid.
-   * 
+   *
    * @param node the node to prepare and validate
    * @param resizing if true, resize the node down if it's out of bounds; if false, move it to fit
    * @returns the prepared node with valid coordinates
-   * 
+   *
    * @example
    * const node = { w: 3, h: 2, content: 'Hello' };
    * const prepared = engine.prepareNode(node);
@@ -547,11 +547,11 @@ export class GridStackEngine {
   /**
    * Part 2 of preparing a node to fit inside the grid - validates and fixes coordinates and dimensions.
    * This ensures the node fits within grid boundaries and respects min/max constraints.
-   * 
+   *
    * @param node the node to validate and fix
    * @param resizing if true, resize the node to fit; if false, move the node to fit
    * @returns the engine instance for chaining
-   * 
+   *
    * @example
    * // Fix a node that might be out of bounds
    * engine.nodeBoundFix(node, true); // Resize to fit
@@ -577,7 +577,7 @@ export class GridStackEngine {
       copy.w = Math.min(this.defaultColumn, copy.w || 1);
       this.cacheOneLayout(copy, this.defaultColumn);
     }
-    
+
     if (node.w > this.column) {
       node.w = this.column;
     } else if (node.w < 1) {
@@ -622,14 +622,14 @@ export class GridStackEngine {
   /**
    * Returns a list of nodes that have been modified from their original values.
    * This is used to track which nodes need DOM updates.
-   * 
+   *
    * @param verify if true, performs additional verification by comparing current vs original positions
    * @returns array of nodes that have been modified
-   * 
+   *
    * @example
    * const changed = engine.getDirtyNodes();
    * console.log('Modified nodes:', changed.length);
-   * 
+   *
    * // Get verified dirty nodes
    * const verified = engine.getDirtyNodes(true);
    */
@@ -652,9 +652,9 @@ export class GridStackEngine {
   /**
    * Clean all dirty and last tried information from nodes.
    * This resets the dirty state tracking for all nodes.
-   * 
+   *
    * @returns the engine instance for chaining
-   * 
+   *
    * @internal
    */
   public cleanNodes(): GridStackEngine {
@@ -669,11 +669,11 @@ export class GridStackEngine {
   /**
    * Save the initial position/size of all nodes to track real dirty state.
    * This creates a snapshot of current positions that can be restored later.
-   * 
+   *
    * Note: Should be called right after change events and before move/resize operations.
-   * 
+   *
    * @returns the engine instance for chaining
-   * 
+   *
    * @internal
    */
   public saveInitial(): GridStackEngine {
@@ -688,9 +688,9 @@ export class GridStackEngine {
   /**
    * Restore all nodes back to their initial values.
    * This is typically called when canceling an operation (e.g., Esc key during drag).
-   * 
+   *
    * @returns the engine instance for chaining
-   * 
+   *
    * @internal
    */
   public restoreInitial(): GridStackEngine {
@@ -706,13 +706,13 @@ export class GridStackEngine {
   /**
    * Find the first available empty spot for the given node dimensions.
    * Updates the node's x,y attributes with the found position.
-   * 
+   *
    * @param node the node to find a position for (w,h must be set)
    * @param nodeList optional list of nodes to check against (defaults to engine nodes)
    * @param column optional column count (defaults to engine column count)
    * @param after optional node to start search after (maintains order)
    * @returns true if an empty position was found and node was updated
-   * 
+   *
    * @example
    * const node = { w: 2, h: 1 };
    * if (engine.findEmptyPosition(node)) {
@@ -743,12 +743,12 @@ export class GridStackEngine {
   /**
    * Add the given node to the grid, handling collision detection and re-packing.
    * This is the main method for adding new widgets to the engine.
-   * 
+   *
    * @param node the node to add to the grid
    * @param triggerAddEvent if true, adds node to addedNodes list for event triggering
    * @param after optional node to place this node after (for ordering)
    * @returns the added node (or existing node if duplicate)
-   * 
+   *
    * @example
    * const node = { x: 0, y: 0, w: 2, h: 1, content: 'Hello' };
    * const added = engine.addNode(node, true);
@@ -778,12 +778,12 @@ export class GridStackEngine {
 
   /**
    * Remove the given node from the grid.
-   * 
+   *
    * @param node the node to remove
    * @param removeDOM if true (default), marks node for DOM removal
    * @param triggerEvent if true, adds node to removedNodes list for event triggering
    * @returns the engine instance for chaining
-   * 
+   *
    * @example
    * engine.removeNode(node, true, true);
    */
@@ -805,11 +805,11 @@ export class GridStackEngine {
 
   /**
    * Remove all nodes from the grid.
-   * 
+   *
    * @param removeDOM if true (default), marks all nodes for DOM removal
    * @param triggerEvent if true (default), triggers removal events
    * @returns the engine instance for chaining
-   * 
+   *
    * @example
    * engine.removeAll(); // Remove all nodes
    */
@@ -826,14 +826,14 @@ export class GridStackEngine {
   /**
    * Check if a node can be moved to a new position, considering layout constraints.
    * This is a safer version of moveNode() that validates the move first.
-   * 
+   *
    * For complex cases (like maxRow constraints), it simulates the move in a clone first,
    * then applies the changes only if they meet all specifications.
-   * 
+   *
    * @param node the node to move
    * @param o move options including target position
    * @returns true if the node was successfully moved
-   * 
+   *
    * @example
    * const canMove = engine.moveNodeCheck(node, { x: 2, y: 1 });
    * if (canMove) {

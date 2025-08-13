@@ -7,16 +7,24 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "inlineSources": true,
-    "lib": [ "es6", "es2015", "dom" ],
+    "lib": [ "es2017", "es2015", "dom" ],
     "module": "ES2020",
     "noImplicitAny": false,
     "outDir": "./dist",
     "sourceMap": true,
     "strict": false,
-    "target": "ES2020"
+    "target": "ES2020",
+    "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   }, 
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./spec/**/*.ts",
+    "./vitest.setup.ts",
+    "./vitest.config.ts"
   ],
   "typeroots": [
     "./node_modules/@types"
