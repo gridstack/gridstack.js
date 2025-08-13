@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GridStack E2E Test - Drag and Drop</title>
+
+  <link rel="stylesheet" href="../../demo/demo.css"/>
+  <script src="../../dist/gridstack-all.js"></script>
+
+  <style type="text/css">
+    body {
+      margin: 20px;
+      font-family: Arial, sans-serif;
+    }
+    
+    .grid-stack {
+      background: #f0f0f0;
+      border: 2px solid #ccc;
+    }
+    
+    .grid-stack-item-content {
+      background: #18bc9c;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: move;
+    }
+    
+    .grid-stack-item {
+      border: 1px solid #ddd;
+    }
+    
+    #outside-area {
+      margin-top: 20px;
+      padding: 20px;
+      background: #ffebee;
+      border: 2px dashed #f44336;
+      min-height: 100px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>GridStack Drag and Drop Test</h1>
+  <p>Test dragging widgets outside the grid should not throw exceptions.</p>
+
+  <div id="grid" class="grid-stack">
+    <div id="item-1" class="grid-stack-item" gs-x="0" gs-y="0" gs-w="2" gs-h="2">
+      <div class="grid-stack-item-content">
+        Draggable Item 1
+      </div>
+    </div>
+    <div id="item-2" class="grid-stack-item" gs-x="2" gs-y="0" gs-w="2" gs-h="1">
+      <div class="grid-stack-item-content">
+        Draggable Item 2
+      </div>
+    </div>
+    <div id="item-3" class="grid-stack-item" gs-x="0" gs-y="2" gs-w="4" gs-h="1">
+      <div class="grid-stack-item-content">
+        Draggable Item 3
+      </div>
+    </div>
+  </div>
+
+  <div id="outside-area">
+    <p>Outside Grid Area - Try dragging items here</p>
+  </div>
+
+  <div id="console-output" style="margin-top: 20px; padding: 10px; background: #f5f5f5; border-radius: 4px;">
+    <h3>Console Output:</h3>
+    <div id="console-messages"></div>
+  </div>
+
+  <script type="text/javascript">
+    // Capture console errors for testing
+    const originalConsoleError = console.error;
+    const originalConsoleWarn = console.warn;
+    const consoleMessages = [];
+    
+    function logMessage(type, message) {
+      consoleMessages.push({ type, message, timestamp: Date.now() });
+      const messageDiv = document.createElement('div');
+      messageDiv.style.color = type === 'error' ? 'red' : 'orange';
+      messageDiv.textContent = `[${type.toUpperCase()}] ${message}`;
+      document.getElementById('console-messages').appendChild(messageDiv);
+    }
+    
+    console.error = function(...args) {
+      logMessage('error', args.join(' '));
+      originalConsoleError.apply(console, args);
+    };
+    
+    console.warn = function(...args) {
+      logMessage('warn', args.join(' '));
+      originalConsoleWarn.apply(console, args);
+    };
+    
+    // Expose console messages for testing
+    window.getConsoleMessages = () => consoleMessages;
+    window.clearConsoleMessages = () => {
+      consoleMessages.length = 0;
+      document.getElementById('console-messages').innerHTML = '';
+    };
+
+    // Initialize GridStack
+    const options = {
+      cellHeight: 80,
+      margin: 5,
+      float: false,
+      draggable: {
+        handle: '.grid-stack-item-content'
+      }
+    };
+    
+    const grid = GridStack.init(options);
+    
+    // Add event listeners for testing
+    grid.on('added removed change', function(e, items) {
+      console.log('Grid event:', e.type, items);
+    });
+    
+    grid.on('dragstart', function(e, node) {
+      console.log('Drag started for item:', node.id);
+    });
+    
+    grid.on('dragstop', function(e, node) {
+      console.log('Drag stopped for item:', node.id);
+    });
+
+    // Expose grid instance for testing
+    window.gridstack = grid;
+    window.testReady = true;
+  </script>
+</body>
+</html>

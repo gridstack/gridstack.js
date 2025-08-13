@@ -1,26 +1,24 @@
 import { Utils } from '../src/utils';
 
-describe('gridstack utils', function() {
-  'use strict';
-
-  describe('setup of utils', function() {
-    it('should set gridstack Utils.', function() {
+describe('gridstack utils', () => {
+  describe('setup of utils', () => {
+    it('should set gridstack Utils.', () => {
       let utils = Utils;
       expect(utils).not.toBeNull();
       expect(typeof utils).toBe('function');
     });
   });
 
-  describe('test toBool', function() {
-    it('should return booleans.', function() {
+  describe('test toBool', () => {
+    it('should return booleans.', () => {
       expect(Utils.toBool(true)).toEqual(true);
       expect(Utils.toBool(false)).toEqual(false);
     });
-    it('should work with integer.', function() {
+    it('should work with integer.', () => {
       expect(Utils.toBool(1)).toEqual(true);
       expect(Utils.toBool(0)).toEqual(false);
     });
-    it('should work with Strings.', function() {
+    it('should work with Strings.', () => {
       expect(Utils.toBool('')).toEqual(false);
       expect(Utils.toBool('0')).toEqual(false);
       expect(Utils.toBool('no')).toEqual(false);
@@ -30,16 +28,16 @@ describe('gridstack utils', function() {
     });
   });
 
-  describe('test isIntercepted', function() {
+  describe('test isIntercepted', () => {
     let src = {x: 3, y: 2, w: 3, h: 2};
 
-    it('should intercept.', function() {
+    it('should intercept.', () => {
       expect(Utils.isIntercepted(src, {x: 0, y: 0, w: 4, h: 3})).toEqual(true);
       expect(Utils.isIntercepted(src, {x: 0, y: 0, w: 40, h: 30})).toEqual(true);
       expect(Utils.isIntercepted(src, {x: 3, y: 2, w: 3, h: 2})).toEqual(true);
       expect(Utils.isIntercepted(src, {x: 5, y: 3, w: 3, h: 2})).toEqual(true);
     });
-    it('shouldn\'t intercept.', function() {
+    it('shouldn\'t intercept.', () => {
       expect(Utils.isIntercepted(src, {x: 0, y: 0, w: 3, h: 2})).toEqual(false);
       expect(Utils.isIntercepted(src, {x: 0, y: 0, w: 13, h: 2})).toEqual(false);
       expect(Utils.isIntercepted(src, {x: 1, y: 4, w: 13, h: 2})).toEqual(false);
@@ -48,41 +46,41 @@ describe('gridstack utils', function() {
     });
   });
 
-  describe('test parseHeight', function() {
+  describe('test parseHeight', () => {
 
-    it('should parse height value', function() {
-      expect(Utils.parseHeight(12)).toEqual(jasmine.objectContaining({h: 12, unit: 'px'}));
-      expect(Utils.parseHeight('12px')).toEqual(jasmine.objectContaining({h: 12, unit: 'px'}));
-      expect(Utils.parseHeight('12.3px')).toEqual(jasmine.objectContaining({h: 12.3, unit: 'px'}));
-      expect(Utils.parseHeight('12.3em')).toEqual(jasmine.objectContaining({h: 12.3, unit: 'em'}));
-      expect(Utils.parseHeight('12.3rem')).toEqual(jasmine.objectContaining({h: 12.3, unit: 'rem'}));
-      expect(Utils.parseHeight('12.3vh')).toEqual(jasmine.objectContaining({h: 12.3, unit: 'vh'}));
-      expect(Utils.parseHeight('12.3vw')).toEqual(jasmine.objectContaining({h: 12.3, unit: 'vw'}));
-      expect(Utils.parseHeight('12.3%')).toEqual(jasmine.objectContaining({h: 12.3, unit: '%'}));
-      expect(Utils.parseHeight('12.5cm')).toEqual(jasmine.objectContaining({h: 12.5, unit: 'cm'}));
-      expect(Utils.parseHeight('12.5mm')).toEqual(jasmine.objectContaining({h: 12.5, unit: 'mm'}));
-      expect(Utils.parseHeight('12.5')).toEqual(jasmine.objectContaining({h: 12.5, unit: 'px'}));
-      expect(function() { Utils.parseHeight('12.5 df'); }).toThrowError('Invalid height val = 12.5 df');
+    it('should parse height value', () => {
+      expect(Utils.parseHeight(12)).toEqual(expect.objectContaining({h: 12, unit: 'px'}));
+      expect(Utils.parseHeight('12px')).toEqual(expect.objectContaining({h: 12, unit: 'px'}));
+      expect(Utils.parseHeight('12.3px')).toEqual(expect.objectContaining({h: 12.3, unit: 'px'}));
+      expect(Utils.parseHeight('12.3em')).toEqual(expect.objectContaining({h: 12.3, unit: 'em'}));
+      expect(Utils.parseHeight('12.3rem')).toEqual(expect.objectContaining({h: 12.3, unit: 'rem'}));
+      expect(Utils.parseHeight('12.3vh')).toEqual(expect.objectContaining({h: 12.3, unit: 'vh'}));
+      expect(Utils.parseHeight('12.3vw')).toEqual(expect.objectContaining({h: 12.3, unit: 'vw'}));
+      expect(Utils.parseHeight('12.3%')).toEqual(expect.objectContaining({h: 12.3, unit: '%'}));
+      expect(Utils.parseHeight('12.5cm')).toEqual(expect.objectContaining({h: 12.5, unit: 'cm'}));
+      expect(Utils.parseHeight('12.5mm')).toEqual(expect.objectContaining({h: 12.5, unit: 'mm'}));
+      expect(Utils.parseHeight('12.5')).toEqual(expect.objectContaining({h: 12.5, unit: 'px'}));
+      expect(() => { Utils.parseHeight('12.5 df'); }).toThrow('Invalid height val = 12.5 df');
     });
 
-    it('should parse negative height value', function() {
-      expect(Utils.parseHeight(-12)).toEqual(jasmine.objectContaining({h: -12, unit: 'px'}));
-      expect(Utils.parseHeight('-12px')).toEqual(jasmine.objectContaining({h: -12, unit: 'px'}));
-      expect(Utils.parseHeight('-12.3px')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'px'}));
-      expect(Utils.parseHeight('-12.3em')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'em'}));
-      expect(Utils.parseHeight('-12.3rem')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'rem'}));
-      expect(Utils.parseHeight('-12.3vh')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'vh'}));
-      expect(Utils.parseHeight('-12.3vw')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'vw'}));
-      expect(Utils.parseHeight('-12.3%')).toEqual(jasmine.objectContaining({h: -12.3, unit: '%'}));
-      expect(Utils.parseHeight('-12.3cm')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'cm'}));
-      expect(Utils.parseHeight('-12.3mm')).toEqual(jasmine.objectContaining({h: -12.3, unit: 'mm'}));
-      expect(Utils.parseHeight('-12.5')).toEqual(jasmine.objectContaining({h: -12.5, unit: 'px'}));
-      expect(function() { Utils.parseHeight('-12.5 df'); }).toThrowError('Invalid height val = -12.5 df');
+    it('should parse negative height value', () => {
+      expect(Utils.parseHeight(-12)).toEqual(expect.objectContaining({h: -12, unit: 'px'}));
+      expect(Utils.parseHeight('-12px')).toEqual(expect.objectContaining({h: -12, unit: 'px'}));
+      expect(Utils.parseHeight('-12.3px')).toEqual(expect.objectContaining({h: -12.3, unit: 'px'}));
+      expect(Utils.parseHeight('-12.3em')).toEqual(expect.objectContaining({h: -12.3, unit: 'em'}));
+      expect(Utils.parseHeight('-12.3rem')).toEqual(expect.objectContaining({h: -12.3, unit: 'rem'}));
+      expect(Utils.parseHeight('-12.3vh')).toEqual(expect.objectContaining({h: -12.3, unit: 'vh'}));
+      expect(Utils.parseHeight('-12.3vw')).toEqual(expect.objectContaining({h: -12.3, unit: 'vw'}));
+      expect(Utils.parseHeight('-12.3%')).toEqual(expect.objectContaining({h: -12.3, unit: '%'}));
+      expect(Utils.parseHeight('-12.3cm')).toEqual(expect.objectContaining({h: -12.3, unit: 'cm'}));
+      expect(Utils.parseHeight('-12.3mm')).toEqual(expect.objectContaining({h: -12.3, unit: 'mm'}));
+      expect(Utils.parseHeight('-12.5')).toEqual(expect.objectContaining({h: -12.5, unit: 'px'}));
+      expect(() => { Utils.parseHeight('-12.5 df'); }).toThrow('Invalid height val = -12.5 df');
     });
   });
 
-  describe('test defaults', function() {
-    it('should assign missing field or undefined', function() {
+  describe('test defaults', () => {
+    it('should assign missing field or undefined', () => {
       let src: any = {};
       expect(src).toEqual({});
       expect(Utils.defaults(src, {x: 1, y: 2})).toEqual({x: 1, y: 2});
@@ -98,8 +96,8 @@ describe('gridstack utils', function() {
     });
   });
 
-  describe('removePositioningStyles', function() {
-    it('should remove styles', function() {
+  describe('removePositioningStyles', () => {
+    it('should remove styles', () => {
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div style="position: absolute; left: 1; top: 2; w: 3; h: 4"></div>';
       let el = doc.body.children[0] as HTMLElement;

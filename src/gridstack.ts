@@ -468,10 +468,10 @@ export class GridStack {
 
   /**
    * Create the default grid item divs and content (possibly lazy loaded) by using GridStack.renderCB().
-   * 
+   *
    * @param n GridStackNode definition containing widget configuration
    * @returns the created HTML element with proper grid item structure
-   * 
+   *
    * @example
    * const element = grid.createWidgetDivs({ w: 2, h: 1, content: 'Hello World' });
    */
@@ -698,7 +698,7 @@ export class GridStack {
    * const savedLayout = grid.save(); // Save current layout
    * // ... later restore it
    * grid.load(savedLayout);
-   * 
+   *
    * // Load with custom add/remove callback
    * grid.load(layout, (items, grid, add) => {
    *   if (add) {
@@ -713,10 +713,10 @@ export class GridStack {
    *     items.forEach(item => grid.removeWidget(item.el));
    *   }
    * });
-   * 
+   *
    * // Load without adding/removing missing widgets
    * grid.load(layout, false);
-   * 
+   *
    * @see {@link http://gridstackjs.com/demo/serialization.html} for complete example
    */
   public load(items: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true): GridStack {
@@ -843,14 +843,14 @@ export class GridStack {
 
   /**
    * Gets the current cell height in pixels. This takes into account the unit type and converts to pixels if necessary.
-   * 
+   *
    * @param forcePixel if true, forces conversion to pixels even when cellHeight is specified in other units
    * @returns the cell height in pixels
-   * 
+   *
    * @example
    * const height = grid.getCellHeight();
    * console.log('Cell height:', height, 'px');
-   * 
+   *
    * // Force pixel conversion
    * const pixelHeight = grid.getCellHeight(true);
    */
@@ -937,13 +937,13 @@ export class GridStack {
   /** Gets current cell width. */
   /**
    * Gets the current cell width in pixels. This is calculated based on the grid container width divided by the number of columns.
-   * 
+   *
    * @returns the cell width in pixels
-   * 
+   *
    * @example
    * const width = grid.cellWidth();
    * console.log('Cell width:', width, 'px');
-   * 
+   *
    * // Use cell width to calculate widget dimensions
    * const widgetWidth = width * 3; // For a 3-column wide widget
    */
@@ -984,21 +984,21 @@ export class GridStack {
   /**
    * Re-layout grid items to reclaim any empty space. This is useful after removing widgets
    * or when you want to optimize the layout.
-   * 
+   *
    * @param layout layout type. Options:
-   *   - 'compact' (default): might re-order items to fill any empty space  
+   *   - 'compact' (default): might re-order items to fill any empty space
    *   - 'list': keep the widget left->right order the same, even if that means leaving an empty slot if things don't fit
    * @param doSort re-sort items first based on x,y position. Set to false to do your own sorting ahead (default: true)
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Compact layout after removing widgets
    * grid.removeWidget('.widget-to-remove');
    * grid.compact();
-   * 
+   *
    * // Use list layout (preserve order)
    * grid.compact('list');
-   * 
+   *
    * // Compact without sorting first
    * grid.compact('compact', false);
    */
@@ -1011,28 +1011,28 @@ export class GridStack {
   /**
    * Set the number of columns in the grid. Will update existing widgets to conform to new number of columns,
    * as well as cache the original layout so you can revert back to previous positions without loss.
-   * 
+   *
    * Requires `gridstack-extra.css` or `gridstack-extra.min.css` for [2-11] columns,
    * else you will need to generate correct CSS.
    * See: https://github.com/gridstack/gridstack.js#change-grid-columns
-   * 
+   *
    * @param column Integer > 0 (default 12)
    * @param layout specify the type of re-layout that will happen. Options:
    *   - 'moveScale' (default): scale widget positions and sizes
    *   - 'move': keep widget sizes, only move positions
-   *   - 'scale': keep widget positions, only scale sizes  
+   *   - 'scale': keep widget positions, only scale sizes
    *   - 'none': don't change widget positions or sizes
    *   Note: items will never be outside of the current column boundaries.
    *   Ignored for `column=1` as we always want to vertically stack.
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Change to 6 columns with default scaling
    * grid.column(6);
-   * 
+   *
    * // Change to 4 columns, only move positions
    * grid.column(4, 'move');
-   * 
+   *
    * // Single column layout (vertical stack)
    * grid.column(1);
    */
@@ -1067,9 +1067,9 @@ export class GridStack {
 
   /**
    * Get the number of columns in the grid (default 12).
-   * 
+   *
    * @returns the current number of columns in the grid
-   * 
+   *
    * @example
    * const columnCount = grid.getColumn(); // returns 12 by default
    */
@@ -1078,9 +1078,9 @@ export class GridStack {
   /**
    * Returns an array of grid HTML elements (no placeholder) - used to iterate through our children in DOM order.
    * This method excludes placeholder elements and returns only actual grid items.
-   * 
+   *
    * @returns array of GridItemHTMLElement instances representing all grid items
-   * 
+   *
    * @example
    * const items = grid.getGridItems();
    * items.forEach(item => {
@@ -1095,9 +1095,9 @@ export class GridStack {
   /**
    * Returns true if change callbacks should be ignored due to column change, sizeToContent, loading, etc.
    * This is useful for callers who want to implement dirty flag functionality.
-   * 
+   *
    * @returns true if change callbacks are currently being ignored
-   * 
+   *
    * @example
    * if (!grid.isIgnoreChangeCB()) {
    *   // Process the change event
@@ -1136,10 +1136,10 @@ export class GridStack {
   /**
    * Enable/disable floating widgets (default: `false`). When enabled, widgets can float up to fill empty spaces.
    * See [example](http://gridstackjs.com/demo/float.html)
-   * 
+   *
    * @param val true to enable floating, false to disable
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * grid.float(true);  // Enable floating
    * grid.float(false); // Disable floating (default)
@@ -1154,9 +1154,9 @@ export class GridStack {
 
   /**
    * Get the current float mode setting.
-   * 
+   *
    * @returns true if floating is enabled, false otherwise
-   * 
+   *
    * @example
    * const isFloating = grid.getFloat();
    * console.log('Floating enabled:', isFloating);
@@ -1197,9 +1197,9 @@ export class GridStack {
   /**
    * Returns the current number of rows, which will be at least `minRow` if set.
    * The row count is based on the highest positioned widget in the grid.
-   * 
+   *
    * @returns the current number of rows in the grid
-   * 
+   *
    * @example
    * const rowCount = grid.getRow();
    * console.log('Grid has', rowCount, 'rows');
@@ -1210,13 +1210,13 @@ export class GridStack {
 
   /**
    * Checks if the specified rectangular area is empty (no widgets occupy any part of it).
-   * 
+   *
    * @param x the x coordinate (column) of the area to check
-   * @param y the y coordinate (row) of the area to check  
+   * @param y the y coordinate (row) of the area to check
    * @param w the width in columns of the area to check
    * @param h the height in rows of the area to check
    * @returns true if the area is completely empty, false if any widget overlaps
-   * 
+   *
    * @example
    * // Check if a 2x2 area at position (1,1) is empty
    * if (grid.isAreaEmpty(1, 1, 2, 2)) {
@@ -1231,22 +1231,22 @@ export class GridStack {
    * If you add elements to your grid by hand (or have some framework creating DOM), you have to tell gridstack afterwards to make them widgets.
    * If you want gridstack to add the elements for you, use `addWidget()` instead.
    * Makes the given element a widget and returns it.
-   * 
+   *
    * @param els widget or single selector to convert.
    * @param options widget definition to use instead of reading attributes or using default sizing values
    * @returns the converted GridItemHTMLElement
    *
    * @example
    * const grid = GridStack.init();
-   * 
+   *
    * // Create HTML content manually, possibly looking like:
    * // <div id="item-1" gs-x="0" gs-y="0" gs-w="3" gs-h="2"></div>
    * grid.el.innerHTML = '<div id="item-1" gs-w="3"></div><div id="item-2"></div>';
-   * 
+   *
    * // Convert existing elements to widgets
    * grid.makeWidget('#item-1'); // Uses gs-* attributes from DOM
    * grid.makeWidget('#item-2', {w: 2, h: 1, content: 'Hello World'});
-   * 
+   *
    * // Or pass DOM element directly
    * const element = document.getElementById('item-3');
    * grid.makeWidget(element, {x: 0, y: 1, w: 4, h: 2});
@@ -1280,7 +1280,7 @@ export class GridStack {
 
   /**
    * Register event handler for grid events. You can call this on a single event name, or space separated list.
-   * 
+   *
    * Supported events:
    * - `added`: Called when widgets are being added to a grid
    * - `change`: Occurs when widgets change their position/size due to constraints or direct changes
@@ -1294,17 +1294,17 @@ export class GridStack {
    * - `resizestart`: Called before user starts resizing an item
    * - `resize`: Called while grid item is being resized (for each new row/column value)
    * - `resizestop`: Called after user is done resizing the item, with updated DOM attributes
-   * 
+   *
    * @param name event name(s) to listen for (space separated for multiple)
    * @param callback function to call when event occurs
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Listen to multiple events at once
    * grid.on('added removed change', (event, items) => {
    *   items.forEach(item => console.log('Item changed:', item));
    * });
-   * 
+   *
    * // Listen to individual events
    * grid.on('added', (event, items) => {
    *   items.forEach(item => console.log('Added item:', item));
@@ -1368,9 +1368,9 @@ export class GridStack {
 
   /**
    * Remove all event handlers from the grid. This is useful for cleanup when destroying a grid.
-   * 
+   *
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * grid.offAll(); // Remove all event listeners
    */
@@ -1519,21 +1519,21 @@ export class GridStack {
   /**
    * Updates widget position/size and other info. This is used to change widget properties after creation.
    * Can update position, size, content, and other widget properties.
-   * 
+   *
    * Note: If you need to call this on all nodes, use load() instead which will update what changed.
    * Setting the same x,y for multiple items will be indeterministic and likely unwanted.
-   * 
+   *
    * @param els widget element(s) or selector to modify
    * @param opt new widget options (x,y,w,h, etc.). Only those set will be updated.
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Update widget size and position
    * grid.update('.my-widget', { x: 2, y: 1, w: 3, h: 2 });
-   * 
+   *
    * // Update widget content
    * grid.update(widget, { content: '<p>New content</p>' });
-   * 
+   *
    * // Update multiple properties
    * grid.update('#my-widget', {
    *   w: 4,
@@ -1631,17 +1631,17 @@ export class GridStack {
   /**
    * Updates widget height to match the content height to avoid vertical scrollbars or dead space.
    * This automatically adjusts the widget height based on its content size.
-   * 
-   * Note: This assumes only 1 child under resizeToContentParent='.grid-stack-item-content' 
+   *
+   * Note: This assumes only 1 child under resizeToContentParent='.grid-stack-item-content'
    * (sized to gridItem minus padding) that represents the entire content size.
-   * 
+   *
    * @param el the grid item element to resize
-   * 
+   *
    * @example
    * // Resize a widget to fit its content
    * const widget = document.querySelector('.grid-stack-item');
    * grid.resizeToContent(widget);
-   * 
+   *
    * // This is commonly used with dynamic content:
    * widget.querySelector('.content').innerHTML = 'New longer content...';
    * grid.resizeToContent(widget);
@@ -1709,15 +1709,15 @@ export class GridStack {
   /**
    * Rotate widgets by swapping their width and height. This is typically called when the user presses 'r' during dragging.
    * The rotation swaps the w/h dimensions and adjusts min/max constraints accordingly.
-   * 
+   *
    * @param els widget element(s) or selector to rotate
    * @param relative optional pixel coordinate relative to upper/left corner to rotate around (keeps that cell under cursor)
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Rotate a specific widget
    * grid.rotate('.my-widget');
-   * 
+   *
    * // Rotate with relative positioning during drag
    * grid.rotate(widget, { left: 50, top: 30 });
    */
@@ -1744,13 +1744,13 @@ export class GridStack {
   /**
    * Updates the margins which will set all 4 sides at once - see `GridStackOptions.margin` for format options.
    * Supports CSS string format of 1, 2, or 4 values or a single number.
-   * 
+   *
    * @param value margin value - can be:
    *   - Single number: `10` (applies to all sides)
    *   - Two values: `'10px 20px'` (top/bottom, left/right)
    *   - Four values: `'10px 20px 5px 15px'` (top, right, bottom, left)
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * grid.margin(10);           // 10px all sides
    * grid.margin('10px 20px');  // 10px top/bottom, 20px left/right
@@ -1774,9 +1774,9 @@ export class GridStack {
   /**
    * Returns the current margin value as a number (undefined if the 4 sides don't match).
    * This only returns a number if all sides have the same margin value.
-   * 
+   *
    * @returns the margin value in pixels, or undefined if sides have different values
-   * 
+   *
    * @example
    * const margin = grid.getMargin();
    * if (margin !== undefined) {
@@ -2179,9 +2179,9 @@ export class GridStack {
   /**
    * Get the global drag & drop implementation instance.
    * This provides access to the underlying drag & drop functionality.
-   * 
+   *
    * @returns the DDGridStack instance used for drag & drop operations
-   * 
+   *
    * @example
    * const dd = GridStack.getDD();
    * // Access drag & drop functionality
@@ -2213,20 +2213,20 @@ export class GridStack {
   }
 
   /**
-   * Enables/Disables dragging by the user for specific grid elements. 
+   * Enables/Disables dragging by the user for specific grid elements.
    * For all items and future items, use enableMove() instead. No-op for static grids.
-   * 
-   * Note: If you want to prevent an item from moving due to being pushed around by another 
+   *
+   * Note: If you want to prevent an item from moving due to being pushed around by another
    * during collision, use the 'locked' property instead.
-   * 
+   *
    * @param els widget element(s) or selector to modify
    * @param val if true widget will be draggable, assuming the parent grid isn't noMove or static
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Make specific widgets draggable
    * grid.movable('.my-widget', true);
-   * 
+   *
    * // Disable dragging for specific widgets
    * grid.movable('#fixed-widget', false);
    */
@@ -2244,15 +2244,15 @@ export class GridStack {
   /**
    * Enables/Disables user resizing for specific grid elements.
    * For all items and future items, use enableResize() instead. No-op for static grids.
-   * 
+   *
    * @param els widget element(s) or selector to modify
    * @param val if true widget will be resizable, assuming the parent grid isn't noResize or static
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Make specific widgets resizable
    * grid.resizable('.my-widget', true);
-   * 
+   *
    * // Disable resizing for specific widgets
    * grid.resizable('#fixed-size-widget', false);
    */
@@ -2270,22 +2270,22 @@ export class GridStack {
   /**
    * Temporarily disables widgets moving/resizing.
    * If you want a more permanent way (which freezes up resources) use `setStatic(true)` instead.
-   * 
+   *
    * Note: This is a no-op for static grids.
-   * 
+   *
    * This is a shortcut for:
    * ```typescript
    * grid.enableMove(false);
    * grid.enableResize(false);
    * ```
-   * 
+   *
    * @param recurse if true (default), sub-grids also get updated
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Disable all interactions
    * grid.disable();
-   * 
+   *
    * // Disable only this grid, not sub-grids
    * grid.disable(false);
    */
@@ -2299,20 +2299,20 @@ export class GridStack {
   /**
    * Re-enables widgets moving/resizing - see disable().
    * Note: This is a no-op for static grids.
-   * 
+   *
    * This is a shortcut for:
    * ```typescript
    * grid.enableMove(true);
    * grid.enableResize(true);
    * ```
-   * 
+   *
    * @param recurse if true (default), sub-grids also get updated
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Re-enable all interactions
    * grid.enable();
-   * 
+   *
    * // Enable only this grid, not sub-grids
    * grid.enable(false);
    */
@@ -2327,18 +2327,18 @@ export class GridStack {
   /**
    * Enables/disables widget moving for all widgets. No-op for static grids.
    * Note: locally defined items (with noMove property) still override this setting.
-   * 
+   *
    * @param doEnable if true widgets will be movable, if false moving is disabled
    * @param recurse if true (default), sub-grids also get updated
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Enable moving for all widgets
    * grid.enableMove(true);
-   * 
+   *
    * // Disable moving for all widgets
    * grid.enableMove(false);
-   * 
+   *
    * // Enable only this grid, not sub-grids
    * grid.enableMove(true, false);
    */
@@ -2355,18 +2355,18 @@ export class GridStack {
   /**
    * Enables/disables widget resizing for all widgets. No-op for static grids.
    * Note: locally defined items (with noResize property) still override this setting.
-   * 
+   *
    * @param doEnable if true widgets will be resizable, if false resizing is disabled
-   * @param recurse if true (default), sub-grids also get updated  
+   * @param recurse if true (default), sub-grids also get updated
    * @returns the grid instance for chaining
-   * 
+   *
    * @example
    * // Enable resizing for all widgets
    * grid.enableResize(true);
-   * 
+   *
    * // Disable resizing for all widgets
    * grid.enableResize(false);
-   * 
+   *
    * // Enable only this grid, not sub-grids
    * grid.enableResize(true, false);
    */

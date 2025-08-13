@@ -38,7 +38,7 @@ export type DDValue = number | string;
 
 /**
  * Callback function type for drag & drop events.
- * 
+ *
  * @param event - The DOM event that triggered the callback
  * @param arg2 - The grid item element being dragged/dropped
  * @param helper - Optional helper element used during drag operations
@@ -49,7 +49,7 @@ export type DDCallback = (event: Event, arg2: GridItemHTMLElement, helper?: Grid
 
 /**
  * HTML Native Mouse and Touch Events Drag and Drop functionality.
- * 
+ *
  * This class provides the main drag & drop implementation for GridStack,
  * handling resizing, dragging, and dropping of grid items using native HTML5 events.
  * It manages the interaction between different DD components and the grid system.
@@ -58,13 +58,13 @@ export class DDGridStack {
 
   /**
    * Enable/disable/configure resizing for grid elements.
-   * 
+   *
    * @param el - Grid item element(s) to configure
    * @param opts - Resize options or command ('enable', 'disable', 'destroy', 'option', or config object)
    * @param key - Option key when using 'option' command
    * @param value - Option value when using 'option' command
    * @returns this instance for chaining
-   * 
+   *
    * @example
    * dd.resizable(element, 'enable');  // Enable resizing
    * dd.resizable(element, 'option', 'minWidth', 100);  // Set minimum width
@@ -106,13 +106,13 @@ export class DDGridStack {
 
   /**
    * Enable/disable/configure dragging for grid elements.
-   * 
+   *
    * @param el - Grid item element(s) to configure
    * @param opts - Drag options or command ('enable', 'disable', 'destroy', 'option', or config object)
    * @param key - Option key when using 'option' command
    * @param value - Option value when using 'option' command
    * @returns this instance for chaining
-   * 
+   *
    * @example
    * dd.draggable(element, 'enable');  // Enable dragging
    * dd.draggable(element, {handle: '.drag-handle'});  // Configure drag handle
