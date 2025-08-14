@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.3.2-dev (TBD)](#1232-dev-tbd)
+- [12.3.3 (2025-08-13)](#1233-2025-08-13)
 - [12.3.2 (2025-08-12)](#1232-2025-08-12)
 - [12.3.1 (2025-08-11)](#1231-2025-08-11)
 - [12.3.0 (2025-08-10)](#1230-2025-08-10)
@@ -134,7 +134,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 12.3.2-dev (TBD)
+## 12.3.3 (2025-08-13)
 * fix: [#3139](https://github.com/gridstack/gridstack.js/pull/3139) `Utils:removeInternalForSave()` to skip arrays
 
 ## 12.3.2 (2025-08-12)
