@@ -464,6 +464,11 @@ export interface DDResizeOpt {
    * Note: it is not recommended to resize from the top sides as weird side effect may occur.
   */
   handles?: string;
+  /**
+   * Custom element or query inside the widget node that is used instead of the
+   * generated resize handle.
+   */
+  element?: string | HTMLElement
 }
 
 /** Drag&Drop remove options */

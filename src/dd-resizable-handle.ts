@@ -4,9 +4,9 @@
  */
 
 import { isTouch, pointerdown, touchend, touchmove, touchstart } from './dd-touch';
-import { GridItemHTMLElement } from './gridstack';
+import { DDResizableOpt, GridItemHTMLElement } from './gridstack';
 
-export interface DDResizableHandleOpt {
+export interface DDResizableHandleOpt extends DDResizableOpt {
   start?: (event) => void;
   move?: (event) => void;
   stop?: (event) => void;
@@ -34,8 +34,11 @@ export class DDResizableHandle {
 
   /** @internal */
   protected _init(): DDResizableHandle {
-    this.el = this.host.querySelector(".ui-resizable-handle")
-    if (!this.el) {
+    if (this.option.element) {
+      this.el = this.option.element instanceof HTMLElement
+        ? this.option.element
+        : this.host.querySelector(this.option.element)
+    } else {
       this.el = document.createElement('div');
       this.el.classList.add('ui-resizable-handle');
       this.host.appendChild(this.el);
@@ -60,15 +63,8 @@ export class DDResizableHandle {
       this.el.removeEventListener('touchstart', touchstart);
       this.el.removeEventListener('pointerdown', pointerdown);
     }
-    try {
+    if (!this.option.element) {
       this.host.removeChild(this.el);
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.name !== "NotFoundError") {
-          // Skip if handle is not a child (created in _init) of the parent node
-          throw error
-        }
-      }
     }
     delete this.el;
     delete this.host;
