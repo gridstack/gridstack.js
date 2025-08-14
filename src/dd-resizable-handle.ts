@@ -34,12 +34,15 @@ export class DDResizableHandle {
 
   /** @internal */
   protected _init(): DDResizableHandle {
-    const el = this.el = document.createElement('div');
-    el.classList.add('ui-resizable-handle');
-    el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
-    el.style.zIndex = '100';
-    el.style.userSelect = 'none';
-    this.host.appendChild(this.el);
+    this.el = this.host.querySelector(".ui-resizable-handle")
+    if (!this.el) {
+      this.el = document.createElement('div');
+      this.el.classList.add('ui-resizable-handle');
+      this.host.appendChild(this.el);
+    }
+    this.el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
+    this.el.style.zIndex = '100';
+    this.el.style.userSelect = 'none';
     this.el.addEventListener('mousedown', this._mouseDown);
     if (isTouch) {
       this.el.addEventListener('touchstart', touchstart);
