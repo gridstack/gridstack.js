@@ -60,7 +60,16 @@ export class DDResizableHandle {
       this.el.removeEventListener('touchstart', touchstart);
       this.el.removeEventListener('pointerdown', pointerdown);
     }
-    this.host.removeChild(this.el);
+    try {
+      this.host.removeChild(this.el);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.name !== "NotFoundError") {
+          // Skip if handle is not a child (created in _init) of the parent node
+          throw error
+        }
+      }
+    }
     delete this.el;
     delete this.host;
     return this;
