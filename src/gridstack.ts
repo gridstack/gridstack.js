@@ -6,7 +6,7 @@
  * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
  */
 import { GridStackEngine } from './gridstack-engine';
-import { Utils, HeightData, obsolete, DragTransform } from './utils';
+import { Utils, HeightData, DragTransform } from './utils';
 import {
   gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragOpt, GridStackPosition, GridStackOptions,
@@ -950,12 +950,14 @@ export class GridStack {
   public cellWidth(): number {
     return this._widthOrContainer() / this.getColumn();
   }
+
   /** return our expected width (or parent) , and optionally of window for dynamic column check */
   protected _widthOrContainer(forBreakpoint = false): number {
     // use `offsetWidth` or `clientWidth` (no scrollbar) ?
     // https://stackoverflow.com/questions/21064101/understanding-offsetwidth-clientwidth-scrollwidth-and-height-respectively
     return forBreakpoint && this.opts.columnOpts?.breakpointForWindow ? window.innerWidth : (this.el.clientWidth || this.el.parentElement.clientWidth || window.innerWidth);
   }
+  
   /** checks for dynamic column count for our current size, returning true if changed */
   protected checkDynamicColumn(): boolean {
     const resp = this.opts.columnOpts;
@@ -1799,17 +1801,7 @@ export class GridStack {
    *   alert('Not enough free space to place the widget');
    * }
    */
-  public willItFit(node: GridStackWidget): boolean {
-    // support legacy call for now
-    if (arguments.length > 1) {
-      console.warn('gridstack.ts: `willItFit(x,y,w,h,autoPosition)` is deprecated. Use `willItFit({x, y,...})`. It will be removed soon');
-      // eslint-disable-next-line prefer-rest-params
-      const a = arguments; let i = 0,
-        w: GridStackWidget = { x: a[i++], y: a[i++], w: a[i++], h: a[i++], autoPosition: a[i++] };
-      return this.willItFit(w);
-    }
-    return this.engine.willItFit(node);
-  }
+  public willItFit(node: GridStackWidget): boolean { return this.engine.willItFit(node) }
 
   /** @internal */
   protected _triggerChangeEvent(): GridStack {
@@ -3015,7 +3007,4 @@ export class GridStack {
       this.engine.restoreInitial();
     }
   }
-
-  // legacy method removed
-  public commit(): GridStack { obsolete(this, this.batchUpdate(false), 'commit', 'batchUpdate', '5.2'); return this; }
 }

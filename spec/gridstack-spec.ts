@@ -1841,39 +1841,6 @@ describe('gridstack >', () => {
     });
   });
 
- // ..and finally track log warnings at the end, instead of displaying them....
-  describe('obsolete warnings >', () => {
-    console.warn = vi.fn(); // track warnings instead of displaying them
-    beforeEach(() => {
-      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
-    });
-    afterEach(() => {
-      document.body.removeChild(document.getElementById('gs-cont'));
-    });
-    it('willItFit() legacy >', () => {
-      grid = GridStack.init({maxRow: 5});
-      expect((grid as any).willItFit(0, 0, 1, 3, false)).toBe(true);
-      expect((grid as any).willItFit(0, 0, 1, 4, false)).toBe(false);
-    });
-    it('warning if OLD commit() is called >', () => {
-      grid = GridStack.init();
-      grid.batchUpdate(true);
-      expect(grid.engine.batchMode).toBe(true);
-      grid.commit(); // old API
-      expect(grid.engine.batchMode).toBe(false);
-      // expect(console.warn).toHaveBeenCalledWith('gridstack.js: Function `setGridWidth` is deprecated in v0.5.3 and has been replaced with `column`. It will be **completely** removed in v1.0');
-    });
-
-    /* saving as example
-    it('warning if OLD setGridWidth is called >', () => {
-      let grid: any = GridStack.init();
-      grid.setGridWidth(11); // old 0.5.2 API
-      expect(grid.getColumn()).toBe(11);
-      expect(console.warn).toHaveBeenCalledWith('gridstack.js: Function `setGridWidth` is deprecated in v0.5.3 and has been replaced with `column`. It will be **completely** removed in v1.0');
-    });
-    */
-  });
-
   // Note: Stylesheet tests moved to E2E tests
   // where real browser CSS engines can provide accurate getComputedStyle() values
   // describe('stylesheet', () => {});
