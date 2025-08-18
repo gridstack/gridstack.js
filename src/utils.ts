@@ -29,15 +29,15 @@ export interface DragTransform {
  * @returns a wrapper function that warns about deprecation
  */
 // eslint-disable-next-line
-export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
-  const wrapper = (...args) => {
-    console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
-    'with `' + newName + '`. It will be **removed** in a future release');
-    return f.apply(self, args);
-  }
-  wrapper.prototype = f.prototype;
-  return wrapper;
-}
+// export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
+//   const wrapper = (...args) => {
+//     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
+//     'with `' + newName + '`. It will be **removed** in a future release');
+//     return f.apply(self, args);
+//   }
+//   wrapper.prototype = f.prototype;
+//   return wrapper;
+// }
 
 /**
  * @internal Checks for obsolete grid options and migrates them to new names.
@@ -48,13 +48,13 @@ export function obsolete(self, f, oldName: string, newName: string, rev: string)
  * @param newName the new option name to use instead
  * @param rev the version when the deprecation was introduced
  */
-export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string): void {
-  if (opts[oldName] !== undefined) {
-    opts[newName] = opts[oldName];
-    console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + ' and has been replaced with `' +
-      newName + '`. It will be **removed** in a future release');
-  }
-}
+// export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string): void {
+//   if (opts[oldName] !== undefined) {
+//     opts[newName] = opts[oldName];
+//     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + ' and has been replaced with `' +
+//       newName + '`. It will be **removed** in a future release');
+//   }
+// }
 
 /**
  * @internal Checks for obsolete grid options that have been completely removed.
@@ -65,11 +65,11 @@ export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: s
  * @param rev the version when the option was removed
  * @param info additional information about the removal
  */
-export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string): void {
-  if (opts[oldName] !== undefined) {
-    console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
-  }
-}
+// export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string): void {
+//   if (opts[oldName] !== undefined) {
+//     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
+//   }
+// }
 
 /**
  * @internal Checks for obsolete HTML element attributes and migrates them.
@@ -80,14 +80,14 @@ export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: st
  * @param newName the new attribute name to use instead
  * @param rev the version when the deprecation was introduced
  */
-export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string): void {
-  const oldAttr = el.getAttribute(oldName);
-  if (oldAttr !== null) {
-    el.setAttribute(newName, oldAttr);
-    console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
-      newName + '`. It will be **removed** in a future release');
-  }
-}
+// export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string): void {
+//   const oldAttr = el.getAttribute(oldName);
+//   if (oldAttr !== null) {
+//     el.setAttribute(newName, oldAttr);
+//     console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
+//       newName + '`. It will be **removed** in a future release');
+//   }
+// }
 
 /**
  * Collection of utility methods used throughout GridStack.
