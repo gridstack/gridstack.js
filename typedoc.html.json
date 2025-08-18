@@ -1,6 +1,7 @@
 {
   "$schema": "https://typedoc.org/schema.json",
   "entryPoints": ["src/gridstack.ts"],
+  "tsconfig": "tsconfig.docs.json",
   "excludeExternals": false,
   "out": "doc/html",
   "exclude": [
