@@ -12,7 +12,7 @@ on:
 jobs:
   sync-docs:
     runs-on: ubuntu-latest
-    if: github.repository == 'gridstack/gridstack.js'
+    if: github.repository == 'adumesny/gridstack.js'
     
     steps:
     - name: Checkout master branch
@@ -53,19 +53,17 @@ jobs:
       run: |
         echo "Syncing main library documentation..."
         
-        # Remove existing docs directory if it exists
-        if [ -d "docs/html" ]; then
-          rm -rf docs/html
+        # Remove existing doc/html directory if it exists
+        if [ -d "doc/html" ]; then
+          rm -rf doc/html
         fi
         
         # Extract docs from master branch using git archive
-        mkdir -p docs
+        mkdir -p doc
         git archive master doc/html | tar -xf -
-        mv doc/html docs/html
-        rm -rf doc
         
         # Add changes
-        git add docs/html
+        git add doc/html
 
     - name: Sync Angular documentation
       if: steps.check-docs.outputs.angular_docs == 'true'
