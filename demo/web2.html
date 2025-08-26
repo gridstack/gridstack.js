@@ -85,11 +85,13 @@
       children
     });
     GridStack.setupDragIn('.sidepanel>.grid-stack-item', undefined, insert);
-
     grid.on('added removed change', function (e, items) {
       let str = '';
       items.forEach(function (item) { str += ' (x,y)=' + item.x + ',' + item.y; });
       console.log(e.type + ' ' + items.length + ' items:' + str);
+    });
+    grid.on('dropover dragstart dragstop', function (e, item) {
+      console.log('here', GridStack.isDraggingState)
     });
   </script>
 </body>

@@ -2047,6 +2047,9 @@ export class GridStack {
 
   /** @internal call when drag (and drop) needs to be cancelled (Esc key) */
   public cancelDrag() {
+    // IUNU addition - End global drag
+    GridStack.endGlobalDrag();
+    // Ends IUNU addition
     const n = this._placeholder?.gridstackNode;
     if (!n) return;
     if (n._isExternal) {
@@ -2088,6 +2091,9 @@ export class GridStack {
       const node = helper.gridstackNode;
       if (!node) return;
 
+      // IUNU addition - Ensure drag state is active
+      GridStack.startGlobalDrag(node);
+      // Ends IUNU addition
       // if the element is being dragged from outside, scale it down to match the grid's scale
       // and slightly adjust its position relative to the mouse
       if (!node.grid?.el) {
@@ -2114,8 +2120,17 @@ export class GridStack {
       };
 
       if (node._temporaryRemoved) {
-        node.x = Math.max(0, Math.round(left / cellWidth));
-        node.y = Math.max(0, Math.round(top / cellHeight));
+        // IUNU modification: More sensitive position calculation for delayed placeholder
+        if (this._delayedPlaceholderActivated) {
+          // Use floor for more responsive updates, or add a smaller threshold
+          node.x = Math.max(0, Math.floor((left + cellWidth * 0.3) / cellWidth));
+          node.y = Math.max(0, Math.floor((top + cellHeight * 0.3) / cellHeight));
+        } else {
+          node.x = Math.max(0, Math.round(left / cellWidth));
+          node.y = Math.max(0, Math.round(top / cellHeight));
+        }
+        // Ends IUNU modification.
+
         delete node.autoPosition;
         this.engine.nodeBoundFix(node);
 
@@ -2241,7 +2256,6 @@ export class GridStack {
 
         // clear any marked for complete removal (Note: don't check _isAboutToRemove as that is cleared above - just do it)
         GridStack._itemRemoving(node.el, false);
-
         dd.on(el, 'drag', onDrag);
         // make sure this is called at least once when going fast #1578
         onDrag(event as DragEvent, el, helper);
@@ -2283,6 +2297,7 @@ export class GridStack {
       .on(this.el, 'drop', (event, el: GridItemHTMLElement, helper: GridItemHTMLElement) => {
         // IUNU addition. Clears the timeout, if any. Needed to avoid conflict with already existent items
         // being dropped.
+        GridStack.endGlobalDrag();
         if (
           this.opts.pauseDragInWhileMoving &&
           !this._delayedPlaceholderActivated
@@ -2451,6 +2466,9 @@ export class GridStack {
 
       /** called when the item stops moving/resizing */
       const onEndMoving = (event: Event) => {
+        // IUNU addition - End global drag
+        GridStack.endGlobalDrag();
+        // Ends IUNU addition
         this.placeholder.remove();
         delete this.placeholder.gridstackNode;
         delete node._moving;
@@ -2518,6 +2536,65 @@ export class GridStack {
   }
 
   // IUNU addition. Creates needed protected properties to handle the delay.
+  private static _globalDragState = {
+    isDragging: false,
+    draggedNode: null as GridStackNode | null,
+  };
+
+  // Add this static getter - accessible as GridStack.isDraggingState
+  public static get isDraggingState(): boolean {
+    return this._globalDragState.isDragging;
+  }
+
+  // Make these public so they can be called from outside
+  public static startGlobalDrag(node?: GridStackNode): void {
+    if (!this._globalDragState.isDragging) {
+      this._globalDragState.isDragging = true;
+      this._globalDragState.draggedNode = node || null;
+      document.body.classList.add('gridstack-dragging');
+      document.body.style.cursor = 'grabbing';
+
+      document.dispatchEvent(new CustomEvent('gridstack:dragstart', { 
+        detail: { isDragging: true, node } 
+      }));
+    }
+  }
+
+  public static endGlobalDrag(): void {
+    if (this._globalDragState.isDragging) {
+      this._globalDragState.isDragging = false;
+      this._globalDragState.draggedNode = null;
+      document.body.classList.remove('gridstack-dragging');
+      document.body.style.cursor = '';
+
+      document.dispatchEvent(new CustomEvent('gridstack:dragend', { 
+        detail: { isDragging: false } 
+      }));
+    }
+  }
+
+  // Static initialization block for global handlers
+  static {
+    if (typeof document !== 'undefined') {
+      // Handle ESC key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this._globalDragState?.isDragging) {
+          this.endGlobalDrag();
+        }
+      });
+      
+      // Safety net for mouseup anywhere on document
+      document.addEventListener('mouseup', () => {
+        setTimeout(() => {
+          if (this._globalDragState?.isDragging) {
+            this.endGlobalDrag();
+          }
+        }, 100);
+      });
+    }
+  }
+  // Ends IUNU addition.
+
   protected __delayedPlaceholderActivated: boolean = false;
 
   public get _delayedPlaceholderActivated(): boolean {
@@ -2602,6 +2679,7 @@ export class GridStack {
     // Ends IUNU removal
 
     // IUNU addition. Sets in a timeout the placeholder feedback when the option pauseDragInWhileMoving is on.
+    GridStack.startGlobalDrag(node);
     const shouldDelayPlaceholder = this.opts.pauseDragInWhileMoving && node._isExternal
     if (shouldDelayPlaceholder) {
       this._delayedPlaceholderActivated = false;
