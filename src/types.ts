@@ -282,6 +282,7 @@ export interface GridStackOptions {
    * IUNU addition. Delay before start draging outside elements to the grid.
    */
   pauseDragInWhileMoving?: number;
+  // Ends IUNU addition.
 }
 
 /** options used during GridStackEngine.moveNode() */

@@ -15,7 +15,7 @@ interface DragOffset {
   left: number;
   top: number;
   width: number;
-  height: number;
+  height: number | string;
   offsetLeft: number;
   offsetTop: number;
 }
@@ -391,7 +391,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       offsetLeft: - event.clientX + targetOffset.left - xformOffsetX,
       offsetTop: - event.clientY + targetOffset.top - xformOffsetY,
       width: targetOffset.width * this.dragTransform.xScale,
-      height: targetOffset.height * this.dragTransform.yScale
+      // IUNU modification
+      // height: targetOffset.height * this.dragTransform.yScale
+      height: 'auto'
+      // Ends IUNU modification
     };
   }
 
