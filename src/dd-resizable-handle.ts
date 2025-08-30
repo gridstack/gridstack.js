@@ -4,9 +4,9 @@
  */
 
 import { isTouch, pointerdown, touchend, touchmove, touchstart } from './dd-touch';
-import { GridItemHTMLElement } from './gridstack';
+import { DDResizableOpt, GridItemHTMLElement } from './gridstack';
 
-export interface DDResizableHandleOpt {
+export interface DDResizableHandleOpt extends DDResizableOpt {
   start?: (event) => void;
   move?: (event) => void;
   stop?: (event) => void;
@@ -34,18 +34,34 @@ export class DDResizableHandle {
 
   /** @internal */
   protected _init(): DDResizableHandle {
-    const el = this.el = document.createElement('div');
-    el.classList.add('ui-resizable-handle');
-    el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
-    el.style.zIndex = '100';
-    el.style.userSelect = 'none';
-    this.host.appendChild(this.el);
+    if (this.option.element) {
+      try {
+        this.el = this.option.element instanceof HTMLElement
+          ? this.option.element
+          : this.host.querySelector(this.option.element)
+      } catch (error) {
+        this.option.element = undefined // make sure destroy handles it correctly
+        console.error("Query for resizeable handle failed, falling back", error)
+      }
+    }
+
+    if (!this.el) {
+      this.el = document.createElement('div');
+      this.host.appendChild(this.el);
+    }
+
+    this.el.classList.add('ui-resizable-handle');
+    this.el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
+    this.el.style.zIndex = '100';
+    this.el.style.userSelect = 'none';
+
     this.el.addEventListener('mousedown', this._mouseDown);
     if (isTouch) {
       this.el.addEventListener('touchstart', touchstart);
       this.el.addEventListener('pointerdown', pointerdown);
       // this.el.style.touchAction = 'none'; // not needed unlike pointerdown doc comment
     }
+
     return this;
   }
 
@@ -57,7 +73,9 @@ export class DDResizableHandle {
       this.el.removeEventListener('touchstart', touchstart);
       this.el.removeEventListener('pointerdown', pointerdown);
     }
-    this.host.removeChild(this.el);
+    if (!this.option.element) {
+      this.host.removeChild(this.el);
+    }
     delete this.el;
     delete this.host;
     return this;

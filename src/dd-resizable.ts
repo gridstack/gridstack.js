@@ -15,6 +15,7 @@ import { DDManager } from './dd-manager';
 export interface DDResizableOpt {
   autoHide?: boolean;
   handles?: string;
+  element?: string | HTMLElement;
   maxHeight?: number;
   maxHeightMoveUp?: number;
   maxWidth?: number;
@@ -153,6 +154,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.handlers = this.option.handles.split(',')
       .map(dir => dir.trim())
       .map(dir => new DDResizableHandle(this.el, dir, {
+        ...this.option,
         start: (event: MouseEvent) => {
           this._resizeStart(event);
         },
