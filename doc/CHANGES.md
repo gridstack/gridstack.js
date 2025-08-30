@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [12.3.3-dev (TBD)](#1233-dev-tbd)
 - [12.3.3 (2025-08-13)](#1233-2025-08-13)
 - [12.3.2 (2025-08-12)](#1232-2025-08-12)
 - [12.3.1 (2025-08-11)](#1231-2025-08-11)
@@ -133,6 +134,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 12.3.3-dev (TBD)
+* feat: [#3104](https://github.com/gridstack/gridstack.js/issues/3104) Custom resize div element target - thank you [Marvin Heilemann](https://github.com/muuvmuuv)
 
 ## 12.3.3 (2025-08-13)
 * fix: [#3139](https://github.com/gridstack/gridstack.js/pull/3139) `Utils:removeInternalForSave()` to skip arrays

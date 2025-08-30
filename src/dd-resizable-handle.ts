@@ -4,12 +4,13 @@
  */
 
 import { isTouch, pointerdown, touchend, touchmove, touchstart } from './dd-touch';
-import { DDResizableOpt, GridItemHTMLElement } from './gridstack';
+import { GridItemHTMLElement } from './gridstack';
 
-export interface DDResizableHandleOpt extends DDResizableOpt {
-  start?: (event) => void;
-  move?: (event) => void;
-  stop?: (event) => void;
+export interface DDResizableHandleOpt {
+  element?: string | HTMLElement;
+  start?: (event: MouseEvent) => void;
+  move?: (event: MouseEvent) => void;
+  stop?: (event: MouseEvent) => void;
 }
 
 export class DDResizableHandle {
