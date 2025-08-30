@@ -6,16 +6,13 @@
 import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
-import { DDUIData, GridItemHTMLElement, Rect, Size } from './types';
+import { DDResizeOpt, DDUIData, GridItemHTMLElement, Rect, Size } from './types';
 import { DDManager } from './dd-manager';
 
 // import { GridItemHTMLElement } from './types'; let count = 0; // TEST
 
 // TODO: merge with DDDragOpt
-export interface DDResizableOpt {
-  autoHide?: boolean;
-  handles?: string;
-  element?: string | HTMLElement;
+export interface DDResizableOpt extends DDResizeOpt {
   maxHeight?: number;
   maxHeightMoveUp?: number;
   maxWidth?: number;
@@ -154,16 +151,10 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.handlers = this.option.handles.split(',')
       .map(dir => dir.trim())
       .map(dir => new DDResizableHandle(this.el, dir, {
-        ...this.option,
-        start: (event: MouseEvent) => {
-          this._resizeStart(event);
-        },
-        stop: (event: MouseEvent) => {
-          this._resizeStop(event);
-        },
-        move: (event: MouseEvent) => {
-          this._resizing(event, dir);
-        }
+        element: this.option.element,
+        start: (event: MouseEvent) => this._resizeStart(event),
+        stop: (event: MouseEvent) => this._resizeStop(event),
+        move: (event: MouseEvent) => this._resizing(event, dir)
       }));
     return this;
   }

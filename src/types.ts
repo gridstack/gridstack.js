@@ -337,7 +337,7 @@ export interface GridStackOptions {
   /** placeholder default content (default?: '') */
   placeholderText?: string;
 
-  /** allows to override UI resizable options. (default?: { handles: 'se' }) */
+  /** allows to override UI resizable options. default is { handles: 'se', autoHide: true on desktop, false on mobile } */
   resizable?: DDResizeOpt;
 
   /**
@@ -457,7 +457,7 @@ export interface GridStackWidget extends GridStackPosition {
 
 /** Drag&Drop resize options */
 export interface DDResizeOpt {
-  /** do resize handle hide by default until mouse over ? - default: true on desktop, false on mobile*/
+  /** do resize handle hide by default until mouse over. default: true on desktop, false on mobile */
   autoHide?: boolean;
   /**
    * sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east)
