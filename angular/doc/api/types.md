@@ -68,7 +68,7 @@ Supports Angular-specific widget definitions and nested grids.
 type NgCompInputs = object;
 ```
 
-Defined in: [angular/projects/lib/src/lib/types.ts:54](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L54)
+Defined in: [angular/projects/lib/src/lib/types.ts:55](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L55)
 
 Type for component input data serialization.
 Maps @Input() property names to their values for widget persistence.
