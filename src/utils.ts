@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2025 Alain Dumesny - see GridStack root license
  */
 
-import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
+import { GridStackElement, GridStackNode, numberOrString, GridStackPosition, GridStackWidget } from './types';
 
 export interface HeightData {
   h: number;

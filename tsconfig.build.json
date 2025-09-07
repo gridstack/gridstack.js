@@ -4,7 +4,8 @@
     "skipLibCheck": true
   },
   "include": [
-    "./src/**/*.ts"
+    "./src/**/*.ts",
+    "./angular/projects/lib/src/**/*.ts"
   ],
   "exclude": [
     "./src/**/*.spec.ts",
@@ -12,7 +13,10 @@
     "./spec/**/*",
     "./vitest.setup.ts",
     "./vitest.config.ts",
-    "./angular/**/*",
+    "./angular/projects/lib/src/**/*.spec.ts",
+    "./angular/projects/lib/src/test.ts",
+    "./angular/projects/demo/**/*",
+    "./angular/node_modules/**/*",
     "./demo/**/*",
     "./node_modules/**/*"
   ]

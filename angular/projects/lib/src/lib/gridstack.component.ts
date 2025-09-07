@@ -4,8 +4,8 @@
  */
 
 import {
-    AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, Input,
-    OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType, ComponentRef
+  AfterContentInit, Component, ContentChildren, ElementRef, EventEmitter, Input,
+  OnDestroy, OnInit, Output, QueryList, Type, ViewChild, ViewContainerRef, reflectComponentType, ComponentRef
 } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { Subscription } from 'rxjs';
@@ -45,19 +45,19 @@ export interface GridCompHTMLElement extends GridHTMLElement {
  * Mapping of selector strings to Angular component types.
  * Used for dynamic component creation based on widget selectors.
  */
-export type SelectorToType = {[key: string]: Type<Object>};
+export type SelectorToType = {[key: string]: Type<object>};
 
 /**
  * Angular component wrapper for GridStack.
- * 
+ *
  * This component provides Angular integration for GridStack grids, handling:
  * - Grid initialization and lifecycle
  * - Dynamic component creation and management
  * - Event binding and emission
  * - Integration with Angular change detection
- * 
+ *
  * Use in combination with GridstackItemComponent for individual grid items.
- * 
+ *
  * @example
  * ```html
  * <gridstack [options]="gridOptions" (change)="onGridChange($event)">
@@ -99,7 +99,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /**
    * Grid configuration options.
    * Can be set before grid initialization or updated after grid is created.
-   * 
+   *
    * @example
    * ```typescript
    * gridOptions: GridStackOptions = {
@@ -122,7 +122,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /**
    * Controls whether empty content should be displayed.
    * Set to true to show ng-content with 'empty-content' selector when grid has no items.
-   * 
+   *
    * @example
    * ```html
    * <gridstack [isEmpty]="gridItems.length === 0">
@@ -134,52 +134,52 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
 
   /**
    * GridStack event emitters for Angular integration.
-   * 
+   *
    * These provide Angular-style event handling for GridStack events.
    * Alternatively, use `this.grid.on('event1 event2', callback)` for multiple events.
-   * 
+   *
    * Note: 'CB' suffix prevents conflicts with native DOM events.
-   * 
+   *
    * @example
    * ```html
    * <gridstack (changeCB)="onGridChange($event)" (droppedCB)="onItemDropped($event)">
    * </gridstack>
    * ```
    */
-  
+
   /** Emitted when widgets are added to the grid */
   @Output() public addedCB = new EventEmitter<nodesCB>();
-  
+
   /** Emitted when grid layout changes */
   @Output() public changeCB = new EventEmitter<nodesCB>();
-  
+
   /** Emitted when grid is disabled */
   @Output() public disableCB = new EventEmitter<eventCB>();
-  
+
   /** Emitted during widget drag operations */
   @Output() public dragCB = new EventEmitter<elementCB>();
-  
+
   /** Emitted when widget drag starts */
   @Output() public dragStartCB = new EventEmitter<elementCB>();
-  
+
   /** Emitted when widget drag stops */
   @Output() public dragStopCB = new EventEmitter<elementCB>();
-  
+
   /** Emitted when widget is dropped */
   @Output() public droppedCB = new EventEmitter<droppedCB>();
-  
+
   /** Emitted when grid is enabled */
   @Output() public enableCB = new EventEmitter<eventCB>();
-  
+
   /** Emitted when widgets are removed from the grid */
   @Output() public removedCB = new EventEmitter<nodesCB>();
-  
+
   /** Emitted during widget resize operations */
   @Output() public resizeCB = new EventEmitter<elementCB>();
-  
+
   /** Emitted when widget resize starts */
   @Output() public resizeStartCB = new EventEmitter<elementCB>();
-  
+
   /** Emitted when widget resize stops */
   @Output() public resizeStopCB = new EventEmitter<elementCB>();
 
@@ -192,7 +192,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   /**
    * Get the underlying GridStack instance.
    * Use this to access GridStack API methods directly.
-   * 
+   *
    * @example
    * ```typescript
    * this.gridComponent.grid.addWidget({x: 0, y: 0, w: 2, h: 1});
@@ -208,10 +208,10 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
 
   /**
    * Mapping of component selectors to their types for dynamic creation.
-   * 
+   *
    * This enables dynamic component instantiation from string selectors.
    * Angular doesn't provide public access to this mapping, so we maintain our own.
-   * 
+   *
    * @example
    * ```typescript
    * GridstackComponent.addComponentToSelectorType([MyWidgetComponent]);
@@ -220,9 +220,9 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   public static selectorToType: SelectorToType = {};
   /**
    * Register a list of Angular components for dynamic creation.
-   * 
+   *
    * @param typeList Array of component types to register
-   * 
+   *
    * @example
    * ```typescript
    * GridstackComponent.addComponentToSelectorType([
@@ -231,16 +231,17 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
    * ]);
    * ```
    */
-  public static addComponentToSelectorType(typeList: Array<Type<Object>>) {
+  public static addComponentToSelectorType(typeList: Array<Type<object>>) {
     typeList.forEach(type => GridstackComponent.selectorToType[ GridstackComponent.getSelector(type) ] = type);
   }
   /**
    * Extract the selector string from an Angular component type.
-   * 
+   *
    * @param type The component type to get selector from
    * @returns The component's selector string
    */
-  public static getSelector(type: Type<Object>): string {
+  public static getSelector(type: Type<object>): string {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     return reflectComponentType(type)!.selector;
   }
 
@@ -367,6 +368,7 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, n:
       const gridItemComp = (host.parentElement as GridItemCompHTMLElement)?._gridItemComp;
       if (!gridItemComp) return;
       // check if gridItem has a child component with 'container' exposed to create under..
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const container = (gridItemComp.childWidget as any)?.container || gridItemComp.container;
       const gridRef = container?.createComponent(GridstackComponent);
       const grid = gridRef?.instance;
