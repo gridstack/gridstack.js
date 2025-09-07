@@ -18,15 +18,15 @@ export interface GridItemCompHTMLElement extends GridItemHTMLElement {
 
 /**
  * Angular component wrapper for individual GridStack items.
- * 
+ *
  * This component represents a single grid item and handles:
  * - Dynamic content creation and management
  * - Integration with parent GridStack component
  * - Component lifecycle and cleanup
  * - Widget options and configuration
- * 
+ *
  * Use in combination with GridstackComponent for the parent grid.
- * 
+ *
  * @example
  * ```html
  * <gridstack>
@@ -76,7 +76,7 @@ export class GridstackItemComponent implements OnDestroy {
   /**
    * Grid item configuration options.
    * Defines position, size, and behavior of this grid item.
-   * 
+   *
    * @example
    * ```typescript
    * itemOptions: GridStackNode = {

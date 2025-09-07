@@ -41,7 +41,7 @@ export interface NgGridStackOptions extends GridStackOptions {
 /**
  * Type for component input data serialization.
  * Maps @Input() property names to their values for widget persistence.
- * 
+ *
  * @example
  * ```typescript
  * const inputs: NgCompInputs = {
@@ -51,4 +51,5 @@ export interface NgGridStackOptions extends GridStackOptions {
  * };
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type NgCompInputs = {[key: string]: any};

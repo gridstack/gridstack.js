@@ -957,7 +957,7 @@ export class GridStack {
     // https://stackoverflow.com/questions/21064101/understanding-offsetwidth-clientwidth-scrollwidth-and-height-respectively
     return forBreakpoint && this.opts.columnOpts?.breakpointForWindow ? window.innerWidth : (this.el.clientWidth || this.el.parentElement.clientWidth || window.innerWidth);
   }
-  
+
   /** checks for dynamic column count for our current size, returning true if changed */
   protected checkDynamicColumn(): boolean {
     const resp = this.opts.columnOpts;

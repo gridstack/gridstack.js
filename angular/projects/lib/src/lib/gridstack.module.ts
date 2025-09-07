@@ -10,10 +10,10 @@ import { GridstackComponent } from "./gridstack.component";
 
 /**
  * @deprecated Use GridstackComponent and GridstackItemComponent as standalone components instead.
- * 
+ *
  * This NgModule is provided for backward compatibility but is no longer the recommended approach.
  * Import components directly in your standalone components or use the new Angular module structure.
- * 
+ *
  * @example
  * ```typescript
  * // Preferred approach - standalone components
@@ -23,7 +23,7 @@ import { GridstackComponent } from "./gridstack.component";
  *   template: '<gridstack></gridstack>'
  * })
  * export class AppComponent {}
- * 
+ *
  * // Legacy approach (deprecated)
  * @NgModule({
  *   imports: [GridstackModule]

@@ -5,14 +5,14 @@
 
 /**
  * Abstract base class that all custom widgets should extend.
- * 
+ *
  * This class provides the interface needed for GridstackItemComponent to:
  * - Serialize/deserialize widget data
  * - Save/restore widget state
  * - Integrate with Angular lifecycle
- * 
+ *
  * Extend this class when creating custom widgets for dynamic grids.
- * 
+ *
  * @example
  * ```typescript
  * @Component({
@@ -21,7 +21,7 @@
  * })
  * export class MyCustomWidget extends BaseWidget {
  *   @Input() data: string = '';
- *   
+ *
  *   serialize() {
  *     return { data: this.data };
  *   }
@@ -46,12 +46,12 @@ export abstract class BaseWidget {
 
   /**
    * Override this method to return serializable data for this widget.
-   * 
+   *
    * Return an object with properties that map to your component's @Input() fields.
    * The selector is handled automatically, so only include component-specific data.
-   * 
+   *
    * @returns Object containing serializable component data
-   * 
+   *
    * @example
    * ```typescript
    * serialize() {
@@ -67,17 +67,17 @@ export abstract class BaseWidget {
 
   /**
    * Override this method to handle widget restoration from saved data.
-   * 
+   *
    * Use this for complex initialization that goes beyond simple @Input() mapping.
    * The default implementation automatically assigns input data to component properties.
-   * 
+   *
    * @param w The saved widget data including input properties
-   * 
+   *
    * @example
    * ```typescript
    * deserialize(w: NgGridStackWidget) {
    *   super.deserialize(w); // Call parent for basic setup
-   *   
+   *
    *   // Custom initialization logic
    *   if (w.input?.complexData) {
    *     this.processComplexData(w.input.complexData);
@@ -92,4 +92,4 @@ export abstract class BaseWidget {
 
     if (w.input)  Object.assign(this, w.input);
   }
- }
+}
