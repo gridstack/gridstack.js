@@ -11,8 +11,13 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: ['/node_modules/'],
+        use: {
+          loader: 'ts-loader',
+          options: {
+            configFile: 'tsconfig.build.json'
+          }
+        },
+        exclude: ['/node_modules/', '/spec/'],
       },
     ],
   },

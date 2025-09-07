@@ -81,7 +81,7 @@ The default implementation automatically assigns input data to component propert
 ```typescript
 deserialize(w: NgGridStackWidget) {
   super.deserialize(w); // Call parent for basic setup
-  
+
   // Custom initialization logic
   if (w.input?.complexData) {
     this.processComplexData(w.input.complexData);
