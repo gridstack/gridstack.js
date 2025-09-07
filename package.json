@@ -25,10 +25,10 @@
     }
   ],
   "scripts": {
-    "build": "yarn --no-progress && yarn build:ng && grunt && webpack && tsc --stripInternal && yarn doc",
+    "build": "yarn --no-progress && yarn build:ng && grunt && webpack && tsc --project tsconfig.build.json --stripInternal && yarn doc",
     "build:ng": "cd angular && yarn --no-progress && yarn build lib",
     "w": "webpack",
-    "t": "rm -rf dist/* && grunt && tsc --stripInternal",
+    "t": "rm -rf dist/* && grunt && tsc --project tsconfig.build.json --stripInternal",
     "doc": "doctoc ./README.md && doctoc ./doc/CHANGES.md && node scripts/generate-docs.js",
     "doc:main": "node scripts/generate-docs.js --main-only",
     "doc:angular": "node scripts/generate-docs.js --angular-only",
