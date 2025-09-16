@@ -1,4 +1,4 @@
-import type { GridStack, GridStackOptions, GridStackWidget } from "gridstack";
+import type { GridItemHTMLElement, GridStack, GridStackOptions, GridStackWidget } from "gridstack";
 import { type PropsWithChildren, useCallback, useState } from "react";
 import { GridStackContext } from "./grid-stack-context";
 
@@ -72,7 +72,12 @@ export function GridStackProvider({
 
   const removeWidget = useCallback(
     (id: string) => {
-      gridStack?.removeWidget(id);
+      const element = document.body.querySelector(`[gs-id="${id}"]`);
+
+      if (element) {
+        gridStack?.removeWidget(element as GridItemHTMLElement);
+      }
+
       setRawWidgetMetaMap((prev) => {
         const newMap = new Map<string, GridStackWidget>(prev);
         newMap.delete(id);
