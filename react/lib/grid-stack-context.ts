@@ -13,6 +13,7 @@ export const GridStackContext = createContext<{
     ) => Omit<GridStackWidget, "id">
   ) => void;
   saveOptions: () => GridStackOptions | GridStackWidget[] | undefined;
+  removeAll: () => void;
 
   _gridStack: {
     value: GridStack | null;

@@ -91,6 +91,11 @@ export function GridStackProvider({
     return gridStack?.save(true, true, (_, widget) => widget);
   }, [gridStack]);
 
+  const removeAll = useCallback(() => {
+    gridStack?.removeAll();
+    setRawWidgetMetaMap(new Map<string, GridStackWidget>());
+  }, [gridStack]);
+
   return (
     <GridStackContext.Provider
       value={{
@@ -101,6 +106,7 @@ export function GridStackProvider({
         removeWidget,
         addSubGrid,
         saveOptions,
+        removeAll,
 
         _gridStack: {
           value: gridStack,
