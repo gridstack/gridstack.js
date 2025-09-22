@@ -5988,7 +5988,7 @@ Drop event handler that receives previous and new node states
 ### GridStackElement
 
 ```ts
-type GridStackElement = string | HTMLElement | GridItemHTMLElement;
+type GridStackElement = string | GridItemHTMLElement;
 ```
 
 Defined in: [types.ts:87](https://github.com/adumesny/gridstack.js/blob/master/src/types.ts#L87)
