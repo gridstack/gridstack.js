@@ -72,11 +72,8 @@ export function GridStackProvider({
 
   const removeWidget = useCallback(
     (id: string) => {
-      const element = document.body.querySelector(`[gs-id="${id}"]`);
-
-      if (element) {
-        gridStack?.removeWidget(element as GridItemHTMLElement);
-      }
+      const element = document.body.querySelector<GridItemHTMLElement>(`[gs-id="${id}"]`);
+      if (element) gridStack?.removeWidget(element);
 
       setRawWidgetMetaMap((prev) => {
         const newMap = new Map<string, GridStackWidget>(prev);

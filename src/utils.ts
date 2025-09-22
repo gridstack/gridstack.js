@@ -123,8 +123,17 @@ export class Utils {
 
       let list = root.querySelectorAll(els);
       if (!list.length && els[0] !== '.' && els[0] !== '#') {
+        // see if mean to be a class
         list = root.querySelectorAll('.' + els);
-        if (!list.length) { list = root.querySelectorAll('#' + els) }
+
+        // else if mean to be an id
+        if (!list.length) list = root.querySelectorAll('#' + els);
+
+        // else see if gs-id attribute
+        if (!list.length) {
+          const el = root.querySelector<HTMLElement>(`[gs-id="${els}"]`);
+          return el ? [el] : [];
+        }
       }
       return Array.from(list) as HTMLElement[];
     }
