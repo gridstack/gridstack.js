@@ -82,9 +82,9 @@ export interface GridItemHTMLElement extends HTMLElement {
 
 /**
  * Type representing various ways to specify grid elements.
- * Can be a CSS selector string, HTMLElement, or GridItemHTMLElement.
+ * Can be a CSS selector string, GridItemHTMLElement (HTML element with GS variables when loaded).
  */
-export type GridStackElement = string | HTMLElement | GridItemHTMLElement;
+export type GridStackElement = string | GridItemHTMLElement;
 
 /**
  * Event handler function types for the .on() method.
