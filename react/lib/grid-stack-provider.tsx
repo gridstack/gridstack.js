@@ -26,13 +26,11 @@ export function GridStackProvider({
   });
 
   const addWidget = useCallback(
-    (fn: (id: string) => Omit<GridStackWidget, "id">) => {
-      const newId = `widget-${Math.random().toString(36).substring(2, 15)}`;
-      const widget = fn(newId);
-      gridStack?.addWidget({ ...widget, id: newId });
+    (widget: GridStackWidget & { id: Required<GridStackWidget>["id"] })  => {
+      gridStack?.addWidget(widget);
       setRawWidgetMetaMap((prev) => {
         const newMap = new Map<string, GridStackWidget>(prev);
-        newMap.set(newId, widget);
+        newMap.set(widget.id, widget);
         return newMap;
       });
     },
@@ -40,29 +38,18 @@ export function GridStackProvider({
   );
 
   const addSubGrid = useCallback(
-    (
-      fn: (
-        id: string,
-        withWidget: (w: Omit<GridStackWidget, "id">) => GridStackWidget
-      ) => Omit<GridStackWidget, "id">
-    ) => {
-      const newId = `sub-grid-${Math.random().toString(36).substring(2, 15)}`;
-      const subWidgetIdMap = new Map<string, GridStackWidget>();
-
-      const widget = fn(newId, (w) => {
-        const subWidgetId = `widget-${Math.random()
-          .toString(36)
-          .substring(2, 15)}`;
-        subWidgetIdMap.set(subWidgetId, w);
-        return { ...w, id: subWidgetId };
-      });
-
-      gridStack?.addWidget({ ...widget, id: newId });
+    (subGrid: GridStackWidget & { 
+      id: Required<GridStackWidget>["id"]; 
+      subGridOpts: Required<GridStackWidget>["subGridOpts"] & { 
+        children: Array<GridStackWidget & { id: Required<GridStackWidget>["id"] }> 
+      } 
+    }) => {
+      gridStack?.addWidget(subGrid);
 
       setRawWidgetMetaMap((prev) => {
         const newMap = new Map<string, GridStackWidget>(prev);
-        subWidgetIdMap.forEach((meta, id) => {
-          newMap.set(id, meta);
+        subGrid.subGridOpts?.children?.forEach((meta: GridStackWidget & { id: Required<GridStackWidget>["id"] }) => {
+          newMap.set(meta.id, meta);
         });
         return newMap;
       });

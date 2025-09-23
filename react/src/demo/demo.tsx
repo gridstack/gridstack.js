@@ -141,7 +141,7 @@ export function GridStackDemo() {
     <>
     <GridStackProvider initialOptions={initialOptions}>
       <Toolbar />
-       <GridStackRenderProvider>
+        <GridStackRenderProvider>
         <GridStackRender componentMap={COMPONENT_MAP} />
       </GridStackRenderProvider>
       <DebugInfo />
@@ -149,7 +149,7 @@ export function GridStackDemo() {
 
     <GridStackProvider initialOptions={initialOptions2}>
       <Toolbar />
-       <GridStackRenderProvider>
+        <GridStackRenderProvider>
         <GridStackRender componentMap={COMPONENT_MAP} />
       </GridStackRenderProvider>
       <DebugInfo />
@@ -175,7 +175,10 @@ function Toolbar() {
     >
       <button
         onClick={() => {
-          addWidget((id) => ({
+          const id = `widget-${Math.random().toString(36).substring(2, 15)}`;
+          
+          addWidget({
+            id,
             w: 2,
             h: 2,
             x: 0,
@@ -184,7 +187,7 @@ function Toolbar() {
               name: "Text",
               props: { content: id },
             }),
-          }));
+          });
         }}
       >
         Add Text (2x2)
@@ -192,7 +195,11 @@ function Toolbar() {
 
       <button
         onClick={() => {
-          addSubGrid((id, withWidget) => ({
+          const subGridId = `sub-grid-${Math.random().toString(36).substring(2, 15)}`;
+          const widgetId = `widget-${Math.random().toString(36).substring(2, 15)}`;
+
+          addSubGrid({
+            id: subGridId,
             h: 5,
             noResize: false,
             sizeToContent: true,
@@ -203,7 +210,8 @@ function Toolbar() {
               minRow: 2,
               cellHeight: CELL_HEIGHT,
               children: [
-                withWidget({
+                {
+                  id: widgetId,
                   h: 1,
                   locked: true,
                   noMove: true,
@@ -213,15 +221,15 @@ function Toolbar() {
                   y: 0,
                   content: JSON.stringify({
                     name: "Text",
-                    props: { content: "Sub Grid 1 Title" + id },
+                    props: { content: "Sub Grid 1 Title" + widgetId },
                   }),
-                }),
+                },
               ],
             },
             w: 12,
             x: 0,
             y: 0,
-          }));
+          });
         }}
       >
         Add Sub Grid (12x1)

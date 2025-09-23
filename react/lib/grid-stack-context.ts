@@ -4,13 +4,15 @@ import { createContext, useContext } from "react";
 export const GridStackContext = createContext<{
   initialOptions: GridStackOptions;
   gridStack: GridStack | null;
-  addWidget: (fn: (id: string) => Omit<GridStackWidget, "id">) => void;
+  addWidget: (widget: GridStackWidget & { id: Required<GridStackWidget>["id"] }) => void;
   removeWidget: (id: string) => void;
   addSubGrid: (
-    fn: (
-      id: string,
-      withWidget: (w: Omit<GridStackWidget, "id">) => GridStackWidget
-    ) => Omit<GridStackWidget, "id">
+    subGrid: GridStackWidget & { 
+      id: Required<GridStackWidget>["id"]; 
+      subGridOpts: Required<GridStackWidget>["subGridOpts"] & { 
+        children: Array<GridStackWidget & { id: Required<GridStackWidget>["id"] }> 
+      } 
+    }
   ) => void;
   saveOptions: () => GridStackOptions | GridStackWidget[] | undefined;
   removeAll: () => void;
