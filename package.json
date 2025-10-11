@@ -93,7 +93,7 @@
     "grunt-protractor-runner": "^5.0.0",
     "grunt-protractor-webdriver": "^0.2.5",
     "grunt-sass": "3.1.0",
-    "happy-dom": "^15.7.4",
+    "happy-dom": "^20.0.0",
     "jsdom": "^25.0.0",
     "protractor": "^7.0.0",
     "sass": "^1.62.0",
