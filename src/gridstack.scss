@@ -77,6 +77,10 @@ $animation_speed: .3s !default;
 
   &.ui-resizable-disabled > .ui-resizable-handle,
   &.ui-resizable-autohide > .ui-resizable-handle { display: none; }
+  /* Fallback for Chromium browsers: only show handles on hover when autohide is enabled */
+  &.ui-resizable-autohide:hover > .ui-resizable-handle {
+    display: block;
+  }
 
   > .ui-resizable-ne,
   > .ui-resizable-nw,
