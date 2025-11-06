@@ -1924,8 +1924,9 @@ export class GridStack {
       el.style.height = n.h > 1 ? `calc(${n.h} * var(--gs-cell-height))` : null;
     }
     // NOTE: those are technically not needed anymore (v12+) as we have CSS vars for everything, but some users depends on them to render item size using CSS
-    n.x > 0 ? el.setAttribute('gs-x', String(n.x)) : el.removeAttribute('gs-x');
-    n.y > 0 ? el.setAttribute('gs-y', String(n.y)) : el.removeAttribute('gs-y');
+    // ALways write x,y otherwise it could be autoPositioned incorrectly #3181
+    el.setAttribute('gs-x', String(n.x));
+    el.setAttribute('gs-y', String(n.y));
     n.w > 1 ? el.setAttribute('gs-w', String(n.w)) : el.removeAttribute('gs-w');
     n.h > 1 ? el.setAttribute('gs-h', String(n.h)) : el.removeAttribute('gs-h');
     return this;

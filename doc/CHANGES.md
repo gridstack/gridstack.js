@@ -137,6 +137,7 @@ Change log
 
 ## 12.3.3-dev (TBD)
 * feat: [#3104](https://github.com/gridstack/gridstack.js/issues/3104) Custom resize div element target - thank you [Marvin Heilemann](https://github.com/muuvmuuv)
+* fix: [#3181](https://github.com/gridstack/gridstack.js/issues/3181) re-initing from DOM missing x:0, y:0 messing layout
 
 ## 12.3.3 (2025-08-13)
 * fix: [#3139](https://github.com/gridstack/gridstack.js/pull/3139) `Utils:removeInternalForSave()` to skip arrays
