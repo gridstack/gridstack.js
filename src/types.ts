@@ -328,7 +328,7 @@ export interface GridStackOptions {
   minRow?: number;
 
   /** If you are using a nonce-based Content Security Policy, pass your nonce here and
-   * GridStack will add it to the <style> elements it creates. */
+   * GridStack will add it to the `<style>` elements it creates. */
   nonce?: string;
 
   /** class for placeholder (default?: 'grid-stack-placeholder') */
