@@ -21,7 +21,7 @@
     "@angular/platform-browser": "^14",
     "@angular/platform-browser-dynamic": "^14",
     "@angular/router": "^14",
-    "gridstack": "^12.3.3",
+    "gridstack": "^12.3.3-dev",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

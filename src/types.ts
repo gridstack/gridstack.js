@@ -1,5 +1,5 @@
 /**
- * types.ts 12.3.3
+ * types.ts 12.3.3-dev
  * Copyright (c) 2021-2025 Alain Dumesny - see GridStack root license
  */
 
