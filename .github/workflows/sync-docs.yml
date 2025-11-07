@@ -79,7 +79,7 @@ jobs:
         git archive master angular/doc | tar -xf -
         
         # Add changes
-        git add angular/doc
+        git add -f angular/doc
 
     - name: Commit and push changes
       if: steps.check-docs.outputs.main_docs == 'true' || steps.check-docs.outputs.angular_docs == 'true'
