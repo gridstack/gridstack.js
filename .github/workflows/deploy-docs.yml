@@ -25,12 +25,12 @@ jobs:
         cache: 'yarn'
 
     - name: Install main dependencies
-      run: yarn install --frozen-lockfile
+      run: yarn install
 
     - name: Install Angular dependencies
       run: |
         cd angular
-        yarn install --frozen-lockfile
+        yarn install
 
     - name: Build Angular library
       run: yarn build:ng
