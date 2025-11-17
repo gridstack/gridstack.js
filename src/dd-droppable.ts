@@ -84,6 +84,12 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _mouseEnter(e: MouseEvent): void {
     // console.log(`${count++} Enter ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
     if (!DDManager.dragElement) return;
+    // During touch drag operations, ignore real browser-generated mouseenter events (isTrusted: true).
+    // Only process simulated mouseenter events (isTrusted: false) created by our touch handling code.
+    // The browser can fire spurious mouseenter events when we dispatch simulated mousemove events.
+    if (isTouch && e.isTrusted) {
+      return
+    }
     if (!this._canDrop(DDManager.dragElement.el)) return;
     e.preventDefault();
     e.stopPropagation();
