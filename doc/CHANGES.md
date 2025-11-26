@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.3.3-dev (TBD)](#1233-dev-tbd)
+- [12.4.0 (2025-11-26)](#1240-2025-11-26)
 - [12.3.3 (2025-08-13)](#1233-2025-08-13)
 - [12.3.2 (2025-08-12)](#1232-2025-08-12)
 - [12.3.1 (2025-08-11)](#1231-2025-08-11)
@@ -135,7 +135,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 12.3.3-dev (TBD)
+## 12.4.0 (2025-11-26)
 * feat: [#3104](https://github.com/gridstack/gridstack.js/issues/3104) Custom resize div element target - thank you [Marvin Heilemann](https://github.com/muuvmuuv)
 * fix: [#3181](https://github.com/gridstack/gridstack.js/issues/3181) re-initing from DOM missing x:0, y:0 messing layout
 * fix: [#3191](https://github.com/gridstack/gridstack.js/pull/3191) touch issue on Linux
