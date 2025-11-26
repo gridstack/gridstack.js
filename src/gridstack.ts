@@ -1512,6 +1512,7 @@ export class GridStack {
       if (o.minRow !== undefined) { opts.minRow = o.minRow; this._updateContainerHeight(); }
       if (o.maxRow !== undefined) opts.maxRow = o.maxRow;
     }
+    if (o.lazyLoad !== undefined) opts.lazyLoad = o.lazyLoad;
     if (o.children?.length) this.load(o.children);
     // TBD if we have a real need for these (more complex code)
     // alwaysShowResizeHandle, draggable, handle, handleClass, itemClass, layout, placeholderClass, placeholderText, resizable, removable, row,...
