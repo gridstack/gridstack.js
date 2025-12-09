@@ -1,6 +1,6 @@
 /**
- * dd-manager.ts 12.2.2
- * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
+ * dd-manager.ts 12.3.3
+ * Copyright (c) 2021-2025 Alain Dumesny - see GridStack root license
  */
 
 import { DDDraggable } from './dd-draggable';
@@ -8,22 +8,43 @@ import { DDDroppable } from './dd-droppable';
 import { DDResizable } from './dd-resizable';
 
 /**
- * globals that are shared across Drag & Drop instances
+ * Global state manager for all Drag & Drop instances.
+ *
+ * This class maintains shared state across all drag & drop operations,
+ * ensuring proper coordination between multiple grids and drag/drop elements.
+ * All properties are static to provide global access throughout the DD system.
  */
 export class DDManager {
-  /** if set (true | in msec), dragging placement (collision) will only happen after a pause by the user*/
+  /**
+   * Controls drag operation pausing behavior.
+   * If set to true or a number (milliseconds), dragging placement and collision
+   * detection will only happen after the user pauses movement.
+   * This improves performance during rapid mouse movements.
+   */
   public static pauseDrag: boolean | number;
 
-  /** true if a mouse down event was handled */
+  /**
+   * Flag indicating if a mouse down event was already handled.
+   * Prevents multiple handlers from processing the same mouse event.
+   */
   public static mouseHandled: boolean;
 
-  /** item being dragged */
+  /**
+   * Reference to the element currently being dragged.
+   * Used to track the active drag operation across the system.
+   */
   public static dragElement: DDDraggable;
 
-  /** item we are currently over as drop target */
+  /**
+   * Reference to the drop target element currently under the cursor.
+   * Used to handle drop operations and hover effects.
+   */
   public static dropElement: DDDroppable;
 
-  /** current item we're over for resizing purpose (ignore nested grid resize handles) */
+  /**
+   * Reference to the element currently being resized.
+   * Helps ignore nested grid resize handles during resize operations.
+   */
   public static overResizeElement: DDResizable;
 
 }

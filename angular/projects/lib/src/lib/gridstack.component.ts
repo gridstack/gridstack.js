@@ -1,5 +1,5 @@
 /**
- * gridstack.component.ts 12.2.2
+ * gridstack.component.ts 12.3.3
  * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -15,22 +15,55 @@ import { NgGridStackNode, NgGridStackWidget } from './types';
 import { BaseWidget } from './base-widget';
 import { GridItemCompHTMLElement, GridstackItemComponent } from './gridstack-item.component';
 
-/** events handlers emitters signature for different events */
+/**
+ * Event handler callback signatures for different GridStack events.
+ * These types define the structure of data passed to Angular event emitters.
+ */
+
+/** Callback for general events (enable, disable, etc.) */
 export type eventCB = {event: Event};
+
+/** Callback for element-specific events (resize, drag, etc.) */
 export type elementCB = {event: Event, el: GridItemHTMLElement};
+
+/** Callback for events affecting multiple nodes (change, etc.) */
 export type nodesCB = {event: Event, nodes: GridStackNode[]};
+
+/** Callback for drop events with before/after node state */
 export type droppedCB = {event: Event, previousNode: GridStackNode, newNode: GridStackNode};
 
-/** store element to Ng Class pointer back */
+/**
+ * Extended HTMLElement interface for the grid container.
+ * Stores a back-reference to the Angular component for integration purposes.
+ */
 export interface GridCompHTMLElement extends GridHTMLElement {
+  /** Back-reference to the Angular GridStack component */
   _gridComp?: GridstackComponent;
 }
 
-/** selector string to runtime Type mapping */
+/**
+ * Mapping of selector strings to Angular component types.
+ * Used for dynamic component creation based on widget selectors.
+ */
 export type SelectorToType = {[key: string]: Type<Object>};
 
 /**
- * HTML Component Wrapper for gridstack, in combination with GridstackItemComponent for the items
+ * Angular component wrapper for GridStack.
+ * 
+ * This component provides Angular integration for GridStack grids, handling:
+ * - Grid initialization and lifecycle
+ * - Dynamic component creation and management
+ * - Event binding and emission
+ * - Integration with Angular change detection
+ * 
+ * Use in combination with GridstackItemComponent for individual grid items.
+ * 
+ * @example
+ * ```html
+ * <gridstack [options]="gridOptions" (change)="onGridChange($event)">
+ *   <div empty-content>Drag widgets here</div>
+ * </gridstack>
+ * ```
  */
 @Component({
   selector: 'gridstack',
@@ -51,12 +84,31 @@ export type SelectorToType = {[key: string]: Type<Object>};
 })
 export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
 
-  /** track list of TEMPLATE (not recommended) grid items so we can sync between DOM and GS internals */
+  /**
+   * List of template-based grid items (not recommended approach).
+   * Used to sync between DOM and GridStack internals when items are defined in templates.
+   * Prefer dynamic component creation instead.
+   */
   @ContentChildren(GridstackItemComponent) public gridstackItems?: QueryList<GridstackItemComponent>;
-  /** container to append items dynamically (recommended way) */
+  /**
+   * Container for dynamic component creation (recommended approach).
+   * Used to append grid items programmatically at runtime.
+   */
   @ViewChild('container', { read: ViewContainerRef, static: true}) public container?: ViewContainerRef;
 
-  /** initial options for creation of the grid */
+  /**
+   * Grid configuration options.
+   * Can be set before grid initialization or updated after grid is created.
+   * 
+   * @example
+   * ```typescript
+   * gridOptions: GridStackOptions = {
+   *   column: 12,
+   *   cellHeight: 'auto',
+   *   animate: true
+   * };
+   * ```
+   */
   @Input() public set options(o: GridStackOptions) {
     if (this._grid) {
       this._grid.updateOptions(o);
@@ -64,51 +116,130 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
       this._options = o;
     }
   }
-  /** return the current running options */
+  /** Get the current running grid options */
   public get options(): GridStackOptions { return this._grid?.opts || this._options || {}; }
 
-  /** true while ng-content with 'no-item-content' should be shown when last item is removed from a grid */
+  /**
+   * Controls whether empty content should be displayed.
+   * Set to true to show ng-content with 'empty-content' selector when grid has no items.
+   * 
+   * @example
+   * ```html
+   * <gridstack [isEmpty]="gridItems.length === 0">
+   *   <div empty-content>Drag widgets here to get started</div>
+   * </gridstack>
+   * ```
+   */
   @Input() public isEmpty?: boolean;
 
-  /** individual list of GridStackEvent callbacks handlers as output
-   * otherwise use this.grid.on('name1 name2 name3', callback) to handle multiple at once
-   * see https://github.com/gridstack/gridstack.js/blob/master/demo/events.js#L4
-   *
-   * Note: camel casing and 'CB' added at the end to prevent @angular-eslint/no-output-native
-   * eg: 'change' would trigger the raw CustomEvent so use different name.
+  /**
+   * GridStack event emitters for Angular integration.
+   * 
+   * These provide Angular-style event handling for GridStack events.
+   * Alternatively, use `this.grid.on('event1 event2', callback)` for multiple events.
+   * 
+   * Note: 'CB' suffix prevents conflicts with native DOM events.
+   * 
+   * @example
+   * ```html
+   * <gridstack (changeCB)="onGridChange($event)" (droppedCB)="onItemDropped($event)">
+   * </gridstack>
+   * ```
    */
+  
+  /** Emitted when widgets are added to the grid */
   @Output() public addedCB = new EventEmitter<nodesCB>();
+  
+  /** Emitted when grid layout changes */
   @Output() public changeCB = new EventEmitter<nodesCB>();
+  
+  /** Emitted when grid is disabled */
   @Output() public disableCB = new EventEmitter<eventCB>();
+  
+  /** Emitted during widget drag operations */
   @Output() public dragCB = new EventEmitter<elementCB>();
+  
+  /** Emitted when widget drag starts */
   @Output() public dragStartCB = new EventEmitter<elementCB>();
+  
+  /** Emitted when widget drag stops */
   @Output() public dragStopCB = new EventEmitter<elementCB>();
+  
+  /** Emitted when widget is dropped */
   @Output() public droppedCB = new EventEmitter<droppedCB>();
+  
+  /** Emitted when grid is enabled */
   @Output() public enableCB = new EventEmitter<eventCB>();
+  
+  /** Emitted when widgets are removed from the grid */
   @Output() public removedCB = new EventEmitter<nodesCB>();
+  
+  /** Emitted during widget resize operations */
   @Output() public resizeCB = new EventEmitter<elementCB>();
+  
+  /** Emitted when widget resize starts */
   @Output() public resizeStartCB = new EventEmitter<elementCB>();
+  
+  /** Emitted when widget resize stops */
   @Output() public resizeStopCB = new EventEmitter<elementCB>();
 
-  /** return the native element that contains grid specific fields as well */
+  /**
+   * Get the native DOM element that contains grid-specific fields.
+   * This element has GridStack properties attached to it.
+   */
   public get el(): GridCompHTMLElement { return this.elementRef.nativeElement; }
 
-  /** return the GridStack class */
+  /**
+   * Get the underlying GridStack instance.
+   * Use this to access GridStack API methods directly.
+   * 
+   * @example
+   * ```typescript
+   * this.gridComponent.grid.addWidget({x: 0, y: 0, w: 2, h: 1});
+   * ```
+   */
   public get grid(): GridStack | undefined { return this._grid; }
 
-  /** ComponentRef of ourself - used by dynamic object to correctly get removed */
+  /**
+   * Component reference for dynamic component removal.
+   * Used internally when this component is created dynamically.
+   */
   public ref: ComponentRef<GridstackComponent> | undefined;
 
   /**
-   * stores the selector -> Type mapping, so we can create items dynamically from a string.
-   * Unfortunately Ng doesn't provide public access to that mapping.
+   * Mapping of component selectors to their types for dynamic creation.
+   * 
+   * This enables dynamic component instantiation from string selectors.
+   * Angular doesn't provide public access to this mapping, so we maintain our own.
+   * 
+   * @example
+   * ```typescript
+   * GridstackComponent.addComponentToSelectorType([MyWidgetComponent]);
+   * ```
    */
   public static selectorToType: SelectorToType = {};
-  /** add a list of ng Component to be mapped to selector */
+  /**
+   * Register a list of Angular components for dynamic creation.
+   * 
+   * @param typeList Array of component types to register
+   * 
+   * @example
+   * ```typescript
+   * GridstackComponent.addComponentToSelectorType([
+   *   MyWidgetComponent,
+   *   AnotherWidgetComponent
+   * ]);
+   * ```
+   */
   public static addComponentToSelectorType(typeList: Array<Type<Object>>) {
     typeList.forEach(type => GridstackComponent.selectorToType[ GridstackComponent.getSelector(type) ] = type);
   }
-  /** return the ng Component selector */
+  /**
+   * Extract the selector string from an Angular component type.
+   * 
+   * @param type The component type to get selector from
+   * @returns The component's selector string
+   */
   public static getSelector(type: Type<Object>): string {
     return reflectComponentType(type)!.selector;
   }

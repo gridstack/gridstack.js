@@ -1,5 +1,5 @@
 /**
- * gridstack-item.component.ts 12.2.2
+ * gridstack-item.component.ts 12.3.3
  * Copyright (c) 2022-2024 Alain Dumesny - see GridStack root license
  */
 
@@ -7,13 +7,34 @@ import { Component, ElementRef, Input, ViewChild, ViewContainerRef, OnDestroy, C
 import { GridItemHTMLElement, GridStackNode } from 'gridstack';
 import { BaseWidget } from './base-widget';
 
-/** store element to Ng Class pointer back */
+/**
+ * Extended HTMLElement interface for grid items.
+ * Stores a back-reference to the Angular component for integration.
+ */
 export interface GridItemCompHTMLElement extends GridItemHTMLElement {
+  /** Back-reference to the Angular GridStackItem component */
   _gridItemComp?: GridstackItemComponent;
 }
 
 /**
- * HTML Component Wrapper for gridstack items, in combination with GridstackComponent for parent grid
+ * Angular component wrapper for individual GridStack items.
+ * 
+ * This component represents a single grid item and handles:
+ * - Dynamic content creation and management
+ * - Integration with parent GridStack component
+ * - Component lifecycle and cleanup
+ * - Widget options and configuration
+ * 
+ * Use in combination with GridstackComponent for the parent grid.
+ * 
+ * @example
+ * ```html
+ * <gridstack>
+ *   <gridstack-item [options]="{x: 0, y: 0, w: 2, h: 1}">
+ *     <my-widget-component></my-widget-component>
+ *   </gridstack-item>
+ * </gridstack>
+ * ```
  */
 @Component({
   selector: 'gridstack-item',
@@ -34,16 +55,37 @@ export interface GridItemCompHTMLElement extends GridItemHTMLElement {
 })
 export class GridstackItemComponent implements OnDestroy {
 
-  /** container to append items dynamically */
+  /**
+   * Container for dynamic component creation within this grid item.
+   * Used to append child components programmatically.
+   */
   @ViewChild('container', { read: ViewContainerRef, static: true}) public container?: ViewContainerRef;
 
-  /** ComponentRef of ourself - used by dynamic object to correctly get removed */
+  /**
+   * Component reference for dynamic component removal.
+   * Used internally when this component is created dynamically.
+   */
   public ref: ComponentRef<GridstackItemComponent> | undefined;
 
-  /** child component so we can save/restore additional data to be saved along */
+  /**
+   * Reference to child widget component for serialization.
+   * Used to save/restore additional data along with grid position.
+   */
   public childWidget: BaseWidget | undefined;
 
-  /** list of options for creating/updating this item */
+  /**
+   * Grid item configuration options.
+   * Defines position, size, and behavior of this grid item.
+   * 
+   * @example
+   * ```typescript
+   * itemOptions: GridStackNode = {
+   *   x: 0, y: 0, w: 2, h: 1,
+   *   noResize: true,
+   *   content: 'Item content'
+   * };
+   * ```
+   */
   @Input() public set options(val: GridStackNode) {
     const grid = this.el.gridstackNode?.grid;
     if (grid) {

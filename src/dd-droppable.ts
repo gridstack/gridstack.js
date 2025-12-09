@@ -1,6 +1,6 @@
 /**
- * dd-droppable.ts 12.2.2
- * Copyright (c) 2021-2024  Alain Dumesny - see GridStack root license
+ * dd-droppable.ts 12.3.3
+ * Copyright (c) 2021-2025  Alain Dumesny - see GridStack root license
  */
 
 import { DDDraggable } from './dd-draggable';

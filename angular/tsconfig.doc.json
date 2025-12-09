@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "projects/lib/src/lib/**/*.ts"
+  ],
+  "exclude": [
+    "projects/demo/**/*",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "node_modules/**"
+  ]
+}

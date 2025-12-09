@@ -15,7 +15,7 @@ If you find this lib useful, please donate [PayPal](https://www.paypal.me/alaind
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/alaind831)
 [![Donate](https://img.shields.io/badge/Donate-Venmo-g.svg)](https://www.venmo.com/adumesny)
 
-Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/gridstackjs/shared_invite/zt-2qa21lnxz-vw29RdTFet3N6~ABqT9kwA)
+Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/gridstackjs/shared_invite/zt-3978nsff6-HDNE_N45DydP36NBSV9JFQ)
 
 <!-- [![Slack Status](https://gridstackjs.com/badge.svg)](https://gridstackjs.slack.com) -->
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -59,7 +59,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
 
 # Demo and API Documentation
 
-Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/), and complete [API documentation](https://github.com/gridstack/gridstack.js/tree/master/doc)
+Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/), and complete [API documentation](https://gridstack.github.io/gridstack.js/doc/html/) ([markdown](https://github.com/gridstack/gridstack.js/tree/master/doc/API.md))
 
 # Usage
 
@@ -142,7 +142,7 @@ GridStack.init();
 
 ...or see list of all [API and options](https://github.com/gridstack/gridstack.js/tree/master/doc) available.
 
-see [jsfiddle sample](https://jsfiddle.net/adumesny/jqhkry7g) as running example too.
+see [stackblitz sample](https://stackblitz.com/edit/gridstack-demo) as running example too.
 
 ## Requirements
 

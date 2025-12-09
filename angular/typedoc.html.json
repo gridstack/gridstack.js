@@ -1,0 +1,80 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "projects/lib/src/lib/gridstack.component.ts",
+    "projects/lib/src/lib/gridstack-item.component.ts", 
+    "projects/lib/src/lib/gridstack.module.ts",
+    "projects/lib/src/lib/base-widget.ts",
+    "projects/lib/src/lib/types.ts"
+  ],
+  "tsconfig": "tsconfig.doc.json",
+  "excludeExternals": false,
+  "out": "doc/html",
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/spec/**",
+    "**/test/**",
+    "**/demo/**",
+    "projects/demo/**",
+    "**/app.component.ts",
+    "**/simple.ts",
+    "**/ngFor.ts",
+    "**/ngFor_cmd.ts",
+    "**/dummy.component.ts",
+    "node_modules/**"
+  ],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "includeVersion": true,
+  "sort": ["source-order"],
+  "sortEntryPoints": false,
+  "kindSortOrder": [
+    "Class",
+    "Interface", 
+    "TypeAlias",
+    "Variable",
+    "Function"
+  ],
+  "groupOrder": [
+    "Modules",
+    "Components",
+    "Classes",
+    "Interfaces",
+    "Type aliases",
+    "Variables",
+    "Functions"
+  ],
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Main",
+    "Components",
+    "Angular Integration",
+    "Types",
+    "Utilities",
+    "*"
+  ],
+  "readme": "README.md",
+  "theme": "default",
+  "hideGenerator": false,
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "cleanOutputDir": true,
+  "titleLink": "https://gridstackjs.com/",
+  "navigationLinks": {
+    "GitHub": "https://github.com/gridstack/gridstack.js",
+    "Demo": "https://gridstackjs.com/demo/",
+    "Main Library": "../../../doc/html/index.html"
+  },
+  "sidebarLinks": {
+    "Documentation": "https://github.com/gridstack/gridstack.js/blob/master/README.md",
+    "Angular Guide": "index.html"
+  },
+  "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/angular/",
+  "githubPages": true,
+  "gitRevision": "master",
+  "gitRemote": "origin",
+  "name": "GridStack Angular Library"
+}

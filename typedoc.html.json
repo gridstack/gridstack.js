@@ -1,0 +1,62 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/gridstack.ts"],
+  "excludeExternals": false,
+  "out": "doc/html",
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/spec/**",
+    "**/test/**",
+    "**/demo/**",
+    "demo/**",
+    "node_modules/**"
+  ],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "includeVersion": true,
+  "sort": ["alphabetical"],
+  "kindSortOrder": [
+    "Class",
+    "Interface", 
+    "TypeAlias",
+    "Variable",
+    "Function"
+  ],
+  "groupOrder": [
+    "Classes",
+    "Interfaces",
+    "Type aliases",
+    "Variables",
+    "Functions"
+  ],
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Main",
+    "Options",
+    "Events",
+    "Utilities",
+    "Types",
+    "*"
+  ],
+  "readme": "none",
+  "theme": "default",
+  "hideGenerator": false,
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "cleanOutputDir": true,
+  "titleLink": "https://gridstackjs.com/",
+  "navigationLinks": {
+    "GitHub": "https://github.com/gridstack/gridstack.js",
+    "Demo": "https://gridstackjs.com/demo/"
+  },
+  "sidebarLinks": {
+    "Documentation": "https://github.com/gridstack/gridstack.js/blob/master/README.md",
+  },
+  "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/",
+  "githubPages": true,
+  "gitRevision": "master",
+  "gitRemote": "origin"
+}

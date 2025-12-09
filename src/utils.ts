@@ -1,6 +1,6 @@
 /**
- * utils.ts 12.2.2
- * Copyright (c) 2021-2024 Alain Dumesny - see GridStack root license
+ * utils.ts 12.3.3
+ * Copyright (c) 2021-2025 Alain Dumesny - see GridStack root license
  */
 
 import { GridStackElement, GridStackNode, GridStackOptions, numberOrString, GridStackPosition, GridStackWidget } from './types';
@@ -17,7 +17,17 @@ export interface DragTransform {
   yOffset: number;
 }
 
-/** checks for obsolete method names */
+/**
+ * @internal Checks for obsolete method names and provides deprecation warnings.
+ * Creates a wrapper function that logs a deprecation warning when called.
+ *
+ * @param self the object context to apply the function to
+ * @param f the new function to call
+ * @param oldName the deprecated method name
+ * @param newName the new method name to use instead
+ * @param rev the version when the deprecation was introduced
+ * @returns a wrapper function that warns about deprecation
+ */
 // eslint-disable-next-line
 export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
   const wrapper = (...args) => {
@@ -29,7 +39,15 @@ export function obsolete(self, f, oldName: string, newName: string, rev: string)
   return wrapper;
 }
 
-/** checks for obsolete grid options (can be used for any fields, but msg is about options) */
+/**
+ * @internal Checks for obsolete grid options and migrates them to new names.
+ * Automatically copies old option values to new option names and shows deprecation warnings.
+ *
+ * @param opts the options object to check and migrate
+ * @param oldName the deprecated option name
+ * @param newName the new option name to use instead
+ * @param rev the version when the deprecation was introduced
+ */
 export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string): void {
   if (opts[oldName] !== undefined) {
     opts[newName] = opts[oldName];
@@ -38,14 +56,30 @@ export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: s
   }
 }
 
-/** checks for obsolete grid options which are gone */
+/**
+ * @internal Checks for obsolete grid options that have been completely removed.
+ * Shows deprecation warnings for options that are no longer supported.
+ *
+ * @param opts the options object to check
+ * @param oldName the removed option name
+ * @param rev the version when the option was removed
+ * @param info additional information about the removal
+ */
 export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string): void {
   if (opts[oldName] !== undefined) {
     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
   }
 }
 
-/** checks for obsolete Jquery element attributes */
+/**
+ * @internal Checks for obsolete HTML element attributes and migrates them.
+ * Automatically copies old attribute values to new attribute names and shows deprecation warnings.
+ *
+ * @param el the HTML element to check and migrate
+ * @param oldName the deprecated attribute name
+ * @param newName the new attribute name to use instead
+ * @param rev the version when the deprecation was introduced
+ */
 export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string): void {
   const oldAttr = el.getAttribute(oldName);
   if (oldAttr !== null) {
@@ -56,11 +90,25 @@ export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, 
 }
 
 /**
- * Utility methods
+ * Collection of utility methods used throughout GridStack.
+ * These are general-purpose helper functions for DOM manipulation,
+ * positioning calculations, object operations, and more.
  */
 export class Utils {
 
-  /** convert a potential selector into actual list of html elements. optional root which defaults to document (for shadow dom) */
+  /**
+   * Convert a potential selector into an actual list of HTML elements.
+   * Supports CSS selectors, element references, and special ID handling.
+   *
+   * @param els selector string, HTMLElement, or array of elements
+   * @param root optional root element to search within (defaults to document, useful for shadow DOM)
+   * @returns array of HTML elements matching the selector
+   *
+   * @example
+   * const elements = Utils.getElements('.grid-item');
+   * const byId = Utils.getElements('#myWidget');
+   * const fromShadow = Utils.getElements('.item', shadowRoot);
+   */
   static getElements(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement[] {
     if (typeof els === 'string') {
       const doc = ('getElementById' in root) ? root as Document : undefined;
@@ -83,7 +131,18 @@ export class Utils {
     return [els];
   }
 
-  /** convert a potential selector into actual single element. optional root which defaults to document (for shadow dom) */
+  /**
+   * Convert a potential selector into a single HTML element.
+   * Similar to getElements() but returns only the first match.
+   *
+   * @param els selector string or HTMLElement
+   * @param root optional root element to search within (defaults to document)
+   * @returns the first HTML element matching the selector, or null if not found
+   *
+   * @example
+   * const element = Utils.getElement('#myWidget');
+   * const first = Utils.getElement('.grid-item');
+   */
   static getElement(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement {
     if (typeof els === 'string') {
       const doc = ('getElementById' in root) ? root as Document : undefined;
@@ -109,12 +168,32 @@ export class Utils {
     return els;
   }
 
-  /** true if widget (or grid) makes this item lazyLoad */
+  /**
+   * Check if a widget should be lazy loaded based on node or grid settings.
+   *
+   * @param n the grid node to check
+   * @returns true if the item should be lazy loaded
+   *
+   * @example
+   * if (Utils.lazyLoad(node)) {
+   *   // Set up intersection observer for lazy loading
+   * }
+   */
   static lazyLoad(n: GridStackNode): boolean {
     return n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
   }
 
-  /** create a div with the given classes */
+  /**
+   * Create a div element with the specified CSS classes.
+   *
+   * @param classes array of CSS class names to add
+   * @param parent optional parent element to append the div to
+   * @returns the created div element
+   *
+   * @example
+   * const div = Utils.createDiv(['grid-item', 'draggable']);
+   * const nested = Utils.createDiv(['content'], parentDiv);
+   */
   static createDiv(classes: string[], parent?: HTMLElement): HTMLElement {
     const el = document.createElement('div');
     classes.forEach(c => {if (c) el.classList.add(c)});
@@ -122,24 +201,71 @@ export class Utils {
     return el;
   }
 
-  /** true if we should resize to content. strict=true when only 'sizeToContent:true' and not a number which lets user adjust */
+  /**
+   * Check if a widget should resize to fit its content.
+   *
+   * @param n the grid node to check (can be undefined)
+   * @param strict if true, only returns true for explicit sizeToContent:true (not numbers)
+   * @returns true if the widget should resize to content
+   *
+   * @example
+   * if (Utils.shouldSizeToContent(node)) {
+   *   // Trigger content-based resizing
+   * }
+   */
   static shouldSizeToContent(n: GridStackNode | undefined, strict = false): boolean {
     return n?.grid && (strict ?
       (n.sizeToContent === true || (n.grid.opts.sizeToContent === true && n.sizeToContent === undefined)) :
       (!!n.sizeToContent || (n.grid.opts.sizeToContent && n.sizeToContent !== false)));
   }
 
-  /** returns true if a and b overlap */
+  /**
+   * Check if two grid positions overlap/intersect.
+   *
+   * @param a first position with x, y, w, h properties
+   * @param b second position with x, y, w, h properties
+   * @returns true if the positions overlap
+   *
+   * @example
+   * const overlaps = Utils.isIntercepted(
+   *   {x: 0, y: 0, w: 2, h: 1},
+   *   {x: 1, y: 0, w: 2, h: 1}
+   * ); // true - they overlap
+   */
   static isIntercepted(a: GridStackPosition, b: GridStackPosition): boolean {
     return !(a.y >= b.y + b.h || a.y + a.h <= b.y || a.x + a.w <= b.x || a.x >= b.x + b.w);
   }
 
-  /** returns true if a and b touch edges or corners */
+  /**
+   * Check if two grid positions are touching (edges or corners).
+   *
+   * @param a first position
+   * @param b second position
+   * @returns true if the positions are touching
+   *
+   * @example
+   * const touching = Utils.isTouching(
+   *   {x: 0, y: 0, w: 2, h: 1},
+   *   {x: 2, y: 0, w: 1, h: 1}
+   * ); // true - they share an edge
+   */
   static isTouching(a: GridStackPosition, b: GridStackPosition): boolean {
     return Utils.isIntercepted(a, {x: b.x-0.5, y: b.y-0.5, w: b.w+1, h: b.h+1})
   }
 
-  /** returns the area a and b overlap */
+  /**
+   * Calculate the overlapping area between two grid positions.
+   *
+   * @param a first position
+   * @param b second position
+   * @returns the area of overlap (0 if no overlap)
+   *
+   * @example
+   * const overlap = Utils.areaIntercept(
+   *   {x: 0, y: 0, w: 3, h: 2},
+   *   {x: 1, y: 0, w: 3, h: 2}
+   * ); // returns 4 (2x2 overlap)
+   */
   static areaIntercept(a: GridStackPosition, b: GridStackPosition): number {
     const x0 = (a.x > b.x) ? a.x : b.x;
     const x1 = (a.x+a.w < b.x+b.w) ? a.x+a.w : b.x+b.w;
@@ -150,16 +276,30 @@ export class Utils {
     return (x1-x0) * (y1-y0);
   }
 
-  /** returns the area */
+  /**
+   * Calculate the total area of a grid position.
+   *
+   * @param a position with width and height
+   * @returns the total area (width * height)
+   *
+   * @example
+   * const area = Utils.area({x: 0, y: 0, w: 3, h: 2}); // returns 6
+   */
   static area(a: GridStackPosition): number {
     return a.w * a.h;
   }
 
   /**
-   * Sorts array of nodes
-   * @param nodes array to sort
-   * @param dir 1 for ascending, -1 for descending (optional)
-   **/
+   * Sort an array of grid nodes by position (y first, then x).
+   *
+   * @param nodes array of nodes to sort
+   * @param dir sort direction: 1 for ascending (top-left first), -1 for descending
+   * @returns the sorted array (modifies original)
+   *
+   * @example
+   * const sorted = Utils.sort(nodes); // Sort top-left to bottom-right
+   * const reverse = Utils.sort(nodes, -1); // Sort bottom-right to top-left
+   */
   static sort(nodes: GridStackNode[], dir: 1 | -1 = 1): GridStackNode[] {
     const und = 10000;
     return nodes.sort((a, b) => {
@@ -169,11 +309,34 @@ export class Utils {
     });
   }
 
-  /** find an item by id */
+  /**
+   * Find a grid node by its ID.
+   *
+   * @param nodes array of nodes to search
+   * @param id the ID to search for
+   * @returns the node with matching ID, or undefined if not found
+   *
+   * @example
+   * const node = Utils.find(nodes, 'widget-1');
+   * if (node) console.log('Found node at:', node.x, node.y);
+   */
   static find(nodes: GridStackNode[], id: string): GridStackNode | undefined {
     return id ? nodes.find(n => n.id === id) : undefined;
   }
 
+  /**
+   * Convert various value types to boolean.
+   * Handles strings like 'false', 'no', '0' as false.
+   *
+   * @param v value to convert
+   * @returns boolean representation
+   *
+   * @example
+   * Utils.toBool('true');  // true
+   * Utils.toBool('false'); // false
+   * Utils.toBool('no');    // false
+   * Utils.toBool('1');     // true
+   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static toBool(v: unknown): boolean {
     if (typeof v === 'boolean') {
@@ -186,10 +349,33 @@ export class Utils {
     return Boolean(v);
   }
 
+  /**
+   * Convert a string value to a number, handling null and empty strings.
+   *
+   * @param value string or null value to convert
+   * @returns number value, or undefined for null/empty strings
+   *
+   * @example
+   * Utils.toNumber('42');  // 42
+   * Utils.toNumber('');    // undefined
+   * Utils.toNumber(null);  // undefined
+   */
   static toNumber(value: null | string): number {
     return (value === null || value.length === 0) ? undefined : Number(value);
   }
 
+  /**
+   * Parse a height value with units into numeric value and unit string.
+   * Supports px, em, rem, vh, vw, %, cm, mm units.
+   *
+   * @param val height value as number or string with units
+   * @returns object with h (height) and unit properties
+   *
+   * @example
+   * Utils.parseHeight('100px');  // {h: 100, unit: 'px'}
+   * Utils.parseHeight('2rem');   // {h: 2, unit: 'rem'}
+   * Utils.parseHeight(50);       // {h: 50, unit: 'px'}
+   */
   static parseHeight(val: numberOrString): HeightData {
     let h: number;
     let unit = 'px';
@@ -209,7 +395,19 @@ export class Utils {
     return { h, unit };
   }
 
-  /** copies unset fields in target to use the given default sources values */
+  /**
+   * Copy unset fields from source objects to target object (shallow merge with defaults).
+   * Similar to Object.assign but only sets undefined/null fields.
+   *
+   * @param target the object to copy defaults into
+   * @param sources one or more source objects to copy defaults from
+   * @returns the modified target object
+   *
+   * @example
+   * const config = { width: 100 };
+   * Utils.defaults(config, { width: 200, height: 50 });
+   * // config is now { width: 100, height: 50 }
+   */
   // eslint-disable-next-line
   static defaults(target, ...sources): {} {
 
@@ -220,7 +418,7 @@ export class Utils {
           target[key] = source[key];
         } else if (typeof source[key] === 'object' && typeof target[key] === 'object') {
           // property is an object, recursively add it's field over... #1373
-          this.defaults(target[key], source[key]);
+          Utils.defaults(target[key], source[key]);
         }
       }
     });
@@ -228,7 +426,18 @@ export class Utils {
     return target;
   }
 
-  /** given 2 objects return true if they have the same values. Checks for Object {} having same fields and values (just 1 level down) */
+  /**
+   * Compare two objects for equality (shallow comparison).
+   * Checks if objects have the same fields and values at one level deep.
+   *
+   * @param a first object to compare
+   * @param b second object to compare
+   * @returns true if objects have the same values
+   *
+   * @example
+   * Utils.same({x: 1, y: 2}, {x: 1, y: 2}); // true
+   * Utils.same({x: 1}, {x: 1, y: 2}); // false
+   */
   static same(a: unknown, b: unknown): boolean {
     if (typeof a !== 'object')  return a == b;
     if (typeof a !== typeof b) return false;
@@ -240,7 +449,19 @@ export class Utils {
     return true;
   }
 
-  /** copies over b size & position (GridStackPosition), and optionally min/max as well */
+  /**
+   * Copy position and size properties from one widget to another.
+   * Copies x, y, w, h and optionally min/max constraints.
+   *
+   * @param a target widget to copy to
+   * @param b source widget to copy from
+   * @param doMinMax if true, also copy min/max width/height constraints
+   * @returns the target widget (a)
+   *
+   * @example
+   * Utils.copyPos(widget1, widget2); // Copy position/size
+   * Utils.copyPos(widget1, widget2, true); // Also copy constraints
+   */
   static copyPos(a: GridStackWidget, b: GridStackWidget, doMinMax = false): GridStackWidget {
     if (b.x !== undefined) a.x = b.x;
     if (b.y !== undefined) a.y = b.y;
@@ -272,6 +493,8 @@ export class Utils {
   /** removes field from the first object if same as the second objects (like diffing) and internal '_' for saving */
   static removeInternalAndSame(a: unknown, b: unknown):void {
     if (typeof a !== 'object' || typeof b !== 'object') return;
+    // skip arrays as we don't know how to hydrate them (unlike object spread operator)
+    if (Array.isArray(a) || Array.isArray(b)) return;
     for (let key in a) {
       const aVal = a[key];
       const bVal = b[key];
@@ -346,45 +569,40 @@ export class Utils {
     if (overflowRegex.test(style.overflow + style.overflowY)) {
       return el;
     } else {
-      return this.getScrollElement(el.parentElement);
+      return Utils.getScrollElement(el.parentElement);
     }
   }
 
   /** @internal */
   static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
-    // is widget in view?
-    const rect = el.getBoundingClientRect();
+    const scrollEl = Utils.getScrollElement(el);
+    if (!scrollEl) return;
+
+    const elRect = el.getBoundingClientRect();
+    const scrollRect = scrollEl.getBoundingClientRect();
     const innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
-    if (rect.top < 0 ||
-      rect.bottom > innerHeightOrClientHeight
-    ) {
-      // set scrollTop of first parent that scrolls
-      // if parent is larger than el, set as low as possible
-      // to get entire widget on screen
-      const offsetDiffDown = rect.bottom - innerHeightOrClientHeight;
-      const offsetDiffUp = rect.top;
-      const scrollEl = this.getScrollElement(el);
-      if (scrollEl !== null) {
-        const prevScroll = scrollEl.scrollTop;
-        if (rect.top < 0 && distance < 0) {
-          // moving up
-          if (el.offsetHeight > innerHeightOrClientHeight) {
-            scrollEl.scrollTop += distance;
-          } else {
-            scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
-          }
-        } else if (distance > 0) {
-          // moving down
-          if (el.offsetHeight > innerHeightOrClientHeight) {
-            scrollEl.scrollTop += distance;
-          } else {
-            scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
-          }
-        }
-        // move widget y by amount scrolled
-        position.top += scrollEl.scrollTop - prevScroll;
+
+    const offsetDiffDown = elRect.bottom - Math.min(scrollRect.bottom, innerHeightOrClientHeight);
+    const offsetDiffUp = elRect.top - Math.max(scrollRect.top, 0);
+    const prevScroll = scrollEl.scrollTop;
+
+    if (offsetDiffUp < 0 && distance < 0) {
+      // scroll up
+      if (el.offsetHeight > scrollRect.height) {
+        scrollEl.scrollTop += distance;
+      } else {
+        scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
+      }
+    } else if (offsetDiffDown > 0 && distance > 0) {
+      // scroll down
+      if (el.offsetHeight > scrollRect.height) {
+        scrollEl.scrollTop += distance;
+      } else {
+        scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
       }
     }
+
+    position.top += scrollEl.scrollTop - prevScroll;
   }
 
   /**
@@ -395,13 +613,13 @@ export class Utils {
    * @param distance Distance from the V edges to start scrolling
    */
   static updateScrollResize(event: MouseEvent, el: HTMLElement, distance: number): void {
-    const scrollEl = this.getScrollElement(el);
+    const scrollEl = Utils.getScrollElement(el);
     const height = scrollEl.clientHeight;
     // #1727 event.clientY is relative to viewport, so must compare this against position of scrollEl getBoundingClientRect().top
     // #1745 Special situation if scrollEl is document 'html': here browser spec states that
     // clientHeight is height of viewport, but getBoundingClientRect() is rectangle of html element;
     // this discrepancy arises because in reality scrollbar is attached to viewport, not html element itself.
-    const offsetTop = (scrollEl === this.getScrollElement()) ? 0 : scrollEl.getBoundingClientRect().top;
+    const offsetTop = (scrollEl === Utils.getScrollElement()) ? 0 : scrollEl.getBoundingClientRect().top;
     const pointerPosY = event.clientY - offsetTop;
     const top = pointerPosY < distance;
     const bottom = pointerPosY > height - distance;
@@ -562,7 +780,7 @@ export class Utils {
 
   /** returns true if event is inside the given element rectangle */
   // Note: Safari Mac has null event.relatedTarget which causes #1684 so check if DragEvent is inside the coordinates instead
-  //    this.el.contains(event.relatedTarget as HTMLElement)
+  //    Utils.el.contains(event.relatedTarget as HTMLElement)
   // public static inside(e: MouseEvent, el: HTMLElement): boolean {
   //   // srcElement, toElement, target: all set to placeholder when leaving simple grid, so we can't use that (Chrome)
   //   const target: HTMLElement = e.relatedTarget || (e as any).fromElement;

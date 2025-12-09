@@ -5,6 +5,10 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [12.3.3 (2025-08-13)](#1233-2025-08-13)
+- [12.3.2 (2025-08-12)](#1232-2025-08-12)
+- [12.3.1 (2025-08-11)](#1231-2025-08-11)
+- [12.3.0 (2025-08-10)](#1230-2025-08-10)
 - [12.2.2 (2025-07-06)](#1222-2025-07-06)
 - [12.2.1 (2025-05-28)](#1221-2025-05-28)
 - [12.2.0 (2025-05-27)](#1220-2025-05-27)
@@ -129,6 +133,22 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 12.3.3 (2025-08-13)
+* fix: [#3139](https://github.com/gridstack/gridstack.js/pull/3139) `Utils:removeInternalForSave()` to skip arrays
+
+## 12.3.2 (2025-08-12)
+* fix: [#3136](https://github.com/gridstack/gridstack.js/pull/3136) more tweaks to save(columnCount) option. 
+
+## 12.3.1 (2025-08-11)
+* fix: [#2493](https://github.com/gridstack/gridstack.js/issues/2493) added save(columnCount) option. Nested grid now use container saved column count. 
+
+## 12.3.0 (2025-08-10)
+* feat: [#3047](https://github.com/gridstack/gridstack.js/issues/3047) added `.grid-stack-dragging` to grid when child is being dragged so we can set `cursor:grabbing`. Updated demo.
+* feat: now using typedoc to generate doc (HTML and markup) from code. improved code examples and comments.
+* fix: [#3099](https://github.com/gridstack/gridstack.js/issues/3099) scroll take into account ScrollContainer position
+* fix: [#3102](https://github.com/gridstack/gridstack.js/pull/3102) React demo now support multiple grids
+* fix: [#3021](https://github.com/gridstack/gridstack.js/issues/3021) correctly reset widget back (to last known position) when released outside
 
 ## 12.2.2 (2025-07-06)
 * fix: [#3070](https://github.com/gridstack/gridstack.js/pull/3070) incorrect property name 'sizeToContent' when cleaning up invalid attributes
