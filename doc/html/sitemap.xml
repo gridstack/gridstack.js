@@ -2,242 +2,242 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/index.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/hierarchy.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/AddRemoveFcn.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/Breakpoint.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/CellPosition.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/ColumnOptions.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/CompactOptions.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/DDBaseImplement.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/DDCallback.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/DDDraggable.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DDDragOpt.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/DDDropOpt.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/DDDroppable.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DDDroppableOpt.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/DDElement.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DDElementHost.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/DDGridStack.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/DDKey.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/DDManager.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/DDOpts.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DDRemoveOpt.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/DDResizable.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/DDResizableHandle.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DDResizableHandleOpt.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DDResizableOpt.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DDResizeOpt.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DDUIData.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/DDValue.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/DragTransform.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/EventCallback.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/variables/gridDefaults.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/GridHTMLElement.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/GridItemHTMLElement.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/GridStack.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/GridStackDroppedHandler.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/GridStackElement.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/GridStackElementHandler.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/GridStackEngine.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/GridStackEngineOptions.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/GridStackEvent.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/GridStackEventHandler.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/GridStackEventHandlerCallback.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/GridStackMoveOpts.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/GridStackNode.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/GridStackNodesHandler.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/GridStackOptions.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/GridStackPosition.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/GridStackWidget.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/HeightData.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/HTMLElementExtendOpt.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/MousePosition.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/numberOrString.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/Position.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/Rect.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/RenderFcn.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/ResizeToContentFcn.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/Responsive.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/types/SaveFcn.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/interfaces/Size.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 	<url>
 		<loc>https://gridstack.github.io/gridstack.js/classes/Utils.html</loc>
-		<lastmod>2025-12-12T21:37:08.598Z</lastmod>
+		<lastmod>2025-12-12T21:43:55.767Z</lastmod>
 	</url>
 </urlset>
