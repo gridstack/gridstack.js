@@ -2118,7 +2118,7 @@ cacheLayout(
    clear): GridStackEngine;
 ```
 
-Defined in: [gridstack-engine.ts:1196](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1196)
+Defined in: [gridstack-engine.ts:1199](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1199)
 
 call to cache the given layout internally to the given location so we can restore back when column changes size
 
@@ -2140,7 +2140,7 @@ call to cache the given layout internally to the given location so we can restor
 cacheOneLayout(n, column): GridStackEngine;
 ```
 
-Defined in: [gridstack-engine.ts:1216](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1216)
+Defined in: [gridstack-engine.ts:1219](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1219)
 
 call to cache the given node layout internally to the given location so we can restore back when column changes size
 
@@ -2182,7 +2182,7 @@ true if x,y or w,h are different after clamping to min/max
 cleanupNode(node): GridStackEngine;
 ```
 
-Defined in: [gridstack-engine.ts:1247](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1247)
+Defined in: [gridstack-engine.ts:1250](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1250)
 
 called to remove all internal values but the _id
 
@@ -2345,7 +2345,7 @@ Defined in: [gridstack-engine.ts:1002](https://github.com/adumesny/gridstack.js/
 protected findCacheLayout(n, column): number;
 ```
 
-Defined in: [gridstack-engine.ts:1230](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1230)
+Defined in: [gridstack-engine.ts:1233](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1233)
 
 ###### Parameters
 
@@ -2668,7 +2668,7 @@ engine.removeNode(node, true, true);
 removeNodeFromLayoutCache(n): void;
 ```
 
-Defined in: [gridstack-engine.ts:1234](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1234)
+Defined in: [gridstack-engine.ts:1237](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1237)
 
 ###### Parameters
 
