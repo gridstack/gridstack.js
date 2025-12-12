@@ -140,7 +140,7 @@ Change log
 * fix: [#3181](https://github.com/gridstack/gridstack.js/issues/3181) re-initing from DOM missing x:0, y:0 messing layout
 * fix: [#3191](https://github.com/gridstack/gridstack.js/pull/3191) touch issue on Linux
 * fix: [#3194](https://github.com/gridstack/gridstack.js/pull/3194) `updateOption()` update lazyLoad
-* fix: [#3201](https://github.com/gridstack/gridstack.js/pull/3201) updating higher column layout can cause negative values in `layoutsNodesChange()`.
+* fix: [#3201](https://github.com/gridstack/gridstack.js/pull/3201) updating higher column layout can cause negative values in `layoutsNodesChange()`
 
 ## 12.3.3 (2025-08-13)
 * fix: [#3139](https://github.com/gridstack/gridstack.js/pull/3139) `Utils:removeInternalForSave()` to skip arrays
