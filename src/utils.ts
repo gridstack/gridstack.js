@@ -17,17 +17,17 @@ export interface DragTransform {
   yOffset: number;
 }
 
-/**
- * @internal Checks for obsolete method names and provides deprecation warnings.
- * Creates a wrapper function that logs a deprecation warning when called.
- *
- * @param self the object context to apply the function to
- * @param f the new function to call
- * @param oldName the deprecated method name
- * @param newName the new method name to use instead
- * @param rev the version when the deprecation was introduced
- * @returns a wrapper function that warns about deprecation
- */
+// /**
+//  * Checks for obsolete method names and provides deprecation warnings.
+//  * Creates a wrapper function that logs a deprecation warning when called.
+//  *
+//  * @param self the object context to apply the function to
+//  * @param f the new function to call
+//  * @param oldName the deprecated method name
+//  * @param newName the new method name to use instead
+//  * @param rev the version when the deprecation was introduced
+//  * @returns a wrapper function that warns about deprecation
+//  */
 // eslint-disable-next-line
 // export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
 //   const wrapper = (...args) => {
@@ -39,15 +39,15 @@ export interface DragTransform {
 //   return wrapper;
 // }
 
-/**
- * @internal Checks for obsolete grid options and migrates them to new names.
- * Automatically copies old option values to new option names and shows deprecation warnings.
- *
- * @param opts the options object to check and migrate
- * @param oldName the deprecated option name
- * @param newName the new option name to use instead
- * @param rev the version when the deprecation was introduced
- */
+// /**
+//  * Checks for obsolete grid options and migrates them to new names.
+//  * Automatically copies old option values to new option names and shows deprecation warnings.
+//  *
+//  * @param opts the options object to check and migrate
+//  * @param oldName the deprecated option name
+//  * @param newName the new option name to use instead
+//  * @param rev the version when the deprecation was introduced
+//  */
 // export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string): void {
 //   if (opts[oldName] !== undefined) {
 //     opts[newName] = opts[oldName];
@@ -56,30 +56,30 @@ export interface DragTransform {
 //   }
 // }
 
-/**
- * @internal Checks for obsolete grid options that have been completely removed.
- * Shows deprecation warnings for options that are no longer supported.
- *
- * @param opts the options object to check
- * @param oldName the removed option name
- * @param rev the version when the option was removed
- * @param info additional information about the removal
- */
+// /**
+//  * Checks for obsolete grid options that have been completely removed.
+//  * Shows deprecation warnings for options that are no longer supported.
+//  *
+//  * @param opts the options object to check
+//  * @param oldName the removed option name
+//  * @param rev the version when the option was removed
+//  * @param info additional information about the removal
+//  */
 // export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string): void {
 //   if (opts[oldName] !== undefined) {
 //     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
 //   }
 // }
 
-/**
- * @internal Checks for obsolete HTML element attributes and migrates them.
- * Automatically copies old attribute values to new attribute names and shows deprecation warnings.
- *
- * @param el the HTML element to check and migrate
- * @param oldName the deprecated attribute name
- * @param newName the new attribute name to use instead
- * @param rev the version when the deprecation was introduced
- */
+// /**
+//  * Checks for obsolete HTML element attributes and migrates them.
+//  * Automatically copies old attribute values to new attribute names and shows deprecation warnings.
+//  *
+//  * @param el the HTML element to check and migrate
+//  * @param oldName the deprecated attribute name
+//  * @param newName the new attribute name to use instead
+//  * @param rev the version when the deprecation was introduced
+//  */
 // export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string): void {
 //   const oldAttr = el.getAttribute(oldName);
 //   if (oldAttr !== null) {
