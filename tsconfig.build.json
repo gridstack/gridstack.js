@@ -4,8 +4,7 @@
     "skipLibCheck": true
   },
   "include": [
-    "./src/**/*.ts",
-    "./angular/projects/lib/src/**/*.ts"
+    "./src/**/*.ts"
   ],
   "exclude": [
     "./src/**/*.spec.ts",
