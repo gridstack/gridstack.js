@@ -4,6 +4,9 @@ dist_save
 *.tgz
 *.zip
 angular/
+!angular/doc/
+!angular/doc/html/
+!angular/doc/html/media/
 react/
 .DS_Store
 doc/.DS_Store
