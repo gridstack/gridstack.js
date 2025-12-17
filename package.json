@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "12.4.0",
+  "version": "12.4.1-dev",
   "license": "MIT",
   "author": "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)",
   "contributors": [
@@ -26,7 +26,7 @@
   ],
   "scripts": {
     "build": "yarn build:ng && grunt && webpack && tsc --project tsconfig.build.json --stripInternal && yarn doc",
-    "build:ng": "cd angular && yarn --no-progress && yarn build lib",
+    "build:ng": "cd angular && yarn build lib",
     "w": "webpack",
     "t": "rm -rf dist/* && grunt && tsc --project tsconfig.build.json --stripInternal",
     "doc": "doctoc ./README.md && doctoc ./doc/CHANGES.md && node scripts/generate-docs.js",

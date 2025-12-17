@@ -1,5 +1,5 @@
 /**
- * gridstack-engine.ts 12.4.0
+ * gridstack-engine.ts 12.4.1-dev
  * Copyright (c) 2021-2025  Alain Dumesny - see GridStack root license
  */
 
@@ -1061,14 +1061,17 @@ export class GridStackEngine {
           // TODO: detect doing item 'swaps' will help instead of move (especially in 1 column mode)
           if (n.y >= 0 && node.y !== node._orig.y) {
             n.y += (node.y - node._orig.y);
+            if (n.y < 0) n.y = 0;
           }
           // X changed, scale from new position
           if (node.x !== node._orig.x) {
             n.x = Math.round(node.x * ratio);
+            if (n.x < 0) n.x = 0;
           }
           // width changed, scale from new width
           if (node.w !== node._orig.w) {
             n.w = Math.round(node.w * ratio);
+            if (n.w < 1) n.w = 1;
           }
           // ...height always carries over from cache
         });
