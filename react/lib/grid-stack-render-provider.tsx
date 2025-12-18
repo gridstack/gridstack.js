@@ -4,6 +4,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useReducer,
 } from "react";
 import { useGridStackContext } from "./grid-stack-context";
 import { GridStack, GridStackOptions, GridStackWidget } from "gridstack";
@@ -11,7 +12,10 @@ import { GridStackRenderContext } from "./grid-stack-render-context";
 import isEqual from "react-fast-compare";
 
 // WeakMap to store widget containers for each grid instance
-export const gridWidgetContainersMap = new WeakMap<GridStack, Map<string, HTMLElement>>();
+export const gridWidgetContainersMap = new WeakMap<
+  GridStack,
+  Map<string, HTMLElement>
+>();
 
 export function GridStackRenderProvider({ children }: PropsWithChildren) {
   const {
@@ -22,6 +26,7 @@ export function GridStackRenderProvider({ children }: PropsWithChildren) {
   const widgetContainersRef = useRef<Map<string, HTMLElement>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<GridStackOptions>(initialOptions);
+  const [renderTick, forceRerender] = useReducer((value) => value + 1, 0);
 
   const renderCBFn = useCallback(
     (element: HTMLElement, widget: GridStackWidget & { grid?: GridStack }) => {
@@ -33,9 +38,15 @@ export function GridStackRenderProvider({ children }: PropsWithChildren) {
           gridWidgetContainersMap.set(widget.grid, containers);
         }
         containers.set(widget.id, element);
-        
+
         // Also update the local ref for backward compatibility
         widgetContainersRef.current.set(widget.id, element);
+
+        if (widget.lazyLoad || optionsRef.current.lazyLoad) {
+          // We need to force a re-render, since React has
+          // already eagerly rendered all widgets in the grid
+          forceRerender();
+        }
       }
     },
     []
@@ -100,7 +111,7 @@ export function GridStackRenderProvider({ children }: PropsWithChildren) {
         }),
         // ! gridStack is required to reinitialize the grid when the options change
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [gridStack]
+        [gridStack, renderTick]
       )}
     >
       <div ref={containerRef}>{gridStack ? children : null}</div>

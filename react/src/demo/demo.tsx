@@ -130,6 +130,7 @@ const gridOptions: GridStackOptions = {
       y: 2,
     },
   ],
+  lazyLoad: true
 };
 
 export function GridStackDemo() {
