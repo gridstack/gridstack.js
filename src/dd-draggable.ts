@@ -8,7 +8,7 @@ import { DragTransform, Utils } from './utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { GridItemHTMLElement, DDUIData, GridStackNode, GridStackPosition, DDDragOpt } from './types';
 import { DDElementHost } from './dd-element';
-import { isTouch, touchend, touchmove, touchstart, pointerdown } from './dd-touch';
+import { isTouch, touchend, touchmove, touchstart, pointerdown, DDTouch } from './dd-touch';
 import { GridHTMLElement } from './gridstack';
 
 interface DragOffset {
@@ -133,6 +133,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal call when mouse goes down before a dragstart happens */
   protected _mouseDown(e: MouseEvent): boolean {
+    // if real brower event (trusted:true vs false for our simulated ones) and we didn't correctly clear the last touch event, clear things up
+    if (DDTouch.touchHandled && e.isTrusted) DDTouch.touchHandled = false;
+
     // don't let more than one widget handle mouseStart
     if (DDManager.mouseHandled) return;
     if (e.button !== 0) return true; // only left click

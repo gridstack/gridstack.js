@@ -8,7 +8,7 @@ import { DDManager } from './dd-manager';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
 import { DDElementHost } from './dd-element';
-import { isTouch, pointerenter, pointerleave } from './dd-touch';
+import { DDTouch, isTouch, pointerenter, pointerleave } from './dd-touch';
 import { DDUIData } from './types';
 
 export interface DDDroppableOpt {
@@ -84,12 +84,10 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _mouseEnter(e: MouseEvent): void {
     // console.log(`${count++} Enter ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
     if (!DDManager.dragElement) return;
-    // During touch drag operations, ignore real browser-generated mouseenter events (isTrusted: true).
-    // Only process simulated mouseenter events (isTrusted: false) created by our touch handling code.
+    // During touch drag operations, ignore real browser-generated mouseenter events (isTrusted:true) vs our simulated ones (isTrusted:false).
     // The browser can fire spurious mouseenter events when we dispatch simulated mousemove events.
-    if (isTouch && e.isTrusted) {
-      return
-    }
+    if (DDTouch.touchHandled && e.isTrusted) return
+
     if (!this._canDrop(DDManager.dragElement.el)) return;
     e.preventDefault();
     e.stopPropagation();
