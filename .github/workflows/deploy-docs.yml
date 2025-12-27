@@ -129,6 +129,6 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./deploy
-        # Clean deployment each time to avoid stale files
-        keep_files: false
+        # Force clean deployment - creates orphan branch to remove ALL old files
+        force_orphan: true
         commit_message: 'Deploy documentation from ${{ github.sha }}'
