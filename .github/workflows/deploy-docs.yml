@@ -52,40 +52,59 @@ jobs:
         mkdir -p deploy/doc/html
         mkdir -p deploy/angular/doc/html
         
+        # Debug: Check what was generated
+        echo "📁 Checking generated documentation..."
+        echo "Main library HTML docs:"
+        if [ -d "doc/html" ]; then
+          echo "  ✓ doc/html/ exists"
+          ls -la doc/html/ | head -10
+        else
+          echo "  ✗ doc/html/ NOT FOUND"
+        fi
+        
+        echo "Angular library HTML docs:"
+        if [ -d "angular/doc/html" ]; then
+          echo "  ✓ angular/doc/html/ exists"
+          ls -la angular/doc/html/ | head -10
+        else
+          echo "  ✗ angular/doc/html/ NOT FOUND"
+        fi
+        
+        echo "Angular library Markdown docs (should NOT be deployed):"
+        if [ -d "angular/doc/api" ]; then
+          echo "  ⚠ angular/doc/api/ exists (will NOT be copied to deployment)"
+          ls -la angular/doc/api/ | head -10
+        else
+          echo "  ✓ angular/doc/api/ does not exist"
+        fi
+        
         # Copy main library HTML documentation
         if [ -d "doc/html" ]; then
           cp -r doc/html/* deploy/doc/html/
+          echo "✓ Copied main library HTML docs"
+        else
+          echo "⚠ Warning: Main library HTML docs not found, skipping..."
         fi
         
         # Copy Angular library HTML documentation  
         if [ -d "angular/doc/html" ]; then
           cp -r angular/doc/html/* deploy/angular/doc/html/
+          echo "✓ Copied Angular library HTML docs"
+        else
+          echo "⚠ Warning: Angular library HTML docs not found, skipping..."
         fi
         
-        # Copy redirect index.html to root
-        if [ -f "doc/index.html" ]; then
-          cp doc/index.html deploy/
-        fi
+        # Note: Do NOT copy or create index.html at root
+        # The gh-pages branch has its own index.html that should be preserved
+        # The keep_files: true option will preserve existing files on gh-pages
         
         # Ensure .nojekyll exists to prevent Jekyll processing
         touch deploy/.nojekyll
         
-        # Optional: Add a simple index.html at root if none exists
-        if [ ! -f "deploy/index.html" ]; then
-          cat > deploy/index.html << 'EOF'
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>GridStack.js Documentation</title>
-            <meta http-equiv="refresh" content="0; url=./doc/html/">
-        </head>
-        <body>
-            <h1>GridStack.js Documentation</h1>
-            <p>Redirecting to <a href="./doc/html/">API Documentation</a>...</p>
-        </body>
-        </html>
-        EOF
-        fi
+        # Final verification
+        echo ""
+        echo "📦 Deployment structure:"
+        find deploy -type f -name "*.html" | head -20
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
