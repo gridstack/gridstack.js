@@ -2376,12 +2376,22 @@ export class GridStack {
 
   /** @internal call when drag (and drop) needs to be cancelled (Esc key) */
   public cancelDrag() {
-    const n = this._placeholder?.gridstackNode;
+    const el = DDManager.dragElement?.el;
+    let n = el?.gridstackNode;
     if (!n) return;
     if (n._isExternal) {
       // remove any newly inserted nodes (from outside)
       n._isAboutToRemove = true;
       this.engine.removeNode(n);
+      // check if this came from another grid, where it needs to be restored (swap it back)
+      if (el._gridstackNodeOrig) {
+        el.gridstackNode = n = el._gridstackNodeOrig;
+        delete el._gridstackNodeOrig;
+        delete DDManager.dropElement; // not dropping onto our original grid, will manually add it back
+        const grid = n.grid;
+        grid.engine.addNode(n, false);
+        grid.engine.restoreInitial();
+      }
     } else if (n._isAboutToRemove) {
       // restore any temp removed (dragged over trash)
       GridStack._itemRemoving(n.el, false);
@@ -2748,11 +2758,15 @@ export class GridStack {
       const onEndMoving = (event: Event) => {
         this.placeholder.remove();
         delete this.placeholder.gridstackNode;
+        const widthChanged = node.w !== node._orig.w;
         delete node._moving;
         delete node._resizing;
         delete node._event;
         delete node._lastTried;
-        const widthChanged = node.w !== node._orig.w;
+        delete node._lastUiPosition;
+        delete node._prevYPix;
+        delete node._rect;
+        delete node._sidebarOrig;
 
         // if the item has moved to another grid, we're done here
         const target: GridItemHTMLElement = event.target as GridItemHTMLElement;
@@ -2915,6 +2929,7 @@ export class GridStack {
       if (node.x === p.x && node.y === p.y) return; // skip same
       // DON'T skip one we tried as we might have failed because of coverage <50% before
       // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
+      console.log('not skip same');
     } else if (event.type === 'resize') {
       if (p.x < 0) return;
       // Scrolling page if needed
