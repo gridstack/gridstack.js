@@ -105,11 +105,30 @@ jobs:
         echo ""
         echo "📦 Deployment structure:"
         find deploy -type f -name "*.html" | head -20
+    
+    - name: Preserve gh-pages root index.html
+      run: |
+        # Fetch gh-pages to get existing index.html if we didn't create one
+        if [ ! -f "deploy/index.html" ]; then
+          echo "📄 No index.html in deploy, fetching from gh-pages..."
+          git fetch origin gh-pages:gh-pages 2>/dev/null || true
+          
+          # Check out just the index.html from gh-pages if it exists
+          if git show origin/gh-pages:index.html > /dev/null 2>&1; then
+            git show origin/gh-pages:index.html > deploy/index.html
+            echo "✓ Preserved existing index.html from gh-pages"
+          else
+            echo "ℹ No index.html on gh-pages to preserve"
+          fi
+        else
+          echo "ℹ index.html already in deploy directory, not fetching from gh-pages"
+        fi
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./deploy
-        keep_files: true
+        # Clean deployment each time to avoid stale files
+        keep_files: false
         commit_message: 'Deploy documentation from ${{ github.sha }}'
