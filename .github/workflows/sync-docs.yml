@@ -30,17 +30,32 @@ jobs:
     - name: Check if docs exist
       id: check-docs
       run: |
+        echo "🔍 Checking for documentation directories on master branch..."
+        
         if [ -d "doc/html" ]; then
+          echo "  ✓ doc/html/ exists"
           echo "main_docs=true" >> $GITHUB_OUTPUT
         else
+          echo "  ✗ doc/html/ NOT FOUND"
           echo "main_docs=false" >> $GITHUB_OUTPUT
         fi
         
-        if [ -d "angular/doc/api" ]; then
+        if [ -d "angular/doc/html" ]; then
+          echo "  ✓ angular/doc/html/ exists"
           echo "angular_docs=true" >> $GITHUB_OUTPUT
         else
+          echo "  ✗ angular/doc/html/ NOT FOUND"
           echo "angular_docs=false" >> $GITHUB_OUTPUT
         fi
+        
+        if [ -d "angular/doc/api" ]; then
+          echo "  ℹ angular/doc/api/ exists (Markdown - will NOT be synced)"
+        fi
+        
+        echo ""
+        echo "Sync decisions:"
+        echo "  Main library HTML: $([ -d 'doc/html' ] && echo 'YES' || echo 'NO')"
+        echo "  Angular library HTML: $([ -d 'angular/doc/html' ] && echo 'YES' || echo 'NO')"
 
     - name: Checkout gh-pages branch
       if: steps.check-docs.outputs.main_docs == 'true' || steps.check-docs.outputs.angular_docs == 'true'
@@ -70,16 +85,17 @@ jobs:
       run: |
         echo "Syncing Angular library documentation..."
         
-        # Remove existing Angular docs if they exist
-        if [ -d "angular/doc" ]; then
-          rm -rf angular/doc
+        # Remove existing Angular HTML docs if they exist
+        if [ -d "angular/doc/html" ]; then
+          rm -rf angular/doc/html
         fi
         
-        # Extract Angular docs from master branch using git archive
-        git archive master angular/doc | tar -xf -
+        # Extract Angular HTML docs from master branch using git archive
+        mkdir -p angular/doc
+        git archive master angular/doc/html | tar -xf -
         
         # Add changes
-        git add -f angular/doc
+        git add -f angular/doc/html
 
     - name: Commit and push changes
       if: steps.check-docs.outputs.main_docs == 'true' || steps.check-docs.outputs.angular_docs == 'true'
@@ -93,10 +109,10 @@ jobs:
         # Create commit message
         COMMIT_MSG="📚 Auto-sync documentation from master"
         if [ "${{ steps.check-docs.outputs.main_docs }}" == "true" ]; then
-          COMMIT_MSG="${COMMIT_MSG}%0A%0A- Updated main library HTML docs (docs/html/)"
+          COMMIT_MSG="${COMMIT_MSG}%0A%0A- Updated main library HTML docs (doc/html/)"
         fi
         if [ "${{ steps.check-docs.outputs.angular_docs }}" == "true" ]; then
-          COMMIT_MSG="${COMMIT_MSG}%0A%0A- Updated Angular library docs (angular/doc/)"
+          COMMIT_MSG="${COMMIT_MSG}%0A%0A- Updated Angular library HTML docs (angular/doc/html/)"
         fi
         
         COMMIT_MSG="${COMMIT_MSG}%0A%0ASource: ${{ github.sha }}"
