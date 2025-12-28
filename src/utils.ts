@@ -590,28 +590,31 @@ export class Utils {
     const elRect = el.getBoundingClientRect();
     const scrollRect = scrollEl.getBoundingClientRect();
     const innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
-
-    const offsetDiffDown = elRect.bottom - Math.min(scrollRect.bottom, innerHeightOrClientHeight);
-    const offsetDiffUp = elRect.top - Math.max(scrollRect.top, 0);
     const prevScroll = scrollEl.scrollTop;
 
+    // Calculate how far element extends past viewport edges
+    const offsetDiffDown = elRect.bottom - Math.min(scrollRect.bottom, innerHeightOrClientHeight);
+    const offsetDiffUp = elRect.top - Math.max(scrollRect.top, 0);
+
+    // Cap the maximum scroll speed per update
+    const maxScrollPerUpdate = 10;
+    let scrollAmount = 0;
+
     if (offsetDiffUp < 0 && distance < 0) {
-      // scroll up
-      if (el.offsetHeight > scrollRect.height) {
-        scrollEl.scrollTop += distance;
-      } else {
-        scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
-      }
+      // Element is above viewport, scroll up
+      // Limit scroll speed to maxScrollPerUpdate
+      scrollAmount = Math.max(offsetDiffUp, -maxScrollPerUpdate);
     } else if (offsetDiffDown > 0 && distance > 0) {
-      // scroll down
-      if (el.offsetHeight > scrollRect.height) {
-        scrollEl.scrollTop += distance;
-      } else {
-        scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
-      }
+      // Element is below viewport, scroll down
+      // Limit scroll speed to maxScrollPerUpdate
+      scrollAmount = Math.min(offsetDiffDown, maxScrollPerUpdate);
     }
 
-    position.top += scrollEl.scrollTop - prevScroll;
+    // Apply scroll
+    if (scrollAmount !== 0) {
+      scrollEl.scrollTop += scrollAmount;
+      position.top += scrollEl.scrollTop - prevScroll;
+    }
   }
 
   /**
