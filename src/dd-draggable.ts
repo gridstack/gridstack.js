@@ -334,7 +334,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal restore back the original style before dragging */
   protected _removeHelperStyle(): DDDraggable {
     this.helper.classList.remove('ui-draggable-dragging');
-    this.el.gridstackNode?.grid?.el.classList.remove('grid-stack-dragging');
+    (this.el._gridstackNodeOrig || this.el.gridstackNode)?.grid?.el.classList.remove('grid-stack-dragging');
     const node = (this.helper as GridItemHTMLElement)?.gridstackNode;
     // don't bother restoring styles if we're gonna remove anyway...
     if (!node?._isAboutToRemove && this.dragElementOriginStyle) {
