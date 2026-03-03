@@ -720,8 +720,7 @@ export class GridStack {
    * @see {@link http://gridstackjs.com/demo/serialization.html} for complete example
    */
   public load(items: GridStackWidget[], addRemove: boolean | AddRemoveFcn = GridStack.addRemoveCB || true): GridStack {
-    items = Utils.cloneDeep(items); // so we can mod
-    const column = this.getColumn();
+    // items = Utils.cloneDeep(items); // TODO: let callee decide by using directly instead of copy we can modify ?
 
     // make sure size 1x1 (default) is present as it may need to override current sizes
     items.forEach(n => { n.w = n.w || n.minW || 1; n.h = n.h || n.minH || 1 });
@@ -736,6 +735,7 @@ export class GridStack {
     let maxColumn = 0;
     items.forEach(n => { maxColumn = Math.max(maxColumn, (n.x || 0) + n.w) });
     if (maxColumn > this.engine.defaultColumn) this.engine.defaultColumn = maxColumn;
+    const column = this.getColumn();
     if (maxColumn > column) {
       // if we're loading (from empty) into a smaller column, check for special responsive layout
       if (this.engine.nodes.length === 0 && this.responseLayout) {
@@ -1494,9 +1494,11 @@ export class GridStack {
     if (o.class !== undefined && o.class !== opts.class) { if (opts.class) this.el.classList.remove(opts.class); if (o.class) this.el.classList.add(o.class); }
     // responsive column take over actual count (keep what we have now)
     if (o.columnOpts) {
+      const hadColumnOpts = !!this.opts.columnOpts;
       this.opts.columnOpts = o.columnOpts;
+      if (hadColumnOpts !== !!this.opts.columnOpts) this._updateResizeEvent();
       this.checkDynamicColumn();
-    } else if (o.columnOpts === null && this.opts.columnOpts) {
+    } else if (o.columnOpts === null && this.opts.columnOpts) { // delete update cmd
       delete this.opts.columnOpts;
       this._updateResizeEvent();
     } else if (typeof(o.column) === 'number') this.column(o.column);
@@ -1510,7 +1512,7 @@ export class GridStack {
       this._updateContainerHeight();
     } else {
       if (o.minRow !== undefined) { opts.minRow = o.minRow; this._updateContainerHeight(); }
-      if (o.maxRow !== undefined) opts.maxRow = o.maxRow;
+      if (o.maxRow !== undefined) opts.maxRow = this.engine.maxRow = o.maxRow;
     }
     if (o.lazyLoad !== undefined) opts.lazyLoad = o.lazyLoad;
     if (o.children?.length) this.load(o.children);
