@@ -184,6 +184,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.temporalRect = this._getChange(event, dir);
     this._applyChange();
     const ev = Utils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
+    (ev as any).resizeDir = dir; // expose handle direction so _dragOrResize can avoid position drift
     if (this.option.resize) {
       this.option.resize(ev, this._ui());
     }

@@ -2928,11 +2928,16 @@ export class GridStack {
       if (node.w === p.w && node.h === p.h) return;
       if (node._lastTried && node._lastTried.w === p.w && node._lastTried.h === p.h) return; // skip one we tried (but failed)
 
-      // if we size on left/top side this might move us, so get possible new position as well
-      const left = ui.position.left + mLeft;
-      const top = ui.position.top + mTop;
-      p.x = Math.round(left / cellWidth);
-      p.y = Math.round(top / cellHeight);
+      // only recalculate position for handles that move the top-left corner (N/W).
+      // for SE/S/E handles the top-left is anchored — recalculating from pixels causes
+      // rounding drift on fine grids where cellWidth/cellHeight are only a few pixels. #385 #1356
+      const dir = ((event as any).resizeDir || '') as string;
+      if (dir.includes('w') || dir.includes('n')) {
+        const left = ui.position.left + mLeft;
+        const top = ui.position.top + mTop;
+        if (dir.includes('w')) p.x = Math.round(left / cellWidth);
+        if (dir.includes('n')) p.y = Math.round(top / cellHeight);
+      }
 
       resizing = true;
     }
