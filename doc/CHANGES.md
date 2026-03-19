@@ -137,6 +137,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 12.4.3 (TBD)
 * fix: [#3237](https://github.com/gridstack/gridstack.js/pull/3237) updateOptions() fixes for columnOpts, maxRow. load() not cloning
+* fix: [#3241](https://github.com/gridstack/gridstack.js/pull/3241) drifting rounding issue when cellHeight is small/fraction
 
 ## 12.4.2 (2025-12-26)
 * regression: [#3214](https://github.com/gridstack/gridstack.js/issues/3214) touch device with real mouse event fix (caused by #3191 in last release)

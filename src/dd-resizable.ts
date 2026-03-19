@@ -6,7 +6,7 @@
 import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
-import { DDResizeOpt, DDUIData, GridItemHTMLElement, Rect, Size } from './types';
+import { DDResizeOpt, DDUIData, GridItemHTMLElement, GridStackMouseEvent, Rect, Size } from './types';
 import { DDManager } from './dd-manager';
 
 // import { GridItemHTMLElement } from './types'; let count = 0; // TEST
@@ -183,8 +183,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.scrolled = this.scrollEl.scrollTop - this.scrollY;
     this.temporalRect = this._getChange(event, dir);
     this._applyChange();
-    const ev = Utils.initEvent<MouseEvent>(event, { type: 'resize', target: this.el });
-    (ev as any).resizeDir = dir; // expose handle direction so _dragOrResize can avoid position drift
+    const ev = Utils.initEvent<GridStackMouseEvent>(event, { type: 'resize', target: this.el });
+    ev.resizeDir = dir; // expose handle direction so _dragOrResize can avoid position drift
     if (this.option.resize) {
       this.option.resize(ev, this._ui());
     }
