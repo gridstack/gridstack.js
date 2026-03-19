@@ -11,7 +11,8 @@ import {
   gridDefaults, ColumnOptions, GridItemHTMLElement, GridStackElement, GridStackEventHandlerCallback,
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragOpt, GridStackPosition, GridStackOptions,
   GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler,
-  Position, RenderFcn
+  Position, RenderFcn,
+  GridStackMouseEvent
 } from './types';
 
 /*
@@ -2872,7 +2873,7 @@ export class GridStack {
   }
 
   /** @internal handles actual drag/resize */
-  protected _dragOrResize(el: GridItemHTMLElement, event: MouseEvent, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void {
+  protected _dragOrResize(el: GridItemHTMLElement, event: GridStackMouseEvent, ui: DDUIData, node: GridStackNode, cellWidth: number, cellHeight: number): void {
     const p = { ...node._orig }; // could be undefined (_isExternal) which is ok (drag only set x,y and w,h will default to node value)
     let resizing: boolean;
     let mLeft = this.opts.marginLeft as number,
@@ -2931,8 +2932,8 @@ export class GridStack {
       // only recalculate position for handles that move the top-left corner (N/W).
       // for SE/S/E handles the top-left is anchored — recalculating from pixels causes
       // rounding drift on fine grids where cellWidth/cellHeight are only a few pixels. #385 #1356
-      const dir = ((event as any).resizeDir || '') as string;
-      if (dir.includes('w') || dir.includes('n')) {
+      const dir = event.resizeDir;
+      if (dir && (dir.includes('w') || dir.includes('n'))) {
         const left = ui.position.left + mLeft;
         const top = ui.position.top + mTop;
         if (dir.includes('w')) p.x = Math.round(left / cellWidth);

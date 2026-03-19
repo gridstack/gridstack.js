@@ -574,3 +574,8 @@ export interface GridStackNode extends GridStackWidget {
   /** @internal had drag&drop been initialized */
   _initDD?: boolean;
 }
+
+// add custom field to support drag/resize optimizations
+export interface GridStackMouseEvent extends MouseEvent {
+  resizeDir?: string;
+}
