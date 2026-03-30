@@ -258,6 +258,11 @@ export class GridStack {
   protected dragTransform: DragTransform = { xScale: 1, yScale: 1, xOffset: 0, yOffset: 0 };
   protected responseLayout: ColumnOptions;
   private _skipInitialResize: boolean;
+  /** @internal auto-scroll animation frame id */
+  protected _autoScrollAnimId: number | null = null;
+  /** @internal cached element and scroll container for auto-scroll */
+  protected _autoScrollEl: HTMLElement | null = null;
+  protected _autoScrollContainer: HTMLElement | null = null;
 
   /**
    * Construct a grid item from the given element and options
@@ -2749,6 +2754,7 @@ export class GridStack {
 
       /** called when the item stops moving/resizing */
       const onEndMoving = (event: Event) => {
+        this._stopScrolling();
         this.placeholder.remove();
         delete this.placeholder.gridstackNode;
         delete node._moving;
@@ -2891,10 +2897,9 @@ export class GridStack {
 
     if (event.type === 'drag') {
       if (node._temporaryRemoved) return; // handled by dropover
-      const distance = ui.position.top - node._prevYPix;
       node._prevYPix = ui.position.top;
       if (this.opts.draggable.scroll !== false) {
-        Utils.updateScrollPosition(el, ui.position, distance);
+        this._updateScrollPosition(el);
       }
 
       // get new position taking into account the margin in the direction we are moving! (need to pass mid point by margin)
@@ -3016,5 +3021,72 @@ export class GridStack {
       // item came from outside restore all nodes back to original
       this.engine.restoreInitial();
     }
+  }
+
+  /** @internal compute how many pixels the element is clipped: negative = above, positive = below, 0 = fully visible */
+  protected _getClipping(el: HTMLElement, scrollEl: HTMLElement): number {
+    const elRect = el.getBoundingClientRect();
+    const scrollRect = scrollEl.getBoundingClientRect();
+    const viewportH = window.innerHeight || document.documentElement.clientHeight;
+    const clippedBelow = elRect.bottom - Math.min(scrollRect.bottom, viewportH);
+    const clippedAbove = elRect.top - Math.max(scrollRect.top, 0);
+    if (clippedAbove < 0) return clippedAbove;
+    if (clippedBelow > 0) return clippedBelow;
+    return 0;
+  }
+
+  /** @internal starts or continues auto-scroll when the dragged element is clipped by the scroll container */
+  protected _updateScrollPosition(el: HTMLElement): void {
+    const scrollEl = Utils.getScrollElement(el);
+    if (!scrollEl) return;
+    this._autoScrollEl = el;
+    this._autoScrollContainer = scrollEl;
+
+    const clipping = this._getClipping(el, scrollEl);
+    if (clipping === 0) {
+      this._stopScrolling();
+    } else if (this._autoScrollAnimId === null) {
+      this._autoScrollAnimId = requestAnimationFrame(this._autoScrollTick);
+    }
+  }
+
+  /** @internal single tick of the auto-scroll animation loop */
+  protected _autoScrollTick = (): void => {
+    const el = this._autoScrollEl;
+    const scrollEl = this._autoScrollContainer;
+    if (!el || !scrollEl) { this._stopScrolling(); return; }
+
+    const clipping = this._getClipping(el, scrollEl);
+    if (clipping === 0) { this._stopScrolling(); return; }
+
+    const scrollRect = scrollEl.getBoundingClientRect();
+    const viewportH = window.innerHeight || document.documentElement.clientHeight;
+    const containerH = Math.min(scrollRect.height, viewportH);
+    const maxSpeed = Math.max(containerH / 75, 2);
+    const absPx = Math.abs(clipping);
+    const speed = Math.min(absPx * 0.3, maxSpeed);
+    const scrollAmount = clipping > 0 ? speed : -speed;
+
+    const prevScroll = scrollEl.scrollTop;
+    scrollEl.scrollTop += scrollAmount;
+    if (scrollEl.scrollTop === prevScroll) { this._stopScrolling(); return; }
+
+    const d = DDManager.dragElement;
+    if (d?.dragging && d.lastDrag) {
+      d._dragFollow(d.lastDrag);
+      d._callDrag(d.lastDrag);
+    }
+
+    this._autoScrollAnimId = requestAnimationFrame(this._autoScrollTick);
+  }
+
+  /** @internal stop any active auto-scroll animation */
+  protected _stopScrolling(): void {
+    if (this._autoScrollAnimId !== null) {
+      cancelAnimationFrame(this._autoScrollAnimId);
+      this._autoScrollAnimId = null;
+    }
+    this._autoScrollEl = null;
+    this._autoScrollContainer = null;
   }
 }

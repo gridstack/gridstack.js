@@ -582,38 +582,6 @@ export class Utils {
     }
   }
 
-  /** @internal */
-  static updateScrollPosition(el: HTMLElement, position: {top: number}, distance: number): void {
-    const scrollEl = Utils.getScrollElement(el);
-    if (!scrollEl) return;
-
-    const elRect = el.getBoundingClientRect();
-    const scrollRect = scrollEl.getBoundingClientRect();
-    const innerHeightOrClientHeight = (window.innerHeight || document.documentElement.clientHeight);
-
-    const offsetDiffDown = elRect.bottom - Math.min(scrollRect.bottom, innerHeightOrClientHeight);
-    const offsetDiffUp = elRect.top - Math.max(scrollRect.top, 0);
-    const prevScroll = scrollEl.scrollTop;
-
-    if (offsetDiffUp < 0 && distance < 0) {
-      // scroll up
-      if (el.offsetHeight > scrollRect.height) {
-        scrollEl.scrollTop += distance;
-      } else {
-        scrollEl.scrollTop += Math.abs(offsetDiffUp) > Math.abs(distance) ? distance : offsetDiffUp;
-      }
-    } else if (offsetDiffDown > 0 && distance > 0) {
-      // scroll down
-      if (el.offsetHeight > scrollRect.height) {
-        scrollEl.scrollTop += distance;
-      } else {
-        scrollEl.scrollTop += offsetDiffDown > distance ? distance : offsetDiffDown;
-      }
-    }
-
-    position.top += scrollEl.scrollTop - prevScroll;
-  }
-
   /**
    * @internal Function used to scroll the page.
    *

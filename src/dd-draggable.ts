@@ -43,9 +43,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected dragEls: HTMLElement[];
   /** @internal true while we are dragging an item around */
-  protected dragging: boolean;
+  public dragging: boolean;
   /** @internal last drag event */
-  protected lastDrag: DragEvent;
+  public lastDrag: DragEvent;
   /** @internal */
   protected parentOriginStylePosition: string;
   /** @internal */
@@ -168,7 +168,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal method to call actual drag event */
-  protected _callDrag(e: DragEvent): void {
+  public _callDrag(e: DragEvent): void {
     if (!this.dragging) return;
     const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'drag' });
     if (this.option.drag) {
@@ -354,7 +354,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal updates the top/left position to follow the mouse */
-  protected _dragFollow(e: DragEvent): void {
+  public _dragFollow(e: DragEvent): void {
     const containmentRect = { left: 0, top: 0 };
     // if (this.helper.style.position === 'absolute') { // we use 'fixed'
     //   const { left, top } = this.helperContainment.getBoundingClientRect();
