@@ -2,6 +2,7 @@
 *.tgz
 *.zip
 .npmrc
+.yarnrc
 coverage
 dist
 dist_save
