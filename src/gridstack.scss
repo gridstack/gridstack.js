@@ -28,7 +28,7 @@
  .grid-stack > .grid-stack-item {
    position: absolute;
    padding: 0;
-   top: 0; left: 0; // some default to reduce at least first row/column inline styles
+   top: 0; // some default to reduce at least first row inline styles
    width: var(--gs-column-width); // reduce 1x1 items inline styles
    height: var(--gs-cell-height);
  
@@ -43,9 +43,16 @@
      overflow-y: hidden;
    }
  }
- 
+
+ .grid-stack:not(.grid-stack-rtl) > .grid-stack-item {
+   left: 0; // some default to reduce at least first column inline styles
+ }
+ .grid-stack.grid-stack-rtl > .grid-stack-item {
+   right: 0; // some default to reduce at least first column inline styles
+ }
+
  .grid-stack {
-   > .grid-stack-item > .grid-stack-item-content, 
+   > .grid-stack-item > .grid-stack-item-content,
    > .grid-stack-placeholder > .placeholder-content {
      top: var(--gs-item-margin-top);
      right: var(--gs-item-margin-right);
@@ -105,7 +112,7 @@
    }
  
    &.ui-draggable-dragging {
-     will-change: left, top;
+     will-change: left, right, top;
    }
  
    &.ui-resizable-resizing {
@@ -126,21 +133,22 @@
  
  .grid-stack-animate,
  .grid-stack-animate .grid-stack-item {
-   transition: left $animation_speed, top $animation_speed, height $animation_speed, width $animation_speed;
+   transition: left $animation_speed, right $animation_speed, top $animation_speed, height $animation_speed, width $animation_speed;
  }
  
  .grid-stack-animate .grid-stack-item.ui-draggable-dragging,
  .grid-stack-animate .grid-stack-item.ui-resizable-resizing,
  .grid-stack-animate .grid-stack-item.grid-stack-placeholder{
-   transition: left 0s, top 0s, height 0s, width 0s;
+   transition: left 0s, right 0s, top 0s, height 0s, width 0s;
  }
  
  // make those more unique as to not conflict with side panel items, but apply to all column layouts (so not in loop below)
  .grid-stack > .grid-stack-item[gs-y="0"] {
    top: 0px;
  }
- .grid-stack > .grid-stack-item[gs-x="0"] {
+ .grid-stack:not(.grid-stack-rtl) > .grid-stack-item[gs-x="0"] {
    left: 0%;
  }
- 
- 
+ .grid-stack.grid-stack-rtl > .grid-stack-item[gs-x="0"] {
+   right: 0%;
+ }

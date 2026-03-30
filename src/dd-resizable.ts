@@ -6,7 +6,7 @@
 import { DDResizableHandle } from './dd-resizable-handle';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { Utils } from './utils';
-import { DDResizeOpt, DDUIData, GridItemHTMLElement, GridStackMouseEvent, Rect, Size } from './types';
+import { DDResizeOpt, DDUIData, GridItemHTMLElement, GridStackMouseEvent, Size } from './types';
 import { DDManager } from './dd-manager';
 
 // import { GridItemHTMLElement } from './types'; let count = 0; // TEST
@@ -22,6 +22,7 @@ export interface DDResizableOpt extends DDResizeOpt {
   start?: (event: Event, ui: DDUIData) => void;
   stop?: (event: Event) => void;
   resize?: (event: Event, ui: DDUIData) => void;
+  rtl?: boolean;
 }
 
 interface RectScaleReciprocal {
@@ -29,15 +30,23 @@ interface RectScaleReciprocal {
   y: number;
 }
 
+interface TemporalRect {
+  width: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+}
+
 export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt<DDResizableOpt> {
   /** @internal */
   protected handlers: DDResizableHandle[];
   /** @internal */
-  protected originalRect: Rect;
+  protected originalRect: DOMRectReadOnly;
   /** @internal */
   protected rectScale: RectScaleReciprocal = { x: 1, y: 1 };
   /** @internal */
-  protected temporalRect: Rect;
+  protected temporalRect: TemporalRect;
   /** @internal */
   protected scrollY: number;
   /** @internal */
@@ -51,7 +60,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected parentOriginStylePosition: string;
   /** @internal */
-  protected static _originStyleProp = ['width', 'height', 'position', 'left', 'top', 'opacity', 'zIndex'];
+  protected static _originStyleProp = ['width', 'height', 'position', 'left', 'right', 'top', 'opacity', 'zIndex'];
   /** @internal */
   protected sizeToContent: boolean;
 
@@ -185,6 +194,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this._applyChange();
     const ev = Utils.initEvent<GridStackMouseEvent>(event, { type: 'resize', target: this.el });
     ev.resizeDir = dir; // expose handle direction so _dragOrResize can avoid position drift
+    ev.hasMovedX = this.option.rtl ? dir.includes('e') : dir.includes('w');
+    ev.hasMovedY = dir.includes('n');
     if (this.option.resize) {
       this.option.resize(ev, this._ui());
     }
@@ -240,13 +251,14 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal */
-  protected _getChange(event: MouseEvent, dir: string): Rect {
+  protected _getChange(event: MouseEvent, dir: string): TemporalRect {
     const oEvent = this.startEvent;
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
       width: this.originalRect.width,
       height: this.originalRect.height + this.scrolled,
       left: this.originalRect.left,
-      top: this.originalRect.top - this.scrolled
+      right: this.originalRect.right,
+      top: this.originalRect.top - this.scrolled,
     };
 
     const offsetX = event.clientX - oEvent.clientX;
@@ -254,13 +266,22 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     let moveLeft: boolean;
     let moveUp: boolean;
 
-    if (dir.indexOf('e') > -1) {
+    const isRtl = this.option.rtl;
+
+    if (!isRtl && dir.indexOf('e') > -1) {
       newRect.width += offsetX;
-    } else if (dir.indexOf('w') > -1) {
+    } else if (isRtl && dir.indexOf('w') > -1) {
+      newRect.width -= offsetX;
+    } else if (!isRtl && dir.indexOf('w') > -1) {
       newRect.width -= offsetX;
       newRect.left += offsetX;
       moveLeft = true;
+    } else if (isRtl && dir.indexOf('e') > -1) {
+      newRect.width += offsetX;
+      newRect.right += offsetX;
+      moveLeft = true;
     }
+
     if (dir.indexOf('s') > -1) {
       newRect.height += offsetY;
     } else if (dir.indexOf('n') > -1) {
@@ -268,10 +289,13 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       newRect.top += offsetY
       moveUp = true;
     }
+
     const constrain = this._constrainSize(newRect.width, newRect.height, moveLeft, moveUp);
     if (Math.round(newRect.width) !== Math.round(constrain.width)) { // round to ignore slight round-off errors
-      if (dir.indexOf('w') > -1) {
+      if (!isRtl && dir.indexOf('w') > -1) {
         newRect.left += newRect.width - constrain.width;
+      } else if (isRtl && dir.indexOf('e') > -1) {
+        newRect.right -= newRect.width - constrain.width;
       }
       newRect.width = constrain.width;
     }
@@ -298,17 +322,29 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _applyChange(): DDResizable {
-    let containmentRect = { left: 0, top: 0, width: 0, height: 0 };
+    let containmentRect = { left: 0, right: 0, top: 0, width: 0, height: 0 };
     if (this.el.style.position === 'absolute') {
       const containmentEl = this.el.parentElement;
-      const { left, top } = containmentEl.getBoundingClientRect();
-      containmentRect = { left, top, width: 0, height: 0 };
+      const { left, right, top } = containmentEl.getBoundingClientRect();
+      containmentRect = { left, right, top, width: 0, height: 0 };
     }
     if (!this.temporalRect) return this;
-    Object.keys(this.temporalRect).forEach(key => {
-      const value = this.temporalRect[key];
-      const scaleReciprocal = key === 'width' || key === 'left' ? this.rectScale.x : key === 'height' || key === 'top' ? this.rectScale.y : 1;
-      this.el.style[key] = (value - containmentRect[key]) * scaleReciprocal + 'px';
+    Object.entries(this.temporalRect).forEach(([key, value]) => {
+      if (this.option.rtl ? key === 'left' : key === 'right')
+        return;
+
+      const scaleReciprocal = key === 'width' || key === 'left' || key === 'right'
+        ? this.rectScale.x
+        : key === 'height' || key === 'top'
+          ? this.rectScale.y
+          : 1;
+      let finalValue: string;
+      if (key === 'right') {
+        finalValue = (containmentRect.right - value) * this.rectScale.x + 'px';
+      } else {
+        finalValue = (value - containmentRect[key]) * scaleReciprocal + 'px';
+      }
+      this.el.style[key] = finalValue;
     });
     return this;
   }
@@ -328,12 +364,17 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       width: this.originalRect.width,
       height: this.originalRect.height + this.scrolled,
       left: this.originalRect.left,
+      right: this.originalRect.right,
       top: this.originalRect.top - this.scrolled
     };
     const rect = this.temporalRect || newRect;
+
+    const leftPos = this.option.rtl
+      ? (containmentRect.right - rect.right) * this.rectScale.x
+      : (rect.left - containmentRect.left) * this.rectScale.x;
     return {
       position: {
-        left: (rect.left - containmentRect.left) * this.rectScale.x,
+        left: leftPos,
         top: (rect.top - containmentRect.top) * this.rectScale.y
       },
       size: {
