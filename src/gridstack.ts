@@ -3035,9 +3035,10 @@ export class GridStack {
     return 0;
   }
 
-  /** @internal starts or continues auto-scroll when the dragged element is clipped by the scroll container */
+  /** @internal starts or continues auto-scroll when the dragged element is clipped by the scroll container.
+   * Uses the grid's own element to find the scroll container so external/sidebar drags work too (#2074). */
   protected _updateScrollPosition(el: HTMLElement): void {
-    const scrollEl = Utils.getScrollElement(el);
+    const scrollEl = Utils.getScrollElement(this.el);
     if (!scrollEl) return;
     this._autoScrollEl = el;
     this._autoScrollContainer = scrollEl;
@@ -3059,12 +3060,10 @@ export class GridStack {
     const clipping = this._getClipping(el, scrollEl);
     if (clipping === 0) { this._stopScrolling(); return; }
 
-    const scrollRect = scrollEl.getBoundingClientRect();
     const viewportH = window.innerHeight || document.documentElement.clientHeight;
-    const containerH = Math.min(scrollRect.height, viewportH);
-    const maxSpeed = Math.max(containerH / 75, 2);
+    const maxSpeed = Math.max(viewportH / 75, 4);
     const absPx = Math.abs(clipping);
-    const speed = Math.min(absPx * 0.3, maxSpeed);
+    const speed = Math.min(absPx * 0.6, maxSpeed);
     const scrollAmount = clipping > 0 ? speed : -speed;
 
     const prevScroll = scrollEl.scrollTop;
