@@ -61,6 +61,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     xOffset: 0,
     yOffset: 0
   };
+  /** @internal auto-scroll animation variables */
+  protected _autoScrollAnimId?: number;
+  protected _autoScrollContainer?: HTMLElement;
+  protected _autoScrollMaxSpeed?: number;
 
   constructor(public el: GridItemHTMLElement, public option: DDDragOpt = {}) {
     super();
@@ -150,6 +154,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     delete this.dragging;
     delete DDManager.dragElement;
     delete DDManager.dropElement;
+    delete this._autoScrollMaxSpeed;
+    delete this._autoScrollContainer;
     // document handler so we can continue receiving moves as the item is 'fixed' position, and capture=true so WE get a first crack
     document.addEventListener('mousemove', this._mouseMove, { capture: true, passive: true }); // true=capture, not bubble
     document.addEventListener('mouseup', this._mouseUp, true);
@@ -226,6 +232,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal call when the mouse gets released to drop the item at current location */
   protected _mouseUp(e: MouseEvent): void {
+    this._stopScrolling();
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp, true);
     if (isTouch && e.currentTarget) { // destroy() during nested grid call us again wit fake _mouseUp
@@ -398,6 +405,66 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       width: targetOffset.width * this.dragTransform.xScale,
       height: targetOffset.height * this.dragTransform.yScale
     };
+  }
+
+  /** @internal starts or continues auto-scroll when the dragged helper is clipped by the scroll container.
+   * Takes the grid's own element to find the scroll container so external/sidebar drags work too (#2074). */
+   public updateScrollPosition(gridEl: HTMLElement): void {
+    this._autoScrollContainer ??= Utils.getScrollElement(gridEl);
+    const clipping = this._getClipping(this.helper, this._autoScrollContainer);
+    if (clipping === 0) {
+      this._stopScrolling();
+    } else if (!this._autoScrollAnimId) {
+      this._autoScrollAnimId = requestAnimationFrame(this._autoScrollTick);
+    }
+  }
+
+  /** @internal compute how many pixels the element is clipped: negative = above, positive = below, 0 = fully visible */
+  protected _getClipping(el: HTMLElement, scrollEl: HTMLElement): number {
+    const elRect = el.getBoundingClientRect();
+    const scrollRect = scrollEl.getBoundingClientRect();
+    const viewportH = window.innerHeight || document.documentElement.clientHeight;
+    const clippedBelow = elRect.bottom - Math.min(scrollRect.bottom, viewportH);
+    const clippedAbove = elRect.top - Math.max(scrollRect.top, 0);
+    if (clippedAbove < 0) return clippedAbove;
+    if (clippedBelow > 0) return clippedBelow;
+    return 0;
+  }
+
+  /** @internal single tick of the auto-scroll animation loop */
+  protected _autoScrollTick = (): void => {
+    const el = this.helper;
+    const scrollCont = this._autoScrollContainer;
+    if (!el || !scrollCont) { this._stopScrolling(); return; }
+    const clipping = this._getClipping(el, scrollCont);
+    if (clipping === 0) { this._stopScrolling(); return; }
+
+    if (!this._autoScrollMaxSpeed) {
+      const viewportH = window.innerHeight || document.documentElement.clientHeight;
+      this._autoScrollMaxSpeed = Math.max(viewportH / 150, 4);
+    }
+    const absPx = Math.abs(clipping);
+    const speed = Math.min(absPx * 0.5, this._autoScrollMaxSpeed);
+    const scrollAmount = clipping > 0 ? speed : -speed;
+
+    const prevScroll = scrollCont.scrollTop;
+    scrollCont.scrollTop += scrollAmount;
+    if (scrollCont.scrollTop === prevScroll) { this._stopScrolling(); return; }
+
+    if (this.dragging && this.lastDrag) {
+      this._dragFollow(this.lastDrag);
+      this._callDrag(this.lastDrag);
+    }
+
+    this._autoScrollAnimId = requestAnimationFrame(this._autoScrollTick);
+  }
+
+  /** @internal stop any active auto-scroll animation */
+  public _stopScrolling(): void {
+    if (this._autoScrollAnimId) {
+      cancelAnimationFrame(this._autoScrollAnimId);
+      delete this._autoScrollAnimId;
+    }
   }
 
   /** @internal TODO: set to public as called by DDDroppable! */

@@ -569,13 +569,11 @@ export class Utils {
     }
   }
 
-  /** @internal returns the passed element if scrollable, else the closest parent that will, up to the entire document scrolling element */
+  /** @internal returns the passed element if vertically scrollable, else the closest parent that will, up to the entire document scrolling element */
   static getScrollElement(el?: HTMLElement): HTMLElement {
     if (!el) return document.scrollingElement as HTMLElement || document.documentElement; // IE support
-    const style = getComputedStyle(el);
-    const overflowRegex = /(auto|scroll)/;
-
-    if (overflowRegex.test(style.overflow + style.overflowY)) {
+    const overflowY = getComputedStyle(el).overflowY;
+    if (overflowY === 'auto' || overflowY === 'scroll') {
       return el;
     } else {
       return Utils.getScrollElement(el.parentElement);
