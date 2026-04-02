@@ -82,7 +82,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal called when the cursor enters our area - prepare for a possible drop and track leaving */
   protected _mouseEnter(e: MouseEvent): void {
-    // console.log(`${count++} Enter ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
+    // console.log(`${count++} Enter ${this.el.id}`); // TEST
     if (!DDManager.dragElement) return;
     // During touch drag operations, ignore real browser-generated mouseenter events (isTrusted:true) vs our simulated ones (isTrusted:false).
     // The browser can fire spurious mouseenter events when we dispatch simulated mousemove events.
@@ -91,6 +91,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     if (!this._canDrop(DDManager.dragElement.el)) return;
     e.preventDefault();
     e.stopPropagation();
+    DDManager.dragElement._stopScrolling();
 
     // make sure when we enter this, that the last one gets a leave FIRST to correctly cleanup as we don't always do
     if (DDManager.dropElement && DDManager.dropElement !== this) {
@@ -109,10 +110,12 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal called when the item is leaving our area, stop tracking if we had moving item */
   protected _mouseLeave(e: MouseEvent, calledByEnter = false): void {
-    // console.log(`${count++} Leave ${this.el.id || (this.el as GridHTMLElement).gridstack.opts.id}`); // TEST
+    // console.log(`${count++} Leave ${this.el.id}`); // TEST
     if (!DDManager.dragElement || DDManager.dropElement !== this) return;
     e.preventDefault();
     e.stopPropagation();
+    // stop the old grid's auto-scroll only when entering a new grid; if leaving to empty space keep scrolling until mouseup
+    if (calledByEnter) DDManager.dragElement._stopScrolling();
 
     const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'dropout' });
     if (this.option.out) {

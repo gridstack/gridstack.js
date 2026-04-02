@@ -573,7 +573,7 @@ export class Utils {
   static getScrollElement(el?: HTMLElement): HTMLElement {
     if (!el) return document.scrollingElement as HTMLElement || document.documentElement; // IE support
     const overflowY = getComputedStyle(el).overflowY;
-    if (overflowY === 'auto' || overflowY === 'scroll') {
+    if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight) {
       return el;
     } else {
       return Utils.getScrollElement(el.parentElement);
