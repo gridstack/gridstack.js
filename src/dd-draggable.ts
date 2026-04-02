@@ -410,7 +410,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal starts or continues auto-scroll when the dragged helper is clipped by the scroll container.
    * Takes the grid's own element to find the scroll container so external/sidebar drags work too (#2074). */
    public updateScrollPosition(gridEl: HTMLElement): void {
-    this._autoScrollContainer ??= Utils.getScrollElement(gridEl);
+    this._autoScrollContainer = Utils.getScrollElement(gridEl); // always use latest active grid
     const clipping = this._getClipping(this.helper, this._autoScrollContainer);
     if (clipping === 0) {
       this._stopScrolling();
@@ -419,11 +419,12 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
   }
 
-  /** @internal compute how many pixels the element is clipped: negative = above, positive = below, 0 = fully visible */
+  /** @internal compute how many pixels the element is clipped: negative = above, positive = below, 0 = fully inside OR outside (stop scrolling) */
   protected _getClipping(el: HTMLElement, scrollEl: HTMLElement): number {
     const elRect = el.getBoundingClientRect();
     const scrollRect = scrollEl.getBoundingClientRect();
     const viewportH = window.innerHeight || document.documentElement.clientHeight;
+    if (elRect.bottom < scrollRect.top || elRect.top > scrollRect.bottom) return 0; // fully outside
     const clippedBelow = elRect.bottom - Math.min(scrollRect.bottom, viewportH);
     const clippedAbove = elRect.top - Math.max(scrollRect.top, 0);
     if (clippedAbove < 0) return clippedAbove;
