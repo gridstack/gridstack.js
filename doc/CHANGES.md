@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.4.3 (TBD)](#1243-tbd)
+- [12.5.0 (2026-04-05)](#1250-2026-04-05)
 - [12.4.2 (2025-12-26)](#1242-2025-12-26)
 - [12.4.1 (2025-12-12)](#1241-2025-12-12)
 - [12.3.3 (2025-08-13)](#1233-2025-08-13)
@@ -136,10 +136,10 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 12.4.3 (TBD)
+## 12.5.0 (2026-04-05)
 * fix: [#3237](https://github.com/gridstack/gridstack.js/pull/3237) updateOptions() fixes for columnOpts, maxRow. load() not cloning
 * fix: [#3241](https://github.com/gridstack/gridstack.js/pull/3241) drifting rounding issue when cellHeight is small/fraction
-* fix: [#2188](https://github.com/gridstack/gridstack.js/issues/2188), [#2074](https://github.com/gridstack/gridstack.js/issues/2074) scroll speed too high, not animating, not using container parent
+* feat: [#2188](https://github.com/gridstack/gridstack.js/issues/2188), [#2074](https://github.com/gridstack/gridstack.js/issues/2074) scroll speed too high, not animating, not using container parent
 
 ## 12.4.2 (2025-12-26)
 * regression: [#3214](https://github.com/gridstack/gridstack.js/issues/3214) touch device with real mouse event fix (caused by #3191 in last release)
