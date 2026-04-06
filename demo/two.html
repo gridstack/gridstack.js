@@ -10,14 +10,21 @@
   <link rel="stylesheet" href="demo.css"/>
   <style type="text/css">
     .with-lines { border: 1px dotted #777}
+    .scroll-container {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 2px solid #aaa;
+      border-radius: 4px;
+      padding: 10px;
+    }
   </style>
 
   <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
 </head>
 <body>
   <div class="container-fluid">
-    <h1>Two grids demo</h1>
-    <p>Two grids, one floating one not, showing drag&drop from sidebar and between grids.
+    <h1>Two grids demo, with scroll containers</h1>
+    <p>Two grids, one floating one not, showing drag&drop from sidebar and between grids. Using scoll containers to test.
     <br>New v10.2: use 'Esc' to cancel any move/resize. Use 'r' to rotate as you drag.</p>
 
     <div class="row">
@@ -51,11 +58,14 @@
       <div class="col-md-6">
         <a onClick="toggleFloat(this, 0)" class="btn btn-primary" href="#">float: true</a>
         <a onClick="compact(0)" class="btn btn-primary" href="#">Compact</a>
-        <div class="grid-stack" id="left_grid"></div>
+        <div class="scroll-container">
+          <div class="grid-stack" id="left_grid"></div>
+        </div>
       </div>
       <div class="col-md-6">
         <a onClick="toggleFloat(this, 1)" class="btn btn-primary" href="#">float: false</a>
         <a onClick="compact(1)" class="btn btn-primary" href="#">Compact</a>
+        page scroll test
         <div class="grid-stack" id="right_grid"></div>
       </div>
     </div>
@@ -68,7 +78,7 @@
       {x: 1, y: 1}, // intentional overlap to test collision on load
       {x: 3, y: 1},
       {x: 2, y: 3, w: 3, maxW: 3, content: 'has maxW=3'},
-      {x: 2, y: 5}
+      {x: 2, y: 5, h:20}
     ];
     items.forEach((item, i) => item.content = item.content || String(i));
 
