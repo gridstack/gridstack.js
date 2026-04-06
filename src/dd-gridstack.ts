@@ -96,7 +96,8 @@ export class DDGridStack {
           ...{
             start: opts.start,
             stop: opts.stop,
-            resize: opts.resize
+            resize: opts.resize,
+            rtl: opts.rtl,
           }
         });
       }
@@ -111,6 +112,7 @@ export class DDGridStack {
    * @param opts - Drag options or command ('enable', 'disable', 'destroy', 'option', or config object)
    * @param key - Option key when using 'option' command
    * @param value - Option value when using 'option' command
+   * @param rtl - Are we in rtl mode?
    * @returns this instance for chaining
    *
    * @example
@@ -133,7 +135,8 @@ export class DDGridStack {
             // containment: (grid.parentGridNode && grid.opts.dragOut === false) ? grid.el.parentElement : (grid.opts.draggable.containment || null),
             start: opts.start,
             stop: opts.stop,
-            drag: opts.drag
+            drag: opts.drag,
+            rtl: opts.rtl,
           }
         });
       }

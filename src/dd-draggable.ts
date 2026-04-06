@@ -12,11 +12,11 @@ import { isTouch, touchend, touchmove, touchstart, pointerdown, DDTouch } from '
 import { GridHTMLElement } from './gridstack';
 
 interface DragOffset {
-  left: number;
+  x: number;
   top: number;
   width: number;
   height: number;
-  offsetLeft: number;
+  offsetX: number;
   offsetTop: number;
 }
 
@@ -51,7 +51,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected helperContainment: HTMLElement;
   /** @internal properties we change during dragging, and restore back */
-  protected static originStyleProp = ['width', 'height', 'transform', 'transform-origin', 'transition', 'pointerEvents', 'position', 'left', 'top', 'minWidth', 'willChange'];
+  protected static originStyleProp = ['width', 'height', 'transform', 'transform-origin', 'transition', 'pointerEvents', 'position', 'left', 'right', 'top', 'minWidth', 'willChange'];
   /** @internal pause before we call the actual drag hit collision code */
   protected dragTimeout: number;
   /** @internal */
@@ -289,7 +289,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       n._origRotate = n._origRotate || { ...n._orig }; // store the real orig size in case we Esc after doing rotation
       delete n._moving; // force rotate to happen (move waits for >50% coverage otherwise)
       grid.setAnimation(false) // immediate rotate so _getDragOffset() gets the right dom size below
-        .rotate(n.el, { top: -this.dragOffset.offsetTop, left: -this.dragOffset.offsetLeft })
+        .rotate(n.el, {
+          top: -this.dragOffset.offsetTop,
+          left: -this.dragOffset.offsetX
+        })
         .setAnimation();
       n._moving = true;
       this.dragOffset = this._getDragOffset(this.lastDrag, n.el, this.helperContainment);
@@ -326,7 +329,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // style.cursor = 'move'; //  TODO: can't set with pointerEvents=none ! (no longer in CSS either as no-op)
     style.width = this.dragOffset.width + 'px';
     style.height = this.dragOffset.height + 'px';
-    style.willChange = 'left, top';
+    style.willChange = 'left, right, top';
     style.position = 'fixed'; // let us drag between grids by not clipping as parent .grid-stack is position: 'relative'
     this._dragFollow(e); // now position it
     style.transition = 'none'; // show up instantly
@@ -362,15 +365,18 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal updates the top/left position to follow the mouse */
   public _dragFollow(e: DragEvent): void {
-    const containmentRect = { left: 0, top: 0 };
-    // if (this.helper.style.position === 'absolute') { // we use 'fixed'
-    //   const { left, top } = this.helperContainment.getBoundingClientRect();
-    //   containmentRect = { left, top };
-    // }
     const style = this.helper.style;
     const offset = this.dragOffset;
-    style.left = (e.clientX + offset.offsetLeft - containmentRect.left) * this.dragTransform.xScale + 'px';
-    style.top = (e.clientY + offset.offsetTop - containmentRect.top) * this.dragTransform.yScale + 'px';
+    if (this.option.rtl) {
+      style.right = ((window.innerWidth - e.clientX) + offset.offsetX) * this.dragTransform.xScale + 'px';
+      if (style.left)
+        style.left = '';
+    } else {
+      style.left = (e.clientX + offset.offsetX) * this.dragTransform.xScale + 'px';
+      if (style.right)
+        style.right = '';
+    }
+    style.top = (e.clientY + offset.offsetTop) * this.dragTransform.yScale + 'px';
   }
 
   /** @internal */
@@ -397,10 +403,15 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
 
     const targetOffset = el.getBoundingClientRect();
+    let x = this.option.rtl ? targetOffset.right : targetOffset.left;
+    let offsetX = this.option.rtl
+      ? (event.clientX - targetOffset.right + xformOffsetX)
+      : (-event.clientX + targetOffset.left - xformOffsetX);
+
     return {
-      left: targetOffset.left,
+      x,
       top: targetOffset.top,
-      offsetLeft: - event.clientX + targetOffset.left - xformOffsetX,
+      offsetX,
       offsetTop: - event.clientY + targetOffset.top - xformOffsetY,
       width: targetOffset.width * this.dragTransform.xScale,
       height: targetOffset.height * this.dragTransform.yScale
@@ -473,10 +484,18 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const containmentEl = this.el.parentElement;
     const containmentRect = containmentEl.getBoundingClientRect();
     const offset = this.helper.getBoundingClientRect();
+
+    // RTL: GridStack measures column positions from the right side of the container,
+    // so we report `left` as the distance between the helper's right edge and the
+    // container's right edge (both in viewport-left coordinates via getBoundingClientRect).
+    const leftPos = this.option.rtl
+      ? (containmentRect.right - offset.right) * this.dragTransform.xScale
+      : (offset.left - containmentRect.left) * this.dragTransform.xScale;
+
     return {
       position: { //Current CSS position of the helper as { top, left } object
         top: (offset.top - containmentRect.top) * this.dragTransform.yScale,
-        left: (offset.left - containmentRect.left) * this.dragTransform.xScale
+        left: leftPos
       }
       /* not used by GridStack for now...
       helper: [this.helper], //The object arr representing the helper that's being dragged.

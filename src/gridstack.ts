@@ -1920,9 +1920,10 @@ export class GridStack {
   protected _writePosAttr(el: HTMLElement, n: GridStackNode): GridStack {
     // Avoid overwriting the inline style of the element during drag/resize, but always update the placeholder
     if ((!n._moving && !n._resizing) || this._placeholder === el) {
+      const xProp = this.opts.rtl ? 'right' : 'left';
       // width/height:1 x/y:0 is set by default in the main CSS, so no need to set inlined vars
       el.style.top = n.y ? (n.y === 1 ? `var(--gs-cell-height)` : `calc(${n.y} * var(--gs-cell-height))`) : null;
-      el.style.left = n.x ? (n.x === 1 ? `var(--gs-column-width)` : `calc(${n.x} * var(--gs-column-width))`) : null;
+      el.style[xProp] = n.x ? (n.x === 1 ? `var(--gs-column-width)` : `calc(${n.x} * var(--gs-column-width))`) : null;
       el.style.width = n.w > 1 ? `calc(${n.w} * var(--gs-column-width))` : null;
       el.style.height = n.h > 1 ? `calc(${n.h} * var(--gs-cell-height))` : null;
     }
@@ -2797,11 +2798,13 @@ export class GridStack {
       dd.draggable(el, {
         start: onStartMoving,
         stop: onEndMoving,
-        drag: dragOrResize
+        drag: dragOrResize,
+        rtl: this.opts.rtl,
       }).resizable(el, {
         start: onStartMoving,
         stop: onEndMoving,
-        resize: dragOrResize
+        resize: dragOrResize,
+        rtl: this.opts.rtl,
       });
       node._initDD = true; // we've set DD support now
     }
@@ -2930,12 +2933,13 @@ export class GridStack {
       // only recalculate position for handles that move the top-left corner (N/W).
       // for SE/S/E handles the top-left is anchored — recalculating from pixels causes
       // rounding drift on fine grids where cellWidth/cellHeight are only a few pixels. #385 #1356
-      const dir = event.resizeDir;
-      if (dir && (dir.includes('w') || dir.includes('n'))) {
+      if (event.hasMovedX) {
         const left = ui.position.left + mLeft;
+        p.x = Math.round(left / cellWidth);
+      }
+      if (event.hasMovedY) {
         const top = ui.position.top + mTop;
-        if (dir.includes('w')) p.x = Math.round(left / cellWidth);
-        if (dir.includes('n')) p.y = Math.round(top / cellHeight);
+        p.y = Math.round(top / cellHeight);
       }
 
       resizing = true;

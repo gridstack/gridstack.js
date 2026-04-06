@@ -497,6 +497,7 @@ export interface DDDragOpt {
   start?: (event: Event, ui: DDUIData) => void;
   stop?: (event: Event) => void;
   drag?: (event: Event, ui: DDUIData) => void;
+  rtl?: boolean;
 }
 export interface Size {
   width: number;
@@ -504,6 +505,11 @@ export interface Size {
 }
 export interface Position {
   top: number;
+  /**
+   * Start position of the element on the X axis.
+   * In LTR mode, this is the coordinate from the left side.
+   * In RTL mode it's actually the coordinate from the right side.
+   */
   left: number;
 }
 export interface Rect extends Size, Position {}
@@ -578,4 +584,6 @@ export interface GridStackNode extends GridStackWidget {
 // add custom field to support drag/resize optimizations
 export interface GridStackMouseEvent extends MouseEvent {
   resizeDir?: string;
+  hasMovedX?: boolean;
+  hasMovedY?: boolean;
 }
