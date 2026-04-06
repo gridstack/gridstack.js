@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [12.5.0-dev (TBD)](#1250-dev-tbd)
 - [12.5.0 (2026-04-05)](#1250-2026-04-05)
 - [12.4.2 (2025-12-26)](#1242-2025-12-26)
 - [12.4.1 (2025-12-12)](#1241-2025-12-12)
@@ -136,6 +137,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+## 12.5.0-dev (TBD)
+* feat: [#3250](https://github.com/gridstack/gridstack.js/pull/3250) full RTL support - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)
+
 ## 12.5.0 (2026-04-05)
 * fix: [#3237](https://github.com/gridstack/gridstack.js/pull/3237) updateOptions() fixes for columnOpts, maxRow. load() not cloning
 * fix: [#3241](https://github.com/gridstack/gridstack.js/pull/3241) drifting rounding issue when cellHeight is small/fraction
