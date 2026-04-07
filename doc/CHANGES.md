@@ -139,6 +139,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 ## 12.5.0-dev (TBD)
 * feat: [#3250](https://github.com/gridstack/gridstack.js/pull/3250) full RTL support - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)
+* fix: [#3261](https://github.com/gridstack/gridstack.js/pull/3261) prepareDragDrop() returns for disable after deletion
 
 ## 12.5.0 (2026-04-05)
 * fix: [#3237](https://github.com/gridstack/gridstack.js/pull/3237) updateOptions() fixes for columnOpts, maxRow. load() not cloning
