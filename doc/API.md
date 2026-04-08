@@ -1,4 +1,4 @@
-# gridstack v12.5.0
+# gridstack v12.5.0-dev
 
 ## Classes
 
@@ -1775,7 +1775,7 @@ is dynamically create and needs to be set later.
 protected triggerEvent(event, target): void;
 ```
 
-Defined in: [gridstack.ts:2974](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2974)
+Defined in: [gridstack.ts:2976](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2976)
 
 call given event callback on our main top-most grid (if we're nested)
 
@@ -4003,7 +4003,7 @@ Defined in: [dd-draggable.ts:69](https://github.com/adumesny/gridstack.js/blob/m
 destroy(): void;
 ```
 
-Defined in: [dd-draggable.ts:122](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L122)
+Defined in: [dd-draggable.ts:131](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L131)
 
 Destroy this drag & drop implementation and clean up resources.
 Removes all event handlers and clears internal state.
@@ -4022,7 +4022,7 @@ Removes all event handlers and clears internal state.
 disable(forDestroy): void;
 ```
 
-Defined in: [dd-draggable.ts:109](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L109)
+Defined in: [dd-draggable.ts:118](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L118)
 
 Disable this drag & drop implementation.
 Subclasses should override to perform additional cleanup.
@@ -4047,7 +4047,7 @@ Subclasses should override to perform additional cleanup.
 enable(): void;
 ```
 
-Defined in: [dd-draggable.ts:95](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L95)
+Defined in: [dd-draggable.ts:104](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L104)
 
 Enable this drag & drop implementation.
 Subclasses should override to perform additional setup.
@@ -4060,13 +4060,27 @@ Subclasses should override to perform additional setup.
 
 [`DDBaseImplement`](#ddbaseimplement).[`enable`](#enable)
 
+##### getAllHandles()
+
+```ts
+protected getAllHandles(): HTMLElement[];
+```
+
+Defined in: [dd-draggable.ts:88](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L88)
+
+return all handles omitting other nested `.grid-stack-item` children (in case where n.subGrid isn't set for some reason)
+
+###### Returns
+
+`HTMLElement`[]
+
 ##### off()
 
 ```ts
 off(event): void;
 ```
 
-Defined in: [dd-draggable.ts:91](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L91)
+Defined in: [dd-draggable.ts:100](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L100)
 
 Unregister an event callback for the specified event.
 
@@ -4090,7 +4104,7 @@ Unregister an event callback for the specified event.
 on(event, callback): void;
 ```
 
-Defined in: [dd-draggable.ts:87](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L87)
+Defined in: [dd-draggable.ts:96](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L96)
 
 Register an event callback for the specified event.
 
@@ -4142,7 +4156,7 @@ Result from the callback function, if any
 updateOption(opts): DDDraggable;
 ```
 
-Defined in: [dd-draggable.ts:133](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L133)
+Defined in: [dd-draggable.ts:142](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L142)
 
 Method to update the options and return the DD implementation
 
