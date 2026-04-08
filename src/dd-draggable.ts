@@ -72,7 +72,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     // get the element that is actually supposed to be dragged by
     const handleName = option?.handle?.substring(1);
     const n = el.gridstackNode;
-    this.dragEls = !handleName || el.classList.contains(handleName) ? [el] : (n?.subGrid ? [el.querySelector(option.handle) || el] : Array.from(el.querySelectorAll(option.handle)));
+    this.dragEls = !handleName || el.classList.contains(handleName) ? [el] : (n?.subGrid ? [el.querySelector(option.handle) || el] : this.getAllHandles());
     if (this.dragEls.length === 0) {
       this.dragEls = [el];
     }
@@ -82,6 +82,15 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this._mouseUp = this._mouseUp.bind(this);
     this._keyEvent = this._keyEvent.bind(this);
     this.enable();
+  }
+
+  /** return all handles omitting other nested `.grid-stack-item` children (in case node.subGrid isn't set for some reason) */
+  protected getAllHandles(): HTMLElement[] {
+    return Array.from(this.el.querySelectorAll(this.option.handle)).filter((node): node is HTMLElement => {
+      if (!(node instanceof HTMLElement)) return false;
+      const owner = node.closest('.grid-stack-item');
+      return owner === this.el || !owner;
+    });
   }
 
   public on(event: DDDragEvent, callback: (event: DragEvent) => void): void {

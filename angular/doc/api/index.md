@@ -1,4 +1,4 @@
-# GridStack Angular Library v12.5.0
+# GridStack Angular Library v12.5.0-dev
 
 ## Modules
 
