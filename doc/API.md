@@ -1,4 +1,4 @@
-# gridstack v12.5.0-dev
+# gridstack v12.6.0
 
 ## Classes
 
@@ -4068,7 +4068,7 @@ protected getAllHandles(): HTMLElement[];
 
 Defined in: [dd-draggable.ts:88](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L88)
 
-return all handles omitting other nested `.grid-stack-item` children (in case where n.subGrid isn't set for some reason)
+return all handles omitting other nested `.grid-stack-item` children (in case node.subGrid isn't set for some reason)
 
 ###### Returns
 

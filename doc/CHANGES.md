@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.5.0-dev (TBD)](#1250-dev-tbd)
+- [12.6.0 (2026-04-08)](#1260-2026-04-08)
 - [12.5.0 (2026-04-05)](#1250-2026-04-05)
 - [12.4.2 (2025-12-26)](#1242-2025-12-26)
 - [12.4.1 (2025-12-12)](#1241-2025-12-12)
@@ -137,7 +137,7 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-## 12.5.0-dev (TBD)
+## 12.6.0 (2026-04-08)
 * feat: [#3250](https://github.com/gridstack/gridstack.js/pull/3250) full RTL support - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)
 * fix: [#3261](https://github.com/gridstack/gridstack.js/pull/3261) prepareDragDrop() returns for disable after deletion
 * fix: [#3262](https://github.com/gridstack/gridstack.js/pull/3262) DDDraggable fix to querySelectorAll(handle) for nested grid
