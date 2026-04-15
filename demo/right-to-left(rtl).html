@@ -32,7 +32,12 @@
       {x: 6, y: 0, w: 2, h: 2},
     ];
     items.forEach((item, i) => item.content = 'item ' + i);
-    let grid = GridStack.init({rtl: true, children: items});
+    let grid = GridStack.init({
+        rtl: true,
+        float: true,
+        children: items,
+        resizable: {handles: 'sw,se'}
+    });
 
     function addWidget() {
       let w = {
