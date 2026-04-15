@@ -53,8 +53,6 @@ export class DDResizableHandle {
 
     this.el.classList.add('ui-resizable-handle');
     this.el.classList.add(`${DDResizableHandle.prefix}${this.dir}`);
-    this.el.style.zIndex = '100';
-    this.el.style.userSelect = 'none';
 
     this.el.addEventListener('mousedown', this._mouseDown);
     if (isTouch) {
