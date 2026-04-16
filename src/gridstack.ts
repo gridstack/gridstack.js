@@ -1508,7 +1508,7 @@ export class GridStack {
     if (o.disableResize !== undefined && !o.staticGrid) this.enableResize(!o.disableResize);
     if (o.float !== undefined) this.float(o.float);
     if (o.row !== undefined) {
-      opts.minRow = opts.maxRow = opts.row = o.row;
+      opts.minRow = opts.maxRow = this.engine.maxRow = opts.row = o.row;
       this._updateContainerHeight();
     } else {
       if (o.minRow !== undefined) { opts.minRow = o.minRow; this._updateContainerHeight(); }
