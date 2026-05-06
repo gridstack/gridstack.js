@@ -354,7 +354,7 @@ export interface GridStackOptions {
   row?: number;
 
   /**
-   * if true turns grid to RTL. Possible values are true, false, 'auto' (default?: 'auto')
+   * if true turns grid to RTL, and applies the `grid-stack-rtl class`. Possible values are true, false, 'auto' (default?: 'auto')
    * See [example](http://gridstack.github.io/gridstack.js/demo/right-to-left(rtl).html)
    */
   rtl?: boolean | 'auto';
