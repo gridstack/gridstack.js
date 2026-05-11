@@ -639,7 +639,7 @@ export class Utils {
     return ret;
   }
 
-  /** deep clone the given HTML node, removing teh unique id field */
+  /** deep clone the given HTML node, removing the unique id field */
   public static cloneNode(el: HTMLElement): HTMLElement {
     const node = el.cloneNode(true) as HTMLElement;
     node.removeAttribute('id');
