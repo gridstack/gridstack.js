@@ -7,10 +7,11 @@
     "dev": "vite",
     "start": "vite",
     "build": "tsc -b && vite build",
+    "build:lib": "cd projects/lib && ../../../node_modules/.bin/tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test": "vitest --config vitest.config.ts",
+    "test:ui": "vitest --config vitest.config.ts --ui"
   },
   "dependencies": {
     "gridstack": "^12.6.0",

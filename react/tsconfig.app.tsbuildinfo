@@ -1,1 +1,1 @@
-{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/demo/demo.tsx"],"version":"5.6.2"}
+{"root":["./src/app.tsx","./src/main.tsx","./src/vite-env.d.ts","./src/demo/demo.tsx","./projects/lib/src/base-widget.tsx","./projects/lib/src/gridstack-context.tsx","./projects/lib/src/gridstack-item.tsx","./projects/lib/src/gridstack-widget-context.tsx","./projects/lib/src/gridstack.tsx","./projects/lib/src/hooks.ts","./projects/lib/src/index.ts","./projects/lib/src/registry.ts","./projects/lib/src/types.ts"],"version":"5.6.2"}

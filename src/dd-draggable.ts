@@ -144,6 +144,27 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
+  /**
+   * Re-scans the item element for drag-handle elements after delayed content (React portal,
+   * Angular component, etc.) has been rendered into the item.  Removes listeners from the
+   * previous handle set, re-queries, then re-attaches.
+   * Not needed for the default `.grid-stack-item-content` handle which is always present.
+   */
+  public refreshHandles(): void {
+    const wasDisabled = this.disabled;
+    // Remove listeners from the current (possibly stale) handle elements.
+    if (!wasDisabled) this.disable(true); // forDestroy=true skips the CSS class toggle
+    // Re-query handles now that framework content is in the DOM.
+    const handleName = this.option?.handle?.substring(1);
+    const n = this.el.gridstackNode;
+    this.dragEls = !handleName || this.el.classList.contains(handleName)
+      ? [this.el]
+      : (n?.subGrid ? [this.el.querySelector(this.option.handle) as HTMLElement || this.el] : this.getAllHandles());
+    if (this.dragEls.length === 0) this.dragEls = [this.el];
+    // Restore previous enabled/disabled state with the new handle set.
+    if (!wasDisabled) this.enable();
+  }
+
   /** @internal call when mouse goes down before a dragstart happens */
   protected _mouseDown(e: MouseEvent): boolean {
     // if real brower event (trusted:true vs false for our simulated ones) and we didn't correctly clear the last touch event, clear things up

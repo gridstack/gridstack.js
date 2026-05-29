@@ -1911,7 +1911,12 @@ export class GridStack {
     sizeToContent ? el.classList.add('size-to-content') : el.classList.remove('size-to-content');
     if (sizeToContent) this.resizeToContentCheck(false, node);
 
-    if (!Utils.lazyLoad(node)) this.prepareDragDrop(node.el);
+    if (!Utils.lazyLoad(node) || !node.visibleObservable) {
+      // Items created via addRemoveCB (e.g. React/Angular wrappers) bypass createWidgetDivs,
+      // so they never get the lazy IntersectionObserver set there. Their content is managed
+      // externally, so initialize drag/drop immediately rather than deferring it.
+      this.prepareDragDrop(node.el);
+    }
 
     return this;
   }
@@ -2706,6 +2711,27 @@ export class GridStack {
   }
 
   /**
+   * Re-scans one or more widget elements for drag handle elements after delayed content
+   * (React portal, Angular component, etc.) has been rendered inside the item.
+   * Only needed when you use a custom `draggable.handle` selector that lives *inside* the
+   * item's dynamically-created content. The default `.grid-stack-item-content` handle is
+   * created synchronously and never needs this call.
+   *
+   * @param els widget element(s) or selector
+   *
+   * @example
+   * // React: after portal renders (see GridStackItem useEffect)
+   * // Angular: after createComp() inside gsCreateNgComponents
+   * grid.refreshDragHandles(itemEl);
+   */
+  public refreshDragHandles(els: GridStackElement): GridStack {
+    GridStack.getElements(els).forEach(el => {
+      (el as DDElementHost).ddElement?.ddDraggable?.refreshHandles();
+    });
+    return this;
+  }
+
+  /**
    * prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
    * @param el GridItemHTMLElement of the widget
    * @param [force=false]
@@ -2740,7 +2766,6 @@ export class GridStack {
         this.triggerEvent(event, event.target as GridItemHTMLElement);
         cellWidth = this.cellWidth();
         cellHeight = this.getCellHeight(true); // force pixels for calculations
-
         this._onStartMoving(el, event, ui, node, cellWidth, cellHeight);
       }
 

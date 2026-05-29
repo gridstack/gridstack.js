@@ -114,7 +114,7 @@ Construct a grid item from the given element and options
 protected _updateResizeEvent(forceRemove): GridStack;
 ```
 
-Defined in: [gridstack.ts:2088](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2088)
+Defined in: [gridstack.ts:2093](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2093)
 
 add or remove the grid element size event handler
 
@@ -428,7 +428,7 @@ Destroys a grid instance. DO NOT CALL any methods or access any vars after this 
 disable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2289](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2289)
+Defined in: [gridstack.ts:2294](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2294)
 
 Temporarily disables widgets moving/resizing.
 If you want a more permanent way (which freezes up resources) use `setStatic(true)` instead.
@@ -469,7 +469,7 @@ grid.disable(false);
 enable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2316](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2316)
+Defined in: [gridstack.ts:2321](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2321)
 
 Re-enables widgets moving/resizing - see disable().
 Note: This is a no-op for static grids.
@@ -508,7 +508,7 @@ grid.enable(false);
 enableMove(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2342](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2342)
+Defined in: [gridstack.ts:2347](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2347)
 
 Enables/disables widget moving for all widgets. No-op for static grids.
 Note: locally defined items (with noMove property) still override this setting.
@@ -545,7 +545,7 @@ grid.enableMove(true, false);
 enableResize(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2370](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2370)
+Defined in: [gridstack.ts:2375](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2375)
 
 Enables/disables widget resizing for all widgets. No-op for static grids.
 Note: locally defined items (with noResize property) still override this setting.
@@ -687,7 +687,7 @@ const columnCount = grid.getColumn(); // returns 12 by default
 static getDD(): DDGridStack;
 ```
 
-Defined in: [gridstack.ts:2186](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2186)
+Defined in: [gridstack.ts:2191](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2191)
 
 Get the global drag & drop implementation instance.
 This provides access to the underlying drag & drop functionality.
@@ -1095,7 +1095,7 @@ grid.margin('5px 10px 15px 20px'); // Different for each side
 movable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2230](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2230)
+Defined in: [gridstack.ts:2235](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2235)
 
 Enables/Disables dragging by the user for specific grid elements.
 For all items and future items, use enableMove() instead. No-op for static grids.
@@ -1431,7 +1431,7 @@ grid.on('added', (event, items) => {
 onResize(clientWidth): GridStack;
 ```
 
-Defined in: [gridstack.ts:2027](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2027)
+Defined in: [gridstack.ts:2032](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2032)
 
 called when we are being resized - check if the one Column Mode needs to be turned on/off
 and remember the prev columns we used, or get our count from parent, as well as check for cellHeight==='auto' (square)
@@ -1453,7 +1453,7 @@ or `sizeToContent` gridItem options.
 prepareDragDrop(el, force?): GridStack;
 ```
 
-Defined in: [gridstack.ts:2713](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2713)
+Defined in: [gridstack.ts:2739](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2739)
 
 prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
 
@@ -1467,6 +1467,38 @@ prepares the element for drag&drop - this is normally called by makeWidget() unl
 ###### Returns
 
 [`GridStack`](#gridstack-1)
+
+##### refreshDragHandles()
+
+```ts
+refreshDragHandles(els): GridStack;
+```
+
+Defined in: [gridstack.ts:2727](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2727)
+
+Re-scans one or more widget elements for drag handle elements after delayed content
+(React portal, Angular component, etc.) has been rendered inside the item.
+Only needed when you use a custom `draggable.handle` selector that lives *inside* the
+item's dynamically-created content. The default `.grid-stack-item-content` handle is
+created synchronously and never needs this call.
+
+###### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `els` | [`GridStackElement`](#gridstackelement) | widget element(s) or selector |
+
+###### Returns
+
+[`GridStack`](#gridstack-1)
+
+###### Example
+
+```ts
+// React: after portal renders (see GridStackItem useEffect)
+// Angular: after createComp() inside gsCreateNgComponents
+grid.refreshDragHandles(itemEl);
+```
 
 ##### registerEngine()
 
@@ -1563,7 +1595,7 @@ Removes widget from the grid.
 resizable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2256](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2256)
+Defined in: [gridstack.ts:2261](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2261)
 
 Enables/Disables user resizing for specific grid elements.
 For all items and future items, use enableResize() instead. No-op for static grids.
@@ -1750,7 +1782,7 @@ static setupDragIn(
    root?): void;
 ```
 
-Defined in: [gridstack.ts:2199](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2199)
+Defined in: [gridstack.ts:2204](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2204)
 
 call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
 Called during GridStack.init() as options, but can also be called directly (last param are used) in case the toolbar
@@ -1775,7 +1807,7 @@ is dynamically create and needs to be set later.
 protected triggerEvent(event, target): void;
 ```
 
-Defined in: [gridstack.ts:2976](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2976)
+Defined in: [gridstack.ts:3001](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3001)
 
 call given event callback on our main top-most grid (if we're nested)
 
@@ -4123,6 +4155,23 @@ Register an event callback for the specified event.
 
 [`DDBaseImplement`](#ddbaseimplement).[`on`](#on)
 
+##### refreshHandles()
+
+```ts
+refreshHandles(): void;
+```
+
+Defined in: [dd-draggable.ts:153](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L153)
+
+Re-scans the item element for drag-handle elements after delayed content (React portal,
+Angular component, etc.) has been rendered into the item.  Removes listeners from the
+previous handle set, re-queries, then re-attaches.
+Not needed for the default `.grid-stack-item-content` handle which is always present.
+
+###### Returns
+
+`void`
+
 ##### triggerEvent()
 
 ```ts
@@ -5178,7 +5227,7 @@ Defined in: [dd-resizable-handle.ts:26](https://github.com/adumesny/gridstack.js
 destroy(): DDResizableHandle;
 ```
 
-Defined in: [dd-resizable-handle.ts:70](https://github.com/adumesny/gridstack.js/blob/master/src/dd-resizable-handle.ts#L70)
+Defined in: [dd-resizable-handle.ts:68](https://github.com/adumesny/gridstack.js/blob/master/src/dd-resizable-handle.ts#L68)
 
 call this when resize handle needs to be removed and cleaned up
 

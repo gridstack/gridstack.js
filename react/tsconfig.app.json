@@ -5,6 +5,11 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "gridstack": ["../src/gridstack.ts"],
+      "gridstack/dist/react": ["./projects/lib/src/index.ts"]
+    },
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -20,5 +25,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src", "projects/lib/src"]
 }
