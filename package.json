@@ -47,7 +47,8 @@
     "test:e2e:headed": "playwright test --headed",
     "lint": "tsc --project tsconfig.build.json --noEmit && eslint src/*.ts angular/projects/lib/src/**/*.ts react/projects/lib/src/**/*.{ts,tsx}",
     "reset": "rm -rf dist node_modules",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build",
+    "preinstall": "npx only-allow yarn"
   },
   "keywords": [
     "Typescript",

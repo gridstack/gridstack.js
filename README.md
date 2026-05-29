@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
 [![downloads](https://img.shields.io/npm/dm/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
-Mobile-friendly modern Typescript library for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Has multiple bindings and works great with [Angular](https://angular.io/) (included), [React](https://reactjs.org/) (included), [Vue](https://vuejs.org/), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others (see [frameworks](#specific-frameworks) section).
+Mobile-friendly modern Typescript library for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Has multiple bindings and works great with [Angular](https://angular.io/) (included), [React](https://reactjs.org/) (included), [Vue](https://vuejs.org/) (included), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others (see [frameworks](#specific-frameworks) section).
 
 Inspired by no-longer maintained gridster, built with love.
 
@@ -159,7 +159,7 @@ search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&rank
 - **knockout**: see [demo](https://gridstackjs.com/demo/knockout.html) using component, but check [custom bindings ticket](https://github.com/gridstack/gridstack.js/issues/465) which is likely better approach.
 - **Rails**: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
 - **React**: we ship out of the box a React wrapper - see <a href="https://github.com/gridstack/gridstack.js/tree/master/react" target="_blank">React Component</a>.
-- **Vue**: see [demo](https://gridstackjs.com/demo/vue3js.html) with [v3 src](https://github.com/gridstack/gridstack.js/tree/master/demo/vue3js.html) or [v2 src](https://github.com/gridstack/gridstack.js/tree/master/demo/vue2js.html)
+- **Vue**: we ship out of the box a Vue 3 wrapper - see <a href="https://github.com/gridstack/gridstack.js/tree/master/vue" target="_blank">Vue Component</a>.
 - **Aurelia**: [aurelia-gridstack](https://github.com/aurelia-ui-toolkits/aurelia-gridstack), see [demo](https://aurelia-ui-toolkits.github.io/aurelia-gridstack/)
 
 ## Extend Library
