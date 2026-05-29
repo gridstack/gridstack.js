@@ -1,0 +1,32 @@
+{
+  "name": "vue",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vue-tsc -b && vite build",
+    "build:lib": "cd projects/lib && ../../../node_modules/.bin/vue-tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest --config vitest.config.ts",
+    "test:ui": "vitest --config vitest.config.ts --ui"
+  },
+  "dependencies": {
+    "gridstack": "^12.6.0",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitest/ui": "^3.2.4",
+    "@vue/test-utils": "^2.4.6",
+    "eslint": "^9.9.0",
+    "globals": "^15.9.0",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.5.3",
+    "vite": "^6.4.2",
+    "vitest": "^3.2.4",
+    "vue-tsc": "^2.2.10"
+  }
+}
