@@ -1,119 +1,219 @@
-# React GridStack Wrapper Demo
+# React wrapper
 
-A React wrapper component for GridStack that provides better TypeScript support and React integration experience.
+The React wrapper lives in [`projects/lib/src/`](projects/lib/src/) and is published with the main `gridstack` package as **`gridstack/dist/react`** (same idea as `gridstack/dist/angular`).
 
-## TODO
+Live demo app: `cd react && yarn && yarn dev`.
 
-- [x] Component mapping
-- [x] SubGrid support
-- [ ] Save and restore layout
-- [ ] Publish to npm
+See [DESIGN-DECISIONS.md](DESIGN-DECISIONS.md) for architecture (static callbacks, portals, save/restore).
 
-## Basic Usage
+---
 
-This is not an npm package, it's just a demo project. Please copy the relevant code to your project to use it.
+## Basic usage
+
+Use `<GridStack>` with `options` and optional `components` for dynamic widget types.
+
+**CSS**
+
+```css
+@import "gridstack/dist/gridstack.css";
+
+.grid-stack {
+  background: #fafad2;
+}
+.grid-stack-item-content {
+  text-align: center;
+  background-color: #18bc9c;
+}
+```
+
+**TSX**
 
 ```tsx
-import {
-  GridStackProvider,
-  GridStackRender,
-  GridStackRenderProvider,
-} from "path/to/lib";
-import "gridstack/dist/gridstack.css";
-import "path/to/demo.css";
+import { GridStackOptions } from "gridstack";
+import { GridStack } from "gridstack/dist/react";
 
-function Text({ content }: { content: string }) {
-  return <div>{content}</div>;
-}
-
-const COMPONENT_MAP = {
-  Text,
-  // ... other components
-};
-
-// Grid options
-const gridOptions = {
-  acceptWidgets: true,
+const options: GridStackOptions = {
   margin: 8,
   cellHeight: 50,
+  column: 12,
   children: [
-    {
-      id: "item1",
-      h: 2,
-      w: 2,
-      content: JSON.stringify({
-        name: "Text",
-        props: { content: "Item 1" },
-      }),
-    },
-    // ... other grid items
+    { id: "1", x: 0, y: 0, w: 2, h: 2, content: "Plain HTML item" },
   ],
 };
 
-function App() {
+export function Board() {
+  return <GridStack options={options} />;
+}
+```
+
+---
+
+## Component mode (recommended)
+
+Put a `component` key on each child widget and pass a `components` map (like Angular dynamic `selector` types).
+
+```tsx
+import { GridStackOptions } from "gridstack";
+import { GridStack } from "gridstack/dist/react";
+
+function Text({ text }: { text: string }) {
+  return <div>{text}</div>;
+}
+
+const options: GridStackOptions = {
+  column: 12,
+  cellHeight: 50,
+  children: [
+    { id: "a", x: 0, y: 0, w: 2, h: 2, component: "Text", props: { text: "Hello" } },
+  ],
+};
+
+export function Board() {
+  return <GridStack options={options} components={{ Text }} />;
+}
+```
+
+---
+
+## Toolbar / API access with `useGridStack`
+
+`useGridStack()` must be used **inside** `<GridStack>` (e.g. in a child component). It exposes `grid`, `addWidget`, `removeWidget`, `save`, etc.
+
+React **`children`** of `<GridStack>` are rendered **after** the grid’s `.grid-stack` root in the DOM, so host UI (toolbars, debug readouts) appears **below** the grid instead of sharing the absolutely positioned canvas.
+
+```tsx
+import { GridStack } from "gridstack/dist/react";
+import { useGridStack } from "gridstack/dist/react";
+
+function Toolbar() {
+  const { addWidget } = useGridStack();
   return (
-    <GridStackProvider initialOptions={gridOptions}>
-      <!-- Maybe a toolbar here. Access to addWidget and addSubGrid by useGridStackContext() -->
+    <button
+      type="button"
+      onClick={() =>
+        addWidget?.({
+          id: "new-" + Date.now(),
+          w: 2,
+          h: 2,
+          x: 0,
+          y: 0,
+          component: "Text",
+          props: { text: "Added" },
+        })
+      }
+    >
+      Add
+    </button>
+  );
+}
 
-      <!-- Grid Stack Root Element -->
-      <GridStackRenderProvider>
-        <!-- Grid Stack Default Render -->
-        <GridStackRender componentMap={COMPONENT_MAP} />
-      </GridStackRenderProvider>
-
-      <!-- Maybe other UI here -->
-    </GridStackProvider>
+export function Board() {
+  return (
+    <GridStack options={options} components={{ Text }}>
+      <Toolbar />
+    </GridStack>
   );
 }
 ```
 
-## Advanced Features
+---
 
-### Toolbar Operations
+## Multiple grids
 
-Provide APIs to add new components and sub-grids:
+Render several `<GridStack>` instances (e.g. with `acceptWidgets: true`) to drag between grids—same pattern as Angular.
+
+---
+
+## Nested subgrids
+
+Use `subGridOpts.children` on a widget; nested grids use the same `components` map from the parent `<GridStack>`.
+
+---
+
+## Save and restore
 
 ```tsx
-function Toolbar() {
-  const { addWidget, addSubGrid } = useGridStackContext();
+const { grid, save } = useGridStack();
+
+const json = JSON.stringify(save?.(true, false)); // widget list
+// later:
+grid?.load(JSON.parse(json));
+```
+
+Optional: **`useWidgetSerializer`** inside a widget component merges extra fields into `props` on save.
+
+---
+
+## Migration from legacy `react/lib`
+
+| Legacy | New |
+|--------|-----|
+| `<GridStackProvider>` + `<GridStackRenderProvider>` + `<GridStackRender>` | Single `<GridStack options={...} components={...}>` |
+| `content: JSON.stringify({ name, props })` | `component` + `props` on the widget |
+| `useGridStackContext()` | `useGridStack()` |
+
+The old files have been moved to [`react/lib/_old/`](lib/_old/) for reference and are excluded from the bundle.
+
+---
+
+## Custom drag handles inside content
+
+By default GridStack uses the item's outer `.grid-stack-item-content` div as the drag handle.
+If you set a custom `draggable.handle` that lives **inside** your React component, call `grid.refreshDragHandles(el)` after the content renders so GridStack can re-scan and attach listeners to the new handle element.
+
+```tsx
+import { useEffect, useRef } from "react";
+import { useGridStack } from "gridstack/dist/react";
+
+function MyWidget() {
+  const { grid } = useGridStack();
+  const handleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!handleRef.current) return;
+    const itemEl = handleRef.current.closest(".grid-stack-item") as HTMLElement | null;
+    if (itemEl) grid?.refreshDragHandles(itemEl);
+  }, [grid]);
 
   return (
     <div>
-      <button onClick={() => addWidget(/* ... */)}>Add Component</button>
-      <button onClick={() => addSubGrid(/* ... */)}>Add SubGrid</button>
+      <div ref={handleRef} className="my-drag-handle" style={{ cursor: "grab", padding: 8 }}>
+        ☰ drag here
+      </div>
+      <p>content</p>
     </div>
   );
 }
+
+// Grid must be initialised with draggable.handle pointing at the same selector:
+const options: GridStackOptions = {
+  draggable: { handle: ".my-drag-handle" },
+  children: [{ id: "a", x: 0, y: 0, w: 3, h: 2, component: "MyWidget" }],
+};
+
+export function Board() {
+  return <GridStack options={options} components={{ MyWidget }} />;
+}
 ```
 
-### Layout Saving
+`refreshDragHandles` is called automatically by `<GridStackItem>` after each portal render, so the above pattern is only needed when you manage the item element yourself (e.g. via `useGridStack().grid` directly).
 
-Get the current layout:
+---
 
-```tsx
-const { saveOptions } = useGridStackContext();
+## Building `dist/react`
 
-const currentLayout = saveOptions();
+Uses the TypeScript project [`projects/lib/tsconfig.build.json`](projects/lib/tsconfig.build.json) (ESM `.js` + `.d.ts`).
+
+From the repo root:
+
+```bash
+yarn build:react
 ```
 
-## API Reference
+Or from `react/`:
 
-### GridStackProvider
+```bash
+yarn build:lib
+```
 
-The main context provider, accepts the following properties:
-
-- `initialOptions`: Initial configuration options for GridStack
-
-### GridStackRender
-
-The core component for rendering the grid, accepts the following properties:
-
-- `componentMap`: A mapping from component names to actual React components
-
-### Hooks
-
-- `useGridStackContext()`: Access GridStack context and operations
-  - `addWidget`: Add a new component
-  - `addSubGrid`: Add a new sub-grid
-  - `saveOptions`: Save current layout
-  - `initialOptions`: Initial configuration options
+Output: `dist/react/` at the **repository root** (alongside `dist/angular/`), so published `gridstack` npm tarball includes it via the `files` field.

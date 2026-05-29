@@ -3120,7 +3120,7 @@ can be used when a new item needs to be created, which we do as a Angular compon
 function gsSaveAdditionalNgInfo(n, w): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:439](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L439)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:447](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L447)
 
 called for each item in the grid - check if additional information needs to be saved.
 Note: since this is options minus gridstack protected members using Utils.removeInternalForSave(),
@@ -3146,7 +3146,7 @@ using BaseWidget.serialize()
 function gsUpdateNgComponents(n): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:458](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L458)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:466](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L466)
 
 track when widgeta re updated (rather than created) to make sure we de-serialize them as well
 

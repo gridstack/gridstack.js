@@ -1,14 +1,11 @@
-import { ComponentProps, useEffect, useState } from "react";
-import { GridStackOptions, GridStackWidget } from "gridstack";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  ComponentDataType,
-  ComponentMap,
-  GridStackProvider,
-  GridStackRender,
-  GridStackRenderProvider,
-  useGridStackContext,
-} from "../../lib";
-// import { GridStackRenderProvider } from "../../lib/grid-stack-render-provider-single";
+  GridStack,
+  useGridStack,
+  useWidgetSerializer,
+  type GridStackOptions,
+  type GridStackWidget,
+} from "gridstack/dist/react";
 
 import "gridstack/dist/gridstack.css";
 import "./demo.css";
@@ -21,185 +18,210 @@ const BREAKPOINTS = [
   { c: 8, w: 1100 },
 ];
 
-function Text({ content }: { content: string }) {
+/** Recommended: declare widgets with `component` + `props` (not `content` JSON strings). */
+function Text(props: Record<string, unknown>) {
+  const content = String(props.content ?? "");
   return <div className="w-full h-full">{content}</div>;
 }
 
-const COMPONENT_MAP: ComponentMap = {
+/** Example: merge extra fields into `props` on `grid.save()` via `useWidgetSerializer`. */
+function Counter(props: Record<string, unknown>) {
+  const label = String(props.label ?? "");
+  const [count, setCount] = useState(0);
+  useWidgetSerializer({
+    serialize: () => ({ count }),
+  });
+  return (
+    <div className="w-full h-full">
+      <div>{label}</div>
+      <button type="button" onClick={() => setCount((c) => c + 1)}>
+        count: {count}
+      </button>
+    </div>
+  );
+}
+
+const COMPONENTS = {
   Text,
-  // ... other components here
+  Counter,
 };
 
-// ! Content must be json string like this:
-// { name: "Text", props: { content: "Item 1" } }
-const gridOptions: GridStackOptions = {
-  acceptWidgets: true,
-  columnOpts: {
-    breakpointForWindow: true,
-    breakpoints: BREAKPOINTS,
-    layout: "moveScale",
-    columnMax: 12,
-  },
-  margin: 8,
-  cellHeight: CELL_HEIGHT,
-  subGridOpts: {
+function baseOptions(): GridStackOptions {
+  return {
     acceptWidgets: true,
     columnOpts: {
+      breakpointForWindow: true,
       breakpoints: BREAKPOINTS,
       layout: "moveScale",
+      columnMax: 12,
     },
     margin: 8,
-    minRow: 2,
     cellHeight: CELL_HEIGHT,
-  },
-  children: [
-    {
-      id: "item1",
-      h: 2,
-      w: 2,
-      x: 0,
-      y: 0,
-      content: JSON.stringify({
-        name: "Text",
-        props: { content: "Item 1" },
-      } satisfies ComponentDataType<ComponentProps<typeof Text>>), // if need type check
-    },
-    {
-      id: "item2",
-      h: 2,
-      w: 2,
-      x: 2,
-      y: 0,
-      content: JSON.stringify({
-        name: "Text",
-        props: { content: "Item 2" },
-      }),
-    },
-    {
-      id: "sub-grid-1",
-      h: 5,
-      sizeToContent: true,
-      subGridOpts: {
-        acceptWidgets: true,
-        cellHeight: CELL_HEIGHT,
-        alwaysShowResizeHandle: false,
-        column: "auto",
-        minRow: 2,
-        layout: "list",
-        margin: 8,
-        children: [
-          {
-            id: "sub-grid-1-title",
-            locked: true,
-            noMove: true,
-            noResize: true,
-            w: 12,
-            x: 0,
-            y: 0,
-            content: JSON.stringify({
-              name: "Text",
-              props: { content: "Sub Grid 1 Title" },
-            }),
-          },
-          {
-            id: "item3",
-            h: 2,
-            w: 2,
-            x: 0,
-            y: 1,
-            content: JSON.stringify({
-              name: "Text",
-              props: { content: "Item 3" },
-            }),
-          },
-          {
-            id: "item4",
-            h: 2,
-            w: 2,
-            x: 2,
-            y: 0,
-            content: JSON.stringify({
-              name: "Text",
-              props: { content: "Item 4" },
-            }),
-          },
-        ],
+    subGridOpts: {
+      acceptWidgets: true,
+      columnOpts: {
+        breakpoints: BREAKPOINTS,
+        layout: "moveScale",
       },
-      w: 12,
-      x: 0,
-      y: 2,
+      margin: 8,
+      minRow: 2,
+      cellHeight: CELL_HEIGHT,
     },
-  ],
-  lazyLoad: true
-};
+    children: [
+      {
+        id: "item1",
+        h: 2,
+        w: 2,
+        x: 0,
+        y: 0,
+        component: "Text",
+        props: { content: "Item 1" },
+      },
+      {
+        id: "item2",
+        h: 2,
+        w: 2,
+        x: 2,
+        y: 0,
+        component: "Text",
+        props: { content: "Item 2" },
+      },
+      {
+        id: "item3",
+        h: 2,
+        w: 2,
+        x: 4,
+        y: 0,
+        component: "Text",
+        props: { content: "Item 3" },
+      },
+      {
+        id: "sub-grid-1",
+        h: 5,
+        sizeToContent: true,
+        subGridOpts: {
+          acceptWidgets: true,
+          cellHeight: CELL_HEIGHT,
+          column: "auto",
+          minRow: 2,
+          margin: 8,
+          children: [
+            {
+              id: "sub-item1",
+              h: 2,
+              w: 4,
+              x: 0,
+              y: 0,
+              component: "Text",
+              props: { content: "Sub-item 1" },
+            },
+            {
+              id: "sub-item2",
+              h: 2,
+              w: 4,
+              x: 4,
+              y: 0,
+              component: "Text",
+              props: { content: "Sub-item 2" },
+            },
+          ],
+        },
+        w: 12,
+        x: 0,
+        y: 2,
+      },
+    ],
+    lazyLoad: true,
+  };
+}
+
+function GridPanel({
+  title,
+  options,
+}: {
+  title: string;
+  options: GridStackOptions;
+}) {
+  const [savedJson, setSavedJson] = useState<string | null>(null);
+
+  return (
+    <section style={{ marginBottom: "2rem" }}>
+      <h3>{title}</h3>
+      <GridStack options={options} components={COMPONENTS}>
+        <Toolbar onSaveJson={setSavedJson} savedJson={savedJson} />
+        <DebugPanel />
+      </GridStack>
+    </section>
+  );
+}
 
 export function GridStackDemo() {
-  // ! Uncontrolled
-  const [initialOptions] = useState(gridOptions);
-  const [initialOptions2] = useState({});
+  const options = useMemo(() => baseOptions(), []);
 
   return (
     <>
-    <GridStackProvider initialOptions={initialOptions}>
-      <Toolbar />
-        <GridStackRenderProvider>
-        <GridStackRender componentMap={COMPONENT_MAP} />
-      </GridStackRenderProvider>
-      <DebugInfo />
-    </GridStackProvider>
-
-    <GridStackProvider initialOptions={initialOptions2}>
-      <Toolbar />
-        <GridStackRenderProvider>
-        <GridStackRender componentMap={COMPONENT_MAP} />
-      </GridStackRenderProvider>
-      <DebugInfo />
-    </GridStackProvider>
+      <p>
+        Layout uses JSON <code>options.children</code> plus a <code>components</code> map. The
+        nested subgrid has several child tiles. Use the toolbar for <strong>save / restore</strong>.
+      </p>
+      <GridPanel
+        title="Grid with nested subgrid (multiple children)"
+        options={options}
+      />
     </>
   );
 }
 
-function Toolbar() {
-  const { addWidget, addSubGrid } = useGridStackContext();
+function Toolbar({
+  onSaveJson,
+  savedJson,
+}: {
+  onSaveJson: (json: string) => void;
+  savedJson: string | null;
+}) {
+  const { addWidget, save, grid } = useGridStack();
+
+  const handleSave = useCallback(() => {
+    const data = save?.(true, false);
+    if (data) onSaveJson(JSON.stringify(data, null, 2));
+  }, [save, onSaveJson]);
+
+  const handleRestore = useCallback(() => {
+    if (!savedJson || !grid) return;
+    try {
+      const parsed = JSON.parse(savedJson) as GridStackWidget[];
+      grid.load(parsed);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [grid, savedJson]);
 
   return (
-    <div
-      style={{
-        border: "1px solid gray",
-        width: "100%",
-        padding: "10px",
-        marginBottom: "10px",
-        display: "flex",
-        flexDirection: "row",
-        gap: "10px",
-      }}
-    >
+    <div className="demo-toolbar">
       <button
+        type="button"
         onClick={() => {
-          const id = `widget-${Math.random().toString(36).substring(2, 15)}`;
-          
-          addWidget({
+          const id = `widget-${Math.random().toString(36).slice(2, 11)}`;
+          addWidget?.({
             id,
             w: 2,
             h: 2,
             x: 0,
             y: 0,
-            content: JSON.stringify({
-              name: "Text",
-              props: { content: id },
-            }),
+            component: "Text",
+            props: { content: id },
           });
         }}
       >
-        Add Text (2x2)
+        Add Text (2×2)
       </button>
 
       <button
+        type="button"
         onClick={() => {
-          const subGridId = `sub-grid-${Math.random().toString(36).substring(2, 15)}`;
-          const widgetId = `widget-${Math.random().toString(36).substring(2, 15)}`;
-
-          addSubGrid({
+          const subGridId = `sub-grid-${Math.random().toString(36).slice(2, 11)}`;
+          const widgetId = `widget-${Math.random().toString(36).slice(2, 11)}`;
+          addWidget?.({
             id: subGridId,
             h: 5,
             noResize: false,
@@ -220,10 +242,8 @@ function Toolbar() {
                   w: 12,
                   x: 0,
                   y: 0,
-                  content: JSON.stringify({
-                    name: "Text",
-                    props: { content: "Sub Grid 1 Title" + widgetId },
-                  }),
+                  component: "Text",
+                  props: { content: `Subgrid ${widgetId}` },
                 },
               ],
             },
@@ -233,67 +253,35 @@ function Toolbar() {
           });
         }}
       >
-        Add Sub Grid (12x1)
+        Add subgrid (12×5)
+      </button>
+
+      <button type="button" onClick={handleSave}>
+        Save layout (JSON)
+      </button>
+      <button type="button" onClick={handleRestore} disabled={!savedJson}>
+        Restore saved JSON
       </button>
     </div>
   );
 }
 
-function DebugInfo() {
-  const { initialOptions, saveOptions } = useGridStackContext();
-
-  const [realtimeOptions, setRealtimeOptions] = useState<
-    GridStackOptions | GridStackWidget[] | undefined
-  >(undefined);
+function DebugPanel() {
+  const { save, layoutVersion } = useGridStack();
+  const [snapshot, setSnapshot] = useState<string>("");
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (saveOptions) {
-        const data = saveOptions();
-        setRealtimeOptions(data);
-      }
+    const t = setInterval(() => {
+      const data = save?.(true, false);
+      if (data) setSnapshot(JSON.stringify(data, null, 2));
     }, 2000);
-
-    return () => clearInterval(timer);
-  }, [saveOptions]);
+    return () => clearInterval(t);
+  }, [save, layoutVersion]);
 
   return (
-    <div>
-      <h2>Debug Info</h2>
-      <div
-        style={{
-          display: "grid",
-          gap: "1rem",
-          gridTemplateColumns: "repeat(2, 1fr)",
-        }}
-      >
-        <div>
-          <h3>Initial Options</h3>
-          <pre
-            style={{
-              backgroundColor: "#f3f4f6",
-              padding: "1rem",
-              borderRadius: "0.25rem",
-              overflow: "auto",
-            }}
-          >
-            {JSON.stringify(initialOptions, null, 2)}
-          </pre>
-        </div>
-        <div>
-          <h3>Realtime Options (2s refresh)</h3>
-          <pre
-            style={{
-              backgroundColor: "#f3f4f6",
-              padding: "1rem",
-              borderRadius: "0.25rem",
-              overflow: "auto",
-            }}
-          >
-            {JSON.stringify(realtimeOptions, null, 2)}
-          </pre>
-        </div>
-      </div>
+    <div className="demo-debug">
+      <h4>Live save() snapshot (~2s)</h4>
+      <pre className="demo-pre">{snapshot || "…"}</pre>
     </div>
   );
 }

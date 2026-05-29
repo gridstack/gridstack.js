@@ -404,10 +404,18 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, n:
               n.visibleObservable?.disconnect();
               delete n.visibleObservable;
               createComp();
+              // Re-scan for any custom drag-handle elements now that the Angular component
+              // has been rendered inside the item content.
+              n.grid?.refreshDragHandles(gridItem.el);
             }});
             window.setTimeout(() => n.visibleObservable?.observe(gridItem.el)); // wait until callee sets position attributes
           }
-        } else createComp();
+        } else {
+          createComp();
+          // Re-scan for any custom drag-handle elements now that the Angular component
+          // has been rendered inside the item content.
+          n.grid?.refreshDragHandles(gridItem.el);
+        }
       }
 
       return gridItem.el;

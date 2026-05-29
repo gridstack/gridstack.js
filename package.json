@@ -25,14 +25,15 @@
     }
   ],
   "scripts": {
-    "build": "yarn build:ng && grunt && webpack && tsc --project tsconfig.build.json --stripInternal && yarn doc",
+    "build": "yarn build:ng && yarn build:react && grunt && webpack && tsc --project tsconfig.build.json --stripInternal && yarn doc",
     "build:ng": "cd angular && yarn build lib",
+    "build:react": "cd react && yarn build:lib",
     "w": "webpack",
     "t": "rm -rf dist/* && grunt && tsc --project tsconfig.build.json --stripInternal",
     "doc": "doctoc ./README.md && doctoc ./doc/CHANGES.md && node scripts/generate-docs.js",
     "doc:main": "node scripts/generate-docs.js --main-only",
     "doc:angular": "node scripts/generate-docs.js --angular-only",
-    "test": "yarn lint && vitest run",
+    "test": "yarn lint && vitest run && cd react && yarn vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
@@ -44,7 +45,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
-    "lint": "tsc --project tsconfig.build.json --noEmit && eslint src/*.ts angular/projects/lib/src/**/*.ts",
+    "lint": "tsc --project tsconfig.build.json --noEmit && eslint src/*.ts angular/projects/lib/src/**/*.ts react/projects/lib/src/**/*.{ts,tsx}",
     "reset": "rm -rf dist node_modules",
     "prepublishOnly": "yarn build"
   },
