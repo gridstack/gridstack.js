@@ -104,7 +104,7 @@
     "typedoc": "^0.28.9",
     "typedoc-plugin-markdown": "^4.8.0",
     "typescript": "^5.0.4",
-    "vitest": "^2.0.5",
+    "vitest": "^4.1.0",
     "webpack": "^5.79.0",
     "webpack-cli": "^5.0.1"
   },
