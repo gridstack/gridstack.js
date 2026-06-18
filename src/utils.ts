@@ -4,6 +4,7 @@
  */
 
 import { GridStackElement, GridStackNode, numberOrString, GridStackPosition, GridStackWidget } from './types';
+import type { GridStack } from './gridstack';
 
 export interface HeightData {
   h: number;
@@ -331,6 +332,30 @@ export class Utils {
    */
   static find(nodes: GridStackNode[], id: string): GridStackNode | undefined {
     return id ? nodes.find(n => n.id === id) : undefined;
+  }
+
+  /**
+   * Find a node by ID in a grid, optionally searching nested sub-grids.
+   *
+   * @param g the grid to search
+   * @param id the ID to search for
+   * @param recursive if true (default), also search nested sub-grids
+   * @returns the node with matching ID, or undefined if not found
+   *
+   * @example
+   * const node = Utils.findInGrid(grid, 'widget-1');          // recursive by default
+   * const top  = Utils.findInGrid(grid, 'widget-1', false);   // top-level only
+   */
+  static findInGrid(g: GridStack, id: string, recursive?: boolean): GridStackNode | undefined {
+    const hit = g.engine.nodes.find(n => String(n.id) === id);
+    if (hit || !recursive) return hit;
+    for (const n of g.engine.nodes) {
+      if (n.subGrid) {
+        const nested = Utils.findInGrid(n.subGrid as GridStack, id);
+        if (nested) return nested;
+      }
+    }
+    return undefined;
   }
 
   /**

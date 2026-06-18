@@ -10,6 +10,9 @@
     "paths": {
       "lib": [
         "../dist/angular"
+      ],
+      "gridstack": [
+        "../dist/gridstack"
       ]
     },
     "noPropertyAccessFromIndexSignature": true,

@@ -49,8 +49,6 @@ export function gsCreateReactComponents(
       // Inherit the host's _gridComp so nested-grid children can register portals.
       const inherited = nearestGridComp(parent);
       if (inherited) el._gridComp = inherited;
-      // Must append to parent — mirrors what Utils.createDiv(classes, parent) does in the
-      // non-React code path (gridstack.ts addGrid) so the subgrid is in the DOM.
       parent?.appendChild(el);
       return el;
     }
@@ -67,8 +65,26 @@ export function gsCreateReactComponents(
     const id = opt.id != null ? String(opt.id) : undefined;
     if (id) {
       el._gridItemRef = { id, gridComp: gridHost };
-      if (opt.component) gridHost.registerSyntheticItemId(id);
+
+      if (opt.component) {
+        // Utils.lazyLoad checks opt.lazyLoad and grid.opts.lazyLoad with correct precedence.
+        const lazy = Utils.lazyLoad(w as GridStackNode);
+        if (lazy) {
+          el._lazyObserver = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) {
+              el._lazyObserver?.disconnect();
+              delete el._lazyObserver;
+              gridHost.registerSyntheticItemId(id);
+            }
+          });
+          // Observe after GS sets position attributes (next frame).
+          setTimeout(() => el._lazyObserver?.observe(el));
+        } else {
+          gridHost.registerSyntheticItemId(id);
+        }
+      }
     }
+
     if (opt.content != null && opt.content !== "") {
       const content = el.querySelector(".grid-stack-item-content") as HTMLElement;
       if (content) content.textContent = String(opt.content);
@@ -76,7 +92,12 @@ export function gsCreateReactComponents(
     return el;
   }
 
+  // Remove path
   const el = (w as GridStackWidget).el as GridItemHTMLElement | undefined;
+  if (el?._lazyObserver) {
+    el._lazyObserver.disconnect();
+    delete el._lazyObserver;
+  }
   if (el?._gridItemRef) {
     const { id, gridComp } = el._gridItemRef;
     gridComp.unregisterSyntheticItemId(id);
@@ -104,6 +125,12 @@ export function gsSaveAdditionalReactInfo(
 }
 
 export function gsUpdateReactComponents(node: GridStackNode): void {
+  const w = node as GridStackWidget;
   const el = node.el as GridItemHTMLElement | undefined;
-  el?._gridItemRef?.gridComp?.requestUpdate?.();
+  const ref = el?._gridItemRef;
+  if (!ref) return;
+  const { id, gridComp } = ref;
+  // Call registered deserialize fn so widget components can react to updated props.
+  if (w.props) gridComp.deserializeWidget?.(id, w);
+  gridComp.requestUpdate?.();
 }

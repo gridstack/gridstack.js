@@ -18,10 +18,13 @@ export interface GridStackHostApi {
   requestUpdate(): void;
   registerWidgetSerializer: (
     id: string,
-    fn: () => Record<string, unknown> | undefined
+    serialize: () => Record<string, unknown> | undefined,
+    deserialize?: (data: Record<string, unknown>) => void
   ) => () => void;
   /** Merge `useWidgetSerializer` results into `w.props` during `grid.save()` */
   mergeWidgetPropsForSave(id: string, w: GridStackWidget): void;
+  /** Invoke the registered deserialize fn for an item after a GS `updateCB`. */
+  deserializeWidget(id: string, w: GridStackWidget): void;
 }
 
 export type GridStackWidgetProps = Record<string, unknown>;
@@ -36,6 +39,8 @@ export interface GridStackWidget extends Omit<CoreGridStackWidget, "subGridOpts"
   el?: HTMLElement;
   /** Nested grid options (recursive; uses React-extended widget children). */
   subGridOpts?: GridStackOptions;
+  /** Defer rendering the component until the item scrolls into view (mirrors Angular lazyLoad). */
+  lazyLoad?: boolean;
 }
 
 export interface GridStackNode extends CoreGridStackNode {
@@ -45,6 +50,8 @@ export interface GridStackNode extends CoreGridStackNode {
 export interface GridStackOptions extends Omit<CoreGridStackOptions, "children" | "subGridOpts"> {
   children?: GridStackWidget[];
   subGridOpts?: GridStackOptions;
+  /** Defer rendering all item components until they scroll into view. Per-item `lazyLoad` overrides. */
+  lazyLoad?: boolean;
 }
 
 export interface GridHTMLElement extends CoreGridHTMLElement {
@@ -53,4 +60,6 @@ export interface GridHTMLElement extends CoreGridHTMLElement {
 
 export interface GridItemHTMLElement extends CoreGridItemHTMLElement {
   _gridItemRef?: { id: string; gridComp: GridStackHostApi };
+  /** IntersectionObserver for lazy-loaded items; cleaned up when item is removed. */
+  _lazyObserver?: IntersectionObserver;
 }
