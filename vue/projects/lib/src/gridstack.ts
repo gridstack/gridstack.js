@@ -9,7 +9,7 @@ import {
   type Component,
   type PropType,
 } from 'vue'
-import { GridStack } from 'gridstack'
+import { GridStack, Utils } from 'gridstack'
 import type {
   GridStackDroppedHandler,
   GridStackElementHandler,
@@ -29,26 +29,14 @@ import type {
 /** Maps `component` JSON keys to Vue components (props merged from saved `props`). */
 export type ComponentMap = Record<string, Component>
 
-/** Recursively find a node by id across the grid and all nested sub-grids. */
-function findNodeInGrid(g: GridStack, id: string): GridStackWidget | undefined {
-  const hit = g.engine.nodes.find((n) => String(n.id) === id) as GridStackWidget | undefined
-  if (hit) return hit
-  for (const n of g.engine.nodes) {
-    if (n.subGrid) {
-      const nested = findNodeInGrid(n.subGrid as GridStack, id)
-      if (nested) return nested
-    }
-  }
-  return undefined
-}
-
 /**
  * `<GridStack>` — root component.
  *
  * - Pass `options` (with `children`) to seed the initial layout.
  * - Pass `components` to map `component` strings in widget JSON to Vue components.
  * - Listens to all GS events via emits; also exposes `getGrid()` for imperative access.
- * - Slot content is rendered _outside_ the `.grid-stack` div (host chrome: toolbars etc.).
+ * - Use the `#empty` slot to render content when the grid has no items.
+ * - Slot content (default) is rendered _outside_ the `.grid-stack` div (host chrome: toolbars etc.).
  */
 export const GridStackComponent = defineComponent({
   name: 'GridStack',
@@ -68,6 +56,8 @@ export const GridStackComponent = defineComponent({
     'added',
     'change',
     'removed',
+    'enable',
+    'disable',
     'drag',
     'dragstart',
     'dragstop',
@@ -90,40 +80,68 @@ export const GridStackComponent = defineComponent({
      */
     const gridReady = ref(false)
 
-    /** Bumped after GS-driven layout changes so descendant composables re-compute. */
+    /** Bumped after GS-driven structural changes (added/removed) so descendant composables re-compute. */
     const layoutVersion = ref(0)
+
+    /** True when the grid currently has no items. */
+    const isEmpty = ref(false)
 
     /** IDs of widgets added by `addRemoveCB` that need a teleport anchor. */
     const syntheticIds = ref<Set<string>>(new Set())
 
+    // Ids scheduled for deferred removal — cancelled if the same id re-registers
+    // within the same microtask (cross-grid DnD: GS fires remove before add).
+    const pendingRemoval = new Set<string>()
+
     const serializersRef = new Map<string, () => Record<string, unknown> | undefined>()
+    const deserializersRef = new Map<string, (data: Record<string, unknown>) => void>()
 
     function registerSyntheticItemId(id: string) {
+      pendingRemoval.delete(id) // cancel deferred removal for cross-grid DnD
       const next = new Set(syntheticIds.value)
       next.add(id)
       syntheticIds.value = next
     }
 
     function unregisterSyntheticItemId(id: string) {
-      const next = new Set(syntheticIds.value)
-      next.delete(id)
-      syntheticIds.value = next
-      serializersRef.delete(id)
+      // Defer by one microtask — if registerSyntheticItemId fires in the same sync block
+      // (cross-grid DnD), it cancels this removal and the Vue subtree never unmounts.
+      pendingRemoval.add(id)
+      void Promise.resolve().then(() => {
+        if (!pendingRemoval.has(id)) return
+        pendingRemoval.delete(id)
+        const next = new Set(syntheticIds.value)
+        next.delete(id)
+        syntheticIds.value = next
+        serializersRef.delete(id)
+        deserializersRef.delete(id)
+      })
     }
 
     function requestUpdate() {
       layoutVersion.value++
     }
 
-    function registerWidgetSerializer(id: string, fn: () => Record<string, unknown> | undefined) {
-      serializersRef.set(id, fn)
-      return () => { serializersRef.delete(id) }
+    function registerWidgetSerializer(
+      id: string,
+      serialize: () => Record<string, unknown> | undefined,
+      deserialize?: (data: Record<string, unknown>) => void,
+    ) {
+      serializersRef.set(id, serialize)
+      if (deserialize) deserializersRef.set(id, deserialize)
+      return () => {
+        serializersRef.delete(id)
+        deserializersRef.delete(id)
+      }
     }
 
     function mergeWidgetPropsForSave(id: string, w: GridStackWidget) {
-      const fn = serializersRef.get(id)
-      const extra = fn?.()
+      const extra = serializersRef.get(id)?.()
       if (extra) w.props = { ...(w.props ?? {}), ...extra }
+    }
+
+    function deserializeWidget(id: string, w: GridStackWidget) {
+      if (w.props) deserializersRef.get(id)?.(w.props)
     }
 
     const hostApi: GridStackHostApi = {
@@ -132,6 +150,7 @@ export const GridStackComponent = defineComponent({
       requestUpdate,
       registerWidgetSerializer,
       mergeWidgetPropsForSave,
+      deserializeWidget,
     }
 
     /** Reference to the `.grid-stack` root div — set via `onVnodeMounted`. */
@@ -161,6 +180,7 @@ export const GridStackComponent = defineComponent({
       grid = GridStack.init(props.options, rootEl)
       gridReady.value = true
       layoutVersion.value++
+      isEmpty.value = !grid.engine.nodes.length
 
       hookEvents()
     })
@@ -173,14 +193,12 @@ export const GridStackComponent = defineComponent({
       gridReady.value = false
     })
 
-    // Watch for options changes and forward them to the live grid instance.
+    // Watch for options reference changes and forward to the live grid instance.
     watch(
       () => props.options,
       (next) => {
         grid?.updateOptions(next)
-        layoutVersion.value++
       },
-      { deep: true },
     )
 
     function hookEvents() {
@@ -188,18 +206,23 @@ export const GridStackComponent = defineComponent({
 
       grid.on('added', ((e: Event, nodes: Parameters<GridStackNodesHandler>[1]) => {
         layoutVersion.value++
+        isEmpty.value = false
         emit('added', e, nodes)
       }) as GridStackNodesHandler)
 
+      // change = position/resize; portal targets don't move so no layoutVersion bump.
       grid.on('change', ((e: Event, nodes: Parameters<GridStackNodesHandler>[1]) => {
-        layoutVersion.value++
         emit('change', e, nodes)
       }) as GridStackNodesHandler)
 
       grid.on('removed', ((e: Event, nodes: Parameters<GridStackNodesHandler>[1]) => {
         layoutVersion.value++
+        isEmpty.value = !grid!.engine.nodes.length
         emit('removed', e, nodes)
       }) as GridStackNodesHandler)
+
+      grid.on('enable', (e: Event) => emit('enable', e))
+      grid.on('disable', (e: Event) => emit('disable', e))
 
       grid.on('drag', (e: Event, el: HTMLElement) => {
         emit('drag', e, el)
@@ -226,7 +249,7 @@ export const GridStackComponent = defineComponent({
 
     function unhookEvents() {
       if (!grid) return
-      ;['added', 'change', 'removed', 'drag', 'dragstart', 'dragstop',
+      ;['added', 'change', 'removed', 'enable', 'disable', 'drag', 'dragstart', 'dragstop',
         'dropped', 'resize', 'resizestart', 'resizestop'].forEach((ev) => grid!.off(ev))
     }
 
@@ -246,7 +269,7 @@ export const GridStackComponent = defineComponent({
       const synItems: ReturnType<typeof h>[] = []
       if (gridReady.value && grid && syntheticIds.value.size > 0) {
         for (const synId of syntheticIds.value) {
-          const node = findNodeInGrid(grid, synId)
+          const node = Utils.findInGrid(grid, synId, true) as GridStackWidget | undefined
           if (!node?.component) continue
           const Comp = props.components[node.component]
           if (!Comp) continue
@@ -260,6 +283,8 @@ export const GridStackComponent = defineComponent({
       }
 
       return h('div', { class: 'gs-wrapper' }, [
+        // Empty slot — rendered when grid has no items (mirrors Angular [empty-content]).
+        isEmpty.value ? slots.empty?.() : undefined,
         // The `.grid-stack` div — onVnodeMounted captures the DOM reference.
         h('div', {
           class: 'grid-stack',
@@ -267,7 +292,7 @@ export const GridStackComponent = defineComponent({
             rootEl = vnode.el as GridHTMLElement | null
           },
         }, synItems),
-        // Slot content rendered outside the grid (toolbars, debug panels, etc.).
+        // Default slot rendered outside the grid (toolbars, debug panels, etc.).
         slots.default?.(),
       ])
     }

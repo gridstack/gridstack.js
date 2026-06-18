@@ -10,22 +10,10 @@ import {
   watch,
   type PropType,
 } from 'vue'
-import type { GridStack, GridStackNode } from 'gridstack'
+import { Utils } from 'gridstack'
+import type { GridStackNode } from 'gridstack'
 import { GS_CONTEXT_KEY, GS_ITEM_CONTEXT_KEY } from './gridstack-context'
 import type { GridStackWidget } from './types'
-
-/** Recursively find a node by id across the grid and all nested sub-grids. */
-function findNodeInGrid(g: GridStack, id: string): GridStackNode | undefined {
-  const hit = g.engine.nodes.find((n) => String(n.id) === id)
-  if (hit) return hit
-  for (const n of g.engine.nodes) {
-    if (n.subGrid) {
-      const nested = findNodeInGrid(n.subGrid as GridStack, id)
-      if (nested) return nested
-    }
-  }
-  return undefined
-}
 
 /**
  * Teleport anchor for one grid item.
@@ -61,7 +49,7 @@ export const GridStackItem = defineComponent({
     function syncContainer() {
       const g = ctx!.grid
       if (!g) return
-      const node = findNodeInGrid(g, props.id)
+      const node = Utils.findInGrid(g, props.id, true)
       const cont = (node?.el?.querySelector('.grid-stack-item-content') as HTMLElement | null) ?? null
       containerEl.value = cont
     }
@@ -71,7 +59,7 @@ export const GridStackItem = defineComponent({
       const g = ctx!.grid
       if (!g) return
 
-      const node = findNodeInGrid(g, props.id)
+      const node = Utils.findInGrid(g, props.id, true)
       if (!node?.el) {
         // Item not yet in any grid — add it.
         g.addWidget({ ...props.options, id: props.id } as GridStackWidget)
@@ -87,7 +75,7 @@ export const GridStackItem = defineComponent({
       // any custom handle selectors the slot content may have introduced.
       void Promise.resolve().then(() => {
         if (!alive) return
-        const n = findNodeInGrid(g, props.id)
+        const n = Utils.findInGrid(g, props.id, true)
         if (n?.el) g.refreshDragHandles(n.el)
       })
     })
@@ -95,11 +83,24 @@ export const GridStackItem = defineComponent({
     // Re-sync the container whenever layoutVersion changes (GS rearranged the DOM).
     watch(() => ctx!.layoutVersion.value, syncContainer)
 
+    // Per-item serialize/deserialize fns — updated by child calling registerSerializer.
+    let serializeFn: (() => Record<string, unknown> | undefined) | undefined
+    let deserializeFn: ((data: Record<string, unknown>) => void) | undefined
+
+    // Register with parent context once; the delegate closures always call the latest fns.
+    const cleanupParentSerializer = ctx!.registerWidgetSerializer(
+      props.id,
+      () => serializeFn?.(),
+      (data) => deserializeFn?.(data),
+    )
+
     onBeforeUnmount(() => {
       alive = false
+      cleanupParentSerializer()
+
       const g = ctx!.grid
       if (!g?.engine) return
-      const node = findNodeInGrid(g, props.id)
+      const node = Utils.findInGrid(g, props.id, true)
       if (!node?.el || !node.grid) return
       if (node.grid === g) {
         try {
@@ -110,24 +111,18 @@ export const GridStackItem = defineComponent({
       }
     })
 
-    // Expose id + serialize registration to child composables via item context.
-    const serializers = new Map<string, () => Record<string, unknown> | undefined>()
-
-    function registerSerializer(fn: () => Record<string, unknown> | undefined) {
-      serializers.set(props.id, fn)
-      return () => { serializers.delete(props.id) }
+    // Expose id + serialize/deserialize registration to child composables via item context.
+    function registerSerializer(
+      serialize: () => Record<string, unknown> | undefined,
+      deserialize?: (data: Record<string, unknown>) => void,
+    ) {
+      serializeFn = serialize
+      deserializeFn = deserialize
+      return () => {
+        serializeFn = undefined
+        deserializeFn = undefined
+      }
     }
-
-    // Merge serializer output into props during grid.save() — called by registry.
-    // We stamp this onto the context so the host GridStack can reach it.
-    const gridComp = ctx!.grid ? (ctx as unknown as { _hostApi?: unknown })._hostApi : null
-    void gridComp // accessed via _gridComp on the DOM; here we register with parent ctx.
-
-    // Also register with parent grid's serializer registry.
-    ctx!.registerWidgetSerializer(props.id, () => {
-      const fn = serializers.get(props.id)
-      return fn?.()
-    })
 
     provide(GS_ITEM_CONTEXT_KEY, {
       id: props.id,

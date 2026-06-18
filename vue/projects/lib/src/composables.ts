@@ -1,4 +1,5 @@
 import { computed, inject, onBeforeUnmount, onMounted } from 'vue'
+import { Utils } from 'gridstack'
 import type { GridStackNode } from 'gridstack'
 import { GS_CONTEXT_KEY, GS_ITEM_CONTEXT_KEY } from './gridstack-context'
 import type { GridStackWidget } from './types'
@@ -57,6 +58,7 @@ export interface UseGridStackItemResult {
  * contains the calling component. Must be called inside `<GridStackItem>` slot content.
  *
  * Recomputes whenever `layoutVersion` changes.
+ * Uses recursive grid search so items dragged to sub-grids are still found.
  */
 export function useGridStackItem(): UseGridStackItemResult {
   const itemCtx = inject(GS_ITEM_CONTEXT_KEY)
@@ -68,7 +70,8 @@ export function useGridStackItem(): UseGridStackItemResult {
   const node = computed<GridStackNode | undefined>(() => {
     // Access layoutVersion to make this reactive.
     void gsCtx.layoutVersion.value
-    return gsCtx.grid?.engine.nodes.find((n) => String(n.id) === String(itemCtx.id))
+    const g = gsCtx.grid
+    return g ? Utils.findInGrid(g, String(itemCtx.id), true) : undefined
   })
 
   return {
@@ -87,16 +90,20 @@ export interface UseWidgetSerializerOptions<T extends Record<string, unknown>> {
 }
 
 /**
- * Optional composable for widget components that need to participate in `grid.save()`.
+ * Optional composable for widget components that need to participate in `grid.save()` / `grid.load()`.
  *
  * Call this inside the `setup()` of a widget component rendered inside `<GridStackItem>`.
  * The `serialize` function is called during `grid.save()` and its return value is merged
  * into the widget's `props` in the serialized JSON.
+ * The `deserialize` function is called when GS updates the node (e.g. after `grid.load()`).
  *
  * @example
  * ```ts
  * const count = ref(0)
- * useWidgetSerializer({ serialize: () => ({ count: count.value }) })
+ * useWidgetSerializer({
+ *   serialize: () => ({ count: count.value }),
+ *   deserialize: (data) => { count.value = data.count as number ?? 0 },
+ * })
  * ```
  */
 export function useWidgetSerializer<T extends Record<string, unknown>>(
@@ -108,6 +115,7 @@ export function useWidgetSerializer<T extends Record<string, unknown>>(
     if (!itemCtx?.registerSerializer) return
     const cleanup = itemCtx.registerSerializer(
       () => opts.serialize?.() as Record<string, unknown> | undefined,
+      opts.deserialize ? (data) => opts.deserialize?.(data as T) : undefined,
     )
     onBeforeUnmount(cleanup)
   })
