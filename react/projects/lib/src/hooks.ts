@@ -1,4 +1,5 @@
 import { useContext, useEffect, useMemo, useRef } from "react";
+import { Utils } from "gridstack";
 import type { GridStackNode } from "gridstack";
 import { GridStackContext } from "./gridstack-context";
 import { GridStackWidgetContext } from "./gridstack-widget-context";
@@ -10,7 +11,9 @@ export interface UseWidgetSerializerOptions<T extends Record<string, unknown>> {
 }
 
 /**
- * Optional hook for widget components that participate in `grid.save()` via `saveCB` / `props`.
+ * Registers serialize/deserialize for a widget component.
+ * `serialize` is called during `grid.save()`; `deserialize` is called when GS
+ * updates the node (e.g. after `grid.load()` or `updateCB`).
  */
 export function useWidgetSerializer<T extends Record<string, unknown>>(
   _opts: UseWidgetSerializerOptions<T>
@@ -21,8 +24,9 @@ export function useWidgetSerializer<T extends Record<string, unknown>>(
 
   useEffect(() => {
     if (!ctx?.registerSerializer) return;
-    return ctx.registerSerializer(() =>
-      optsRef.current.serialize?.() as Record<string, unknown> | undefined
+    return ctx.registerSerializer(
+      () => optsRef.current.serialize?.() as Record<string, unknown> | undefined,
+      (data) => optsRef.current.deserialize?.(data as T)
     );
   }, [ctx]);
 }
@@ -64,16 +68,15 @@ export function useGridStackItem(): UseGridStackItemResult {
   const wctx = useContext(GridStackWidgetContext);
   const ctx = useContext(GridStackContext);
   if (!wctx?.id) {
-    throw new Error(
-      "useGridStackItem must be used inside <GridStackItem> content"
-    );
+    throw new Error("useGridStackItem must be used inside <GridStackItem> content");
   }
   if (!ctx) {
     throw new Error("useGridStackItem must be used within <GridStack>");
   }
   const { grid, layoutVersion } = ctx;
+  // Use recursive search so items dragged to sub-grids are still found.
   const node = useMemo(
-    () => grid?.engine.nodes.find((n) => String(n.id) === String(wctx.id)),
+    () => (grid ? Utils.findInGrid(grid, String(wctx.id), true) : undefined),
     [grid, wctx.id, layoutVersion]
   );
   return { id: wctx.id, node };

@@ -1312,10 +1312,6 @@ globals@^15.9.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-15.15.0.tgz"
   integrity sha512-7ACyT3wmyp3I61S4fG682L0VA2RGD9otkqGJIwNUMF1SWUombIIk+af1unuDYgMm082aHYwD+mzJvv9Iu8dsgg==
 
-gridstack@^12.6.0:
-  version "12.6.0"
-  resolved "https://registry.yarnpkg.com/gridstack/-/gridstack-12.6.0.tgz"
-  integrity sha512-dUrqsormSybFn/2P4Dz8AgprftKD5e/IiV7UmC0XLQU+G+/WtkAeFiCSNLoAGhPDXoJ/O61Xtj3gljY/Ds83yQ==
 
 has-flag@^4.0.0:
   version "4.0.0"

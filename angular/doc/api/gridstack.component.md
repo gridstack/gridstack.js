@@ -2860,6 +2860,7 @@ GridHTMLElement.replaceChildren
 
 | Property | Modifier | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
+| <a id="gridstack"></a> `gridstack?` | `public` | `GridStack` | - | `GridHTMLElement.gridstack` | dist/gridstack.d.ts:24 |
 | <a id="_gridcomp"></a> `_gridComp?` | `public` | [`GridstackComponent`](#gridstackcomponent) | Back-reference to the Angular GridStack component | - | [angular/projects/lib/src/lib/gridstack.component.ts:41](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L41) |
 | <a id="ariaatomic"></a> `ariaAtomic` | `public` | `null` \| `string` | - | `GridHTMLElement.ariaAtomic` | node\_modules/typescript/lib/lib.dom.d.ts:2020 |
 | <a id="ariaautocomplete"></a> `ariaAutoComplete` | `public` | `null` \| `string` | - | `GridHTMLElement.ariaAutoComplete` | node\_modules/typescript/lib/lib.dom.d.ts:2021 |

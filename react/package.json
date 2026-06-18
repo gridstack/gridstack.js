@@ -14,7 +14,6 @@
     "test:ui": "vitest --config vitest.config.ts --ui"
   },
   "dependencies": {
-    "gridstack": "^12.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-fast-compare": "^3.2.2",

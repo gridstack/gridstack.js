@@ -14,7 +14,6 @@
     "test:ui": "vitest --config vitest.config.ts --ui"
   },
   "dependencies": {
-    "gridstack": "^12.6.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {

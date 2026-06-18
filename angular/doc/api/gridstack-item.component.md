@@ -2671,6 +2671,7 @@ GridItemHTMLElement.replaceChildren
 
 | Property | Modifier | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
+| <a id="gridstacknode"></a> `gridstackNode?` | `public` | `GridStackNode` | Pointer to the associated grid node instance containing position, size, and other widget data | `GridItemHTMLElement.gridstackNode` | dist/types.d.ts:45 |
 | <a id="_griditemcomp"></a> `_gridItemComp?` | `public` | [`GridstackItemComponent`](#gridstackitemcomponent) | Back-reference to the Angular GridStackItem component | - | [angular/projects/lib/src/lib/gridstack-item.component.ts:16](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack-item.component.ts#L16) |
 | <a id="ariaatomic"></a> `ariaAtomic` | `public` | `null` \| `string` | - | `GridItemHTMLElement.ariaAtomic` | node\_modules/typescript/lib/lib.dom.d.ts:2020 |
 | <a id="ariaautocomplete"></a> `ariaAutoComplete` | `public` | `null` \| `string` | - | `GridItemHTMLElement.ariaAutoComplete` | node\_modules/typescript/lib/lib.dom.d.ts:2021 |

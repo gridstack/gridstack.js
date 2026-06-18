@@ -11,7 +11,10 @@
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "paths": {
+      "gridstack": ["../../../dist/gridstack"]
+    }
   },
   "include": ["src/**/*.ts"]
 }

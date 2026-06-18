@@ -3,7 +3,8 @@ import { createContext, useContext } from "react";
 export interface GridStackWidgetContextValue {
   id: string;
   registerSerializer?: (
-    fn: () => Record<string, unknown> | undefined
+    serialize: () => Record<string, unknown> | undefined,
+    deserialize?: (data: Record<string, unknown>) => void
   ) => () => void;
 }
 

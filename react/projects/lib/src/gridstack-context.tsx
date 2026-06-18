@@ -3,23 +3,20 @@ import type { GridStack } from "gridstack";
 
 export interface GridStackContextValue {
   grid: GridStack | null;
-  /** Bumped after GS-driven updates so descendants can re-sync */
+  /** Bumped after GS-driven structural changes (add/remove) so portal containers re-sync. */
   layoutVersion: number;
   /** @internal — used by `useWidgetSerializer` via `<GridStackItem>` */
   registerWidgetSerializer: (
     id: string,
-    fn: () => Record<string, unknown> | undefined
+    serialize: () => Record<string, unknown> | undefined,
+    deserialize?: (data: Record<string, unknown>) => void
   ) => () => void;
 }
 
-export const GridStackContext = createContext<GridStackContextValue | null>(
-  null
-);
+export const GridStackContext = createContext<GridStackContextValue | null>(null);
 
 export function useGridStackContextValue(): GridStackContextValue {
   const v = useContext(GridStackContext);
-  if (!v) {
-    throw new Error("useGridStack must be used within <GridStack>");
-  }
+  if (!v) throw new Error("useGridStack must be used within <GridStack>");
   return v;
 }
