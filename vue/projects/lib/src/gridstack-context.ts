@@ -7,12 +7,19 @@ export interface GsContext {
   grid: GridStack | null
   /** Bumped after GS-driven layout changes so descendants can re-sync. */
   layoutVersion: Ref<number>
-  registerWidgetSerializer(id: string, fn: () => Record<string, unknown> | undefined): () => void
+  registerWidgetSerializer(
+    id: string,
+    serialize: () => Record<string, unknown> | undefined,
+    deserialize?: (data: Record<string, unknown>) => void,
+  ): () => void
 }
 
 export interface GsItemContext {
   id: string
-  registerSerializer?: (fn: () => Record<string, unknown> | undefined) => () => void
+  registerSerializer?: (
+    serialize: () => Record<string, unknown> | undefined,
+    deserialize?: (data: Record<string, unknown>) => void,
+  ) => () => void
 }
 
 export const GS_CONTEXT_KEY: InjectionKey<GsContext> = Symbol('gs-context')

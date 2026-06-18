@@ -16,9 +16,15 @@ export interface GridStackHostApi {
   unregisterSyntheticItemId(id: string): void
   /** Notify Vue to re-read node props after GS `update()` / `updateCB`. */
   requestUpdate(): void
-  registerWidgetSerializer(id: string, fn: () => Record<string, unknown> | undefined): () => void
+  registerWidgetSerializer(
+    id: string,
+    serialize: () => Record<string, unknown> | undefined,
+    deserialize?: (data: Record<string, unknown>) => void,
+  ): () => void
   /** Merge `useWidgetSerializer` results into `w.props` during `grid.save()`. */
   mergeWidgetPropsForSave(id: string, w: GridStackWidget): void
+  /** Call widget's deserialize callback with updated props (invoked by `updateCB`). */
+  deserializeWidget(id: string, w: GridStackWidget): void
 }
 
 export type GridStackWidgetProps = Record<string, unknown>

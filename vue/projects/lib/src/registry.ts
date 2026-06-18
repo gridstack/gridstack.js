@@ -99,5 +99,10 @@ export function gsSaveAdditionalVueInfo(
 
 export function gsUpdateVueComponents(node: GridStackNode): void {
   const el = node.el as GridItemHTMLElement | undefined
-  el?._gridItemRef?.gridComp?.requestUpdate?.()
+  const ref = el?._gridItemRef
+  if (!ref) return
+  const { id, gridComp } = ref
+  const w = node as GridStackWidget
+  if (w.props) gridComp.deserializeWidget(id, w)
+  gridComp.requestUpdate()
 }
