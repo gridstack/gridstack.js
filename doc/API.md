@@ -1453,7 +1453,7 @@ or `sizeToContent` gridItem options.
 prepareDragDrop(el, force?): GridStack;
 ```
 
-Defined in: [gridstack.ts:2739](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2739)
+Defined in: [gridstack.ts:2763](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2763)
 
 prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
 
@@ -1474,7 +1474,7 @@ prepares the element for drag&drop - this is normally called by makeWidget() unl
 refreshDragHandles(els): GridStack;
 ```
 
-Defined in: [gridstack.ts:2727](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2727)
+Defined in: [gridstack.ts:2751](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2751)
 
 Re-scans one or more widget elements for drag handle elements after delayed content
 (React portal, Angular component, etc.) has been rendered inside the item.
@@ -1807,7 +1807,7 @@ is dynamically create and needs to be set later.
 protected triggerEvent(event, target): void;
 ```
 
-Defined in: [gridstack.ts:3001](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3001)
+Defined in: [gridstack.ts:3025](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3025)
 
 call given event callback on our main top-most grid (if we're nested)
 
@@ -2866,7 +2866,7 @@ new Utils(): Utils;
 static addElStyles(el, styles): void;
 ```
 
-Defined in: [utils.ts:703](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L703)
+Defined in: [utils.ts:692](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L692)
 
 ###### Parameters
 
@@ -2885,7 +2885,7 @@ Defined in: [utils.ts:703](https://github.com/adumesny/gridstack.js/blob/master/
 static appendTo(el, parent): void;
 ```
 
-Defined in: [utils.ts:685](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L685)
+Defined in: [utils.ts:674](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L674)
 
 ###### Parameters
 
@@ -2964,7 +2964,7 @@ const overlap = Utils.areaIntercept(
 static canBeRotated(n): boolean;
 ```
 
-Defined in: [utils.ts:806](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L806)
+Defined in: [utils.ts:795](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L795)
 
 true if the item can be rotated (checking for prop, not space available)
 
@@ -2984,7 +2984,7 @@ true if the item can be rotated (checking for prop, not space available)
 static clone<T>(obj): T;
 ```
 
-Defined in: [utils.ts:648](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L648)
+Defined in: [utils.ts:637](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L637)
 
 single level clone, returning a new object with same top fields. This will share sub objects and arrays
 
@@ -3010,7 +3010,7 @@ single level clone, returning a new object with same top fields. This will share
 static cloneDeep<T>(obj): T;
 ```
 
-Defined in: [utils.ts:664](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L664)
+Defined in: [utils.ts:653](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L653)
 
 Recursive clone version that returns a full copy, checking for nested objects and arrays ONLY.
 Note: this will use as-is any key starting with double __ (and not copy inside) some lib have circular dependencies.
@@ -3037,7 +3037,7 @@ Note: this will use as-is any key starting with double __ (and not copy inside) 
 static cloneNode(el): HTMLElement;
 ```
 
-Defined in: [utils.ts:679](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L679)
+Defined in: [utils.ts:668](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L668)
 
 deep clone the given HTML node, removing the unique id field
 
@@ -3060,7 +3060,7 @@ static copyPos(
    doMinMax): GridStackWidget;
 ```
 
-Defined in: [utils.ts:510](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L510)
+Defined in: [utils.ts:499](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L499)
 
 Copy position and size properties from one widget to another.
 Copies x, y, w, h and optionally min/max constraints.
@@ -3122,7 +3122,7 @@ const nested = Utils.createDiv(['content'], parentDiv);
 static defaults(target, ...sources): object;
 ```
 
-Defined in: [utils.ts:457](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L457)
+Defined in: [utils.ts:446](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L446)
 
 Copy unset fields from source objects to target object (shallow merge with defaults).
 Similar to Object.assign but only sets undefined/null fields.
@@ -3154,7 +3154,7 @@ Utils.defaults(config, { width: 200, height: 50 });
 static find(nodes, id): GridStackNode;
 ```
 
-Defined in: [utils.ts:344](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L344)
+Defined in: [utils.ts:333](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L333)
 
 Find a grid node by its ID.
 
@@ -3187,7 +3187,7 @@ static findInGrid(
    recursive?): GridStackNode;
 ```
 
-Defined in: [utils.ts:360](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L360)
+Defined in: [utils.ts:349](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L349)
 
 Find a node by ID in a grid, optionally searching nested sub-grids.
 
@@ -3281,7 +3281,7 @@ const fromShadow = Utils.getElements('.item', shadowRoot);
 static getValuesFromTransformedElement(parent): DragTransform;
 ```
 
-Defined in: [utils.ts:763](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L763)
+Defined in: [utils.ts:752](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L752)
 
 defines an element that is used to get the offset and scale from grid transforms
 returns the scale and offsets from said element
@@ -3302,7 +3302,7 @@ returns the scale and offsets from said element
 static initEvent<T>(e, info): T;
 ```
 
-Defined in: [utils.ts:720](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L720)
+Defined in: [utils.ts:709](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L709)
 
 ###### Type Parameters
 
@@ -3423,7 +3423,7 @@ if (Utils.lazyLoad(node)) {
 static parseHeight(val): HeightData;
 ```
 
-Defined in: [utils.ts:424](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L424)
+Defined in: [utils.ts:413](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L413)
 
 Parse a height value with units into numeric value and unit string.
 Supports px, em, rem, vh, vw, %, cm, mm units.
@@ -3454,7 +3454,7 @@ Utils.parseHeight(50);       // {h: 50, unit: 'px'}
 static removeInternalAndSame(a, b): void;
 ```
 
-Defined in: [utils.ts:539](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L539)
+Defined in: [utils.ts:528](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L528)
 
 removes field from the first object if same as the second objects (like diffing) and internal '_' for saving
 
@@ -3475,7 +3475,7 @@ removes field from the first object if same as the second objects (like diffing)
 static removeInternalForSave(n, removeEl): void;
 ```
 
-Defined in: [utils.ts:556](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L556)
+Defined in: [utils.ts:545](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L545)
 
 removes internal fields '_' and default values for saving
 
@@ -3496,7 +3496,7 @@ removes internal fields '_' and default values for saving
 static removePositioningStyles(el): void;
 ```
 
-Defined in: [utils.ts:589](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L589)
+Defined in: [utils.ts:578](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L578)
 
 ###### Parameters
 
@@ -3514,7 +3514,7 @@ Defined in: [utils.ts:589](https://github.com/adumesny/gridstack.js/blob/master/
 static same(a, b): boolean;
 ```
 
-Defined in: [utils.ts:486](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L486)
+Defined in: [utils.ts:475](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L475)
 
 Compare two objects for equality (shallow comparison).
 Checks if objects have the same fields and values at one level deep.
@@ -3545,7 +3545,7 @@ Utils.same({x: 1}, {x: 1, y: 2}); // false
 static samePos(a, b): boolean;
 ```
 
-Defined in: [utils.ts:525](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L525)
+Defined in: [utils.ts:514](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L514)
 
 true if a and b has same size & position
 
@@ -3566,7 +3566,7 @@ true if a and b has same size & position
 static sanitizeMinMax(node): void;
 ```
 
-Defined in: [utils.ts:530](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L530)
+Defined in: [utils.ts:519](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L519)
 
 given a node, makes sure it's min/max are valid
 
@@ -3620,7 +3620,7 @@ static simulateMouseEvent(
    target?): void;
 ```
 
-Defined in: [utils.ts:736](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L736)
+Defined in: [utils.ts:725](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L725)
 
 copies the MouseEvent (or convert Touch) properties and sends it as another event to the given target
 
@@ -3675,7 +3675,7 @@ static swap(
    b): void;
 ```
 
-Defined in: [utils.ts:787](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L787)
+Defined in: [utils.ts:776](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L776)
 
 swap the given object 2 field values
 
@@ -3697,7 +3697,7 @@ swap the given object 2 field values
 static throttle(func, delay): () => void;
 ```
 
-Defined in: [utils.ts:579](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L579)
+Defined in: [utils.ts:568](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L568)
 
 delay calling the given function for given delay, preventing new calls from happening while waiting
 
@@ -3724,7 +3724,7 @@ delay calling the given function for given delay, preventing new calls from happ
 static toBool(v): boolean;
 ```
 
-Defined in: [utils.ts:386](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L386)
+Defined in: [utils.ts:375](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L375)
 
 Convert various value types to boolean.
 Handles strings like 'false', 'no', '0' as false.
@@ -3756,7 +3756,7 @@ Utils.toBool('1');     // true
 static toNumber(value): number;
 ```
 
-Defined in: [utils.ts:408](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L408)
+Defined in: [utils.ts:397](https://github.com/adumesny/gridstack.js/blob/master/src/utils.ts#L397)
 
 Convert a string value to a number, handling null and empty strings.
 
