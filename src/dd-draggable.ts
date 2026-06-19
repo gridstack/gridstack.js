@@ -167,8 +167,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal call when mouse goes down before a dragstart happens */
   protected _mouseDown(e: MouseEvent): boolean {
-    // if real brower event (trusted:true vs false for our simulated ones) and we didn't correctly clear the last touch event, clear things up
-    if (DDTouch.touchHandled && e.isTrusted) DDTouch.touchHandled = false;
+    // if real browser event (trusted:true vs false for our simulated ones) and prior touch/mouse state didn't clean up, reset it
+    if (e.isTrusted) {
+      if (DDTouch.touchHandled) DDTouch.touchHandled = false;
+      if (DDManager.mouseHandled) delete DDManager.mouseHandled; // stuck from an incomplete prior drag
+    }
 
     // don't let more than one widget handle mouseStart
     if (DDManager.mouseHandled) return;
