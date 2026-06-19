@@ -2384,6 +2384,30 @@ export class GridStack {
 
   /** @internal call when drag (and drop) needs to be cancelled (Esc key) */
   public cancelDrag() {
+    // if the widget was dragged from another grid into this one, restore it back
+    const dragEl = DDManager.dragElement?.el as GridItemHTMLElement;
+    if (dragEl?._gridstackNodeOrig) {
+      const origNode = dragEl._gridstackNodeOrig;
+      const origGrid = origNode.grid;
+      // remove the temp node from this (target) grid
+      const n = this._placeholder?.gridstackNode;
+      if (n) {
+        n._isAboutToRemove = true;
+        this.engine.removeNode(n);
+      }
+      this.engine.restoreInitial();
+      // restore the element back to its original grid
+      dragEl.gridstackNode = origNode;
+      delete dragEl._gridstackNodeOrig;
+      delete DDManager.dropElement;
+      // add the node back to the original grid and restore all positions
+      if (origGrid) {
+        origGrid.engine.addNode(origNode, false);
+        origGrid.engine.restoreInitial();
+      }
+      return;
+    }
+
     const n = this._placeholder?.gridstackNode;
     if (!n) return;
     if (n._isExternal) {
