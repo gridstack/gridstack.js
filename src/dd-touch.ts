@@ -17,7 +17,7 @@ export const isTouch: boolean = typeof window !== 'undefined' && typeof document
     // || !!window.TouchEvent // true on Windows 10 Chrome desktop so don't use this
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     || ((window as any).DocumentTouch && document instanceof (window as any).DocumentTouch)
-    || navigator.maxTouchPoints > 0
+    || (navigator.maxTouchPoints > 0 && window.matchMedia('(any-pointer: coarse)').matches)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     || (navigator as any).msMaxTouchPoints > 0
   );
