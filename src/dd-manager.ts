@@ -30,6 +30,13 @@ export class DDManager {
   public static mouseHandled: boolean;
 
   /**
+   * The timeStamp of the mousedown event that set mouseHandled.
+   * Used to distinguish stale state (from a prior incomplete drag) from
+   * a bubbled event of the current mousedown (which should not reset the flag).
+   */
+  public static mouseHandledTimeStamp: number;
+
+  /**
    * Reference to the element currently being dragged.
    * Used to track the active drag operation across the system.
    */
