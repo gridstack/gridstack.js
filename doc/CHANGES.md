@@ -144,6 +144,7 @@ Change log
 * NEW: vue wrapper: brand new wrapper follow same pattern as well
 * fix: [#3154](https://github.com/gridstack/gridstack.js/issues/3154) Esc key doesn't restore subgrid
 * fix: [#3231](https://github.com/gridstack/gridstack.js/issues/3231) drag broken in Firefox 147.0.4+ and Chrome 144+ due to `navigator.maxTouchPoints > 0` now returning true on desktop (macOS trackpad)
+* fix: [#3291](https://github.com/gridstack/gridstack.js/pull/3291) flicker nested grid demo when dragging between sub-grids
 
 ## 12.6.0 (2026-04-08)
 * feat: [#3250](https://github.com/gridstack/gridstack.js/pull/3250) full RTL support - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)

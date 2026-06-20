@@ -24,11 +24,17 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
   public accept: (el: HTMLElement) => boolean;
 
+  protected eventEl: HTMLElement;
+
   constructor(public el: HTMLElement, public option: DDDroppableOpt = {}) {
     super();
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
     this._mouseEnter = this._mouseEnter.bind(this);
     this._mouseLeave = this._mouseLeave.bind(this);
+    // For sub-grids the .grid-stack element is inset from the .grid-stack-item cell by the item
+    // margins (--gs-item-margin-*).  Register on the outer .grid-stack-item instead so adjacent
+    // cells are gapless — moving from one sub-grid to a sibling never passes through dead space.
+    this.eventEl = (this.el.closest('.grid-stack-item') as HTMLElement) || this.el;
     this.enable();
     this._setupAccept();
   }
@@ -46,11 +52,11 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     super.enable();
     this.el.classList.add('ui-droppable');
     this.el.classList.remove('ui-droppable-disabled');
-    this.el.addEventListener('mouseenter', this._mouseEnter);
-    this.el.addEventListener('mouseleave', this._mouseLeave);
+    this.eventEl.addEventListener('mouseenter', this._mouseEnter);
+    this.eventEl.addEventListener('mouseleave', this._mouseLeave);
     if (isTouch) {
-      this.el.addEventListener('pointerenter', pointerenter);
-      this.el.addEventListener('pointerleave', pointerleave);
+      this.eventEl.addEventListener('pointerenter', pointerenter);
+      this.eventEl.addEventListener('pointerleave', pointerleave);
     }
   }
 
@@ -59,11 +65,11 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     super.disable();
     this.el.classList.remove('ui-droppable');
     if (!forDestroy) this.el.classList.add('ui-droppable-disabled');
-    this.el.removeEventListener('mouseenter', this._mouseEnter);
-    this.el.removeEventListener('mouseleave', this._mouseLeave);
+    this.eventEl.removeEventListener('mouseenter', this._mouseEnter);
+    this.eventEl.removeEventListener('mouseleave', this._mouseLeave);
     if (isTouch) {
-      this.el.removeEventListener('pointerenter', pointerenter);
-      this.el.removeEventListener('pointerleave', pointerleave);
+      this.eventEl.removeEventListener('pointerenter', pointerenter);
+      this.eventEl.removeEventListener('pointerleave', pointerleave);
     }
   }
 
@@ -176,4 +182,3 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     };
   }
 }
-
