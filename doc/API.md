@@ -4316,7 +4316,7 @@ Note: Use enable()/disable() methods to change state as other operations need to
 new DDDroppable(el, option): DDDroppable;
 ```
 
-Defined in: [dd-droppable.ts:27](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L27)
+Defined in: [dd-droppable.ts:29](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L29)
 
 ###### Parameters
 
@@ -4341,7 +4341,7 @@ Defined in: [dd-droppable.ts:27](https://github.com/adumesny/gridstack.js/blob/m
 destroy(): void;
 ```
 
-Defined in: [dd-droppable.ts:70](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L70)
+Defined in: [dd-droppable.ts:76](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L76)
 
 Destroy this drag & drop implementation and clean up resources.
 Removes all event handlers and clears internal state.
@@ -4360,7 +4360,7 @@ Removes all event handlers and clears internal state.
 disable(forDestroy): void;
 ```
 
-Defined in: [dd-droppable.ts:57](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L57)
+Defined in: [dd-droppable.ts:63](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L63)
 
 Disable this drag & drop implementation.
 Subclasses should override to perform additional cleanup.
@@ -4385,7 +4385,7 @@ Subclasses should override to perform additional cleanup.
 drop(e): void;
 ```
 
-Defined in: [dd-droppable.ts:146](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L146)
+Defined in: [dd-droppable.ts:152](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L152)
 
 item is being dropped on us - called by the drag mouseup handler - this calls the client drop event
 
@@ -4405,7 +4405,7 @@ item is being dropped on us - called by the drag mouseup handler - this calls th
 enable(): void;
 ```
 
-Defined in: [dd-droppable.ts:44](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L44)
+Defined in: [dd-droppable.ts:50](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L50)
 
 Enable this drag & drop implementation.
 Subclasses should override to perform additional setup.
@@ -4424,7 +4424,7 @@ Subclasses should override to perform additional setup.
 off(event): void;
 ```
 
-Defined in: [dd-droppable.ts:40](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L40)
+Defined in: [dd-droppable.ts:46](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L46)
 
 Unregister an event callback for the specified event.
 
@@ -4448,7 +4448,7 @@ Unregister an event callback for the specified event.
 on(event, callback): void;
 ```
 
-Defined in: [dd-droppable.ts:36](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L36)
+Defined in: [dd-droppable.ts:42](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L42)
 
 Register an event callback for the specified event.
 
@@ -4500,7 +4500,7 @@ Result from the callback function, if any
 updateOption(opts): DDDroppable;
 ```
 
-Defined in: [dd-droppable.ts:77](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L77)
+Defined in: [dd-droppable.ts:83](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L83)
 
 Method to update the options and return the DD implementation
 
@@ -4523,8 +4523,9 @@ Method to update the options and return the DD implementation
 | Property | Modifier | Type | Default value | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
 | <a id="accept-1"></a> `accept` | `public` | (`el`) => `boolean` | `undefined` | - | [dd-droppable.ts:25](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L25) |
-| <a id="el-1"></a> `el` | `public` | `HTMLElement` | `undefined` | The HTML element being extended | [dd-droppable.ts:27](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L27) |
-| <a id="option-1"></a> `option` | `public` | [`DDDroppableOpt`](#dddroppableopt) | `{}` | The drag & drop options/configuration | [dd-droppable.ts:27](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L27) |
+| <a id="el-1"></a> `el` | `public` | `HTMLElement` | `undefined` | The HTML element being extended | [dd-droppable.ts:29](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L29) |
+| <a id="eventel"></a> `eventEl` | `protected` | `HTMLElement` | `undefined` | - | [dd-droppable.ts:27](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L27) |
+| <a id="option-1"></a> `option` | `public` | [`DDDroppableOpt`](#dddroppableopt) | `{}` | The drag & drop options/configuration | [dd-droppable.ts:29](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L29) |
 
 ***
 
