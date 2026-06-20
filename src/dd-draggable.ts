@@ -167,10 +167,13 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal call when mouse goes down before a dragstart happens */
   protected _mouseDown(e: MouseEvent): boolean {
-    // if real browser event (trusted:true vs false for our simulated ones) and prior touch/mouse state didn't clean up, reset it
+    // if real browser event (trusted:true vs false for our simulated ones) and prior touch/mouse state didn't clean up, reset it.
+    // Only reset mouseHandled when the timeStamp differs from the current event — a different timeStamp means this is a new user
+    // interaction where a prior drag didn't clean up. The same timeStamp means this _mouseDown is a bubble of the very same click
+    // that a deeper nested item already handled, so we must NOT reset the flag (that would let the parent steal the drag).
     if (e.isTrusted) {
       if (DDTouch.touchHandled) DDTouch.touchHandled = false;
-      if (DDManager.mouseHandled) delete DDManager.mouseHandled; // stuck from an incomplete prior drag
+      if (DDManager.mouseHandled && e.timeStamp !== DDManager.mouseHandledTimeStamp) delete DDManager.mouseHandled; // stale from incomplete prior drag
     }
 
     // don't let more than one widget handle mouseStart
@@ -203,6 +206,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (document.activeElement) (document.activeElement as HTMLElement).blur();
 
     DDManager.mouseHandled = true;
+    DDManager.mouseHandledTimeStamp = e.timeStamp;
     return true;
   }
 
@@ -302,6 +306,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     delete DDManager.dragElement;
     delete DDManager.dropElement;
     delete DDManager.mouseHandled;
+    delete DDManager.mouseHandledTimeStamp;
     e.preventDefault();
   }
 
