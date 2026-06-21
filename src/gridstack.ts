@@ -1510,9 +1510,13 @@ export class GridStack {
     if (o.row !== undefined) {
       opts.minRow = opts.maxRow = this.engine.maxRow = opts.row = o.row;
       this._updateContainerHeight();
+      if (this.engine.getRow() > o.row) this.compact(); // relayout widgets that exceed new row limit
     } else {
       if (o.minRow !== undefined) { opts.minRow = o.minRow; this._updateContainerHeight(); }
-      if (o.maxRow !== undefined) opts.maxRow = this.engine.maxRow = o.maxRow;
+      if (o.maxRow !== undefined) {
+        opts.maxRow = this.engine.maxRow = o.maxRow;
+        if (this.engine.getRow() > o.maxRow) this.compact(); // relayout widgets that exceed new row limit
+      }
     }
     if (o.lazyLoad !== undefined) opts.lazyLoad = o.lazyLoad;
     if (o.children?.length) this.load(o.children);
