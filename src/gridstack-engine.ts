@@ -89,7 +89,9 @@ export class GridStackEngine {
       this._prevFloat = this._float;
       this._float = true; // let things go anywhere for now... will restore and possibly reposition later
       this.cleanNodes();
-      this.saveInitial(); // since begin update (which is called multiple times) won't do this
+      // skip saveInitial() if a drag/resize is in progress - it would overwrite _orig with mid-drag
+      // positions and corrupt change detection, causing onChange not to fire (see #2823)
+      if (!this.nodes.some(n => n._updating)) this.saveInitial();
     } else {
       this._float = this._prevFloat;
       delete this._prevFloat;

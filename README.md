@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
 [![downloads](https://img.shields.io/npm/dm/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
-Mobile-friendly modern Typescript library for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Has multiple bindings and works great with [Angular](https://angular.io/) (included), [React](https://reactjs.org/) (included), [Vue](https://vuejs.org/) (included), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others (see [frameworks](#specific-frameworks) section).
+Mobile-friendly modern Typescript library for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Has multiple bindings and works great with [Angular](https://angular.dev/) (included), [React](https://reactjs.org/) (included), [Vue](https://vuejs.org/) (included), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others (see [frameworks](#specific-frameworks) section).
 
 Inspired by no-longer maintained gridster, built with love.
 
