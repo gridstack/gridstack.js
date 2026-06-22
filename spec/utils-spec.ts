@@ -576,8 +576,8 @@ describe('gridstack utils', () => {
       expect(Utils.same({ a: 1 }, { a: 1, b: 2 })).toBe(false);
     });
 
-    it('should return false for different types', () => {
-      expect(Utils.same(5, '5')).toBe(true); // same uses == comparison for primitives
+    it('should use coercive equality for primitives (e.g. number/string attribute values)', () => {
+      expect(Utils.same(5, '5')).toBe(true); // intentional: gs-* attrs come as strings
       expect(Utils.same({}, [])).toBe(true); // both are objects, same number of keys (0)
     });
   });

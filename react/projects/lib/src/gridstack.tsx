@@ -217,7 +217,7 @@ export const GridStackComponent = forwardRef<GridStackHandle, GridStackProps>(
       prevOptsSig.current = optsSig;
       setLayoutVersion((v) => v + 1);
       setGridSession((s) => s + 1);
-      setIsEmpty(!gridRef.current.engine.nodes.length);
+      setIsEmpty(!gridRef.current?.engine.nodes.length);
 
       return () => {
         delete el._gridComp;
