@@ -115,7 +115,8 @@ export class GridStackEngine {
     if (!collide) return false;
 
     // swap check: if we're actively moving in gravity mode, see if we collide with an object the same size
-    if (node._moving && !opt.nested && !this.float) {
+    // never swap for external items dragged from outside the grid - only push
+    if (node._moving && !node._isExternal && !opt.nested && !this.float) {
       if (this.swap(node, collide)) return true;
     }
 
@@ -870,8 +871,8 @@ export class GridStackEngine {
     // check if we're covering 50% collision and could move, while still being under maxRow or at least not making it worse
     // (case where widget was somehow added past our max #2449)
     const canMove = clone.moveNode(clonedNode, o) && clone.getRow() <= Math.max(this.getRow(), this.maxRow);
-    // else check if we can force a swap (float=true, or different shapes) on non-resize
-    if (!canMove && !o.resizing && o.collide) {
+    // else check if we can force a swap (float=true, or different shapes) on non-resize - but not for external items
+    if (!canMove && !o.resizing && o.collide && !node._isExternal) {
       const collide = o.collide.el.gridstackNode; // find the source node the clone collided with at 50%
       if (this.swap(node, collide)) { // swaps and mark dirty
         this._notify();
