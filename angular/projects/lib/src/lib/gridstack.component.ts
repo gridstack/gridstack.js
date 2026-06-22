@@ -389,10 +389,12 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, n:
       if (type) {
         // shared code to create our selector component
         const createComp = () => {
-          const childWidget = gridItem.container?.createComponent(type)?.instance as BaseWidget;
+          const compRef = gridItem.container?.createComponent(type);
+          const childWidget = compRef?.instance as BaseWidget;
           // if proper BaseWidget subclass, save it and load additional data
           if (childWidget && typeof childWidget.serialize === 'function' && typeof childWidget.deserialize === 'function') {
             gridItem.childWidget = childWidget;
+            childWidget._compRef = compRef as ComponentRef<BaseWidget>;
             childWidget.deserialize(n);
           }
         }

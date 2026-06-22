@@ -151,6 +151,7 @@ Change log
 * fix: [#2948](https://github.com/gridstack/gridstack.js/issues/2948) dynamically created nested grid disappeared when dragging out
 * fix: [#3269](https://github.com/gridstack/gridstack.js/pull/3269) cleanup old rtl residue - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)
 * fix: [#3270](https://github.com/gridstack/gridstack.js/pull/3270) dragging item from outside doesn't allow swap (weird change is layout especially when you move out as it doesn't restore)
+* fix: [#2950](https://github.com/gridstack/gridstack.js/issues/2950) Angular: now support signal inputs (ng14.1+) like `name = input<string>()`
 
 ## 12.6.0 (2026-04-08)
 * feat: [#3250](https://github.com/gridstack/gridstack.js/pull/3250) full RTL support - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)

@@ -29,7 +29,7 @@
  * ```
  */
 
-import { Injectable } from '@angular/core';
+import { ComponentRef, Injectable } from '@angular/core';
 import { NgCompInputs, NgGridStackWidget } from './types';
 
 /**
@@ -43,6 +43,9 @@ export abstract class BaseWidget {
    * Populated automatically when the widget is loaded or saved.
    */
   public widgetItem?: NgGridStackWidget;
+
+  /** @internal set by GridstackComponent to enable signal-based input support via setInput() */
+  public _compRef?: ComponentRef<BaseWidget>;
 
   /**
    * Override this method to return serializable data for this widget.
@@ -88,8 +91,14 @@ export abstract class BaseWidget {
   public deserialize(w: NgGridStackWidget)  {
     // save full description for meta data
     this.widgetItem = w;
-    if (!w) return;
+    if (!w?.input) return;
 
-    if (w.input)  Object.assign(this, w.input);
+    if (this._compRef) {
+      // Use setInput() to correctly handle both @Input() decorator and signal-based inputs (Angular 17+).
+      // Direct Object.assign overwrites signal functions with plain values, breaking signal inputs.
+      Object.keys(w.input).forEach(key => this._compRef!.setInput(key, (w.input as any)[key]));
+    } else {
+      Object.assign(this, w.input);
+    }
   }
 }
