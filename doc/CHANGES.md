@@ -140,7 +140,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 12.6.0-dev (TBD)
-* NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, memory leak, empty content, etc...
+* NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, fix memory leak, empty content, etc...
 * NEW: vue wrapper: brand new wrapper follow same pattern as well
 * feat: [#662](https://github.com/gridstack/gridstack.js/issues/662) added grid-lines.html demo (just CSS)
 * fix: [#3154](https://github.com/gridstack/gridstack.js/issues/3154) Esc key doesn't restore subgrid
@@ -148,6 +148,7 @@ Change log
 * fix: [#3291](https://github.com/gridstack/gridstack.js/pull/3291) flicker nested grid demo when dragging between sub-grids
 * fix: [#3085](https://github.com/gridstack/gridstack.js/issues/3085) Changing rows after init relays out if smaller
 * fix: [#2823](https://github.com/gridstack/gridstack.js/issues/2823) Scrollbar appears prevents onChange being called
+* fix: [#2948](https://github.com/gridstack/gridstack.js/issues/2948) dynamically created nested grid disappeared when dragging out
 
 ## 12.6.0 (2026-04-08)
 * feat: [#3250](https://github.com/gridstack/gridstack.js/pull/3250) full RTL support - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)
