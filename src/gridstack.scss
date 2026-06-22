@@ -9,13 +9,6 @@
    position: relative;
  }
 
- .grid-stack-rtl {
-   direction: ltr;
-   > .grid-stack-item {
-     direction: rtl;
-   }
- }
-
  .grid-stack-placeholder > .placeholder-content {
    background-color: rgba(0,0,0,0.1);
    margin: 0;
