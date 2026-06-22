@@ -28,7 +28,7 @@ new BaseWidget(): BaseWidget;
 serialize(): undefined | NgCompInputs;
 ```
 
-Defined in: [angular/projects/lib/src/lib/base-widget.ts:66](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L66)
+Defined in: [angular/projects/lib/src/lib/base-widget.ts:69](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L69)
 
 Override this method to return serializable data for this widget.
 
@@ -59,7 +59,7 @@ serialize() {
 deserialize(w): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/base-widget.ts:88](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L88)
+Defined in: [angular/projects/lib/src/lib/base-widget.ts:91](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L91)
 
 Override this method to handle widget restoration from saved data.
 

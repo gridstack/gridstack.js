@@ -2860,7 +2860,7 @@ GridHTMLElement.replaceChildren
 
 | Property | Modifier | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="gridstack"></a> `gridstack?` | `public` | `GridStack` | - | `GridHTMLElement.gridstack` | dist/gridstack.d.ts:25 |
+| <a id="gridstack"></a> `gridstack?` | `public` | `GridStack` | - | `GridHTMLElement.gridstack` | dist/gridstack.d.ts:24 |
 | <a id="_gridcomp"></a> `_gridComp?` | `public` | [`GridstackComponent`](#gridstackcomponent) | Back-reference to the Angular GridStack component | - | [angular/projects/lib/src/lib/gridstack.component.ts:41](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L41) |
 | <a id="ariaatomic"></a> `ariaAtomic` | `public` | `null` \| `string` | - | `GridHTMLElement.ariaAtomic` | node\_modules/typescript/lib/lib.dom.d.ts:2020 |
 | <a id="ariaautocomplete"></a> `ariaAutoComplete` | `public` | `null` \| `string` | - | `GridHTMLElement.ariaAutoComplete` | node\_modules/typescript/lib/lib.dom.d.ts:2021 |
@@ -3121,7 +3121,7 @@ can be used when a new item needs to be created, which we do as a Angular compon
 function gsSaveAdditionalNgInfo(n, w): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:447](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L447)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:449](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L449)
 
 called for each item in the grid - check if additional information needs to be saved.
 Note: since this is options minus gridstack protected members using Utils.removeInternalForSave(),
@@ -3147,7 +3147,7 @@ using BaseWidget.serialize()
 function gsUpdateNgComponents(n): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:466](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L466)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:468](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L468)
 
 track when widgeta re updated (rather than created) to make sure we de-serialize them as well
 
