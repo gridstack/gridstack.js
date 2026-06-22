@@ -606,6 +606,11 @@ export class GridStack {
       // migrate any children over and offsetting by our location
       n.x += this.parentGridNode.x;
       n.y += this.parentGridNode.y;
+      // n.el is still inside the (now-detached) subgrid DOM and has el.gridstackNode set,
+      // so makeWidget would bail out without these steps.
+      this._removeDD(n.el);      // destroy subgrid D&D and clear n._initDD so pGrid re-registers it
+      n.el.remove();             // detach from subgrid DOM so makeWidget can append to pGrid
+      delete n.el.gridstackNode; // clear stale ref so makeWidget won't return early
       pGrid.makeWidget(n.el, n);
     });
     pGrid.batchUpdate(false);
@@ -614,7 +619,17 @@ export class GridStack {
 
     // create an artificial event for the original grid now that this one is gone (got a leave, but won't get enter)
     if (nodeThatRemoved) {
-      window.setTimeout(() => Utils.simulateMouseEvent(nodeThatRemoved._event, 'mouseenter', pGrid.el), 0);
+      // _leave() already restored el.gridstackNode to the original pGrid node (via _gridstackNodeOrig), but that
+      // original node has grid===pGrid and no _temporaryRemoved, so pGrid's dropover would silently skip it.
+      // Mark it so the simulated mouseenter is actually processed and the item gets a placeholder in pGrid.
+      const origNode = nodeThatRemoved.el?.gridstackNode as GridStackNode;
+      if (origNode && origNode !== nodeThatRemoved) origNode._temporaryRemoved = true;
+      // nodeThatRemoved._event was cleared by cleanupNode() when the item entered the subgrid, so use the
+      // always-current lastDrag from the active DDDraggable instead.
+      window.setTimeout(() => {
+        const dragEvent = DDManager.dragElement?.lastDrag || nodeThatRemoved._event;
+        if (dragEvent) Utils.simulateMouseEvent(dragEvent, 'mouseenter', pGrid.el);
+      }, 0);
     }
   }
 
