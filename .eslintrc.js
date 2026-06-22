@@ -16,10 +16,10 @@ module.exports = {
   },
   rules: {
     'indent': ['error', 2],
-    'max-len': ['error', 180],
+    'max-len': 0,
     'no-trailing-spaces': 1,
     'prefer-const': 0,
     '@typescript-eslint/ban-ts-comment': 0,
-    'max-len': 0
+    '@typescript-eslint/no-explicit-any': 'warn',
   }
 };

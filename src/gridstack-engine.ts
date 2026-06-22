@@ -230,7 +230,7 @@ export class GridStackEngine {
     let overMax = 0.5; // need >50%
     for (let n of collides) {
       if (n.locked || !n._rect) {
-        break;
+        continue;
       }
       const r2 = n._rect; // overlapping target
       let yOver = Number.MAX_VALUE, xOver = Number.MAX_VALUE;
@@ -255,23 +255,6 @@ export class GridStackEngine {
     o.collide = collide; // save it so we don't have to find it again
     return collide;
   }
-
-  /** does a pixel coverage returning the node that has the most coverage by area */
-  /*
-  protected collideCoverage(r: GridStackPosition, collides: GridStackNode[]): {collide: GridStackNode, over: number} {
-    const collide: GridStackNode;
-    const overMax = 0;
-    collides.forEach(n => {
-      if (n.locked || !n._rect) return;
-      const over = Utils.areaIntercept(r, n._rect);
-      if (over > overMax) {
-        overMax = over;
-        collide = n;
-      }
-    });
-    return {collide, over: overMax};
-  }
-  */
 
   /**
    * Cache the pixel rectangles for all nodes used for collision detection during drag operations.

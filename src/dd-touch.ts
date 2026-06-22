@@ -22,23 +22,11 @@ export const isTouch: boolean = typeof window !== 'undefined' && typeof document
     || (navigator as any).msMaxTouchPoints > 0
   );
 
-// interface TouchCoord {x: number, y: number};
-
 export class DDTouch {
   /** set to true while we are handling touch dragging, to prevent accepting browser real mouse events (trusted:true) vs our simulated ones (trusted:false) */
   public static touchHandled: boolean;
   public static pointerLeaveTimeout: number;
 }
-
-/**
-* Get the x,y position of a touch event
-*/
-// function getTouchCoords(e: TouchEvent): TouchCoord {
-//   return {
-//     x: e.changedTouches[0].pageX,
-//     y: e.changedTouches[0].pageY
-//   };
-// }
 
 /**
  * Simulate a mouse event based on a corresponding touch event
@@ -81,9 +69,6 @@ export function touchstart(e: TouchEvent): void {
   if (DDTouch.touchHandled) return;
   DDTouch.touchHandled = true;
 
-  // Simulate the mouse events
-  // simulateMouseEvent(e, 'mouseover');
-  // simulateMouseEvent(e, 'mousemove');
   simulateMouseEvent(e, 'mousedown');
 }
 
@@ -115,9 +100,7 @@ export function touchend(e: TouchEvent): void {
 
   const wasDragging = !!DDManager.dragElement;
 
-  // Simulate the mouseup event
   simulateMouseEvent(e, 'mouseup');
-  // simulateMouseEvent(event, 'mouseout');
 
   // If the touch interaction did not move, it should trigger a click
   if (!wasDragging) {

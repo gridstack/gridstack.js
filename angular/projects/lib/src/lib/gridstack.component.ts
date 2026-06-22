@@ -267,7 +267,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   public ngOnInit(): void {
     // init ourself before any template children are created since we track them below anyway - no need to double create+update widgets
     this.loaded = !!this.options?.children?.length;
-    this._grid = GridStack.init(this._options, this.el);
+    this._grid = GridStack.init(this._options, this.el)!;
     delete this._options; // GS has it now
 
     this.checkEmpty();

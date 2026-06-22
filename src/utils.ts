@@ -18,78 +18,6 @@ export interface DragTransform {
   yOffset: number;
 }
 
-// /**
-//  * Checks for obsolete method names and provides deprecation warnings.
-//  * Creates a wrapper function that logs a deprecation warning when called.
-//  *
-//  * @param self the object context to apply the function to
-//  * @param f the new function to call
-//  * @param oldName the deprecated method name
-//  * @param newName the new method name to use instead
-//  * @param rev the version when the deprecation was introduced
-//  * @returns a wrapper function that warns about deprecation
-//  */
-// eslint-disable-next-line
-// export function obsolete(self, f, oldName: string, newName: string, rev: string): (...args: any[]) => any {
-//   const wrapper = (...args) => {
-//     console.warn('gridstack.js: Function `' + oldName + '` is deprecated in ' + rev + ' and has been replaced ' +
-//     'with `' + newName + '`. It will be **removed** in a future release');
-//     return f.apply(self, args);
-//   }
-//   wrapper.prototype = f.prototype;
-//   return wrapper;
-// }
-
-// /**
-//  * Checks for obsolete grid options and migrates them to new names.
-//  * Automatically copies old option values to new option names and shows deprecation warnings.
-//  *
-//  * @param opts the options object to check and migrate
-//  * @param oldName the deprecated option name
-//  * @param newName the new option name to use instead
-//  * @param rev the version when the deprecation was introduced
-//  */
-// export function obsoleteOpts(opts: GridStackOptions, oldName: string, newName: string, rev: string): void {
-//   if (opts[oldName] !== undefined) {
-//     opts[newName] = opts[oldName];
-//     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + ' and has been replaced with `' +
-//       newName + '`. It will be **removed** in a future release');
-//   }
-// }
-
-// /**
-//  * Checks for obsolete grid options that have been completely removed.
-//  * Shows deprecation warnings for options that are no longer supported.
-//  *
-//  * @param opts the options object to check
-//  * @param oldName the removed option name
-//  * @param rev the version when the option was removed
-//  * @param info additional information about the removal
-//  */
-// export function obsoleteOptsDel(opts: GridStackOptions, oldName: string, rev: string, info: string): void {
-//   if (opts[oldName] !== undefined) {
-//     console.warn('gridstack.js: Option `' + oldName + '` is deprecated in ' + rev + info);
-//   }
-// }
-
-// /**
-//  * Checks for obsolete HTML element attributes and migrates them.
-//  * Automatically copies old attribute values to new attribute names and shows deprecation warnings.
-//  *
-//  * @param el the HTML element to check and migrate
-//  * @param oldName the deprecated attribute name
-//  * @param newName the new attribute name to use instead
-//  * @param rev the version when the deprecation was introduced
-//  */
-// export function obsoleteAttr(el: HTMLElement, oldName: string, newName: string, rev: string): void {
-//   const oldAttr = el.getAttribute(oldName);
-//   if (oldAttr !== null) {
-//     el.setAttribute(newName, oldAttr);
-//     console.warn('gridstack.js: attribute `' + oldName + '`=' + oldAttr + ' is deprecated on this object in ' + rev + ' and has been replaced with `' +
-//       newName + '`. It will be **removed** in a future release');
-//   }
-// }
-
 /**
  * Collection of utility methods used throughout GridStack.
  * These are general-purpose helper functions for DOM manipulation,
@@ -153,7 +81,7 @@ export class Utils {
    * const element = Utils.getElement('#myWidget');
    * const first = Utils.getElement('.grid-item');
    */
-  static getElement(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement {
+  static getElement(els: GridStackElement, root: HTMLElement | Document = document): HTMLElement | null {
     if (typeof els === 'string') {
       const doc = ('getElementById' in root) ? root as Document : undefined;
       if (!els.length) return null;
@@ -190,7 +118,7 @@ export class Utils {
    * }
    */
   static lazyLoad(n: GridStackNode): boolean {
-    return n.lazyLoad || n.grid?.opts?.lazyLoad && n.lazyLoad !== false;
+    return !!(n.lazyLoad || (n.grid?.opts?.lazyLoad && n.lazyLoad !== false));
   }
 
   /**
@@ -311,7 +239,7 @@ export class Utils {
    * const reverse = Utils.sort(nodes, -1); // Sort bottom-right to top-left
    */
   static sort(nodes: GridStackNode[], dir: 1 | -1 = 1): GridStackNode[] {
-    const und = 10000;
+    const und = Number.MAX_SAFE_INTEGER;
     return nodes.sort((a, b) => {
       const diffY = dir * ((a.y ?? und) - (b.y ?? und));
       if (diffY === 0) return dir * ((a.x ?? und) - (b.x ?? und));
@@ -394,7 +322,7 @@ export class Utils {
    * Utils.toNumber('');    // undefined
    * Utils.toNumber(null);  // undefined
    */
-  static toNumber(value: null | string): number {
+  static toNumber(value: null | string): number | undefined {
     return (value === null || value.length === 0) ? undefined : Number(value);
   }
 
@@ -447,7 +375,7 @@ export class Utils {
 
     sources.forEach(source => {
       for (const key in source) {
-        if (!source.hasOwnProperty(key)) return;
+        if (!Object.prototype.hasOwnProperty.call(source, key)) return;
         if (target[key] === null || target[key] === undefined) {
           target[key] = source[key];
         } else if (typeof source[key] === 'object' && typeof target[key] === 'object') {
@@ -473,7 +401,8 @@ export class Utils {
    * Utils.same({x: 1}, {x: 1, y: 2}); // false
    */
   static same(a: unknown, b: unknown): boolean {
-    if (typeof a !== 'object')  return a == b;
+    // eslint-disable-next-line eqeqeq
+    if (typeof a !== 'object')  return a == b; // intentional: coerces string/number pairs (e.g. gs-* attribute values)
     if (typeof a !== typeof b) return false;
     // else we have object, check just 1 level deep for being same things...
     if (Object.keys(a).length !== Object.keys(b).length) return false;
@@ -555,15 +484,6 @@ export class Utils {
     if (n.h === 1 || n.h === n.minH) delete n.h;
   }
 
-  /** return the closest parent (or itself) matching the given class */
-  // static closestUpByClass(el: HTMLElement, name: string): HTMLElement {
-  //   while (el) {
-  //     if (el.classList.contains(name)) return el;
-  //     el = el.parentElement
-  //   }
-  //   return null;
-  // }
-
   /** delay calling the given function for given delay, preventing new calls from happening while waiting */
   static throttle(func: () => void, delay: number): () => void {
     let isWaiting = false;
@@ -638,7 +558,6 @@ export class Utils {
     if (obj === null || obj === undefined || typeof(obj) !== 'object') {
       return obj;
     }
-    // return Object.assign({}, obj);
     if (obj instanceof Array) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return [...obj] as any;
@@ -653,11 +572,10 @@ export class Utils {
   static cloneDeep<T>(obj: T): T {
     // list of fields we will skip during cloneDeep (nested objects, other internal)
     const skipFields = ['parentGrid', 'el', 'grid', 'subGrid', 'engine'];
-    // return JSON.parse(JSON.stringify(obj)); // doesn't work with date format ?
     const ret = Utils.clone(obj);
     for (const key in ret) {
       // NOTE: we don't support function/circular dependencies so skip those properties for now...
-      if (ret.hasOwnProperty(key) && typeof(ret[key]) === 'object' && key.substring(0, 2) !== '__' && !skipFields.find(k => k === key)) {
+      if (Object.prototype.hasOwnProperty.call(ret, key) && typeof(ret[key]) === 'object' && key.substring(0, 2) !== '__' && !skipFields.find(k => k === key)) {
         ret[key] = Utils.cloneDeep(obj[key]);
       }
     }
@@ -683,16 +601,10 @@ export class Utils {
     }
   }
 
-  // public static setPositionRelative(el: HTMLElement): void {
-  //   if (!(/^(?:r|a|f)/).test(getComputedStyle(el).position)) {
-  //     el.style.position = "relative";
-  //   }
-  // }
-
   public static addElStyles(el: HTMLElement, styles: { [prop: string]: string | string[] }): void {
     if (styles instanceof Object) {
       for (const s in styles) {
-        if (styles.hasOwnProperty(s)) {
+        if (Object.prototype.hasOwnProperty.call(styles, s)) {
           if (Array.isArray(styles[s])) {
             // support fallback value
             (styles[s] as string[]).forEach(val => {
@@ -777,19 +689,6 @@ export class Utils {
     if (!o) return;
     const tmp = o[a]; o[a] = o[b]; o[b] = tmp;
   }
-
-  /** returns true if event is inside the given element rectangle */
-  // Note: Safari Mac has null event.relatedTarget which causes #1684 so check if DragEvent is inside the coordinates instead
-  //    Utils.el.contains(event.relatedTarget as HTMLElement)
-  // public static inside(e: MouseEvent, el: HTMLElement): boolean {
-  //   // srcElement, toElement, target: all set to placeholder when leaving simple grid, so we can't use that (Chrome)
-  //   const target: HTMLElement = e.relatedTarget || (e as any).fromElement;
-  //   if (!target) {
-  //     const { bottom, left, right, top } = el.getBoundingClientRect();
-  //     return (e.x < right && e.x > left && e.y < bottom && e.y > top);
-  //   }
-  //   return el.contains(target);
-  // }
 
   /** true if the item can be rotated (checking for prop, not space available) */
   public static canBeRotated(n: GridStackNode): boolean {

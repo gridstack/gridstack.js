@@ -89,7 +89,7 @@ export class GridStack {
    * Note: the HTMLElement (of type GridHTMLElement) will store a `gridstack: GridStack` value that can be retrieve later
    * const grid = document.querySelector('.grid-stack').gridstack;
    */
-  public static init(options: GridStackOptions = {}, elOrString: GridStackElement = '.grid-stack'): GridStack {
+  public static init(options: GridStackOptions = {}, elOrString: GridStackElement = '.grid-stack'): GridStack | null {
     if (typeof document === 'undefined') return null; // temp workaround SSR
     const el = GridStack.getGridElement(elOrString);
     if (!el) {
@@ -139,7 +139,7 @@ export class GridStack {
    * @param parent HTML element parent to the grid
    * @param opt grids options used to initialize the grid, and list of children
    */
-  public static addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack {
+  public static addGrid(parent: HTMLElement, opt: GridStackOptions = {}): GridStack | null {
     if (!parent) return null;
 
     let el = parent as GridHTMLElement;
@@ -2130,11 +2130,11 @@ export class GridStack {
   }
 
   /** @internal convert a potential selector into actual element */
-  public static getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement { return Utils.getElement(els) }
+  public static getElement(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement | null { return Utils.getElement(els) }
   /** @internal */
   public static getElements(els: GridStackElement = '.grid-stack-item'): GridItemHTMLElement[] { return Utils.getElements(els) }
   /** @internal */
-  public static getGridElement(els: GridStackElement): GridHTMLElement { return GridStack.getElement(els) }
+  public static getGridElement(els: GridStackElement): GridHTMLElement | null { return GridStack.getElement(els) }
   /** @internal */
   public static getGridElements(els: string): GridHTMLElement[] { return Utils.getElements(els) }
 
