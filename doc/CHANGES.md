@@ -142,6 +142,7 @@ Change log
 ## 12.6.0-dev (TBD)
 * NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, fix memory leak, empty content, etc...
 * NEW: vue wrapper: brand new wrapper follow same pattern as well
+* break: [#3302](https://github.com/gridstack/gridstack.js/pull/3303) Angular wrapper using component+props (instead of selector+input)
 * feat: [#662](https://github.com/gridstack/gridstack.js/issues/662) added grid-lines.html demo (just CSS)
 * fix: [#3154](https://github.com/gridstack/gridstack.js/issues/3154) Esc key doesn't restore subgrid
 * fix: [#3231](https://github.com/gridstack/gridstack.js/issues/3231) drag broken in Firefox 147.0.4+ and Chrome 144+ due to `navigator.maxTouchPoints > 0` now returning true on desktop (macOS trackpad)

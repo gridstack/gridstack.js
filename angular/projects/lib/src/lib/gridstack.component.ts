@@ -42,10 +42,11 @@ export interface GridCompHTMLElement extends GridHTMLElement {
 }
 
 /**
- * Mapping of selector strings to Angular component types.
- * Used for dynamic component creation based on widget selectors.
+ * Mapping of component keys to Angular component types.
+ * Keys are the `component` field values stored in widget JSON
+ * (by default the component's `@Component.selector` string).
  */
-export type SelectorToType = {[key: string]: Type<object>};
+export type ComponentMap = {[key: string]: Type<object>};
 
 /**
  * Angular component wrapper for GridStack.
@@ -207,38 +208,32 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
   public ref: ComponentRef<GridstackComponent> | undefined;
 
   /**
-   * Mapping of component selectors to their types for dynamic creation.
-   *
-   * This enables dynamic component instantiation from string selectors.
-   * Angular doesn't provide public access to this mapping, so we maintain our own.
-   *
-   * @example
-   * ```typescript
-   * GridstackComponent.addComponentToSelectorType([MyWidgetComponent]);
-   * ```
+   * Map of component keys to Angular component types used for dynamic creation.
+   * Keys default to the component's `@Component.selector` string when registered
+   * via `registerComponents()`.
    */
-  public static selectorToType: SelectorToType = {};
+  public static componentMap: ComponentMap = {};
+
   /**
-   * Register a list of Angular components for dynamic creation.
+   * Register Angular components for dynamic creation.
+   *
+   * Each component is keyed by its `@Component.selector` string, which becomes
+   * the `component` field value in widget JSON (same role as `component` in React/Vue).
    *
    * @param typeList Array of component types to register
    *
    * @example
    * ```typescript
-   * GridstackComponent.addComponentToSelectorType([
-   *   MyWidgetComponent,
-   *   AnotherWidgetComponent
-   * ]);
+   * GridstackComponent.registerComponents([MyWidgetComponent, AnotherWidgetComponent]);
    * ```
    */
-  public static addComponentToSelectorType(typeList: Array<Type<object>>) {
-    typeList.forEach(type => GridstackComponent.selectorToType[ GridstackComponent.getSelector(type) ] = type);
+  public static registerComponents(typeList: Array<Type<object>>) {
+    typeList.forEach(type => GridstackComponent.componentMap[GridstackComponent.getSelector(type)] = type);
   }
+
   /**
-   * Extract the selector string from an Angular component type.
-   *
-   * @param type The component type to get selector from
-   * @returns The component's selector string
+   * Extract the Angular selector string from a component type.
+   * This is used as the default `component` key in widget JSON.
    */
   public static getSelector(type: Type<object>): string {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -384,8 +379,8 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, n:
       gridItem.ref = gridItemRef
 
       // define what type of component to create as child, OR you can do it GridstackItemComponent template, but this is more generic
-      const selector = n.selector;
-      const type = selector ? GridstackComponent.selectorToType[selector] : undefined;
+      const component = n.component;
+      const type = component ? GridstackComponent.componentMap[component] : undefined;
       if (type) {
         // shared code to create our selector component
         const createComp = () => {
@@ -449,9 +444,9 @@ export function gsCreateNgComponents(host: GridCompHTMLElement | HTMLElement, n:
 export function gsSaveAdditionalNgInfo(n: NgGridStackNode, w: NgGridStackWidget) {
   const gridItem = (n.el as GridItemCompHTMLElement)?._gridItemComp;
   if (gridItem) {
-    const input = gridItem.childWidget?.serialize();
-    if (input) {
-      w.input = input;
+    const props = gridItem.childWidget?.serialize();
+    if (props) {
+      w.props = props;
     }
     return;
   }
@@ -468,5 +463,5 @@ export function gsSaveAdditionalNgInfo(n: NgGridStackNode, w: NgGridStackWidget)
 export function gsUpdateNgComponents(n: NgGridStackNode) {
   const w: NgGridStackWidget = n;
   const gridItem = (n.el as GridItemCompHTMLElement)?._gridItemComp;
-  if (gridItem?.childWidget && w.input) gridItem.childWidget.deserialize(w);
+  if (gridItem?.childWidget && w.props) gridItem.childWidget.deserialize(w);
 }

@@ -1,6 +1,6 @@
 /**
  * Vue wrapper type extensions — same identifiers as core `gridstack`, extended when imported from `gridstack/dist/vue`.
- * React parity: `component`/`props` ⇄ Angular `selector`/`input`.
+ * All three framework wrappers (Vue, React, Angular) use the same `component`/`props` field names for widget JSON.
  */
 import type {
   GridStackOptions as CoreGridStackOptions,

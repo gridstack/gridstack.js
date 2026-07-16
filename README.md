@@ -49,6 +49,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Migrating to v10](#migrating-to-v10)
   - [Migrating to v11](#migrating-to-v11)
   - [Migrating to v12](#migrating-to-v12)
+  - [Migrating to v13](#migrating-to-v13)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [Usage Trend](#usage-trend)
@@ -508,6 +509,28 @@ this fixes a long standing issue where people forget to include the right CSS fo
 * `gridstack-extra.min.css` no longer exist, nor is custom column CSS classes needed. API/options hasn't changed.
 * (v12.1) `ES5` folder content has been removed - was for IE support, which has been dropped.
 * (v12.1) nested grid events are now sent to the main grid. You might have to adjust your workaround of this missing feature. nested.html demo has been adjusted.
+
+## Migrating to v13
+
+No breaking changes in the base library, but NEW React and Vue wrapper now being shipped!
+
+**Breaking changes: Angular wrapper only** (`gridstack/dist/angular`)
+
+Widget JSON fields are renamed to match the React/Vue convention, making layouts portable across all three frameworks:
+
+```diff
+- { selector: 'app-chart', input: { title: 'Revenue' } }
++ { component: 'app-chart', props: { title: 'Revenue' } }
+```
+
+The registration call is also renamed:
+
+```diff
+- GridstackComponent.addComponentToSelectorType([ChartComponent, TableComponent]);
++ GridstackComponent.registerComponents([ChartComponent, TableComponent]);
+```
+
+The static map and its type are renamed accordingly (`selectorToType` → `componentMap`, `SelectorToType` → `ComponentMap`). If you subclass `BaseWidget` and override `deserialize()`, replace any direct reads of `w.input` with `w.props`.
 
 # jQuery Application
 
