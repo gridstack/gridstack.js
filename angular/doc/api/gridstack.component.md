@@ -3268,7 +3268,7 @@ Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:33](https://git
 ##### previousNode
 
 ```ts
-previousNode: GridStackNode;
+previousNode: GridStackNode | undefined;
 ```
 
 Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:33](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L33)

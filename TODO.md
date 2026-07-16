@@ -4,20 +4,6 @@ Items deferred from the June 2026 code-quality pass. Tackle in order; each build
 
 ---
 
-## 1. TypeScript strict mode migration
-
-**Why:** `tsconfig.json` runs with `strict: false` and `noImplicitAny: false`, hiding a whole class of bugs from both the compiler and consumers who rely on the published `.d.ts` declarations.
-
-**Steps:**
-1. Enable `"strictNullChecks": true` first (lowest noise). Fix the resulting errors — most are already nullable but were silently untyped.
-2. Enable `"noImplicitReturns": true` and `"noImplicitAny": true`. The majority of remaining issues will be in the drag-and-drop internals (`dd-draggable.ts`, `dd-resizable.ts`) and the engine.
-3. Finally set `"strict": true` to catch the rest (strict function types, strict property init, etc.).
-4. Remove the per-file `// eslint-disable-next-line @typescript-eslint/no-explicit-any` suppressions as each file is cleaned up.
-
-**Estimated scope:** ~50-80 type errors once `strictNullChecks` is on, mostly in `gridstack.ts` and the DD layer.
-
----
-
 ## 2. Break up `gridstack.ts` (~3 100 lines)
 
 **Why:** The single `GridStack` class has grown to cover CSS/cell-height management, responsive/column layout, drag-drop wiring, serialization, and the public API. This makes it hard to navigate and test in isolation.

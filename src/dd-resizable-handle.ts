@@ -15,11 +15,11 @@ export interface DDResizableHandleOpt {
 
 export class DDResizableHandle {
   /** @internal */
-  protected el: HTMLElement;
+  protected el!: HTMLElement;
   /** @internal true after we've moved enough pixels to start a resize */
-  protected moving = false;
-  /** @internal */
-  protected mouseDownEvent: MouseEvent;
+  protected moving?: boolean;
+  /** @internal set on mousedown, cleared on mouseup */
+  protected mouseDownEvent?: MouseEvent;
   /** @internal */
   protected static prefix = 'ui-resizable-';
 
@@ -37,9 +37,9 @@ export class DDResizableHandle {
   protected _init(): DDResizableHandle {
     if (this.option.element) {
       try {
-        this.el = this.option.element instanceof HTMLElement
+        this.el = (this.option.element instanceof HTMLElement
           ? this.option.element
-          : this.host.querySelector(this.option.element)
+          : this.host.querySelector<HTMLElement>(this.option.element)) as HTMLElement
       } catch (error) {
         this.option.element = undefined // make sure destroy handles it correctly
         console.error("Query for resizeable handle failed, falling back", error)
@@ -66,7 +66,7 @@ export class DDResizableHandle {
 
   /** call this when resize handle needs to be removed and cleaned up */
   public destroy(): DDResizableHandle {
-    if (this.moving) this._mouseUp(this.mouseDownEvent);
+    if (this.moving) this._mouseUp(this.mouseDownEvent!);
     this.el.removeEventListener('mousedown', this._mouseDown);
     if (isTouch) {
       this.el.removeEventListener('touchstart', touchstart);
@@ -75,8 +75,6 @@ export class DDResizableHandle {
     if (!this.option.element) {
       this.host.removeChild(this.el);
     }
-    delete this.el;
-    delete this.host;
     return this;
   }
 
@@ -95,13 +93,13 @@ export class DDResizableHandle {
 
   /** @internal */
   protected _mouseMove(e: MouseEvent): void {
-    const s = this.mouseDownEvent;
+    const s = this.mouseDownEvent!;
     if (this.moving) {
       this._triggerEvent('move', e);
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 2) {
       // don't start unless we've moved at least 3 pixels
       this.moving = true;
-      this._triggerEvent('start', this.mouseDownEvent);
+      this._triggerEvent('start', this.mouseDownEvent!);
       this._triggerEvent('move', e);
       // now track keyboard events to cancel
       document.addEventListener('keydown', this._keyEvent);
@@ -132,7 +130,7 @@ export class DDResizableHandle {
   protected _keyEvent(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       this.host.gridstackNode?.grid?.engine.restoreInitial();
-      this._mouseUp(this.mouseDownEvent);
+      this._mouseUp(this.mouseDownEvent!);
     }
   }
 
@@ -140,7 +138,8 @@ export class DDResizableHandle {
 
   /** @internal */
   protected _triggerEvent(name: string, event: MouseEvent): DDResizableHandle {
-    if (this.option[name]) this.option[name](event);
+    const opt = this.option as Record<string, ((e: MouseEvent) => void) | undefined>;
+    if (opt[name]) opt[name]!(event);
     return this;
   }
 }

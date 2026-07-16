@@ -16,15 +16,13 @@ export type EventCallback = (event: Event) => boolean|void;
  */
 export abstract class DDBaseImplement {
   /**
-   * Returns the current disabled state.
+   * Returns the current disabled state (undefined if not set yet).
    * Note: Use enable()/disable() methods to change state as other operations need to happen.
    */
-  public get disabled(): boolean   { return this._disabled; }
+  public get disabled(): boolean | undefined  { return this._disabled; }
 
-  /** @internal */
-  protected _disabled: boolean; // initial state to differentiate from false
-  /** @internal */
-  protected _eventRegister: {
+  private _disabled: boolean | undefined; // initial state to differentiate from false
+  private _eventRegister: {
     [eventName: string]: EventCallback;
   } = {};
 
@@ -68,7 +66,7 @@ export abstract class DDBaseImplement {
    * Removes all event handlers and clears internal state.
    */
   public destroy(): void {
-    delete this._eventRegister;
+    this._eventRegister = {};
   }
 
   /**
@@ -79,7 +77,7 @@ export abstract class DDBaseImplement {
    * @returns Result from the callback function, if any
    */
   public triggerEvent(eventName: string, event: Event): boolean|void {
-    if (!this.disabled && this._eventRegister && this._eventRegister[eventName])
+    if (!this.disabled && this._eventRegister[eventName])
       return this._eventRegister[eventName](event);
   }
 }
@@ -94,5 +92,5 @@ export interface HTMLElementExtendOpt<T> {
   /** The drag & drop options/configuration */
   option: T;
   /** Method to update the options and return the DD implementation */
-  updateOption(T): DDBaseImplement;
+  updateOption(opts: T): DDBaseImplement;
 }

@@ -24,8 +24,8 @@ export const isTouch: boolean = typeof window !== 'undefined' && typeof document
 
 export class DDTouch {
   /** set to true while we are handling touch dragging, to prevent accepting browser real mouse events (trusted:true) vs our simulated ones (trusted:false) */
-  public static touchHandled: boolean;
-  public static pointerLeaveTimeout: number;
+  public static touchHandled?: boolean;
+  public static pointerLeaveTimeout?: number;
 }
 
 /**

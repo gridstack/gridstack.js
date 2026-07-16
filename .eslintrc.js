@@ -20,6 +20,6 @@ module.exports = {
     'no-trailing-spaces': 1,
     'prefer-const': 0,
     '@typescript-eslint/ban-ts-comment': 0,
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-explicit-any': 'error',
   }
 };

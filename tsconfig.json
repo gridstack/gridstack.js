@@ -9,10 +9,12 @@
     "inlineSources": true,
     "lib": [ "es2017", "es2015", "dom" ],
     "module": "ES2020",
-    "noImplicitAny": false,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
     "outDir": "./dist",
     "sourceMap": true,
-    "strict": false,
+    "strict": true,
     "target": "ES2020",
     "types": ["vitest/globals", "@testing-library/jest-dom", "node"],
     "skipLibCheck": true,
@@ -21,10 +23,7 @@
     "moduleResolution": "node"
   }, 
   "include": [
-    "./src/**/*.ts",
-    "./spec/**/*.ts",
-    "./vitest.setup.ts",
-    "./vitest.config.ts"
+    "./src/**/*.ts"
   ],
   "typeroots": [
     "./node_modules/@types"

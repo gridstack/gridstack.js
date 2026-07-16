@@ -40,29 +40,30 @@ interface TemporalRect {
 
 export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt<DDResizableOpt> {
   /** @internal */
-  protected handlers: DDResizableHandle[];
-  /** @internal */
-  protected originalRect: DOMRectReadOnly;
+  /** @internal set in _setupHandlers(), cleared in _removeHandlers() */
+  protected handlers?: DDResizableHandle[];
+  /** @internal set in _resizeStart, cleared in _resizeStop */
+  protected originalRect?: DOMRectReadOnly;
   /** @internal */
   protected rectScale: RectScaleReciprocal = { x: 1, y: 1 };
+  /** @internal set in _resizing, cleared in _resizeStop */
+  protected temporalRect?: TemporalRect;
+  /** @internal set in _resizeStart, cleared in _resizeStop */
+  protected scrollY?: number;
+  /** @internal set in _resizeStart, cleared in _resizeStop */
+  protected scrolled?: number;
   /** @internal */
-  protected temporalRect: TemporalRect;
-  /** @internal */
-  protected scrollY: number;
-  /** @internal */
-  protected scrolled: number;
-  /** @internal */
-  protected scrollEl: HTMLElement;
-  /** @internal */
-  protected startEvent: MouseEvent;
+  protected scrollEl!: HTMLElement;
+  /** @internal set in _resizeStart, cleared in _resizeStop */
+  protected startEvent?: MouseEvent;
   /** @internal value saved in the same order as _originStyleProp[] */
-  protected elOriginStyleVal: string[];
+  protected elOriginStyleVal!: string[];
   /** @internal */
-  protected parentOriginStylePosition: string;
+  protected parentOriginStylePosition!: string;
   /** @internal */
   protected static _originStyleProp = ['width', 'height', 'position', 'left', 'right', 'top', 'opacity', 'zIndex'];
   /** @internal */
-  protected sizeToContent: boolean;
+  protected sizeToContent!: boolean;
 
   // have to be public else complains for HTMLElementExtendOpt ?
   constructor(public el: GridItemHTMLElement, public option: DDResizableOpt = {}) {
@@ -71,47 +72,47 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this._mouseOver = this._mouseOver.bind(this);
     this._mouseOut = this._mouseOut.bind(this);
     this.enable();
-    this._setupAutoHide(this.option.autoHide);
+    this._setupAutoHide(!!this.option.autoHide);
     this._setupHandlers();
   }
 
-  public on(event: 'resizestart' | 'resize' | 'resizestop', callback: (event: DragEvent) => void): void {
-    super.on(event, callback);
+  public override on(event: 'resizestart' | 'resize' | 'resizestop', callback: (event: DragEvent) => void): void {
+    super.on(event, callback as (event: Event) => void);
   }
 
-  public off(event: 'resizestart' | 'resize' | 'resizestop'): void {
+  public override off(event: 'resizestart' | 'resize' | 'resizestop'): void {
     super.off(event);
   }
 
-  public enable(): void {
+  public override enable(): void {
     super.enable();
     this.el.classList.remove('ui-resizable-disabled');
-    this._setupAutoHide(this.option.autoHide);
+    this._setupAutoHide(!!this.option.autoHide);
   }
 
-  public disable(): void {
+  public override disable(): void {
     super.disable();
     this.el.classList.add('ui-resizable-disabled');
     this._setupAutoHide(false);
   }
 
-  public destroy(): void {
+  public override destroy(): void {
     this._removeHandlers();
     this._setupAutoHide(false);
-    delete this.el;
+    delete (this as Partial<DDResizable>).el;
     super.destroy();
   }
 
   public updateOption(opts: DDResizableOpt): DDResizable {
     const updateHandles = (opts.handles && opts.handles !== this.option.handles);
     const updateAutoHide = (opts.autoHide && opts.autoHide !== this.option.autoHide);
-    Object.keys(opts).forEach(key => this.option[key] = opts[key]);
+    Object.assign(this.option, opts);
     if (updateHandles) {
       this._removeHandlers();
       this._setupHandlers();
     }
     if (updateAutoHide) {
-      this._setupAutoHide(this.option.autoHide);
+      this._setupAutoHide(!!this.option.autoHide);
     }
     return this;
   }
@@ -157,7 +158,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _setupHandlers(): DDResizable {
-    this.handlers = this.option.handles.split(',')
+    this.handlers = (this.option.handles ?? 'se').split(',')
       .map(dir => dir.trim())
       .map(dir => new DDResizableHandle(this.el, dir, {
         element: this.option.element,
@@ -189,7 +190,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _resizing(event: MouseEvent, dir: string): DDResizable {
-    this.scrolled = this.scrollEl.scrollTop - this.scrollY;
+    this.scrolled = this.scrollEl.scrollTop - this.scrollY!;
     this.temporalRect = this._getChange(event, dir);
     this._applyChange();
     const ev = Utils.initEvent<GridStackMouseEvent>(event, { type: 'resize', target: this.el });
@@ -223,18 +224,18 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal */
   protected _setupHelper(): DDResizable {
-    this.elOriginStyleVal = DDResizable._originStyleProp.map(prop => this.el.style[prop]);
-    this.parentOriginStylePosition = this.el.parentElement.style.position;
+    this.elOriginStyleVal = DDResizable._originStyleProp.map(prop => (this.el.style as unknown as Record<string, string>)[prop]);
+    const parentEl = this.el.parentElement!;
+    this.parentOriginStylePosition = parentEl.style.position;
 
-    const parent = this.el.parentElement;
-    const dragTransform = Utils.getValuesFromTransformedElement(parent);
+    const dragTransform = Utils.getValuesFromTransformedElement(parentEl);
     this.rectScale = {
       x: dragTransform.xScale,
       y: dragTransform.yScale
     };
 
-    if (getComputedStyle(this.el.parentElement).position.match(/static/)) {
-      this.el.parentElement.style.position = 'relative';
+    if (getComputedStyle(parentEl).position.match(/static/)) {
+      parentEl.style.position = 'relative';
     }
     this.el.style.position = 'absolute';
     this.el.style.opacity = '0.8';
@@ -244,27 +245,27 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected _cleanHelper(): DDResizable {
     DDResizable._originStyleProp.forEach((prop, i) => {
-      this.el.style[prop] = this.elOriginStyleVal[i] || null;
+      (this.el.style as unknown as Record<string, string | null>)[prop] = this.elOriginStyleVal[i] || null;
     });
-    this.el.parentElement.style.position = this.parentOriginStylePosition || null;
+    this.el.parentElement!.style.position = this.parentOriginStylePosition || null!;
     return this;
   }
 
   /** @internal */
   protected _getChange(event: MouseEvent, dir: string): TemporalRect {
-    const oEvent = this.startEvent;
+    const oEvent = this.startEvent!;
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
-      width: this.originalRect.width,
-      height: this.originalRect.height + this.scrolled,
-      left: this.originalRect.left,
-      right: this.originalRect.right,
-      top: this.originalRect.top - this.scrolled,
+      width: this.originalRect!.width,
+      height: this.originalRect!.height + this.scrolled!,
+      left: this.originalRect!.left,
+      right: this.originalRect!.right,
+      top: this.originalRect!.top - this.scrolled!,
     };
 
     const offsetX = event.clientX - oEvent.clientX;
     const offsetY = this.sizeToContent ? 0 : event.clientY - oEvent.clientY; // prevent vert resize
-    let moveLeft: boolean;
-    let moveUp: boolean;
+  let moveLeft = false;
+  let moveUp = false;
 
     const isRtl = this.option.rtl;
 
@@ -312,9 +313,9 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _constrainSize(oWidth: number, oHeight: number, moveLeft: boolean, moveUp: boolean): Size {
     const o = this.option;
     const maxWidth = (moveLeft ? o.maxWidthMoveLeft : o.maxWidth) || Number.MAX_SAFE_INTEGER;
-    const minWidth = o.minWidth / this.rectScale.x || oWidth;
+    const minWidth = (o.minWidth ?? 0) / this.rectScale.x || oWidth;
     const maxHeight = (moveUp ? o.maxHeightMoveUp : o.maxHeight) || Number.MAX_SAFE_INTEGER;
-    const minHeight = o.minHeight / this.rectScale.y || oHeight;
+    const minHeight = (o.minHeight ?? 0) / this.rectScale.y || oHeight;
     const width = Math.min(maxWidth, Math.max(minWidth, oWidth));
     const height = Math.min(maxHeight, Math.max(minHeight, oHeight));
     return { width, height };
@@ -324,11 +325,12 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _applyChange(): DDResizable {
     let containmentRect = { left: 0, right: 0, top: 0, width: 0, height: 0 };
     if (this.el.style.position === 'absolute') {
-      const containmentEl = this.el.parentElement;
+      const containmentEl = this.el.parentElement!;
       const { left, right, top } = containmentEl.getBoundingClientRect();
       containmentRect = { left, right, top, width: 0, height: 0 };
     }
     if (!this.temporalRect) return this;
+    const cRect = containmentRect as Record<string, number>;
     Object.entries(this.temporalRect).forEach(([key, value]) => {
       if (this.option.rtl ? key === 'left' : key === 'right')
         return;
@@ -342,30 +344,30 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       if (key === 'right') {
         finalValue = (containmentRect.right - value) * this.rectScale.x + 'px';
       } else {
-        finalValue = (value - containmentRect[key]) * scaleReciprocal + 'px';
+        finalValue = (value - cRect[key]) * scaleReciprocal + 'px';
       }
-      this.el.style[key] = finalValue;
+      (this.el.style as unknown as Record<string, string>)[key] = finalValue;
     });
     return this;
   }
 
   /** @internal */
   protected _removeHandlers(): DDResizable {
-    this.handlers.forEach(handle => handle.destroy());
+    this.handlers!.forEach(handle => handle.destroy());
     delete this.handlers;
     return this;
   }
 
   /** @internal */
   protected _ui = (): DDUIData => {
-    const containmentEl = this.el.parentElement;
+    const containmentEl = this.el.parentElement!;
     const containmentRect = containmentEl.getBoundingClientRect();
     const newRect = { // Note: originalRect is a complex object, not a simple Rect, so copy out.
-      width: this.originalRect.width,
-      height: this.originalRect.height + this.scrolled,
-      left: this.originalRect.left,
-      right: this.originalRect.right,
-      top: this.originalRect.top - this.scrolled
+      width: this.originalRect!.width,
+      height: this.originalRect!.height + this.scrolled!,
+      left: this.originalRect!.left,
+      right: this.originalRect!.right,
+      top: this.originalRect!.top - this.scrolled!
     };
     const rect = this.temporalRect || newRect;
 
