@@ -16,16 +16,18 @@
  * @example
  * ```typescript
  * @Component({
- *   selector: 'my-custom-widget',
+ *   selector: 'app-my-widget',
  *   template: '<div>{{data}}</div>'
  * })
- * export class MyCustomWidget extends BaseWidget {
- *   @Input() data: string = '';
+ * export class MyWidget extends BaseWidget {
+ *   data = input(''); // signal input (Angular 17+) — or @Input() data = ''
  *
- *   serialize() {
- *     return { data: this.data };
+ *   override serialize() {
+ *     return { data: this.data() };
  *   }
  * }
+ * // Register so the widget JSON { component: 'app-my-widget', props: { data: 'hello' } } works:
+ * GridstackComponent.registerComponents([MyWidget]);
  * ```
  */
 
@@ -76,29 +78,29 @@ export abstract class BaseWidget {
    *
    * @param w The saved widget data including input properties
    *
-   * @example
-   * ```typescript
-   * deserialize(w: NgGridStackWidget) {
-   *   super.deserialize(w); // Call parent for basic setup
-   *
-   *   // Custom initialization logic
-   *   if (w.input?.complexData) {
-   *     this.processComplexData(w.input.complexData);
-   *   }
-   * }
-   * ```
+ * @example
+ * ```typescript
+ * override deserialize(w: NgGridStackWidget) {
+ *   super.deserialize(w); // Call parent for basic setup
+ *
+ *   // Custom initialization logic
+ *   if (w.props?.complexData) {
+ *     this.processComplexData(w.props.complexData);
+ *   }
+ * }
+ * ```
    */
   public deserialize(w: NgGridStackWidget)  {
     // save full description for meta data
     this.widgetItem = w;
-    if (!w?.input) return;
+    if (!w?.props) return;
 
     if (this._compRef) {
       // Use setInput() to correctly handle both @Input() decorator and signal-based inputs (Angular 17+).
       // Direct Object.assign overwrites signal functions with plain values, breaking signal inputs.
-      Object.keys(w.input).forEach(key => this._compRef!.setInput(key, (w.input as any)[key]));
+      Object.keys(w.props).forEach(key => this._compRef!.setInput(key, (w.props as any)[key]));
     } else {
-      Object.assign(this, w.input);
+      Object.assign(this, w.props);
     }
   }
 }

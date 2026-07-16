@@ -4,10 +4,11 @@
 
 ### NgGridStackWidget
 
-Defined in: [angular/projects/lib/src/lib/types.ts:12](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L12)
+Defined in: [angular/projects/lib/src/lib/types.ts:13](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L13)
 
 Extended GridStackWidget interface for Angular integration.
-Adds Angular-specific properties for dynamic component creation.
+Matches the React/Vue convention: `component` identifies the widget type,
+`props` carries the data passed to it (via ComponentRef.setInput()).
 
 #### Extends
 
@@ -34,18 +35,18 @@ Adds Angular-specific properties for dynamic component creation.
 | <a id="lazyload"></a> `lazyLoad?` | `boolean` | true when widgets are only created when they scroll into view (visible) | - | `GridStackWidget.lazyLoad` | dist/types.d.ts:354 |
 | <a id="sizetocontent"></a> `sizeToContent?` | `number` \| `boolean` | local (vs grid) override - see GridStackOptions. Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) | - | `GridStackWidget.sizeToContent` | dist/types.d.ts:357 |
 | <a id="resizetocontentparent"></a> `resizeToContentParent?` | `string` | local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height | - | `GridStackWidget.resizeToContentParent` | dist/types.d.ts:359 |
-| <a id="selector"></a> `selector?` | `string` | Angular component selector for dynamic creation (e.g., 'my-widget') | - | - | [angular/projects/lib/src/lib/types.ts:14](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L14) |
-| <a id="input"></a> `input?` | [`NgCompInputs`](#ngcompinputs) | Serialized data for component @Input() properties | - | - | [angular/projects/lib/src/lib/types.ts:16](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L16) |
-| <a id="subgridopts"></a> `subGridOpts?` | [`NgGridStackOptions`](#nggridstackoptions) | Configuration for nested sub-grids | `GridStackWidget.subGridOpts` | - | [angular/projects/lib/src/lib/types.ts:18](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L18) |
+| <a id="component"></a> `component?` | `string` | Key used to look up the Angular component in the `componentMap` (defaults to the component's `@Component.selector`, e.g. `'app-chart'`). | - | - | [angular/projects/lib/src/lib/types.ts:18](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L18) |
+| <a id="props"></a> `props?` | [`NgCompInputs`](#ngcompinputs) | Serialized props forwarded to the component via `ComponentRef.setInput()`. | - | - | [angular/projects/lib/src/lib/types.ts:20](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L20) |
+| <a id="subgridopts"></a> `subGridOpts?` | [`NgGridStackOptions`](#nggridstackoptions) | Configuration for nested sub-grids | `GridStackWidget.subGridOpts` | - | [angular/projects/lib/src/lib/types.ts:22](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L22) |
 
 ***
 
 ### NgGridStackNode
 
-Defined in: [angular/projects/lib/src/lib/types.ts:25](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L25)
+Defined in: [angular/projects/lib/src/lib/types.ts:29](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L29)
 
 Extended GridStackNode interface for Angular integration.
-Adds component selector for dynamic content creation.
+Adds component key for dynamic content creation.
 
 #### Extends
 
@@ -77,13 +78,13 @@ Adds component selector for dynamic content creation.
 | <a id="grid"></a> `grid?` | `GridStack` | pointer back to parent Grid instance | `GridStackNode.grid` | dist/types.d.ts:433 |
 | <a id="subgrid"></a> `subGrid?` | `GridStack` | actual sub-grid instance | `GridStackNode.subGrid` | dist/types.d.ts:435 |
 | <a id="visibleobservable"></a> `visibleObservable?` | `IntersectionObserver` | allow delay creation when visible | `GridStackNode.visibleObservable` | dist/types.d.ts:437 |
-| <a id="selector-1"></a> `selector?` | `string` | Angular component selector for this node's content | - | [angular/projects/lib/src/lib/types.ts:27](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L27) |
+| <a id="component-1"></a> `component?` | `string` | Key used to look up the Angular component in the `componentMap`. | - | [angular/projects/lib/src/lib/types.ts:31](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L31) |
 
 ***
 
 ### NgGridStackOptions
 
-Defined in: [angular/projects/lib/src/lib/types.ts:34](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L34)
+Defined in: [angular/projects/lib/src/lib/types.ts:38](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L38)
 
 Extended GridStackOptions interface for Angular integration.
 Supports Angular-specific widget definitions and nested grids.
@@ -136,8 +137,8 @@ Supports Angular-specific widget definitions and nested grids.
 | <a id="staticgrid"></a> `staticGrid?` | `boolean` | makes grid static (default?: false). If `true` widgets are not movable/resizable. You don't even need draggable/resizable. A CSS class 'grid-stack-static' is also added to the element. | - | `GridStackOptions.staticGrid` | dist/types.d.ts:284 |
 | <a id="styleinhead"></a> ~~`styleInHead?`~~ | `boolean` | **Deprecated** Not used anymore, styles are now implemented with local CSS variables | - | `GridStackOptions.styleInHead` | dist/types.d.ts:288 |
 | <a id="subgriddynamic"></a> `subGridDynamic?` | `boolean` | enable/disable the creation of sub-grids on the fly by dragging items completely over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that. | - | `GridStackOptions.subGridDynamic` | dist/types.d.ts:293 |
-| <a id="children"></a> `children?` | [`NgGridStackWidget`](#nggridstackwidget)[] | Array of Angular widget definitions for initial grid setup | `GridStackOptions.children` | - | [angular/projects/lib/src/lib/types.ts:36](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L36) |
-| <a id="subgridopts-2"></a> `subGridOpts?` | [`NgGridStackOptions`](#nggridstackoptions) | Configuration for nested sub-grids (Angular-aware) | `GridStackOptions.subGridOpts` | - | [angular/projects/lib/src/lib/types.ts:38](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L38) |
+| <a id="children"></a> `children?` | [`NgGridStackWidget`](#nggridstackwidget)[] | Array of Angular widget definitions for initial grid setup | `GridStackOptions.children` | - | [angular/projects/lib/src/lib/types.ts:40](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L40) |
+| <a id="subgridopts-2"></a> `subGridOpts?` | [`NgGridStackOptions`](#nggridstackoptions) | Configuration for nested sub-grids (Angular-aware) | `GridStackOptions.subGridOpts` | - | [angular/projects/lib/src/lib/types.ts:42](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L42) |
 
 ## Type Aliases
 
@@ -147,7 +148,7 @@ Supports Angular-specific widget definitions and nested grids.
 type NgCompInputs = object;
 ```
 
-Defined in: [angular/projects/lib/src/lib/types.ts:55](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L55)
+Defined in: [angular/projects/lib/src/lib/types.ts:59](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/types.ts#L59)
 
 Type for component input data serialization.
 Maps @Input() property names to their values for widget persistence.

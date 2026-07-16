@@ -13,6 +13,9 @@
       ],
       "gridstack": [
         "../dist/gridstack"
+      ],
+      "gridstack/dist/angular": [
+        "projects/lib/src/index"
       ]
     },
     "noPropertyAccessFromIndexSignature": true,

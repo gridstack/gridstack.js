@@ -7,24 +7,28 @@ import { GridStackNode, GridStackOptions, GridStackWidget } from "gridstack";
 
 /**
  * Extended GridStackWidget interface for Angular integration.
- * Adds Angular-specific properties for dynamic component creation.
+ * Matches the React/Vue convention: `component` identifies the widget type,
+ * `props` carries the data passed to it (via ComponentRef.setInput()).
  */
 export interface NgGridStackWidget extends GridStackWidget {
-  /** Angular component selector for dynamic creation (e.g., 'my-widget') */
-  selector?: string;
-  /** Serialized data for component @Input() properties */
-  input?: NgCompInputs;
+  /**
+   * Key used to look up the Angular component in the `componentMap`
+   * (defaults to the component's `@Component.selector`, e.g. `'app-chart'`).
+   */
+  component?: string;
+  /** Serialized props forwarded to the component via `ComponentRef.setInput()`. */
+  props?: NgCompInputs;
   /** Configuration for nested sub-grids */
   subGridOpts?: NgGridStackOptions;
 }
 
 /**
  * Extended GridStackNode interface for Angular integration.
- * Adds component selector for dynamic content creation.
+ * Adds component key for dynamic content creation.
  */
 export interface NgGridStackNode extends GridStackNode {
-  /** Angular component selector for this node's content */
-  selector?: string;
+  /** Key used to look up the Angular component in the `componentMap`. */
+  component?: string;
 }
 
 /**

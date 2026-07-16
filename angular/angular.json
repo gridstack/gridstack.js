@@ -54,7 +54,7 @@
               "projects/demo/src/assets"
             ],
             "styles": [
-              "node_modules/gridstack/dist/gridstack.min.css",
+              "../dist/gridstack.min.css",
               "projects/demo/src/styles.css"
             ],
             "scripts": []
@@ -119,7 +119,7 @@
               "projects/demo/src/assets"
             ],
             "styles": [
-              "node_modules/gridstack/dist/gridstack.min.css",
+              "../dist/gridstack.min.css",
               "projects/demo/src/styles.css"
             ],
             "scripts": []

@@ -4,7 +4,7 @@
 
 ### `abstract` BaseWidget
 
-Defined in: [angular/projects/lib/src/lib/base-widget.ts:39](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L39)
+Defined in: [angular/projects/lib/src/lib/base-widget.ts:41](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L41)
 
 Base widget class for GridStack Angular integration.
 
@@ -28,7 +28,7 @@ new BaseWidget(): BaseWidget;
 serialize(): undefined | NgCompInputs;
 ```
 
-Defined in: [angular/projects/lib/src/lib/base-widget.ts:69](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L69)
+Defined in: [angular/projects/lib/src/lib/base-widget.ts:71](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L71)
 
 Override this method to return serializable data for this widget.
 
@@ -59,7 +59,7 @@ serialize() {
 deserialize(w): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/base-widget.ts:91](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L91)
+Defined in: [angular/projects/lib/src/lib/base-widget.ts:93](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L93)
 
 Override this method to handle widget restoration from saved data.
 
@@ -79,12 +79,12 @@ The default implementation automatically assigns input data to component propert
 ###### Example
 
 ```typescript
-deserialize(w: NgGridStackWidget) {
+override deserialize(w: NgGridStackWidget) {
   super.deserialize(w); // Call parent for basic setup
 
   // Custom initialization logic
-  if (w.input?.complexData) {
-    this.processComplexData(w.input.complexData);
+  if (w.props?.complexData) {
+    this.processComplexData(w.props.complexData);
   }
 }
 ```
@@ -93,4 +93,4 @@ deserialize(w: NgGridStackWidget) {
 
 | Property | Modifier | Type | Description | Defined in |
 | ------ | ------ | ------ | ------ | ------ |
-| <a id="widgetitem"></a> `widgetItem?` | `public` | [`NgGridStackWidget`](types.md#nggridstackwidget) | Complete widget definition including position, size, and Angular-specific data. Populated automatically when the widget is loaded or saved. | [angular/projects/lib/src/lib/base-widget.ts:45](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L45) |
+| <a id="widgetitem"></a> `widgetItem?` | `public` | [`NgGridStackWidget`](types.md#nggridstackwidget) | Complete widget definition including position, size, and Angular-specific data. Populated automatically when the widget is loaded or saved. | [angular/projects/lib/src/lib/base-widget.ts:47](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/base-widget.ts#L47) |

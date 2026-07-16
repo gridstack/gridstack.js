@@ -7,9 +7,6 @@
 
 import { Component, OnDestroy, Input, ViewChild, ViewContainerRef } from '@angular/core';
 
-// TEST local testing
-// import { BaseWidget } from './base-widget';
-// import { NgCompInputs } from './gridstack.component';
 import { BaseWidget, NgCompInputs } from 'gridstack/dist/angular';
 
 @Component({

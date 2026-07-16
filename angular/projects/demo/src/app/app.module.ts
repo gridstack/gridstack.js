@@ -7,9 +7,6 @@ import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 import { AngularSimpleComponent } from './simple';
 import { AComponent, BComponent, CComponent, NComponent } from './dummy.component';
 
-// TEST local testing
-// import { GridstackModule } from './gridstack.module';
-// import { GridstackComponent } from './gridstack.component';
 import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
 
 @NgModule({
@@ -35,6 +32,6 @@ import { GridstackModule, GridstackComponent } from 'gridstack/dist/angular';
 export class AppModule {
   constructor() {
     // register all our dynamic components created in the grid
-    GridstackComponent.addComponentToSelectorType([AComponent, BComponent, CComponent, NComponent]);
+    GridstackComponent.registerComponents([AComponent, BComponent, CComponent, NComponent]);
   }
 }
