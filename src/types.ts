@@ -101,7 +101,7 @@ export type GridStackElementHandler = (event: Event, el: GridItemHTMLElement) =>
 export type GridStackNodesHandler = (event: Event, nodes: GridStackNode[]) => void;
 
 /** Drop event handler that receives previous and new node states */
-export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => void;
+export type GridStackDroppedHandler = (event: Event, previousNode: GridStackNode | undefined, newNode: GridStackNode) => void;
 
 /** Union type of all possible event handler types */
 export type GridStackEventHandlerCallback = GridStackEventHandler | GridStackElementHandler | GridStackNodesHandler | GridStackDroppedHandler;

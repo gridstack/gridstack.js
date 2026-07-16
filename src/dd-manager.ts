@@ -21,37 +21,37 @@ export class DDManager {
    * detection will only happen after the user pauses movement.
    * This improves performance during rapid mouse movements.
    */
-  public static pauseDrag: boolean | number;
+  public static pauseDrag?: boolean | number;
 
   /**
    * Flag indicating if a mouse down event was already handled.
    * Prevents multiple handlers from processing the same mouse event.
    */
-  public static mouseHandled: boolean;
+  public static mouseHandled?: boolean;
 
   /**
    * The timeStamp of the mousedown event that set mouseHandled.
    * Used to distinguish stale state (from a prior incomplete drag) from
    * a bubbled event of the current mousedown (which should not reset the flag).
    */
-  public static mouseHandledTimeStamp: number;
+  public static mouseHandledTimeStamp?: number;
 
   /**
    * Reference to the element currently being dragged.
    * Used to track the active drag operation across the system.
    */
-  public static dragElement: DDDraggable;
+  public static dragElement?: DDDraggable;
 
   /**
    * Reference to the drop target element currently under the cursor.
    * Used to handle drop operations and hover effects.
    */
-  public static dropElement: DDDroppable;
+  public static dropElement?: DDDroppable;
 
   /**
    * Reference to the element currently being resized.
    * Helps ignore nested grid resize handles during resize operations.
    */
-  public static overResizeElement: DDResizable;
+  public static overResizeElement?: DDResizable;
 
 }

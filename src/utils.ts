@@ -152,9 +152,9 @@ export class Utils {
    * }
    */
   static shouldSizeToContent(n: GridStackNode | undefined, strict = false): boolean {
-    return n?.grid && (strict ?
+    return !!(n?.grid && (strict ?
       (n.sizeToContent === true || (n.grid.opts.sizeToContent === true && n.sizeToContent === undefined)) :
-      (!!n.sizeToContent || (n.grid.opts.sizeToContent && n.sizeToContent !== false)));
+      (!!n.sizeToContent || (n.grid.opts.sizeToContent && n.sizeToContent !== false))));
   }
 
   /**
@@ -171,7 +171,7 @@ export class Utils {
    * ); // true - they overlap
    */
   static isIntercepted(a: GridStackPosition, b: GridStackPosition): boolean {
-    return !(a.y >= b.y + b.h || a.y + a.h <= b.y || a.x + a.w <= b.x || a.x >= b.x + b.w);
+    return !(a.y! >= b.y! + b.h! || a.y! + a.h! <= b.y! || a.x! + a.w! <= b.x! || a.x! >= b.x! + b.w!);
   }
 
   /**
@@ -188,7 +188,7 @@ export class Utils {
    * ); // true - they share an edge
    */
   static isTouching(a: GridStackPosition, b: GridStackPosition): boolean {
-    return Utils.isIntercepted(a, {x: b.x-0.5, y: b.y-0.5, w: b.w+1, h: b.h+1})
+    return Utils.isIntercepted(a, {x: b.x!-0.5, y: b.y!-0.5, w: b.w!+1, h: b.h!+1})
   }
 
   /**
@@ -205,11 +205,11 @@ export class Utils {
    * ); // returns 4 (2x2 overlap)
    */
   static areaIntercept(a: GridStackPosition, b: GridStackPosition): number {
-    const x0 = (a.x > b.x) ? a.x : b.x;
-    const x1 = (a.x+a.w < b.x+b.w) ? a.x+a.w : b.x+b.w;
+    const x0 = (a.x! > b.x!) ? a.x! : b.x!;
+    const x1 = (a.x!+a.w! < b.x!+b.w!) ? a.x!+a.w! : b.x!+b.w!;
     if (x1 <= x0) return 0; // no overlap
-    const y0 = (a.y > b.y) ? a.y : b.y;
-    const y1 = (a.y+a.h < b.y+b.h) ? a.y+a.h : b.y+b.h;
+    const y0 = (a.y! > b.y!) ? a.y! : b.y!;
+    const y1 = (a.y!+a.h! < b.y!+b.h!) ? a.y!+a.h! : b.y!+b.h!;
     if (y1 <= y0) return 0; // no overlap
     return (x1-x0) * (y1-y0);
   }
@@ -224,7 +224,7 @@ export class Utils {
    * const area = Utils.area({x: 0, y: 0, w: 3, h: 2}); // returns 6
    */
   static area(a: GridStackPosition): number {
-    return a.w * a.h;
+    return a.w! * a.h!;
   }
 
   /**
@@ -370,8 +370,8 @@ export class Utils {
    * Utils.defaults(config, { width: 200, height: 50 });
    * // config is now { width: 100, height: 50 }
    */
-  // eslint-disable-next-line
-  static defaults(target, ...sources): {} {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static defaults(target: Record<string, any>, ...sources: Record<string, any>[]): Record<string, any> {
 
     sources.forEach(source => {
       for (const key in source) {
@@ -404,10 +404,12 @@ export class Utils {
     // eslint-disable-next-line eqeqeq
     if (typeof a !== 'object')  return a == b; // intentional: coerces string/number pairs (e.g. gs-* attribute values)
     if (typeof a !== typeof b) return false;
+    const ao = a as Record<string, unknown>;
+    const bo = b as Record<string, unknown>;
     // else we have object, check just 1 level deep for being same things...
-    if (Object.keys(a).length !== Object.keys(b).length) return false;
-    for (const key in a) {
-      if (a[key] !== b[key]) return false;
+    if (Object.keys(ao).length !== Object.keys(bo).length) return false;
+    for (const key in ao) {
+      if (ao[key] !== bo[key]) return false;
     }
     return true;
   }
@@ -456,23 +458,27 @@ export class Utils {
   /** removes field from the first object if same as the second objects (like diffing) and internal '_' for saving */
   static removeInternalAndSame(a: unknown, b: unknown):void {
     if (typeof a !== 'object' || typeof b !== 'object') return;
+    if (!a || !b) return;
     // skip arrays as we don't know how to hydrate them (unlike object spread operator)
     if (Array.isArray(a) || Array.isArray(b)) return;
-    for (let key in a) {
-      const aVal = a[key];
-      const bVal = b[key];
+    const ao = a as Record<string, unknown>;
+    const bo = b as Record<string, unknown>;
+    for (const key in ao) {
+      const aVal = ao[key];
+      const bVal = bo[key];
       if (key[0] === '_' || aVal === bVal) {
-        delete a[key]
+        delete ao[key];
       } else if (aVal && typeof aVal === 'object' && bVal !== undefined) {
         Utils.removeInternalAndSame(aVal, bVal);
-        if (!Object.keys(aVal).length) { delete a[key] }
+        if (!Object.keys(aVal as object).length) { delete ao[key]; }
       }
     }
   }
 
   /** removes internal fields '_' and default values for saving */
   static removeInternalForSave(n: GridStackNode, removeEl = true): void {
-    for (let key in n) { if (key[0] === '_' || n[key] === null || n[key] === undefined ) delete n[key]; }
+    const nd = n as Record<string, unknown>;
+    for (const key in nd) { if (key[0] === '_' || nd[key] === null || nd[key] === undefined ) delete nd[key]; }
     delete n.grid;
     if (removeEl) delete n.el;
     // delete default values (will be re-created on read)
@@ -521,7 +527,7 @@ export class Utils {
     if ((overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight > el.clientHeight) {
       return el;
     } else {
-      return Utils.getScrollElement(el.parentElement);
+      return Utils.getScrollElement(el.parentElement ?? undefined);
     }
   }
 
@@ -590,7 +596,7 @@ export class Utils {
   }
 
   public static appendTo(el: HTMLElement, parent: string | HTMLElement): void {
-    let parentNode: HTMLElement;
+    let parentNode: HTMLElement | null;
     if (typeof parent === 'string') {
       parentNode = Utils.getElement(parent);
     } else {
@@ -603,15 +609,16 @@ export class Utils {
 
   public static addElStyles(el: HTMLElement, styles: { [prop: string]: string | string[] }): void {
     if (styles instanceof Object) {
+      const elStyle = el.style as unknown as Record<string, string>;
       for (const s in styles) {
         if (Object.prototype.hasOwnProperty.call(styles, s)) {
           if (Array.isArray(styles[s])) {
             // support fallback value
             (styles[s] as string[]).forEach(val => {
-              el.style[s] = val;
+              elStyle[s] = val;
             });
           } else {
-            el.style[s] = styles[s];
+            elStyle[s] = styles[s] as string;
           }
         }
       }
@@ -619,7 +626,7 @@ export class Utils {
   }
 
   public static initEvent<T>(e: DragEvent | MouseEvent, info: { type: string; target?: EventTarget }): T {
-    const evt = { type: info.type };
+    const evt: Record<string, unknown> = { type: info.type };
     const obj = {
       button: 0,
       which: 0,
@@ -628,8 +635,9 @@ export class Utils {
       cancelable: true,
       target: info.target ? info.target : e.target
     };
-    ['altKey','ctrlKey','metaKey','shiftKey'].forEach(p => evt[p] = e[p]); // keys
-    ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = e[p]); // point info
+    const src = e as unknown as Record<string, unknown>;
+    ['altKey','ctrlKey','metaKey','shiftKey'].forEach(p => evt[p] = src[p]); // keys
+    ['pageX','pageY','clientX','clientY','screenX','screenY'].forEach(p => evt[p] = src[p]); // point info
     return {...evt, ...obj} as unknown as T;
   }
 
@@ -646,15 +654,15 @@ export class Utils {
       screenY: e.screenY,
       clientX: e.clientX,
       clientY: e.clientY,
-      ctrlKey: me.ctrlKey??false,
-      altKey: me.altKey??false,
-      shiftKey: me.shiftKey??false,
-      metaKey: me.metaKey??false,
+      ctrlKey: me.ctrlKey ?? false,
+      altKey: me.altKey ?? false,
+      shiftKey: me.shiftKey ?? false,
+      metaKey: me.metaKey ?? false,
       button: 0,
       relatedTarget: e.target
     });
 
-    (target || e.target).dispatchEvent(simulatedEvent);
+    (target || e.target)!.dispatchEvent(simulatedEvent);
   }
 
   /**
@@ -687,7 +695,8 @@ export class Utils {
   /** swap the given object 2 field values */
   public static swap(o: unknown, a: string, b: string): void {
     if (!o) return;
-    const tmp = o[a]; o[a] = o[b]; o[b] = tmp;
+    const obj = o as Record<string, unknown>;
+    const tmp = obj[a]; obj[a] = obj[b]; obj[b] = tmp;
   }
 
   /** true if the item can be rotated (checking for prop, not space available) */

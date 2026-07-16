@@ -22,7 +22,7 @@ export interface DDDroppableOpt {
 
 export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt<DDDroppableOpt> {
 
-  public accept: (el: HTMLElement) => boolean;
+  public accept!: (el: HTMLElement) => boolean;
 
   protected eventEl: HTMLElement;
 
@@ -39,15 +39,15 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     this._setupAccept();
   }
 
-  public on(event: 'drop' | 'dropover' | 'dropout', callback: (event: DragEvent) => void): void {
-    super.on(event, callback);
+  public override on(event: 'drop' | 'dropover' | 'dropout', callback: (event: DragEvent) => void): void {
+    super.on(event, callback as (event: Event) => void);
   }
 
-  public off(event: 'drop' | 'dropover' | 'dropout'): void {
+  public override off(event: 'drop' | 'dropover' | 'dropout'): void {
     super.off(event);
   }
 
-  public enable(): void {
+  public override enable(): void {
     if (this.disabled === false) return;
     super.enable();
     this.el.classList.add('ui-droppable');
@@ -60,7 +60,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     }
   }
 
-  public disable(forDestroy = false): void {
+  public override disable(forDestroy = false): void {
     if (this.disabled === true) return;
     super.disable();
     this.el.classList.remove('ui-droppable');
@@ -73,7 +73,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     }
   }
 
-  public destroy(): void {
+  public override destroy(): void {
     this.disable(true);
     this.el.classList.remove('ui-droppable');
     this.el.classList.remove('ui-droppable-disabled');
@@ -81,7 +81,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public updateOption(opts: DDDroppableOpt): DDDroppable {
-    Object.keys(opts).forEach(key => this.option[key] = opts[key]);
+    Object.assign(this.option, opts);
     this._setupAccept();
     return this;
   }
@@ -135,11 +135,11 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
 
       // if we're still over a parent droppable, send it an enter as we don't get one from leaving nested children
       if (!calledByEnter) {
-        let parentDrop: DDDroppable;
-        let parent: DDElementHost = this.el.parentElement;
+        let parentDrop: DDDroppable | undefined;
+        let parent: DDElementHost | null = this.el.parentElement;
         while (!parentDrop && parent) {
           parentDrop = parent.ddElement?.ddDroppable;
-          parent = parent.parentElement;
+          parent = parent.parentElement as DDElementHost | null;
         }
         if (parentDrop) {
           parentDrop._mouseEnter(e);
@@ -153,7 +153,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     e.preventDefault();
     const ev = Utils.initEvent<DragEvent>(e, { target: this.el, type: 'drop' });
     if (this.option.drop) {
-      this.option.drop(ev, this._ui(DDManager.dragElement))
+      this.option.drop(ev, this._ui(DDManager.dragElement!))
     }
     this.triggerEvent('drop', ev);
   }

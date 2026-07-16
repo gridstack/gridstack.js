@@ -30,7 +30,7 @@ export type elementCB = {event: Event, el: GridItemHTMLElement};
 export type nodesCB = {event: Event, nodes: GridStackNode[]};
 
 /** Callback for drop events with before/after node state */
-export type droppedCB = {event: Event, previousNode: GridStackNode, newNode: GridStackNode};
+export type droppedCB = {event: Event, previousNode: GridStackNode | undefined, newNode: GridStackNode};
 
 /**
  * Extended HTMLElement interface for the grid container.
@@ -328,7 +328,7 @@ export class GridstackComponent implements OnInit, AfterContentInit, OnDestroy {
       .on('drag', (event: Event, el: GridItemHTMLElement) => this.dragCB.emit({event, el}))
       .on('dragstart', (event: Event, el: GridItemHTMLElement) => this.dragStartCB.emit({event, el}))
       .on('dragstop', (event: Event, el: GridItemHTMLElement) => this.dragStopCB.emit({event, el}))
-      .on('dropped', (event: Event, previousNode: GridStackNode, newNode: GridStackNode) => this.droppedCB.emit({event, previousNode, newNode}))
+      .on('dropped', (event: Event, previousNode: GridStackNode | undefined, newNode: GridStackNode) => this.droppedCB.emit({event, previousNode, newNode}))
       .on('enable', (event: Event) => this.enableCB.emit({event}))
       .on('removed', (event: Event, nodes: GridStackNode[]) => {
         const gridComp = (nodes[0].grid?.el as GridCompHTMLElement)._gridComp || this;
