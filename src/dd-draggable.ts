@@ -476,7 +476,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const elRect = el.getBoundingClientRect();
     const scrollRect = scrollEl.getBoundingClientRect();
     const viewportH = window.innerHeight || document.documentElement.clientHeight;
-    if (elRect.bottom < scrollRect.top || elRect.top > scrollRect.bottom) return 0; // fully outside
+    const isRoot = scrollEl === (document.scrollingElement || document.documentElement);
+    if (!isRoot && (elRect.bottom < scrollRect.top || elRect.top > scrollRect.bottom)) return 0; // fully outside nested container
     const clippedBelow = elRect.bottom - Math.min(scrollRect.bottom, viewportH);
     const clippedAbove = elRect.top - Math.max(scrollRect.top, 0);
     if (clippedAbove < 0) return clippedAbove;
