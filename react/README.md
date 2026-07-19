@@ -1,6 +1,6 @@
 # React wrapper
 
-The React wrapper lives in [`projects/lib/src/`](projects/lib/src/) and is published with the main `gridstack` package as **`gridstack/dist/react`** (same idea as `gridstack/dist/angular`).
+The React wrapper lives in `projects/lib/src/` and is published with the main `gridstack` package as **`gridstack/dist/react`** (same idea as `gridstack/dist/angular`).
 
 Live demo app: `cd react && yarn && yarn dev`.
 
@@ -152,7 +152,7 @@ Optional: **`useWidgetSerializer`** inside a widget component merges extra field
 | `content: JSON.stringify({ name, props })` | `component` + `props` on the widget |
 | `useGridStackContext()` | `useGridStack()` |
 
-The old files have been moved to [`react/lib/_old/`](lib/_old/) for reference and are excluded from the bundle.
+The old files have been moved to `react/lib/_old/` for reference and are excluded from the bundle.
 
 ---
 
