@@ -1,4 +1,4 @@
-# GridStack Vue Library v0.0.0
+# GridStack Vue Library v13.0.0
 
 ## Modules
 
