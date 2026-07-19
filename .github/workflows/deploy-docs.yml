@@ -31,7 +31,7 @@ jobs:
       run: |
         grunt
         webpack
-        tsc --project tsconfig.docs.json --stripInternal
+        npx tsc --project tsconfig.docs.json --stripInternal
 
     - name: Install Angular dependencies
       run: |
