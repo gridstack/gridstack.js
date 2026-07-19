@@ -8,8 +8,15 @@ angular/
 !angular/doc/html/
 !angular/doc/html/media/
 react/
+!react/doc/
+!react/doc/html/
+vue/
+!vue/doc/
+!vue/doc/html/
 .DS_Store
 doc/.DS_Store
+.claude/
+.cursor/
 
 !node_modules/
 node_modules/*

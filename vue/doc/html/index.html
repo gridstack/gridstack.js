@@ -1,0 +1,127 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="./"><head><meta charset="utf-8"/><link rel="canonical" href="https://gridstack.github.io/gridstack.js/vue/"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>GridStack Vue Library - v0.0.0</title><meta name="description" content="Documentation for GridStack Vue Library"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script defer src="assets/main.js"></script><script async src="assets/icons.js" id="tsd-icons-script"></script><script async src="assets/search.js" id="tsd-search-script"></script><script async src="assets/navigation.js" id="tsd-nav-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="https://gridstackjs.com/" class="title">GridStack Vue Library - v0.0.0</a><div id="tsd-toolbar-links"><a href="https://github.com/gridstack/gridstack.js">GitHub</a><a href="https://gridstackjs.com/demo/">Demo</a><a href="../../../doc/html/index.html">Main Library</a></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><h1>GridStack Vue Library - v0.0.0</h1></div><div class="tsd-panel tsd-typography"><h1 id="gridstack-vue" class="tsd-anchor-link">gridstack-vue<a href="#gridstack-vue" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1><p>Official Vue 3 wrapper for <a href="https://gridstackjs.com/" target="_blank" class="external">GridStack.js</a>.</p>
+<p>Mirrors the <code>gridstack-react</code> wrapper API while feeling native to Vue:
+Composition API, <code>provide</code>/<code>inject</code>, composables, and <code>&lt;Teleport&gt;</code> for zero-destroy widget reparenting.</p>
+<hr>
+<h2 id="quick-start" class="tsd-anchor-link">Quick Start<a href="#quick-start" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><pre><code class="ts"><span class="hl-0">// main.ts</span><br/><span class="hl-1">import</span><span class="hl-2"> { </span><span class="hl-3">createApp</span><span class="hl-2"> } </span><span class="hl-1">from</span><span class="hl-2"> </span><span class="hl-4">&#39;vue&#39;</span><br/><span class="hl-1">import</span><span class="hl-2"> </span><span class="hl-3">App</span><span class="hl-2"> </span><span class="hl-1">from</span><span class="hl-2"> </span><span class="hl-4">&#39;./App.vue&#39;</span><br/><span class="hl-5">createApp</span><span class="hl-2">(</span><span class="hl-3">App</span><span class="hl-2">).</span><span class="hl-5">mount</span><span class="hl-2">(</span><span class="hl-4">&#39;#app&#39;</span><span class="hl-2">)</span>
+</code><button type="button">Copy</button></pre>
+
+<pre><code class="vue"><!-- App.vue -->
+<script setup lang="ts">
+import { defineComponent, h } from 'vue'
+import { GridStack, type GridStackOptions } from 'gridstack/dist/vue'
+import 'gridstack/dist/gridstack.css'
+
+const Text = defineComponent({
+  props: { content: { type: String, default: '' } },
+  setup(props) { return () => h('div', props.content) },
+})
+
+const options: GridStackOptions = {
+  cellHeight: 50,
+  children: [
+    { id: 'a', x: 0, y: 0, w: 3, h: 2, component: 'Text', props: { content: 'Hello!' } },
+  ],
+}
+</script>
+
+<template>
+  <GridStack :options="options" :components="{ Text }" />
+</template>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h2 id="api" class="tsd-anchor-link">API<a href="#api" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><h3 id="" class="tsd-anchor-link"><code>&lt;GridStack&gt;</code></h3><table>
+<thead>
+<tr>
+<th>Prop</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>options</code></td>
+<td><code>GridStackOptions</code></td>
+<td>GridStack init options, including <code>children</code> for the initial layout</td>
+</tr>
+<tr>
+<td><code>components</code></td>
+<td><code>ComponentMap</code></td>
+<td>Map <code>component</code> string keys → Vue components</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Emits:</strong> <code>added</code>, <code>change</code>, <code>removed</code>, <code>drag</code>, <code>dragstart</code>, <code>dragstop</code>, <code>dropped</code>, <code>resize</code>, <code>resizestart</code>, <code>resizestop</code></p>
+<p><strong>Exposed:</strong> <code>getGrid()</code> → <code>GridStack | null</code> (for imperative access via template ref)</p>
+<p><strong>Default slot:</strong> rendered <em>outside</em> the <code>.grid-stack</code> div — use for toolbars, debug panels, etc.</p>
+<pre><code class="vue"><GridStack :options="opts" :components="comps">
+  <Toolbar />   <!-- rendered beside the grid, not inside it -->
+</GridStack>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h3 id="usegridstack" class="tsd-anchor-link"><code>useGridStack()</code><a href="#usegridstack" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Composable for children of <code>&lt;GridStack&gt;</code>:</p>
+<pre><code class="ts"><span class="hl-6">const</span><span class="hl-2"> { </span><span class="hl-7">grid</span><span class="hl-2">, </span><span class="hl-7">addWidget</span><span class="hl-2">, </span><span class="hl-7">removeWidget</span><span class="hl-2">, </span><span class="hl-7">removeAll</span><span class="hl-2">, </span><span class="hl-7">save</span><span class="hl-2">, </span><span class="hl-7">load</span><span class="hl-2">, </span><span class="hl-7">layoutVersion</span><span class="hl-2"> } = </span><span class="hl-5">useGridStack</span><span class="hl-2">()</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h3 id="usegridstackitem" class="tsd-anchor-link"><code>useGridStackItem()</code><a href="#usegridstackitem" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Composable for components rendered <em>inside</em> a widget slot:</p>
+<pre><code class="ts"><span class="hl-6">const</span><span class="hl-2"> { </span><span class="hl-7">id</span><span class="hl-2">, </span><span class="hl-7">node</span><span class="hl-2"> } = </span><span class="hl-5">useGridStackItem</span><span class="hl-2">()</span><br/><span class="hl-0">// node is the live GridStackNode (position, size, etc.)</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h3 id="usewidgetserializer" class="tsd-anchor-link"><code>useWidgetSerializer()</code><a href="#usewidgetserializer" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Persist extra widget state into <code>grid.save()</code>:</p>
+<pre><code class="ts"><span class="hl-6">const</span><span class="hl-2"> </span><span class="hl-7">count</span><span class="hl-2"> = </span><span class="hl-5">ref</span><span class="hl-2">(</span><span class="hl-8">0</span><span class="hl-2">)</span><br/><span class="hl-5">useWidgetSerializer</span><span class="hl-2">({</span><br/><span class="hl-2">  </span><span class="hl-5">serialize</span><span class="hl-3">:</span><span class="hl-2"> () </span><span class="hl-6">=&gt;</span><span class="hl-2"> ({ </span><span class="hl-3">count:</span><span class="hl-2"> </span><span class="hl-3">count</span><span class="hl-2">.</span><span class="hl-3">value</span><span class="hl-2"> }),</span><br/><span class="hl-2">  </span><span class="hl-0">// deserialize: (data) =&gt; { count.value = data.count }  // optional</span><br/><span class="hl-2">})</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h3 id="widget-json-schema" class="tsd-anchor-link">Widget JSON schema<a href="#widget-json-schema" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h3><p>Widgets are described by <code>GridStackWidget</code> objects (extends the core type):</p>
+<pre><code class="ts"><span class="hl-6">interface</span><span class="hl-2"> </span><span class="hl-9">GridStackWidget</span><span class="hl-2"> {</span><br/><span class="hl-2">  </span><span class="hl-3">id</span><span class="hl-2">?: </span><span class="hl-9">string</span><br/><span class="hl-2">  </span><span class="hl-3">x</span><span class="hl-2">?: </span><span class="hl-9">number</span><span class="hl-2">; </span><span class="hl-3">y</span><span class="hl-2">?: </span><span class="hl-9">number</span><span class="hl-2">; </span><span class="hl-3">w</span><span class="hl-2">?: </span><span class="hl-9">number</span><span class="hl-2">; </span><span class="hl-3">h</span><span class="hl-2">?: </span><span class="hl-9">number</span><br/><span class="hl-2">  </span><span class="hl-3">component</span><span class="hl-2">?: </span><span class="hl-9">string</span><span class="hl-2">   </span><span class="hl-0">// key in the `components` map</span><br/><span class="hl-2">  </span><span class="hl-3">props</span><span class="hl-2">?: </span><span class="hl-9">Record</span><span class="hl-2">&lt;</span><span class="hl-9">string</span><span class="hl-2">, </span><span class="hl-9">unknown</span><span class="hl-2">&gt;  </span><span class="hl-0">// passed as props to the component</span><br/><span class="hl-2">  </span><span class="hl-3">subGridOpts</span><span class="hl-2">?: </span><span class="hl-9">GridStackOptions</span><span class="hl-2">   </span><span class="hl-0">// for nested sub-grids</span><br/><span class="hl-2">  </span><span class="hl-0">// ... all standard GridStack widget options</span><br/><span class="hl-2">}</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h2 id="widget-reparenting-cross-grid-dnd" class="tsd-anchor-link">Widget reparenting (cross-grid DnD)<a href="#widget-reparenting-cross-grid-dnd" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><p>Widget components are mounted once and survive being dragged between grids.
+<code>&lt;GridStackItem&gt;</code> uses Vue's <code>&lt;Teleport&gt;</code> to move slot content into whichever
+<code>.grid-stack-item-content</code> element currently owns the widget — no destroy/remount.</p>
+<hr>
+<h2 id="development" class="tsd-anchor-link">Development<a href="#development" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><pre><code class="sh"><span class="hl-5">cd</span><span class="hl-2"> </span><span class="hl-4">vue</span><br/><span class="hl-5">npm</span><span class="hl-2"> </span><span class="hl-4">install</span><br/><span class="hl-5">npm</span><span class="hl-2"> </span><span class="hl-4">run</span><span class="hl-2"> </span><span class="hl-4">dev</span><span class="hl-2">        </span><span class="hl-0"># Vite dev server (demo app)</span><br/><span class="hl-5">npm</span><span class="hl-2"> </span><span class="hl-4">run</span><span class="hl-2"> </span><span class="hl-4">build</span><span class="hl-2">      </span><span class="hl-0"># production build of the demo</span><br/><span class="hl-5">npm</span><span class="hl-2"> </span><span class="hl-4">run</span><span class="hl-2"> </span><span class="hl-4">build:lib</span><span class="hl-2">  </span><span class="hl-0"># compile the library to dist/vue/</span><br/><span class="hl-5">npm</span><span class="hl-2"> </span><span class="hl-4">run</span><span class="hl-2"> </span><span class="hl-4">test</span><span class="hl-2">       </span><span class="hl-0"># vitest</span>
+</code><button type="button">Copy</button></pre>
+
+<hr>
+<h2 id="how-it-compares-to-the-angular-wrapper" class="tsd-anchor-link">How it compares to the Angular wrapper<a href="#how-it-compares-to-the-angular-wrapper" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2><table>
+<thead>
+<tr>
+<th></th>
+<th>Angular</th>
+<th>Vue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Component key</td>
+<td><code>selector</code></td>
+<td><code>component</code></td>
+</tr>
+<tr>
+<td>Component data</td>
+<td><code>input</code></td>
+<td><code>props</code></td>
+</tr>
+<tr>
+<td>Serialization</td>
+<td><code>BaseWidget.serialize()</code></td>
+<td><code>useWidgetSerializer()</code> (or <code>BaseWidget</code>)</td>
+</tr>
+<tr>
+<td>Context</td>
+<td><code>@Input()</code> / DI</td>
+<td><code>provide</code>/<code>inject</code> + composables</td>
+</tr>
+<tr>
+<td>DOM injection</td>
+<td><code>ViewContainerRef</code></td>
+<td><code>&lt;Teleport&gt;</code></td>
+</tr>
+</tbody>
+</table>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-external" name="external"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>External</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#gridstack-vue"><span>gridstack-<wbr/>vue</span></a><ul><li><a href="#quick-start"><span>Quick <wbr/>Start</span></a></li><li><a href="#api"><span>API</span></a></li><li><ul><li><a href="#"><span>&lt;<wbr/>Grid<wbr/>Stack&gt;</span></a></li><li><a href="#usegridstack"><span>use<wbr/>Grid<wbr/>Stack()</span></a></li><li><a href="#usegridstackitem"><span>use<wbr/>Grid<wbr/>Stack<wbr/>Item()</span></a></li><li><a href="#usewidgetserializer"><span>use<wbr/>Widget<wbr/>Serializer()</span></a></li><li><a href="#widget-json-schema"><span>Widget <wbr/>JSON schema</span></a></li></ul></li><li><a href="#widget-reparenting-cross-grid-dnd"><span>Widget reparenting (cross-<wbr/>grid <wbr/>Dn<wbr/>D)</span></a></li><li><a href="#development"><span>Development</span></a></li><li><a href="#how-it-compares-to-the-angular-wrapper"><span>How it compares to the <wbr/>Angular wrapper</span></a></li></ul></div></details></div><div class="site-menu"><nav id="tsd-sidebar-links" class="tsd-navigation"><a href="https://github.com/gridstack/gridstack.js/blob/master/vue/README.md">Documentation</a><a href="index.html">Vue Guide</a><a href="https://github.com/gridstack/gridstack.js" class="tsd-nav-link">GitHub</a><a href="https://gridstackjs.com/demo/" class="tsd-nav-link">Demo</a><a href="../../../doc/html/index.html" class="tsd-nav-link">Main Library</a></nav><nav class="tsd-navigation"><a href="modules.html">GridStack Vue Library - v0.0.0</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p class="tsd-generator">Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></footer><div class="overlay"></div></body></html>
