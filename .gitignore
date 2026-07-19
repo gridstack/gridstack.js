@@ -10,6 +10,7 @@ angular/
 react/
 !react/doc/
 !react/doc/html/
+!react/doc/html/media/
 vue/
 !vue/doc/
 !vue/doc/html/
