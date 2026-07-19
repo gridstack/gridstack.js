@@ -4,8 +4,6 @@ import { AngularSimpleComponent } from './simple';
 import { AngularNgForTestComponent } from './ngFor';
 import { AngularNgForCmdTestComponent } from './ngFor_cmd';
 
-// TEST: local testing of file
-// import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from './gridstack.component';
 import { GridstackComponent, NgGridStackOptions, NgGridStackWidget, elementCB, gsCreateNgComponents, nodesCB } from 'gridstack/dist/angular';
 
 // unique ids sets for each item for correct ngFor updating
@@ -21,8 +19,8 @@ export class AppComponent implements OnInit {
   @ViewChild(AngularNgForTestComponent) case1Comp?: AngularNgForTestComponent;
   @ViewChild(AngularNgForCmdTestComponent) case2Comp?: AngularNgForCmdTestComponent;
   @ViewChild(GridstackComponent) gridComp?: GridstackComponent;
-  @ViewChild('origTextArea', {static: true}) origTextEl?: ElementRef<HTMLTextAreaElement>;
-  @ViewChild('textArea', {static: true}) textEl?: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('origTextArea') origTextEl?: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('textArea') textEl?: ElementRef<HTMLTextAreaElement>;
 
   // which sample to show
   public show = 5;
@@ -40,7 +38,7 @@ export class AppComponent implements OnInit {
     cellHeight: 70,
     columnOpts: { breakpoints: [{w:768, c:1}] },
   }
-  public sub0: NgGridStackWidget[] = [{x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-a', input: {text: 'bar'}}, {x:1, y:1, content:'plain html'}, {x:0, y:1, selector:'app-b'} ];
+  public sub0: NgGridStackWidget[] = [{x:0, y:0, component:'app-a'}, {x:1, y:0, component:'app-a', props: {text: 'bar'}}, {x:1, y:1, content:'plain html'}, {x:0, y:1, component:'app-b'} ];
   public gridOptionsFull: NgGridStackOptions = {
     ...this.gridOptions,
     children: this.sub0,
@@ -60,9 +58,9 @@ export class AppComponent implements OnInit {
     acceptWidgets: true, // will accept .grid-stack-item by default
     margin: 5,
   };
-  public sub1: NgGridStackWidget[] = [ {x:0, y:0, selector:'app-a'}, {x:1, y:0, selector:'app-b'}, {x:2, y:0, selector:'app-c'}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
+  public sub1: NgGridStackWidget[] = [ {x:0, y:0, component:'app-a'}, {x:1, y:0, component:'app-b'}, {x:2, y:0, component:'app-c'}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
   public sub2: NgGridStackWidget[] = [ {x:0, y:0}, {x:0, y:1, w:2}];
-  public sub3: NgGridStackWidget = { selector: 'app-n', w:2, h:2, subGridOpts: { children: [{selector: 'app-a'}, {selector: 'app-b', y:0, x:1}]}};
+  public sub3: NgGridStackWidget = { component: 'app-n', w:2, h:2, subGridOpts: { children: [{component: 'app-a'}, {component: 'app-b', y:0, x:1}]}};
   private subChildren: NgGridStackWidget[] = [
     {x:0, y:0, content: 'regular item'},
     {x:1, y:0, w:4, h:4, subGridOpts: {children: this.sub1}},
@@ -86,8 +84,8 @@ export class AppComponent implements OnInit {
     acceptWidgets: true,
     float: true,
     children: [
-      {x: 0, y: 0, w: 2, h: 2, selector: 'app-a'},
-      {x: 3, y: 1, h: 2, selector: 'app-b'},
+      {x: 0, y: 0, w: 2, h: 2, component: 'app-a'},
+      {x: 3, y: 1, h: 2, component: 'app-b'},
       {x: 4, y: 1},
       {x: 2, y: 3, w: 3, maxW: 3, id: 'special', content: 'has maxW=3'},
     ]
@@ -101,16 +99,16 @@ export class AppComponent implements OnInit {
     this.sub3,
   ];
   public sidebarContent7: NgGridStackWidget[] = [
-    {selector: 'app-a'},
-    {selector: 'app-b', w:2, maxW: 3},
+    {component: 'app-a'},
+    {component: 'app-b', w:2, maxW: 3},
   ];
 
   constructor() {
-    for (let y = 0; y <= 5; y++) this.lazyChildren.push({x:0, y, id:String(y), selector: y%2 ? 'app-b' : 'app-a'});
+    for (let y = 0; y <= 5; y++) this.lazyChildren.push({x:0, y, id:String(y), component: y%2 ? 'app-b' : 'app-a'});
 
     // give them content and unique id to make sure we track them during changes below...
     [...this.items, ...this.subChildren, ...this.sub1, ...this.sub2, ...this.sub0].forEach((w: NgGridStackWidget) => {
-      if (!w.selector && !w.content && !w.subGridOpts) w.content = `item ${ids++}`;
+      if (!w.component && !w.content && !w.subGridOpts) w.content = `item ${ids++}`;
     });
   }
 

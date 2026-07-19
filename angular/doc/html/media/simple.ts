@@ -28,9 +28,9 @@
 
    // simple div above doesn't require Angular to run, so init gridstack here
    public ngOnInit() {
-     this.grid = GridStack.init({
-       cellHeight: 70,
-     })
+    this.grid = GridStack.init({
+      cellHeight: 70,
+    })!
      .load(this.items); // and load our content directly (will create DOM)
    }
 
