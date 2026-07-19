@@ -152,16 +152,6 @@ function generateLibraryDocs(libConfig, libName) {
       root,
       `Generating HTML docs for ${libName}`
     );
-    
-    // Remove media directory from HTML docs if it exists
-    const htmlMediaPath = path.join(root, libConfig.outputDir, 'html', 'media');
-    if (fs.existsSync(htmlMediaPath)) {
-      execCommand(
-        `rm -rf ${path.join(libConfig.outputDir, 'html', 'media')}`,
-        root,
-        `Removing media directory from HTML docs for ${libName}`
-      );
-    }
   }
   
   console.log(`✅ ${libName} documentation generated successfully`);
