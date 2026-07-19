@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [12.6.0-dev (TBD)](#1260-dev-tbd)
+- [13.0.0 (2026-07-18)](#1300-2026-07-18)
 - [12.6.0 (2026-04-08)](#1260-2026-04-08)
 - [12.5.0 (2026-04-05)](#1250-2026-04-05)
 - [12.4.2 (2025-12-26)](#1242-2025-12-26)
@@ -139,10 +139,10 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 12.6.0-dev (TBD)
+## 13.0.0 (2026-07-18)
 * NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, fix memory leak, empty content, etc...
 * NEW: vue wrapper: brand new wrapper follow same pattern as well
-* break: [#3302](https://github.com/gridstack/gridstack.js/pull/3303) Angular wrapper using component+props (instead of selector+input)
+* break: [#3310](https://github.com/gridstack/gridstack.js/pull/3310) Angular wrapper using component+props (instead of selector+input)
 * feat: [#662](https://github.com/gridstack/gridstack.js/issues/662) added grid-lines.html demo (just CSS)
 * fix: [#3154](https://github.com/gridstack/gridstack.js/issues/3154) Esc key doesn't restore subgrid
 * fix: [#3231](https://github.com/gridstack/gridstack.js/issues/3231) drag broken in Firefox 147.0.4+ and Chrome 144+ due to `navigator.maxTouchPoints > 0` now returning true on desktop (macOS trackpad)
