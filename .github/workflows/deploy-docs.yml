@@ -27,6 +27,12 @@ jobs:
     - name: Install main dependencies
       run: yarn install
 
+    - name: Build main library
+      run: |
+        grunt
+        webpack
+        tsc --project tsconfig.docs.json --stripInternal
+
     - name: Install Angular dependencies
       run: |
         cd angular
@@ -35,11 +41,15 @@ jobs:
     - name: Build Angular library
       run: yarn build:ng
 
-    - name: Build main library
+    - name: Install React dependencies
       run: |
-        grunt
-        webpack
-        tsc --project tsconfig.docs.json --stripInternal
+        cd react
+        yarn install
+
+    - name: Install Vue dependencies
+      run: |
+        cd vue
+        yarn install
 
     - name: Generate all documentation
       run: yarn doc
@@ -51,84 +61,65 @@ jobs:
         # Create proper directory structure for GitHub Pages
         mkdir -p deploy/doc/html
         mkdir -p deploy/angular/doc/html
+        mkdir -p deploy/react/doc/html
+        mkdir -p deploy/vue/doc/html
         
         # Debug: Check what was generated
         echo "📁 Checking generated documentation..."
-        echo "Main library HTML docs:"
-        if [ -d "doc/html" ]; then
-          echo "  ✓ doc/html/ exists"
-          ls -la doc/html/ | head -10
-        else
-          echo "  ✗ doc/html/ NOT FOUND"
-        fi
-        
-        echo "Angular library HTML docs:"
-        if [ -d "angular/doc/html" ]; then
-          echo "  ✓ angular/doc/html/ exists"
-          ls -la angular/doc/html/ | head -10
-        else
-          echo "  ✗ angular/doc/html/ NOT FOUND"
-        fi
-        
-        echo "Angular library Markdown docs (should NOT be deployed):"
-        if [ -d "angular/doc/api" ]; then
-          echo "  ⚠ angular/doc/api/ exists (will NOT be copied to deployment)"
-          ls -la angular/doc/api/ | head -10
-        else
-          echo "  ✓ angular/doc/api/ does not exist"
-        fi
+        for lib in "Main:doc/html" "Angular:angular/doc/html" "React:react/doc/html" "Vue:vue/doc/html"; do
+          name="${lib%%:*}"
+          dir="${lib##*:}"
+          if [ -d "$dir" ]; then
+            echo "  ✓ $name: $dir/ exists ($(ls $dir | wc -l) files)"
+          else
+            echo "  ✗ $name: $dir/ NOT FOUND"
+          fi
+        done
         
         # Copy main library HTML documentation
         if [ -d "doc/html" ]; then
           cp -r doc/html/* deploy/doc/html/
           echo "✓ Copied main library HTML docs"
-        else
-          echo "⚠ Warning: Main library HTML docs not found, skipping..."
         fi
         
         # Copy Angular library HTML documentation  
         if [ -d "angular/doc/html" ]; then
           cp -r angular/doc/html/* deploy/angular/doc/html/
           echo "✓ Copied Angular library HTML docs"
-        else
-          echo "⚠ Warning: Angular library HTML docs not found, skipping..."
         fi
         
-        # Note: Do NOT copy or create index.html at root
-        # The gh-pages branch has its own index.html that should be preserved
-        # The keep_files: true option will preserve existing files on gh-pages
-        
+        # Copy React library HTML documentation
+        if [ -d "react/doc/html" ]; then
+          cp -r react/doc/html/* deploy/react/doc/html/
+          echo "✓ Copied React library HTML docs"
+        fi
+
+        # Copy Vue library HTML documentation
+        if [ -d "vue/doc/html" ]; then
+          cp -r vue/doc/html/* deploy/vue/doc/html/
+          echo "✓ Copied Vue library HTML docs"
+        fi
+
         # Ensure .nojekyll exists to prevent Jekyll processing
         touch deploy/.nojekyll
         
         # Final verification
         echo ""
-        echo "📦 Deployment structure:"
+        echo "📦 Deployment structure (HTML files):"
         find deploy -type f -name "*.html" | head -20
     
-    - name: Preserve gh-pages root index.html
-      run: |
-        # Fetch gh-pages to get existing index.html if we didn't create one
-        if [ ! -f "deploy/index.html" ]; then
-          echo "📄 No index.html in deploy, fetching from gh-pages..."
-          git fetch origin gh-pages:gh-pages 2>/dev/null || true
-          
-          # Check out just the index.html from gh-pages if it exists
-          if git show origin/gh-pages:index.html > /dev/null 2>&1; then
-            git show origin/gh-pages:index.html > deploy/index.html
-            echo "✓ Preserved existing index.html from gh-pages"
-          else
-            echo "ℹ No index.html on gh-pages to preserve"
-          fi
-        else
-          echo "ℹ index.html already in deploy directory, not fetching from gh-pages"
-        fi
-
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./deploy
-        # Force clean deployment - creates orphan branch to remove ALL old files
-        force_orphan: true
+        keep_files: true
         commit_message: 'Deploy documentation from ${{ github.sha }}'
+
+    - name: Deployment completed
+      run: |
+        echo "✅ Documentation deployment completed!"
+        echo "📖 Available at: https://gridstack.github.io/gridstack.js/"
+        echo "   Angular: https://gridstack.github.io/gridstack.js/angular/doc/html/"
+        echo "   React:   https://gridstack.github.io/gridstack.js/react/doc/html/"
+        echo "   Vue:     https://gridstack.github.io/gridstack.js/vue/doc/html/"

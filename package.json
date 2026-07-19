@@ -33,6 +33,8 @@
     "doc": "doctoc ./README.md && doctoc ./doc/CHANGES.md && node scripts/generate-docs.js",
     "doc:main": "node scripts/generate-docs.js --main-only",
     "doc:angular": "node scripts/generate-docs.js --angular-only",
+    "doc:react": "node scripts/generate-docs.js --react-only",
+    "doc:vue": "node scripts/generate-docs.js --vue-only",
     "test": "yarn lint && vitest run && cd react && yarn vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
