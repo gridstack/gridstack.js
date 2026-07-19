@@ -11,4 +11,7 @@ node_modules
 .idea/
 .DS_Store
 doc/html/
+angular/doc/html/
+react/doc/html/
+vue/doc/html/
 .claude

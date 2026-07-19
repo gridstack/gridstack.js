@@ -26,6 +26,22 @@ const config = {
     typedocHtmlConfig: 'typedoc.html.json',
     outputDir: 'doc'
   },
+
+  // React library paths
+  react: {
+    root: 'react',
+    typedocConfig: 'typedoc.json',
+    typedocHtmlConfig: 'typedoc.html.json',
+    outputDir: 'doc'
+  },
+
+  // Vue library paths
+  vue: {
+    root: 'vue',
+    typedocConfig: 'typedoc.json',
+    typedocHtmlConfig: 'typedoc.html.json',
+    outputDir: 'doc'
+  },
   
   // Output configuration
   output: {
@@ -118,17 +134,14 @@ function generateLibraryDocs(libConfig, libName) {
       `Generating Markdown docs for ${libName}`
     );
     
-    // For main library, no _media directory cleanup needed since we generate a single file
-    // For Angular library, remove _media directory if it exists
-    if (libName === 'Angular Library') {
-      const mediaPath = path.join(root, libConfig.outputDir, 'api', '_media');
-      if (fs.existsSync(mediaPath)) {
-        execCommand(
-          `rm -rf ${path.join(libConfig.outputDir, 'api', '_media')}`,
-          root,
-          `Removing _media directory for ${libName}`
-        );
-      }
+    // Remove _media directory if it exists (not needed for API markdown docs)
+    const mediaPath = path.join(root, libConfig.outputDir, 'api', '_media');
+    if (fs.existsSync(mediaPath)) {
+      execCommand(
+        `rm -rf ${path.join(libConfig.outputDir, 'api', '_media')}`,
+        root,
+        `Removing _media directory for ${libName}`
+      );
     }
   }
   
@@ -204,6 +217,18 @@ function cleanup() {
   if (fs.existsSync(angularDocsPath)) {
     execCommand(`rm -rf ${angularDocsPath}`, config.angular.root, 'Cleaning Angular library docs');
   }
+
+  // Clean React docs
+  const reactDocsPath = path.join(config.react.root, config.react.outputDir);
+  if (fs.existsSync(reactDocsPath)) {
+    execCommand(`rm -rf ${reactDocsPath}`, config.react.root, 'Cleaning React library docs');
+  }
+
+  // Clean Vue docs
+  const vueDocsPath = path.join(config.vue.root, config.vue.outputDir);
+  if (fs.existsSync(vueDocsPath)) {
+    execCommand(`rm -rf ${vueDocsPath}`, config.vue.root, 'Cleaning Vue library docs');
+  }
   
   console.log(`✅ Cleanup completed`);
 }
@@ -220,6 +245,8 @@ Usage: node scripts/generate-docs.js [options]
 Options:
   --main-only       Generate only main library documentation
   --angular-only    Generate only Angular library documentation
+  --react-only      Generate only React library documentation
+  --vue-only        Generate only Vue library documentation
   --no-cleanup      Skip cleanup of existing documentation
   --quiet           Reduce output verbosity
   --help, -h        Show this help message
@@ -228,6 +255,8 @@ Examples:
   node scripts/generate-docs.js                    # Generate all documentation
   node scripts/generate-docs.js --main-only        # Main library only
   node scripts/generate-docs.js --angular-only     # Angular library only
+  node scripts/generate-docs.js --react-only       # React library only
+  node scripts/generate-docs.js --vue-only         # Vue library only
   node scripts/generate-docs.js --no-cleanup       # Keep existing docs
 
 Environment:
@@ -243,6 +272,8 @@ function parseArgs() {
   const options = {
     mainOnly: false,
     angularOnly: false,
+    reactOnly: false,
+    vueOnly: false,
     cleanup: true,
     verbose: process.env.NODE_ENV === 'development'
   };
@@ -254,6 +285,12 @@ function parseArgs() {
         break;
       case '--angular-only':
         options.angularOnly = true;
+        break;
+      case '--react-only':
+        options.reactOnly = true;
+        break;
+      case '--vue-only':
+        options.vueOnly = true;
         break;
       case '--no-cleanup':
         options.cleanup = false;
@@ -283,10 +320,19 @@ function main() {
   // Update config with options
   config.output.cleanup = options.cleanup;
   config.output.verbose = options.verbose;
+
+  // Determine which libraries to build
+  const onlyFlag = options.mainOnly || options.angularOnly || options.reactOnly || options.vueOnly;
+  const buildMain    = !onlyFlag || options.mainOnly;
+  const buildAngular = !onlyFlag || options.angularOnly;
+  const buildReact   = !onlyFlag || options.reactOnly;
+  const buildVue     = !onlyFlag || options.vueOnly;
   
   console.log(`🚀 GridStack Documentation Generator`);
-  console.log(`   Main library: ${!options.angularOnly}`);
-  console.log(`   Angular library: ${!options.mainOnly}`);
+  console.log(`   Main library: ${buildMain}`);
+  console.log(`   Angular library: ${buildAngular}`);
+  console.log(`   React library: ${buildReact}`);
+  console.log(`   Vue library: ${buildVue}`);
   console.log(`   Cleanup: ${config.output.cleanup}`);
   console.log(`   Verbose: ${config.output.verbose}`);
   
@@ -297,31 +343,48 @@ function main() {
     }
     
     // Generate main library documentation
-    if (!options.angularOnly) {
+    if (buildMain) {
       generateLibraryDocs(config.mainLib, 'Main Library');
     }
     
     // Generate Angular library documentation
-    if (!options.mainOnly) {
+    if (buildAngular) {
       generateLibraryDocs(config.angular, 'Angular Library');
     }
+
+    // Generate React library documentation
+    if (buildReact) {
+      generateLibraryDocs(config.react, 'React Library');
+    }
+
+    // Generate Vue library documentation
+    if (buildVue) {
+      generateLibraryDocs(config.vue, 'Vue Library');
+    }
     
-    // Run post-processing
-    if (!options.angularOnly) {
+    // Run post-processing (main library reorder scripts)
+    if (buildMain) {
       runPostProcessing();
     }
     
     console.log(`\n🎉 Documentation generation completed successfully!`);
     console.log(`\nGenerated documentation:`);
     
-    if (!options.angularOnly) {
+    if (buildMain) {
       console.log(`   📄 Main Library Markdown: doc/API.md`);
       console.log(`   🌐 Main Library HTML: doc/html/`);
     }
-    
-    if (!options.mainOnly) {
+    if (buildAngular) {
       console.log(`   📄 Angular Library Markdown: angular/doc/api/`);
       console.log(`   🌐 Angular Library HTML: angular/doc/html/`);
+    }
+    if (buildReact) {
+      console.log(`   📄 React Library Markdown: react/doc/api/`);
+      console.log(`   🌐 React Library HTML: react/doc/html/`);
+    }
+    if (buildVue) {
+      console.log(`   📄 Vue Library Markdown: vue/doc/api/`);
+      console.log(`   🌐 Vue Library HTML: vue/doc/html/`);
     }
     
   } catch (error) {

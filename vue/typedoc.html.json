@@ -1,0 +1,73 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "projects/lib/src/gridstack.ts",
+    "projects/lib/src/gridstack-item.ts",
+    "projects/lib/src/composables.ts",
+    "projects/lib/src/base-widget.ts",
+    "projects/lib/src/types.ts",
+    "projects/lib/src/registry.ts",
+    "projects/lib/src/gridstack-context.ts"
+  ],
+  "tsconfig": "tsconfig.doc.json",
+  "excludeExternals": false,
+  "out": "doc/html",
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "node_modules/**"
+  ],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "includeVersion": true,
+  "sort": ["source-order"],
+  "sortEntryPoints": false,
+  "kindSortOrder": [
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Variable",
+    "Function"
+  ],
+  "groupOrder": [
+    "Components",
+    "Classes",
+    "Interfaces",
+    "Type aliases",
+    "Variables",
+    "Functions"
+  ],
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Main",
+    "Components",
+    "Vue Integration",
+    "Types",
+    "Composables",
+    "Utilities",
+    "*"
+  ],
+  "readme": "README.md",
+  "theme": "default",
+  "hideGenerator": false,
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "cleanOutputDir": true,
+  "titleLink": "https://gridstackjs.com/",
+  "navigationLinks": {
+    "GitHub": "https://github.com/gridstack/gridstack.js",
+    "Demo": "https://gridstackjs.com/demo/",
+    "Main Library": "../../../doc/html/index.html"
+  },
+  "sidebarLinks": {
+    "Documentation": "https://github.com/gridstack/gridstack.js/blob/master/vue/README.md",
+    "Vue Guide": "index.html"
+  },
+  "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/vue/",
+  "githubPages": true,
+  "gitRevision": "master",
+  "gitRemote": "origin",
+  "name": "GridStack Vue Library"
+}

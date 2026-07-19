@@ -1,0 +1,76 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "projects/lib/src/gridstack.tsx",
+    "projects/lib/src/gridstack-item.tsx",
+    "projects/lib/src/hooks.ts",
+    "projects/lib/src/base-widget.tsx",
+    "projects/lib/src/types.ts",
+    "projects/lib/src/registry.ts",
+    "projects/lib/src/gridstack-context.tsx",
+    "projects/lib/src/gridstack-widget-context.tsx"
+  ],
+  "tsconfig": "tsconfig.doc.json",
+  "excludeExternals": false,
+  "out": "doc/html",
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "node_modules/**"
+  ],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "includeVersion": true,
+  "sort": ["source-order"],
+  "sortEntryPoints": false,
+  "kindSortOrder": [
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Variable",
+    "Function"
+  ],
+  "groupOrder": [
+    "Components",
+    "Classes",
+    "Interfaces",
+    "Type aliases",
+    "Variables",
+    "Functions"
+  ],
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Main",
+    "Components",
+    "React Integration",
+    "Types",
+    "Hooks",
+    "Utilities",
+    "*"
+  ],
+  "readme": "README.md",
+  "theme": "default",
+  "hideGenerator": false,
+  "searchInComments": true,
+  "searchInDocuments": true,
+  "cleanOutputDir": true,
+  "titleLink": "https://gridstackjs.com/",
+  "navigationLinks": {
+    "GitHub": "https://github.com/gridstack/gridstack.js",
+    "Demo": "https://gridstackjs.com/demo/",
+    "Main Library": "../../../doc/html/index.html"
+  },
+  "sidebarLinks": {
+    "Documentation": "https://github.com/gridstack/gridstack.js/blob/master/react/README.md",
+    "React Guide": "index.html"
+  },
+  "hostedBaseUrl": "https://gridstack.github.io/gridstack.js/react/",
+  "githubPages": true,
+  "gitRevision": "master",
+  "gitRemote": "origin",
+  "name": "GridStack React Library"
+}
