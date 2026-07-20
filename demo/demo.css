@@ -48,10 +48,25 @@ h1 {
   background: #eee;
 }
 
+@media print {
+  .grid-stack {
+    background: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 .sidebar > .grid-stack-item,
 .grid-stack-item-content {
   text-align: center;
   background-color: #18bc9c;
+}
+
+@media print {
+  .grid-stack-item-content {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
 
 .card-header {

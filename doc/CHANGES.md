@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [13.0.0-dev (TBD)](#1300-dev-tbd)
 - [13.0.0 (2026-07-18)](#1300-2026-07-18)
 - [12.6.0 (2026-04-08)](#1260-2026-04-08)
 - [12.5.0 (2026-04-05)](#1250-2026-04-05)
@@ -138,6 +139,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 13.0.0-dev (TBD)
+* feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) pageBreak printing support for grids !
 
 ## 13.0.0 (2026-07-18)
 * NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, fix memory leak, empty content, etc...

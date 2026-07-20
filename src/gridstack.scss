@@ -149,3 +149,21 @@
  .grid-stack.grid-stack-rtl > .grid-stack-item[gs-x="0"] {
    right: 0%;
  }
+
+@media print {
+  .grid-stack {
+    height: auto !important;
+  }
+  .grid-stack > .grid-stack-item {
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    float: left;
+  }
+  .grid-stack > .grid-stack-item[gs-page-break="true"] {
+    page-break-before: always !important;
+    break-before: page !important;
+    float: none !important;
+    clear: both !important;
+  }
+}

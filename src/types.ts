@@ -444,6 +444,8 @@ export interface GridStackWidget extends GridStackPosition {
   id?: string;
   /** html to append inside as content */
   content?: string;
+  /** add a page break before this widget (default?: undefined). Useful for printing. */
+  pageBreak?: boolean;
   /** true when widgets are only created when they scroll into view (visible) */
   lazyLoad?: boolean;
   /** local (vs grid) override - see GridStackOptions.
