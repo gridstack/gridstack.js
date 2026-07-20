@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Print Grid Demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Print Grid Demo</h1>
+    <p>
+      This example demonstrates how to use the <code>pageBreak</code> widget option (or the <code>gs-page-break</code> attribute) 
+      to force a new page when printing a grid. <br/>
+      Notice how Item 3 has <code>pageBreak: true</code> and prints on a new page.
+    </p>
+    <div>
+      <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  
+  <script type="text/javascript">
+    // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+    GridStack.renderCB = function(el, w) {
+      el.innerHTML = w.content;
+    };
+
+    let options = {
+      float: true,
+      cellHeight: 100,
+      margin: 10,
+    };
+    
+    let items = [
+      {x: 0, y: 0, w: 4, h: 2, content: 'Item 1<br>(Page 1)'},
+      {x: 4, y: 0, w: 4, h: 1, content: 'Item 2<br>(Page 1)'},
+      {x: 0, y: 2, w: 12, h: 1, content: 'Item 3<br><strong>(Starts on Page 2)</strong>', pageBreak: true},
+      {x: 0, y: 3, w: 6, h: 1, content: 'Item 4<br>(Page 2)'},
+      {x: 6, y: 3, w: 6, h: 1, content: 'Item 5<br>(Page 2)'}
+    ];
+
+    let grid = GridStack.init(options);
+    grid.load(items);
+  </script>
+</body>
+</html>

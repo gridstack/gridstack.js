@@ -1980,6 +1980,7 @@ export class GridStack {
       locked: 'gs-locked',
       id: 'gs-id',
       sizeToContent: 'gs-size-to-content',
+      pageBreak: 'gs-page-break',
     };
     const nodeRec = node as Record<string, unknown>;
     const attrsRec = attrs as Record<string, string>;
@@ -2004,6 +2005,7 @@ export class GridStack {
     n.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
     n.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
     n.locked = Utils.toBool(el.getAttribute('gs-locked'));
+    n.pageBreak = Utils.toBool(el.getAttribute('gs-page-break'));
     const attr = el.getAttribute('gs-size-to-content');
     if (attr) {
       if (attr === 'true' || attr === 'false') n.sizeToContent = Utils.toBool(attr);
