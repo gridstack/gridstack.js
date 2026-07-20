@@ -10,7 +10,8 @@
     "projects/lib/src/gridstack-context.ts"
   ],
   "tsconfig": "tsconfig.doc.json",
-  "excludeExternals": false,
+  "excludeExternals": true,
+  "externalPattern": ["**/dist/**", "node_modules/**"],
   "out": "doc/html",
   "exclude": [
     "**/*.spec.ts",

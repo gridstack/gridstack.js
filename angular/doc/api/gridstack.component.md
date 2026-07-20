@@ -46,7 +46,7 @@ Get the current running grid options
 
 ###### Returns
 
-`GridStackOptions`
+[`GridStackOptions`](../../../doc/API.md#gridstackoptions)
 
 ###### Set Signature
 
@@ -73,7 +73,7 @@ gridOptions: GridStackOptions = {
 
 | Parameter | Type |
 | ------ | ------ |
-| `o` | `GridStackOptions` |
+| `o` | [`GridStackOptions`](../../../doc/API.md#gridstackoptions) |
 
 ###### Returns
 
@@ -344,7 +344,7 @@ Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:338](https://gi
 | <a id="resizestopcb"></a> `resizeStopCB` | `public` | `EventEmitter`\<[`elementCB`](#elementcb)\> | `undefined` | Emitted when widget resize stops | [angular/projects/lib/src/lib/gridstack.component.ts:185](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L185) |
 | <a id="ref"></a> `ref` | `public` | \| `undefined` \| `ComponentRef`\<[`GridstackComponent`](#gridstackcomponent)\> | `undefined` | Component reference for dynamic component removal. Used internally when this component is created dynamically. | [angular/projects/lib/src/lib/gridstack.component.ts:208](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L208) |
 | <a id="componentmap-1"></a> `componentMap` | `static` | [`ComponentMap`](#componentmap) | `{}` | Map of component keys to Angular component types used for dynamic creation. Keys default to the component's `@Component.selector` string when registered via `registerComponents()`. | [angular/projects/lib/src/lib/gridstack.component.ts:215](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L215) |
-| <a id="_options"></a> `_options?` | `protected` | `GridStackOptions` | `undefined` | - | [angular/projects/lib/src/lib/gridstack.component.ts:243](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L243) |
+| <a id="_options"></a> `_options?` | `protected` | [`GridStackOptions`](../../../doc/API.md#gridstackoptions) | `undefined` | - | [angular/projects/lib/src/lib/gridstack.component.ts:243](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L243) |
 | <a id="_grid"></a> `_grid?` | `protected` | `GridStack` | `undefined` | - | [angular/projects/lib/src/lib/gridstack.component.ts:244](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L244) |
 | <a id="_sub"></a> `_sub` | `protected` | `undefined` \| `Subscription` | `undefined` | - | [angular/projects/lib/src/lib/gridstack.component.ts:245](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L245) |
 | <a id="loaded"></a> `loaded?` | `protected` | `boolean` | `undefined` | - | [angular/projects/lib/src/lib/gridstack.component.ts:246](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L246) |
@@ -361,7 +361,7 @@ Stores a back-reference to the Angular component for integration purposes.
 
 #### Extends
 
-- `GridHTMLElement`
+- [`GridHTMLElement`](../../../doc/API.md#gridhtmlelement)
 
 #### Methods
 
@@ -2859,7 +2859,6 @@ GridHTMLElement.replaceChildren
 
 | Property | Modifier | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="gridstack"></a> `gridstack?` | `public` | `GridStack` | - | `GridHTMLElement.gridstack` | dist/gridstack.d.ts:24 |
 | <a id="_gridcomp"></a> `_gridComp?` | `public` | [`GridstackComponent`](#gridstackcomponent) | Back-reference to the Angular GridStack component | - | [angular/projects/lib/src/lib/gridstack.component.ts:41](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L41) |
 | <a id="ariaatomic"></a> `ariaAtomic` | `public` | `null` \| `string` | - | `GridHTMLElement.ariaAtomic` | node\_modules/typescript/lib/lib.dom.d.ts:2020 |
 | <a id="ariaautocomplete"></a> `ariaAutoComplete` | `public` | `null` \| `string` | - | `GridHTMLElement.ariaAutoComplete` | node\_modules/typescript/lib/lib.dom.d.ts:2021 |

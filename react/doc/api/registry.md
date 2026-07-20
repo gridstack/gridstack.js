@@ -28,8 +28,8 @@ Defined in: [react/projects/lib/src/registry.ts:110](https://github.com/adumesny
 
 | Parameter | Type |
 | ------ | ------ |
-| `node` | `GridStackNode` |
-| `w` | `GridStackWidget` |
+| `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
+| `w` | [`GridStackWidget`](../../../doc/API.md#gridstackwidget) |
 
 #### Returns
 
@@ -49,7 +49,7 @@ Defined in: [react/projects/lib/src/registry.ts:127](https://github.com/adumesny
 
 | Parameter | Type |
 | ------ | ------ |
-| `node` | `GridStackNode` |
+| `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
 
 #### Returns
 

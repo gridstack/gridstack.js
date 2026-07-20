@@ -10,7 +10,67 @@ if (!fs.existsSync(docsPath)) {
   process.exit(1);
 }
 
-const content = fs.readFileSync(docsPath, 'utf8');
+const rawContent = fs.readFileSync(docsPath, 'utf8');
+
+// Filter out inherited properties from properties tables to prevent core documentation duplication
+function filterProperties(content) {
+  const lines = content.split(/\r?\n/);
+  const resultLines = [];
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.includes('| Property | Type | Description | Inherited from | Defined in |')) {
+      // We found a properties table!
+      const headerLine = line;
+      const separatorLine = lines[i + 1];
+      const tableRows = [];
+      i += 2;
+      while (i < lines.length && lines[i].trim().startsWith('|')) {
+        tableRows.push(lines[i]);
+        i++;
+      }
+      
+      // Filter rows that are NOT inherited (where the "Inherited from" column is exactly "-")
+      const filteredRows = [];
+      for (const row of tableRows) {
+        const parts = row.split('|').map(p => p.trim());
+        // parts[0] is empty because row starts with |
+        // parts[1] is Property
+        // parts[2] is Type
+        // parts[3] is Description
+        // parts[4] is Inherited from
+        // parts[5] is Defined in
+        // parts[6] is empty because row ends with |
+        if (parts[4] === '-') {
+          // Keep this row, but strip the Inherited from column
+          const newRow = `| ${parts[1]} | ${parts[2]} | ${parts[3]} | ${parts[5]} |`;
+          filteredRows.push(newRow);
+        }
+      }
+      
+      if (filteredRows.length > 0) {
+        // We have local properties, output the new table with 4 columns
+        resultLines.push('| Property | Type | Description | Defined in |');
+        resultLines.push('| ------ | ------ | ------ | ------ |');
+        resultLines.push(...filteredRows);
+      } else {
+        // No local properties left! Strip the preceding '#### Properties' header if it exists
+        if (resultLines.length > 0 && resultLines[resultLines.length - 1] === '') {
+          resultLines.pop();
+        }
+        if (resultLines.length > 0 && resultLines[resultLines.length - 1].trim() === '#### Properties') {
+          resultLines.pop();
+        }
+      }
+    } else {
+      resultLines.push(line);
+      i++;
+    }
+  }
+  return resultLines.join('\n');
+}
+
+const content = filterProperties(rawContent);
 
 // Split content by ### headers to get sections
 const sections = content.split(/(?=^### )/m);

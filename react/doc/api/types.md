@@ -116,34 +116,18 @@ Defined in: [react/projects/lib/src/types.ts:32](https://github.com/adumesny/gri
 
 #### Extends
 
-- `Omit`\<`CoreGridStackWidget`, `"subGridOpts"`\>
+- `Omit`\<[`CoreGridStackWidget`](../../../doc/API.md#gridstackwidget), `"subGridOpts"`\>
 
 #### Properties
 
-| Property | Type | Description | Overrides | Inherited from | Defined in |
-| ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="x"></a> `x?` | `number` | widget position x (default?: 0) | - | [`GridStackNode`](#gridstacknode).[`x`](#x-1) | dist/types.d.ts:321 |
-| <a id="y"></a> `y?` | `number` | widget position y (default?: 0) | - | [`GridStackNode`](#gridstacknode).[`y`](#y-1) | dist/types.d.ts:323 |
-| <a id="w"></a> `w?` | `number` | widget dimension width (default?: 1) | - | [`GridStackNode`](#gridstacknode).[`w`](#w-1) | dist/types.d.ts:325 |
-| <a id="h"></a> `h?` | `number` | widget dimension height (default?: 1) | - | [`GridStackNode`](#gridstacknode).[`h`](#h-1) | dist/types.d.ts:327 |
-| <a id="autoposition"></a> `autoPosition?` | `boolean` | if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) | - | [`GridStackNode`](#gridstacknode).[`autoPosition`](#autoposition-1) | dist/types.d.ts:334 |
-| <a id="minw"></a> `minW?` | `number` | minimum width allowed during resize/creation (default?: undefined = un-constrained) | - | [`GridStackNode`](#gridstacknode).[`minW`](#minw-1) | dist/types.d.ts:336 |
-| <a id="maxw"></a> `maxW?` | `number` | maximum width allowed during resize/creation (default?: undefined = un-constrained) | - | [`GridStackNode`](#gridstacknode).[`maxW`](#maxw-1) | dist/types.d.ts:338 |
-| <a id="minh"></a> `minH?` | `number` | minimum height allowed during resize/creation (default?: undefined = un-constrained) | - | [`GridStackNode`](#gridstacknode).[`minH`](#minh-1) | dist/types.d.ts:340 |
-| <a id="maxh"></a> `maxH?` | `number` | maximum height allowed during resize/creation (default?: undefined = un-constrained) | - | [`GridStackNode`](#gridstacknode).[`maxH`](#maxh-1) | dist/types.d.ts:342 |
-| <a id="noresize"></a> `noResize?` | `boolean` | prevent direct resizing by the user (default?: undefined = un-constrained) | - | [`GridStackNode`](#gridstacknode).[`noResize`](#noresize-1) | dist/types.d.ts:344 |
-| <a id="nomove"></a> `noMove?` | `boolean` | prevents direct moving by the user (default?: undefined = un-constrained) | - | [`GridStackNode`](#gridstacknode).[`noMove`](#nomove-1) | dist/types.d.ts:346 |
-| <a id="locked"></a> `locked?` | `boolean` | prevents being pushed by other widgets or api (default?: undefined = un-constrained), which is different from `noMove` (user action only) | - | [`GridStackNode`](#gridstacknode).[`locked`](#locked-1) | dist/types.d.ts:348 |
-| <a id="id"></a> `id?` | `string` | value for `gs-id` stored on the widget (default?: undefined) | - | [`GridStackNode`](#gridstacknode).[`id`](#id-1) | dist/types.d.ts:350 |
-| <a id="content"></a> `content?` | `string` | html to append inside as content | - | [`GridStackNode`](#gridstacknode).[`content`](#content-1) | dist/types.d.ts:352 |
-| <a id="sizetocontent"></a> `sizeToContent?` | `number` \| `boolean` | local (vs grid) override - see GridStackOptions. Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) | - | [`GridStackNode`](#gridstacknode).[`sizeToContent`](#sizetocontent-1) | dist/types.d.ts:357 |
-| <a id="resizetocontentparent"></a> `resizeToContentParent?` | `string` | local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height | - | [`GridStackNode`](#gridstacknode).[`resizeToContentParent`](#resizetocontentparent-1) | dist/types.d.ts:359 |
-| <a id="component"></a> `component?` | `string` | Key in the `components` map passed to `<GridStack components={...} />` | - | - | [react/projects/lib/src/types.ts:34](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L34) |
-| <a id="props"></a> `props?` | [`GridStackWidgetProps`](#gridstackwidgetprops) | - | - | - | [react/projects/lib/src/types.ts:35](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L35) |
-| <a id="class"></a> `class?` | `string` | Extra CSS classes on the widget root (mirrors Angular `class` on widget JSON). | - | - | [react/projects/lib/src/types.ts:37](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L37) |
-| <a id="el"></a> `el?` | `HTMLElement` | Runtime DOM node when removing via `addRemoveCB` (not serialized). | - | - | [react/projects/lib/src/types.ts:39](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L39) |
-| <a id="subgridopts"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | Nested grid options (recursive; uses React-extended widget children). | - | - | [react/projects/lib/src/types.ts:41](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L41) |
-| <a id="lazyload"></a> `lazyLoad?` | `boolean` | Defer rendering the component until the item scrolls into view (mirrors Angular lazyLoad). | [`GridStackNode`](#gridstacknode).[`lazyLoad`](#lazyload-1) | - | [react/projects/lib/src/types.ts:43](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L43) |
+| Property | Type | Description | Overrides | Defined in |
+| ------ | ------ | ------ | ------ | ------ |
+| <a id="component"></a> `component?` | `string` | Key in the `components` map passed to `<GridStack components={...} />` | - | [react/projects/lib/src/types.ts:34](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L34) |
+| <a id="props"></a> `props?` | [`GridStackWidgetProps`](#gridstackwidgetprops) | - | - | [react/projects/lib/src/types.ts:35](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L35) |
+| <a id="class"></a> `class?` | `string` | Extra CSS classes on the widget root (mirrors Angular `class` on widget JSON). | - | [react/projects/lib/src/types.ts:37](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L37) |
+| <a id="el"></a> `el?` | `HTMLElement` | Runtime DOM node when removing via `addRemoveCB` (not serialized). | - | [react/projects/lib/src/types.ts:39](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L39) |
+| <a id="subgridopts"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | Nested grid options (recursive; uses React-extended widget children). | - | [react/projects/lib/src/types.ts:41](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L41) |
+| <a id="lazyload"></a> `lazyLoad?` | `boolean` | Defer rendering the component until the item scrolls into view (mirrors Angular lazyLoad). | `Omit.lazyLoad` | [react/projects/lib/src/types.ts:43](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L43) |
 
 ***
 
@@ -153,35 +137,13 @@ Defined in: [react/projects/lib/src/types.ts:46](https://github.com/adumesny/gri
 
 #### Extends
 
-- `GridStackNode`
+- [`GridStackNode`](../../../doc/API.md#gridstacknode)
 
 #### Properties
 
-| Property | Type | Description | Inherited from | Defined in |
-| ------ | ------ | ------ | ------ | ------ |
-| <a id="x-1"></a> `x?` | `number` | widget position x (default?: 0) | `CoreGridStackNode.x` | dist/types.d.ts:321 |
-| <a id="y-1"></a> `y?` | `number` | widget position y (default?: 0) | `CoreGridStackNode.y` | dist/types.d.ts:323 |
-| <a id="w-1"></a> `w?` | `number` | widget dimension width (default?: 1) | `CoreGridStackNode.w` | dist/types.d.ts:325 |
-| <a id="h-1"></a> `h?` | `number` | widget dimension height (default?: 1) | `CoreGridStackNode.h` | dist/types.d.ts:327 |
-| <a id="autoposition-1"></a> `autoPosition?` | `boolean` | if true then x, y parameters will be ignored and widget will be places on the first available position (default?: false) | `CoreGridStackNode.autoPosition` | dist/types.d.ts:334 |
-| <a id="minw-1"></a> `minW?` | `number` | minimum width allowed during resize/creation (default?: undefined = un-constrained) | `CoreGridStackNode.minW` | dist/types.d.ts:336 |
-| <a id="maxw-1"></a> `maxW?` | `number` | maximum width allowed during resize/creation (default?: undefined = un-constrained) | `CoreGridStackNode.maxW` | dist/types.d.ts:338 |
-| <a id="minh-1"></a> `minH?` | `number` | minimum height allowed during resize/creation (default?: undefined = un-constrained) | `CoreGridStackNode.minH` | dist/types.d.ts:340 |
-| <a id="maxh-1"></a> `maxH?` | `number` | maximum height allowed during resize/creation (default?: undefined = un-constrained) | `CoreGridStackNode.maxH` | dist/types.d.ts:342 |
-| <a id="noresize-1"></a> `noResize?` | `boolean` | prevent direct resizing by the user (default?: undefined = un-constrained) | `CoreGridStackNode.noResize` | dist/types.d.ts:344 |
-| <a id="nomove-1"></a> `noMove?` | `boolean` | prevents direct moving by the user (default?: undefined = un-constrained) | `CoreGridStackNode.noMove` | dist/types.d.ts:346 |
-| <a id="locked-1"></a> `locked?` | `boolean` | prevents being pushed by other widgets or api (default?: undefined = un-constrained), which is different from `noMove` (user action only) | `CoreGridStackNode.locked` | dist/types.d.ts:348 |
-| <a id="id-1"></a> `id?` | `string` | value for `gs-id` stored on the widget (default?: undefined) | `CoreGridStackNode.id` | dist/types.d.ts:350 |
-| <a id="content-1"></a> `content?` | `string` | html to append inside as content | `CoreGridStackNode.content` | dist/types.d.ts:352 |
-| <a id="lazyload-1"></a> `lazyLoad?` | `boolean` | true when widgets are only created when they scroll into view (visible) | `CoreGridStackNode.lazyLoad` | dist/types.d.ts:354 |
-| <a id="sizetocontent-1"></a> `sizeToContent?` | `number` \| `boolean` | local (vs grid) override - see GridStackOptions. Note: This also allow you to set a maximum h value (but user changeable during normal resizing) to prevent unlimited content from taking too much space (get scrollbar) | `CoreGridStackNode.sizeToContent` | dist/types.d.ts:357 |
-| <a id="resizetocontentparent-1"></a> `resizeToContentParent?` | `string` | local override of GridStack.resizeToContentParent that specify the class to use for the parent (actual) vs child (wanted) height | `CoreGridStackNode.resizeToContentParent` | dist/types.d.ts:359 |
-| <a id="subgridopts-1"></a> `subGridOpts?` | `GridStackOptions` | optional nested grid options and list of children, which then turns into actual instance at runtime to get options from | `CoreGridStackNode.subGridOpts` | dist/types.d.ts:361 |
-| <a id="el-1"></a> `el?` | `GridItemHTMLElement` | pointer back to HTML element | `CoreGridStackNode.el` | dist/types.d.ts:431 |
-| <a id="grid"></a> `grid?` | `GridStack` | pointer back to parent Grid instance | `CoreGridStackNode.grid` | dist/types.d.ts:433 |
-| <a id="subgrid"></a> `subGrid?` | `GridStack` | actual sub-grid instance | `CoreGridStackNode.subGrid` | dist/types.d.ts:435 |
-| <a id="visibleobservable"></a> `visibleObservable?` | `IntersectionObserver` | allow delay creation when visible | `CoreGridStackNode.visibleObservable` | dist/types.d.ts:437 |
-| <a id="component-1"></a> `component?` | `string` | - | - | [react/projects/lib/src/types.ts:47](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L47) |
+| Property | Type | Defined in |
+| ------ | ------ | ------ |
+| <a id="component-1"></a> `component?` | `string` | [react/projects/lib/src/types.ts:47](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L47) |
 
 ***
 
@@ -191,54 +153,15 @@ Defined in: [react/projects/lib/src/types.ts:50](https://github.com/adumesny/gri
 
 #### Extends
 
-- `Omit`\<`CoreGridStackOptions`, `"children"` \| `"subGridOpts"`\>
+- `Omit`\<[`CoreGridStackOptions`](../../../doc/API.md#gridstackoptions), `"children"` \| `"subGridOpts"`\>
 
 #### Properties
 
-| Property | Type | Description | Overrides | Inherited from | Defined in |
-| ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="acceptwidgets"></a> `acceptWidgets?` | `string` \| `boolean` \| (`element`) => `boolean` | Accept widgets dragged from other grids or from outside (default: `false`). Can be: - `true`: will accept HTML elements having 'grid-stack-item' as class attribute - `false`: will not accept any external widgets - string: explicit class name to accept instead of default - function: callback called before an item will be accepted when entering a grid **Example** `// Accept all grid items acceptWidgets: true // Accept only items with specific class acceptWidgets: 'my-draggable-item' // Custom validation function acceptWidgets: (el) => { return el.getAttribute('data-accept') === 'true'; }` **See** [http://gridstack.github.io/gridstack.js/demo/two.html](http://gridstack.github.io/gridstack.js/demo/two.html) for complete example | - | `Omit.acceptWidgets` | dist/types.d.ts:155 |
-| <a id="alwaysshowresizehandle"></a> `alwaysShowResizeHandle?` | `boolean` \| `"mobile"` | possible values (default: `mobile`) - does not apply to non-resizable widgets `false` the resizing handles are only shown while hovering over a widget `true` the resizing handles are always shown 'mobile' if running on a mobile device, default to `true` (since there is no hovering per say), else `false`. See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html) | - | `Omit.alwaysShowResizeHandle` | dist/types.d.ts:161 |
-| <a id="animate"></a> `animate?` | `boolean` | turns animation on (default?: true) | - | `Omit.animate` | dist/types.d.ts:163 |
-| <a id="auto"></a> `auto?` | `boolean` | if false gridstack will not initialize existing items (default?: true) | - | `Omit.auto` | dist/types.d.ts:165 |
-| <a id="cellheight"></a> `cellHeight?` | `numberOrString` | One cell height (default: 'auto'). Can be: - an integer (px): fixed pixel height - a string (ex: '100px', '10em', '10rem'): CSS length value - 0: library will not generate styles for rows (define your own CSS) - 'auto': height calculated for square cells (width / column) and updated live on window resize - 'initial': similar to 'auto' but stays fixed size during window resizing Note: % values don't work correctly - see demo/cell-height.html **Example** `// Fixed 100px height cellHeight: 100 // CSS units cellHeight: '5rem' cellHeight: '100px' // Auto-sizing for square cells cellHeight: 'auto' // No CSS generation (custom styles) cellHeight: 0` | - | `Omit.cellHeight` | dist/types.d.ts:190 |
-| <a id="cellheightthrottle"></a> `cellHeightThrottle?` | `number` | throttle time delay (in ms) used when cellHeight='auto' to improve performance vs usability (default?: 100). A value of 0 will make it instant at a cost of re-creating the CSS file at ever window resize event! | - | `Omit.cellHeightThrottle` | dist/types.d.ts:194 |
-| <a id="cellheightunit"></a> `cellHeightUnit?` | `string` | (internal) unit for cellHeight (default? 'px') which is set when a string cellHeight with a unit is passed (ex: '10rem') | - | `Omit.cellHeightUnit` | dist/types.d.ts:196 |
-| <a id="column"></a> `column?` | `number` \| `"auto"` | number of columns (default?: 12). Note: IF you change this, CSS also have to change. See https://github.com/gridstack/gridstack.js#change-grid-columns. Note: for nested grids, it is recommended to use 'auto' which will always match the container grid-item current width (in column) to keep inside and outside items always the same. flag is NOT supported for regular non-nested grids. | - | `Omit.column` | dist/types.d.ts:203 |
-| <a id="columnopts"></a> `columnOpts?` | `Responsive` | responsive column layout for width:column behavior | - | `Omit.columnOpts` | dist/types.d.ts:205 |
-| <a id="class-1"></a> `class?` | `string` | additional class on top of '.grid-stack' (which is required for our CSS) to differentiate this instance. Note: only used by addGrid(), else your element should have the needed class | - | `Omit.class` | dist/types.d.ts:208 |
-| <a id="disabledrag"></a> `disableDrag?` | `boolean` | disallows dragging of widgets (default?: false) | - | `Omit.disableDrag` | dist/types.d.ts:210 |
-| <a id="disableresize"></a> `disableResize?` | `boolean` | disallows resizing of widgets (default?: false). | - | `Omit.disableResize` | dist/types.d.ts:212 |
-| <a id="draggable"></a> `draggable?` | `DDDragOpt` | allows to override UI draggable options. (default?: { handle?: '.grid-stack-item-content', appendTo?: 'body' }) | - | `Omit.draggable` | dist/types.d.ts:214 |
-| <a id="engineclass"></a> `engineClass?` | *typeof* `GridStackEngine` | the type of engine to create (so you can subclass) default to GridStackEngine | - | `Omit.engineClass` | dist/types.d.ts:217 |
-| <a id="float"></a> `float?` | `boolean` | enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) | - | `Omit.float` | dist/types.d.ts:219 |
-| <a id="handle"></a> `handle?` | `string` | draggable handle selector (default?: '.grid-stack-item-content') | - | `Omit.handle` | dist/types.d.ts:221 |
-| <a id="handleclass"></a> `handleClass?` | `string` | draggable handle class (e.g. 'grid-stack-item-content'). If set 'handle' is ignored (default?: null) | - | `Omit.handleClass` | dist/types.d.ts:223 |
-| <a id="itemclass"></a> `itemClass?` | `string` | additional widget class (default?: 'grid-stack-item') | - | `Omit.itemClass` | dist/types.d.ts:225 |
-| <a id="layout"></a> `layout?` | `ColumnOptions` | re-layout mode when we're a subgrid and we are being resized. default to 'list' | - | `Omit.layout` | dist/types.d.ts:227 |
-| <a id="margin"></a> `margin?` | `numberOrString` | gap between grid item and content (default?: 10). This will set all 4 sides and support the CSS formats below an integer (px) a string with possible units (ex: '2em', '20px', '2rem') string with space separated values (ex: '5px 10px 0 20px' for all 4 sides, or '5em 10em' for top/bottom and left/right pairs like CSS). Note: all sides must have same units (last one wins, default px) | - | `Omit.margin` | dist/types.d.ts:237 |
-| <a id="margintop"></a> `marginTop?` | `numberOrString` | OLD way to optionally set each side - use margin: '5px 10px 0 20px' instead. Used internally to store each side. | - | `Omit.marginTop` | dist/types.d.ts:239 |
-| <a id="marginright"></a> `marginRight?` | `numberOrString` | - | - | `Omit.marginRight` | dist/types.d.ts:240 |
-| <a id="marginbottom"></a> `marginBottom?` | `numberOrString` | - | - | `Omit.marginBottom` | dist/types.d.ts:241 |
-| <a id="marginleft"></a> `marginLeft?` | `numberOrString` | - | - | `Omit.marginLeft` | dist/types.d.ts:242 |
-| <a id="marginunit"></a> `marginUnit?` | `string` | (internal) unit for margin (default? 'px') set when `margin` is set as string with unit (ex: 2rem') | - | `Omit.marginUnit` | dist/types.d.ts:244 |
-| <a id="maxrow"></a> `maxRow?` | `number` | maximum rows amount. Default? is 0 which means no maximum rows | - | `Omit.maxRow` | dist/types.d.ts:246 |
-| <a id="minrow"></a> `minRow?` | `number` | minimum rows amount which is handy to prevent grid from collapsing when empty. Default is `0`. When no set the `min-height` CSS attribute on the grid div (in pixels) can be used, which will round to the closest row. | - | `Omit.minRow` | dist/types.d.ts:250 |
-| <a id="nonce"></a> `nonce?` | `string` | If you are using a nonce-based Content Security Policy, pass your nonce here and GridStack will add it to the `<style>` elements it creates. | - | `Omit.nonce` | dist/types.d.ts:253 |
-| <a id="placeholderclass"></a> `placeholderClass?` | `string` | class for placeholder (default?: 'grid-stack-placeholder') | - | `Omit.placeholderClass` | dist/types.d.ts:255 |
-| <a id="placeholdertext"></a> `placeholderText?` | `string` | placeholder default content (default?: '') | - | `Omit.placeholderText` | dist/types.d.ts:257 |
-| <a id="resizable"></a> `resizable?` | `DDResizeOpt` | allows to override UI resizable options. default is { handles: 'se', autoHide: true on desktop, false on mobile } | - | `Omit.resizable` | dist/types.d.ts:259 |
-| <a id="removable"></a> `removable?` | `string` \| `boolean` | if true widgets could be removed by dragging outside of the grid. It could also be a selector string (ex: ".trash"), in this case widgets will be removed by dropping them there (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/two.html) | - | `Omit.removable` | dist/types.d.ts:265 |
-| <a id="removableoptions"></a> `removableOptions?` | `DDRemoveOpt` | allows to override UI removable options. (default?: { accept: '.grid-stack-item' }) | - | `Omit.removableOptions` | dist/types.d.ts:267 |
-| <a id="row"></a> `row?` | `number` | fix grid number of rows. This is a shortcut of writing `minRow:N, maxRow:N`. (default `0` no constrain) | - | `Omit.row` | dist/types.d.ts:269 |
-| <a id="rtl"></a> `rtl?` | `boolean` \| `"auto"` | if true turns grid to RTL, and applies the `grid-stack-rtl class`. Possible values are true, false, 'auto' (default?: 'auto') See [example](http://gridstack.github.io/gridstack.js/demo/right-to-left(rtl).html) | - | `Omit.rtl` | dist/types.d.ts:274 |
-| <a id="sizetocontent-2"></a> `sizeToContent?` | `boolean` | set to true if all grid items (by default, but item can also override) height should be based on content size instead of WidgetItem.h to avoid v-scrollbars. Note: this is still row based, not pixels, so it will use ceil(getBoundingClientRect().height / getCellHeight()) | - | `Omit.sizeToContent` | dist/types.d.ts:278 |
-| <a id="staticgrid"></a> `staticGrid?` | `boolean` | makes grid static (default?: false). If `true` widgets are not movable/resizable. You don't even need draggable/resizable. A CSS class 'grid-stack-static' is also added to the element. | - | `Omit.staticGrid` | dist/types.d.ts:284 |
-| <a id="styleinhead"></a> ~~`styleInHead?`~~ | `boolean` | **Deprecated** Not used anymore, styles are now implemented with local CSS variables | - | `Omit.styleInHead` | dist/types.d.ts:288 |
-| <a id="subgriddynamic"></a> `subGridDynamic?` | `boolean` | enable/disable the creation of sub-grids on the fly by dragging items completely over others (nest) vs partially (push). Forces `DDDragOpt.pause=true` to accomplish that. | - | `Omit.subGridDynamic` | dist/types.d.ts:293 |
-| <a id="children"></a> `children?` | [`GridStackWidget`](#gridstackwidget)[] | - | - | - | [react/projects/lib/src/types.ts:51](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L51) |
-| <a id="subgridopts-2"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | - | - | - | [react/projects/lib/src/types.ts:52](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L52) |
-| <a id="lazyload-2"></a> `lazyLoad?` | `boolean` | Defer rendering all item components until they scroll into view. Per-item `lazyLoad` overrides. | `Omit.lazyLoad` | - | [react/projects/lib/src/types.ts:54](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L54) |
+| Property | Type | Description | Overrides | Defined in |
+| ------ | ------ | ------ | ------ | ------ |
+| <a id="children"></a> `children?` | [`GridStackWidget`](#gridstackwidget)[] | - | - | [react/projects/lib/src/types.ts:51](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L51) |
+| <a id="subgridopts-1"></a> `subGridOpts?` | [`GridStackOptions`](#gridstackoptions) | - | - | [react/projects/lib/src/types.ts:52](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L52) |
+| <a id="lazyload-1"></a> `lazyLoad?` | `boolean` | Defer rendering all item components until they scroll into view. Per-item `lazyLoad` overrides. | `Omit.lazyLoad` | [react/projects/lib/src/types.ts:54](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L54) |
 
 ***
 
@@ -248,7 +171,7 @@ Defined in: [react/projects/lib/src/types.ts:57](https://github.com/adumesny/gri
 
 #### Extends
 
-- `GridHTMLElement`
+- [`GridHTMLElement`](../../../doc/API.md#gridhtmlelement)
 
 #### Methods
 
@@ -2746,7 +2669,6 @@ CoreGridHTMLElement.replaceChildren
 
 | Property | Modifier | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="gridstack"></a> `gridstack?` | `public` | `GridStack` | - | `CoreGridHTMLElement.gridstack` | dist/gridstack.d.ts:24 |
 | <a id="_gridcomp"></a> `_gridComp?` | `public` | [`GridStackHostApi`](#gridstackhostapi) | - | - | [react/projects/lib/src/types.ts:58](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L58) |
 | <a id="ariaatomic"></a> `ariaAtomic` | `public` | `null` \| `string` | - | `CoreGridHTMLElement.ariaAtomic` | node\_modules/typescript/lib/lib.dom.d.ts:2020 |
 | <a id="ariaautocomplete"></a> `ariaAutoComplete` | `public` | `null` \| `string` | - | `CoreGridHTMLElement.ariaAutoComplete` | node\_modules/typescript/lib/lib.dom.d.ts:2021 |
@@ -2793,7 +2715,7 @@ CoreGridHTMLElement.replaceChildren
 | <a id="clientleft"></a> `clientLeft` | `readonly` | `number` | - | `CoreGridHTMLElement.clientLeft` | node\_modules/typescript/lib/lib.dom.d.ts:5047 |
 | <a id="clienttop"></a> `clientTop` | `readonly` | `number` | - | `CoreGridHTMLElement.clientTop` | node\_modules/typescript/lib/lib.dom.d.ts:5048 |
 | <a id="clientwidth"></a> `clientWidth` | `readonly` | `number` | - | `CoreGridHTMLElement.clientWidth` | node\_modules/typescript/lib/lib.dom.d.ts:5049 |
-| <a id="id-2"></a> `id` | `public` | `string` | Returns the value of element's id content attribute. Can be set to change it. | `CoreGridHTMLElement.id` | node\_modules/typescript/lib/lib.dom.d.ts:5051 |
+| <a id="id"></a> `id` | `public` | `string` | Returns the value of element's id content attribute. Can be set to change it. | `CoreGridHTMLElement.id` | node\_modules/typescript/lib/lib.dom.d.ts:5051 |
 | <a id="localname"></a> `localName` | `readonly` | `string` | Returns the local name. | `CoreGridHTMLElement.localName` | node\_modules/typescript/lib/lib.dom.d.ts:5053 |
 | <a id="namespaceuri"></a> `namespaceURI` | `readonly` | `null` \| `string` | Returns the namespace. | `CoreGridHTMLElement.namespaceURI` | node\_modules/typescript/lib/lib.dom.d.ts:5055 |
 | <a id="onfullscreenchange"></a> `onfullscreenchange` | `public` | `null` \| (`this`, `ev`) => `any` | - | `CoreGridHTMLElement.onfullscreenchange` | node\_modules/typescript/lib/lib.dom.d.ts:5056 |
@@ -2912,7 +2834,7 @@ CoreGridHTMLElement.replaceChildren
 | <a id="accesskeylabel"></a> `accessKeyLabel` | `readonly` | `string` | - | `CoreGridHTMLElement.accessKeyLabel` | node\_modules/typescript/lib/lib.dom.d.ts:6556 |
 | <a id="autocapitalize"></a> `autocapitalize` | `public` | `string` | - | `CoreGridHTMLElement.autocapitalize` | node\_modules/typescript/lib/lib.dom.d.ts:6557 |
 | <a id="dir"></a> `dir` | `public` | `string` | - | `CoreGridHTMLElement.dir` | node\_modules/typescript/lib/lib.dom.d.ts:6558 |
-| <a id="draggable-1"></a> `draggable` | `public` | `boolean` | - | `CoreGridHTMLElement.draggable` | node\_modules/typescript/lib/lib.dom.d.ts:6559 |
+| <a id="draggable"></a> `draggable` | `public` | `boolean` | - | `CoreGridHTMLElement.draggable` | node\_modules/typescript/lib/lib.dom.d.ts:6559 |
 | <a id="hidden"></a> `hidden` | `public` | `boolean` | - | `CoreGridHTMLElement.hidden` | node\_modules/typescript/lib/lib.dom.d.ts:6560 |
 | <a id="inert"></a> `inert` | `public` | `boolean` | - | `CoreGridHTMLElement.inert` | node\_modules/typescript/lib/lib.dom.d.ts:6561 |
 | <a id="innertext"></a> `innerText` | `public` | `string` | - | `CoreGridHTMLElement.innerText` | node\_modules/typescript/lib/lib.dom.d.ts:6562 |
@@ -2928,7 +2850,7 @@ CoreGridHTMLElement.replaceChildren
 | <a id="translate"></a> `translate` | `public` | `boolean` | - | `CoreGridHTMLElement.translate` | node\_modules/typescript/lib/lib.dom.d.ts:6572 |
 | <a id="autofocus"></a> `autofocus` | `public` | `boolean` | - | `CoreGridHTMLElement.autofocus` | node\_modules/typescript/lib/lib.dom.d.ts:7764 |
 | <a id="dataset"></a> `dataset` | `readonly` | `DOMStringMap` | - | `CoreGridHTMLElement.dataset` | node\_modules/typescript/lib/lib.dom.d.ts:7765 |
-| <a id="nonce-1"></a> `nonce?` | `public` | `string` | - | `CoreGridHTMLElement.nonce` | node\_modules/typescript/lib/lib.dom.d.ts:7766 |
+| <a id="nonce"></a> `nonce?` | `public` | `string` | - | `CoreGridHTMLElement.nonce` | node\_modules/typescript/lib/lib.dom.d.ts:7766 |
 | <a id="tabindex"></a> `tabIndex` | `public` | `number` | - | `CoreGridHTMLElement.tabIndex` | node\_modules/typescript/lib/lib.dom.d.ts:7767 |
 | <a id="innerhtml"></a> `innerHTML` | `public` | `string` | - | `CoreGridHTMLElement.innerHTML` | node\_modules/typescript/lib/lib.dom.d.ts:9130 |
 | <a id="baseuri"></a> `baseURI` | `readonly` | `string` | Returns node's node document's document base URL. | `CoreGridHTMLElement.baseURI` | node\_modules/typescript/lib/lib.dom.d.ts:10249 |
@@ -2978,7 +2900,7 @@ Defined in: [react/projects/lib/src/types.ts:61](https://github.com/adumesny/gri
 
 #### Extends
 
-- `GridItemHTMLElement`
+- [`GridItemHTMLElement`](../../../doc/API.md#griditemhtmlelement)
 
 #### Methods
 
@@ -5476,7 +5398,6 @@ CoreGridItemHTMLElement.replaceChildren
 
 | Property | Modifier | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="gridstacknode-1"></a> `gridstackNode?` | `public` | `GridStackNode` | Pointer to the associated grid node instance containing position, size, and other widget data | `CoreGridItemHTMLElement.gridstackNode` | dist/types.d.ts:45 |
 | <a id="_griditemref"></a> `_gridItemRef?` | `public` | `object` | - | - | [react/projects/lib/src/types.ts:62](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L62) |
 | `_gridItemRef.id` | `public` | `string` | - | - | [react/projects/lib/src/types.ts:62](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L62) |
 | `_gridItemRef.gridComp` | `public` | [`GridStackHostApi`](#gridstackhostapi) | - | - | [react/projects/lib/src/types.ts:62](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/types.ts#L62) |
@@ -5526,7 +5447,7 @@ CoreGridItemHTMLElement.replaceChildren
 | <a id="clientleft-1"></a> `clientLeft` | `readonly` | `number` | - | `CoreGridItemHTMLElement.clientLeft` | node\_modules/typescript/lib/lib.dom.d.ts:5047 |
 | <a id="clienttop-1"></a> `clientTop` | `readonly` | `number` | - | `CoreGridItemHTMLElement.clientTop` | node\_modules/typescript/lib/lib.dom.d.ts:5048 |
 | <a id="clientwidth-1"></a> `clientWidth` | `readonly` | `number` | - | `CoreGridItemHTMLElement.clientWidth` | node\_modules/typescript/lib/lib.dom.d.ts:5049 |
-| <a id="id-3"></a> `id` | `public` | `string` | Returns the value of element's id content attribute. Can be set to change it. | `CoreGridItemHTMLElement.id` | node\_modules/typescript/lib/lib.dom.d.ts:5051 |
+| <a id="id-1"></a> `id` | `public` | `string` | Returns the value of element's id content attribute. Can be set to change it. | `CoreGridItemHTMLElement.id` | node\_modules/typescript/lib/lib.dom.d.ts:5051 |
 | <a id="localname-1"></a> `localName` | `readonly` | `string` | Returns the local name. | `CoreGridItemHTMLElement.localName` | node\_modules/typescript/lib/lib.dom.d.ts:5053 |
 | <a id="namespaceuri-1"></a> `namespaceURI` | `readonly` | `null` \| `string` | Returns the namespace. | `CoreGridItemHTMLElement.namespaceURI` | node\_modules/typescript/lib/lib.dom.d.ts:5055 |
 | <a id="onfullscreenchange-1"></a> `onfullscreenchange` | `public` | `null` \| (`this`, `ev`) => `any` | - | `CoreGridItemHTMLElement.onfullscreenchange` | node\_modules/typescript/lib/lib.dom.d.ts:5056 |
@@ -5645,7 +5566,7 @@ CoreGridItemHTMLElement.replaceChildren
 | <a id="accesskeylabel-1"></a> `accessKeyLabel` | `readonly` | `string` | - | `CoreGridItemHTMLElement.accessKeyLabel` | node\_modules/typescript/lib/lib.dom.d.ts:6556 |
 | <a id="autocapitalize-1"></a> `autocapitalize` | `public` | `string` | - | `CoreGridItemHTMLElement.autocapitalize` | node\_modules/typescript/lib/lib.dom.d.ts:6557 |
 | <a id="dir-1"></a> `dir` | `public` | `string` | - | `CoreGridItemHTMLElement.dir` | node\_modules/typescript/lib/lib.dom.d.ts:6558 |
-| <a id="draggable-2"></a> `draggable` | `public` | `boolean` | - | `CoreGridItemHTMLElement.draggable` | node\_modules/typescript/lib/lib.dom.d.ts:6559 |
+| <a id="draggable-1"></a> `draggable` | `public` | `boolean` | - | `CoreGridItemHTMLElement.draggable` | node\_modules/typescript/lib/lib.dom.d.ts:6559 |
 | <a id="hidden-1"></a> `hidden` | `public` | `boolean` | - | `CoreGridItemHTMLElement.hidden` | node\_modules/typescript/lib/lib.dom.d.ts:6560 |
 | <a id="inert-1"></a> `inert` | `public` | `boolean` | - | `CoreGridItemHTMLElement.inert` | node\_modules/typescript/lib/lib.dom.d.ts:6561 |
 | <a id="innertext-1"></a> `innerText` | `public` | `string` | - | `CoreGridItemHTMLElement.innerText` | node\_modules/typescript/lib/lib.dom.d.ts:6562 |
@@ -5661,7 +5582,7 @@ CoreGridItemHTMLElement.replaceChildren
 | <a id="translate-1"></a> `translate` | `public` | `boolean` | - | `CoreGridItemHTMLElement.translate` | node\_modules/typescript/lib/lib.dom.d.ts:6572 |
 | <a id="autofocus-1"></a> `autofocus` | `public` | `boolean` | - | `CoreGridItemHTMLElement.autofocus` | node\_modules/typescript/lib/lib.dom.d.ts:7764 |
 | <a id="dataset-1"></a> `dataset` | `readonly` | `DOMStringMap` | - | `CoreGridItemHTMLElement.dataset` | node\_modules/typescript/lib/lib.dom.d.ts:7765 |
-| <a id="nonce-2"></a> `nonce?` | `public` | `string` | - | `CoreGridItemHTMLElement.nonce` | node\_modules/typescript/lib/lib.dom.d.ts:7766 |
+| <a id="nonce-1"></a> `nonce?` | `public` | `string` | - | `CoreGridItemHTMLElement.nonce` | node\_modules/typescript/lib/lib.dom.d.ts:7766 |
 | <a id="tabindex-1"></a> `tabIndex` | `public` | `number` | - | `CoreGridItemHTMLElement.tabIndex` | node\_modules/typescript/lib/lib.dom.d.ts:7767 |
 | <a id="innerhtml-1"></a> `innerHTML` | `public` | `string` | - | `CoreGridItemHTMLElement.innerHTML` | node\_modules/typescript/lib/lib.dom.d.ts:9130 |
 | <a id="baseuri-1"></a> `baseURI` | `readonly` | `string` | Returns node's node document's document base URL. | `CoreGridItemHTMLElement.baseURI` | node\_modules/typescript/lib/lib.dom.d.ts:10249 |
