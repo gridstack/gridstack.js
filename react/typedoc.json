@@ -11,7 +11,22 @@
     "projects/lib/src/gridstack-widget-context.tsx"
   ],
   "tsconfig": "tsconfig.doc.json",
-  "excludeExternals": false,
+  "excludeExternals": true,
+  "externalPattern": ["**/dist/**", "node_modules/**"],
+  "externalSymbolLinkMappings": {
+    "gridstack": {
+      "GridStackWidget": "../../../doc/API.md#gridstackwidget",
+      "GridStackOptions": "../../../doc/API.md#gridstackoptions",
+      "GridStackNode": "../../../doc/API.md#gridstacknode",
+      "CoreGridStackWidget": "../../../doc/API.md#gridstackwidget",
+      "CoreGridStackOptions": "../../../doc/API.md#gridstackoptions",
+      "CoreGridStackNode": "../../../doc/API.md#gridstacknode",
+      "GridHTMLElement": "../../../doc/API.md#gridhtmlelement",
+      "GridItemHTMLElement": "../../../doc/API.md#griditemhtmlelement",
+      "CoreGridHTMLElement": "../../../doc/API.md#gridhtmlelement",
+      "CoreGridItemHTMLElement": "../../../doc/API.md#griditemhtmlelement"
+    }
+  },
   "out": "doc/api",
   "plugin": ["typedoc-plugin-markdown"],
   "theme": "markdown",

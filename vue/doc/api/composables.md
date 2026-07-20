@@ -11,7 +11,7 @@ Defined in: [vue/projects/lib/src/composables.ts:51](https://github.com/adumesny
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
 | <a id="id"></a> `id` | `string` | [vue/projects/lib/src/composables.ts:52](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L52) |
-| <a id="node"></a> `node` | `GridStackNode` | [vue/projects/lib/src/composables.ts:53](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L53) |
+| <a id="node"></a> `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) | [vue/projects/lib/src/composables.ts:53](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L53) |
 
 ***
 
@@ -52,10 +52,10 @@ Must be called within a component that is a descendant of `<GridStack>`.
 | ------ | ------ | ------ | ------ |
 | `get grid` | `GridStack` | Raw GridStack instance (not a Vue ref — never proxy it). | [vue/projects/lib/src/composables.ts:22](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L22) |
 | `get layoutVersion` | `number` | Bumps whenever the layout changes — use as a reactive dependency. | [vue/projects/lib/src/composables.ts:24](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L24) |
-| `addWidget()` | (`w`) => `GridItemHTMLElement` | - | [vue/projects/lib/src/composables.ts:25](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L25) |
+| `addWidget()` | (`w`) => [`GridItemHTMLElement`](../../../doc/API.md#griditemhtmlelement) | - | [vue/projects/lib/src/composables.ts:25](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L25) |
 | `removeWidget()` | ( `el`, `removeDOM?`, `triggerEvent?`) => `GridStack` | - | [vue/projects/lib/src/composables.ts:28](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L28) |
 | `removeAll()` | (`removeDOM`) => `GridStack` | - | [vue/projects/lib/src/composables.ts:35](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L35) |
-| `save()` | (`saveContent`, `saveGridOpt`) => `GridStackOptions` \| `GridStackWidget`[] | - | [vue/projects/lib/src/composables.ts:38](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L38) |
+| `save()` | (`saveContent`, `saveGridOpt`) => \| [`GridStackOptions`](../../../doc/API.md#gridstackoptions) \| [`GridStackWidget`](../../../doc/API.md#gridstackwidget)[] | - | [vue/projects/lib/src/composables.ts:38](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L38) |
 | `load()` | (`items`) => `GridStack` | - | [vue/projects/lib/src/composables.ts:41](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L41) |
 
 ***

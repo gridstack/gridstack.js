@@ -46,7 +46,7 @@ return the latest grid options (from GS once built, otherwise initial values)
 
 ###### Returns
 
-`GridStackNode`
+[`GridStackNode`](../../../doc/API.md#gridstacknode)
 
 ###### Set Signature
 
@@ -73,7 +73,7 @@ itemOptions: GridStackNode = {
 
 | Parameter | Type |
 | ------ | ------ |
-| `val` | `GridStackNode` |
+| `val` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
 
 ###### Returns
 
@@ -159,7 +159,7 @@ OnDestroy.ngOnDestroy
 | <a id="container"></a> `container?` | `public` | `ViewContainerRef` | Container for dynamic component creation within this grid item. Used to append child components programmatically. | [angular/projects/lib/src/lib/gridstack-item.component.ts:62](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack-item.component.ts#L62) |
 | <a id="ref"></a> `ref` | `public` | \| `undefined` \| `ComponentRef`\<[`GridstackItemComponent`](#gridstackitemcomponent)\> | Component reference for dynamic component removal. Used internally when this component is created dynamically. | [angular/projects/lib/src/lib/gridstack-item.component.ts:68](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack-item.component.ts#L68) |
 | <a id="childwidget"></a> `childWidget` | `public` | `undefined` \| [`BaseWidget`](base-widget.md#basewidget) | Reference to child widget component for serialization. Used to save/restore additional data along with grid position. | [angular/projects/lib/src/lib/gridstack-item.component.ts:74](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack-item.component.ts#L74) |
-| <a id="_options"></a> `_options?` | `protected` | `GridStackNode` | - | [angular/projects/lib/src/lib/gridstack-item.component.ts:104](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack-item.component.ts#L104) |
+| <a id="_options"></a> `_options?` | `protected` | [`GridStackNode`](../../../doc/API.md#gridstacknode) | - | [angular/projects/lib/src/lib/gridstack-item.component.ts:104](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack-item.component.ts#L104) |
 | <a id="elementref"></a> `elementRef` | `readonly` | `ElementRef`\<[`GridItemCompHTMLElement`](#griditemcomphtmlelement)\> | - | [angular/projects/lib/src/lib/gridstack-item.component.ts:114](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack-item.component.ts#L114) |
 
 ## Interfaces
@@ -173,7 +173,7 @@ Stores a back-reference to the Angular component for integration.
 
 #### Extends
 
-- `GridItemHTMLElement`
+- [`GridItemHTMLElement`](../../../doc/API.md#griditemhtmlelement)
 
 #### Methods
 
@@ -2671,7 +2671,6 @@ GridItemHTMLElement.replaceChildren
 
 | Property | Modifier | Type | Description | Inherited from | Defined in |
 | ------ | ------ | ------ | ------ | ------ | ------ |
-| <a id="gridstacknode"></a> `gridstackNode?` | `public` | `GridStackNode` | Pointer to the associated grid node instance containing position, size, and other widget data | `GridItemHTMLElement.gridstackNode` | dist/types.d.ts:45 |
 | <a id="_griditemcomp"></a> `_gridItemComp?` | `public` | [`GridstackItemComponent`](#gridstackitemcomponent) | Back-reference to the Angular GridStackItem component | - | [angular/projects/lib/src/lib/gridstack-item.component.ts:16](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack-item.component.ts#L16) |
 | <a id="ariaatomic"></a> `ariaAtomic` | `public` | `null` \| `string` | - | `GridItemHTMLElement.ariaAtomic` | node\_modules/typescript/lib/lib.dom.d.ts:2020 |
 | <a id="ariaautocomplete"></a> `ariaAutoComplete` | `public` | `null` \| `string` | - | `GridItemHTMLElement.ariaAutoComplete` | node\_modules/typescript/lib/lib.dom.d.ts:2021 |

@@ -28,8 +28,8 @@ Defined in: [vue/projects/lib/src/registry.ts:83](https://github.com/adumesny/gr
 
 | Parameter | Type |
 | ------ | ------ |
-| `node` | `GridStackNode` |
-| `w` | `GridStackWidget` |
+| `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
+| `w` | [`GridStackWidget`](../../../doc/API.md#gridstackwidget) |
 
 #### Returns
 
@@ -49,7 +49,7 @@ Defined in: [vue/projects/lib/src/registry.ts:100](https://github.com/adumesny/g
 
 | Parameter | Type |
 | ------ | ------ |
-| `node` | `GridStackNode` |
+| `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
 
 #### Returns
 

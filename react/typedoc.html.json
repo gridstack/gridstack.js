@@ -11,7 +11,8 @@
     "projects/lib/src/gridstack-widget-context.tsx"
   ],
   "tsconfig": "tsconfig.doc.json",
-  "excludeExternals": false,
+  "excludeExternals": true,
+  "externalPattern": ["**/dist/**", "node_modules/**"],
   "out": "doc/html",
   "exclude": [
     "**/*.spec.ts",

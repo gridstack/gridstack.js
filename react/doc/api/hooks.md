@@ -68,10 +68,10 @@ Defined in: [react/projects/lib/src/hooks.ts:34](https://github.com/adumesny/gri
 | `grid` | `null` \| `GridStack` | [react/projects/lib/src/hooks.ts:42](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L42) |
 | `layoutVersion` | `number` | [react/projects/lib/src/hooks.ts:43](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L43) |
 | `registerWidgetSerializer()` | (`id`, `serialize`, `deserialize?`) => () => `void` | [react/projects/lib/src/hooks.ts:44](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L44) |
-| `addWidget()` | (`w`) => `undefined` \| `GridItemHTMLElement` | [react/projects/lib/src/hooks.ts:45](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L45) |
+| `addWidget()` | (`w`) => \| `undefined` \| [`GridItemHTMLElement`](../../../doc/API.md#griditemhtmlelement) | [react/projects/lib/src/hooks.ts:45](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L45) |
 | `removeWidget()` | (`el`, `removeDOM?`, `triggerEvent?`) => `undefined` \| `GridStack` | [react/projects/lib/src/hooks.ts:49](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L49) |
 | `removeAll()` | (`removeDOM`) => `undefined` \| `GridStack` | [react/projects/lib/src/hooks.ts:54](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L54) |
-| `save()` | (`saveContent`, `saveGridOpt`) => `undefined` \| `GridStackOptions` \| `GridStackWidget`[] | [react/projects/lib/src/hooks.ts:55](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L55) |
+| `save()` | (`saveContent`, `saveGridOpt`) => \| `undefined` \| [`GridStackOptions`](../../../doc/API.md#gridstackoptions) \| [`GridStackWidget`](../../../doc/API.md#gridstackwidget)[] | [react/projects/lib/src/hooks.ts:55](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L55) |
 
 ***
 
