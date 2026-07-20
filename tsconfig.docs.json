@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "skipLibCheck": true,
-    "types": []
+    "types": [],
+    "rootDir": "./src"
   },
   "include": [
     "./src/**/*.ts"

@@ -31,7 +31,7 @@ jobs:
       run: |
         grunt
         webpack
-        tsc --project tsconfig.docs.json --stripInternal
+        npx tsc --project tsconfig.docs.json --stripInternal
 
     - name: Install Angular dependencies
       run: |
@@ -42,14 +42,10 @@ jobs:
       run: yarn build:ng
 
     - name: Install React dependencies
-      run: |
-        cd react
-        yarn install
+      run: cd react && npm install --legacy-peer-deps
 
     - name: Install Vue dependencies
-      run: |
-        cd vue
-        yarn install
+      run: cd vue && npm install --legacy-peer-deps
 
     - name: Generate all documentation
       run: yarn doc
