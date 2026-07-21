@@ -141,7 +141,8 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 13.0.0-dev (TBD)
-* feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) pageBreak printing support for grids !
+* feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) major printing support for grids using PrintOptions (pageBreak, hide, orientation, ...)
+* fix: [#3325](https://github.com/gridstack/gridstack.js/issues/3325) preinstall script
 
 ## 13.0.0 (2026-07-18)
 * NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, fix memory leak, empty content, etc...
