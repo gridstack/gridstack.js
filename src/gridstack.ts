@@ -1846,8 +1846,33 @@ export class GridStack {
       this._triggerEvent('change', elements);
     }
     this.engine.saveInitial(); // we called, now reset initial values & dirty flags
+    this._sortDom();
+
     return this;
   }
+
+  /** @internal Re-orders the HTML DOM nodes to match the visual layout for accessibility (Tab navigation) and printing (when not using CSS grids). */
+  protected _sortDom(): GridStack {
+    let nodes = this.engine.nodes;
+    nodes.forEach(n => {
+      if (n.subGrid) n.subGrid._sortDom();
+    });
+
+    if (nodes.length < 2) return this;
+    this.engine.sortNodes();
+    nodes = this.engine.nodes; // new sorted array
+    const children = this.el.children;
+    if (nodes.some((n, i) => n.el !== children[i])) {
+      // order doesn't match, re-order DOM
+      nodes.forEach(n => {
+        if (n.el && n.el.parentElement === this.el) {
+          this.el.appendChild(n.el);
+        }
+      });
+    }
+    return this;
+  }
+
 
   /** @internal */
   protected _triggerAddEvent(): GridStack {
