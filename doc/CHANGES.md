@@ -139,6 +139,9 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
+## 13.0.1 (2026-07-22)
+* fix: [#3325](https://github.com/gridstack/gridstack.js/issues/3325) preinstall script
+
 ## 13.0.0 (2026-07-18)
 * NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, fix memory leak, empty content, etc...
 * NEW: vue wrapper: brand new wrapper follow same pattern as well
