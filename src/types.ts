@@ -421,6 +421,18 @@ export interface GridStackPosition {
 }
 
 /**
+ * Print options for a widget
+ */
+export interface PrintOptions {
+  /** add a page break before this widget (default?: undefined). */
+  pageBreak?: boolean;
+  /** prevent this widget from printing (default?: undefined). */
+  hide?: boolean;
+  /** set the orientation of the printed page (default?: 'portrait'). */
+  orientation?: 'portrait' | 'landscape';
+}
+
+/**
  * GridStack Widget creation options
  */
 export interface GridStackWidget extends GridStackPosition {
@@ -444,8 +456,8 @@ export interface GridStackWidget extends GridStackPosition {
   id?: string;
   /** html to append inside as content */
   content?: string;
-  /** add a page break before this widget (default?: undefined). Useful for printing. */
-  pageBreak?: boolean;
+  /** print options */
+  print?: PrintOptions;
   /** true when widgets are only created when they scroll into view (visible) */
   lazyLoad?: boolean;
   /** local (vs grid) override - see GridStackOptions.

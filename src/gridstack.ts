@@ -416,7 +416,10 @@ export class GridStack {
 
   private _updateColumnVar(opts: GridStackOptions = this.opts): void {
     this.el.classList.add('gs-' + opts.column);
-    if (typeof opts.column === 'number') this.el.style.setProperty('--gs-column-width', `${100/opts.column}%`);
+    if (typeof opts.column === 'number') {
+      this.el.style.setProperty('--gs-column-width', `${100/opts.column}%`);
+      this.el.style.setProperty('--gs-columns', String(opts.column));
+    }
   }
 
   /**
@@ -1959,6 +1962,13 @@ export class GridStack {
       elStyle.width = n.w! > 1 ? `calc(${n.w} * var(--gs-column-width))` : null;
       elStyle.height = n.h! > 1 ? `calc(${n.h} * var(--gs-cell-height))` : null;
     }
+    
+    // Always inject variables for print CSS grid mapping (since attr() is not fully supported in calc)
+    el.style.setProperty('--gs-x', String(n.x || 0));
+    el.style.setProperty('--gs-y', String(n.y || 0));
+    el.style.setProperty('--gs-w', String(n.w || 1));
+    el.style.setProperty('--gs-h', String(n.h || 1));
+    
     // NOTE: those are technically not needed anymore (v12+) as we have CSS vars for everything, but some users depends on them to render item size using CSS
     // ALways write x,y otherwise it could be autoPositioned incorrectly #3181
     el.setAttribute('gs-x', String(n.x ?? 0));
@@ -1980,17 +1990,26 @@ export class GridStack {
       locked: 'gs-locked',
       id: 'gs-id',
       sizeToContent: 'gs-size-to-content',
-      pageBreak: 'gs-page-break',
     };
     const nodeRec = node as Record<string, unknown>;
     const attrsRec = attrs as Record<string, string>;
     for (const key in attrsRec) {
-      if (nodeRec[key]) { // 0 is valid for x,y only but done above already and not in list anyway
+      if (nodeRec[key] !== undefined && nodeRec[key] !== null && nodeRec[key] !== false) { // 0 is valid for x,y only but done above already and not in list anyway
         el.setAttribute(attrsRec[key], String(nodeRec[key]));
       } else {
         el.removeAttribute(attrsRec[key]);
       }
     }
+    if (node.print) {
+      if (node.print.pageBreak) el.setAttribute('gs-page-break', String(node.print.pageBreak)); else el.removeAttribute('gs-page-break');
+      if (node.print.hide) el.setAttribute('gs-print-hide', String(node.print.hide)); else el.removeAttribute('gs-print-hide');
+      if (node.print.orientation) el.setAttribute('gs-print-orientation', String(node.print.orientation)); else el.removeAttribute('gs-print-orientation');
+    } else {
+      el.removeAttribute('gs-page-break');
+      el.removeAttribute('gs-print-hide');
+      el.removeAttribute('gs-print-orientation');
+    }
+
     return this;
   }
 
@@ -2005,7 +2024,17 @@ export class GridStack {
     n.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
     n.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
     n.locked = Utils.toBool(el.getAttribute('gs-locked'));
-    n.pageBreak = Utils.toBool(el.getAttribute('gs-page-break'));
+    
+    let pageBreak = el.getAttribute('gs-page-break');
+    let hide = el.getAttribute('gs-print-hide');
+    let orientation = el.getAttribute('gs-print-orientation') as 'portrait' | 'landscape';
+    if (pageBreak || hide || orientation) {
+      n.print = {};
+      if (pageBreak) n.print.pageBreak = Utils.toBool(pageBreak);
+      if (hide) n.print.hide = Utils.toBool(hide);
+      if (orientation) n.print.orientation = orientation;
+    }
+
     const attr = el.getAttribute('gs-size-to-content');
     if (attr) {
       if (attr === 'true' || attr === 'false') n.sizeToContent = Utils.toBool(attr);

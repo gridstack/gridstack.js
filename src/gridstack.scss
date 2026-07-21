@@ -151,19 +151,51 @@
  }
 
 @media print {
+  @page gs-landscape {
+    size: landscape;
+  }
+  @page gs-portrait {
+    size: portrait;
+  }
+
+  /* Use native CSS Grid instead of floats for printing to perfectly respect 
+     visual coordinates and dimensions while maintaining layout flow */
   .grid-stack {
+    display: grid !important;
+    grid-template-columns: repeat(var(--gs-columns, 12), minmax(0, 1fr)) !important;
+    grid-auto-rows: var(--gs-cell-height) !important;
     height: auto !important;
   }
   .grid-stack > .grid-stack-item {
     position: relative !important;
+    float: none !important;
+    width: auto !important;
+    height: auto !important;
     left: auto !important;
     top: auto !important;
-    float: left;
+    
+    /* Apply GS coordinates natively via the injected CSS vars */
+    grid-column-start: calc(var(--gs-x) + 1) !important;
+    grid-column-end: span var(--gs-w) !important;
+    grid-row-start: calc(var(--gs-y) + 1) !important;
+    grid-row-end: span var(--gs-h) !important;
   }
   .grid-stack > .grid-stack-item[gs-page-break="true"] {
     page-break-before: always !important;
     break-before: page !important;
-    float: none !important;
-    clear: both !important;
+  }
+  .grid-stack > .grid-stack-item[gs-print-hide="true"] {
+    display: none !important;
+  }
+  .grid-stack > .grid-stack-item[gs-print-orientation="landscape"] {
+    page: gs-landscape;
+    /* Force item to take proper landscape width, overriding portrait grid track sizing.
+       vmax ensures we get the long edge of the paper regardless of default printer orientation */
+    min-width: calc(100vmax * var(--gs-w) / var(--gs-columns, 12)) !important;
+  }
+  .grid-stack > .grid-stack-item[gs-print-orientation="portrait"] {
+    page: gs-portrait;
+    /* vmin ensures we get the short edge of the paper */
+    min-width: calc(100vmin * var(--gs-w) / var(--gs-columns, 12)) !important;
   }
 }
