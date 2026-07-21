@@ -14,9 +14,7 @@
   <div class="container-fluid">
     <h1>Print Grid Demo</h1>
     <p>
-      This example demonstrates how to use the <code>pageBreak</code> widget option (or the <code>gs-page-break</code> attribute) 
-      to force a new page when printing a grid. <br/>
-      Notice how Item 3 has <code>pageBreak: true</code> and prints on a new page.
+      New v13.1+ printing support and widget <code>PrintOptions</code> to control how items are printed. <br/>
     </p>
     <div>
       <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
@@ -38,11 +36,13 @@
     };
     
     let items = [
-      {x: 0, y: 0, w: 4, h: 2, content: 'Item 1<br>(Page 1)'},
-      {x: 4, y: 0, w: 4, h: 1, content: 'Item 2<br>(Page 1)'},
-      {x: 0, y: 2, w: 12, h: 1, content: 'Item 3<br><strong>(Starts on Page 2)</strong>', pageBreak: true},
-      {x: 0, y: 3, w: 6, h: 1, content: 'Item 4<br>(Page 2)'},
-      {x: 6, y: 3, w: 6, h: 1, content: 'Item 5<br>(Page 2)'}
+      {x: 6, y: 0, w: 4, h: 1, content: 'Item 2<br>(Page 1)'},
+      {x: 1, y: 0, w: 4, h: 2, content: 'Item 1<br>(Page 1)'}, // verify domSort is working
+      {x: 0, y: 2, w: 12, h: 1, content: 'Item 3<br><strong>(Starts on Page 2)</strong>', print: { pageBreak: true } },
+      {x: 0, y: 3, w: 6, h: 1, content: 'Item 4<br>(Not Printed)', print: { hide: true } },
+      {x: 6, y: 3, w: 6, h: 1, content: 'Item 5'},
+      {x: 0, y: 4, w: 12, h: 2, content: 'Item 6<br>(Starts on Landscape Page)', print: { pageBreak: true, orientation: 'landscape' } },
+      {x: 0, y: 6, w: 12, h: 2, content: 'Item 7<br>(Starts on Portrait Page)', print: { pageBreak: true, orientation: 'portrait' } }
     ];
 
     let grid = GridStack.init(options);
