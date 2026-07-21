@@ -143,6 +143,7 @@ Change log
 ## 13.0.0-dev (TBD)
 * feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) major printing support for grids using PrintOptions (pageBreak, hide, orientation, ...)
 * fix: [#3325](https://github.com/gridstack/gridstack.js/issues/3325) preinstall script
+* fix: [#3329](https://github.com/gridstack/gridstack.js/pull/3329) DOM matches the visual order when widgets are moved around (accessibility tabbing, regular printing)
 
 ## 13.0.0 (2026-07-18)
 * NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, fix memory leak, empty content, etc...
