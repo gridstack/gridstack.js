@@ -1,6 +1,6 @@
 {
   "name": "gridstack",
-  "version": "13.0.0",
+  "version": "13.0.1",
   "license": "MIT",
   "author": "Alain Dumesny <alaind831+github@gmail.com> (https://github.com/adumesny)",
   "contributors": [
@@ -25,14 +25,18 @@
     }
   ],
   "scripts": {
-    "build": "grunt && webpack && tsc --project tsconfig.build.json --stripInternal && yarn build:ng && yarn build:react && yarn doc",
-    "build:ng": "cd angular && yarn build lib",
+    "build": "yarn build:core && yarn build:ng && yarn build:react && yarn build:vue && yarn doc",
+    "build:core": "grunt && webpack && tsc --project tsconfig.build.json --stripInternal",
+    "build:ng": "cd angular && yarn build",
     "build:react": "cd react && yarn build:lib",
-    "w": "webpack",
-    "t": "rm -rf dist/* && grunt && tsc --project tsconfig.build.json --stripInternal",
+    "build:vue": "cd vue && yarn build:lib",
+    "w": "webpack --mode development",
+    "t": "rm -rf dist/* && grunt && yarn w && tsc --project tsconfig.build.json --stripInternal",
     "doc": "doctoc ./README.md && doctoc ./doc/CHANGES.md && node scripts/generate-docs.js",
     "doc:main": "node scripts/generate-docs.js --main-only",
     "doc:angular": "node scripts/generate-docs.js --angular-only",
+    "doc:react": "node scripts/generate-docs.js --react-only",
+    "doc:vue": "node scripts/generate-docs.js --vue-only",
     "test": "yarn lint && vitest run && cd react && yarn vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

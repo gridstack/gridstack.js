@@ -7,7 +7,7 @@
     "dev": "vite",
     "start": "vite",
     "build": "vue-tsc -b && vite build",
-    "build:lib": "cd projects/lib && ../../../node_modules/.bin/vue-tsc -p tsconfig.build.json",
+    "build:lib": "cd projects/lib && ../../node_modules/.bin/vue-tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest --config vitest.config.ts",

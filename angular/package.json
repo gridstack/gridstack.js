@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build lib",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "doc": "npx typedoc --options typedoc.json && npx typedoc --options typedoc.html.json",

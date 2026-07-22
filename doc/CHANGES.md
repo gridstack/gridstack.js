@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [13.0.1 (2026-07-22)](#1301-2026-07-22)
 - [13.0.0 (2026-07-18)](#1300-2026-07-18)
 - [12.6.0 (2026-04-08)](#1260-2026-04-08)
 - [12.5.0 (2026-04-05)](#1250-2026-04-05)
@@ -141,6 +142,7 @@ Change log
 
 ## 13.0.1 (2026-07-22)
 * fix: [#3325](https://github.com/gridstack/gridstack.js/issues/3325) preinstall script
+* fix: [#3324](https://github.com/gridstack/gridstack.js/issues/3324) vue files missing from package
 
 ## 13.0.0 (2026-07-18)
 * NEW: react wrapper: re-did to follow the Angular pattern (drag&Drop between grid doesn't destroy content), events, lazyLoad support, fix memory leak, empty content, etc...
