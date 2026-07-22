@@ -1,13 +1,13 @@
 {
   "name": "vue",
   "private": true,
-  "version": "13.0.0",
+  "version": "13.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "start": "vite",
     "build": "vue-tsc -b && vite build",
-    "build:lib": "cd projects/lib && ../../../node_modules/.bin/vue-tsc -p tsconfig.build.json",
+    "build:lib": "cd projects/lib && ../../node_modules/.bin/vue-tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest --config vitest.config.ts",
@@ -27,5 +27,8 @@
     "vite": "^6.4.3",
     "vitest": "^4.1.0",
     "vue-tsc": "^2.2.10"
+  },
+  "resolutions": {
+    "vite": "^6.4.3"
   }
 }
