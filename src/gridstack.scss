@@ -174,10 +174,12 @@
     left: auto !important;
     top: auto !important;
     
-    /* Apply GS coordinates natively via the injected CSS vars */
+    /* Apply GS coordinates natively via the injected CSS vars.
+       We deliberately DO NOT set grid-row-start so that the browser's 
+       CSS Grid engine can natively auto-flow elements upwards, naturally 
+       collapsing any empty rows caused by hidden elements! */
     grid-column-start: calc(var(--gs-x) + 1) !important;
     grid-column-end: span var(--gs-w) !important;
-    grid-row-start: calc(var(--gs-y) + 1) !important;
     grid-row-end: span var(--gs-h) !important;
   }
   .grid-stack > .grid-stack-item[gs-page-break="true"] {
@@ -197,5 +199,10 @@
     page: gs-portrait;
     /* vmin ensures we get the short edge of the paper */
     min-width: calc(100vmin * var(--gs-w) / var(--gs-columns, 12)) !important;
+  }
+  
+  /* Hide interactive elements during print */
+  .grid-stack > .grid-stack-item > .ui-resizable-handle {
+    display: none !important;
   }
 }
