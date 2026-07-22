@@ -27,7 +27,7 @@
   "scripts": {
     "build": "yarn build:core && yarn build:ng && yarn build:react && yarn build:vue && yarn doc",
     "build:core": "grunt && webpack && tsc --project tsconfig.build.json --stripInternal",
-    "build:ng": "cd angular && yarn build",
+    "build:ng": "cd angular && yarn build && cd .. && grunt copy:dist",
     "build:react": "cd react && yarn build:lib",
     "build:vue": "cd vue && yarn build:lib",
     "w": "webpack --mode development",
@@ -114,6 +114,9 @@
   "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
   "files": [
     "dist",
-    "doc/API.md"
+    "doc/API.md",
+    "angular/README.md",
+    "react/README.md",
+    "vue/README.md"
   ]
 }

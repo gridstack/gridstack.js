@@ -39,6 +39,8 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'dist/angular/README.md': ['angular/README.md'],
+          'dist/react/README.md': ['react/README.md'],
+          'dist/vue/README.md': ['vue/README.md'],
           'dist/angular/src/gridstack.component.ts': ['angular/projects/lib/src/lib/gridstack.component.ts'],
           'dist/angular/src/gridstack-item.component.ts': ['angular/projects/lib/src/lib/gridstack-item.component.ts'],
           'dist/angular/src/base-widget.ts': ['angular/projects/lib/src/lib/base-widget.ts'],
