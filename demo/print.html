@@ -20,7 +20,12 @@
       <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
     </div>
     <br><br>
-    <div class="grid-stack"></div>
+    <div class="grid-stack" id="grid1"></div>
+
+    <br><br>
+    <h2>Second Grid (Default Print Behavior, 6 column)</h2>
+    <p>Notice how large items span across multiple printed pages automatically, but layout same.</p>
+    <div class="grid-stack" id="grid2"></div>
   </div>
   
   <script type="text/javascript">
@@ -42,11 +47,28 @@
       {x: 0, y: 3, w: 6, h: 1, content: 'Item 4<br>(Not Printed)', print: { hide: true } },
       {x: 6, y: 3, w: 6, h: 1, content: 'Item 5'},
       {x: 0, y: 4, w: 12, h: 2, content: 'Item 6<br>(Starts on Landscape Page)', print: { pageBreak: true, orientation: 'landscape' } },
-      {x: 0, y: 6, w: 12, h: 2, content: 'Item 7<br>(Starts on Portrait Page)', print: { pageBreak: true, orientation: 'portrait' } }
+      {x: 0, y: 6, w: 6, h: 1, content: 'Item 7'},
+      {x: 0, y: 6, w: 12, h: 2, content: 'Item 8<br>(Starts on Portrait Page)', print: { pageBreak: true, orientation: 'portrait' } },
+      {x: 0, y: 8, w: 6, h: 1, content: 'Item 9'},
     ];
 
-    let grid = GridStack.init(options);
-    grid.load(items);
+    let grid1 = GridStack.init(options, '#grid1');
+    grid1.load(items);
+
+    let grid2 = GridStack.init({...options, column: 6}, '#grid2');
+    let items2 = [];
+    for (let i = 0; i < 15; i++) {
+      let h = Math.round(1 + 3 * Math.random());
+      if (i === 2 || i === 8) {
+        h = 14; // Large item to span multiple pages
+      }
+      items2.push({
+        w: Math.round(1 + 3 * Math.random()),
+        h: h,
+        content: `Random ${i+1}` + (h > 10 ? '<br>(Spans pages)' : '')
+      });
+    }
+    grid2.load(items2);
   </script>
 </body>
 </html>

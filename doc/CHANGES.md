@@ -5,7 +5,8 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [13.0.0-dev (TBD)](#1300-dev-tbd)
+- [13.1.0 (2026-07-22)](#1310-2026-07-22)
+- [13.0.1 (2026-07-22)](#1301-2026-07-22)
 - [13.0.0 (2026-07-18)](#1300-2026-07-18)
 - [12.6.0 (2026-04-08)](#1260-2026-04-08)
 - [12.5.0 (2026-04-05)](#1250-2026-04-05)
@@ -140,9 +141,9 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 13.0.1-dev (TBD)
+## 13.1.0 (2026-07-22)
 * feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) major printing support for grids using PrintOptions (pageBreak, hide, orientation, ...)
-* fix: [#3329](https://github.com/gridstack/gridstack.js/pull/3329) DOM matches the visual order when widgets are moved around (accessibility tabbing, regular printing)
+* feat: [#3329](https://github.com/gridstack/gridstack.js/pull/3329) DOM matches the visual order when widgets are moved around (accessibility tabbing, regular printing)
 
 ## 13.0.1 (2026-07-22)
 * fix: [#3325](https://github.com/gridstack/gridstack.js/issues/3325) preinstall script
