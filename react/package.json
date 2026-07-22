@@ -1,7 +1,7 @@
 {
   "name": "react",
   "private": true,
-  "version": "13.0.0",
+  "version": "13.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -33,5 +33,8 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^6.4.3",
     "vitest": "^4.1.0"
+  },
+  "resolutions": {
+    "vite": "^6.4.3"
   }
 }

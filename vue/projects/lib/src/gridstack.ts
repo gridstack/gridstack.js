@@ -178,6 +178,7 @@ export const GridStackComponent = defineComponent({
       })
 
       grid = GridStack.init(props.options, rootEl)
+      if (!grid) return
       gridReady.value = true
       layoutVersion.value++
       isEmpty.value = !grid.engine.nodes.length

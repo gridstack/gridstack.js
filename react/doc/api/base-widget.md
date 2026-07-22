@@ -27,7 +27,7 @@ For functional components, prefer useWidgetSerializer instead.
 new BaseWidget<P>(props): BaseWidget<P>;
 ```
 
-Defined in: react/node\_modules/@types/react/ts5.0/index.d.ts:1003
+Defined in: react/node\_modules/@types/react/ts5.0/index.d.ts:1017
 
 ###### Parameters
 
@@ -51,7 +51,7 @@ Component<P>.constructor
 new BaseWidget<P>(props, context): BaseWidget<P>;
 ```
 
-Defined in: react/node\_modules/@types/react/ts5.0/index.d.ts:1008
+Defined in: react/node\_modules/@types/react/ts5.0/index.d.ts:1022
 
 ###### Parameters
 
