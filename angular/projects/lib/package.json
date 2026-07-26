@@ -1,6 +1,6 @@
 {
   "name": "gridstack-angular",
-  "version": "13.1.1",
+  "version": "13.1.2",
   "peerDependencies": {
     "@angular/common": ">=14",
     "@angular/core": ">=14"

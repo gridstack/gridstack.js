@@ -145,7 +145,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 13.1.2 (2026-07-26)
-* fix: [#3339](https://github.com/gridstack/gridstack.js/pull/3339) strict mode (v13.0.0) fails columnWidth without .breakpoints
+* fix: [#3339](https://github.com/gridstack/gridstack.js/pull/3339) strict mode (v13.0.0) fails columnWidth without .breakpoints - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)
 
 ## 13.1.1 (2026-07-25)
 * feat: [#3336](https://github.com/gridstack/gridstack.js/pull/3336) printMode?: 'flow' | 'exact' to support 2 very differenrt options due to browser bug. uddated demos to showcase one vs the other (and mode toggle) 
@@ -155,7 +155,7 @@ Change log
 * feat: [#3329](https://github.com/gridstack/gridstack.js/pull/3329) DOM matches the visual order when widgets are moved around (accessibility tabbing, regular printing)
 
 ## 13.0.2 (2026-07-26)
-* fix: [#3339](https://github.com/gridstack/gridstack.js/pull/3339) strict mode (v13.0.0) fails columnWidth without .breakpoints
+* fix: [#3339](https://github.com/gridstack/gridstack.js/pull/3339) strict mode (v13.0.0) fails columnWidth without .breakpoints - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)
 
 ## 13.0.1 (2026-07-22)
 * fix: [#3325](https://github.com/gridstack/gridstack.js/issues/3325) preinstall script
