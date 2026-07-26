@@ -15,6 +15,10 @@
     <h1>Responsive layout:'none'</h1>
     <p>show loading a fixed (<b>layout:'none'</b>) but still responsive design (150px columns) with items w:2-4</p>
     <p>showing how it will not change the layout unless it doesn't fit. loading into small view remembers the full layout (column:6)</p>
+    <div>
+      <span>Number of Columns:</span> <span id="column-text"></span>
+    </div>
+    <br/>
     <div class="grid-stack"></div>
   </div>
   <script src="events.js"></script>
@@ -24,7 +28,7 @@
       w.x=i, w.y=i, // comment out to have autoPosition:true which behaves differently
       w.w=i+2, w.content = `${i} w:${w.w}`})
     
-    GridStack.init({
+    let grid = GridStack.init({
       children,
       column: 6,
       cellHeight: 100,
@@ -34,6 +38,13 @@
         layout: 'none',
       },
     });
+
+    let text = document.querySelector('#column-text');
+    function updateText() {
+      text.innerHTML = grid.getColumn();
+    }
+    grid.on('change resizecontent', updateText);
+    updateText();
   </script>
 </body>
 </html>

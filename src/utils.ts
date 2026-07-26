@@ -1,5 +1,5 @@
 /**
- * utils.ts 13.1.1
+ * utils.ts 13.1.2
  * Copyright (c) 2021-2025 Alain Dumesny - see GridStack root license
  */
 
