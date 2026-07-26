@@ -1,4 +1,4 @@
-# GridStack React Library v13.1.0
+# GridStack React Library v13.1.1
 
 ## Modules
 
