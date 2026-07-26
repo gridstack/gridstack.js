@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Print Grid Manual Mode Demo</title>
+  <title>Print Grid Exact Mode Demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
   <script src="../dist/gridstack-all.js"></script>
@@ -12,14 +12,17 @@
 </head>
 <body>
   <div class="container-fluid">
-    <h1>Print Grid Manual Mode Demo</h1>
+    <h1>Print Grid Exact Mode Demo</h1>
     <p>
       New v13.1+ printing support with <code>printMode: 'exact'</code> and widget <code>PrintOptions</code> to control how items are printed. <br/>
       This mode perfectly respects visual coordinates, dimensions, page breaks, and orientations using CSS Grid. <br/>
-      <strong>Drawback:</strong> Chrome's print engine may slice tall items.
+      <strong>Drawbacks:</strong> Chrome's print engine may slice tall items, and widgets will show scrollbars instead of expanding to fit content.
     </p>
     <div class="gs-print-hide">
       <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
+      <label style="margin-left: 15px;">
+        <input type="checkbox" id="printModeToggle" checked onchange="togglePrintMode()"> Exact Print Mode
+      </label>
     </div>
     <br><br>
     <div class="grid-stack" id="grid1"></div>
@@ -53,6 +56,16 @@
 
     let grid1 = GridStack.init(options, '#grid1');
     grid1.load(items);
+
+    function togglePrintMode() {
+      let isExact = document.getElementById('printModeToggle').checked;
+      let el = document.getElementById('grid1');
+      if (isExact) {
+        el.classList.add('gs-print-exact');
+      } else {
+        el.classList.remove('gs-print-exact');
+      }
+    }
   </script>
 </body>
 </html>
