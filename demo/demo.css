@@ -1,5 +1,5 @@
 /* required file for gridstack to work */
-@import "../node_modules/gridstack/dist/gridstack.min.css";
+@import "../node_modules/gridstack/dist/gridstack.css";
 
 /* Optional styles for demos */
 .btn-primary {
@@ -48,20 +48,38 @@ h1 {
   background: #eee;
 }
 
+@media print {
+  .grid-stack {
+    background: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 .sidebar > .grid-stack-item,
 .grid-stack-item-content {
   text-align: center;
   background-color: #18bc9c;
 }
 
+@media print {
+  .grid-stack-item-content {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 .card-header {
   margin: 0;
-  cursor: move;
+  cursor: grab;
   min-height: 25px;
   background-color: #16af91;
 }
 .card-header:hover {
   background-color: #149b80;
+}
+.grid-stack-dragging {
+  cursor: grabbing;
 }
 
 .ui-draggable-disabled.ui-resizable-disabled > .grid-stack-item-content {

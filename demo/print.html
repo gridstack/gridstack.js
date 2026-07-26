@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Print Grid Demo (Default Flow Mode)</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Print Grid Demo</h1>
+    <p>
+      Default v13.1+ Print Behavior (Flow Mode), 6 column. Notice how large items span across multiple printed pages automatically without being sliced.<br/>
+      <strong>Drawback:</strong> Cannot force exact layout, and manual page breaks/orientations may not work well.
+    </p>
+    <div class="gs-print-hide">
+      <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
+      <label style="margin-left: 15px;">
+        <input type="checkbox" id="printModeToggle" onchange="togglePrintMode()"> Exact Print Mode
+      </label>
+    </div>
+    <br><br>
+    <div class="grid-stack" id="grid2"></div>
+  </div>
+  
+  <script type="text/javascript">
+    // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
+    GridStack.renderCB = function(el, w) {
+      el.innerHTML = w.content;
+    };
+
+    let options = {
+      float: true,
+      cellHeight: 100,
+      margin: 10,
+    };
+    
+    let grid2 = GridStack.init({...options, column: 6}, '#grid2');
+    let items2 = [];
+    for (let i = 0; i < 15; i++) {
+      let h = Math.round(1 + 3 * Math.random());
+      if (i === 2 || i === 8) {
+        h = 14; // Large item to span multiple pages
+      }
+      // Calculate a number of lines that roughly fits the height (cellHeight is 100px)
+      let lines = Math.floor(h * 3.5);
+      items2.push({
+        w: Math.round(1 + 3 * Math.random()),
+        h: h,
+        content: `Random ${i+1}` + (h > 10 ? '<br>(Spans pages)<br>' : '<br>') + 'Line<br>'.repeat(lines)
+      });
+    }
+    grid2.load(items2);
+
+    function togglePrintMode() {
+      let isExact = document.getElementById('printModeToggle').checked;
+      let el = document.getElementById('grid2');
+      if (isExact) {
+        el.classList.add('gs-print-exact');
+      } else {
+        el.classList.remove('gs-print-exact');
+      }
+    }
+  </script>
+</body>
+</html>

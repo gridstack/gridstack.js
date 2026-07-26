@@ -57,9 +57,12 @@
         columnWidth: 100, // wanted width
       },
       children: items,
-      float: true })
-    .on('change', (ev, gsItems) => text.innerHTML = grid.getColumn());
-    text.innerHTML = grid.getColumn();
+      float: true });
+    function updateText() {
+      text.innerHTML = grid.getColumn();
+    }
+    grid.on('change resizecontent', updateText);
+    updateText();
   </script>
 </body>
 </html>

@@ -7,7 +7,7 @@
   <title>Right-To-Left (RTL) demo</title>
   <style type="text/css">
     /* don't include demo.css as that has some forced text aligment */
-    @import "../node_modules/gridstack/dist/gridstack.min.css";
+    @import "../node_modules/gridstack/dist/gridstack.css";
     .grid-stack {
       background: #FAFAD2;
     }
@@ -32,7 +32,12 @@
       {x: 6, y: 0, w: 2, h: 2},
     ];
     items.forEach((item, i) => item.content = 'item ' + i);
-    let grid = GridStack.init({rtl: true, children: items});
+    let grid = GridStack.init({
+        rtl: true,
+        float: true,
+        children: items,
+        resizable: {handles: 'sw,se'}
+    });
 
     function addWidget() {
       let w = {
