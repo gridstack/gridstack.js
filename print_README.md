@@ -45,8 +45,9 @@ let grid = GridStack.init({
 - Zero vertical gaps (perfect 2D masonry packing).
 - Honors manual `PrintOptions` like `pageBreak: true` and `orientation: 'landscape'`.
 
-**The Trade-off (Slicing):**
-Because it uses CSS Grid, Chrome's pagination bug applies. If a tall widget lands on a page boundary, Chrome will likely slice it in half across two pages.
+**The Trade-offs:**
+- **Slicing:** Because it uses CSS Grid, Chrome's pagination bug applies. If a tall widget lands on a page boundary, Chrome will likely slice it in half across two pages.
+- **Scrollbars:** Widgets do *not* auto-expand their height to fit content. If a widget has more content than its `h` value allows, it will print with a scrollbar (or clip the content) just like it does on screen, rather than expanding and pushing the widgets below it down.
 
 ---
 
@@ -54,7 +55,7 @@ Because it uses CSS Grid, Chrome's pagination bug applies. If a tall widget land
 
 You can customize how individual widgets print by passing a `print` object to the widget options.
 
-*Note: `pageBreak` and `orientation` work best in **Exact Mode**.*
+*Note: `pageBreak` and `orientation` require **Exact Mode**. In Flow Mode, items use `float: left` to achieve natural wrapping, and Chrome's print engine ignores forced page breaks on floated elements - `pageBreak` and `orientation` will have no effect there.*
 
 ```javascript
 {

@@ -19,6 +19,9 @@
     </p>
     <div class="gs-print-hide">
       <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
+      <label style="margin-left: 15px;">
+        <input type="checkbox" id="printModeToggle" onchange="togglePrintMode()"> Exact Print Mode
+      </label>
     </div>
     <br><br>
     <div class="grid-stack" id="grid2"></div>
@@ -52,6 +55,16 @@
       });
     }
     grid2.load(items2);
+
+    function togglePrintMode() {
+      let isExact = document.getElementById('printModeToggle').checked;
+      let el = document.getElementById('grid2');
+      if (isExact) {
+        el.classList.add('gs-print-exact');
+      } else {
+        el.classList.remove('gs-print-exact');
+      }
+    }
   </script>
 </body>
 </html>
