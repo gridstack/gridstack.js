@@ -158,15 +158,62 @@
     size: portrait;
   }
 
-  /* Use native CSS Grid instead of floats for printing to perfectly respect 
-     visual coordinates and dimensions while maintaining layout flow */
-  .grid-stack {
+  /* ========================================================================
+     DEFAULT PRINT MODE: Flow
+     Ignores exact Y/H coordinates and uses block/float flow. 
+     Items auto-size their height and flow naturally across pages without slicing.
+     Drawback: Cannot force exact layout, page breaks/orientations may not work well.
+     ======================================================================== */
+  .grid-stack:not(.gs-print-exact) {
+    display: block !important;
+    height: auto !important;
+    position: static !important;
+  }
+  .grid-stack:not(.gs-print-exact) > .grid-stack-item {
+    display: block !important;
+    float: left !important;
+    position: static !important;
+    height: auto !important; /* Let it grow with content */
+    left: auto !important;
+    top: auto !important;
+    
+    /* Proportional width based on grid columns */
+    width: calc(100% * var(--gs-w) / var(--gs-columns, 12)) !important;
+
+    /* Prevent slicing items across pages */
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  .grid-stack:not(.gs-print-exact) > .grid-stack-item > .grid-stack-item-content {
+    position: relative !important; /* change from absolute to relative to dictate parent height */
+    height: auto !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    
+    /* Convert absolute positioning offsets to margins to keep the gaps */
+    margin-top: var(--gs-item-margin-top) !important;
+    margin-right: var(--gs-item-margin-right) !important;
+    margin-bottom: var(--gs-item-margin-bottom) !important;
+    margin-left: var(--gs-item-margin-left) !important;
+    
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+  }
+
+  /* ========================================================================
+     EXACT PRINT MODE: .gs-print-exact (CSS Grid)
+     Perfectly respects visual coordinates, dimensions, page breaks, and orientations.
+     Drawback: Chrome's print engine may slice tall items or push entire rows to the next page.
+     ======================================================================== */
+  .grid-stack.gs-print-exact {
     display: grid !important;
     grid-template-columns: repeat(var(--gs-columns, 12), minmax(0, 1fr)) !important;
     grid-auto-rows: var(--gs-cell-height) !important;
     height: auto !important;
   }
-  .grid-stack > .grid-stack-item {
+  .grid-stack.gs-print-exact > .grid-stack-item {
     position: relative !important;
     float: none !important;
     width: auto !important;
@@ -182,11 +229,16 @@
     grid-column-end: span var(--gs-w) !important;
     grid-row-end: span var(--gs-h) !important;
   }
+
+  /* ========================================================================
+     SHARED PRINT STYLES
+     ======================================================================== */
   .grid-stack > .grid-stack-item[gs-page-break="true"] {
     page-break-before: always !important;
     break-before: page !important;
   }
-  .grid-stack > .grid-stack-item[gs-print-hide="true"] {
+  .grid-stack > .grid-stack-item[gs-print-hide="true"],
+  .gs-print-hide {
     display: none !important;
   }
   .grid-stack > .grid-stack-item[gs-print-orientation="landscape"] {

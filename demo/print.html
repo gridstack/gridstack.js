@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Print Grid Demo</title>
+  <title>Print Grid Demo (Default Flow Mode)</title>
 
   <link rel="stylesheet" href="demo.css"/>
   <script src="../dist/gridstack-all.js"></script>
@@ -14,17 +14,13 @@
   <div class="container-fluid">
     <h1>Print Grid Demo</h1>
     <p>
-      New v13.1+ printing support and widget <code>PrintOptions</code> to control how items are printed. <br/>
+      Default v13.1+ Print Behavior (Flow Mode), 6 column. Notice how large items span across multiple printed pages automatically without being sliced.<br/>
+      <strong>Drawback:</strong> Cannot force exact layout, and manual page breaks/orientations may not work well.
     </p>
-    <div>
+    <div class="gs-print-hide">
       <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
     </div>
     <br><br>
-    <div class="grid-stack" id="grid1"></div>
-
-    <br><br>
-    <h2>Second Grid (Default Print Behavior, 6 column)</h2>
-    <p>Notice how large items span across multiple printed pages automatically, but layout same.</p>
     <div class="grid-stack" id="grid2"></div>
   </div>
   
@@ -40,21 +36,6 @@
       margin: 10,
     };
     
-    let items = [
-      {x: 6, y: 1, w: 4, h: 1, content: 'Item 2<br>(Page 1)'}, // test floating (due to hidden:true support to reclaim space, will move upwards)
-      {x: 1, y: 0, w: 4, h: 2, content: 'Item 1<br>(Page 1)'}, // verify domSort is working
-      {x: 0, y: 2, w: 12, h: 1, content: 'Item 3<br><strong>(Starts on Page 2)</strong>', print: { pageBreak: true } },
-      {x: 0, y: 3, w: 12, h: 1, content: 'Item 4<br>(Not Printed)', print: { hide: true } },
-      {x: 6, y: 3, w: 6, h: 1, content: 'Item 5'}, // should reflow upwards
-      {x: 0, y: 4, w: 12, h: 2, content: 'Item 6<br>(Starts on Landscape Page)', print: { pageBreak: true, orientation: 'landscape' } },
-      {x: 0, y: 6, w: 6, h: 1, content: 'Item 7'},
-      {x: 0, y: 6, w: 12, h: 2, content: 'Item 8<br>(Starts on Portrait Page)', print: { pageBreak: true, orientation: 'portrait' } },
-      {x: 0, y: 8, w: 6, h: 1, content: 'Item 9'},
-    ];
-
-    let grid1 = GridStack.init(options, '#grid1');
-    grid1.load(items);
-
     let grid2 = GridStack.init({...options, column: 6}, '#grid2');
     let items2 = [];
     for (let i = 0; i < 15; i++) {
@@ -62,10 +43,12 @@
       if (i === 2 || i === 8) {
         h = 14; // Large item to span multiple pages
       }
+      // Calculate a number of lines that roughly fits the height (cellHeight is 100px)
+      let lines = Math.floor(h * 3.5);
       items2.push({
         w: Math.round(1 + 3 * Math.random()),
         h: h,
-        content: `Random ${i+1}` + (h > 10 ? '<br>(Spans pages)' : '')
+        content: `Random ${i+1}` + (h > 10 ? '<br>(Spans pages)<br>' : '<br>') + 'Line<br>'.repeat(lines)
       });
     }
     grid2.load(items2);
