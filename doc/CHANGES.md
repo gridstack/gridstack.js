@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [13.1.1 (2026-07-25)](#1311-2026-07-25)
 - [13.1.0 (2026-07-22)](#1310-2026-07-22)
 - [13.0.1 (2026-07-22)](#1301-2026-07-22)
 - [13.0.0 (2026-07-18)](#1300-2026-07-18)
@@ -140,6 +141,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 13.1.1 (2026-07-25)
+* feat: [#3336](https://github.com/gridstack/gridstack.js/pull/3336) printMode?: 'flow' | 'exact' to support 2 very differenrt options due to browser bug. uddated demos to showcase one vs the other (and mode toggle) 
 
 ## 13.1.0 (2026-07-22)
 * feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) major printing support for grids using PrintOptions (pageBreak, hide, orientation, ...)
