@@ -354,6 +354,14 @@ export interface GridStackOptions {
   row?: number;
 
   /**
+   * Print mode for the grid (default?: 'flow').
+   * - 'flow': items auto-size their height and flow naturally across pages without slicing.
+   * - 'exact': uses CSS grid to perfectly respect visual coordinates and dimensions, but may slice tall items or push entire rows to the next page.
+   * See [print_README.md](https://github.com/gridstack/gridstack.js/tree/master/print_README.md) for more details.
+   */
+  printMode?: 'flow' | 'exact';
+
+  /**
    * if true turns grid to RTL, and applies the `grid-stack-rtl class`. Possible values are true, false, 'auto' (default?: 'auto')
    * See [example](http://gridstack.github.io/gridstack.js/demo/right-to-left(rtl).html)
    */
@@ -421,14 +429,15 @@ export interface GridStackPosition {
 }
 
 /**
- * Print options for a widget
+ * Print options for a widget.
+ * See [print_README.md](https://github.com/gridstack/gridstack.js/tree/master/print_README.md) for more details.
  */
 export interface PrintOptions {
-  /** add a page break before this widget (default?: undefined). */
-  pageBreak?: boolean;
-  /** prevent this widget from printing (default?: undefined). */
+  /** prevent this widget from printing (default?: undefined). Applies to both print modes. */
   hide?: boolean;
-  /** set the orientation of the printed page (default?: 'portrait'). */
+  /** add a page break before this widget (default?: undefined). Note: Only works in exact mode (`printMode: 'exact'`). See [print_README.md](https://github.com/gridstack/gridstack.js/tree/master/print_README.md) */
+  pageBreak?: boolean;
+  /** set the orientation of the printed page (default?: 'portrait'). Note: Only works in exact mode (`printMode: 'exact'`). See [print_README.md](https://github.com/gridstack/gridstack.js/tree/master/print_README.md) */
   orientation?: 'portrait' | 'landscape';
 }
 
