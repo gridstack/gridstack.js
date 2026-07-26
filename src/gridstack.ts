@@ -297,8 +297,12 @@ export class GridStack {
       if (!resp.columnWidth && !bk?.length) {
         delete opts.columnOpts;
       } else {
-        resp.columnMax = resp.columnMax || 12;
-        if (bk!.length > 1) bk!.sort((a, b) => (b.w || 0) - (a.w || 0));
+        if (bk && bk.length > 1) {
+          bk.sort((a, b) => (b.w || 0) - (a.w || 0));
+          delete resp.columnWidth; // breakpoints wins if both set
+        } else {
+          resp.columnMax = resp.columnMax || 12; // set resonable limit ?
+        }
       }
     }
 
