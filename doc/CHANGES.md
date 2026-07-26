@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [13.0.2 (2026-07-26)](#1302-2026-07-26)
 - [13.0.1 (2026-07-22)](#1301-2026-07-22)
 - [13.0.0 (2026-07-18)](#1300-2026-07-18)
 - [12.6.0 (2026-04-08)](#1260-2026-04-08)
@@ -139,6 +140,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 13.0.2 (2026-07-26)
+* fix: [#3340](https://github.com/gridstack/gridstack.js/pull/3340) strict mode (v13.0.0) fails columnWidth without .breakpoints
 
 ## 13.0.1 (2026-07-22)
 * fix: [#3325](https://github.com/gridstack/gridstack.js/issues/3325) preinstall script
