@@ -2037,11 +2037,11 @@ export class GridStack {
     }
     if (node.print) {
       if (node.print.pageBreak) el.setAttribute('gs-page-break', String(node.print.pageBreak)); else el.removeAttribute('gs-page-break');
-      if (node.print.hide) el.setAttribute('gs-print-hide', String(node.print.hide)); else el.removeAttribute('gs-print-hide');
+      if (node.print.hide) el.classList.add('gs-print-hide'); else el.classList.remove('gs-print-hide');
       if (node.print.orientation) el.setAttribute('gs-print-orientation', String(node.print.orientation)); else el.removeAttribute('gs-print-orientation');
     } else {
       el.removeAttribute('gs-page-break');
-      el.removeAttribute('gs-print-hide');
+      el.classList.remove('gs-print-hide');
       el.removeAttribute('gs-print-orientation');
     }
 
@@ -2061,12 +2061,12 @@ export class GridStack {
     n.locked = Utils.toBool(el.getAttribute('gs-locked'));
     
     let pageBreak = el.getAttribute('gs-page-break');
-    let hide = el.getAttribute('gs-print-hide');
+    let hide = el.classList.contains('gs-print-hide');
     let orientation = el.getAttribute('gs-print-orientation') as 'portrait' | 'landscape';
     if (pageBreak || hide || orientation) {
       n.print = {};
       if (pageBreak) n.print.pageBreak = Utils.toBool(pageBreak);
-      if (hide) n.print.hide = Utils.toBool(hide);
+      if (hide) n.print.hide = true;
       if (orientation) n.print.orientation = orientation;
     }
 
