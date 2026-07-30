@@ -66,7 +66,9 @@ export class DDResizableHandle {
 
   /** call this when resize handle needs to be removed and cleaned up */
   public destroy(): DDResizableHandle {
-    if (this.moving) this._mouseUp(this.mouseDownEvent!);
+    // Clean up whenever a gesture is armed (mousedown), not only after the
+    // 3px threshold flips `moving`. Mirrors DDDraggable.destroy(). See #3345.
+    if (this.mouseDownEvent) this._mouseUp(this.mouseDownEvent);
     this.el.removeEventListener('mousedown', this._mouseDown);
     if (isTouch) {
       this.el.removeEventListener('touchstart', touchstart);
