@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3198 Drop large widget into small subgrid</title>
+  <link rel="stylesheet" href="../../../demo/demo.css"/>
+  <script src="../../../dist/gridstack-all.js"></script>
+ </head>
+<body>
+  <h1>3198 Drop large widget into small subgrid</h1>
+  <p>Test for dropping a large widget into a subgrid whose height is smaller than the widget.</p>
+  <div class="grid-stack">
+  </div>
+  
+  <script type="text/javascript">
+    let subGridOpts = {
+      cellHeight: 50,
+      acceptWidgets: true,
+      children: []
+    };
+
+    let items = [
+      {x: 0, y: 0, w: 3, h: 2, content: '1'},
+      {x: 0, y: 2, w: 12, h: 4, content: 'section H:4', subGridOpts: subGridOpts},
+      {x: 0, y: 5, w: 3, h: 2, content: '2'},
+      {x: 4, y: 5, w: 3, h: 6, content: 'larger H:6'}
+    ];
+
+    let grid = GridStack.init({
+      cellHeight: 50,
+      margin: 5,
+      acceptWidgets: true,
+      children: items
+    });
+  </script>
+</body>
+</html>
