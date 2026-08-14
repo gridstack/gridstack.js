@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useRef } from "react";
 import { Utils } from "gridstack";
-import type { GridStackNode } from "gridstack";
+import type { GridStackElement, GridStackNode } from "gridstack";
 import { GridStackContext } from "./gridstack-context";
 import { GridStackWidgetContext } from "./gridstack-widget-context";
 import type { GridStackWidget } from "./types";
@@ -42,12 +42,9 @@ export function useGridStack() {
       grid,
       layoutVersion,
       registerWidgetSerializer,
-      addWidget: (w: GridStackWidget) =>
-        grid?.addWidget(
-          w as Parameters<NonNullable<typeof grid>["addWidget"]>[0]
-        ),
+      addWidget: (w: GridStackWidget) => grid?.addWidget(w),
       removeWidget: (
-        el: Parameters<NonNullable<typeof grid>["removeWidget"]>[0],
+        el: GridStackElement,
         removeDOM?: boolean,
         triggerEvent?: boolean
       ) => grid?.removeWidget(el, removeDOM, triggerEvent),
