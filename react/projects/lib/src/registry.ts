@@ -3,10 +3,10 @@
  * Dispatches via DOM `_gridComp` / `_gridItemRef` back-refs (no closure over per-grid state).
  */
 import { GridStack, Utils } from "gridstack";
-import type { GridStackNode, GridStackWidget as CoreGridStackWidget } from "gridstack";
 import type {
   GridHTMLElement,
   GridItemHTMLElement,
+  GridStackNode,
   GridStackWidget,
 } from "./types";
 
@@ -36,39 +36,37 @@ function nearestGridComp(el: HTMLElement | null): GridHTMLElement["_gridComp"] |
 /** @internal */
 export function gsCreateReactComponents(
   parent: HTMLElement,
-  w: CoreGridStackWidget,
+  w: GridStackWidget,
   add: boolean,
   isGrid: boolean
 ): HTMLElement | undefined {
   if (add) {
     if (isGrid) {
-      const opt = w as GridStackWidget;
       const classes = ["grid-stack"];
-      if (opt.class) classes.push(...String(opt.class).split(" ").filter(Boolean));
+      if (w.class) classes.push(...w.class.split(" ").filter(Boolean));
       const el = Utils.createDiv(classes) as GridHTMLElement;
       // Inherit the host's _gridComp so nested-grid children can register portals.
       const inherited = nearestGridComp(parent);
       if (inherited) el._gridComp = inherited;
-      parent?.appendChild(el);
+      parent.appendChild(el);
       return el;
     }
 
     const gridHost = (parent as GridHTMLElement)._gridComp;
     if (!gridHost) return undefined;
 
-    const opt = w as GridStackWidget;
     const itemClasses = ["grid-stack-item"];
-    if (opt.class) itemClasses.push(...String(opt.class).split(" ").filter(Boolean));
+    if (w.class) itemClasses.push(...w.class.split(" ").filter(Boolean));
     const el = Utils.createDiv(itemClasses) as GridItemHTMLElement;
     Utils.createDiv(["grid-stack-item-content"], el);
 
-    const id = opt.id != null ? String(opt.id) : undefined;
+    const id = w.id;
     if (id) {
       el._gridItemRef = { id, gridComp: gridHost };
 
-      if (opt.component) {
-        // Utils.lazyLoad checks opt.lazyLoad and grid.opts.lazyLoad with correct precedence.
-        const lazy = Utils.lazyLoad(w as GridStackNode);
+      if (w.component) {
+        // Utils.lazyLoad checks w.lazyLoad and grid.opts.lazyLoad with correct precedence.
+        const lazy = Utils.lazyLoad(w);
         if (lazy) {
           el._lazyObserver = new IntersectionObserver(([entry]) => {
             if (entry.isIntersecting) {
@@ -85,15 +83,15 @@ export function gsCreateReactComponents(
       }
     }
 
-    if (opt.content != null && opt.content !== "") {
-      const content = el.querySelector(".grid-stack-item-content") as HTMLElement;
-      if (content) content.textContent = String(opt.content);
+    if (w.content) {
+      const content = el.querySelector(".grid-stack-item-content");
+      if (content) content.textContent = w.content;
     }
     return el;
   }
 
   // Remove path
-  const el = (w as GridStackWidget).el as GridItemHTMLElement | undefined;
+  const el = w.el as GridItemHTMLElement | undefined;
   if (el?._lazyObserver) {
     el._lazyObserver.disconnect();
     delete el._lazyObserver;
@@ -109,18 +107,17 @@ export function gsCreateReactComponents(
 
 export function gsSaveAdditionalReactInfo(
   node: GridStackNode,
-  w: CoreGridStackWidget
+  w: GridStackWidget
 ): void {
   const n = node as GridStackNode & { component?: string; props?: Record<string, unknown> };
-  const out = w as GridStackWidget;
-  if (n.component != null) out.component = n.component;
-  if (n.props != null) out.props = { ...n.props };
+  if (n.component != null) w.component = n.component;
+  if (n.props != null) w.props = { ...n.props };
   // Strip runtime-only fields that must never appear in serialized output.
-  delete (out as Record<string, unknown>).visibleObservable;
+  delete (w as Record<string, unknown>).visibleObservable;
   const el = node.el as GridItemHTMLElement | undefined;
-  const id = n.id != null ? String(n.id) : undefined;
+  const id = n.id;
   if (id && el?._gridItemRef?.gridComp?.mergeWidgetPropsForSave) {
-    el._gridItemRef.gridComp.mergeWidgetPropsForSave(id, out);
+    el._gridItemRef.gridComp.mergeWidgetPropsForSave(id, w);
   }
 }
 
