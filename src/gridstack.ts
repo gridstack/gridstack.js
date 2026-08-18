@@ -3086,7 +3086,8 @@ export class GridStack {
       if (event.hasMovedX) {
         // Set the X based on already calculated p width and node properties.
         if (node.x != undefined && p.w != undefined && node.w != undefined) {
-          p.x = node.x - (p.w - node.w);
+          const calcPX = node.x - (p.w - node.w);
+          p.x = calcPX < 0 ? 0 : calcPX;
         }
         else {
           const left = ui.position!.left + mLeft;
@@ -3096,7 +3097,8 @@ export class GridStack {
       if (event.hasMovedY) {
         // Set the Y based on already calculated p height and node properties.
         if (node.y != undefined && p.h != undefined && node.h != undefined) {
-          p.y = node.y - (p.h - node.h);
+          const calcPY = node.y - (p.h - node.h);
+          p.y = calcPY < 0 ? 0 : calcPY;
         }
         else {
           const top = ui.position!.top + mTop;
