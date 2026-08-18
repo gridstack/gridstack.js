@@ -461,7 +461,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** @internal starts or continues auto-scroll when the dragged helper is clipped by the scroll container.
    * Takes the grid's own element to find the scroll container so external/sidebar drags work too (#2074). */
-   public updateScrollPosition(gridEl: HTMLElement): void {
+  public updateScrollPosition(gridEl: HTMLElement): void {
     this._autoScrollContainer = Utils.getScrollElement(gridEl); // always use latest active grid
     const clipping = this._getClipping(this.helper!, this._autoScrollContainer);
     if (clipping === 0) {
