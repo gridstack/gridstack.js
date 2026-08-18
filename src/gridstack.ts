@@ -3084,8 +3084,14 @@ export class GridStack {
       // for SE/S/E handles the top-left is anchored — recalculating from pixels causes
       // rounding drift on fine grids where cellWidth/cellHeight are only a few pixels. #385 #1356
       if (event.hasMovedX) {
-        const left = ui.position!.left + mLeft;
-        p.x = Math.round(left / cellWidth);
+        // Set the X based on the node properties.
+        if (node.x != undefined && p.w != undefined && node.w != undefined) {
+          p.x = node.x - (p.w - node.w);
+        }
+        else {
+          const left = ui.position!.left + mLeft;
+          p.x = Math.round(left / cellWidth);
+        }
       }
       if (event.hasMovedY) {
         const top = ui.position!.top + mTop;
