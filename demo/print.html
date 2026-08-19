@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Print Grid Demo (Default Flow Mode)</title>
+  <title>Print Grid Demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
   <script src="../dist/gridstack-all.js"></script>
@@ -14,19 +14,19 @@
   <div class="container-fluid">
     <h1>Print Grid Demo</h1>
     <p>
-      Default v13.1+ Print Behavior (Flow Mode), 6 column. Notice how large items span across multiple printed pages automatically without being sliced.<br/>
-      <strong>Drawback:</strong> Cannot force exact layout, and manual page breaks/orientations may not work well.
+      v13.1+ printing support, 6 column. Widgets auto-size to their content and flow naturally across
+      pages - notice how the large items span multiple printed pages automatically without being sliced
+      in half, and without showing a scrollbar.<br/>
+      See <a href="print_exact.html">Print grid (advanced PrintOptions)</a> for per-widget <code>hide</code>,
+      <code>pageBreak</code> and <code>orientation</code> examples.
     </p>
     <div class="gs-print-hide">
       <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
-      <label style="margin-left: 15px;">
-        <input type="checkbox" id="printModeToggle" onchange="togglePrintMode()"> Exact Print Mode
-      </label>
     </div>
     <br><br>
     <div class="grid-stack" id="grid2"></div>
   </div>
-  
+
   <script type="text/javascript">
     // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
     GridStack.renderCB = function(el, w) {
@@ -38,7 +38,7 @@
       cellHeight: 100,
       margin: 10,
     };
-    
+
     let grid2 = GridStack.init({...options, column: 6}, '#grid2');
     let items2 = [];
     for (let i = 0; i < 15; i++) {
@@ -55,16 +55,6 @@
       });
     }
     grid2.load(items2);
-
-    function togglePrintMode() {
-      let isExact = document.getElementById('printModeToggle').checked;
-      let el = document.getElementById('grid2');
-      if (isExact) {
-        el.classList.add('gs-print-exact');
-      } else {
-        el.classList.remove('gs-print-exact');
-      }
-    }
   </script>
 </body>
 </html>

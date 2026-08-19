@@ -340,12 +340,6 @@ export class GridStack {
       this.el.classList.add('grid-stack-rtl');
     }
 
-    if (opts.printMode === 'exact') {
-      this.el.classList.add('gs-print-exact');
-    } else {
-      this.el.classList.add('gs-print-flow');
-    }
-
     // check if we're been nested, and if so update our style and keep pointer around (used during save)
     const parentGridItem: GridItemHTMLElement | null = this.el.closest('.' + gridDefaults.itemClass!);
     const parentNode = parentGridItem?.gridstackNode;

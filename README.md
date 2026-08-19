@@ -304,10 +304,9 @@ See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html).
 
 ## Printing Support
 
-GridStack v13.1+ introduces native printing support with two distinct layout modes to handle the complexities of browser print engines (like Chrome's Flexbox/Grid pagination bug).
-
-- **Flow Mode (Default):** Items auto-size their height and flow naturally across pages without slicing. Best for dashboards with tall widgets that span multiple pages.
-- **Exact Mode (`printMode: 'exact'`):** Uses CSS Grid to perfectly respect visual coordinates and dimensions, but may slice tall items or push entire rows to the next page. Best for single-page dashboards.
+GridStack v13.1+ introduces native printing support. Widgets auto-size to their content and flow naturally
+across pages without being sliced in half, and a hidden widget (`print.hide`) leaves no gap behind. Per-widget
+`PrintOptions` let you force a page break or switch a widget's page to landscape/portrait.
 
 See [print_README.md](./print_README.md) for full details, examples, and how to use widget `PrintOptions` (like `pageBreak` and `orientation`).
 
