@@ -159,24 +159,30 @@
   }
 
   /* ========================================================================
-     DEFAULT PRINT MODE: Flow
-     Ignores exact Y/H coordinates and uses block/float flow. 
-     Items auto-size their height and flow naturally across pages without slicing.
-     Drawback: Cannot force exact layout, page breaks/orientations may not work well.
+     PRINT LAYOUT
+     GridStack normally positions items with `position: absolute`, which browsers
+     can't paginate at all (it's removed from the flow). For print we switch to
+     block/float flow instead: items auto-size their height to content and flow
+     left to right, wrapping naturally across pages without being sliced in half.
+     Trade-off: this ignores the exact on-screen Y coordinate, so if one item in
+     a row is much taller than its siblings, shorter siblings in the next row
+     still can't start higher than that tall item's bottom (plain CSS has no
+     print-safe masonry packing) - hidden items don't cause this though, since
+     a display:none item simply takes no space and following items move up.
      ======================================================================== */
-  .grid-stack:not(.gs-print-exact) {
+  .grid-stack {
     display: block !important;
     height: auto !important;
     position: static !important;
   }
-  .grid-stack:not(.gs-print-exact) > .grid-stack-item {
+  .grid-stack > .grid-stack-item {
     display: block !important;
     float: left !important;
     position: static !important;
     height: auto !important; /* Let it grow with content */
     left: auto !important;
     top: auto !important;
-    
+
     /* Proportional width based on grid columns */
     width: calc(100% * var(--gs-w) / var(--gs-columns, 12)) !important;
 
@@ -184,18 +190,18 @@
     break-inside: avoid !important;
     page-break-inside: avoid !important;
   }
-  .grid-stack:not(.gs-print-exact) > .grid-stack-item > .grid-stack-item-content {
+  .grid-stack > .grid-stack-item > .grid-stack-item-content {
     position: relative !important; /* change from absolute to relative to dictate parent height */
     height: auto !important;
     overflow: visible !important;
     white-space: normal !important;
-    
+
     /* Convert absolute positioning offsets to margins to keep the gaps */
     margin-top: var(--gs-item-margin-top) !important;
     margin-right: var(--gs-item-margin-right) !important;
     margin-bottom: var(--gs-item-margin-bottom) !important;
     margin-left: var(--gs-item-margin-left) !important;
-    
+
     top: auto !important;
     right: auto !important;
     bottom: auto !important;
@@ -203,46 +209,32 @@
   }
 
   /* ========================================================================
-     EXACT PRINT MODE: .gs-print-exact (CSS Grid)
-     Perfectly respects visual coordinates, dimensions, page breaks, and orientations.
-     Drawback: Chrome's print engine may slice tall items or push entire rows to the next page.
+     PER-WIDGET PrintOptions
      ======================================================================== */
-  .grid-stack.gs-print-exact {
-    display: grid !important;
-    grid-template-columns: repeat(var(--gs-columns, 12), minmax(0, 1fr)) !important;
-    grid-auto-rows: var(--gs-cell-height) !important;
-    height: auto !important;
+  .gs-print-hide {
+    display: none !important;
   }
-  .grid-stack.gs-print-exact > .grid-stack-item {
-    position: relative !important;
+  /* needs to out-specificity the base item rule above (display: block !important)
+     so a hidden widget actually collapses instead of still reserving its slot */
+  .grid-stack > .grid-stack-item.gs-print-hide {
+    display: none !important;
+  }
+  /* pageBreak/orientation need the item to be a normal block box: Chrome's print
+     engine ignores forced page breaks on floated elements, so pull these out of
+     the float flow (their width is kept as-is - a plain block box already can't
+     have a later float rise up beside it, so nothing else tucks into the row). */
+  .grid-stack > .grid-stack-item[gs-page-break="true"],
+  .grid-stack > .grid-stack-item[gs-print-orientation] {
     float: none !important;
-    width: auto !important;
-    height: auto !important;
-    left: auto !important;
-    top: auto !important;
-    
-    /* Apply GS coordinates natively via the injected CSS vars.
-       We deliberately DO NOT set grid-row-start so that the browser's 
-       CSS Grid engine can natively auto-flow elements upwards, naturally 
-       collapsing any empty rows caused by hidden elements! */
-    grid-column-start: calc(var(--gs-x) + 1) !important;
-    grid-column-end: span var(--gs-w) !important;
-    grid-row-end: span var(--gs-h) !important;
+    clear: both !important;
   }
-
-  /* ========================================================================
-     SHARED PRINT STYLES
-     ======================================================================== */
   .grid-stack > .grid-stack-item[gs-page-break="true"] {
     page-break-before: always !important;
     break-before: page !important;
   }
-  .gs-print-hide {
-    display: none !important;
-  }
   .grid-stack > .grid-stack-item[gs-print-orientation="landscape"] {
     page: gs-landscape;
-    /* Force item to take proper landscape width, overriding portrait grid track sizing.
+    /* Force item to take proper landscape width, overriding portrait-page sizing.
        vmax ensures we get the long edge of the paper regardless of default printer orientation */
     min-width: calc(100vmax * var(--gs-w) / var(--gs-columns, 12)) !important;
   }
@@ -251,7 +243,7 @@
     /* vmin ensures we get the short edge of the paper */
     min-width: calc(100vmin * var(--gs-w) / var(--gs-columns, 12)) !important;
   }
-  
+
   /* Hide interactive elements during print */
   .grid-stack > .grid-stack-item > .ui-resizable-handle {
     display: none !important;

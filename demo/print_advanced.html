@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Print Grid Exact Mode Demo</title>
+  <title>Print Grid Advanced PrintOptions Demo</title>
 
   <link rel="stylesheet" href="demo.css"/>
   <script src="../dist/gridstack-all.js"></script>
@@ -12,22 +12,23 @@
 </head>
 <body>
   <div class="container-fluid">
-    <h1>Print Grid Exact Mode Demo</h1>
+    <h1>Print Grid Advanced PrintOptions Demo</h1>
     <p>
-      New v13.1+ printing support with <code>printMode: 'exact'</code> and widget <code>PrintOptions</code> to control how items are printed. <br/>
-      This mode perfectly respects visual coordinates, dimensions, page breaks, and orientations using CSS Grid. <br/>
-      <strong>Drawbacks:</strong> Chrome's print engine may slice tall items, and widgets will show scrollbars instead of expanding to fit content.
+      v13.1+ printing support with per-widget <code>PrintOptions</code>: <code>hide</code>, <code>pageBreak</code>
+      and <code>orientation</code>, combined with the same content-sized, non-slicing layout from
+      <a href="print.html">Print grid</a>.<br/>
+      Notes: a hidden widget (Item 4) leaves no gap - the next widget reflows up to take its place. An
+      <code>orientation</code> section stays in effect until something else forces a new page, so the widget
+      that should resume portrait after a landscape section (Item 8) sets <code>orientation: 'portrait'</code>
+      explicitly rather than relying on it reverting on its own.
     </p>
     <div class="gs-print-hide">
       <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
-      <label style="margin-left: 15px;">
-        <input type="checkbox" id="printModeToggle" checked onchange="togglePrintMode()"> Exact Print Mode
-      </label>
     </div>
     <br><br>
     <div class="grid-stack" id="grid1"></div>
   </div>
-  
+
   <script type="text/javascript">
     // NOTE: REAL apps would sanitize-html or DOMPurify before blinding setting innerHTML. see #2736
     GridStack.renderCB = function(el, w) {
@@ -38,9 +39,8 @@
       float: true,
       cellHeight: 100,
       margin: 10,
-      printMode: 'exact'
     };
-    
+
     let items = [
       {x: 6, y: 1, w: 4, h: 1, content: 'Item 2<br>(Page 1)'}, // test floating (due to hidden:true support to reclaim space, will move upwards)
       {x: 1, y: 0, w: 4, h: 2, content: 'Item 1<br>(Page 1)'}, // verify domSort is working
@@ -51,21 +51,11 @@
       {x: 0, y: 6, w: 6, h: 1, content: 'Item 7'},
       {x: 0, y: 6, w: 12, h: 2, content: 'Item 8<br>(Starts on Portrait Page)' + 'Line<br>'.repeat(4), print: { pageBreak: true, orientation: 'portrait' } },
       {x: 0, y: 8, w: 6, h: 1, content: 'Item 9' + 'Line<br>'.repeat(10)},
-      {x: 0, y: 9, w: 12, h: 14, content: 'Item 10<br>(Very tall widget to test clipping and page breaks)<br>' + 'Line<br>'.repeat(40) }
+      {x: 0, y: 9, w: 12, h: 14, content: 'Item 10<br>(Very tall widget - auto-sizes to content, never sliced)<br>' + 'Line<br>'.repeat(40) }
     ];
 
     let grid1 = GridStack.init(options, '#grid1');
     grid1.load(items);
-
-    function togglePrintMode() {
-      let isExact = document.getElementById('printModeToggle').checked;
-      let el = document.getElementById('grid1');
-      if (isExact) {
-        el.classList.add('gs-print-exact');
-      } else {
-        el.classList.remove('gs-print-exact');
-      }
-    }
   </script>
 </body>
 </html>
