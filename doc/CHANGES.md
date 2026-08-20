@@ -147,6 +147,7 @@ Change log
 
 ## 13.2.0 (TBD)
 * feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) removed printMode as we support much better printing now that doesn't compromise.
+* feat: [#3362](https://github.com/gridstack/gridstack.js/pull/3362) added `PrintOptions.mode` for app custom settings
 * fix: [#3357](https://github.com/gridstack/gridstack.js/pull/3357) (react): drop type assertions on useGridStack add/remove helpers - thank you [YOUNGHO8762](https://github.com/YOUNGHO8762)
 * fix: [#3358](https://github.com/gridstack/gridstack.js/pull/3358) (react): use wrapper widget types in registry callbacks - thank you [YOUNGHO8762](https://github.com/YOUNGHO8762)
 * fix: [#3360](https://github.com/gridstack/gridstack.js/pull/3360) better north and west resize handles - thank you [Ryan Peterson](https://github.com/ryanpetebyte)
