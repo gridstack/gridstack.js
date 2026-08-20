@@ -1,6 +1,6 @@
 import { computed, inject, onBeforeUnmount, onMounted } from 'vue'
 import { Utils } from 'gridstack'
-import type { GridStackNode } from 'gridstack'
+import type { GridStackElement, GridStackNode } from 'gridstack'
 import { GS_CONTEXT_KEY, GS_ITEM_CONTEXT_KEY } from './gridstack-context'
 import type { GridStackWidget } from './types'
 
@@ -23,10 +23,10 @@ export function useGridStack() {
     /** Bumps whenever the layout changes — use as a reactive dependency. */
     get layoutVersion() { return ctx.layoutVersion.value },
     addWidget(w: GridStackWidget) {
-      return ctx.grid?.addWidget(w as Parameters<NonNullable<typeof ctx.grid>['addWidget']>[0])
+      return ctx.grid?.addWidget(w)
     },
     removeWidget(
-      el: Parameters<NonNullable<typeof ctx.grid>['removeWidget']>[0],
+      el: GridStackElement,
       removeDOM?: boolean,
       triggerEvent?: boolean,
     ) {
