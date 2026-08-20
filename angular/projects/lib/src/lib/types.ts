@@ -1,5 +1,5 @@
 /**
- * gridstack-item.component.ts 13.1.2
+ * gridstack-item.component.ts 13.2.0
  * Copyright (c) 2025 Alain Dumesny - see GridStack root license
  */
 

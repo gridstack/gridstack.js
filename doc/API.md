@@ -1,4 +1,4 @@
-# gridstack v13.1.2
+# gridstack v13.2.0
 
 ## Classes
 
