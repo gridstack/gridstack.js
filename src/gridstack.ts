@@ -3074,30 +3074,16 @@ export class GridStack {
       if (node.w === p.w && node.h === p.h) return;
       if (node._lastTried && node._lastTried.w === p.w && node._lastTried.h === p.h) return; // skip one we tried (but failed)
 
-      // only recalculate position for handles that move the top-left corner (N/W).
+      // only recalculate position for handles that move the top-left corner (NW/N/W).
       // for SE/S/E handles the top-left is anchored — recalculating from pixels causes
       // rounding drift on fine grids where cellWidth/cellHeight are only a few pixels. #385 #1356
       if (event.hasMovedX) {
-        // Set the X based on already calculated p width and node properties.
-        if (node.x != undefined && p.w != undefined && node.w != undefined) {
-          const calcPX = node.x - (p.w - node.w);
-          p.x = calcPX < 0 ? 0 : calcPX;
-        }
-        else {
-          const left = ui.position!.left + mLeft;
-          p.x = Math.round(left / cellWidth);
-        }
+        const calcPX = node.x! - (p.w - node.w!);
+        p.x = calcPX < 0 ? 0 : calcPX;
       }
       if (event.hasMovedY) {
-        // Set the Y based on already calculated p height and node properties.
-        if (node.y != undefined && p.h != undefined && node.h != undefined) {
-          const calcPY = node.y - (p.h - node.h);
-          p.y = calcPY < 0 ? 0 : calcPY;
-        }
-        else {
-          const top = ui.position!.top + mTop;
-          p.y = Math.round(top / cellHeight);
-        }
+        const calcPY = node.y! - (p.h - node.h!);
+        p.y = calcPY < 0 ? 0 : calcPY;
       }
 
       resizing = true;
