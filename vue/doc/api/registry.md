@@ -8,7 +8,7 @@
 function installGridStackVueCallbacks(): void;
 ```
 
-Defined in: [vue/projects/lib/src/registry.ts:9](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L9)
+Defined in: [vue/projects/lib/src/registry.ts:13](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L13)
 
 #### Returns
 
@@ -22,14 +22,14 @@ Defined in: [vue/projects/lib/src/registry.ts:9](https://github.com/adumesny/gri
 function gsSaveAdditionalVueInfo(node, w): void;
 ```
 
-Defined in: [vue/projects/lib/src/registry.ts:83](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L83)
+Defined in: [vue/projects/lib/src/registry.ts:85](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L85)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
-| `w` | [`GridStackWidget`](../../../doc/API.md#gridstackwidget) |
+| `node` | [`GridStackNode`](types.md#gridstacknode) |
+| `w` | [`GridStackWidget`](types.md#gridstackwidget) |
 
 #### Returns
 
@@ -43,13 +43,13 @@ Defined in: [vue/projects/lib/src/registry.ts:83](https://github.com/adumesny/gr
 function gsUpdateVueComponents(node): void;
 ```
 
-Defined in: [vue/projects/lib/src/registry.ts:100](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L100)
+Defined in: [vue/projects/lib/src/registry.ts:101](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L101)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
+| `node` | [`GridStackNode`](types.md#gridstacknode) |
 
 #### Returns
 
