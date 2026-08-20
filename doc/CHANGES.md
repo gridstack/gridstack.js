@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [13.2.0 (TBD)](#1320-tbd)
+- [13.2.0 (2026-08-19)](#1320-2026-08-19)
 - [13.1.2 (2026-07-26)](#1312-2026-07-26)
 - [13.1.1 (2026-07-25)](#1311-2026-07-25)
 - [13.1.0 (2026-07-22)](#1310-2026-07-22)
@@ -145,7 +145,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 13.2.0 (TBD)
+## 13.2.0 (2026-08-19)
 * feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) removed printMode as we support much better printing now that doesn't compromise.
 * feat: [#3362](https://github.com/gridstack/gridstack.js/pull/3362) added `PrintOptions.mode` for app custom settings
 * fix: [#3357](https://github.com/gridstack/gridstack.js/pull/3357) (react): drop type assertions on useGridStack add/remove helpers - thank you [YOUNGHO8762](https://github.com/YOUNGHO8762)
