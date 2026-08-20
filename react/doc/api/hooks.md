@@ -69,9 +69,9 @@ Defined in: [react/projects/lib/src/hooks.ts:34](https://github.com/adumesny/gri
 | `layoutVersion` | `number` | [react/projects/lib/src/hooks.ts:43](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L43) |
 | `registerWidgetSerializer()` | (`id`, `serialize`, `deserialize?`) => () => `void` | [react/projects/lib/src/hooks.ts:44](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L44) |
 | `addWidget()` | (`w`) => \| `undefined` \| [`GridItemHTMLElement`](../../../doc/API.md#griditemhtmlelement) | [react/projects/lib/src/hooks.ts:45](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L45) |
-| `removeWidget()` | (`el`, `removeDOM?`, `triggerEvent?`) => `undefined` \| `GridStack` | [react/projects/lib/src/hooks.ts:49](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L49) |
-| `removeAll()` | (`removeDOM`) => `undefined` \| `GridStack` | [react/projects/lib/src/hooks.ts:54](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L54) |
-| `save()` | (`saveContent`, `saveGridOpt`) => \| `undefined` \| [`GridStackOptions`](../../../doc/API.md#gridstackoptions) \| [`GridStackWidget`](../../../doc/API.md#gridstackwidget)[] | [react/projects/lib/src/hooks.ts:55](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L55) |
+| `removeWidget()` | (`el`, `removeDOM?`, `triggerEvent?`) => `undefined` \| `GridStack` | [react/projects/lib/src/hooks.ts:46](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L46) |
+| `removeAll()` | (`removeDOM`) => `undefined` \| `GridStack` | [react/projects/lib/src/hooks.ts:51](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L51) |
+| `save()` | (`saveContent`, `saveGridOpt`) => \| `undefined` \| [`GridStackOptions`](../../../doc/API.md#gridstackoptions) \| [`GridStackWidget`](../../../doc/API.md#gridstackwidget)[] | [react/projects/lib/src/hooks.ts:52](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L52) |
 
 ***
 
@@ -81,7 +81,7 @@ Defined in: [react/projects/lib/src/hooks.ts:34](https://github.com/adumesny/gri
 function useGridStackItem(): UseGridStackItemResult;
 ```
 
-Defined in: [react/projects/lib/src/hooks.ts:67](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L67)
+Defined in: [react/projects/lib/src/hooks.ts:64](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L64)
 
 #### Returns
 
@@ -95,7 +95,7 @@ Defined in: [react/projects/lib/src/hooks.ts:67](https://github.com/adumesny/gri
 type UseGridStackItemResult = object;
 ```
 
-Defined in: [react/projects/lib/src/hooks.ts:62](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L62)
+Defined in: [react/projects/lib/src/hooks.ts:59](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L59)
 
 #### Properties
 
@@ -105,7 +105,7 @@ Defined in: [react/projects/lib/src/hooks.ts:62](https://github.com/adumesny/gri
 id: string;
 ```
 
-Defined in: [react/projects/lib/src/hooks.ts:63](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L63)
+Defined in: [react/projects/lib/src/hooks.ts:60](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L60)
 
 ##### node
 
@@ -113,4 +113,4 @@ Defined in: [react/projects/lib/src/hooks.ts:63](https://github.com/adumesny/gri
 node: GridStackNode | undefined;
 ```
 
-Defined in: [react/projects/lib/src/hooks.ts:64](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L64)
+Defined in: [react/projects/lib/src/hooks.ts:61](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/hooks.ts#L61)

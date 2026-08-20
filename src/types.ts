@@ -431,6 +431,8 @@ export interface PrintOptions {
   pageBreak?: boolean;
   /** set the orientation of the printed page (default?: 'portrait'). See [print_README.md](https://github.com/gridstack/gridstack.js/tree/master/print_README.md) */
   orientation?: 'portrait' | 'landscape';
+  /** application specific print options for a given widget */
+  mode?: string;
 }
 
 /**

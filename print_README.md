@@ -55,12 +55,16 @@ portrait, rather than relying on it reverting on its own.
 ## Utility Classes
 
 GridStack also provides a utility class to hide specific elements (like buttons, links, or a navbar) during
-printing - useful for anything interactive that doesn't make sense on paper:
+printing - useful for anything interactive that doesn't make sense on paper, and reverse only during content
 
 ```html
 <div class="gs-print-hide">
   <button onClick="window.print()">Print Dashboard</button>
 </div>
+<div class="gs-print-show">
+  content for print only...
+</div>
+
 ```
 
 This works anywhere in the document, not just on grid items - for example on buttons/links inside a widget's

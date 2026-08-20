@@ -150,6 +150,10 @@
    right: 0%;
  }
 
+ .gs-print-show {
+  display: none; // only shows during printing
+ }
+
 @media print {
   @page gs-landscape {
     size: landscape;
@@ -212,7 +216,10 @@
      PER-WIDGET PrintOptions
      ======================================================================== */
   .gs-print-hide {
-    display: none !important;
+    display: none;
+  }
+  .gs-print-show {
+    display: block;
   }
   /* needs to out-specificity the base item rule above (display: block !important)
      so a hidden widget actually collapses instead of still reserving its slot */

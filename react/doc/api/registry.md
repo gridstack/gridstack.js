@@ -22,14 +22,14 @@ Defined in: [react/projects/lib/src/registry.ts:13](https://github.com/adumesny/
 function gsSaveAdditionalReactInfo(node, w): void;
 ```
 
-Defined in: [react/projects/lib/src/registry.ts:110](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L110)
+Defined in: [react/projects/lib/src/registry.ts:108](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L108)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
-| `w` | [`GridStackWidget`](../../../doc/API.md#gridstackwidget) |
+| `node` | [`GridStackNode`](types.md#gridstacknode) |
+| `w` | [`GridStackWidget`](types.md#gridstackwidget) |
 
 #### Returns
 
@@ -43,13 +43,13 @@ Defined in: [react/projects/lib/src/registry.ts:110](https://github.com/adumesny
 function gsUpdateReactComponents(node): void;
 ```
 
-Defined in: [react/projects/lib/src/registry.ts:127](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L127)
+Defined in: [react/projects/lib/src/registry.ts:124](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L124)
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `node` | [`GridStackNode`](../../../doc/API.md#gridstacknode) |
+| `node` | [`GridStackNode`](types.md#gridstacknode) |
 
 #### Returns
 
