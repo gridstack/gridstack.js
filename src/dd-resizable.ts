@@ -264,8 +264,8 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
 
     const offsetX = event.clientX - oEvent.clientX;
     const offsetY = this.sizeToContent ? 0 : event.clientY - oEvent.clientY; // prevent vert resize
-  let moveLeft = false;
-  let moveUp = false;
+    let moveLeft = false;
+    let moveUp = false;
 
     const isRtl = this.option.rtl;
 

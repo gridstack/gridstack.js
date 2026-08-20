@@ -1991,13 +1991,13 @@ export class GridStack {
       elStyle.width = n.w! > 1 ? `calc(${n.w} * var(--gs-column-width))` : null;
       elStyle.height = n.h! > 1 ? `calc(${n.h} * var(--gs-cell-height))` : null;
     }
-    
+
     // Always inject variables for print CSS grid mapping (since attr() is not fully supported in calc)
     el.style.setProperty('--gs-x', String(n.x || 0));
     el.style.setProperty('--gs-y', String(n.y || 0));
     el.style.setProperty('--gs-w', String(n.w || 1));
     el.style.setProperty('--gs-h', String(n.h || 1));
-    
+
     // NOTE: those are technically not needed anymore (v12+) as we have CSS vars for everything, but some users depends on them to render item size using CSS
     // ALways write x,y otherwise it could be autoPositioned incorrectly #3181
     el.setAttribute('gs-x', String(n.x ?? 0));
@@ -2053,7 +2053,7 @@ export class GridStack {
     n.noResize = Utils.toBool(el.getAttribute('gs-no-resize'));
     n.noMove = Utils.toBool(el.getAttribute('gs-no-move'));
     n.locked = Utils.toBool(el.getAttribute('gs-locked'));
-    
+
     let pageBreak = el.getAttribute('gs-page-break');
     let hide = el.classList.contains('gs-print-hide');
     let orientation = el.getAttribute('gs-print-orientation') as 'portrait' | 'landscape';
@@ -3078,12 +3078,26 @@ export class GridStack {
       // for SE/S/E handles the top-left is anchored — recalculating from pixels causes
       // rounding drift on fine grids where cellWidth/cellHeight are only a few pixels. #385 #1356
       if (event.hasMovedX) {
-        const left = ui.position!.left + mLeft;
-        p.x = Math.round(left / cellWidth);
+        // Set the X based on already calculated p width and node properties.
+        if (node.x != undefined && p.w != undefined && node.w != undefined) {
+          const calcPX = node.x - (p.w - node.w);
+          p.x = calcPX < 0 ? 0 : calcPX;
+        }
+        else {
+          const left = ui.position!.left + mLeft;
+          p.x = Math.round(left / cellWidth);
+        }
       }
       if (event.hasMovedY) {
-        const top = ui.position!.top + mTop;
-        p.y = Math.round(top / cellHeight);
+        // Set the Y based on already calculated p height and node properties.
+        if (node.y != undefined && p.h != undefined && node.h != undefined) {
+          const calcPY = node.y - (p.h - node.h);
+          p.y = calcPY < 0 ? 0 : calcPY;
+        }
+        else {
+          const top = ui.position!.top + mTop;
+          p.y = Math.round(top / cellHeight);
+        }
       }
 
       resizing = true;
