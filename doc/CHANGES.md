@@ -146,9 +146,10 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 13.2.0 (TBD)
-* feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) removed printMode as we support much better printing now that doesn't compromises.
-* fix: [#3357](https://github.com/gridstack/gridstack.js/pull/3357) (react): drop type assertions on useGridStack add/remove helpers
-* fix: [#3358](https://github.com/gridstack/gridstack.js/pull/3358) (react): use wrapper widget types in registry callbacks
+* feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) removed printMode as we support much better printing now that doesn't compromise.
+* fix: [#3357](https://github.com/gridstack/gridstack.js/pull/3357) (react): drop type assertions on useGridStack add/remove helpers - thank you [YOUNGHO8762](https://github.com/YOUNGHO8762)
+* fix: [#3358](https://github.com/gridstack/gridstack.js/pull/3358) (react): use wrapper widget types in registry callbacks - thank you [YOUNGHO8762](https://github.com/YOUNGHO8762)
+* fix: [#3360](https://github.com/gridstack/gridstack.js/pull/3360) better north and west resize handles - thank you [Ryan Peterson](https://github.com/ryanpetebyte)
 
 ## 13.1.2 (2026-07-26)
 * reg: [#3340](https://github.com/gridstack/gridstack.js/pull/3340) regression: strict mode (v13.0.0) fails columnWidth without .breakpoints - thank you [Daniel Cohen Gindi](https://github.com/danielgindi)
