@@ -150,6 +150,7 @@ Change log
 * feat: [#2781](https://github.com/gridstack/gridstack.js/issues/3177) [#2781](https://github.com/gridstack/gridstack.js/issues/3177) mobile: pause to drag/reszie vs scroll behavior
 * fix: [#3374](https://github.com/gridstack/gridstack.js/issues/3374) use `moveBefore()` (when supported) instead of `appendChild()` in `_sortDom()` so reordering doesn't reload iframes / lose element state
 * fix: [#934](https://github.com/gridstack/gridstack.js/issues/934) disable pointer events on iframes while dragging/resizing so fast mouse moves aren't swallowed by the iframe's own document
+* fix: [#3371](https://github.com/gridstack/gridstack.js/issues/3371) (vue, react): item content vanished after dragging between 2 grids with `acceptWidgets`
 
 ## 13.2.0 (2026-08-19)
 * feat: [#701](https://github.com/gridstack/gridstack.js/issues/701) removed printMode as we support much better printing now that doesn't compromise.
