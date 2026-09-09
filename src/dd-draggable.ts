@@ -247,6 +247,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
        * don't start unless we've moved at least 3 pixels
        */
       this.dragging = true;
+      Utils.pauseIframePointerEvents(true);
       this.el.classList.remove('ui-draggable-armed');
       DDManager.dragElement = this;
       // if we're dragging an actual grid item, set the current drop as the grid (to detect enter/leave)
@@ -287,6 +288,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     }
     if (this.dragging) {
       delete this.dragging;
+      Utils.pauseIframePointerEvents(false);
       delete (this.el.gridstackNode as GridStackNodeRotate)?._origRotate;
       document.removeEventListener('keydown', this._keyEvent);
 

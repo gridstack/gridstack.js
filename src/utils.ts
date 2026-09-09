@@ -559,6 +559,17 @@ export class Utils {
     }
   }
 
+  /**
+   * disable/re-enable pointer events on all iframes on the page while dragging/resizing, otherwise
+   * fast mouse moves over an iframe get swallowed by its own document instead of reaching ours,
+   * which stalls the drag/resize. See https://github.com/gridstack/gridstack.js/issues/934
+   */
+  static pauseIframePointerEvents(pause: boolean): void {
+    document.querySelectorAll('iframe').forEach(iframe => {
+      (iframe as HTMLIFrameElement).style.pointerEvents = pause ? 'none' : '';
+    });
+  }
+
   /** single level clone, returning a new object with same top fields. This will share sub objects and arrays */
   static clone<T>(obj: T): T {
     if (obj === null || obj === undefined || typeof(obj) !== 'object') {
