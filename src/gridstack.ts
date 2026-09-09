@@ -1867,10 +1867,12 @@ export class GridStack {
     nodes = this.engine.nodes; // new sorted array
     const children = this.el.children;
     if (nodes.some((n, i) => n.el !== children[i])) {
-      // order doesn't match, re-order DOM
+      // order doesn't match, re-order DOM. Use moveBefore() to preserve element state (ex: iframe) #3374
+      const moveBefore = (this.el as { moveBefore?: (node: Node, ref: Node | null) => void }).moveBefore?.bind(this.el);
       nodes.forEach(n => {
         if (n.el && n.el.parentElement === this.el) {
-          this.el.appendChild(n.el);
+          if (moveBefore) moveBefore(n.el, null);
+          else this.el.appendChild(n.el);
         }
       });
     }
