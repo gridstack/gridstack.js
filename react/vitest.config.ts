@@ -5,11 +5,16 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      'gridstack/dist/react': fileURLToPath(
-        new URL('./projects/lib/src/index.ts', import.meta.url)
-      ),
-    },
+    alias: [
+      {
+        find: 'gridstack/dist/react',
+        replacement: fileURLToPath(new URL('./projects/lib/src/index.ts', import.meta.url)),
+      },
+      {
+        find: /^gridstack$/,
+        replacement: fileURLToPath(new URL('../src/gridstack.ts', import.meta.url)),
+      },
+    ],
   },
   test: {
     environment: 'jsdom',

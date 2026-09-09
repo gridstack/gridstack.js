@@ -20,6 +20,7 @@ import { GridStackItem } from "./gridstack-item";
 import { installGridStackReactCallbacks } from "./registry";
 import type {
   GridStackHostApi,
+  GridStackNode,
   GridStackOptions,
   GridStackWidget,
   GridHTMLElement,
@@ -242,6 +243,19 @@ export const GridStackComponent = forwardRef<GridStackHandle, GridStackProps>(
       const addedHandler: GridStackNodesHandler = (e, nodes) => {
         bumpLayout();
         setIsEmpty(false);
+        // Cross-grid DnD: GS reuses the existing item element (no addRemoveCB call), so
+        // `_gridItemRef.gridComp` still points at the source grid. Transfer portal
+        // ownership to this grid or the React subtree gets unmounted (item content vanishes).
+        nodes.forEach((node) => {
+          const n = node as GridStackNode;
+          const el = n.el as GridItemHTMLElement | undefined;
+          const ref = el?._gridItemRef;
+          if (n.component && ref && ref.gridComp !== hostApiRef.current) {
+            ref.gridComp.unregisterSyntheticItemId(ref.id);
+            hostApiRef.current.registerSyntheticItemId(ref.id);
+            el._gridItemRef = { id: ref.id, gridComp: hostApiRef.current };
+          }
+        });
         onAdded?.(e, nodes);
       };
       g.on("added", addedHandler);

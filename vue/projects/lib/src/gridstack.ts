@@ -22,6 +22,7 @@ import type {
   GridHTMLElement,
   GridItemHTMLElement,
   GridStackHostApi,
+  GridStackNode,
   GridStackOptions,
   GridStackWidget,
 } from './types'
@@ -208,6 +209,19 @@ export const GridStackComponent = defineComponent({
       grid.on('added', ((e: Event, nodes: Parameters<GridStackNodesHandler>[1]) => {
         layoutVersion.value++
         isEmpty.value = false
+        // Cross-grid DnD: GS reuses the existing item element (no addRemoveCB call), so
+        // `_gridItemRef.gridComp` still points at the source grid. Transfer teleport
+        // ownership to this grid or the Vue subtree gets unmounted (item content vanishes).
+        nodes.forEach((node) => {
+          const n = node as GridStackNode
+          const el = n.el as GridItemHTMLElement | undefined
+          const ref = el?._gridItemRef
+          if (n.component && ref && ref.gridComp !== hostApi) {
+            ref.gridComp.unregisterSyntheticItemId(ref.id)
+            hostApi.registerSyntheticItemId(ref.id)
+            el._gridItemRef = { id: ref.id, gridComp: hostApi }
+          }
+        })
         emit('added', e, nodes)
       }) as GridStackNodesHandler)
 
