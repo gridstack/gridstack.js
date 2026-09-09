@@ -177,6 +177,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this.scrollY = this.scrollEl.scrollTop;
     this.scrolled = 0;
     this.startEvent = event;
+    Utils.pauseIframePointerEvents(true);
     this._setupHelper();
     this._applyChange();
     const ev = Utils.initEvent<MouseEvent>(event, { type: 'resizestart', target: this.el });
@@ -207,6 +208,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   /** @internal */
   protected _resizeStop(event: MouseEvent): DDResizable {
     const ev = Utils.initEvent<MouseEvent>(event, { type: 'resizestop', target: this.el });
+    Utils.pauseIframePointerEvents(false);
     // Remove style attr now, so the stop handler can rebuild style attrs
     this._cleanHelper();
     if (this.option.stop) {
