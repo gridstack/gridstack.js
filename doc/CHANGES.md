@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [13.2.0-dev (TBD)](#1320-dev-tbd)
+- [13.3.0 (2026-09-11)](#1330-2026-09-11)
 - [13.2.0 (2026-08-19)](#1320-2026-08-19)
 - [13.1.2 (2026-07-26)](#1312-2026-07-26)
 - [13.1.1 (2026-07-25)](#1311-2026-07-25)
@@ -146,7 +146,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 13.2.0-dev (TBD)
+## 13.3.0 (2026-09-11)
 * feat: [#2781](https://github.com/gridstack/gridstack.js/issues/3177) [#2781](https://github.com/gridstack/gridstack.js/issues/3177) mobile: pause to drag/reszie vs scroll behavior
 * feat: [#3383](https://github.com/gridstack/gridstack.js/pull/3383) added `PrintOptions.breakInside` and `.gs-print-avoid-break-after` so section (nested grids) and tables can fragment across pages
 * fix: [#3374](https://github.com/gridstack/gridstack.js/issues/3374) Iframe: use `moveBefore()` instead of `appendChild()` in `_sortDom()` so reordering doesn't reload iframes
