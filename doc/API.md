@@ -1,4 +1,4 @@
-# gridstack v13.2.0
+# gridstack v13.3.0
 
 ## Classes
 
@@ -115,7 +115,7 @@ Construct a grid item from the given element and options
 protected _updateResizeEvent(forceRemove): GridStack;
 ```
 
-Defined in: [gridstack.ts:2190](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2190)
+Defined in: [gridstack.ts:2191](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2191)
 
 add or remove the grid element size event handler
 
@@ -429,7 +429,7 @@ Destroys a grid instance. DO NOT CALL any methods or access any vars after this 
 disable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2392](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2392)
+Defined in: [gridstack.ts:2393](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2393)
 
 Temporarily disables widgets moving/resizing.
 If you want a more permanent way (which freezes up resources) use `setStatic(true)` instead.
@@ -470,7 +470,7 @@ grid.disable(false);
 enable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2419](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2419)
+Defined in: [gridstack.ts:2420](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2420)
 
 Re-enables widgets moving/resizing - see disable().
 Note: This is a no-op for static grids.
@@ -509,7 +509,7 @@ grid.enable(false);
 enableMove(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2445](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2445)
+Defined in: [gridstack.ts:2446](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2446)
 
 Enables/disables widget moving for all widgets. No-op for static grids.
 Note: locally defined items (with noMove property) still override this setting.
@@ -546,7 +546,7 @@ grid.enableMove(true, false);
 enableResize(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2473](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2473)
+Defined in: [gridstack.ts:2474](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2474)
 
 Enables/disables widget resizing for all widgets. No-op for static grids.
 Note: locally defined items (with noResize property) still override this setting.
@@ -688,7 +688,7 @@ const columnCount = grid.getColumn(); // returns 12 by default
 static getDD(): DDGridStack;
 ```
 
-Defined in: [gridstack.ts:2289](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2289)
+Defined in: [gridstack.ts:2290](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2290)
 
 Get the global drag & drop implementation instance.
 This provides access to the underlying drag & drop functionality.
@@ -1096,7 +1096,7 @@ grid.margin('5px 10px 15px 20px'); // Different for each side
 movable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2333](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2333)
+Defined in: [gridstack.ts:2334](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2334)
 
 Enables/Disables dragging by the user for specific grid elements.
 For all items and future items, use enableMove() instead. No-op for static grids.
@@ -1432,7 +1432,7 @@ grid.on('added', (event, items) => {
 onResize(clientWidth): GridStack;
 ```
 
-Defined in: [gridstack.ts:2128](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2128)
+Defined in: [gridstack.ts:2129](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2129)
 
 called when we are being resized - check if the one Column Mode needs to be turned on/off
 and remember the prev columns we used, or get our count from parent, as well as check for cellHeight==='auto' (square)
@@ -1454,7 +1454,7 @@ or `sizeToContent` gridItem options.
 prepareDragDrop(el, force?): GridStack;
 ```
 
-Defined in: [gridstack.ts:2862](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2862)
+Defined in: [gridstack.ts:2863](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2863)
 
 prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
 
@@ -1475,7 +1475,7 @@ prepares the element for drag&drop - this is normally called by makeWidget() unl
 refreshDragHandles(els): GridStack;
 ```
 
-Defined in: [gridstack.ts:2850](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2850)
+Defined in: [gridstack.ts:2851](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2851)
 
 Re-scans one or more widget elements for drag handle elements after delayed content
 (React portal, Angular component, etc.) has been rendered inside the item.
@@ -1596,7 +1596,7 @@ Removes widget from the grid.
 resizable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2359](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2359)
+Defined in: [gridstack.ts:2360](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2360)
 
 Enables/Disables user resizing for specific grid elements.
 For all items and future items, use enableResize() instead. No-op for static grids.
@@ -1783,7 +1783,7 @@ static setupDragIn(
    root?): void;
 ```
 
-Defined in: [gridstack.ts:2302](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2302)
+Defined in: [gridstack.ts:2303](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2303)
 
 call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
 Called during GridStack.init() as options, but can also be called directly (last param are used) in case the toolbar
@@ -1808,7 +1808,7 @@ is dynamically create and needs to be set later.
 protected triggerEvent(event, target): void;
 ```
 
-Defined in: [gridstack.ts:3124](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3124)
+Defined in: [gridstack.ts:3125](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3125)
 
 call given event callback on our main top-most grid (if we're nested)
 

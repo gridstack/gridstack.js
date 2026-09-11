@@ -73,7 +73,7 @@ const GridStackComponent: DefineComponent<ExtractPropTypes<{
 }, any>;
 ```
 
-Defined in: [vue/projects/lib/src/gridstack.ts:41](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/gridstack.ts#L41)
+Defined in: [vue/projects/lib/src/gridstack.ts:42](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/gridstack.ts#L42)
 
 `<GridStack>` — root component.
 
@@ -91,6 +91,6 @@ Defined in: [vue/projects/lib/src/gridstack.ts:41](https://github.com/adumesny/g
 type ComponentMap = Record<string, Component>;
 ```
 
-Defined in: [vue/projects/lib/src/gridstack.ts:30](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/gridstack.ts#L30)
+Defined in: [vue/projects/lib/src/gridstack.ts:31](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/gridstack.ts#L31)
 
 Maps `component` JSON keys to Vue components (props merged from saved `props`).
