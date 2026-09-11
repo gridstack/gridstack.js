@@ -431,6 +431,12 @@ export interface PrintOptions {
   pageBreak?: boolean;
   /** set the orientation of the printed page (default?: 'portrait'). See [print_README.md](https://github.com/gridstack/gridstack.js/tree/master/print_README.md) */
   orientation?: 'portrait' | 'landscape';
+  /** allow this widget (ex: a tall table/datagrid, or a section with a nested sub-grid) to fragment
+   * across multiple printed pages instead of being kept together as one unbreakable block - which
+   * otherwise pushes the whole widget to the next page (leaving a blank gap) whenever it doesn't fit
+   * in the space remaining on the current page (default?: undefined = kept on one page).
+   * See [print_README.md](https://github.com/gridstack/gridstack.js/tree/master/print_README.md) */
+  breakInside?: boolean;
   /** application specific print options for a given widget */
   mode?: string;
 }

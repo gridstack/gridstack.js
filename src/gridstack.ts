@@ -2031,14 +2031,17 @@ export class GridStack {
         el.removeAttribute(attrsRec[key]);
       }
     }
-    if (node.print) {
-      if (node.print.pageBreak) el.setAttribute('gs-page-break', String(node.print.pageBreak)); else el.removeAttribute('gs-page-break');
-      if (node.print.hide) el.classList.add('gs-print-hide'); else el.classList.remove('gs-print-hide');
-      if (node.print.orientation) el.setAttribute('gs-print-orientation', String(node.print.orientation)); else el.removeAttribute('gs-print-orientation');
+    const print = node.print;
+    if (print) {
+      if (print.pageBreak) el.setAttribute('gs-page-break', String(print.pageBreak)); else el.removeAttribute('gs-page-break');
+      if (print.hide) el.classList.add('gs-print-hide'); else el.classList.remove('gs-print-hide');
+      if (print.orientation) el.setAttribute('gs-print-orientation', String(print.orientation)); else el.removeAttribute('gs-print-orientation');
+      if (print.breakInside) el.setAttribute('gs-break-inside', String(print.breakInside)); else el.removeAttribute('gs-break-inside');
     } else {
       el.removeAttribute('gs-page-break');
       el.classList.remove('gs-print-hide');
       el.removeAttribute('gs-print-orientation');
+      el.removeAttribute('gs-break-inside');
     }
 
     return this;
@@ -2059,11 +2062,13 @@ export class GridStack {
     let pageBreak = el.getAttribute('gs-page-break');
     let hide = el.classList.contains('gs-print-hide');
     let orientation = el.getAttribute('gs-print-orientation') as 'portrait' | 'landscape';
-    if (pageBreak || hide || orientation) {
+    let breakInside = el.getAttribute('gs-break-inside');
+    if (pageBreak || hide || orientation || breakInside) {
       n.print = {};
       if (pageBreak) n.print.pageBreak = Utils.toBool(pageBreak);
       if (hide) n.print.hide = true;
       if (orientation) n.print.orientation = orientation;
+      if (breakInside) n.print.breakInside = Utils.toBool(breakInside);
     }
 
     const attr = el.getAttribute('gs-size-to-content');
