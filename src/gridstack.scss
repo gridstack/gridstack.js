@@ -248,6 +248,14 @@
   .gs-print-show {
     display: block;
   }
+  /* opt-in for any element (not just grid items) that must not have a page break land right after
+     it - ex: a section/table header that has to stay with the content that follows. Put this on a
+     plain block-level wrapper rather than directly on a `display:flex`/`grid` element: Chrome's print
+     engine ignores break-after/page-break-after set on flex/grid containers themselves. */
+  .gs-print-avoid-break-after {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
   /* needs to out-specificity the base item rule above (display: block !important)
      so a hidden widget actually collapses instead of still reserving its slot */
   .grid-stack > .grid-stack-item.gs-print-hide {
@@ -276,6 +284,20 @@
     page: gs-portrait;
     /* vmin ensures we get the short edge of the paper */
     min-width: calc(100vmin * var(--gs-w) / var(--gs-columns, 12)) !important;
+  }
+
+  /* breakInside opts a widget (tall table/datagrid, or a section wrapping a nested sub-grid) out of
+     the base rule's break-inside: avoid, so it can fragment across pages instead of being pushed
+     whole to the next page whenever it doesn't fit in the space remaining on the current one - which
+     otherwise leaves the current page mostly blank. Pulled out of the float flow and widened to the
+     full print width, same reasoning as pageBreak/orientation above: Chrome can mis-paginate a
+     floated box that's allowed to break across pages, overlapping the next floated sibling. */
+  .grid-stack > .grid-stack-item[gs-break-inside="true"] {
+    float: none !important;
+    clear: both !important;
+    width: 100% !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
   }
 
   /* Hide interactive elements during print */

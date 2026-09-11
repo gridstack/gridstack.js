@@ -306,9 +306,10 @@ See [example](http://gridstack.github.io/gridstack.js/demo/mobile.html).
 
 GridStack v13.1+ introduces native printing support. Widgets auto-size to their content and flow naturally
 across pages without being sliced in half, and a hidden widget (`print.hide`) leaves no gap behind. Per-widget
-`PrintOptions` let you force a page break or switch a widget's page to landscape/portrait.
+`PrintOptions` let you force a page break, switch a widget's page to landscape/portrait, or let a widget taller
+than a page (like a long table) fragment across pages instead of leaving a blank gap.
 
-See [print_README.md](./print_README.md) for full details, examples, and how to use widget `PrintOptions` (like `pageBreak` and `orientation`).
+See [print_README.md](./print_README.md) for full details, examples, and how to use widget `PrintOptions` (like `pageBreak`, `orientation`, and `breakInside`).
 
 # Migrating
 ## Migrating to v0.6

@@ -20,7 +20,11 @@
       Notes: a hidden widget (Item 4) leaves no gap - the next widget reflows up to take its place. An
       <code>orientation</code> section stays in effect until something else forces a new page, so the widget
       that should resume portrait after a landscape section (Item 8) sets <code>orientation: 'portrait'</code>
-      explicitly rather than relying on it reverting on its own.
+      explicitly rather than relying on it reverting on its own.<br/>
+      <code>breakInside: true</code> (Item 11) lets a widget that's taller than a full page (ex: a long table)
+      fragment across pages instead of being pushed whole to the next one, leaving a blank gap. Item 12 combines
+      it with the <code>gs-print-avoid-break-after</code> utility class to keep a section header attached to
+      the row of widgets right after it - see <a href="../print_README.md">print_README.md</a> for details.
     </p>
     <div class="gs-print-hide">
       <a class="btn btn-primary" onClick="window.print()" href="#">Print Page</a>
@@ -51,7 +55,20 @@
       {x: 0, y: 6, w: 6, h: 1, content: 'Item 7'},
       {x: 0, y: 6, w: 12, h: 2, content: 'Item 8<br>(Starts on Portrait Page)' + 'Line<br>'.repeat(4), print: { pageBreak: true, orientation: 'portrait' } },
       {x: 0, y: 8, w: 6, h: 1, content: 'Item 9' + 'Line<br>'.repeat(10)},
-      {x: 0, y: 9, w: 12, h: 14, content: 'Item 10<br>(Very tall widget - auto-sizes to content, never sliced)<br>' + 'Line<br>'.repeat(40) }
+      {x: 0, y: 9, w: 12, h: 14, content: 'Item 10<br>(Very tall widget - auto-sizes to content, never sliced)<br>' + 'Line<br>'.repeat(40) },
+      {x: 0, y: 23, w: 12, h: 10, print: { pageBreak: true, breakInside: true }, content:
+        'Item 11<br><strong>(breakInside: true - long table fragments across pages instead of jumping whole to the next page)</strong>' +
+        '<table style="width:100%; border-collapse:collapse;">' +
+        Array.from({length: 30}, (_, i) => `<tr><td style="border:1px solid #ccc;">Row ${i + 1}</td><td style="border:1px solid #ccc;">Data ${i + 1}</td></tr>`).join('') +
+        '</table>'
+      },
+      {x: 0, y: 33, w: 12, h: 6, print: { pageBreak: true, breakInside: true }, content:
+        'Item 12<br><strong>(section: header stays with the row that follows it via gs-print-avoid-break-after)</strong>' +
+        '<div class="gs-print-avoid-break-after">' +
+        '<div style="display:flex; justify-content:space-between; background:#eee; padding:4px;"><strong>Section Header</strong><span>...</span></div>' +
+        '</div>' +
+        Array.from({length: 8}, (_, i) => `<div style="padding:4px; border-top:1px solid #ccc;">Nested row ${i + 1}</div>`).join('')
+      }
     ];
 
     let grid1 = GridStack.init(options, '#grid1');
