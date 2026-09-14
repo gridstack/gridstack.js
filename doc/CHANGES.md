@@ -150,6 +150,7 @@ Change log
 ## 14.0.0 (TBD)
 * feat: [#754](https://github.com/gridstack/gridstack.js/issues/754) new `mode?: 'top' | 'float' | 'list' | 'compact'` - items are continuously re-flowed in sequential (row-major) order, like a re-orderable list: dragging, resizing, adding or removing an item re-flows everyone else instead of pushing them down, and dropping an item on another takes its place. See new
 [list.html](https://gridstackjs.com/demo/list.html) demo.
+* fix: [#3012](https://github.com/gridstack/gridstack.js/issues/3012) prevent crash when calling update() during change event
 
 ## 13.3.0 (2026-09-11)
 * feat: [#2781](https://github.com/gridstack/gridstack.js/issues/3177) [#2781](https://github.com/gridstack/gridstack.js/issues/3177) mobile: pause to drag/reszie vs scroll behavior
