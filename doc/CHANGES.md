@@ -149,6 +149,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 14.0.1 (TBD)
+* fix: [#3355](https://github.com/gridstack/gridstack.js/issues/3355) auto-scroll hands off to the outer container when a nested scroll container is pinned
 * fix: [#2729](https://github.com/gridstack/gridstack.js/issues/2729) `cancel` selector now matches elements inside a shadow root
 * fix: [#2728](https://github.com/gridstack/gridstack.js/issues/2728) drag helper drifts off the cursor when the page scrolls under a CSS-transformed containing block
 * fix: [#1959](https://github.com/gridstack/gridstack.js/issues/1959) `update()` refuses a move that would land on a locked item

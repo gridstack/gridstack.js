@@ -586,7 +586,17 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
     const prevScroll = scrollCont.scrollTop;
     scrollCont.scrollTop += scrollAmount;
-    if (scrollCont.scrollTop === prevScroll) { this._stopScrolling(); return; }
+    if (scrollCont.scrollTop === prevScroll) {
+      // This container is pinned at its limit. We used to just give up, which with nested scroll
+      // containers meant the drag dead-ended the moment the INNER one bottomed out and the page
+      // behind it never moved (#3355). Hand off to the next scrollable ancestor instead.
+      const next = scrollCont.parentElement ? Utils.getScrollElement(scrollCont.parentElement) : undefined;
+      if (!next || next === scrollCont) { this._stopScrolling(); return; }
+      const nextPrev = next.scrollTop;
+      next.scrollTop += scrollAmount;
+      if (next.scrollTop === nextPrev) { this._stopScrolling(); return; } // that one's pinned too
+      this._autoScrollContainer = next; // keep going on the one that can actually move
+    }
 
     if (this.dragging && this.lastDrag) {
       this._updateCBDrift(); // we just scrolled; the 'scroll' event lands async so re-sync now
