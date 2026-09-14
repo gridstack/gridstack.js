@@ -293,4 +293,60 @@ describe('regression >', () => {
       expect(A._orig).toBeUndefined();
     });
   });
+
+  describe('3179 shrink-to-fit during a drag >', () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    // NOTE: the 'shrinkToFit' feature itself isn't built here - you called that a lot of work in
+    // the thread. What IS fixed is the blocker that stopped the reporter doing it themselves:
+    // update() during a drag used to wipe node._orig and then throw "missing _orig.w" (see #3012).
+    it('lets an app shrink on dragstart and grow back on dragstop', () => {
+      grid = GridStack.init({column: 6, cellHeight: 50, mode: 'float', children: [
+        {id: 'big', x: 0, y: 0, w: 4, h: 2},
+        {id: 'a', x: 4, y: 0, w: 2, h: 1},
+        {id: 'b', x: 4, y: 1, w: 1, h: 1}, // leaves a 1x1 gap at (5,1)
+      ]});
+      const big = grid.engine.nodes.find(n => n.id === 'big')!;
+      const orig = {w: big.w!, h: big.h!};
+
+      grid.engine.cleanNodes().beginUpdate(big);   // dragstart
+      grid.update(big.el!, {w: 1, h: 1});          // shrink so it can enter the small gap
+      expect(big._orig).toBeDefined();             // ...and the drag baseline survives it
+
+      grid.update(big.el!, {x: 5, y: 1});          // drag into the gap
+      expect(() => big.w !== big._orig!.w).not.toThrow(); // what onEndMoving does at dragstop
+
+      grid.update(big.el!, orig);                  // grow back
+      grid.engine.endUpdate();
+      expect(big.w).toBe(orig.w);
+      expect(big.h).toBe(orig.h);
+    });
+
+    it('leaves no overlap behind after the round trip', () => {
+      grid = GridStack.init({column: 6, cellHeight: 50, mode: 'float', children: [
+        {id: 'big', x: 0, y: 0, w: 4, h: 2},
+        {id: 'a', x: 4, y: 0, w: 2, h: 1},
+      ]});
+      const big = grid.engine.nodes.find(n => n.id === 'big')!;
+      grid.engine.cleanNodes().beginUpdate(big);
+      grid.update(big.el!, {w: 1, h: 1});
+      grid.update(big.el!, {x: 5, y: 0});
+      grid.update(big.el!, {w: 4, h: 2});
+      grid.engine.endUpdate();
+
+      const ns = grid.engine.nodes;
+      for (let i = 0; i < ns.length; i++) {
+        for (let j = i + 1; j < ns.length; j++) {
+          const a = ns[i], b = ns[j];
+          const over = a.x! < b.x! + b.w! && b.x! < a.x! + a.w! && a.y! < b.y! + b.h! && b.y! < a.y! + a.h!;
+          expect(over).toBe(false);
+        }
+      }
+    });
+  });
 });
