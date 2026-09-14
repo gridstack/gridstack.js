@@ -64,6 +64,12 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   };
   /** @internal element we bound the touch handlers to in _mouseDown(), so _mouseUp() can un-bind the same one */
   protected _touchTarget?: HTMLElement;
+  /** @internal how far the helper's containing block has slid since dragstart.
+   * A transform on an ancestor makes IT - not the viewport - the containing block for our
+   * position:fixed helper, so the left/top we write are relative to that element, and it scrolls
+   * away from where we measured it at dragstart, drifting the helper off the cursor (#2728).
+   * With no transform the probe below always reads (0,0) so this stays zero and nothing changes. */
+  protected _cbDrift: { dx: number, dy: number } = { dx: 0, dy: 0 };
   /** @internal auto-scroll animation variables */
   protected _autoScrollAnimId?: number;
   protected _autoScrollContainer?: HTMLElement;
@@ -291,7 +297,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       this.helper = this._createHelper();
       this._setupHelperContainmentStyle();
       this.dragTransform = Utils.getValuesFromTransformedElement(this.helperContainment);
+      this._cbDrift = { dx: 0, dy: 0 };
       this.dragOffset = this._getDragOffset(e, this.el, this.helperContainment);
+      // capture=true: scroll doesn't bubble, so this is how we hear about ANY container scrolling
+      document.addEventListener('scroll', this._updateCBDrift, { capture: true, passive: true });
       this._setupHelperStyle(e);
 
       const ev = Utils.initEvent<MouseEvent>(e, { target: this.el, type: 'dragstart' });
@@ -323,6 +332,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       Utils.pauseIframePointerEvents(false);
       delete (this.el.gridstackNode as GridStackNodeRotate)?._origRotate;
       document.removeEventListener('keydown', this._keyEvent);
+      document.removeEventListener('scroll', this._updateCBDrift, true);
+      this._cbDrift = { dx: 0, dy: 0 };
 
       // reset the drop target if dragging over ourself (already parented, just moving during stop callback below)
       if (DDManager.dropElement?.el === this.el.parentElement) {
@@ -448,20 +459,33 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
+  /** @internal re-probe where our containing block now sits and record how far it moved since dragstart,
+   * then re-place the helper right away rather than waiting for the next mouse move. */
+  protected _updateCBDrift = (): void => {
+    if (!this.dragging || !this.helperContainment) return;
+    const t = Utils.getValuesFromTransformedElement(this.helperContainment);
+    this._cbDrift = {
+      dx: t.xOffset - this.dragTransform.xOffset,
+      dy: t.yOffset - this.dragTransform.yOffset,
+    };
+    if (this.lastDrag) this._dragFollow(this.lastDrag);
+  }
+
   /** @internal updates the top/left position to follow the mouse */
   public _dragFollow(e: MouseEvent): void {
     const style = this.helper!.style;
     const offset = this.dragOffset;
+    const { dx, dy } = this._cbDrift; // back out however far our containing block has scrolled (#2728)
     if (this.option.rtl) {
-      style.right = ((window.innerWidth - e.clientX) + offset.offsetX) * this.dragTransform.xScale + 'px';
+      style.right = ((window.innerWidth - e.clientX) + offset.offsetX + dx) * this.dragTransform.xScale + 'px';
       if (style.left)
         style.left = '';
     } else {
-      style.left = (e.clientX + offset.offsetX) * this.dragTransform.xScale + 'px';
+      style.left = (e.clientX + offset.offsetX - dx) * this.dragTransform.xScale + 'px';
       if (style.right)
         style.right = '';
     }
-    style.top = (e.clientY + offset.offsetTop) * this.dragTransform.yScale + 'px';
+    style.top = (e.clientY + offset.offsetTop - dy) * this.dragTransform.yScale + 'px';
   }
 
   /** @internal */
@@ -550,6 +574,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (scrollCont.scrollTop === prevScroll) { this._stopScrolling(); return; }
 
     if (this.dragging && this.lastDrag) {
+      this._updateCBDrift(); // we just scrolled; the 'scroll' event lands async so re-sync now
       this._dragFollow(this.lastDrag);
       this._callDrag(this.lastDrag);
     }
