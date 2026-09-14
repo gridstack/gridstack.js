@@ -107,10 +107,7 @@ describe('gridstack utils', () => {
       Utils.removePositioningStyles(el);
       expect(el.style.position).toEqual('');
 
-      // bogus test
       expect(Utils.getScrollElement(el)).not.toBe(null);
-      // bogus test
-      Utils.updateScrollPosition(el, {top: 20}, 10);
     });
   });
 
@@ -896,23 +893,42 @@ describe('gridstack utils', () => {
     });
   });
 
-  describe('updateScrollPosition', () => {
-    it('should update scroll position', () => {
-      const container = document.createElement('div');
-      container.style.overflow = 'auto';
-      container.style.height = '100px';
+  describe('getScrollElement', () => {
+    let container: HTMLElement;
+    let el: HTMLElement;
+    const savedStyle = window.getComputedStyle;
+
+    /** jsdom has no layout, so fake what tells us a parent has a live vertical scrollbar */
+    const setScrollable = (scrollable: boolean) => {
+      Object.defineProperty(container, 'scrollHeight', { value: scrollable ? 200 : 100, configurable: true });
+      Object.defineProperty(container, 'clientHeight', { value: 100, configurable: true });
+    };
+
+    beforeEach(() => {
+      container = document.createElement('div');
       document.body.appendChild(container);
-
-      const el = document.createElement('div');
+      el = document.createElement('div');
       container.appendChild(el);
-
-      const position = { top: 50 };
-      Utils.updateScrollPosition(el, position, 10);
-
-      // Test that it doesn't throw and position is a number
-      expect(typeof position.top).toBe('number');
-
+      // the global setup mock ignores the element, so answer per element instead
+      window.getComputedStyle = ((e: HTMLElement) => ({ overflowY: e === container ? 'auto' : 'visible' })) as never;
+    });
+    afterEach(() => {
+      window.getComputedStyle = savedStyle;
       document.body.removeChild(container);
+    });
+
+    it('should return the closest parent that scrolls', () => {
+      setScrollable(true);
+      expect(Utils.getScrollElement(el)).toBe(container);
+    });
+
+    it('should skip overflow parent with nothing to scroll (#3252)', () => {
+      setScrollable(false);
+      expect(Utils.getScrollElement(el)).toBe(document.documentElement);
+    });
+
+    it('should default to the document scrolling element', () => {
+      expect(Utils.getScrollElement()).toBe(document.documentElement);
     });
   });
 

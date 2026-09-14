@@ -157,7 +157,8 @@ describe('DDDroppable', () => {
         ui: vi.fn().mockReturnValue({
           helper: document.createElement('div'),
           position: { left: 0, top: 0 }
-        })
+        }),
+        _stopScrolling: vi.fn()
       };
       DDManager.dragElement = mockDraggable as any;
     });

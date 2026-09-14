@@ -49,7 +49,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
-    "lint": "tsc --project tsconfig.build.json --noEmit && eslint src/*.ts angular/projects/lib/src/**/*.ts react/projects/lib/src/**/*.{ts,tsx}",
+    "lint": "tsc --project tsconfig.build.json --noEmit && eslint src/*.ts angular/projects/lib/src/**/*.ts && cd react && yarn lint",
     "reset": "rm -rf dist node_modules",
     "prepublishOnly": "yarn build"
   },
