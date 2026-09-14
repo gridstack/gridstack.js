@@ -168,4 +168,43 @@ describe('regression >', () => {
       expect(grid.el.textContent).toContain('IMPORTANT'); // not swallowed by the revert
     });
   });
+
+  describe('2625 narrowed sub-grid must still lay out properly >', () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div style="width: 1200px; height: 600px" id="gs-cont"><div class="grid-stack"></div></div>');
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    // NOTE: re-checked on 2026-09-14 and this no longer reproduces (reported against v10.0.1);
+    // locking the behavior in rather than fixing it.
+    it('items reflow instead of stacking on top of each other', () => {
+      grid = GridStack.init({column: 12, cellHeight: 50, children: [
+        {id: 'sub', x: 0, y: 0, w: 4, h: 4, subGridOpts: {column: 'auto', children: [
+          {id: '6', x: 0, y: 0, w: 1, h: 1},
+          {id: '7', x: 1, y: 0, w: 1, h: 1},
+        ]}},
+      ]});
+      const sub = grid.engine.nodes.find(n => n.id === 'sub')!;
+      const sg = sub.subGrid!;
+      expect(sg.getColumn()).toBe(4);
+
+      grid.update(sub.el!, {w: 1}); // resize the sub-grid item down to its narrowest
+
+      expect(sg.getColumn()).toBe(1);
+      const n6 = sg.engine.nodes.find(n => n.id === '6')!;
+      const n7 = sg.engine.nodes.find(n => n.id === '7')!;
+      const overlap = n6.x! < n7.x! + n7.w! && n7.x! < n6.x! + n6.w! &&
+                      n6.y! < n7.y! + n7.h! && n7.y! < n6.y! + n6.h!;
+      expect(overlap).toBe(false);
+      expect([n6.y, n7.y].sort()).toEqual([0, 1]); // stacked vertically, not on top of each other
+
+      // and the DOM agrees, so they actually render apart
+      expect(n7.el!.getAttribute('gs-y')).toBe('1');
+      expect(sg.el.getAttribute('gs-current-row')).toBe('2');
+      expect(sg.el.style.minHeight).toBe('100px'); // grew to fit both rows
+    });
+  });
 });
