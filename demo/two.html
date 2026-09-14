@@ -56,14 +56,26 @@
 
     <div class="row" style="margin-top: 20px">
       <div class="col-md-6">
-        <a onClick="toggleMode(this, 0)" class="btn btn-primary" href="#">mode: float</a>
+        <label>mode:</label>
+        <select onchange="grids[0].mode(this.value)">
+          <option value="top">top</option>
+          <option value="float" selected>float</option>
+          <option value="list">list</option>
+          <option value="compact">compact</option>
+        </select>
         <a onClick="compact(0)" class="btn btn-primary" href="#">Compact</a>
         <div class="scroll-container">
           <div class="grid-stack" id="left_grid"></div>
         </div>
       </div>
       <div class="col-md-6">
-        <a onClick="toggleMode(this, 1)" class="btn btn-primary" href="#">mode: top</a>
+        <label>mode:</label>
+        <select onchange="grids[1].mode(this.value)">
+          <option value="top" selected>top</option>
+          <option value="float">float</option>
+          <option value="list">list</option>
+          <option value="compact">compact</option>
+        </select>
         <a onClick="compact(1)" class="btn btn-primary" href="#">Compact</a>
         page scroll test
         <div class="grid-stack" id="right_grid"></div>
@@ -122,11 +134,6 @@
       // el.setAttribute('gs-id', 'foo'); // help debug #2231
       // el.innerHTML = 'cloned'; // help debug
       return el;
-    }
-
-    function toggleMode(button, i) {
-      grids[i].mode(grids[i].getMode() === 'float' ? 'top' : 'float');
-      button.innerHTML = 'mode: ' + grids[i].getMode();
     }
 
     function compact(i) {

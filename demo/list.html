@@ -16,38 +16,35 @@
     <p>New in v14: the <code>mode</code> option (<code>'top' | 'float' | 'list' | 'compact'</code>) which replaces the old <code>float</code> boolean.</p>
     <p>In <code>mode: 'list'</code> items are continuously re-flowed in sequential (row-major) order, like a re-orderable list:
     dropping an item on another one takes its place and everything else shifts over, instead of being pushed down.
-    Use the toggle to compare all 4 modes, and see <a href="list_advanced.html">list advanced demo</a> for items of different sizes.</p>
+    Use the dropdown to compare all 4 modes, and see <a href="list_advanced.html">list advanced demo</a> for items of different sizes.</p>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
-      <a class="btn btn-primary" onclick="toggleMode()" id="mode" href="#">mode: list</a>
+      <label>mode:</label>
+      <select onchange="grid.mode(this.value)">
+        <option value="top">top</option>
+        <option value="float">float</option>
+        <option value="list" selected>list</option>
+        <option value="compact">compact</option>
+      </select>
     </div>
     <br><br>
     <div class="grid-stack"></div>
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
-    let modes = ['top', 'float', 'list', 'compact'];
-    let modeIndex = modes.indexOf('list');
-
     let count = 0;
     let children = [];
     for (let i = 0; i < 20; i++) children.push({w: 2, h: 1, content: String(++count)}); // 6 per row in the default 12 column grid
 
     let grid = GridStack.init({
       cellHeight: 100,
-      mode: modes[modeIndex],
+      mode: 'list',
       children
     });
     addEvents(grid);
 
     addNewWidget = function() {
       grid.addWidget({w: 2, h: 1, content: String(++count)});
-    };
-
-    toggleMode = function() {
-      modeIndex = (modeIndex + 1) % modes.length;
-      grid.mode(modes[modeIndex]);
-      document.querySelector('#mode').innerHTML = 'mode: ' + modes[modeIndex];
     };
   </script>
 </body>

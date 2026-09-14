@@ -15,7 +15,13 @@
     <h1>enableMove() demo</h1>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
-      <a class="btn btn-primary" onclick="toggleMode()" id="float" href="#">mode: float</a>
+      <label>mode:</label>
+      <select onchange="grid.mode(this.value)">
+        <option value="top" selected>top</option>
+        <option value="float">float</option>
+        <option value="list">list</option>
+        <option value="compact">compact</option>
+      </select>
       <a class="btn btn-primary" onclick="grid.enableMove(true)" href="#">enable</a>
       <a class="btn btn-primary" onclick="grid.disable()" href="#">disable</a>
     </div>
@@ -45,11 +51,6 @@
       };
       n.content = String(count++);
       grid.addWidget(n);
-    };
-
-    toggleMode = function() {
-      grid.mode(grid.getMode() === 'float' ? 'top' : 'float');
-      document.querySelector('#float').innerHTML = 'mode: ' + grid.getMode();
     };
     addNewWidget();
   </script>

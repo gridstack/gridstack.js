@@ -16,7 +16,7 @@
     <h1>Swap collision demo from older 1.x builds</h1>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
-      <a class="btn btn-primary" onclick="toggleMode()" id="float" href="#"></a>
+      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#"></a>
       <a class="btn btn-primary" onclick="toggleMax()" id="max" href="#"></a>
     </div>
     <br><br>
@@ -33,7 +33,7 @@
     let floatButton = document.getElementById('float');
     let maxButton = document.getElementById('max');
     let count = 6;
-    let grid = GridStack.init({mode: 'top', cellHeight: 70, maxRow: 3});
+    let grid = GridStack.init({float: false, cellHeight: 70, maxRow: 3});
 
     addNewWidget = function() {
       let n = {
@@ -46,11 +46,11 @@
       grid.addWidget(n);
     };
 
-    toggleMode = function() {
-      grid.mode(grid.getMode() === 'float' ? 'top' : 'float');
-      floatButton.innerHTML = 'mode: ' + grid.getMode();
+    toggleFloat = function() {
+      grid.float(! grid.float()); // NOTE: v1.0.0 has no getFloat() - float() is the getter
+      floatButton.innerHTML = 'float: ' + grid.float();
     };
-    floatButton.innerHTML = 'mode: ' + grid.getMode();
+    floatButton.innerHTML = 'float: ' + grid.float();
 
     toggleMax = function() {
       grid.opts.maxRow = grid.engine.maxRow = grid.opts.maxRow ? 0 : 3;
