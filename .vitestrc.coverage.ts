@@ -9,6 +9,7 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     
     include: [
+      'spec/**/*-spec.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
       'spec/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}',
       'src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'
     ],
@@ -18,7 +19,8 @@ export default defineConfig({
       '**/dist/**',
       '**/angular/**',
       '**/react/**',
-      '**/demo/**'
+      '**/demo/**',
+      '**/spec/e2e/**' // old Protractor E2E tests, not runnable under vitest
     ],
 
     // Enhanced coverage configuration for detailed reporting
@@ -61,13 +63,13 @@ export default defineConfig({
       include: ['src/**/*.{js,ts}'],
       
       // Strict coverage thresholds
+      // NOTE: vitest takes these keys directly - the nyc-style `global: {...}` nesting
+      // is silently ignored (see the same note in vitest.config.ts).
       thresholds: {
-        global: {
-          branches: 85,
-          functions: 85,
-          lines: 85,
-          statements: 85
-        },
+        branches: 85,
+        functions: 85,
+        lines: 85,
+        statements: 85,
         // Per-file thresholds for critical files
         'src/gridstack.ts': {
           branches: 90,
@@ -122,10 +124,12 @@ export default defineConfig({
     ],
 
     // Output files for CI/CD integration
+    // NOTE: keep out of ./coverage - the html reporter copies the coverage dir next to
+    // its own output, and copying ./coverage into ./coverage/coverage fails (EINVAL)
     outputFile: {
-      html: './coverage/test-results.html',
-      json: './coverage/test-results.json',
-      junit: './coverage/junit-report.xml'
+      html: './test-results/detailed.html',
+      json: './test-results/detailed.json',
+      junit: './test-results/detailed-junit.xml'
     }
   }
 })

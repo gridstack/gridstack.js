@@ -42,7 +42,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "test:coverage:ui": "vitest --ui --coverage.enabled=true",
-    "test:coverage:detailed": "vitest run --config .vitestrc.coverage.ts",
+    "test:coverage:detailed": "vitest run --config .vitestrc.coverage.ts --coverage",
     "test:coverage:html": "vitest run --coverage && open coverage/index.html",
     "test:coverage:lcov": "vitest run --coverage --coverage.reporter=lcov",
     "test:ci": "vitest run --coverage --reporter=verbose --reporter=junit --outputFile.junit=./coverage/junit-report.xml",
