@@ -46,7 +46,7 @@
     let grid = GridStack.init({
       minRow: 1, // don't let it collapse when empty
       cellHeight: 80,
-      float: true,
+      mode: 'float',
       draggable: { cancel: '.no-drag'} // example of additional custom elements to skip drag on
     }).load(serializedData);
     addEvents(grid);

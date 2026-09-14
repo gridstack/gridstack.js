@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>List grid (advanced) demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>List grid (advanced) demo</h1>
+    <p>New in v14: the <code>mode</code> option (<code>'top' | 'float' | 'list' | 'compact'</code>) which replaces the old <code>float</code> boolean.</p>
+    <p>Same continuous re-flow as the <a href="list.html">simple list demo</a>, but with differently sized items.
+    Try <code>mode: 'compact'</code> and drag a small item near the top: it can tuck into a gap left by a bigger item.
+    Try <code>mode: 'list'</code> instead: relative order is always preserved, so items only ever re-flow sequentially, never jump ahead.</p>
+    <div>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <a class="btn btn-primary" onclick="toggleMode()" id="mode" href="#">mode: list</a>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let modes = ['top', 'float', 'list', 'compact'];
+    let modeIndex = modes.indexOf('list');
+
+    let items = [
+      {w: 4, h: 1},
+      {w: 2, h: 1},
+      {w: 2, h: 2},
+      {w: 4, h: 2},
+      {w: 2, h: 1},
+      {w: 6, h: 1},
+      {w: 2, h: 1},
+      {w: 2, h: 1},
+      {w: 4, h: 1},
+      {w: 2, h: 2},
+      {w: 2, h: 1},
+      {w: 4, h: 1},
+    ];
+    let count = 0;
+    let children = items.map(i => ({...i, content: String(++count)}));
+
+    let grid = GridStack.init({
+      cellHeight: 100,
+      mode: modes[modeIndex],
+      children
+    });
+    addEvents(grid);
+
+    getNode = function() {
+      let n = items[Math.floor(Math.random() * items.length)];
+      return {w: n.w, h: n.h, content: String(++count)};
+    };
+
+    addNewWidget = function() {
+      grid.addWidget(getNode());
+    };
+
+    toggleMode = function() {
+      modeIndex = (modeIndex + 1) % modes.length;
+      grid.mode(modes[modeIndex]);
+      document.querySelector('#mode').innerHTML = 'mode: ' + modes[modeIndex];
+    };
+  </script>
+</body>
+</html>

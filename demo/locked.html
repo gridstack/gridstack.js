@@ -15,14 +15,14 @@
     <h1>Locked demo</h1>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
-      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#">float: true</a>
+      <a class="btn btn-primary" onclick="toggleMode()" id="float" href="#">mode: float</a>
     </div>
     <br><br>
     <div class="grid-stack"></div>
   </div>
 
   <script type="text/javascript">
-    let grid = GridStack.init({float: true});
+    let grid = GridStack.init({mode: 'float'});
 
     grid.on('added removed change', function(e, items) {
       let str = '';
@@ -51,9 +51,9 @@
       count++
     };
 
-    toggleFloat = function() {
-      grid.float(! grid.float());
-      document.querySelector('#float').innerHTML = 'float: ' + grid.float();
+    toggleMode = function() {
+      grid.mode(grid.getMode() === 'float' ? 'top' : 'float');
+      document.querySelector('#float').innerHTML = 'mode: ' + grid.getMode();
     };
     addNewWidget();
   </script>

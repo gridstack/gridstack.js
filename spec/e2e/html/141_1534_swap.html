@@ -16,7 +16,7 @@
     <p>for bugs 141 <b>1094</b> 1534 1605</p>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
-      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#"></a>
+      <a class="btn btn-primary" onclick="toggleMode()" id="float" href="#"></a>
       <a class="btn btn-primary" onclick="toggleMax()" id="max" href="#"></a>
       <a class="btn btn-primary" onclick="toggleBigger()" id="big" href="#"></a>
       with layouts:
@@ -40,7 +40,7 @@
     let layout = 5;
 
     let opt = {
-      float: false,
+      mode: 'top',
       cellHeight: 70,
       margin: 5,
       maxRow: 0,
@@ -108,11 +108,11 @@
     loadAdvanced = function() {
       grid.update(grid.engine.nodes[1].el, {locked: true, content:'locked'});
     }
-    toggleFloat = function() {
-      grid.float(! grid.getFloat());
-      floatButton.innerHTML = 'float: ' + grid.getFloat();
+    toggleMode = function() {
+      grid.mode(grid.getMode() === 'float' ? 'top' : 'float');
+      floatButton.innerHTML = 'mode: ' + grid.getMode();
     }
-    floatButton.innerHTML = 'float: ' + grid.getFloat();
+    floatButton.innerHTML = 'mode: ' + grid.getMode();
 
     toggleMax = function() {
       grid.opts.maxRow = grid.engine.maxRow = grid.opts.maxRow ? 0 : 3;

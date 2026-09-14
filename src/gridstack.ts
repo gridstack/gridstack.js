@@ -12,7 +12,7 @@ import {
   GridStackNode, GridStackWidget, numberOrString, DDUIData, DDDragOpt, GridStackPosition, GridStackOptions,
   GridStackEventHandler, GridStackNodesHandler, AddRemoveFcn, SaveFcn, CompactOptions, GridStackMoveOpts, ResizeToContentFcn, GridStackDroppedHandler, GridStackElementHandler,
   Position, RenderFcn,
-  GridStackMouseEvent
+  GridStackMouseEvent, GridStackMode
 } from './types';
 
 /*
@@ -209,6 +209,15 @@ export class GridStack {
   /** scoping so users can call new GridStack.Engine(12) for example */
   public static Engine = GridStackEngine;
 
+  /** @internal migrates the old `float: boolean` option (removed) to the new `mode` option, for JS callers/saved JSON that still pass it */
+  private static _migrateFloat(o: GridStackOptions): void {
+    const legacyFloat = (o as Record<string, unknown>).float as boolean | undefined;
+    if (legacyFloat !== undefined) {
+      if (o.mode === undefined) o.mode = legacyFloat ? 'float' : 'top';
+      delete (o as Record<string, unknown>).float;
+    }
+  }
+
   /** engine used to implement non DOM grid functionality */
   public engine: GridStackEngine;
 
@@ -269,6 +278,7 @@ export class GridStack {
   public constructor(public el: GridHTMLElement, public opts: GridStackOptions = {}) {
     el.gridstack = this;
     this.opts = opts = opts || {}; // handles null/undefined/0
+    GridStack._migrateFloat(opts);
 
     if (!el.classList.contains('grid-stack')) {
       this.el.classList.add('grid-stack');
@@ -375,7 +385,7 @@ export class GridStack {
     const engineClass = opts.engineClass || GridStack.engineClass || GridStackEngine;
     this.engine = new engineClass({
       column: this.getColumn(),
-      float: opts.float,
+      mode: opts.mode,
       maxRow: opts.maxRow,
       onChange: (cbNodes) => {
         cbNodes.forEach(n => {
@@ -393,7 +403,7 @@ export class GridStack {
     });
 
     if (opts.auto) {
-      this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set float=true, need to prevent collision check...
+      this.batchUpdate(); // prevent in between re-layout #1535 TODO: this only set mode='float', need to prevent collision check...
       this.engine._loading = true; // loading collision check
       this.getGridItems().forEach(el => this._prepareElement(el));
       delete this.engine._loading;
@@ -1063,8 +1073,10 @@ export class GridStack {
    * // Single column layout (vertical stack)
    * grid.column(1);
    */
-  public column(column: number, layout: ColumnOptions = 'moveScale'): GridStack {
+  public column(column: number, layout?: ColumnOptions): GridStack {
     if (!column || column < 1 || this.opts.column === column) return this;
+    // 'list'/'compact' mode re-flows items anyway, so default to matching that instead of 'moveScale'
+    layout ??= (this.opts.mode === 'list' || this.opts.mode === 'compact' ? this.opts.mode : 'moveScale');
 
     const oldColumn = this.getColumn();
     this.opts.column = column;
@@ -1161,35 +1173,36 @@ export class GridStack {
   }
 
   /**
-   * Enable/disable floating widgets (default: `false`). When enabled, widgets can float up to fill empty spaces.
-   * See [example](http://gridstackjs.com/demo/float.html)
+   * Set the layout mode controlling how widgets pack/reflow (default: `'top'`). See {@link GridStackMode}.
+   * See [float example](http://gridstackjs.com/demo/float.html) and [list example](http://gridstackjs.com/demo/list.html)
    *
-   * @param val true to enable floating, false to disable
+   * @param val the new mode ('top' | 'float' | 'list' | 'compact')
    * @returns the grid instance for chaining
    *
    * @example
-   * grid.float(true);  // Enable floating
-   * grid.float(false); // Disable floating (default)
+   * grid.mode('float'); // no gravity, widgets stay where placed
+   * grid.mode('top');   // top gravity packing (default)
+   * grid.mode('list');  // continuous sequential reflow, like a re-orderable list
    */
-  public float(val: boolean): GridStack {
-    if (this.opts.float !== val) {
-      this.opts.float = this.engine.float = val;
+  public mode(val: GridStackMode): GridStack {
+    if (this.opts.mode !== val) {
+      this.opts.mode = this.engine.mode = val;
       this._triggerChangeEvent();
     }
     return this;
   }
 
   /**
-   * Get the current float mode setting.
+   * Get the current layout mode setting.
    *
-   * @returns true if floating is enabled, false otherwise
+   * @returns the current mode
    *
    * @example
-   * const isFloating = grid.getFloat();
-   * console.log('Floating enabled:', isFloating);
+   * const mode = grid.getMode();
+   * console.log('Current mode:', mode);
    */
-  public getFloat(): boolean {
-    return this.engine.float;
+  public getMode(): GridStackMode {
+    return this.engine.mode;
   }
 
   /**
@@ -1513,6 +1526,7 @@ export class GridStack {
   public updateOptions(o: GridStackOptions): GridStack {
     const opts = this.opts;
     if (o === opts) return this; // nothing to do
+    GridStack._migrateFloat(o);
     if (o.acceptWidgets !== undefined) { opts.acceptWidgets = o.acceptWidgets; this._setupAcceptWidget(); }
     if (o.animate !== undefined) this.setAnimation(o.animate);
     if (o.cellHeight) this.cellHeight(o.cellHeight);
@@ -1531,7 +1545,7 @@ export class GridStack {
     if (o.staticGrid !== undefined) this.setStatic(o.staticGrid);
     if (o.disableDrag !== undefined && !o.staticGrid) this.enableMove(!o.disableDrag);
     if (o.disableResize !== undefined && !o.staticGrid) this.enableResize(!o.disableResize);
-    if (o.float !== undefined) this.float(o.float);
+    if (o.mode !== undefined) this.mode(o.mode);
     if (o.row !== undefined) {
       opts.minRow = opts.maxRow = this.engine.maxRow = opts.row = o.row;
       this._updateContainerHeight();

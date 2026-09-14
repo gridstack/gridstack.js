@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
   ];
   public gridOptions: GridStackOptions = {
     margin: 5,
-    // float: true,
+    // mode: 'float',
     minRow: 1,
     cellHeight: 70,
     columnOpts: { breakpoints: [{w:768, c:1}] },
@@ -82,7 +82,7 @@ export class AppComponent implements OnInit {
     minRow: 1, // don't collapse when empty
     removable: '.trash',
     acceptWidgets: true,
-    float: true,
+    mode: 'float',
     children: [
       {x: 0, y: 0, w: 2, h: 2, component: 'app-a'},
       {x: 3, y: 1, h: 2, component: 'app-b'},
@@ -90,7 +90,7 @@ export class AppComponent implements OnInit {
       {x: 2, y: 3, w: 3, maxW: 3, id: 'special', content: 'has maxW=3'},
     ]
   };
-  public twoGridOpt2: NgGridStackOptions = { ...this.twoGridOpt1, float: false }
+  public twoGridOpt2: NgGridStackOptions = { ...this.twoGridOpt1, mode: 'top' }
   private serializedData?: NgGridStackOptions;
 
   // sidebar content to create storing the Widget description to be used on drop

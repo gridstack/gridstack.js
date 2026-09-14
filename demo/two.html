@@ -56,14 +56,14 @@
 
     <div class="row" style="margin-top: 20px">
       <div class="col-md-6">
-        <a onClick="toggleFloat(this, 0)" class="btn btn-primary" href="#">float: true</a>
+        <a onClick="toggleMode(this, 0)" class="btn btn-primary" href="#">mode: float</a>
         <a onClick="compact(0)" class="btn btn-primary" href="#">Compact</a>
         <div class="scroll-container">
           <div class="grid-stack" id="left_grid"></div>
         </div>
       </div>
       <div class="col-md-6">
-        <a onClick="toggleFloat(this, 1)" class="btn btn-primary" href="#">float: false</a>
+        <a onClick="toggleMode(this, 1)" class="btn btn-primary" href="#">mode: top</a>
         <a onClick="compact(1)" class="btn btn-primary" href="#">Compact</a>
         page scroll test
         <div class="grid-stack" id="right_grid"></div>
@@ -92,7 +92,7 @@
       column: 6,
       minRow: 1, // don't collapse when empty
       cellHeight: 70,
-      float: true,
+      mode: 'float',
       removable: '.trash', // true or drag-out delete class
       /** accepts everything fcn, not just .grid-stack-item (true case) but can also be: true | false | '.someClass' value */
       acceptWidgets: function(el) { return true },
@@ -100,7 +100,7 @@
       // itemClass: 'with-lines', // test a custom additional class #2110
     };
     let grids = GridStack.initAll(options);
-    grids[1].float(false);
+    grids[1].mode('top');
 
     // new v4 static method instead of setting up options on every grid (never been per grid really)
     // new v11 method takes GridStackWidget[] to specify what to create on drop
@@ -124,9 +124,9 @@
       return el;
     }
 
-    function toggleFloat(button, i) {
-      grids[i].float(! grids[i].getFloat());
-      button.innerHTML = 'float: ' + grids[i].getFloat();
+    function toggleMode(button, i) {
+      grids[i].mode(grids[i].getMode() === 'float' ? 'top' : 'float');
+      button.innerHTML = 'mode: ' + grids[i].getMode();
     }
 
     function compact(i) {

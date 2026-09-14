@@ -34,7 +34,7 @@
     items.forEach((item, i) => item.content = 'item ' + i);
     let grid = GridStack.init({
         rtl: true,
-        float: true,
+        mode: 'float',
         children: items,
         resizable: {handles: 'sw,se'}
     });

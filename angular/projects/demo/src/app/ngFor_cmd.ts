@@ -56,7 +56,7 @@ export class AngularNgForCmdTestComponent implements AfterViewInit {
   public ngAfterViewInit() {
     this.grid = GridStack.init({
       margin: 5,
-      float: true,
+      mode: 'float',
     })!;
 
     // To sync dom manipulation done by Angular and widget manipulation done by gridstack we need to zip the observables
