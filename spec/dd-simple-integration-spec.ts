@@ -351,6 +351,35 @@ describe('DD Integration Tests', () => {
       resizable.destroy();
     });
 
+    it('should keep peer resize handles hidden during an active resize', () => {
+      const peer = document.createElement('div') as GridItemHTMLElement;
+      document.body.appendChild(peer);
+      const resizable = new DDResizable(element, {handles: 'se', autoHide: true});
+      const peerResizable = new DDResizable(peer, {handles: 'se', autoHide: true});
+      const handle = element.querySelector('.ui-resizable-se')!;
+
+      try {
+        mouse('mouseover', 100, 100, element);
+        mouse('mousedown', 100, 100, handle);
+        mouse('mousemove', 120, 120);
+        expect(element.classList.contains('ui-resizable-resizing')).toBe(true);
+
+        mouse('mouseout', 120, 120, element);
+        mouse('mouseover', 120, 120, peer);
+
+        expect(peer.classList.contains('ui-resizable-autohide')).toBe(true);
+
+        mouse('mouseup', 120, 120);
+        expect(peer.classList.contains('ui-resizable-autohide')).toBe(false);
+        expect(DDManager.resizeElement).toBeUndefined();
+      } finally {
+        mouse('mouseup', 120, 120);
+        resizable.destroy();
+        peerResizable.destroy();
+        peer.remove();
+      }
+    });
+
     it('should cancel the resize on Escape', () => {
       const stop = vi.fn();
       const resizable = new DDResizable(element, {handles: 'se', stop});
@@ -361,6 +390,7 @@ describe('DD Integration Tests', () => {
       document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
 
       expect(stop).toHaveBeenCalled();
+      expect(DDManager.resizeElement).toBeUndefined();
       resizable.destroy();
     });
   });
