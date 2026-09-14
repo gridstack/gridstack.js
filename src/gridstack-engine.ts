@@ -1066,6 +1066,12 @@ export class GridStackEngine {
         }
       }
 
+      // never land on top of a LOCKED item
+      if (needToMove && this.collideAll(node, nn, o.skip).some(n => n.locked)) {
+        needToMove = false;
+        if (wasUndefinedPack) delete o.pack;
+      }
+
       // now move (to the original ask vs the collision version which might differ) and repack things
       if (needToMove && !Utils.samePos(node, nn)) {
         node._dirty = true;
