@@ -21,5 +21,8 @@ module.exports = {
     'prefer-const': 0,
     '@typescript-eslint/ban-ts-comment': 0,
     '@typescript-eslint/no-explicit-any': 'error',
+    // `!` is used throughout as a deliberate style where the compiler can't follow the
+    // reasoning. NOTE: typescript-eslint v8 dropped this rule from 'recommended' too.
+    '@typescript-eslint/no-non-null-assertion': 0,
   }
 };

@@ -62,7 +62,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
 
 # Demo and API Documentation
 
-Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/), and complete [API documentation](https://gridstack.github.io/gridstack.js/doc/html/) ([markdown](https://github.com/gridstack/gridstack.js/tree/master/doc/API.md))
+Please visit http://gridstackjs.com and [these demos](http://gridstackjs.com/demo/). Complete API documentation: [HTML for the latest release](https://gridstackjs.com/doc/html/), or [markdown for this branch](https://github.com/gridstack/gridstack.js/tree/master/doc/API.md) (regenerated with the code, so it also covers unreleased changes).
 
 # Usage
 

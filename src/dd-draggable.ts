@@ -87,7 +87,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
 
   /** return all handles omitting other nested `.grid-stack-item` children (in case node.subGrid isn't set for some reason) */
   protected getAllHandles(): HTMLElement[] {
-    return Array.from(this.el.querySelectorAll(this.option.handle!)).filter((node): node is HTMLElement => {
+    const handle = this.option.handle;
+    if (!handle) return []; // caller falls back to the item itself
+    return Array.from(this.el.querySelectorAll(handle)).filter((node): node is HTMLElement => {
       if (!(node instanceof HTMLElement)) return false;
       const owner = node.closest('.grid-stack-item');
       return owner === this.el || !owner;
