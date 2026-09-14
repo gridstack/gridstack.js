@@ -84,7 +84,6 @@
     "@vitest/ui": "^4.1.0",
     "connect": "^3.7.0",
     "core-js": "^3.30.1",
-    "coveralls": "^3.1.1",
     "doctoc": "^2.2.1",
     "eslint": "^8.38.0",
     "grunt": "^1.6.1",

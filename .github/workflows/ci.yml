@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    name: lint + unit tests + coverage
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '20'
+        cache: 'yarn'
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile
+
+    # `yarn lint` also lints ./react, which has its own node_modules - inlined here so
+    # this job doesn't need that install (the react job covers it).
+    - name: Lint
+      run: |
+        npx tsc --project tsconfig.build.json --noEmit
+        npx eslint src/*.ts angular/projects/lib/src/**/*.ts
+
+    # writes coverage/lcov.info, and fails if we drop below the thresholds in vitest.config.ts
+    - name: Unit tests + coverage
+      run: yarn test:coverage
+
+    # lcov.info only ever contains src/*.ts - see the coverage include/exclude in vitest.config.ts
+    - name: Upload coverage to Coveralls
+      uses: coverallsapp/github-action@v2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./coverage/lcov.info
+        format: lcov
+
+  # no coverage upload here on purpose - the badge tracks the core lib (src/) only.
+  react:
+    name: react unit tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+
+    - uses: actions/setup-node@v7
+      with:
+        node-version: '20'
+
+    # root install first: react/ resolves some tooling out of the root node_modules
+    - name: Install dependencies
+      run: |
+        yarn install --frozen-lockfile
+        cd react && npm install --legacy-peer-deps
+
+    - name: Lint + test
+      run: cd react && npm run lint && npx vitest run
