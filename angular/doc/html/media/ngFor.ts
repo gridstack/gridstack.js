@@ -61,7 +61,7 @@ export class AngularNgForTestComponent implements AfterViewInit {
   public ngAfterViewInit() {
     this.grid = GridStack.init({
       margin: 5,
-      float: true,
+      mode: 'float',
     })!
     .on('change added', (event: Event, nodes: GridStackNode[]) => this.onChange(nodes));
 
