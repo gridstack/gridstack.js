@@ -5,7 +5,9 @@ import {
   touchend, 
   pointerdown, 
   pointerenter, 
-  pointerleave 
+  pointerleave,
+  cancelPendingTouchDrag,
+  DDTouch
 } from '../src/dd-touch';
 import { DDManager } from '../src/dd-manager';
 import { Utils } from '../src/utils';
@@ -120,11 +122,22 @@ function createMockPointerEvent(type: string, pointerType: string, options: Part
   return mockEvent as PointerEvent;
 }
 
+/** touch drags only start after the user pauses on the item - see #2781 */
+const TOUCH_DRAG_DELAY = 300;
+const pauseToDrag = () => vi.advanceTimersByTime(TOUCH_DRAG_DELAY);
+
 describe('dd-touch', () => {
   let mockUtils: any;
   let mockDDManager: any;
 
+  /** touchstart + wait out the pause, which is what actually starts the drag */
+  function startTouchDrag(touch: Touch): void {
+    touchstart(createMockTouchEvent('touchstart', [touch]));
+    pauseToDrag();
+  }
+
   beforeEach(() => {
+    vi.useFakeTimers(); // drags are now delayed, see #2781
     mockUtils = vi.mocked(Utils);
     mockDDManager = vi.mocked(DDManager);
     
@@ -132,31 +145,14 @@ describe('dd-touch', () => {
     mockUtils.simulateMouseEvent.mockClear();
     mockDDManager.dragElement = null;
     
-    // Mock window.clearTimeout and setTimeout
-    vi.spyOn(window, 'clearTimeout');
-    vi.spyOn(window, 'setTimeout').mockImplementation((callback: Function, delay: number) => {
-      return setTimeout(callback, delay) as any;
-    });
-    
-    // Reset DDTouch state by calling touchend to reset touchHandled flag
-    // This is a workaround since we can't access DDTouch directly
-    const resetTouch = {
-      pageX: 0, pageY: 0, clientX: 0, clientY: 0, screenX: 0, screenY: 0,
-      identifier: 0, target: document.createElement('div'),
-      radiusX: 0, radiusY: 0, rotationAngle: 0, force: 0
-    } as Touch;
-    const resetEvent = createMockTouchEvent('touchend', [], { changedTouches: [resetTouch] });
-    
-    // Call touchstart then touchend to reset state
-    const startEvent = createMockTouchEvent('touchstart', [resetTouch]);
-    touchstart(startEvent);
-    touchend(resetEvent);
-    
-    // Clear any calls made during reset
-    mockUtils.simulateMouseEvent.mockClear();
+    // reset leftover state from the previous gesture
+    cancelPendingTouchDrag();
+    DDTouch.touchHandled = false;
+    delete DDTouch.pointerLeaveTimeout;
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -192,18 +188,46 @@ describe('dd-touch', () => {
       } as Touch;
     });
 
-    it('should simulate mousedown for single touch', () => {
+    it('should simulate mousedown only after pausing on the item (#2781)', () => {
       const mockTouchEvent = createMockTouchEvent('touchstart', [mockTouch]);
 
       touchstart(mockTouchEvent);
+      expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalled(); // still could be a page scroll
 
+      pauseToDrag();
       expect(mockUtils.simulateMouseEvent).toHaveBeenCalledWith(mockTouch, 'mousedown');
+    });
+
+    it('should let a quick swipe scroll the page instead of dragging (#2781)', () => {
+      const target = document.createElement('div');
+      touchstart(createMockTouchEvent('touchstart', [mockTouch], { currentTarget: target } as never));
+
+      // finger moves away before the delay elapses -> this is a scroll, not a drag
+      const move: Event & { touches?: unknown } = new Event('touchmove');
+      move.touches = [{ ...mockTouch, clientX: mockTouch.clientX + 50 }];
+      target.dispatchEvent(move);
+      pauseToDrag();
+
+      expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalled();
+      expect(DDTouch.touchHandled).toBeFalsy();
+    });
+
+    it('should not drag when releasing before the pause elapses (tap)', () => {
+      const target = document.createElement('div');
+      touchstart(createMockTouchEvent('touchstart', [mockTouch], { currentTarget: target } as never));
+
+      target.dispatchEvent(new Event('touchend'));
+      pauseToDrag();
+
+      expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalled();
+      expect(DDTouch.touchHandled).toBeFalsy();
     });
 
     it('should prevent default on cancelable events', () => {
       const mockTouchEvent = createMockTouchEvent('touchstart', [mockTouch], { cancelable: true });
 
       touchstart(mockTouchEvent);
+      pauseToDrag();
 
       expect(mockTouchEvent.preventDefault).toHaveBeenCalled();
     });
@@ -212,6 +236,7 @@ describe('dd-touch', () => {
       const mockTouchEvent = createMockTouchEvent('touchstart', [mockTouch], { cancelable: false });
 
       touchstart(mockTouchEvent);
+      pauseToDrag();
 
       expect(mockTouchEvent.preventDefault).not.toHaveBeenCalled();
     });
@@ -221,6 +246,7 @@ describe('dd-touch', () => {
       const mockTouchEvent = createMockTouchEvent('touchstart', [mockTouch, secondTouch]);
 
       touchstart(mockTouchEvent);
+      pauseToDrag();
 
       expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalled();
     });
@@ -247,10 +273,7 @@ describe('dd-touch', () => {
     });
 
     it('should simulate mousemove for single touch when touch is handled', () => {
-      // First call touchstart to set DDTouch.touchHandled = true
-      const startEvent = createMockTouchEvent('touchstart', [mockTouch]);
-      touchstart(startEvent);
-      
+      startTouchDrag(mockTouch);
       mockUtils.simulateMouseEvent.mockClear(); // Clear previous calls
       
       const mockTouchEvent = createMockTouchEvent('touchmove', [mockTouch]);
@@ -269,10 +292,7 @@ describe('dd-touch', () => {
     });
 
     it('should ignore multi-touch events', () => {
-      // First call touchstart to set DDTouch.touchHandled = true
-      const startEvent = createMockTouchEvent('touchstart', [mockTouch]);
-      touchstart(startEvent);
-      
+      startTouchDrag(mockTouch);
       mockUtils.simulateMouseEvent.mockClear(); // Clear previous calls
       
       const secondTouch = { ...mockTouch, identifier: 2 };
@@ -305,10 +325,7 @@ describe('dd-touch', () => {
     });
 
     it('should simulate mouseup when touch is handled', () => {
-      // First call touchstart to set DDTouch.touchHandled = true
-      const startEvent = createMockTouchEvent('touchstart', [mockTouch]);
-      touchstart(startEvent);
-      
+      startTouchDrag(mockTouch);
       mockUtils.simulateMouseEvent.mockClear(); // Clear previous calls
       
       const mockTouchEvent = createMockTouchEvent('touchend', [], { changedTouches: [mockTouch] });
@@ -318,10 +335,7 @@ describe('dd-touch', () => {
     });
 
     it('should simulate click when not dragging', () => {
-      // First call touchstart to set DDTouch.touchHandled = true
-      const startEvent = createMockTouchEvent('touchstart', [mockTouch]);
-      touchstart(startEvent);
-      
+      startTouchDrag(mockTouch);
       mockUtils.simulateMouseEvent.mockClear(); // Clear previous calls
       mockDDManager.dragElement = null; // Not dragging
       
@@ -333,10 +347,7 @@ describe('dd-touch', () => {
     });
 
     it('should not simulate click when dragging', () => {
-      // First call touchstart to set DDTouch.touchHandled = true
-      const startEvent = createMockTouchEvent('touchstart', [mockTouch]);
-      touchstart(startEvent);
-      
+      startTouchDrag(mockTouch);
       mockUtils.simulateMouseEvent.mockClear(); // Clear previous calls
       mockDDManager.dragElement = {}; // Dragging
       
@@ -355,29 +366,16 @@ describe('dd-touch', () => {
       expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalled();
     });
 
-    it('should clear pointerLeaveTimeout when it exists', () => {
-      // First set up a pointerleave timeout
+    it('should cancel the pending mouseleave when releasing over ourself', () => {
+      startTouchDrag(mockTouch);
       mockDDManager.dragElement = {};
-      const pointerEvent = createMockPointerEvent('pointerleave', 'touch');
-      
-      let timeoutId: number;
-      vi.mocked(window.setTimeout).mockImplementation((callback: Function, delay: number) => {
-        timeoutId = 123;
-        return timeoutId as any;
-      });
-      
-      pointerleave(pointerEvent);
-      
-      // Now call touchstart and touchend to trigger the timeout clearing
-      const startEvent = createMockTouchEvent('touchstart', [mockTouch]);
-      touchstart(startEvent);
-      
+      pointerleave(createMockPointerEvent('pointerleave', 'touch')); // leave we get right before the release
       mockUtils.simulateMouseEvent.mockClear();
-      
-      const mockTouchEvent = createMockTouchEvent('touchend', [], { changedTouches: [mockTouch] });
-      touchend(mockTouchEvent);
 
-      expect(window.clearTimeout).toHaveBeenCalledWith(123);
+      touchend(createMockTouchEvent('touchend', [], { changedTouches: [mockTouch] }));
+      vi.advanceTimersByTime(50);
+
+      expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalledWith(expect.anything(), 'mouseleave');
     });
   });
 
@@ -476,8 +474,8 @@ describe('dd-touch', () => {
       const mockPointerEvent = createMockPointerEvent('pointerleave', 'touch');
 
       pointerleave(mockPointerEvent);
+      vi.advanceTimersByTime(50);
 
-      expect(window.setTimeout).not.toHaveBeenCalled();
       expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalled();
     });
 
@@ -486,29 +484,19 @@ describe('dd-touch', () => {
       const mockPointerEvent = createMockPointerEvent('pointerleave', 'mouse');
 
       pointerleave(mockPointerEvent);
+      vi.advanceTimersByTime(50);
 
-      expect(window.setTimeout).not.toHaveBeenCalled();
       expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalled();
     });
 
     it('should delay mouseleave simulation for touch events when dragging', () => {
       mockDDManager.dragElement = {};
       const mockPointerEvent = createMockPointerEvent('pointerleave', 'touch');
-      
-      // Mock setTimeout to capture the callback
-      let timeoutCallback: Function;
-      vi.mocked(window.setTimeout).mockImplementation((callback: Function, delay: number) => {
-        timeoutCallback = callback;
-        return 123 as any;
-      });
 
       pointerleave(mockPointerEvent);
+      expect(mockUtils.simulateMouseEvent).not.toHaveBeenCalled(); // delayed so a release on ourself can cancel it
 
-      expect(window.setTimeout).toHaveBeenCalledWith(expect.any(Function), 10);
-      
-      // Execute the timeout callback
-      timeoutCallback!();
-      
+      vi.advanceTimersByTime(50);
       expect(mockUtils.simulateMouseEvent).toHaveBeenCalledWith(mockPointerEvent, 'mouseleave');
     });
   });

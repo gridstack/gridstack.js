@@ -214,7 +214,7 @@ export const GridStackComponent = forwardRef<GridStackHandle, GridStackProps>(
         }
       });
 
-      gridRef.current = GridStack.init(options, el); // eslint-disable-line react-hooks/exhaustive-deps
+      gridRef.current = GridStack.init(options, el);
       prevOptsSig.current = optsSig;
       setLayoutVersion((v) => v + 1);
       setGridSession((s) => s + 1);
@@ -226,13 +226,13 @@ export const GridStackComponent = forwardRef<GridStackHandle, GridStackProps>(
         gridRef.current = null;
         prevOptsSig.current = null;
       };
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps — intentionally init once
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps -- intentionally init once
 
     // Options update — calls GS updateOptions when content changes without recreating the grid.
     useLayoutEffect(() => {
       if (!gridRef.current || prevOptsSig.current === null || prevOptsSig.current === optsSig)
         return;
-      gridRef.current.updateOptions(options); // eslint-disable-line react-hooks/exhaustive-deps
+      gridRef.current.updateOptions(options);
       prevOptsSig.current = optsSig;
     }, [optsSig]); // eslint-disable-line react-hooks/exhaustive-deps
 

@@ -55,6 +55,8 @@ Object.defineProperty(window, 'performance', {
 
 // Mock CSS properties that might be used by gridstack
 Object.defineProperty(window, 'getComputedStyle', {
+  writable: true, // so individual tests can spy/override it
+  configurable: true,
   value: () => ({
     getPropertyValue: () => '',
     width: '100px',

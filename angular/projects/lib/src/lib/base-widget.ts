@@ -93,14 +93,16 @@ export abstract class BaseWidget {
   public deserialize(w: NgGridStackWidget)  {
     // save full description for meta data
     this.widgetItem = w;
-    if (!w?.props) return;
+    const props = w?.props;
+    if (!props) return;
 
-    if (this._compRef) {
+    const compRef = this._compRef;
+    if (compRef) {
       // Use setInput() to correctly handle both @Input() decorator and signal-based inputs (Angular 17+).
       // Direct Object.assign overwrites signal functions with plain values, breaking signal inputs.
-      Object.keys(w.props).forEach(key => this._compRef!.setInput(key, (w.props as any)[key]));
+      Object.keys(props).forEach(key => compRef.setInput(key, props[key]));
     } else {
-      Object.assign(this, w.props);
+      Object.assign(this, props);
     }
   }
 }
