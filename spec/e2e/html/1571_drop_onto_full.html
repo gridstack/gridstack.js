@@ -66,12 +66,24 @@
 
     <div class="row">
       <div class="col-md-6">
-        <a onClick="toggleMode(this, 0)" class="btn btn-primary" href="#">mode: top</a>
+        <label>mode:</label>
+        <select onchange="grids[0].mode(this.value)">
+          <option value="top" selected>top</option>
+          <option value="float">float</option>
+          <option value="list">list</option>
+          <option value="compact">compact</option>
+        </select>
         <a onClick="compact(0)" class="btn btn-primary" href="#">Compact</a>
         <div class="grid-stack"></div>
       </div>
       <div class="col-md-6">
-        <a onClick="toggleMode(this, 1)" class="btn btn-primary" href="#">mode: top</a>
+        <label>mode:</label>
+        <select onchange="grids[1].mode(this.value)">
+          <option value="top" selected>top</option>
+          <option value="float">float</option>
+          <option value="list">list</option>
+          <option value="compact">compact</option>
+        </select>
         <a onClick="compact(1)" class="btn btn-primary" href="#">Compact</a>
         <div class="grid-stack"></div>
       </div>
@@ -96,11 +108,6 @@
     grids.forEach(function (grid, i) {
       addEvents(grid, i);
     });
-
-    function toggleMode(button, i) {
-      grids[i].mode(grids[i].getMode() === 'float' ? 'top' : 'float');
-      button.innerHTML = 'mode: ' + grids[i].getMode();
-    }
 
     function compact(i) {
       grids[i].compact();

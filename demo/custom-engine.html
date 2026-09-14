@@ -16,7 +16,13 @@
     <p>shows a custom engine subclass in Typescript that only allows objects to move vertically.</p>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
-      <a class="btn btn-primary" onclick="toggleMode()" id="float" href="#">mode: float</a>
+      <label>mode:</label>
+      <select onchange="grid.mode(this.value)">
+        <option value="top">top</option>
+        <option value="float" selected>float</option>
+        <option value="list">list</option>
+        <option value="compact">compact</option>
+      </select>
     </div>
     <br><br>
     <div class="grid-stack"></div>
@@ -48,13 +54,14 @@
     ];
     items.forEach(n => n.content = String(count++));
 
-    let grid = GridStack.init({
+    // NOTE: module scope, so expose what the inline HTML handlers need
+    let grid = window.grid = GridStack.init({
       mode: 'float', 
       cellHeight: 70
     }).load(items);
     addEvents(grid);
 
-    let addNewWidget = function() {
+    let addNewWidget = window.addNewWidget = function() {
       let n = items[count] || {
         x: Math.round(12 * Math.random()),
         y: Math.round(5 * Math.random()),
@@ -63,11 +70,6 @@
       };
       n.content = n.content || String(count++);
       grid.addWidget(n);
-    };
-
-    let toggleMode = function() {
-      grid.mode(grid.getMode() === 'float' ? 'top' : 'float');
-      document.querySelector('#float').innerHTML = 'mode: ' + grid.getMode();
     };
   </script>
 </body>
