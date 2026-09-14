@@ -34,7 +34,7 @@ export const gridDefaults: GridStackOptions = {
   // **** same as not being set ****
   // disableDrag: false,
   // disableResize: false,
-  // float: false,
+  // mode: 'top',
   // handleClass: null,
   // removable: false,
   // staticGrid: false,
@@ -56,7 +56,7 @@ export const gridDefaults: GridStackOptions = {
  * - `'none'`: Leave items unchanged unless they don't fit in the new column count
  * - Custom function: Provide your own layout logic
  */
-export type ColumnOptions = 'list' | 'compact' | 'moveScale' | 'move' | 'scale' | 'none' |
+export type ColumnOptions = CompactOptions | 'moveScale' | 'move' | 'scale' | 'none' |
   ((column: number, oldColumn: number, nodes: GridStackNode[], oldNodes: GridStackNode[]) => void);
 /**
  * Options for the compact() method to reclaim empty space.
@@ -64,6 +64,20 @@ export type ColumnOptions = 'list' | 'compact' | 'moveScale' | 'move' | 'scale' 
  * - `'compact'`: Find truly empty spaces, may reorder items for optimal fit
  */
 export type CompactOptions = 'list' | 'compact';
+/**
+ * Controls how widgets are laid out and kept in place as the grid changes (default: `'top'`).
+ * See [float example](http://gridstack.github.io/gridstack.js/demo/float.html) and
+ * [list example](http://gridstack.github.io/gridstack.js/demo/list.html).
+ *
+ * Options:
+ * - `'top'`: top gravity packing - widgets float up to fill empty space above them (was `float: false`)
+ * - `'float'`: no gravity - widgets stay exactly where placed, only pushed when colliding (was `float: true`)
+ * - `'list'`: widgets are continuously reflowed in sequential (row-major) order, like a re-orderable list -
+ *   moving/adding/removing an item reflows everyone else after it, keeping relative order
+ * - `'compact'`: same continuous reflow as `'list'`, but reuses any truly empty gaps first, so a smaller
+ *   item can jump ahead of a bigger one - order isn't guaranteed to stay stable
+ */
+export type GridStackMode = 'top' | 'float' | CompactOptions;
 /**
  * Type representing values that can be either numbers or strings (e.g., dimensions with units).
  * Used for properties like width, height, margins that accept both numeric and string values.
@@ -283,8 +297,8 @@ export interface GridStackOptions {
   /** the type of engine to create (so you can subclass) default to GridStackEngine */
   engineClass?: typeof GridStackEngine;
 
-  /** enable floating widgets (default?: false) See example (http://gridstack.github.io/gridstack.js/demo/float.html) */
-  float?: boolean;
+  /** layout mode controlling how widgets pack/reflow (default?: 'top') */
+  mode?: GridStackMode;
 
   /** draggable handle selector (default?: '.grid-stack-item-content') */
   handle?: string;

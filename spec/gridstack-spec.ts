@@ -208,10 +208,10 @@ describe('gridstack >', () => {
       let items = Utils.getElements('.grid-stack-item');
       grid.column(9);
       expect(grid.getColumn()).toBe(9);
-      items.forEach(el => expect(el.getAttribute('gs-y')).toBe(null));
+      items.forEach(el => expect(el.getAttribute('gs-y')).toBe('0'));
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
-      items.forEach(el => expect(el.getAttribute('gs-y')).toBe(null));
+      items.forEach(el => expect(el.getAttribute('gs-y')).toBe('0'));
     });
     it('no sizing, no moving >', () => {
       grid = GridStack.init({column: 12});
@@ -220,7 +220,7 @@ describe('gridstack >', () => {
       expect(grid.getColumn()).toBe(8);
       items.forEach(el => {
         expect(parseInt(el.getAttribute('gs-w'))).toBe(4);
-        expect(el.getAttribute('gs-y')).toBe(null);
+        expect(el.getAttribute('gs-y')).toBe('0');
       });
     });
     it('no sizing, but moving down >', () => {
@@ -229,38 +229,38 @@ describe('gridstack >', () => {
       grid.column(7, 'move');
       expect(grid.getColumn()).toBe(7);
       items.forEach(el => expect(parseInt(el.getAttribute('gs-w'))).toBe(4));
-      expect(items[0].getAttribute('gs-y')).toBe(null);
+      expect(items[0].getAttribute('gs-y')).toBe('0');
       expect(parseInt(items[1].getAttribute('gs-y'))).toBe(2);
     });
     it('should change column number and re-layout items >', () => {
       let options = {
         column: 12,
-        float: true
+        mode: 'float'
       };
       grid = GridStack.init(options);
       let el1 = document.getElementById('item1')
       let el2 = document.getElementById('item2')
 
       // items start at 4x2 and 4x4
-      expect(el1.getAttribute('gs-x')).toBe(null);
-      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
+      expect(el1.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(4);
-      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(el2.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
       // 1 column will have item1, item2
       grid.column(1);
       expect(grid.getColumn()).toBe(1);
-      expect(el1.getAttribute('gs-x')).toBe(null);
-      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
+      expect(el1.getAttribute('gs-y')).toBe('0');
       expect(el1.getAttribute('gs-w')).toBe(null);
       expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(el2.getAttribute('gs-x')).toBe(null);
+      expect(el2.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-y'))).toBe(2);
       expect(el2.getAttribute('gs-w')).toBe(null);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
@@ -268,7 +268,7 @@ describe('gridstack >', () => {
       // add default 1x1 item to the end (1 column)
       let el3 = grid.addWidget({content:'new'});
       expect(el3).not.toBe(null);
-      expect(el3.getAttribute('gs-x')).toBe(null);
+      expect(el3.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(6);
       expect(el3.getAttribute('gs-w')).toBe(null);
       expect(el3.getAttribute('gs-h')).toBe(null);
@@ -276,20 +276,20 @@ describe('gridstack >', () => {
       // back to 12 column and initial layout (other than new item3)
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
-      expect(el1.getAttribute('gs-x')).toBe(null);
-      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
+      expect(el1.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(4);
-      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(el2.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
       // TODO: we don't remembers autoPlacement (cleared multiple places)
       // expect(parseInt(el3.getAttribute('gs-x'))).toBe(8);
       // expect(el3.getAttribute('gs-y')).toBe(null);
-      expect(el3.getAttribute('gs-x')).toBe(null);
+      expect(el3.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(6);
       expect(el3.getAttribute('gs-w')).toBe(null);
       expect(el3.getAttribute('gs-h')).toBe(null);
@@ -297,34 +297,34 @@ describe('gridstack >', () => {
       // back to 1 column
       grid.column(1);
       expect(grid.getColumn()).toBe(1);
-      expect(el1.getAttribute('gs-x')).toBe(null);
-      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
+      expect(el1.getAttribute('gs-y')).toBe('0');
       expect(el1.getAttribute('gs-w')).toBe(null);
       expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(el2.getAttribute('gs-x')).toBe(null);
+      expect(el2.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-y'))).toBe(2);
       expect(el2.getAttribute('gs-w')).toBe(null);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
 
-      expect(el3.getAttribute('gs-x')).toBe(null);
+      expect(el3.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(6);
       expect(el3.getAttribute('gs-w')).toBe(null);
       expect(el3.getAttribute('gs-h')).toBe(null);
 
       // move item2 to beginning to [3][1][2] vertically
       grid.update(el3, {x:0, y:0});
-      expect(el3.getAttribute('gs-x')).toBe(null);
-      expect(el3.getAttribute('gs-y')).toBe(null);
+      expect(el3.getAttribute('gs-x')).toBe('0');
+      expect(el3.getAttribute('gs-y')).toBe('0');
       expect(el3.getAttribute('gs-w')).toBe(null);
       expect(el3.getAttribute('gs-h')).toBe(null);
 
-      expect(el1.getAttribute('gs-x')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
       expect(el1.getAttribute('gs-w')).toBe(null);
       expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
 
-      expect(el2.getAttribute('gs-x')).toBe(null);
+      expect(el2.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-y'))).toBe(3);
       expect(el2.getAttribute('gs-w')).toBe(null);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(4);
@@ -332,12 +332,12 @@ describe('gridstack >', () => {
       // back to 12 column, el3 to be beginning still, but [1][2] to be in 1 columns still but wide 4x2 and 4x still
       grid.column(12);
       expect(grid.getColumn()).toBe(12);
-      expect(el3.getAttribute('gs-x')).toBe(null); // 8 TEST WHY
-      expect(el3.getAttribute('gs-y')).toBe(null);
+      expect(el3.getAttribute('gs-x')).toBe('0'); // 8 TEST WHY
+      expect(el3.getAttribute('gs-y')).toBe('0');
       expect(el3.getAttribute('gs-w')).toBe(null);
       expect(el3.getAttribute('gs-h')).toBe(null);
 
-      expect(el1.getAttribute('gs-x')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
       expect(parseInt(el1.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
@@ -352,12 +352,12 @@ describe('gridstack >', () => {
       grid.column(2);
       expect(grid.getColumn()).toBe(2);
 
-      expect(el3.getAttribute('gs-x')).toBe(null); // 1 TEST WHY
-      expect(el3.getAttribute('gs-y')).toBe(null);
+      expect(el3.getAttribute('gs-x')).toBe('0'); // 1 TEST WHY
+      expect(el3.getAttribute('gs-y')).toBe('0');
       expect(el3.getAttribute('gs-w')).toBe(null); // 1 as we scaled from 12 columns
       expect(el3.getAttribute('gs-h')).toBe(null);
 
-      expect(el1.getAttribute('gs-x')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
       expect(el1.getAttribute('gs-w')).toBe(null);
       expect(parseInt(el1.getAttribute('gs-h'))).toBe(2);
@@ -442,7 +442,7 @@ describe('gridstack >', () => {
   //   it('should support default going to 1 column >', () => {
   //     let options = {
   //       column: 12,
-  //       float: true
+  //       mode: 'float'
   //     };
   //     grid = GridStack.init(options);
   //     grid.batchUpdate();
@@ -490,7 +490,7 @@ describe('gridstack >', () => {
   //     let options = {
   //       column: 12,
   //       oneColumnModeDomSort: true,
-  //       float: true
+  //       mode: 'float'
   //     };
   //     grid = GridStack.init(options);
   //     let el1 = grid.addWidget({w:1, h:1});
@@ -748,7 +748,7 @@ describe('gridstack >', () => {
     });
   });
 
-  describe('grid method _packNodes with float >', () => {
+  describe('grid method _packNodes with mode float >', () => {
     beforeEach(() => {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
     });
@@ -759,7 +759,7 @@ describe('gridstack >', () => {
       let options = {
         cellHeight: 80,
         margin: 5,
-        float: true
+        mode: 'float'
       };
       grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
@@ -779,7 +779,7 @@ describe('gridstack >', () => {
       items.forEach(oldEl => {
         let el = oldEl.cloneNode(true) as GridItemHTMLElement;
         el = grid.makeWidget(el);
-        expect(el.gridstackNode?.x).not.toBe(oldEl.gridstackNode?.x);
+        expect(el.gridstackNode?.x === oldEl.gridstackNode?.x && el.gridstackNode?.y === oldEl.gridstackNode?.y).toBe(false);
       });
     });
   });
@@ -792,7 +792,7 @@ describe('gridstack >', () => {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should keep all widget options the same (autoPosition off >', () => {
-      grid = GridStack.init({float: true});;
+      grid = GridStack.init({mode: 'float'});;
       let w = grid.addWidget({x: 6, y:7, w:2, h:3, autoPosition:false,
         minW:1, maxW:4, minH:2, maxH:5, id:'coolWidget'});
       
@@ -803,10 +803,10 @@ describe('gridstack >', () => {
       expect(w.getAttribute('gs-auto-position')).toBe(null);
       expect(w.getAttribute('gs-id')).toBe('coolWidget');
 
-      // should move widget to top with float=false
-      expect(grid.getFloat()).toBe(true);
-      grid.float(false);
-      expect(grid.getFloat()).toBe(false);
+      // should move widget to top with mode='top'
+      expect(grid.getMode()).toBe('float');
+      grid.mode('top');
+      expect(grid.getMode()).toBe('top');
       expect(parseInt(w.getAttribute('gs-x'))).toBe(6);
       expect(parseInt(w.getAttribute('gs-y'))).toBe(4); // <--- from 7 to 4 below second original widget
       expect(parseInt(w.getAttribute('gs-w'))).toBe(2);
@@ -815,8 +815,8 @@ describe('gridstack >', () => {
       expect(w.getAttribute('gs-id')).toBe('coolWidget');
 
       // should not move again (no-op)
-      grid.float(true);
-      expect(grid.getFloat()).toBe(true);
+      grid.mode('float');
+      expect(grid.getMode()).toBe('float');
       expect(parseInt(w.getAttribute('gs-x'))).toBe(6);
       expect(parseInt(w.getAttribute('gs-y'))).toBe(4);
       expect(parseInt(w.getAttribute('gs-w'))).toBe(2);
@@ -834,7 +834,7 @@ describe('gridstack >', () => {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should change x, y coordinates for widgets. >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       let w = grid.addWidget({x:9, y:7, w:2, h:3, autoPosition:true});
       
       expect(parseInt(w.getAttribute('gs-x'), 10)).not.toBe(9);
@@ -854,7 +854,7 @@ describe('gridstack >', () => {
       let w = grid.addWidget({h: 2, id: 'optionWidget'});
       
       expect(parseInt(w.getAttribute('gs-x'))).toBe(8);
-      expect(w.getAttribute('gs-y')).toBe(null);
+      expect(w.getAttribute('gs-y')).toBe('0');
       expect(w.getAttribute('gs-w')).toBe(null);
       expect(parseInt(w.getAttribute('gs-h'))).toBe(2);
       // expect(w.getAttribute('gs-auto-position')).toBe('true');
@@ -865,7 +865,7 @@ describe('gridstack >', () => {
       let w = grid.addWidget({y: 9, h: 2, id: 'optionWidget'});
       
       expect(parseInt(w.getAttribute('gs-x'))).toBe(8);
-      expect(w.getAttribute('gs-y')).toBe(null);
+      expect(w.getAttribute('gs-y')).toBe('0');
       expect(w.getAttribute('gs-w')).toBe(null);
       expect(parseInt(w.getAttribute('gs-h'))).toBe(2);
       // expect(w.getAttribute('gs-auto-position')).toBe('true');
@@ -876,7 +876,7 @@ describe('gridstack >', () => {
       let w = grid.addWidget({x: 9, h: 2, id: 'optionWidget'});
       
       expect(parseInt(w.getAttribute('gs-x'))).toBe(8);
-      expect(w.getAttribute('gs-y')).toBe(null);
+      expect(w.getAttribute('gs-y')).toBe('0');
       expect(w.getAttribute('gs-w')).toBe(null);
       expect(parseInt(w.getAttribute('gs-h'))).toBe(2);
       // expect(w.getAttribute('gs-auto-position')).toBe('true');
@@ -887,7 +887,7 @@ describe('gridstack >', () => {
       let w = grid.addWidget({x: 8, h: 2, id: 'optionWidget'});
       
       expect(parseInt(w.getAttribute('gs-x'))).toBe(8);
-      expect(w.getAttribute('gs-y')).toBe(null);
+      expect(w.getAttribute('gs-y')).toBe('0');
       expect(w.getAttribute('gs-w')).toBe(null);
       expect(parseInt(w.getAttribute('gs-h'))).toBe(2);
       // expect(w.getAttribute('gs-auto-position')).toBe('true');
@@ -898,7 +898,7 @@ describe('gridstack >', () => {
       let w = grid.addWidget({ });
       
       expect(parseInt(w.getAttribute('gs-x'))).toBe(8);
-      expect(w.getAttribute('gs-y')).toBe(null);
+      expect(w.getAttribute('gs-y')).toBe('0');
       expect(w.getAttribute('gs-w')).toBe(null);
       expect(w.getAttribute('gs-h')).toBe(null);
       // expect(w.getAttribute('gs-auto-position')).toBe('true');
@@ -918,32 +918,32 @@ describe('gridstack >', () => {
       let w = grid.addWidget({x: 'foo', y: null, w: 'bar', h: ''} as any);
       
       expect(parseInt(w.getAttribute('gs-x'))).toBe(8);
-      expect(w.getAttribute('gs-y')).toBe(null);
+      expect(w.getAttribute('gs-y')).toBe('0');
       expect(w.getAttribute('gs-w')).toBe(null);
       expect(w.getAttribute('gs-h')).toBe(null);
     });
     it('makeWidget attr should be retained >', () => { // #1276
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       const d = document.createElement('div');
       d.innerHTML = '<div class="grid-stack-item" gs-w="3" gs-max-w="4" gs-id="gsfoo" id="foo"><div class="grid-stack-item-content">foo content</div></div>';
       grid.el.appendChild(d.firstChild);
       let w = grid.makeWidget('foo');
       expect(parseInt(w.getAttribute('gs-x'))).toBe(8);
-      expect(w.getAttribute('gs-y')).toBe(null);
+      expect(w.getAttribute('gs-y')).toBe('0');
       expect(parseInt(w.getAttribute('gs-w'))).toBe(3);
       expect(w.gridstackNode.maxW).toBe(4);
       expect(w.getAttribute('gs-h')).toBe(null);
       expect(w.getAttribute('gs-id')).toBe('gsfoo');
     });
     it('makeWidget width option override >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       const d = document.createElement('div');
       d.innerHTML = '<div class="grid-stack-item" gs-w="3" gs-max-w="4" gs-id="gsfoo" id="foo"><div class="grid-stack-item-content">foo content</div></div>';
       grid.el.appendChild(d.firstChild);
       let w = grid.makeWidget('foo', {x:null, y:null, w:2});
       
       expect(parseInt(w.getAttribute('gs-x'))).toBe(8);
-      expect(w.getAttribute('gs-y')).toBe(null);
+      expect(w.getAttribute('gs-y')).toBe('0');
       expect(parseInt(w.getAttribute('gs-w'))).toBe(2);
       expect(w.getAttribute('gs-h')).toBe(null);
     });
@@ -963,16 +963,16 @@ describe('gridstack >', () => {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let w = grid.makeWidget(el);
-      expect(w.getAttribute('gs-x')).toBe(null);
+      expect(w.getAttribute('gs-x')).toBe('0');
     });
-    it('passing element float=true >', () => {
-      grid = GridStack.init({float: true});
+    it("passing element mode='float' >", () => {
+      grid = GridStack.init({mode: 'float'});
       let doc = document.implementation.createHTMLDocument();
       doc.body.innerHTML = '<div><div class="grid-stack-item-content"></div></div>';
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let w = grid.makeWidget(el);
-      expect(w.getAttribute('gs-x')).toBe(null);
+      expect(w.getAttribute('gs-x')).toBe('0');
     });
     it('passing class >', () => {
       grid = GridStack.init();
@@ -981,7 +981,7 @@ describe('gridstack >', () => {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let w = grid.makeWidget('.item');
-      expect(w.getAttribute('gs-x')).toBe(null);
+      expect(w.getAttribute('gs-x')).toBe('0');
     });
     it('passing class no dot >', () => {
       grid = GridStack.init();
@@ -990,7 +990,7 @@ describe('gridstack >', () => {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let w = grid.makeWidget('item');
-      expect(w.getAttribute('gs-x')).toBe(null);
+      expect(w.getAttribute('gs-x')).toBe('0');
     });
     it('passing id >', () => {
       grid = GridStack.init();
@@ -999,7 +999,7 @@ describe('gridstack >', () => {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let w = grid.makeWidget('#item');
-      expect(w.getAttribute('gs-x')).toBe(null);
+      expect(w.getAttribute('gs-x')).toBe('0');
     });
     it('passing id no # >', () => {
       grid = GridStack.init();
@@ -1008,7 +1008,7 @@ describe('gridstack >', () => {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let w = grid.makeWidget('item');
-      expect(w.getAttribute('gs-x')).toBe(null);
+      expect(w.getAttribute('gs-x')).toBe('0');
     });
     it('passing id as number >', () => {
       grid = GridStack.init();
@@ -1017,28 +1017,58 @@ describe('gridstack >', () => {
       let el = doc.body.children[0] as HTMLElement;
       grid.el.appendChild(el);
       let w = grid.makeWidget('1');
-      expect(w.getAttribute('gs-x')).toBe(null);
+      expect(w.getAttribute('gs-x')).toBe('0');
     });
   });
 
-  describe('method getFloat() >', () => {
+  describe('method mode() >', () => {
     beforeEach(() => {
-      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
     });
     afterEach(() => {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
-    it('should match true/false only >', () => {
-      grid = GridStack.init({float: true});
-      expect(grid.getFloat()).toBe(true);
-      (grid as any).float(0);
-      expect(grid.getFloat()).toBe(false);
-      grid.float(null);
-      expect(grid.getFloat()).toBe(false);
-      grid.float(undefined);
-      expect(grid.getFloat()).toBe(false);
-      grid.float(false);
-      expect(grid.getFloat()).toBe(false);
+    const reInit = (o: any) => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+      return GridStack.init(o);
+    };
+    it('should default to top and set/get other modes', () => {
+      grid = GridStack.init({});
+      expect(grid.getMode()).toBe('top');
+      grid.mode('list');
+      expect(grid.getMode()).toBe('list');
+      grid.mode('compact');
+      expect(grid.getMode()).toBe('compact');
+      grid.mode('float');
+      expect(grid.getMode()).toBe('float');
+    });
+    it('should migrate the removed float option to mode (old saved JSON / JS callers)', () => {
+      grid = GridStack.init({float: true} as any);
+      expect(grid.getMode()).toBe('float');
+      expect((grid.opts as any).float).toBeUndefined(); // removed after migrating
+      grid = reInit({float: false});
+      expect(grid.getMode()).toBe('top');
+      // explicit mode wins over legacy float
+      grid = reInit({float: true, mode: 'list'});
+      expect(grid.getMode()).toBe('list');
+    });
+    it('should migrate legacy float through updateOptions() too', () => {
+      grid = GridStack.init({});
+      grid.updateOptions({float: true} as any);
+      expect(grid.getMode()).toBe('float');
+      grid.updateOptions({mode: 'compact'});
+      expect(grid.getMode()).toBe('compact');
+    });
+    it('sub-grid inherits parent mode unless it sets its own', () => {
+      grid = reInit({mode: 'list', children: [
+        {x: 0, y: 0, w: 2, h: 2, subGridOpts: {children: [{content: 'a'}, {content: 'b'}]}},
+      ]});
+      expect(grid.engine.nodes[0].subGrid!.getMode()).toBe('list');
+      grid = reInit({mode: 'list', children: [
+        {x: 0, y: 0, w: 2, h: 2, subGridOpts: {mode: 'float', children: [{content: 'a'}]}},
+      ]});
+      expect(grid.engine.nodes[0].subGrid!.getMode()).toBe('float');
     });
   });
 
@@ -1108,7 +1138,7 @@ describe('gridstack >', () => {
       let options = {
         cellHeight: 80,
         margin: 5,
-        float: true
+        mode: 'float'
       };
       grid = GridStack.init(options);
       let items = Utils.getElements('.grid-stack-item');
@@ -1126,7 +1156,7 @@ describe('gridstack >', () => {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should move and resize widget >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       let el = Utils.getElements('.grid-stack-item')[1];
       expect(parseInt(el.getAttribute('gs-w'))).toBe(4);
       
@@ -1137,7 +1167,7 @@ describe('gridstack >', () => {
       expect(parseInt(el.getAttribute('gs-h'))).toBe(2);
     });
     it('should change noMove >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       let items = Utils.getElements('.grid-stack-item');
       let el = items[1];
       let dd = GridStack.getDD();
@@ -1151,12 +1181,12 @@ describe('gridstack >', () => {
       expect(dd.isDraggable(items[0])).toBe(true);
 
       expect(parseInt(el.getAttribute('gs-x'))).toBe(4);
-      expect(el.getAttribute('gs-y')).toBe(null);
+      expect(el.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el.getAttribute('gs-w'))).toBe(4);
       expect(parseInt(el.getAttribute('gs-h'))).toBe(4);
     });
     it('should change content and id, and move >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       let el = findEl('gsItem2');
       let sub = el.querySelector('.grid-stack-item-content');
 
@@ -1170,31 +1200,31 @@ describe('gridstack >', () => {
       expect(parseInt(el.getAttribute('gs-h'))).toBe(4);
     });
     it('should change max and constrain a wanted resize >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       let el = findEl('gsItem2');
       expect(el.getAttribute('gs-max-w')).toBe(null);
 
       grid.update(el, {maxW: 2, w: 5});
       expect(parseInt(el.getAttribute('gs-x'))).toBe(4);
-      expect(el.getAttribute('gs-y')).toBe(null);
+      expect(el.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el.getAttribute('gs-w'))).toBe(2);
       expect(parseInt(el.getAttribute('gs-h'))).toBe(4);
       expect(el.gridstackNode.maxW).toBe(2);
     });
     it('should change max and constrain existing >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       let el = findEl('gsItem2');
       expect(el.getAttribute('gs-max-w')).toBe(null);
 
       grid.update(el, {maxW: 2});
       expect(parseInt(el.getAttribute('gs-x'))).toBe(4);
-      expect(el.getAttribute('gs-y')).toBe(null);
+      expect(el.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el.getAttribute('gs-w'))).toBe(2);
       expect(parseInt(el.getAttribute('gs-h'))).toBe(4);
       expect(el.gridstackNode.maxW).toBe(2);
     });
     it('should change all max and move, no inf loop! >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
       let items = Utils.getElements('.grid-stack-item');
 
       items.forEach(item => {
@@ -1203,10 +1233,10 @@ describe('gridstack >', () => {
       });
 
       grid.update('.grid-stack-item', {maxW: 2, maxH: 2});
-      expect(items[0].getAttribute('gs-x')).toBe(null);
+      expect(items[0].getAttribute('gs-x')).toBe('0');
       expect(parseInt(items[1].getAttribute('gs-x'))).toBe(4);
       items.forEach((item: GridItemHTMLElement) => {
-        expect(item.getAttribute('gs-y')).toBe(null);
+        expect(item.getAttribute('gs-y')).toBe('0');
         expect(parseInt(item.getAttribute('gs-h'))).toBe(2);
         expect(parseInt(item.getAttribute('gs-w'))).toBe(2);
         expect(item.gridstackNode.maxW).toBe(2);
@@ -1548,7 +1578,7 @@ describe('gridstack >', () => {
       document.body.removeChild(document.getElementById('gs-cont'));
     });
     it('should move all 3 items to top-left with no space >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
 
       let el3 = grid.addWidget({x: 3, y: 5});
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(3);
@@ -1556,10 +1586,10 @@ describe('gridstack >', () => {
 
       grid.compact();
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(8);
-      expect(el3.getAttribute('gs-y')).toBe(null);
+      expect(el3.getAttribute('gs-y')).toBe('0');
     });
     it('not move locked item >', () => {
-      grid = GridStack.init({float: true});
+      grid = GridStack.init({mode: 'float'});
 
       let el3 = grid.addWidget({x: 3, y: 5, locked: true, noMove: true});
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(3);
@@ -1581,11 +1611,11 @@ describe('gridstack >', () => {
     it('not move locked item, size down added one >', () => {
       grid = GridStack.init();
       let el1 = grid.addWidget({x: 0, y: 1, w: 12,  locked: true});
-      expect(el1.getAttribute('gs-x')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
 
       let el2 = grid.addWidget({x: 2, y: 0, h: 3});
-      expect(el1.getAttribute('gs-x')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(2);
       expect(parseInt(el2.getAttribute('gs-y'))).toBe(2);
@@ -1734,14 +1764,14 @@ describe('gridstack >', () => {
       grid.load([{id:'gsItem1',x:0,y:0,w:5,h:1},{id:'gsItem2',x:6,y:0,w:2,h:2}]);
 
       let el1 = document.getElementById('item1')
-      expect(el1.getAttribute('gs-x')).toBe(null);
-      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
+      expect(el1.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-w'))).toBe(5);
       expect(el1.getAttribute('gs-h')).toBe(null);
 
       let el2 = document.getElementById('item2')
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(6);
-      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(el2.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(2);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(2);
     });
@@ -1756,15 +1786,15 @@ describe('gridstack >', () => {
 
       expect(document.getElementById('item1')).toBe(null);
       let el1 = grid.engine.nodes.find(n => n.id === 'new1').el;
-      expect(el1.getAttribute('gs-x')).toBe(null);
-      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
+      expect(el1.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el1.getAttribute('gs-w'))).toBe(5);
       expect(el1.getAttribute('gs-h')).toBe(null);
 
       expect(document.getElementById('item2')).toBe(null);
       let el2 = grid.engine.nodes.find(n => n.id === 'new2').el;
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(6);
-      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(el2.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-w'))).toBe(2);
       expect(parseInt(el2.getAttribute('gs-h'))).toBe(2);
     });
@@ -1777,7 +1807,7 @@ describe('gridstack >', () => {
       items.forEach(item => {
         const n = grid.engine.nodes.find(n => n.id === item.id);
         if (item.y) expect(parseInt(n.el.getAttribute('gs-y'))).toBe(item.y!);
-        else expect(n.el.getAttribute('gs-y')).toBe(null);
+        else expect(n.el.getAttribute('gs-y')).toBe('0');
       });
     }
     beforeEach(() => {
@@ -1860,14 +1890,14 @@ describe('gridstack >', () => {
         cellHeight: '40px',
         margin: 8,
         column: 11,
-        float: true, 
+        mode: 'float', 
         row: 10,
       });
       expect(grid.getCellHeight(true)).toBe(40);
       expect(grid.getMargin()).toBe(8);
       expect(grid.opts.marginTop).toBe(8);
       expect(grid.getColumn()).toBe(11);
-      expect(grid.getFloat()).toBe(true);
+      expect(grid.getMode()).toBe('float');
       expect(grid.opts.row).toBe(10);
       expect(grid.opts.minRow).toBe(10);
       expect(grid.opts.maxRow).toBe(10);

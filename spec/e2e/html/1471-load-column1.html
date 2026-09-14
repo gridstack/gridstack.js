@@ -16,14 +16,14 @@
     <p>resize to below 768px, reload, then expand up to check 12 column</p>
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
-      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#">float: true</a>
+      <a class="btn btn-primary" onclick="toggleMode()" id="float" href="#">mode: float</a>
     </div>
     <br><br>
     <div class="grid-stack"></div>
   </div>
   <script src="../../../demo/events.js"></script>
   <script type="text/javascript">
-    let grid = GridStack.init({float: true});
+    let grid = GridStack.init({mode: 'float'});
     addEvents(grid);
 
     let items = [
@@ -46,9 +46,9 @@
       grid.addWidget(n);
     };
 
-    toggleFloat = function() {
-      grid.float(! grid.getFloat());
-      document.querySelector('#float').innerHTML = 'float: ' + grid.getFloat();
+    toggleMode = function() {
+      grid.mode(grid.getMode() === 'float' ? 'top' : 'float');
+      document.querySelector('#float').innerHTML = 'mode: ' + grid.getMode();
     };
   </script>
 </body>

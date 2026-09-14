@@ -51,6 +51,7 @@ Join us on Slack: [https://gridstackjs.slack.com](https://join.slack.com/t/grids
   - [Migrating to v11](#migrating-to-v11)
   - [Migrating to v12](#migrating-to-v12)
   - [Migrating to v13](#migrating-to-v13)
+  - [Migrating to v14](#migrating-to-v14)
 - [jQuery Application](#jquery-application)
 - [Changes](#changes)
 - [Usage Trend](#usage-trend)
@@ -541,6 +542,24 @@ The registration call is also renamed:
 ```
 
 The static map and its type are renamed accordingly (`selectorToType` → `componentMap`, `SelectorToType` → `ComponentMap`). If you subclass `BaseWidget` and override `deserialize()`, replace any direct reads of `w.input` with `w.props`.
+
+## Migrating to v14
+
+**Breaking changes**
+
+* break: [#754](https://github.com/gridstack/gridstack.js/issues/754) the `float` grid option is replaced by `mode?: 'top' | 'float' | 'list' | 'compact'` (default `'top'`), which adds 2 new
+layout behaviors. Old `float: true|false` values passed in code or saved JSON are still **auto-migrated** at runtime (to `'float'`|`'top'`), but the field is gone from `GridStackOptions`
+so TS users need to update. `save()` now writes `mode` instead of `float`.
+```ts
+GridStack.init({float: true});   // 13.x
+GridStack.init({mode: 'float'}); // 14.0
+```
+* break: [#754](https://github.com/gridstack/gridstack.js/issues/754) removed `grid.float(val)` and `grid.getFloat()` - use `grid.mode(val)` and `grid.getMode()` instead. Same for the engine's
+`engine.float` getter/setter, now `engine.mode`.
+```ts
+grid.float(true); grid.getFloat();      // 13.x
+grid.mode('float'); grid.getMode();     // 14.0
+```
 
 # jQuery Application
 

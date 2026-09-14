@@ -16,7 +16,7 @@
     <div>
       <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
       <a class="btn btn-primary" onClick="makeNewWidget()" href="#">Make Widget</a>
-      <a class="btn btn-primary" onclick="toggleFloat()" id="float" href="#">float: true</a>
+      <a class="btn btn-primary" onclick="toggleMode()" id="float" href="#">mode: float</a>
     </div>
     <br><br>
     <div class="grid-stack"></div>
@@ -24,7 +24,7 @@
   <script src="events.js"></script>
   <script type="text/javascript">
     let grid = GridStack.init({
-      float: true, 
+      mode: 'float', 
       // disableResize: true, // TEST no resizing, but dragging
       resizable: { handles: 'all'} // do all sides for testing
     });
@@ -65,9 +65,9 @@
       let w = grid.makeWidget(el);
     };
 
-    toggleFloat = function() {
-      grid.float(! grid.getFloat());
-      document.querySelector('#float').innerHTML = 'float: ' + grid.getFloat();
+    toggleMode = function() {
+      grid.mode(grid.getMode() === 'float' ? 'top' : 'float');
+      document.querySelector('#float').innerHTML = 'mode: ' + grid.getMode();
     };
     addNewWidget();
   </script>

@@ -39,24 +39,24 @@ describe('regression >', () => {
       let el1 = findEl('1');
       let el2 = findEl('2');
 
-      expect(el0.getAttribute('gs-x')).toBe(null);
-      expect(el0.getAttribute('gs-y')).toBe(null);
+      expect(el0.getAttribute('gs-x')).toBe('0');
+      expect(el0.getAttribute('gs-y')).toBe('0');
       expect(el0.children[0].innerHTML).toBe(items[0].content!);
       expect(parseInt(el1.getAttribute('gs-x'))).toBe(1);
       expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(2);
-      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(el2.getAttribute('gs-y')).toBe('0');
 
       // loading with changed content should be same positions
       items.forEach(n => n.content += '*')
       grid.load(items);
-      expect(el0.getAttribute('gs-x')).toBe(null);
-      expect(el0.getAttribute('gs-y')).toBe(null);
+      expect(el0.getAttribute('gs-x')).toBe('0');
+      expect(el0.getAttribute('gs-y')).toBe('0');
       expect(el0.children[0].innerHTML).toBe(items[0].content!);
       expect(parseInt(el1.getAttribute('gs-x'))).toBe(1);
       expect(parseInt(el1.getAttribute('gs-y'))).toBe(1);
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(2);
-      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(el2.getAttribute('gs-y')).toBe('0');
     });
   });
 
@@ -80,31 +80,31 @@ describe('regression >', () => {
       let el1 = findSubEl('1');
       let el2 = findSubEl('2');
       let el3 = findSubEl('3');
-      expect(nested.getAttribute('gs-x')).toBe(null);
-      expect(nested.getAttribute('gs-y')).toBe(null);
+      expect(nested.getAttribute('gs-x')).toBe('0');
+      expect(nested.getAttribute('gs-y')).toBe('0');
       expect(parseInt(nested.getAttribute('gs-w'))).toBe(3);
       // TODO: sizeToContent doesn't seem to be called in headless mode ??? works in browser.
       // expect(nested.getAttribute('gs-h')).toBe(null); // sizeToContent 5 -> 1 which is null
-      expect(el1.getAttribute('gs-x')).toBe(null);
-      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
+      expect(el1.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(1);
-      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(el2.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el3.getAttribute('gs-x'))).toBe(2);
-      expect(el3.getAttribute('gs-y')).toBe(null);
+      expect(el3.getAttribute('gs-y')).toBe('0');
 
       // now resize the nested grid to 2 -> should reflow el3
       grid.update(nested, {w:2});
-      expect(nested.getAttribute('gs-x')).toBe(null);
-      expect(nested.getAttribute('gs-y')).toBe(null);
+      expect(nested.getAttribute('gs-x')).toBe('0');
+      expect(nested.getAttribute('gs-y')).toBe('0');
       expect(parseInt(nested.getAttribute('gs-w'))).toBe(2);
       // TODO: sizeToContent doesn't seem to be called in headless mode ??? works in browser.
       // expect(parseInt(nested.getAttribute('gs-h'))).toBe(2);
-      expect(el1.getAttribute('gs-x')).toBe(null);
-      expect(el1.getAttribute('gs-y')).toBe(null);
+      expect(el1.getAttribute('gs-x')).toBe('0');
+      expect(el1.getAttribute('gs-y')).toBe('0');
       expect(parseInt(el2.getAttribute('gs-x'))).toBe(1);
-      expect(el2.getAttribute('gs-y')).toBe(null);
+      expect(el2.getAttribute('gs-y')).toBe('0');
       // 3rd item pushed to next row
-      expect(el3.getAttribute('gs-x')).toBe(null);
+      expect(el3.getAttribute('gs-x')).toBe('0');
       expect(parseInt(el3.getAttribute('gs-y'))).toBe(1);
     });
   });

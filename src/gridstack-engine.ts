@@ -4,7 +4,7 @@
  */
 
 import { Utils } from './utils';
-import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts, SaveFcn, CompactOptions } from './types';
+import { GridStackNode, ColumnOptions, GridStackPosition, GridStackMoveOpts, SaveFcn, CompactOptions, GridStackMode } from './types';
 
 /** callback to update the DOM attributes since this class is generic (no HTML or other info) for items that changed - see _notify() */
 type OnChangeCB = (nodes: GridStackNode[]) => void;
@@ -13,7 +13,7 @@ type OnChangeCB = (nodes: GridStackNode[]) => void;
 export interface GridStackEngineOptions {
   column?: number;
   maxRow?: number;
-  float?: boolean;
+  mode?: GridStackMode;
   nodes?: GridStackNode[];
   onChange?: OnChangeCB;
 }
@@ -42,9 +42,9 @@ export class GridStackEngine {
   /** @internal callback to update the DOM attributes */
   protected onChange!: OnChangeCB;
   /** @internal */
-  protected _float!: boolean;
+  protected _mode!: GridStackMode;
   /** @internal */
-  protected _prevFloat?: boolean;
+  protected _prevMode?: GridStackMode;
   /** @internal cached layouts of difference column count so we can restore back (eg 12 -> 1 -> 12) */
   protected _layouts?: (GridStackNode[] | undefined)[]; // maps column # to array of values nodes
   /** @internal set during loading (which is sorted) so item gets added AFTER collision nodes */
@@ -62,7 +62,7 @@ export class GridStackEngine {
     this.column = opts.column || this.defaultColumn;
     if (this.column > this.defaultColumn) this.defaultColumn = this.column;
     this.maxRow = opts.maxRow ?? 0;
-    this._float = opts.float ?? false;
+    this._mode = opts.mode || 'top';
     this.nodes = opts.nodes || [];
     this.onChange = opts.onChange ?? (() => { /* no-op */ });
   }
@@ -86,24 +86,29 @@ export class GridStackEngine {
     if (!!this.batchMode === flag) return this;
     this.batchMode = flag;
     if (flag) {
-      this._prevFloat = this._float;
-      this._float = true; // let things go anywhere for now... will restore and possibly reposition later
+      this._prevMode = this._mode;
+      this._mode = 'float'; // let things go anywhere for now... will restore and possibly reposition later
       this.cleanNodes();
       // skip saveInitial() if a drag/resize is in progress - it would overwrite _orig with mid-drag
       // positions and corrupt change detection, causing onChange not to fire (see #2823)
       if (!this.nodes.some(n => n._updating)) this.saveInitial();
     } else {
-      this._float = this._prevFloat ?? false;
-      delete this._prevFloat;
+      this._mode = this._prevMode || 'top';
+      delete this._prevMode;
       if (doPack) this._packNodes();
       this._notify();
     }
     return this;
   }
 
+  /** @internal the mode we will actually end up in: batchUpdate() temporarily forces 'float' so things can go anywhere */
+  protected get _realMode(): GridStackMode {
+    return this.batchMode ? (this._prevMode || 'top') : this.mode;
+  }
+
   // use entire row for hitting area (will use bottom reverse sorted first) if we not actively moving DOWN and didn't already skip
   protected _useEntireRowArea(node: GridStackNode, nn: GridStackPosition): boolean {
-    return (!this.float || this.batchMode && !this._prevFloat) && !this._hasLocked && (!node._moving || node._skipDown || nn.y! <= node.y!);
+    return (this.mode !== 'float' || this.batchMode && this._prevMode !== 'float') && !this._hasLocked && (!node._moving || node._skipDown || nn.y! <= node.y!);
   }
 
   /** @internal fix collision on given 'node', going to given new location 'nn', with optional 'collide' node already found.
@@ -116,7 +121,7 @@ export class GridStackEngine {
 
     // swap check: if we're actively moving in gravity mode, see if we collide with an object the same size
     // never swap for external items dragged from outside the grid - only push
-    if (node._moving && !node._isExternal && !opt.nested && !this.float) {
+    if (node._moving && !node._isExternal && !opt.nested && this.mode !== 'float') {
       if (this.swap(node, collide)) return true;
     }
 
@@ -137,7 +142,7 @@ export class GridStackEngine {
       let moved: boolean;
       // if colliding with a locked item OR loading (move after) OR moving down with top gravity (and collide could move up) -> skip past the collide,
       // but remember that skip down so we only do this once (and push others otherwise).
-      if (collide.locked || this._loading || node._moving && !node._skipDown && nn.y! > node.y! && !this.float &&
+      if (collide.locked || this._loading || node._moving && !node._skipDown && nn.y! > node.y! && this.mode !== 'float' &&
         // can take space we had, or before where we're going
         (!this.collide(collide, {...collide, y: node.y}, node) || !this.collide(collide, {...collide, y: nn.y! - collide.h!}, node))) {
 
@@ -373,55 +378,76 @@ export class GridStackEngine {
    */
   public compact(layout: CompactOptions = 'compact', doSort = true): GridStackEngine {
     if (this.nodes.length === 0) return this;
-    if (doSort) this.sortNodes();
     const wasBatch = this.batchMode;
     if (!wasBatch) this.batchUpdate();
-    const wasColumnResize = this._inColumnResize;
-    if (!wasColumnResize) this._inColumnResize = true; // faster addNode()
-    const copyNodes = this.nodes;
-    this.nodes = []; // pretend we have no nodes to conflict layout to start with...
-    copyNodes.forEach((n, index, list) => {
-      let after: GridStackNode | undefined;
-      if (!n.locked) {
-        n.autoPosition = true;
-        if (layout === 'list' && index) after = list[index - 1];
-      }
-      this.addNode(n, false, after); // 'false' for add event trigger
-    });
-    if (!wasColumnResize) delete this._inColumnResize;
+    this._relayout(layout, doSort);
     if (!wasBatch) this.batchUpdate(false);
     return this;
   }
 
+  /** @internal clears and re-adds every node in a fresh row-major layout - shared by compact() and the continuous 'list'/'compact' mode pack */
+  protected _relayout(layout: CompactOptions, doSort = true): GridStackEngine {
+    if (this.nodes.length === 0) return this;
+    if (doSort) this.sortNodes();
+    const wasColumnResize = this._inColumnResize;
+    if (!wasColumnResize) this._inColumnResize = true; // faster addNode() and skip layout cache update
+    const copyNodes = this.nodes;
+    // locked items never move, so seed them first as obstacles the others will lay out around
+    this.nodes = copyNodes.filter(n => n.locked);
+
+    // track the first cell that isn't taken yet: nothing can possibly start before it, so 'compact' scans from
+    // there instead of re-scanning from 0 for every item (which made it O(n^3) on large grids)
+    const taken = new Set<number>();
+    let firstFree = 0;
+    const fill = (n: GridStackNode) => {
+      for (let y = n.y!; y < n.y! + n.h!; y++) {
+        for (let x = n.x!; x < n.x! + n.w!; x++) taken.add(y * this.column + x);
+      }
+      while (taken.has(firstFree)) ++firstFree;
+    };
+    this.nodes.forEach(fill); // locked ones
+
+    copyNodes.forEach((n, index, list) => {
+      if (n.locked) return;
+      n.autoPosition = true;
+      // 'list' flows right after the previous item, 'compact' may back-fill any earlier gap
+      const after = layout === 'list' ? (index ? list[index - 1] : 0) : firstFree;
+      this.addNode(n, false, after); // 'false' for add event trigger
+      fill(n);
+    });
+    if (!wasColumnResize) delete this._inColumnResize;
+    return this;
+  }
+
   /**
-   * Enable/disable floating widgets (default: `false`).
-   * When floating is enabled, widgets can move up to fill empty spaces.
-   * See [example](http://gridstackjs.com/demo/float.html)
+   * Set the layout mode controlling how widgets pack/reflow (default: `'top'`). See {@link GridStackMode}.
+   * See [float example](http://gridstackjs.com/demo/float.html) and [list example](http://gridstackjs.com/demo/list.html)
    *
-   * @param val true to enable floating, false to disable
+   * @param val the new mode
    *
    * @example
-   * engine.float = true;  // Enable floating
-   * engine.float = false; // Disable floating (default)
+   * engine.mode = 'float'; // no gravity, widgets stay where placed
+   * engine.mode = 'top';   // top gravity packing (default)
+   * engine.mode = 'list';  // continuous sequential reflow
    */
-  public set float(val: boolean) {
-    if (this._float === val) return;
-    this._float = val || false;
-    if (!val) {
+  public set mode(val: GridStackMode) {
+    if (this._mode === val) return;
+    this._mode = val || 'top';
+    if (this._mode !== 'float') {
       this._packNodes()._notify();
     }
   }
 
   /**
-   * Get the current floating mode setting.
+   * Get the current layout mode setting.
    *
-   * @returns true if floating is enabled, false otherwise
+   * @returns the current mode
    *
    * @example
-   * const isFloating = engine.float;
-   * console.log('Floating enabled:', isFloating);
+   * const mode = engine.mode;
+   * console.log('Current mode:', mode);
    */
-  public get float(): boolean { return this._float || false; }
+  public get mode(): GridStackMode { return this._mode || 'top'; }
 
   /**
    * Sort the nodes array from first to last, or reverse.
@@ -439,12 +465,12 @@ export class GridStackEngine {
     return this;
   }
 
-  /** @internal called to top gravity pack the items back OR revert back to original Y positions when floating */
+  /** @internal called to top gravity pack the items back, continuously reflow (list/compact), OR revert back to original Y positions when floating */
   protected _packNodes(): GridStackEngine {
     if (this.batchMode) { return this; }
     this.sortNodes(); // first to last
 
-    if (this.float) {
+    if (this.mode === 'float') {
       // restore original Y pos
       this.nodes.forEach(n => {
         if (n._updating || n._orig === undefined || n.y === n._orig.y) return;
@@ -458,6 +484,16 @@ export class GridStackEngine {
           }
         }
       });
+    } else if (this.mode === 'list' || this.mode === 'compact') {
+      // continuously reflow items in row-major order (already sorted above).
+      // 'compact' back-fills gaps which is more work, so while dragging/resizing use the cheaper sequential
+      // 'list' flow and do the real compact pass once we're done - see endUpdate()
+      const layout: CompactOptions = this.mode === 'compact' && this.nodes.some(n => n._updating) ? 'list' : this.mode;
+      // guard batchMode so addNode() calls inside _relayout() don't re-enter _packNodes() recursively
+      const wasBatch = this.batchMode;
+      this.batchMode = true;
+      this._relayout(layout, false);
+      this.batchMode = wasBatch;
     } else {
       // top gravity pack
       this.nodes.forEach((n, i) => {
@@ -705,8 +741,9 @@ export class GridStackEngine {
    *   console.log('Found position at:', node.x, node.y);
    * }
    */
-  public findEmptyPosition(node: GridStackNode, nodeList = this.nodes, column = this.column, after?: GridStackNode): boolean {
-    const start = after ? after.y! * column + (after.x! + after.w!) : 0;
+  public findEmptyPosition(node: GridStackNode, nodeList = this.nodes, column = this.column, after?: GridStackNode | number): boolean {
+    // 'after' is where to start scanning from: either past a given node, or a raw row-major cell index
+    const start = typeof after === 'number' ? after : (after ? after.y! * column + (after.x! + after.w!) : 0);
     let found = false;
     for (let i = start; !found; ++i) {
       const x = i % column;
@@ -732,14 +769,14 @@ export class GridStackEngine {
    *
    * @param node the node to add to the grid
    * @param triggerAddEvent if true, adds node to addedNodes list for event triggering
-   * @param after optional node to place this node after (for ordering)
+   * @param after optional node to place this node after (for ordering), or a raw row-major cell index to start scanning at
    * @returns the added node (or existing node if duplicate)
    *
    * @example
    * const node = { x: 0, y: 0, w: 2, h: 1, content: 'Hello' };
    * const added = engine.addNode(node, true);
    */
-  public addNode(node: GridStackNode, triggerAddEvent = false, after?: GridStackNode): GridStackNode {
+  public addNode(node: GridStackNode, triggerAddEvent = false, after?: GridStackNode | number): GridStackNode {
     const dup = this.nodes.find(n => n._id === node._id);
     if (dup) return dup; // prevent inserting twice! return it instead.
 
@@ -749,12 +786,23 @@ export class GridStackEngine {
     delete node._removeDOM;
 
     let skipCollision = false;
-    if (node.autoPosition && this.findEmptyPosition(node, this.nodes, this.column, after)) {
-      delete node.autoPosition; // found our slot
-      skipCollision = true;
+    if (node.autoPosition) {
+      // 'list' keeps the insertion order, so flow after the last item rather than back-filling an earlier gap
+      if (after === undefined && this._realMode === 'list') after = this.nodes[this.nodes.length - 1];
+      if (this.findEmptyPosition(node, this.nodes, this.column, after)) {
+        delete node.autoPosition; // found our slot
+        skipCollision = true;
+      }
     }
 
-    this.nodes.push(node);
+    if (!skipCollision && (this.mode === 'list' || this.mode === 'compact')) {
+      // no push physics: unshift (rather than push) so this node wins any position tie over whatever
+      // it lands on, then let the continuous reflow (_packNodes -> _relayout) rank/place everyone
+      this.nodes.unshift(node);
+      skipCollision = true;
+    } else {
+      this.nodes.push(node);
+    }
     if (triggerAddEvent) { this.addedNodes.push(node); }
 
     if (!skipCollision) this._fixCollisions(node);
@@ -840,7 +888,7 @@ export class GridStackEngine {
     let clonedNode: GridStackNode | undefined;
     const clone = new GridStackEngine({
       column: this.column,
-      float: this.float,
+      mode: this.mode,
       nodes: this.nodes.map(n => {
         if (n._id === node._id) {
           clonedNode = {...n};
@@ -854,7 +902,7 @@ export class GridStackEngine {
     // check if we're covering 50% collision and could move, while still being under maxRow or at least not making it worse
     // (case where widget was somehow added past our max #2449)
     const canMove = clone.moveNode(clonedNode, o) && clone.getRow() <= Math.max(this.getRow(), this.maxRow);
-    // else check if we can force a swap (float=true, or different shapes) on non-resize - but not for external items
+    // else check if we can force a swap (mode='float', or different shapes) on non-resize - but not for external items
     if (!canMove && !o.resizing && o.collide && !node._isExternal) {
       const collide = o.collide.el?.gridstackNode; // find the source node the clone collided with at 50%
       if (collide && this.swap(node, collide)) { // swaps and mark dirty
@@ -883,7 +931,7 @@ export class GridStackEngine {
     // create a clone with NO maxRow and check if still within size
     const clone = new GridStackEngine({
       column: this.column,
-      float: this.float,
+      mode: this.mode,
       nodes: this.nodes.map(n => {return {...n}})
     });
     const n = {...node}; // clone node so we don't mod any settings on it but have full autoPosition and min/max as well! #1687
@@ -895,6 +943,18 @@ export class GridStackEngine {
       return true;
     }
     return false;
+  }
+
+  /** @internal if sub-grids can be created on the fly, see if we're covering 80% of the item we're dragging over
+   * (which means the user wants to nest into it rather than push it away). return true if we created one. */
+  protected _makeDynamicSubGrid(node: GridStackNode, o: GridStackMoveOpts, collide: GridStackNode | undefined): boolean {
+    if (!collide || !node.grid?.opts?.subGridDynamic || node.grid._isTemp || !o.rect || !collide._rect) return false;
+    const over = Utils.areaIntercept(o.rect, collide._rect);
+    const a1 = Utils.area(o.rect);
+    const a2 = Utils.area(collide._rect);
+    if (over / (a1 < a2 ? a1 : a2) <= .8) return false;
+    collide.grid!.makeSubGrid(collide.el!, undefined, node);
+    return true;
   }
 
   /** true if x,y or w,h are different after clamping to min/max */
@@ -933,37 +993,55 @@ export class GridStackEngine {
     if (!o.forceCollide && Utils.samePos(node, o)) return false;
     const prevPos: GridStackPosition = Utils.copyPos({}, node);
 
-    // check if we will need to fix collision at our new location
-    const collides = this.collideAll(node, nn, o.skip);
-    let needToMove = true;
-    if (collides.length) {
-      const activeDrag = node._moving && !o.nested;
-      // check to make sure we actually collided over 50% surface area while dragging
-      let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
-      // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
-      if (activeDrag && collide && node.grid?.opts?.subGridDynamic && !node.grid._isTemp) {
-        const over = Utils.areaIntercept(o.rect!, collide._rect!);
-        const a1 = Utils.area(o.rect!);
-        const a2 = Utils.area(collide._rect!);
-        const perc = over / (a1 < a2 ? a1 : a2);
-        if (perc > .8) {
-          collide.grid!.makeSubGrid(collide.el!, undefined, node);
-          collide = undefined;
+    if (this.mode === 'list' || this.mode === 'compact') {
+      // no push/swap physics: the tentative position only ranks the item for the continuous reflow below.
+      // we still support creating sub-grids on the fly by pausing over another item though.
+      let nested = false;
+      if (node._moving && !o.nested && node.grid?.opts?.subGridDynamic) {
+        const collide = this.directionCollideCoverage(node, o, this.collideAll(node, nn, o.skip));
+        if (this._makeDynamicSubGrid(node, o, collide)) {
+          nested = true;
+          if (wasUndefinedPack) delete o.pack;
+        }
+      }
+      if (!nested) {
+        node._dirty = true;
+        const prevIndex = prevPos.y! * this.column + prevPos.x!;
+        Utils.copyPos(node, nn);
+        // we land exactly on the spot we're dropped on, so break the sort tie against whoever is there based on
+        // the direction we came from: going up we insert before it, going down after it (as leaving our old
+        // spot shifts everyone in between back up by one).
+        const i = this.nodes.indexOf(node);
+        if (i !== -1) {
+          this.nodes.splice(i, 1);
+          if (node.y! * this.column + node.x! < prevIndex) this.nodes.unshift(node);
+          else this.nodes.push(node);
+        }
+      }
+    } else {
+      // check if we will need to fix collision at our new location
+      const collides = this.collideAll(node, nn, o.skip);
+      let needToMove = true;
+      if (collides.length) {
+        const activeDrag = node._moving && !o.nested;
+        // check to make sure we actually collided over 50% surface area while dragging
+        let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
+        // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
+        if (activeDrag && this._makeDynamicSubGrid(node, o, collide)) collide = undefined;
+
+        if (collide) {
+          needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
+        } else {
+          needToMove = false; // we didn't cover >50% for a move, skip...
+          if (wasUndefinedPack) delete o.pack;
         }
       }
 
-      if (collide) {
-        needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
-      } else {
-        needToMove = false; // we didn't cover >50% for a move, skip...
-        if (wasUndefinedPack) delete o.pack;
+      // now move (to the original ask vs the collision version which might differ) and repack things
+      if (needToMove && !Utils.samePos(node, nn)) {
+        node._dirty = true;
+        Utils.copyPos(node, nn);
       }
-    }
-
-    // now move (to the original ask vs the collision version which might differ) and repack things
-    if (needToMove && !Utils.samePos(node, nn)) {
-      node._dirty = true;
-      Utils.copyPos(node, nn);
     }
     if (o.pack) {
       this._packNodes()
@@ -990,6 +1068,8 @@ export class GridStackEngine {
     if (n) {
       delete n._updating;
       delete n._skipDown;
+      // 'compact' used the cheaper 'list' flow while moving (see _packNodes), so do the real gap filling pass now
+      if (this.mode === 'compact') this._packNodes()._notify();
     }
     return this;
   }
@@ -1076,11 +1156,13 @@ export class GridStackEngine {
    * @param layout specify the type of re-layout that will happen (position, size, etc...).
    * Note: items will never be outside of the current column boundaries. default (moveScale). Ignored for 1 column
    */
-  public columnChanged(prevColumn: number, column: number, layout: ColumnOptions = 'moveScale'): GridStackEngine {
+  public columnChanged(prevColumn: number, column: number, layout?: ColumnOptions): GridStackEngine {
     if (!this.nodes.length || !column || prevColumn === column) return this;
+    // in 'list'/'compact' mode items get re-flowed anyway, so match that rather than the 'moveScale' default
+    layout = layout ?? (this.mode === 'list' || this.mode === 'compact' ? this.mode : 'moveScale');
 
     // simpler shortcuts layouts
-    const doCompact = layout === 'compact' || layout === 'list';
+    const doCompact = (layout === 'compact' || layout === 'list') ? layout : undefined;
     if (doCompact) {
       this.sortNodes(1); // sort with original layout once and only once (new column will affect order otherwise)
     }
@@ -1140,7 +1222,7 @@ export class GridStackEngine {
 
     // much simpler layout that just compacts
     if (doCompact) {
-      this.compact(layout, false);
+      this.compact(doCompact, false);
     } else {
       // ...and add any extra non-cached ones
       if (nodes.length) {
@@ -1170,7 +1252,7 @@ export class GridStackEngine {
       });
     }
 
-    this.nodes.forEach(n => delete n._orig); // clear _orig before batch=false so it doesn't handle float=true restore
+    this.nodes.forEach(n => delete n._orig); // clear _orig before batch=false so it doesn't handle mode='float' restore
     this.batchUpdate(false, !doCompact);
     delete this._inColumnResize;
     return this;
