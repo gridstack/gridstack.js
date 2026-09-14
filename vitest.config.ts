@@ -46,14 +46,13 @@ export default defineConfig({
         'scripts/**',
         'spec/e2e/**' // Exclude e2e tests from coverage
       ],
-      // Coverage thresholds (optional - set to your desired levels)
+      // Coverage thresholds - fail the run if we regress below these.
+      // NOTE: vitest takes these keys directly; the nyc-style `global: {...}` nesting is silently ignored.
       thresholds: {
-        global: {
-          branches: 80,
-          functions: 80,
-          lines: 80,
-          statements: 80
-        }
+        lines: 80,
+        statements: 78,
+        functions: 85,
+        branches: 68
       },
       // Include source files for coverage even if not tested
       all: true,
@@ -70,8 +69,10 @@ export default defineConfig({
     reporters: ['verbose', 'html'],
 
     // Output directory for test results
+    // NOTE: keep out of ./coverage - the html reporter copies the coverage dir next to
+    // its own output, and copying ./coverage into ./coverage/coverage fails (EINVAL)
     outputFile: {
-      html: './coverage/test-results.html'
+      html: './test-results/index.html'
     }
   },
 

@@ -2,6 +2,7 @@ import { DDDraggable } from '../src/dd-draggable';
 import { DDDroppable } from '../src/dd-droppable';
 import { DDResizable } from '../src/dd-resizable';
 import { DDElement } from '../src/dd-element';
+import { DDManager } from '../src/dd-manager';
 import { GridItemHTMLElement } from '../src/types';
 
 describe('DD Integration Tests', () => {
@@ -225,6 +226,141 @@ describe('DD Integration Tests', () => {
       expect(seHandle).toBeTruthy();
       expect(nwHandle).toBeTruthy();
       
+      resizable.destroy();
+    });
+  });
+
+  describe('drag gesture', () => {
+    /** dispatch a real mouse event - the drag code listens on document for move/up */
+    const mouse = (type: string, x: number, y: number, target: EventTarget = document) => {
+      target.dispatchEvent(new MouseEvent(type, {bubbles: true, cancelable: true, button: 0, clientX: x, clientY: y}));
+    };
+
+    it('should fire dragstart/drag/dragstop as the mouse moves and releases', () => {
+      const start = vi.fn(), drag = vi.fn(), stop = vi.fn();
+      const draggable = new DDDraggable(element, {start, drag, stop});
+
+      mouse('mousedown', 10, 10, element);
+      expect(start).not.toHaveBeenCalled(); // a click alone isn't a drag
+
+      mouse('mousemove', 30, 30);
+      expect(start).toHaveBeenCalled();
+      expect(DDManager.dragElement).toBe(draggable);
+
+      mouse('mousemove', 50, 60);
+      expect(drag).toHaveBeenCalled();
+
+      mouse('mouseup', 50, 60);
+      expect(stop).toHaveBeenCalled();
+      expect(DDManager.dragElement).toBeUndefined();
+
+      draggable.destroy();
+    });
+
+    it('should not start dragging for a tiny mouse move (#3px threshold)', () => {
+      const start = vi.fn();
+      const draggable = new DDDraggable(element, {start});
+
+      mouse('mousedown', 10, 10, element);
+      mouse('mousemove', 11, 11);
+      expect(start).not.toHaveBeenCalled();
+      expect(DDManager.dragElement).toBeUndefined();
+
+      mouse('mouseup', 11, 11);
+      draggable.destroy();
+    });
+
+    it('should ignore a non left click', () => {
+      const start = vi.fn();
+      const draggable = new DDDraggable(element, {start});
+
+      element.dispatchEvent(new MouseEvent('mousedown', {bubbles: true, button: 2, clientX: 10, clientY: 10}));
+      mouse('mousemove', 40, 40);
+
+      expect(start).not.toHaveBeenCalled();
+      draggable.destroy();
+    });
+
+    it('should cancel the drag on Escape', () => {
+      const stop = vi.fn();
+      const draggable = new DDDraggable(element, {stop});
+
+      mouse('mousedown', 10, 10, element);
+      mouse('mousemove', 40, 40);
+      expect(DDManager.dragElement).toBe(draggable);
+
+      document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+
+      expect(stop).toHaveBeenCalled();
+      expect(DDManager.dragElement).toBeUndefined();
+      draggable.destroy();
+    });
+
+    it('should only let one item handle a drag at a time', () => {
+      const other = document.createElement('div');
+      document.body.appendChild(other);
+      const start1 = vi.fn(), start2 = vi.fn();
+      const d1 = new DDDraggable(element, {start: start1});
+      const d2 = new DDDraggable(other, {start: start2});
+
+      mouse('mousedown', 10, 10, element);
+      mouse('mousedown', 10, 10, other); // second one must be ignored
+      mouse('mousemove', 40, 40);
+
+      expect(start1).toHaveBeenCalled();
+      expect(start2).not.toHaveBeenCalled();
+
+      mouse('mouseup', 40, 40);
+      d1.destroy(); d2.destroy(); other.remove();
+    });
+  });
+
+  describe('resize gesture', () => {
+    const mouse = (type: string, x: number, y: number, target: EventTarget = document) => {
+      target.dispatchEvent(new MouseEvent(type, {bubbles: true, cancelable: true, button: 0, clientX: x, clientY: y}));
+    };
+
+    it('should fire resizestart/resize/resizestop when dragging a handle', () => {
+      const start = vi.fn(), resize = vi.fn(), stop = vi.fn();
+      const resizable = new DDResizable(element, {handles: 'se', start, resize, stop});
+      const handle = element.querySelector('.ui-resizable-se')!;
+
+      mouse('mousedown', 100, 100, handle);
+      expect(start).not.toHaveBeenCalled();
+
+      mouse('mousemove', 140, 150);
+      expect(start).toHaveBeenCalled();
+      expect(resize).toHaveBeenCalled();
+
+      mouse('mouseup', 140, 150);
+      expect(stop).toHaveBeenCalled();
+
+      resizable.destroy();
+    });
+
+    it('should not resize for a tiny move', () => {
+      const start = vi.fn();
+      const resizable = new DDResizable(element, {handles: 'se', start});
+      const handle = element.querySelector('.ui-resizable-se')!;
+
+      mouse('mousedown', 100, 100, handle);
+      mouse('mousemove', 101, 101);
+      expect(start).not.toHaveBeenCalled();
+
+      mouse('mouseup', 101, 101);
+      resizable.destroy();
+    });
+
+    it('should cancel the resize on Escape', () => {
+      const stop = vi.fn();
+      const resizable = new DDResizable(element, {handles: 'se', stop});
+      const handle = element.querySelector('.ui-resizable-se')!;
+
+      mouse('mousedown', 100, 100, handle);
+      mouse('mousemove', 140, 150);
+      document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}));
+
+      expect(stop).toHaveBeenCalled();
       resizable.destroy();
     });
   });

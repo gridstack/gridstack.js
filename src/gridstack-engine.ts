@@ -583,6 +583,14 @@ export class GridStackEngine {
 
     const before = node._orig || Utils.copyPos({}, node);
 
+    // a non-finite value (NaN/Infinity, ex: pixel math against a zero cell size or a collapsed
+    // grid) can't be packed or collision checked, and would spin the packing loops forever,
+    // so clamp it back to a usable value. NOTE: leave undefined alone - that means autoPosition.
+    if (node.x !== undefined && !Number.isFinite(node.x)) node.x = 0;
+    if (node.y !== undefined && !Number.isFinite(node.y)) node.y = 0;
+    if (node.w !== undefined && !Number.isFinite(node.w)) node.w = 1;
+    if (node.h !== undefined && !Number.isFinite(node.h)) node.h = 1;
+
     if (node.maxW) { node.w = Math.min(node.w || 1, node.maxW); }
     if (node.maxH) { node.h = Math.min(node.h || 1, node.maxH); }
     if (node.minW) { node.w = Math.max(node.w || 1, node.minW); }

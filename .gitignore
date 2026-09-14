@@ -4,6 +4,7 @@
 .npmrc
 .yarnrc
 coverage
+test-results
 dist
 dist_save
 node_modules

@@ -1422,6 +1422,204 @@ describe('gridstack >', () => {
       items.forEach(el => expect(el.classList.contains('ui-draggable-disabled')).toBe(true));
       expect(grid.opts.disableDrag).toBe(true);
     });
+    it('should move/resize a single item only >', () => {
+      grid = GridStack.init({cellHeight: 80});
+      const el = findEl('gsItem1');
+
+      grid.movable(el, false);
+      grid.resizable(el, false);
+      expect(el.classList.contains('ui-draggable-disabled')).toBe(true);
+      expect(el.classList.contains('ui-resizable-disabled')).toBe(true);
+      expect(findEl('gsItem2').classList.contains('ui-draggable-disabled')).toBe(false);
+      expect(grid.opts.disableDrag).toBeFalsy(); // grid wide setting untouched
+
+      grid.movable(el, true);
+      grid.resizable(el, true);
+      expect(el.classList.contains('ui-draggable-disabled')).toBe(false);
+      expect(el.classList.contains('ui-resizable-disabled')).toBe(false);
+    });
+    it('should not move/resize items of a static grid >', () => {
+      grid = GridStack.init({staticGrid: true});
+      const el = findEl('gsItem1');
+      grid.movable(el, true);
+      grid.resizable(el, true);
+      expect(el.classList.contains('ui-draggable')).toBe(false);
+    });
+  });
+
+  describe('mouse drag/resize on a grid item >', () => {
+    const mouse = (type: string, x: number, y: number, target: EventTarget = document) => {
+      target.dispatchEvent(new MouseEvent(type, {bubbles: true, cancelable: true, button: 0, clientX: x, clientY: y}));
+    };
+    const origRect = Element.prototype.getBoundingClientRect;
+
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+      // jsdom has no layout and returns 0x0 for everything, which makes the drag scale math
+      // divide by zero - give every element a real box so the gesture math stays finite
+      Element.prototype.getBoundingClientRect = function(this: Element) {
+        const w = this.classList?.contains('grid-stack') ? 960 : 320;
+        return {x: 0, y: 0, left: 0, top: 0, right: w, bottom: 160, width: w, height: 160, toJSON: () => ({})} as DOMRect;
+      };
+    });
+    afterEach(() => {
+      Element.prototype.getBoundingClientRect = origRect;
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    it('should fire the grid dragstart/dragstop events >', () => {
+      grid = GridStack.init({cellHeight: 80});
+      const dragstart = vi.fn(), dragstop = vi.fn();
+      grid.on('dragstart', dragstart).on('dragstop', dragstop);
+      const el = findEl('gsItem1');
+
+      mouse('mousedown', 10, 10, el.querySelector('.grid-stack-item-content')!);
+      mouse('mousemove', 60, 60);
+      expect(dragstart).toHaveBeenCalled();
+      expect(grid.el.classList.contains('grid-stack-dragging')).toBe(true);
+
+      mouse('mouseup', 60, 60);
+      expect(dragstop).toHaveBeenCalled();
+      expect(find('gsItem1')).toBeDefined(); // item still in the grid
+    });
+
+    it('should accept a widget dragged in from outside (acceptWidgets) >', () => {
+      grid = GridStack.init({acceptWidgets: true, cellHeight: 80});
+      // sidebar item as documented: .grid-stack-item for acceptWidgets:true, size via data-gs-widget JSON
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div class="sidebar"><div class="grid-stack-item" data-gs-widget=\'{"w":2,"h":2,"content":"new item"}\'>drag me</div></div>');
+      GridStack.setupDragIn('.sidebar > .grid-stack-item');
+      const sb = document.querySelector('.sidebar > .grid-stack-item') as HTMLElement;
+      expect(grid.engine.nodes.length).toBe(2);
+
+      mouse('mousedown', 5, 5, sb);
+      mouse('mousemove', 40, 40); // drag starts outside the grid
+      grid.el.dispatchEvent(new MouseEvent('mouseenter', {bubbles: true})); // cursor enters the grid
+      mouse('mousemove', 300, 100);
+      mouse('mouseup', 300, 100); // drop it
+
+      expect(grid.engine.nodes.length).toBe(3);
+      const added = grid.engine.nodes.find(n => n.w === 2 && n.h === 2)!;
+      expect(added).toBeDefined();
+      expect(added.grid).toBe(grid);
+      document.querySelector('.sidebar')!.remove();
+    });
+
+    it('should fire the grid resizestart/resizestop events >', () => {
+      grid = GridStack.init({cellHeight: 80});
+      const resizestart = vi.fn(), resizestop = vi.fn();
+      grid.on('resizestart', resizestart).on('resizestop', resizestop);
+      const handle = findEl('gsItem1').querySelector('.ui-resizable-se')!;
+
+      mouse('mousedown', 100, 100, handle);
+      mouse('mousemove', 160, 170);
+      expect(resizestart).toHaveBeenCalled();
+
+      mouse('mouseup', 160, 170);
+      expect(resizestop).toHaveBeenCalled();
+      expect(find('gsItem1')).toBeDefined();
+    });
+  });
+
+  describe('GridStack.setupDragIn() >', () => {
+    let side: HTMLElement;
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', '<div class="sidebar"><div class="sb-item">a</div><div class="sb-item">b</div></div>');
+      side = document.querySelector('.sidebar')!;
+    });
+    afterEach(() => side.remove());
+
+    it('should make outside items draggable and carry their widget definition >', () => {
+      GridStack.setupDragIn('.sb-item', undefined, [{w: 2, h: 3}, {w: 1, h: 1}]);
+
+      const items = Array.from(side.children) as GridItemHTMLElement[];
+      items.forEach(el => expect(GridStack.getDD().isDraggable(el)).toBe(true));
+      expect(items[0].gridstackNode).toEqual({w: 2, h: 3});
+      expect(items[1].gridstackNode).toEqual({w: 1, h: 1});
+    });
+
+    it('should be safe to call again on the same items >', () => {
+      GridStack.setupDragIn('.sb-item', undefined, [{w: 2, h: 3}]);
+      GridStack.setupDragIn('.sb-item', undefined, [{w: 5, h: 5}]);
+
+      const el = side.firstElementChild as GridItemHTMLElement;
+      expect(GridStack.getDD().isDraggable(el)).toBe(true);
+      expect(el.gridstackNode).toEqual({w: 5, h: 5});
+    });
+  });
+
+  describe('grid.columnOpts responsive >', () => {
+    const savedWidth = window.innerWidth;
+    const setWindowWidth = (w: number) => Object.defineProperty(window, 'innerWidth', {value: w, writable: true, configurable: true});
+    /** window resize the grid reacts to */
+    const resizeTo = (w: number) => { setWindowWidth(w); grid.onResize(w); };
+
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+      setWindowWidth(savedWidth);
+    });
+
+    it('should pick the column count of the matching breakpoint >', () => {
+      // passed out of order on purpose - the order shouldn't matter
+      grid = GridStack.init({columnOpts: {breakpointForWindow: true, breakpoints: [{w: 500, c: 3}, {w: 700, c: 6}]}});
+      expect(grid.getColumn()).toBe(12);
+
+      resizeTo(600);
+      expect(grid.getColumn()).toBe(6);
+      resizeTo(400);
+      expect(grid.getColumn()).toBe(3);
+      resizeTo(1000); // wider than any breakpoint -> back to the max
+      expect(grid.getColumn()).toBe(12);
+    });
+
+    it('should derive the column count from columnWidth >', () => {
+      grid = GridStack.init({columnOpts: {breakpointForWindow: true, columnWidth: 100}});
+      resizeTo(350);
+      expect(grid.getColumn()).toBe(4);
+      resizeTo(2000); // capped by columnMax
+      expect(grid.getColumn()).toBe(12);
+    });
+
+    it('should stop responding once columnOpts is removed >', () => {
+      grid = GridStack.init({columnOpts: {breakpointForWindow: true, columnWidth: 100}});
+      grid.updateOptions({columnOpts: null});
+      const column = grid.getColumn();
+      resizeTo(350);
+      expect(grid.getColumn()).toBe(column);
+    });
+  });
+
+  describe('grid.rotate() >', () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should swap w/h and the min/max constrains >', () => {
+      grid = GridStack.init({cellHeight: 80});
+      grid.update(findEl('gsItem1'), {minW: 1, maxW: 6, minH: 2, maxH: 3});
+
+      grid.rotate(findEl('gsItem1'));
+
+      const n = find('gsItem1');
+      expect(n.w).toBe(2); // was 4x2
+      expect(n.h).toBe(4);
+      expect(n.minW).toBe(2); expect(n.maxW).toBe(3);
+      expect(n.minH).toBe(1); expect(n.maxH).toBe(6);
+    });
+    it('should not rotate a locked/no-resize item >', () => {
+      grid = GridStack.init({cellHeight: 80});
+      grid.update(findEl('gsItem1'), {noResize: true});
+
+      grid.rotate(findEl('gsItem1'));
+
+      expect(find('gsItem1').w).toBe(4); // unchanged
+      expect(find('gsItem1').h).toBe(2);
+    });
   });
 
   describe('grid.enableResize >', () => {
@@ -1639,6 +1837,66 @@ describe('gridstack >', () => {
     });
   });
 
+  describe('GridStack.addGrid() >', () => {
+    let parent: HTMLElement;
+    beforeEach(() => {
+      parent = document.createElement('div');
+      document.body.appendChild(parent);
+    });
+    afterEach(() => {
+      grid?.destroy();
+      grid = undefined!;
+      parent.remove();
+    });
+
+    it('should create the grid and its children under the given parent >', () => {
+      grid = GridStack.addGrid(parent, {children: [{id: 'a', x: 0, y: 0, w: 2}, {id: 'b', x: 4, y: 0}]})!;
+      expect(grid).not.toBeNull();
+      expect(parent.querySelector('.grid-stack')).toBe(grid.el);
+      expect(grid.engine.nodes.length).toBe(2);
+      expect(find('a').w).toBe(2);
+      expect(find('b').x).toBe(4);
+    });
+
+    it('should re-use the parent when it is already a grid element >', () => {
+      parent.classList.add('grid-stack');
+      grid = GridStack.addGrid(parent, {children: [{id: 'a'}]})!;
+      expect(grid.el).toBe(parent);
+    });
+
+    it('should load into the existing grid when called twice >', () => {
+      grid = GridStack.addGrid(parent, {children: [{id: 'a'}]})!;
+      const again = GridStack.addGrid(grid.el, {children: [{id: 'b'}, {id: 'c'}]})!;
+      expect(again).toBe(grid);
+      expect(grid.engine.nodes.map(n => n.id)).toEqual(['b', 'c']);
+    });
+
+    it('should create a nested grid from subGridOpts and save it back >', () => {
+      grid = GridStack.addGrid(parent, {children: [
+        {id: 'sub', w: 4, h: 4, subGridOpts: {children: [{id: 'kid', w: 2}]}}
+      ]})!;
+      const sub = find('sub').subGrid!;
+      expect(sub).toBeDefined();
+      expect(sub.el.classList.contains('grid-stack-nested')).toBe(true);
+      expect(sub.engine.nodes.length).toBe(1);
+
+      const saved = grid.save() as GridStackWidget[];
+      expect(saved[0].subGridOpts!.children!.length).toBe(1);
+      expect(saved[0].subGridOpts!.children![0].id).toBe('kid');
+    });
+
+    it('should turn an item into a sub grid and back >', () => {
+      grid = GridStack.addGrid(parent, {children: [{id: 'a'}, {id: 'b'}]})!;
+      grid.makeSubGrid(findEl('a'));
+      const sub = find('a').subGrid!;
+      expect(sub).toBeDefined();
+      expect(sub.engine.nodes.length).toBe(1); // 'a' content moved inside
+
+      sub.removeAsSubGrid();
+      expect(grid.engine.nodes.find(n => n.subGrid)).toBeUndefined();
+    });
+  });
+
   describe('two grids >', () => {
     beforeEach(() => {
       document.body.insertAdjacentHTML('afterbegin', gridHTML);
@@ -1709,6 +1967,24 @@ describe('gridstack >', () => {
     });
     afterEach(() => {
       document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('should round trip print options through DOM and save >', () => {
+      grid = GridStack.init();
+      const el = findEl('gsItem1');
+      grid.update(el, {print: {pageBreak: true, hide: true, orientation: 'landscape', breakInside: true}});
+      expect(el.getAttribute('gs-page-break')).toBe('true');
+      expect(el.classList.contains('gs-print-hide')).toBe(true);
+      expect(el.getAttribute('gs-print-orientation')).toBe('landscape');
+      expect(el.getAttribute('gs-break-inside')).toBe('true');
+
+      // a grid re-created from that same DOM reads them back...
+      grid.destroy(false);
+      grid = GridStack.init();
+      expect(find('gsItem1').print).toEqual({pageBreak: true, hide: true, orientation: 'landscape', breakInside: true});
+
+      // ...and they survive save()
+      const saved = grid.save() as GridStackWidget[];
+      expect(saved[0].print).toEqual({pageBreak: true, hide: true, orientation: 'landscape', breakInside: true});
     });
     it('save layout >', () => {
       grid = GridStack.init({maxRow: 10});
