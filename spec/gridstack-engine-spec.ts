@@ -22,6 +22,31 @@ describe('gridstack engine:', () => {
     expect(typeof GridStackEngine).toBe('function');
   });
 
+  describe('non-finite positions >', () => {
+    it('should clamp a non-finite position to a usable one', () => {
+      // pixel math against a zero cell size (collapsed/hidden grid) yields Infinity/NaN,
+      // which can't be packed or collision checked
+      e = new GridStackEngine({column: 12});
+      const n = e.addNode({id: 'bad', x: Infinity, y: Infinity, w: NaN, h: Infinity});
+
+      expect(Number.isFinite(n.x!)).toBe(true);
+      expect(Number.isFinite(n.y!)).toBe(true);
+      expect(n.w).toBe(1);
+      expect(n.h).toBe(1);
+    });
+
+    it('should keep the layout valid when a move goes non-finite', () => {
+      e = new GridStackEngine({column: 12});
+      e.addNode({id: 'a', x: 0, y: 0, w: 2, h: 1});
+      const b = e.addNode({id: 'b', x: 2, y: 0, w: 2, h: 1});
+
+      e.moveNode(b, {y: Infinity});
+
+      expect(Number.isFinite(b.y!)).toBe(true);
+      expect(overlaps(e)).toEqual([]);
+    });
+  });
+
   describe('test constructor >', () => {
   
     it('should be setup properly', () => {

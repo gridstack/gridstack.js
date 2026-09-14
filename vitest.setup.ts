@@ -64,12 +64,22 @@ Object.defineProperty(window, 'getComputedStyle', {
     marginTop: '0px',
     marginBottom: '0px',
     marginLeft: '0px',
-    marginRight: '0px'
+    marginRight: '0px',
+    // real (and jsdom) computed styles always return these - code reads them during drag/resize
+    position: 'static',
+    transform: 'none',
+    display: 'block',
+    overflowX: 'visible',
+    overflowY: 'visible'
   })
 });
 
 // Mock scrollTo for tests that might trigger scrolling
 window.scrollTo = vi.fn();
+
+// jsdom doesn't implement element scrolling at all, which auto-scroll during drag/resize calls
+if (!Element.prototype.scrollBy) Element.prototype.scrollBy = vi.fn();
+if (!Element.prototype.scrollTo) Element.prototype.scrollTo = vi.fn();
 
 // Setup DOM environment
 Object.defineProperty(window, 'location', {

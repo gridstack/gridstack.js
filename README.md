@@ -1,10 +1,10 @@
 # gridstack.js
 
 [![NPM version](https://img.shields.io/npm/v/gridstack.svg)](https://www.npmjs.com/package/gridstack)
-[![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=develop)](https://coveralls.io/github/gridstack/gridstack.js?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/gridstack/gridstack.js/badge.svg?branch=master)](https://coveralls.io/github/gridstack/gridstack.js?branch=master)
 [![downloads](https://img.shields.io/npm/dm/gridstack.svg)](https://www.npmjs.com/package/gridstack)
 
-Mobile-friendly modern Typescript library for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Has multiple bindings and works great with [Angular](./angular/README.md) (included), [React](./react/README.md) (included), [Vue](./vue/README.md) (included), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others (see [frameworks](#specific-frameworks) section).
+Mobile-friendly modern pure Typescript library (no external dependencies) for dashboard layout and creation. Making a drag-and-drop, multi-column responsive dashboard has never been easier. Has multiple bindings and works great with [Angular](./angular/README.md) (included), [React](./react/README.md) (included), [Vue](./vue/README.md) (included), [Knockout.js](http://knockoutjs.com), [Ember](https://www.emberjs.com/) and others (see [frameworks](#specific-frameworks) section).
 
 Inspired by no-longer maintained gridster, built with love.
 
