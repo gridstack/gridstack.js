@@ -1653,7 +1653,10 @@ export class GridStack {
         } else {
           this.resizeToContentCheck(widthChanged, n);
         }
-        delete n._orig; // clear out original position now that we moved #2669
+        // clear out original position now that we moved #2669 - but NOT mid drag/resize, where _orig is
+        // the gesture's baseline that _dragOrResize/onEndMoving still need. A user calling update() from
+        // a 'drag'/'resize' handler used to delete it and crash on the following stop event (#3012).
+        if (!n._updating) delete n._orig;
       }
       if (m || changed) {
         this._writeAttr(el, n);
@@ -2919,7 +2922,7 @@ export class GridStack {
         delete node._resizing;
         delete node._event;
         delete node._lastTried;
-        const widthChanged = node.w !== node._orig!.w;
+        const widthChanged = !!node._orig && node.w !== node._orig.w;
 
         // if the item has moved to another grid, we're done here
         const target: GridItemHTMLElement = event.target as GridItemHTMLElement;

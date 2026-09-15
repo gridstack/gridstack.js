@@ -256,4 +256,41 @@ describe('regression >', () => {
       grid.engine.endUpdate();
     });
   });
+
+  describe('3012 update() from inside a drag/resize handler >', () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    it('keeps node._orig alive so the stop event does not crash', () => {
+      grid = GridStack.init({cellHeight: 50, children: [{id: 'A', x: 0, y: 0, w: 3, h: 3}]});
+      const A = grid.engine.nodes.find(n => n.id === 'A')!;
+
+      grid.engine.cleanNodes().beginUpdate(A); // resizestart
+      expect(A._updating).toBe(true);
+      expect(A._orig).toEqual({x: 0, y: 0, w: 3, h: 3});
+
+      // the aspect-ratio handler: update() from inside the 'resize' event
+      grid.update(A.el!, {h: 4});
+      expect(A.h).toBe(4);
+      // used to be deleted here, then onEndMoving did `node._orig!.w` -> TypeError
+      expect(A._orig).toEqual({x: 0, y: 0, w: 3, h: 3});
+      expect(() => A.w !== A._orig!.w).not.toThrow();
+
+      grid.engine.endUpdate();
+    });
+
+    it('still clears _orig for a plain update() outside a gesture (#2669)', () => {
+      grid = GridStack.init({cellHeight: 50, children: [{id: 'A', x: 0, y: 0, w: 3, h: 3}]});
+      const A = grid.engine.nodes.find(n => n.id === 'A')!;
+      grid.engine.saveInitial();
+      expect(A._orig).toBeDefined();
+      grid.update(A.el!, {h: 4});
+      expect(A._updating).toBeFalsy();
+      expect(A._orig).toBeUndefined();
+    });
+  });
 });
