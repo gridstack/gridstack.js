@@ -349,4 +349,48 @@ describe('regression >', () => {
       }
     });
   });
+  describe("2866 mode:'list' inserts between and reflows right >", () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    /** row-major reading order, which is the order 'list' mode maintains */
+    const order = () => grid.engine.nodes.slice()
+      .sort((a, b) => (a.y! * 4 + a.x!) - (b.y! * 4 + b.x!))
+      .map(n => n.id).join('');
+
+    // NOTE: this is the 'mobile icon rearrange' behavior the issue asked for, and mode:'list'
+    // (shipped with the top/float/list/compact rework) already provides it - so this locks it in.
+    it('dropping on an item takes its place and shifts the rest right', () => {
+      grid = GridStack.init({column: 4, cellHeight: 50, mode: 'list', children: [
+        {id: 'A', x: 0, y: 0, w: 1, h: 1}, {id: 'B', x: 1, y: 0, w: 1, h: 1},
+        {id: 'C', x: 2, y: 0, w: 1, h: 1}, {id: 'D', x: 3, y: 0, w: 1, h: 1},
+        {id: 'E', x: 0, y: 1, w: 1, h: 1},
+      ]});
+      expect(order()).toBe('ABCDE');
+
+      const E = grid.engine.nodes.find(n => n.id === 'E')!;
+      grid.update(E.el!, {x: 1, y: 0}); // drop E onto B's slot
+
+      expect(order()).toBe('AEBCD');    // E takes the slot, B/C/D shift right and wrap
+      const D = grid.engine.nodes.find(n => n.id === 'D')!;
+      expect(D.y).toBe(1);              // reflowed onto the next row rather than being pushed down
+    });
+
+    it('keeps the run gapless as items move', () => {
+      grid = GridStack.init({column: 3, cellHeight: 50, mode: 'list', children: [
+        {id: 'A', x: 0, y: 0, w: 1, h: 1}, {id: 'B', x: 1, y: 0, w: 1, h: 1},
+        {id: 'C', x: 2, y: 0, w: 1, h: 1}, {id: 'D', x: 0, y: 1, w: 1, h: 1},
+      ]});
+      const D = grid.engine.nodes.find(n => n.id === 'D')!;
+      grid.update(D.el!, {x: 0, y: 0}); // all the way to the front
+      expect(order()).toBe('DABC');
+      // every slot from 0..3 is used exactly once - no holes left behind
+      const slots = grid.engine.nodes.map(n => n.y! * 3 + n.x!).sort((a, b) => a - b);
+      expect(slots).toEqual([0, 1, 2, 3]);
+    });
+  });
 });
