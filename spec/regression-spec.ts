@@ -207,4 +207,53 @@ describe('regression >', () => {
       expect(sg.el.style.minHeight).toBe('100px'); // grew to fit both rows
     });
   });
+
+  describe('3000 float: pushed items restore when dragging back >', () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    // NOTE: this no longer reproduced when re-checked on 2026-09-14 (the mode:'float' rework in
+    // 61e358bf landed after the report), so this locks the reported behavior in rather than fixing it.
+    it('two h=2 items, pushed 3 rows down, both come back', () => {
+      grid = GridStack.init({mode: 'float', cellHeight: 50, children: [
+        {id: 'A', x: 0, y: 0, w: 2, h: 2},
+        {id: 'B', x: 0, y: 2, w: 2, h: 2},
+      ]});
+      const A = grid.engine.nodes.find(n => n.id === 'A')!;
+      const B = grid.engine.nodes.find(n => n.id === 'B')!;
+
+      grid.engine.cleanNodes().beginUpdate(A); // dragstart snapshots _orig for everyone
+      expect(B._orig!.y).toBe(2);
+
+      [1, 2, 3].forEach(y => grid.engine.moveNode(A, {x: 0, y, w: 2, h: 2}));
+      expect(A.y).toBe(3);
+      expect(B.y).toBe(5); // pushed the reported 3 rows
+
+      [2, 1, 0].forEach(y => grid.engine.moveNode(A, {x: 0, y, w: 2, h: 2}));
+      expect(A.y).toBe(0);
+      expect(B.y).toBe(2); // ...and restored, rather than stranded at 5
+      grid.engine.endUpdate();
+    });
+
+    it('a third item blocking the way only holds items back as far as it must', () => {
+      grid = GridStack.init({mode: 'float', cellHeight: 50, children: [
+        {id: 'A', x: 0, y: 0, w: 2, h: 2},
+        {id: 'B', x: 0, y: 2, w: 2, h: 2},
+        {id: 'C', x: 4, y: 0, w: 2, h: 2},
+      ]});
+      const [A, B, C] = ['A', 'B', 'C'].map(id => grid.engine.nodes.find(n => n.id === id)!);
+      grid.engine.cleanNodes().beginUpdate(A);
+
+      [1, 2, 3].forEach(y => grid.engine.moveNode(A, {x: 0, y, w: 2, h: 2}));
+      expect(B.y).toBe(5);
+      [2, 1, 0].forEach(y => grid.engine.moveNode(A, {x: 0, y, w: 2, h: 2}));
+      expect(B.y).toBe(2);
+      expect(C.y).toBe(0); // untouched in its own column
+      grid.engine.endUpdate();
+    });
+  });
 });
