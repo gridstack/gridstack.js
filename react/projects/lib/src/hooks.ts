@@ -73,7 +73,7 @@ export function useGridStackItem(): UseGridStackItemResult {
   const { grid, layoutVersion } = ctx;
   // Use recursive search so items dragged to sub-grids are still found.
   const node = useMemo(
-    () => (grid ? Utils.findInGrid(grid, String(wctx.id), true) : undefined),
+    () => (grid ? Utils.findInGrid(grid, wctx.id, true) : undefined),
     [grid, wctx.id, layoutVersion]
   );
   return { id: wctx.id, node };

@@ -71,7 +71,7 @@ export function useGridStackItem(): UseGridStackItemResult {
     // Access layoutVersion to make this reactive.
     void gsCtx.layoutVersion.value
     const g = gsCtx.grid
-    return g ? Utils.findInGrid(g, String(itemCtx.id), true) : undefined
+    return g ? Utils.findInGrid(g, itemCtx.id, true) : undefined
   })
 
   return {
