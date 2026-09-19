@@ -97,6 +97,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   public override destroy(): void {
+    if (DDManager.resizeElement === this) delete DDManager.resizeElement;
     this._removeHandlers();
     this._setupAutoHide(false);
     delete (this as Partial<DDResizable>).el;
