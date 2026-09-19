@@ -143,7 +143,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     if (DDManager.overResizeElement || DDManager.dragElement) return;
     DDManager.overResizeElement = this;
     // console.log(`${count++} enter ${(this.el as GridItemHTMLElement).gridstackNode._id}`)
-    this.el.classList.remove('ui-resizable-autohide');
+    if (!DDManager.resizeElement) this.el.classList.remove('ui-resizable-autohide');
   }
 
   /** @internal */
@@ -181,6 +181,7 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
     this._setupHelper();
     this._applyChange();
     const ev = Utils.initEvent<MouseEvent>(event, { type: 'resizestart', target: this.el });
+    DDManager.resizeElement = this;
     if (this.option.start) {
       this.option.start(ev, this._ui());
     }
@@ -215,6 +216,10 @@ export class DDResizable extends DDBaseImplement implements HTMLElementExtendOpt
       this.option.stop(ev); // Note: ui() not used by gridstack so don't pass
     }
     this.el.classList.remove('ui-resizable-resizing');
+    if (DDManager.resizeElement === this) delete DDManager.resizeElement;
+    if (!DDManager.resizeElement && DDManager.overResizeElement) {
+      DDManager.overResizeElement.el.classList.remove('ui-resizable-autohide');
+    }
     this.triggerEvent('resizestop', ev);
     delete this.startEvent;
     delete this.originalRect;

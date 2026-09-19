@@ -49,9 +49,12 @@ export class DDManager {
   public static dropElement?: DDDroppable;
 
   /**
-   * Reference to the element currently being resized.
-   * Helps ignore nested grid resize handles during resize operations.
+   * Reference to the resizable element currently under the pointer.
+   * Helps ignore nested grid resize handles during hover operations.
    */
   public static overResizeElement?: DDResizable;
+
+  /** @internal element with an active resize operation, used to keep peer handles hidden */
+  public static resizeElement?: DDResizable;
 
 }
