@@ -2343,9 +2343,22 @@ export class GridStack {
     }
 
     dragInOptions = { appendTo: 'body', helper: 'clone', ...(dragInOptions || {}) }; // default to handle:undefined = drag by the whole item
+
+    // allow sidebar `el.addEventListener('dragstart'|'drag'|'dragstop', ...)` to work like grids.
+    const userStart = dragInOptions.start, userDrag = dragInOptions.drag, userStop = dragInOptions.stop;
+    const emit = (el: HTMLElement, type: string, ui?: DDUIData) =>
+      el.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { el, ui } }));
+
     const els = (typeof dragIn === 'string') ? Utils.getElements(dragIn, root) : dragIn;
     els!.forEach((el, i) => {
-      if (!dd.isDraggable(el)) dd.dragIn(el, dragInOptions!);
+      if (!dd.isDraggable(el)) {
+        dd.dragIn(el, {
+          ...dragInOptions,
+          start: (event, ui) => { userStart?.(event, ui); emit(el, 'dragstart', ui); },
+          drag: (event, ui) => { userDrag?.(event, ui); emit(el, 'drag', ui); },
+          stop: (event) => { userStop?.(event); emit(el, 'dragstop'); },
+        });
+      }
       if (widgets?.[i]) (el as GridItemHTMLElement).gridstackNode = widgets[i];
     });
   }

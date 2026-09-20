@@ -125,6 +125,13 @@
       addEvents(grid, i);
     });
 
+    // new v14.x events
+    document.querySelectorAll('.sidebar-item').forEach(el => {
+      el.addEventListener('dragstart', (e) => console.log('sidebar dragstart', e.target.textContent.trim()));
+      el.addEventListener('drag', (e) => console.log('sidebar drag', e.target.textContent.trim()));
+      el.addEventListener('dragstop', (e) => console.log('sidebar dragstop', e.target.textContent.trim()));
+    });
+
     // clone the sidepanel item so we drag a copy, and in some case ('manual') create the final widget, else sidebarContent will be used.
     function myClone(el) {
       if (el.getAttribute('gs-id') === 'manual') {
