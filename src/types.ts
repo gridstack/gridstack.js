@@ -239,6 +239,7 @@ export interface GridStackOptions {
    * - 0: library will not generate styles for rows (define your own CSS)
    * - 'auto': height calculated for square cells (width / column) and updated live on window resize
    * - 'initial': similar to 'auto' but stays fixed size during window resizing
+   * - 'fill': rows divide the container height the way columns divide its width, so a fixed `row`
    *
    * Note: % values don't work correctly - see demo/cell-height.html
    *
@@ -252,6 +253,10 @@ export interface GridStackOptions {
    *
    * // Auto-sizing for square cells
    * cellHeight: 'auto'
+   * cellHeight: 'initial'
+   *
+   * // Fill the container height
+   * cellHeight: 'fill'
    *
    * // No CSS generation (custom styles)
    * cellHeight: 0

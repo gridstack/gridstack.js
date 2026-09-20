@@ -221,7 +221,7 @@ OnInit.ngOnInit
 ngAfterContentInit(): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:272](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L272)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:273](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L273)
 
 wait until after all DOM is ready to init gridstack children (after angular ngFor and sub-components run first)
 
@@ -241,7 +241,7 @@ AfterContentInit.ngAfterContentInit
 ngOnDestroy(): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:280](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L280)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:281](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L281)
 
 A callback method that performs custom clean-up, invoked immediately
 before a directive, pipe, or service instance is destroyed.
@@ -262,7 +262,7 @@ OnDestroy.ngOnDestroy
 updateAll(): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:294](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L294)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:295](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L295)
 
 called when the TEMPLATE (not recommended) list of items changes - get a list of nodes and
 update the layout accordingly (which will take care of adding/removing items changed by Angular)
@@ -277,7 +277,7 @@ update the layout accordingly (which will take care of adding/removing items cha
 checkEmpty(): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:305](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L305)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:306](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L306)
 
 check if the grid is empty, if so show alternative content
 
@@ -291,7 +291,7 @@ check if the grid is empty, if so show alternative content
 protected hookEvents(grid?): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:311](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L311)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:312](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L312)
 
 get all known events as easy to use Outputs for convenience
 
@@ -311,7 +311,7 @@ get all known events as easy to use Outputs for convenience
 protected unhookEvents(grid?): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:338](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L338)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:339](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L339)
 
 ###### Parameters
 
@@ -3094,7 +3094,7 @@ function gsCreateNgComponents(
    isGrid): undefined | HTMLElement;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:349](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L349)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:350](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L350)
 
 can be used when a new item needs to be created, which we do as a Angular component, or deleted (skip)
 
@@ -3119,7 +3119,7 @@ can be used when a new item needs to be created, which we do as a Angular compon
 function gsSaveAdditionalNgInfo(n, w): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:444](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L444)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:445](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L445)
 
 called for each item in the grid - check if additional information needs to be saved.
 Note: since this is options minus gridstack protected members using Utils.removeInternalForSave(),
@@ -3145,7 +3145,7 @@ using BaseWidget.serialize()
 function gsUpdateNgComponents(n): void;
 ```
 
-Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:463](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L463)
+Defined in: [angular/projects/lib/src/lib/gridstack.component.ts:464](https://github.com/adumesny/gridstack.js/blob/master/angular/projects/lib/src/lib/gridstack.component.ts#L464)
 
 track when widgeta re updated (rather than created) to make sure we de-serialize them as well
 

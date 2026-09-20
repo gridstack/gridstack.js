@@ -393,4 +393,64 @@ describe('regression >', () => {
       expect(slots).toEqual([0, 1, 2, 3]);
     });
   });
+
+  describe("2583 cellHeight:'fill' - rows divide the container height >", () => {
+    /** a fixed 800x600 container, like the reporter's */
+    const container = (h = 600) =>
+      `<div style="width: 800px; height: ${h}px" id="gs-cont"><div class="grid-stack" style="height: 100%;"></div></div>`;
+
+    afterEach(() => {
+      document.getElementById('gs-cont')?.remove();
+    });
+
+    const setHeight = (h: number) => {
+      const gs = document.querySelector('.grid-stack') as HTMLElement;
+      if (gs) Object.defineProperty(gs, 'clientHeight', {value: h, configurable: true});
+    };
+
+    it('divides the container height by the row count', () => {
+      document.body.insertAdjacentHTML('afterbegin', container());
+      setHeight(600);
+      grid = GridStack.init({column: 3, row: 2, cellHeight: 'fill', margin: 0});
+      // 2 rows in 600px => 300 each, the same way 3 columns split 800px of width
+      expect(grid.getCellHeight(true)).toBe(300);
+    });
+
+    it('follows the row count, so fewer items still fill the height', () => {
+      document.body.insertAdjacentHTML('afterbegin', container());
+      setHeight(600);
+      grid = GridStack.init({column: 3, row: 3, cellHeight: 'fill', margin: 0,
+        children: [{x: 0, y: 0, w: 1, h: 1}, {x: 1, y: 0, w: 1, h: 1}]});
+      expect(grid.getCellHeight(true)).toBe(200); // 600 / 3 rows
+    });
+
+    it('includes margins so rows still fit perfectly', () => {
+      document.body.insertAdjacentHTML('afterbegin', container());
+      setHeight(600);
+      grid = GridStack.init({column: 3, row: 2, cellHeight: 'fill', margin: 10});
+      expect(grid.getCellHeight(true)).toBe(300);
+    });
+
+    it('re-fills when the container resizes', () => {
+      document.body.insertAdjacentHTML('afterbegin', container());
+      setHeight(600);
+      grid = GridStack.init({column: 3, row: 2, cellHeight: 'fill', margin: 0});
+      expect(grid.getCellHeight(true)).toBe(300);
+
+      setHeight(400);
+      grid.cellHeight();               // what the ResizeObserver path calls
+      expect(grid.getCellHeight(true)).toBe(200);
+    });
+
+    it("leaves 'auto' and explicit values alone", () => {
+      document.body.insertAdjacentHTML('afterbegin', container());
+      setHeight(600);
+      grid = GridStack.init({column: 3, row: 2, cellHeight: 50, margin: 0});
+      expect(grid.getCellHeight(true)).toBe(50);
+      grid.cellHeight('fill');
+      expect(grid.getCellHeight(true)).toBe(300);
+      grid.cellHeight(70);
+      expect(grid.getCellHeight(true)).toBe(70); // switched back off
+    });
+  });
 });
