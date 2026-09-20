@@ -2,6 +2,7 @@ import { GridItemHTMLElement, GridStack, GridStackWidget } from '../src/gridstac
 import type { GridStackNode } from '../src/types';
 import { Utils } from '../src/utils';
 import { DDManager } from '../src/dd-manager';
+import { DDElement } from '../src/dd-element';
 
 describe('regression >', () => {
   'use strict';
@@ -512,6 +513,64 @@ describe('regression >', () => {
       dragIt();
       expect(detail?.el).toBe(side);
       expect(detail?.ui).toBeDefined();
+    });
+  });
+
+  describe('3148 drag handle inside a shadow root >', () => {
+    let host: GridItemHTMLElement;
+    afterEach(() => {
+      delete DDManager.mouseHandled;
+      host?.remove();
+    });
+
+    /** a card whose drag handle lives inside a web component's shadow root */
+    const build = () => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div class="grid-stack-item"><div class="grid-stack-item-content">' +
+        '<div class="card"></div></div></div>');
+      host = document.querySelector('.grid-stack-item') as GridItemHTMLElement;
+      const card = host.querySelector('.card') as HTMLElement;
+      const shadow = card.attachShadow({mode: 'open'});
+      shadow.innerHTML = '<button class="drag-handle">::</button><div class="body">scroll me</div>';
+      const dd = DDElement.init(host).setupDraggable({handle: '.drag-handle'}).ddDraggable!;
+      return { dd, shadow };
+    };
+
+    it('finds it, instead of falling back to the whole card', () => {
+      const { dd, shadow } = build();
+      const handle = shadow.querySelector('.drag-handle') as HTMLElement;
+      // querySelectorAll() stops at the shadow boundary, so this used to come back empty and
+      // dragEls fell back to [the whole item] - the entire card stayed draggable
+      expect(dd['dragEls']).toEqual([handle]);
+      expect(dd['dragEls']).not.toContain(host);
+    });
+
+    it('only the handle starts a drag, so the rest can still scroll', () => {
+      const { dd, shadow } = build();
+      const started = (target: HTMLElement): boolean => {
+        target.dispatchEvent(new MouseEvent('mousedown', {button: 0, bubbles: true, composed: true}));
+        const ok = !!dd['mouseDownEvent'];
+        dd['_mouseUp'](new MouseEvent('mouseup'));
+        delete DDManager.mouseHandled;
+        return ok;
+      };
+      expect(started(shadow.querySelector('.drag-handle') as HTMLElement)).toBe(true);
+      expect(started(shadow.querySelector('.body') as HTMLElement)).toBe(false);
+    });
+
+    it("does not steal a nested item's handle", () => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div class="grid-stack-item outer"><div class="grid-stack-item-content">' +
+        '<div class="grid-stack"><div class="grid-stack-item inner">' +
+        '<div class="grid-stack-item-content"><div class="card"></div></div>' +
+        '</div></div></div></div>');
+      host = document.querySelector('.outer') as GridItemHTMLElement;
+      const card = host.querySelector('.card') as HTMLElement;
+      const shadow = card.attachShadow({mode: 'open'});
+      shadow.innerHTML = '<button class="drag-handle">::</button>';
+      const dd = DDElement.init(host).setupDraggable({handle: '.drag-handle'}).ddDraggable!;
+      // that handle belongs to .inner (through the shadow host), not to us
+      expect(dd['dragEls']).toEqual([host]); // fell back to ourself, correctly
     });
   });
 });

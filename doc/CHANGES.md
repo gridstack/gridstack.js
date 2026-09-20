@@ -155,6 +155,8 @@ Change log
 * feat: [#2627](https://github.com/gridstack/gridstack.js/issues/2627), [#2761](https://github.com/gridstack/gridstack.js/issues/2761) emit dragstart/drag/dragstop on sidebar drag-in items
 * fix: [#3012](https://github.com/gridstack/gridstack.js/issues/3012), [#3179](https://github.com/gridstack/gridstack.js/issues/3179) prevent crash when calling update() during change event
 * fix: [#3226](https://github.com/gridstack/gridstack.js/issues/3226) don't reveal other widgets' resize handles during a resize - thank you [dvd233](https://github.com/dvd233)
+* fix: [#3148](https://github.com/gridstack/gridstack.js/issues/3148) find drag handles inside open shadow roots. See
+[title_drag.html](https://gridstackjs.com/demo/title_drag.html).
 
 ## 13.3.0 (2026-09-11)
 * feat: [#2781](https://github.com/gridstack/gridstack.js/issues/3177), [#2781](https://github.com/gridstack/gridstack.js/issues/3177) mobile: pause to drag/reszie vs scroll behavior

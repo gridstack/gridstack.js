@@ -430,7 +430,7 @@ Destroys a grid instance. DO NOT CALL any methods or access any vars after this 
 disable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2430](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2430)
+Defined in: [gridstack.ts:2443](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2443)
 
 Temporarily disables widgets moving/resizing.
 If you want a more permanent way (which freezes up resources) use `setStatic(true)` instead.
@@ -471,7 +471,7 @@ grid.disable(false);
 enable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2457](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2457)
+Defined in: [gridstack.ts:2470](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2470)
 
 Re-enables widgets moving/resizing - see disable().
 Note: This is a no-op for static grids.
@@ -510,7 +510,7 @@ grid.enable(false);
 enableMove(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2483](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2483)
+Defined in: [gridstack.ts:2496](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2496)
 
 Enables/disables widget moving for all widgets. No-op for static grids.
 Note: locally defined items (with noMove property) still override this setting.
@@ -547,7 +547,7 @@ grid.enableMove(true, false);
 enableResize(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2511](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2511)
+Defined in: [gridstack.ts:2524](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2524)
 
 Enables/disables widget resizing for all widgets. No-op for static grids.
 Note: locally defined items (with noResize property) still override this setting.
@@ -1098,7 +1098,7 @@ grid.mode('list');  // continuous sequential reflow, like a re-orderable list
 movable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2371](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2371)
+Defined in: [gridstack.ts:2384](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2384)
 
 Enables/Disables dragging by the user for specific grid elements.
 For all items and future items, use enableMove() instead. No-op for static grids.
@@ -1457,7 +1457,7 @@ or `sizeToContent` gridItem options.
 prepareDragDrop(el, force?): GridStack;
 ```
 
-Defined in: [gridstack.ts:2900](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2900)
+Defined in: [gridstack.ts:2913](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2913)
 
 prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
 
@@ -1478,7 +1478,7 @@ prepares the element for drag&drop - this is normally called by makeWidget() unl
 refreshDragHandles(els): GridStack;
 ```
 
-Defined in: [gridstack.ts:2888](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2888)
+Defined in: [gridstack.ts:2901](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2901)
 
 Re-scans one or more widget elements for drag handle elements after delayed content
 (React portal, Angular component, etc.) has been rendered inside the item.
@@ -1599,7 +1599,7 @@ Removes widget from the grid.
 resizable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2397](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2397)
+Defined in: [gridstack.ts:2410](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2410)
 
 Enables/Disables user resizing for specific grid elements.
 For all items and future items, use enableResize() instead. No-op for static grids.
@@ -1811,7 +1811,7 @@ is dynamically create and needs to be set later.
 protected triggerEvent(event, target): void;
 ```
 
-Defined in: [gridstack.ts:3162](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3162)
+Defined in: [gridstack.ts:3175](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3175)
 
 call given event callback on our main top-most grid (if we're nested)
 
@@ -4094,7 +4094,7 @@ Defined in: [dd-draggable.ts:70](https://github.com/adumesny/gridstack.js/blob/m
 destroy(): void;
 ```
 
-Defined in: [dd-draggable.ts:135](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L135)
+Defined in: [dd-draggable.ts:154](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L154)
 
 Destroy this drag & drop implementation and clean up resources.
 Removes all event handlers and clears internal state.
@@ -4113,7 +4113,7 @@ Removes all event handlers and clears internal state.
 disable(forDestroy): void;
 ```
 
-Defined in: [dd-draggable.ts:121](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L121)
+Defined in: [dd-draggable.ts:140](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L140)
 
 Disable this drag & drop implementation.
 Subclasses should override to perform additional cleanup.
@@ -4138,7 +4138,7 @@ Subclasses should override to perform additional cleanup.
 enable(): void;
 ```
 
-Defined in: [dd-draggable.ts:107](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L107)
+Defined in: [dd-draggable.ts:126](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L126)
 
 Enable this drag & drop implementation.
 Subclasses should override to perform additional setup.
@@ -4171,7 +4171,7 @@ return all handles omitting other nested `.grid-stack-item` children (in case no
 off(event): void;
 ```
 
-Defined in: [dd-draggable.ts:103](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L103)
+Defined in: [dd-draggable.ts:122](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L122)
 
 Unregister an event callback for the specified event.
 
@@ -4195,7 +4195,7 @@ Unregister an event callback for the specified event.
 on(event, callback): void;
 ```
 
-Defined in: [dd-draggable.ts:99](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L99)
+Defined in: [dd-draggable.ts:118](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L118)
 
 Register an event callback for the specified event.
 
@@ -4220,7 +4220,7 @@ Register an event callback for the specified event.
 refreshHandles(): void;
 ```
 
-Defined in: [dd-draggable.ts:156](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L156)
+Defined in: [dd-draggable.ts:175](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L175)
 
 Re-scans the item element for drag-handle elements after delayed content (React portal,
 Angular component, etc.) has been rendered into the item.  Removes listeners from the
@@ -4264,7 +4264,7 @@ Result from the callback function, if any
 updateOption(opts): DDDraggable;
 ```
 
-Defined in: [dd-draggable.ts:145](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L145)
+Defined in: [dd-draggable.ts:164](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L164)
 
 Method to update the options and return the DD implementation
 
