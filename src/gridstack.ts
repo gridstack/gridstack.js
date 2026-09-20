@@ -256,10 +256,13 @@ export class GridStack {
   public _gsEventHandler: Record<string, GridStackEventHandlerCallback> = {};
   /** @internal flag to keep cells square during resize */
   protected _isAutoCellHeight: boolean;
+  /** @internal `cellHeight: 'fill'` - rows divide the container height the way columns divide its width */
+  protected _isFillCellHeight?: boolean;
   /** @internal set when trackResize is on, cleared when off */
   protected _sizeThrottle?: () => void;
   /** @internal limit auto cell resizing method */
   protected prevWidth!: number;
+  protected prevHeight?: number;
   /** @internal extra row added when dragging at the bottom of the grid */
   protected _extraDragRow = 0;
   /** @internal true if nested grid should get column count from our width */
@@ -360,7 +363,8 @@ export class GridStack {
     }
 
     this._isAutoCellHeight = (opts.cellHeight === 'auto');
-    if (this._isAutoCellHeight || opts.cellHeight === 'initial') {
+    this._isFillCellHeight = (opts.cellHeight === 'fill');
+    if (this._isAutoCellHeight || this._isFillCellHeight || opts.cellHeight === 'initial') {
       // make the cell content square initially (will use resize/column event to keep it square)
       this.cellHeight(undefined);
     } else {
@@ -939,12 +943,23 @@ export class GridStack {
 
     // if not called internally, check if we're changing mode
     if (val !== undefined) {
-      if (this._isAutoCellHeight !== (val === 'auto')) {
+      if (this._isAutoCellHeight !== (val === 'auto') || this._isFillCellHeight !== (val === 'fill')) {
         this._isAutoCellHeight = (val === 'auto');
+        this._isFillCellHeight = (val === 'fill');
         this._updateResizeEvent();
       }
     }
-    if (val === 'initial' || val === 'auto') { val = undefined; }
+    if (val === 'initial' || val === 'auto' || val === 'fill') { val = undefined; }
+
+    // rows divide the container height the way columns divide its width, so a fixed number of rows
+    // exactly fills a fixed-height container with no scrollbar (#2583)
+    if (val === undefined && this._isFillCellHeight) {
+      let rows = this.getRow() || this.opts.row || this.opts.maxRow || 1;
+      const h = this.el.clientHeight;
+      if (h > 0) {
+        val = Math.max(1, h / rows);
+      }
+    }
 
     // make item content be square
     if (val === undefined) {
@@ -1091,7 +1106,7 @@ export class GridStack {
 
     // update the items now
     this.engine.columnChanged(oldColumn, column, layout);
-    if (this._isAutoCellHeight) this.cellHeight();
+    if (this._isAutoCellHeight || this._isFillCellHeight) this.cellHeight();
 
     this.resizeToContentCheck(true); // wait for width resizing
 
@@ -1244,7 +1259,7 @@ export class GridStack {
    * console.log('Grid has', rowCount, 'rows');
    */
   public getRow(): number {
-    return Math.max(this.engine.getRow(), this.opts.minRow || 0);
+    return Math.max(this.engine?.getRow() || 0, this.opts.minRow || 0);
   }
 
   /**
@@ -1867,6 +1882,9 @@ export class GridStack {
     }
     this.engine.saveInitial(); // we called, now reset initial values & dirty flags
     this._sortDom();
+    if (this._isFillCellHeight) {
+      this.cellHeight(); // row count might have changed
+    }
 
     return this;
   }
@@ -1959,8 +1977,8 @@ export class GridStack {
     this.el.setAttribute('gs-current-row', String(row));
     this.el.style.removeProperty('min-height');
     this.el.style.removeProperty('height');
-    if (row) {
-      // nested grids have 'insert:0' to fill the space of parent by default, but we may be taller so use min-height for possible scrollbars
+    if (row && (parent || !this._isFillCellHeight)) {
+      // nested grids have 'inset:0' to fill the space of parent by default, but we may be taller so use min-height for possible scrollbars
       this.el.style[parent ? 'minHeight' : 'height'] = row * cellHeight + unit!;
     }
 
@@ -2142,10 +2160,13 @@ export class GridStack {
    * and remember the prev columns we used, or get our count from parent, as well as check for cellHeight==='auto' (square)
    * or `sizeToContent` gridItem options.
    */
-  public onResize(clientWidth = this.el?.clientWidth): GridStack {
+  public onResize(clientWidth = this.el?.clientWidth, clientHeight = this.el?.clientHeight): GridStack {
     if (!clientWidth) return this; // return if we're gone or no size yet (will get called again)
-    if (this.prevWidth === clientWidth) return this; // no-op
-    this.prevWidth = clientWidth
+    if (clientWidth === this.prevWidth && clientHeight === this.prevHeight) return this; // nothing changed
+    if (clientWidth === this.prevWidth && !this._isFillCellHeight) return this; // only height changed, but we don't care
+
+    this.prevWidth = clientWidth;
+    this.prevHeight = clientHeight;
     // console.log('onResize ', clientWidth);
 
     this.batchUpdate();
@@ -2163,7 +2184,7 @@ export class GridStack {
     }
 
     // make the cells content square again
-    if (this._isAutoCellHeight) this.cellHeight();
+    if (this._isAutoCellHeight || this._isFillCellHeight) this.cellHeight();
 
     // update any nested grids, or items size
     this.engine.nodes.forEach(n => {
@@ -2207,7 +2228,7 @@ export class GridStack {
   protected _updateResizeEvent(forceRemove = false): GridStack {
     // only add event if we're not nested (parent will call us) and we're auto sizing cells or supporting dynamic column (i.e. doing work)
     // or supporting new sizeToContent option.
-    const trackSize = !this.parentGridNode && (this._isAutoCellHeight || this.opts.sizeToContent || this.opts.columnOpts
+    const trackSize = !this.parentGridNode && (this._isAutoCellHeight || this._isFillCellHeight || this.opts.sizeToContent || this.opts.columnOpts
       || this.engine.nodes.find(n => n.sizeToContent));
 
     if (!forceRemove && trackSize && !this.resizeObserver) {

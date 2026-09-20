@@ -150,6 +150,8 @@ Change log
 ## 14.0.0 (TBD)
 * feat: [#754](https://github.com/gridstack/gridstack.js/issues/754), [#2866](https://github.com/gridstack/gridstack.js/issues/2866) new `mode?: 'top' | 'float' | 'list' | 'compact'` - items are continuously re-flowed in sequential (row-major) order, like a re-orderable list: dragging, resizing, adding or removing an item re-flows everyone else instead of pushing them down, and dropping an item on another takes its place. See new
 [list.html](https://gridstackjs.com/demo/list.html) demo.
+* feat: [#2583](https://github.com/gridstack/gridstack.js/issues/2583), [#787](https://github.com/gridstack/gridstack.js/issues/787) new `cellHeight: 'fill'` - rows divide the container height. See new 'fill' option 
+[cell-height.html](https://gridstackjs.com/demo/cell-height.html) demo.
 * fix: [#3012](https://github.com/gridstack/gridstack.js/issues/3012), [#3179](https://github.com/gridstack/gridstack.js/issues/3179) prevent crash when calling update() during change event
 * fix: [#3226](https://github.com/gridstack/gridstack.js/issues/3226) don't reveal other widgets' resize handles during a resize - thank you [dvd233](https://github.com/dvd233)
 
@@ -483,7 +485,7 @@ also further compressed CSS multi column rules (use `.gs-# > .grid-stack-item` i
 * optimize [#2243](https://github.com/gridstack/gridstack.js/issues/2243) removed `gs-min|max_w|h` attribute generated in CSS or written out as they are never used for rendering, only for initial load. This reduce our column/row CSS in half!
 * optimize: removed `gs-w='1'` and `gs-h='1'` dom attribute writing since we already have min-width/min-height set, no need to set more attributes.
 * optimize: remove `'ui-draggable'` and `'ui-resizable'` since wasn't used in CSS and we have the `-disabled` version when off (so we can use `not(xyz-disabled)`).
-* add: `GridStack.saveCB` global callback for each item during save so app can insert any custom data before serializing it. `save()` can now be passed optional callback
+* add: `GridStack.saveCB` global callback for each item during save so app can insert any custom data before serializing it. `save()` can now be passed optional callbackgit log
 * move: `GridStack.addRemoveCB` is now global instead of grid option. `load()` can still be passed different optional callback
 * fix: addGrid() to handle passing an existing initialized grid already
 * break: `GridStackOptions.subGrid` -> `GridStackOptions.subGridOpts`. We now have `GridStackWidget.subGridOpts` vs `GridStackNode.subGrid` (subclass) rather than try to merge the two at runtime since very different types...
