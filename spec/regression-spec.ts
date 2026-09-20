@@ -1,6 +1,7 @@
 import { GridItemHTMLElement, GridStack, GridStackWidget } from '../src/gridstack';
 import type { GridStackNode } from '../src/types';
 import { Utils } from '../src/utils';
+import { DDManager } from '../src/dd-manager';
 
 describe('regression >', () => {
   'use strict';
@@ -451,6 +452,66 @@ describe('regression >', () => {
       expect(grid.getCellHeight(true)).toBe(300);
       grid.cellHeight(70);
       expect(grid.getCellHeight(true)).toBe(70); // switched back off
+    });
+  });
+
+  describe('2627 dragstart/dragstop for sidebar items >', () => {
+    let side: HTMLElement;
+    afterEach(() => {
+      delete DDManager.mouseHandled;
+      delete DDManager.dragElement;
+      document.getElementById('gs-cont')?.remove();
+    });
+
+    const setupSidebar = (opts: Record<string, unknown> = {}) => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div id="gs-cont"><div class="sidebar-item grid-stack-item">drag me</div>' +
+        '<div class="grid-stack"></div></div>');
+      side = document.querySelector('.sidebar-item') as HTMLElement;
+      grid = GridStack.init({acceptWidgets: true, cellHeight: 50});
+      GridStack.setupDragIn('.sidebar-item', opts, [{w: 2, h: 2}]);
+      return side;
+    };
+
+    const dragIt = () => {
+      const dd = (side as GridItemHTMLElement).ddElement!.ddDraggable!;
+      const down = new MouseEvent('mousedown', {button: 0, bubbles: true, clientX: 0, clientY: 0});
+      Object.defineProperty(down, 'target', {value: side});
+      Object.defineProperty(down, 'currentTarget', {value: side});
+      dd['_mouseDown'](down);
+      dd['_mouseMove'](new MouseEvent('mousemove', {clientX: 40, clientY: 40}));
+      dd['_mouseUp'](new MouseEvent('mouseup'));
+    };
+
+    it('fires DOM dragstart / drag / dragstop on the sidebar element', () => {
+      setupSidebar();
+      const seen: string[] = [];
+      ['dragstart', 'drag', 'dragstop'].forEach(t => side.addEventListener(t, () => seen.push(t)));
+
+      dragIt();
+
+      // v10 dropped native HTML5 DnD and sidebar items had no grid to route through, so
+      // addEventListener('dragstart') never fired at all
+      expect(seen).toContain('dragstart');
+      expect(seen).toContain('dragstop');
+      expect(seen.indexOf('dragstart')).toBeLessThan(seen.indexOf('dragstop'));
+    });
+
+    it('still calls callbacks the caller passed to setupDragIn', () => {
+      const start = vi.fn(), stop = vi.fn();
+      setupSidebar({start, stop});
+      dragIt();
+      expect(start).toHaveBeenCalled();
+      expect(stop).toHaveBeenCalled();
+    });
+
+    it('hands the drag ui data along on the event detail', () => {
+      setupSidebar();
+      let detail: {el?: HTMLElement, ui?: unknown} | undefined;
+      side.addEventListener('dragstart', (e) => { detail = (e as CustomEvent).detail; });
+      dragIt();
+      expect(detail?.el).toBe(side);
+      expect(detail?.ui).toBeDefined();
     });
   });
 });

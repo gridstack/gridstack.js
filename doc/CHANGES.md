@@ -152,6 +152,7 @@ Change log
 [list.html](https://gridstackjs.com/demo/list.html) demo.
 * feat: [#2583](https://github.com/gridstack/gridstack.js/issues/2583), [#787](https://github.com/gridstack/gridstack.js/issues/787) new `cellHeight: 'fill'` - rows divide the container height. See new 'fill' option 
 [cell-height.html](https://gridstackjs.com/demo/cell-height.html) demo.
+* feat: [#2627](https://github.com/gridstack/gridstack.js/issues/2627), [#2761](https://github.com/gridstack/gridstack.js/issues/2761) emit dragstart/drag/dragstop on sidebar drag-in items
 * fix: [#3012](https://github.com/gridstack/gridstack.js/issues/3012), [#3179](https://github.com/gridstack/gridstack.js/issues/3179) prevent crash when calling update() during change event
 * fix: [#3226](https://github.com/gridstack/gridstack.js/issues/3226) don't reveal other widgets' resize handles during a resize - thank you [dvd233](https://github.com/dvd233)
 
