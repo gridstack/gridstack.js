@@ -18,10 +18,26 @@
         <div class="card-header">- Drag here -</div>
         <div class="card">the rest of the panel content doesn't drag</div>
       </div></div>
+      <div class="grid-stack-item" gs-x="3" gs-w="3" gs-h="3"><div class="grid-stack-item-content">
+        <my-card></my-card>
+      </div></div>
     </div>
   </div>
   <script src="events.js"></script>
   <script type="text/javascript">
+    class MyCard extends HTMLElement {
+      constructor() {
+        super();
+        const shadow = this.attachShadow({mode: 'open'});
+        shadow.innerHTML = `
+          <link rel="stylesheet" href="demo.css"/>
+          <div class="card-header">- Web Component Drag -</div>
+          <div class="card" style="padding: 8px">Shadow DOM content doesn't drag</div>
+        `;
+      }
+    }
+    customElements.define('my-card', MyCard);
+
     let grid = GridStack.init({ handle: '.card-header' }); // drag by the header only
     addEvents(grid);
   </script>

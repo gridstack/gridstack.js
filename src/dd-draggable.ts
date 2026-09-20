@@ -89,9 +89,28 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected getAllHandles(): HTMLElement[] {
     const handle = this.option.handle;
     if (!handle) return []; // caller falls back to the item itself
-    return Array.from(this.el.querySelectorAll(handle)).filter((node): node is HTMLElement => {
+    const found: Element[] = [];
+    // querySelectorAll() stops dead at a shadow boundary, so a handle living inside a web component
+    // could never be found and the whole card stayed draggable (#3148). Descend into open shadow
+    // roots too - closed ones are not reachable by design.
+    const scan = (root: Element | ShadowRoot): void => {
+      found.push(...Array.from(root.querySelectorAll(handle)));
+      root.querySelectorAll('*').forEach(child => {
+        const shadow = (child as HTMLElement).shadowRoot;
+        if (shadow) scan(shadow);
+      });
+    };
+    scan(this.el);
+    return found.filter((node): node is HTMLElement => {
       if (!(node instanceof HTMLElement)) return false;
-      const owner = node.closest('.grid-stack-item');
+      // a handle inside a shadow root has no light-DOM .grid-stack-item ancestor to check against,
+      // so walk out through the host(s) to find who really owns it
+      let owner: Element | null = node.closest('.grid-stack-item');
+      let root = node.getRootNode();
+      while (!owner && root instanceof ShadowRoot) {
+        owner = root.host.closest('.grid-stack-item');
+        root = root.host.getRootNode();
+      }
       return owner === this.el || !owner;
     });
   }
