@@ -672,4 +672,47 @@ describe('regression >', () => {
       expect(B.y).toBe(3);
     });
   });
+
+  describe('2703 icon inside a button drag handle >', () => {
+    let el: HTMLElement;
+    afterEach(() => {
+      el?.remove();
+    });
+
+    const mouseDown = (target: HTMLElement): boolean => {
+      const dd = (el as GridItemHTMLElement).ddElement?.ddDraggable;
+      const e = new MouseEvent('mousedown', {button: 0, bubbles: true});
+      Object.defineProperty(e, 'target', {value: target});
+      Object.defineProperty(e, 'currentTarget', {value: dd!['dragEls'][0]});
+      // returns true when it bailed out (did NOT take the drag)
+      const skipped = dd!['_mouseDown'](e) === true && !dd!['mouseDownEvent'];
+      dd!['_mouseUp'](new MouseEvent('mouseup'));
+      delete DDManager.mouseHandled;
+      return !skipped; // true = drag was taken
+    };
+
+    it('drags from the icon nested in a <button> handle', () => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div class="grid-stack-item"><div class="grid-stack-item-content">' +
+        '<button class="my-handle"><i class="icon"></i></button></div></div>');
+      el = document.querySelector('.grid-stack-item');
+      DDElement.init(el).setupDraggable({handle: '.my-handle'});
+
+      const button = el.querySelector('.my-handle') as HTMLElement;
+      const icon = el.querySelector('.icon') as HTMLElement;
+      expect(mouseDown(button)).toBe(true); // already worked
+      expect(mouseDown(icon)).toBe(true);   // #2703: used to bail on the <button> blocklist
+    });
+
+    it('still lets a <button> nested in a larger handle keep its click', () => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div class="grid-stack-item"><div class="grid-stack-item-content">' +
+        '<button class="action">go</button></div></div>');
+      el = document.querySelector('.grid-stack-item');
+      DDElement.init(el).setupDraggable({handle: '.grid-stack-item-content'});
+
+      const action = el.querySelector('.action') as HTMLElement;
+      expect(mouseDown(action)).toBe(false); // must NOT start a drag
+    });
+  });
 });

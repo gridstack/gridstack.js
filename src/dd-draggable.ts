@@ -202,8 +202,12 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (DDManager.mouseHandled) return true;
     if (e.button !== 0) return true; // only left click
 
-    // make sure we are not clicking on known object that handles mouseDown, or ones supplied by the user
-    if (!this.dragEls.find(el => el === e.target) && (e.target as HTMLElement).closest(skipMouseDown)) return true;
+    // make sure we are not clicking on known object that handles mouseDown, or ones supplied by the user.
+    // compare the blocked ancestor (not just the target) against our handles: an icon/span nested inside a
+    // handle that IS a <button> must still drag (#2703), while a real <button> nested inside a larger
+    // handle (the default .grid-stack-item-content) must still keep its click.
+    const skipEl = (e.target as HTMLElement).closest(skipMouseDown);
+    if (skipEl && !this.dragEls.some(el => el === e.target || el === skipEl)) return true;
     if (this.option.cancel) {
       if ((e.target as HTMLElement).closest(this.option.cancel)) return true;
     }
