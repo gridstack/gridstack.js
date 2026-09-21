@@ -8,7 +8,7 @@
 function installGridStackReactCallbacks(): void;
 ```
 
-Defined in: [react/projects/lib/src/registry.ts:13](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L13)
+Defined in: [react/projects/lib/src/registry.ts:16](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L16)
 
 #### Returns
 
@@ -22,7 +22,7 @@ Defined in: [react/projects/lib/src/registry.ts:13](https://github.com/adumesny/
 function gsSaveAdditionalReactInfo(node, w): void;
 ```
 
-Defined in: [react/projects/lib/src/registry.ts:108](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L108)
+Defined in: [react/projects/lib/src/registry.ts:117](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L117)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [react/projects/lib/src/registry.ts:108](https://github.com/adumesny
 function gsUpdateReactComponents(node): void;
 ```
 
-Defined in: [react/projects/lib/src/registry.ts:124](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L124)
+Defined in: [react/projects/lib/src/registry.ts:133](https://github.com/adumesny/gridstack.js/blob/master/react/projects/lib/src/registry.ts#L133)
 
 #### Parameters
 

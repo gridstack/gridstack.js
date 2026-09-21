@@ -1,4 +1,4 @@
-# gridstack v13.3.0
+# gridstack v14.0.0
 
 ## Classes
 
@@ -116,7 +116,7 @@ Construct a grid item from the given element and options
 protected _updateResizeEvent(forceRemove): GridStack;
 ```
 
-Defined in: [gridstack.ts:2228](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2228)
+Defined in: [gridstack.ts:2230](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2230)
 
 add or remove the grid element size event handler
 
@@ -430,7 +430,7 @@ Destroys a grid instance. DO NOT CALL any methods or access any vars after this 
 disable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2443](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2443)
+Defined in: [gridstack.ts:2445](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2445)
 
 Temporarily disables widgets moving/resizing.
 If you want a more permanent way (which freezes up resources) use `setStatic(true)` instead.
@@ -471,7 +471,7 @@ grid.disable(false);
 enable(recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2470](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2470)
+Defined in: [gridstack.ts:2472](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2472)
 
 Re-enables widgets moving/resizing - see disable().
 Note: This is a no-op for static grids.
@@ -510,7 +510,7 @@ grid.enable(false);
 enableMove(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2496](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2496)
+Defined in: [gridstack.ts:2498](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2498)
 
 Enables/disables widget moving for all widgets. No-op for static grids.
 Note: locally defined items (with noMove property) still override this setting.
@@ -547,7 +547,7 @@ grid.enableMove(true, false);
 enableResize(doEnable, recurse): GridStack;
 ```
 
-Defined in: [gridstack.ts:2524](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2524)
+Defined in: [gridstack.ts:2526](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2526)
 
 Enables/disables widget resizing for all widgets. No-op for static grids.
 Note: locally defined items (with noResize property) still override this setting.
@@ -659,7 +659,7 @@ const columnCount = grid.getColumn(); // returns 12 by default
 static getDD(): DDGridStack;
 ```
 
-Defined in: [gridstack.ts:2327](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2327)
+Defined in: [gridstack.ts:2329](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2329)
 
 Get the global drag & drop implementation instance.
 This provides access to the underlying drag & drop functionality.
@@ -709,7 +709,7 @@ items.forEach(item => {
 getMargin(): number;
 ```
 
-Defined in: [gridstack.ts:1857](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1857)
+Defined in: [gridstack.ts:1859](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1859)
 
 Returns the current margin value as a number (undefined if the 4 sides don't match).
 This only returns a number if all sides have the same margin value.
@@ -1036,7 +1036,7 @@ grid.makeWidget(element, {x: 0, y: 1, w: 4, h: 2});
 margin(value): GridStack;
 ```
 
-Defined in: [gridstack.ts:1828](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1828)
+Defined in: [gridstack.ts:1830](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1830)
 
 Updates the margins which will set all 4 sides at once - see `GridStackOptions.margin` for format options.
 Supports CSS string format of 1, 2, or 4 values or a single number.
@@ -1098,7 +1098,7 @@ grid.mode('list');  // continuous sequential reflow, like a re-orderable list
 movable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2384](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2384)
+Defined in: [gridstack.ts:2386](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2386)
 
 Enables/Disables dragging by the user for specific grid elements.
 For all items and future items, use enableMove() instead. No-op for static grids.
@@ -1434,7 +1434,7 @@ grid.on('added', (event, items) => {
 onResize(clientWidth, clientHeight): GridStack;
 ```
 
-Defined in: [gridstack.ts:2163](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2163)
+Defined in: [gridstack.ts:2165](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2165)
 
 called when we are being resized - check if the one Column Mode needs to be turned on/off
 and remember the prev columns we used, or get our count from parent, as well as check for cellHeight==='auto' (square)
@@ -1457,7 +1457,7 @@ or `sizeToContent` gridItem options.
 prepareDragDrop(el, force?): GridStack;
 ```
 
-Defined in: [gridstack.ts:2913](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2913)
+Defined in: [gridstack.ts:2915](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2915)
 
 prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
 
@@ -1478,7 +1478,7 @@ prepares the element for drag&drop - this is normally called by makeWidget() unl
 refreshDragHandles(els): GridStack;
 ```
 
-Defined in: [gridstack.ts:2901](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2901)
+Defined in: [gridstack.ts:2903](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2903)
 
 Re-scans one or more widget elements for drag handle elements after delayed content
 (React portal, Angular component, etc.) has been rendered inside the item.
@@ -1599,7 +1599,7 @@ Removes widget from the grid.
 resizable(els, val): GridStack;
 ```
 
-Defined in: [gridstack.ts:2410](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2410)
+Defined in: [gridstack.ts:2412](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2412)
 
 Enables/Disables user resizing for specific grid elements.
 For all items and future items, use enableResize() instead. No-op for static grids.
@@ -1633,7 +1633,7 @@ grid.resizable('#fixed-size-widget', false);
 resizeToContent(el): void;
 ```
 
-Defined in: [gridstack.ts:1717](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1717)
+Defined in: [gridstack.ts:1719](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1719)
 
 Updates widget height to match the content height to avoid vertical scrollbars or dead space.
 This automatically adjusts the widget height based on its content size.
@@ -1669,7 +1669,7 @@ grid.resizeToContent(widget);
 rotate(els, relative?): GridStack;
 ```
 
-Defined in: [gridstack.ts:1792](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1792)
+Defined in: [gridstack.ts:1794](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1794)
 
 Rotate widgets by swapping their width and height. This is typically called when the user presses 'r' during dragging.
 The rotation swaps the w/h dimensions and adjusts min/max constraints accordingly.
@@ -1786,7 +1786,7 @@ static setupDragIn(
    root?): void;
 ```
 
-Defined in: [gridstack.ts:2340](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2340)
+Defined in: [gridstack.ts:2342](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2342)
 
 call to setup dragging in from the outside (say toolbar), by specifying the class selection and options.
 Called during GridStack.init() as options, but can also be called directly (last param are used) in case the toolbar
@@ -1811,7 +1811,7 @@ is dynamically create and needs to be set later.
 protected triggerEvent(event, target): void;
 ```
 
-Defined in: [gridstack.ts:3175](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3175)
+Defined in: [gridstack.ts:3177](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3177)
 
 call given event callback on our main top-most grid (if we're nested)
 
@@ -1897,7 +1897,7 @@ Updates the passed in options on the grid (similar to update(widget) for for the
 willItFit(node): boolean;
 ```
 
-Defined in: [gridstack.ts:1871](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1871)
+Defined in: [gridstack.ts:1873](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L1873)
 
 Returns true if the height of the grid will be less than the vertical
 constraint. Always returns true if grid doesn't have height constraint.
@@ -2133,7 +2133,7 @@ engine.batchUpdate(false); // Apply all changes at once
 beginUpdate(node): GridStackEngine;
 ```
 
-Defined in: [gridstack-engine.ts:1065](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1065)
+Defined in: [gridstack-engine.ts:1069](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1069)
 
 ###### Parameters
 
@@ -2154,7 +2154,7 @@ cacheLayout(
    clear): GridStackEngine;
 ```
 
-Defined in: [gridstack-engine.ts:1275](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1275)
+Defined in: [gridstack-engine.ts:1279](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1279)
 
 call to cache the given layout internally to the given location so we can restore back when column changes size
 
@@ -2176,7 +2176,7 @@ call to cache the given layout internally to the given location so we can restor
 cacheOneLayout(n, column): GridStackEngine;
 ```
 
-Defined in: [gridstack-engine.ts:1295](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1295)
+Defined in: [gridstack-engine.ts:1299](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1299)
 
 call to cache the given node layout internally to the given location so we can restore back when column changes size
 
@@ -2197,7 +2197,7 @@ call to cache the given node layout internally to the given location so we can r
 changedPosConstrain(node, p): boolean;
 ```
 
-Defined in: [gridstack-engine.ts:969](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L969)
+Defined in: [gridstack-engine.ts:973](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L973)
 
 true if x,y or w,h are different after clamping to min/max
 
@@ -2218,7 +2218,7 @@ true if x,y or w,h are different after clamping to min/max
 cleanupNode(node): GridStackEngine;
 ```
 
-Defined in: [gridstack-engine.ts:1326](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1326)
+Defined in: [gridstack-engine.ts:1330](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1330)
 
 called to remove all internal values but the _id
 
@@ -2369,7 +2369,7 @@ does a pixel coverage collision based on where we started, returning the node th
 endUpdate(): GridStackEngine;
 ```
 
-Defined in: [gridstack-engine.ts:1074](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1074)
+Defined in: [gridstack-engine.ts:1078](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1078)
 
 ###### Returns
 
@@ -2381,7 +2381,7 @@ Defined in: [gridstack-engine.ts:1074](https://github.com/adumesny/gridstack.js/
 protected findCacheLayout(n, column): number;
 ```
 
-Defined in: [gridstack-engine.ts:1309](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1309)
+Defined in: [gridstack-engine.ts:1313](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1313)
 
 ###### Parameters
 
@@ -2472,7 +2472,7 @@ const verified = engine.getDirtyNodes(true);
 getRow(): number;
 ```
 
-Defined in: [gridstack-engine.ts:1061](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1061)
+Defined in: [gridstack-engine.ts:1065](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1065)
 
 ###### Returns
 
@@ -2521,7 +2521,7 @@ if (engine.isAreaEmpty(2, 1, 3, 2)) {
 moveNode(node, o): boolean;
 ```
 
-Defined in: [gridstack-engine.ts:983](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L983)
+Defined in: [gridstack-engine.ts:987](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L987)
 
 return true if the passed in node was actually moved (checks for no-op and locked)
 
@@ -2704,7 +2704,7 @@ engine.removeNode(node, true, true);
 removeNodeFromLayoutCache(n): void;
 ```
 
-Defined in: [gridstack-engine.ts:1313](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1313)
+Defined in: [gridstack-engine.ts:1317](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1317)
 
 ###### Parameters
 
@@ -2725,7 +2725,7 @@ save(
    column?): GridStackNode[];
 ```
 
-Defined in: [gridstack-engine.ts:1092](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1092)
+Defined in: [gridstack-engine.ts:1096](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L1096)
 
 saves a copy of the largest column layout (eg 12 even when rendering 1 column) so we don't loose orig layout, unless explicity column
 count to use is given. returning a list of widgets for serialization
@@ -2811,7 +2811,7 @@ if (swapped) {
 willItFit(node): boolean;
 ```
 
-Defined in: [gridstack-engine.ts:936](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L936)
+Defined in: [gridstack-engine.ts:940](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack-engine.ts#L940)
 
 return true if can fit in grid height constrain only (always true if no maxRow)
 
