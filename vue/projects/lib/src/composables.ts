@@ -67,16 +67,14 @@ export function useGridStackItem(): UseGridStackItemResult {
   const gsCtx = inject(GS_CONTEXT_KEY)
   if (!gsCtx) throw new Error('useGridStackItem must be used within <GridStack>')
 
-  const node = computed<GridStackNode | undefined>(() => {
-    // Access layoutVersion to make this reactive.
-    void gsCtx.layoutVersion.value
-    const g = gsCtx.grid
-    return g ? Utils.findInGrid(g, itemCtx.id, true) : undefined
-  })
-
   return {
     id: itemCtx.id,
-    get node() { return node.value },
+    get node() {
+      // Access layoutVersion to make this reactive during render.
+      void gsCtx.layoutVersion.value
+      const g = gsCtx.grid
+      return g ? Utils.findInGrid(g, itemCtx.id, true) : undefined
+    },
   }
 }
 

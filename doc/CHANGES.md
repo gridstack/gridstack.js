@@ -161,6 +161,7 @@ Change log
 * fix: [#2953](https://github.com/gridstack/gridstack.js/issues/2953) API update() honors maxRow like dragging does
 * fix: [#2976](https://github.com/gridstack/gridstack.js/issues/2976) (react, vue): render a drag-in widget that has a component but no id
 * fix: [#2703](https://github.com/gridstack/gridstack.js/issues/2703) allow dragging from elements nested inside a button/input handle
+* fix: [#2974](https://github.com/gridstack/gridstack.js/issues/2974) (react, vue): re-render item content after an interactive drag/resize
 
 ## 13.3.0 (2026-09-11)
 * feat: [#2781](https://github.com/gridstack/gridstack.js/issues/3177), [#2781](https://github.com/gridstack/gridstack.js/issues/3177) mobile: pause to drag/reszie vs scroll behavior

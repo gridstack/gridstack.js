@@ -3,7 +3,7 @@ import { createApp, defineComponent, h, ref, type App } from 'vue'
 import type { GridHTMLElement, GridItemHTMLElement, GridStack as GridStackInstance } from 'gridstack'
 import type { GridStackWidget } from './src/types'
 import { GridStack } from './src/gridstack'
-import { useWidgetSerializer } from './src/composables'
+import { useWidgetSerializer, useGridStackItem } from './src/composables'
 
 function flush(): Promise<void> {
   return new Promise((r) => setTimeout(r, 50))
@@ -263,5 +263,42 @@ describe('GridStack Vue wrapper', () => {
     expect(gridElB.contains(itemEl)).toBe(true)
     // ...and its Vue-rendered content must have followed, not been unmounted.
     expect(document.querySelector('[data-testid="portal"]')?.textContent).toBe('hello')
+  })
+
+  it('re-renders item content after an interactive resize (#2974)', async () => {
+    const ShowH = defineComponent({
+      setup() {
+        const item = useGridStackItem()
+        return () => h('span', { 'data-testid': 'h' }, String(item.node?.h ?? '?'))
+      },
+    })
+
+    const Root = defineComponent({
+      setup() {
+        const options = {
+          column: 12, cellHeight: 50, margin: 0,
+          children: [{ id: 'z1', x: 0, y: 0, w: 2, h: 2, component: 'H' }],
+        }
+        return () => h(GridStack, { options, components: { H: ShowH } })
+      },
+    })
+
+    ;({ app, container } = mountApp(Root))
+    await flush()
+
+    expect(document.querySelector('[data-testid="h"]')?.textContent).toBe('2')
+
+    const gridEl = container.querySelector('.grid-stack') as GridHTMLElement
+    const g = gridEl.gridstack!
+
+    // what an interactive resize leaves behind: the node is mutated in place and `change` fires.
+    // (a programmatic grid.update() instead goes through updateCB -> requestUpdate, which did bump)
+    const t = g as unknown as { _triggerChangeEvent(): unknown }
+    g.engine.nodes[0].h = 5
+    g.engine.nodes[0]._dirty = true
+    t._triggerChangeEvent()
+    await flush()
+
+    expect(document.querySelector('[data-testid="h"]')?.textContent).toBe('5')
   })
 })
