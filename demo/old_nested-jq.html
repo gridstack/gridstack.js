@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nested JQuery grids demo (old v5.1.1) which never worked fully</title>
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/gridstack@5.1.1/dist/gridstack-jq.js"></script>
+  <style type="text/css">
+    /* make nested grids have slightly darker bg */
+    .grid-stack.grid-stack-nested {
+      background: #e4e4c1;
+    }
+    /* make nested grid take almost all space (need some to tell them apart) so items inside can have similar to external size+margin */
+    .grid-stack > .grid-stack-item.grid-stack-nested > .grid-stack-item-content {
+      /* inset: 0 2px; not IE */
+      top: 0;
+      bottom: 0;
+      left: 2px;
+      right: 2px;
+    }
+    /* make nested grid take entire item content */
+    .grid-stack-item-content .grid-stack {
+      min-height: 100%;
+      min-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>Nested JQuery grids demo</h1>
+    <p>This is the same nested grid demo, but for Jquery which has additional work required, and options.<br>
+      1. dragOut is implemented (second subgrid cannot drag outside, only adding item).<br>
+    </p>
+    <a class="btn btn-primary" onClick="addNested()" href="#">Add Widget</a>
+    <a class="btn btn-primary" onClick="addNewWidget('.sub1')" href="#">Add Widget Grid1</a>
+    <a class="btn btn-primary" onClick="addNewWidget('.sub2')" href="#">Add Widget Grid2</a>
+    <span>entire save/re-create:</span>
+    <a class="btn btn-primary" onClick="save()" href="#">Save</a>
+    <a class="btn btn-primary" onClick="destroy()" href="#">Destroy</a>
+    <a class="btn btn-primary" onClick="load()" href="#">Create</a>
+    <span>partial save/load:</span>
+    <a class="btn btn-primary" onClick="save(true, false)" href="#">Save list</a>
+    <a class="btn btn-primary" onClick="save(false, false)" href="#">Save no content</a>
+    <a class="btn btn-primary" onClick="destroy(false)" href="#">Clear</a>
+    <a class="btn btn-primary" onClick="load(false)" href="#">Load</a>
+    <br><br>
+    <!-- grid will be added here -->
+  </div>
+
+  <script type="text/javascript">
+    let sub1 = [ {x:0, y:0}, {x:1, y:0}, {x:2, y:0}, {x:3, y:0}, {x:0, y:1}, {x:1, y:1}];
+    let sub2 = [ {x:0, y:0}, {x:0, y:1, w:2}];
+    let count = 0;
+    [...sub1, ...sub2].forEach(d => d.content = String(count++));
+    let subOptions = {
+      cellHeight: 50, // should be 50 - top/bottom
+      column: 'auto', // size to match container
+      acceptWidgets: true, // will accept .grid-stack-item by default
+      margin: 5,
+      draggable: {
+        scroll: false,
+        appendTo: 'body',
+        helper: myClone,
+        // handle: ".grid-stack-item"
+        // zIndex: true,
+      }
+    };
+    let options = { // main grid options
+      cellHeight: 50,
+      margin: 5,
+      minRow: 2, // don't collapse when empty
+      acceptWidgets: true,
+      id: 'main',
+      children: [
+        {x:0, y:0, content: 'regular item'},
+        {x:1, w:4, h:4, subGridOpts: {children: sub1, dragOut: true, class: 'sub1', ...subOptions}},
+        {x:5, w:3, h:4, subGridOpts: {children: sub2, dragOut: false, class: 'sub2', ...subOptions}},
+      ]
+    };
+
+    // create and load it all from JSON above
+    let grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
+
+    // WORK-IN_PROGRESS the target is content, but we need to drag the grid-item parent and jquery-ui needs helper
+    // to be different, and re-parented (so it doesn't get clipped by other containers overflow-x:hidden, overflow-y:auto which are needed behavior)
+    // but jq-ui doesn't support position:fixed
+    function myClone(event) {
+      let item = event.target.parentElement;
+      item = item.cloneNode(true);
+      grid.el.append(item)
+      // item.style.position = 'fixed'
+      return item;
+    }
+
+    function addNested() {
+      grid.addWidget({x:0, y:100, content:"new item"});
+    }
+
+    function addNewWidget(selector) {
+      let subGrid = document.querySelector(selector).gridstack;
+      let node = {
+        x: Math.round(6 * Math.random()),
+        y: Math.round(5 * Math.random()),
+        w: Math.round(1 + 1 * Math.random()),
+        h: Math.round(1 + 1 * Math.random()),
+        content: String(count++)
+      };
+      subGrid.addWidget(node);
+      return false;
+    };
+
+    function save(content = true, full = true) {
+      options = grid.save(content, full);
+      console.log(options);
+      // console.log(JSON.stringify(options));
+    }
+    function destroy(full = true) {
+      if (full) {
+        grid.destroy();
+        grid = undefined;
+      } else {
+        grid.removeAll();
+      }
+    }
+    function load(full = true) {
+      if (full) {
+        grid = GridStack.addGrid(document.querySelector('.container-fluid'), options);
+      } else {
+        grid.load(options);
+      }
+    }
+
+  </script>
+</body>
+</html>
