@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { GridHTMLElement, GridItemHTMLElement, GridStack as GridStackInstance } from "gridstack";
 import type { GridStackWidget } from "gridstack";
 import { GridStack } from "./src/gridstack";
-import { useWidgetSerializer, useGridStackItem } from "./src/hooks";
+import { useWidgetSerializer, useGridStackItem, useGridStack } from "./src/hooks";
 
 function flush(): Promise<void> {
   return new Promise((r) => {
@@ -336,5 +336,41 @@ describe("GridStack React wrapper", () => {
     await act(flush);
 
     expect(document.querySelector('[data-testid="h"]')?.textContent).toBe("5");
+  });
+
+  it("#2960 useGridStack().removeWidget takes an element, matching core's signature", async () => {
+    let api: ReturnType<typeof useGridStack> | undefined;
+    function Probe() {
+      api = useGridStack();
+      return null;
+    }
+
+    await act(async () => {
+      root.render(
+        <GridStack
+          options={{
+            column: 12, cellHeight: 50, margin: 0,
+            children: [{ id: "r1", x: 0, y: 0, w: 2, h: 2, component: "T" }],
+          }}
+          components={{ T: () => <span data-testid="keep">x</span> }}
+        >
+          <Probe />
+        </GridStack>
+      );
+    });
+    await act(flush);
+
+    const gridEl = container.querySelector(".grid-stack") as GridHTMLElement;
+    const g = gridEl?.gridstack as GridStackInstance;
+    expect(g.engine.nodes.length).toBe(1);
+
+    const el = g.engine.nodes[0].el as GridItemHTMLElement;
+    await act(async () => {
+      api!.removeWidget(el, true, true);
+    });
+    await act(flush);
+
+    expect(g.engine.nodes.length).toBe(0);
+    expect(document.querySelector('[data-testid="keep"]')).toBeNull();
   });
 });
