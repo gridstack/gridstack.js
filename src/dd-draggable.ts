@@ -339,6 +339,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     delete DDManager.dropElement;
     delete DDManager.mouseHandled;
     delete DDManager.mouseHandledTimeStamp;
+    DDTouch.touchHandled = false;
     e.preventDefault();
   }
 
