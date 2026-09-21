@@ -884,8 +884,12 @@ export class GridStackEngine {
    */
   public moveNodeCheck(node: GridStackNode, o: GridStackMoveOpts): boolean {
     // if (node.locked) return false;
-    if (!this.changedPosConstrain(node, o)) return false;
-    o.pack = true;
+    // note: call this for the min/max clamping side effect even when forced, but a forceCollide caller
+    // (load() re-checking an item that landed in the same spot) still wants the collision pass to run
+    const changed = this.changedPosConstrain(node, o);
+    if (!changed && !o.forceCollide) return false;
+    // same defaulting as moveNode() - don't force a pack while batching, the caller packs on commit
+    if (o.pack === undefined && !this.batchMode) o.pack = true;
 
     // simpler case: move item directly...
     if (!this.maxRow) {

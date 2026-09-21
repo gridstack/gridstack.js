@@ -635,4 +635,41 @@ describe('regression >', () => {
       next.destroy();
     });
   });
+
+  describe('2953 maxRow overlap from API >', () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+    it('update() that cannot fit under maxRow is refused, not overlapped', () => {
+      grid = GridStack.init({maxRow: 4, cellHeight: 50, children: [
+        {id: 'A', x: 0, y: 0, w: 12, h: 2},
+        {id: 'B', x: 0, y: 2, w: 12, h: 2},
+      ]});
+      const A = grid.engine.nodes.find(n => n.id === 'A')!;
+      const B = grid.engine.nodes.find(n => n.id === 'B')!;
+
+      // grid is full (maxRow=4): growing A to 3 would need B at y=3..5, past maxRow.
+      // interactive resize refuses this, so the API must too rather than overlap B.
+      grid.update(A.el!, {h: 3});
+      expect(A.h).toBe(2);
+      expect(B.y).toBe(2);
+      expect(grid.engine.getRow()).toBe(4);
+      const overlap = A.y! < B.y! + B.h! && B.y! < A.y! + A.h!;
+      expect(overlap).toBe(false);
+    });
+    it('update() that does fit still pushes items down', () => {
+      grid = GridStack.init({maxRow: 6, cellHeight: 50, children: [
+        {id: 'A', x: 0, y: 0, w: 12, h: 2},
+        {id: 'B', x: 0, y: 2, w: 12, h: 2},
+      ]});
+      const A = grid.engine.nodes.find(n => n.id === 'A')!;
+      const B = grid.engine.nodes.find(n => n.id === 'B')!;
+      grid.update(A.el!, {h: 3});
+      expect(A.h).toBe(3);
+      expect(B.y).toBe(3);
+    });
+  });
 });
