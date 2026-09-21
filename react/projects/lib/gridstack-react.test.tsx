@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { GridHTMLElement, GridItemHTMLElement, GridStack as GridStackInstance } from "gridstack";
 import type { GridStackWidget } from "gridstack";
 import { GridStack } from "./src/gridstack";
-import { useWidgetSerializer } from "./src/hooks";
+import { useWidgetSerializer, useGridStackItem } from "./src/hooks";
 
 function flush(): Promise<void> {
   return new Promise((r) => {
@@ -300,5 +300,41 @@ describe("GridStack React wrapper", () => {
     expect(saved.length).toBe(2);
     expect(saved.every(w => !!w.id)).toBe(true);
     expect(new Set(saved.map(w => w.id)).size).toBe(2);
+  });
+
+  it("#2974 re-renders item content after an interactive resize (change event)", async () => {
+    function ShowH() {
+      const { node } = useGridStackItem();
+      return <span data-testid="h">{String(node?.h ?? "?")}</span>;
+    }
+
+    await act(async () => {
+      root.render(
+        <GridStack
+          options={{
+            column: 12, cellHeight: 50, margin: 0,
+            children: [{ id: "z1", x: 0, y: 0, w: 2, h: 2, component: "H" }],
+          }}
+          components={{ H: () => <ShowH /> }}
+        />
+      );
+    });
+    await act(flush);
+    expect(document.querySelector('[data-testid="h"]')?.textContent).toBe("2");
+
+    const gridEl = container.querySelector(".grid-stack") as GridHTMLElement;
+    const g = gridEl?.gridstack as GridStackInstance;
+
+    // what an interactive resize leaves behind: the node is mutated in place and `change` fires.
+    // (a programmatic grid.update() instead goes through updateCB -> requestUpdate, which did bump)
+    const t = g as unknown as { _triggerChangeEvent(): unknown };
+    await act(async () => {
+      g.engine.nodes[0].h = 5;
+      g.engine.nodes[0]._dirty = true;
+      t._triggerChangeEvent();
+    });
+    await act(flush);
+
+    expect(document.querySelector('[data-testid="h"]')?.textContent).toBe("5");
   });
 });

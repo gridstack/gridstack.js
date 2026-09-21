@@ -225,8 +225,12 @@ export const GridStackComponent = defineComponent({
         emit('added', e, nodes)
       }) as GridStackNodesHandler)
 
-      // change = position/resize; portal targets don't move so no layoutVersion bump.
+      // change = position/resize. The portal *targets* are unaffected, but anything reading
+      // node geometry (useGridStackItem().node, watched via layoutVersion) is now stale: a
+      // programmatic grid.update() re-renders via updateCB -> requestUpdate while an interactive
+      // drag/resize did not, so resizing an item never reached Vue (#2974).
       grid.on('change', ((e: Event, nodes: Parameters<GridStackNodesHandler>[1]) => {
+        layoutVersion.value++
         emit('change', e, nodes)
       }) as GridStackNodesHandler)
 

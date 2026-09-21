@@ -260,8 +260,12 @@ export const GridStackComponent = forwardRef<GridStackHandle, GridStackProps>(
       };
       g.on("added", addedHandler);
 
-      // change = position/size update; portal containers are unaffected so no layoutVersion bump.
+      // change = position/size update. The portal *containers* are unaffected, but anything reading
+      // node geometry (useGridStackItem().node, memoized on layoutVersion) is now stale: a
+      // programmatic grid.update() re-rendered via updateCB -> requestUpdate while an interactive
+      // drag/resize did not, so resizing an item never reached React (#2974).
       const changeHandler: GridStackNodesHandler = (e, nodes) => {
+        bumpLayout();
         onChange?.(e, nodes);
       };
       g.on("change", changeHandler);
