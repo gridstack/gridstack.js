@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>List grid demo</title>
+
+  <link rel="stylesheet" href="demo.css"/>
+  <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h1>List grid demo</h1>
+    <p>New in v14: the <code>mode</code> option (<code>'top' | 'float' | 'list' | 'compact'</code>) which replaces the old <code>float</code> boolean.</p>
+    <p>In <code>mode: 'list'</code> items are continuously re-flowed in sequential (row-major) order, like a re-orderable list:
+    dropping an item on another one takes its place and everything else shifts over, instead of being pushed down.
+    Use the dropdown to compare all 4 modes, and see <a href="list_advanced.html">list advanced demo</a> for items of different sizes.</p>
+    <div>
+      <a class="btn btn-primary" onClick="addNewWidget()" href="#">Add Widget</a>
+      <label>mode:</label>
+      <select onchange="grid.mode(this.value)">
+        <option value="top">top</option>
+        <option value="float">float</option>
+        <option value="list" selected>list</option>
+        <option value="compact">compact</option>
+      </select>
+    </div>
+    <br><br>
+    <div class="grid-stack"></div>
+  </div>
+  <script src="events.js"></script>
+  <script type="text/javascript">
+    let count = 0;
+    let children = [];
+    for (let i = 0; i < 20; i++) children.push({w: 2, h: 1, content: String(++count)}); // 6 per row in the default 12 column grid
+
+    let grid = GridStack.init({
+      cellHeight: 100,
+      mode: 'list',
+      children
+    });
+    addEvents(grid);
+
+    addNewWidget = function() {
+      grid.addWidget({w: 2, h: 1, content: String(++count)});
+    };
+  </script>
+</body>
+</html>

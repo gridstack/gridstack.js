@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="demo.css"/>
   <script src="../node_modules/gridstack/dist/gridstack-all.js"></script>
+
 </head>
 <body>
   <div class="container-fluid">
@@ -22,7 +23,7 @@
   <script src="events.js"></script>
   <script type="text/javascript">
     let grid = GridStack.init({
-      float: true,
+      mode: 'float',
       resizable: { handles: 'all'}
     });
     addEvents(grid);
