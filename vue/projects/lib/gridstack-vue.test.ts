@@ -82,6 +82,38 @@ describe('GridStack Vue wrapper', () => {
     expect(document.querySelector('[data-testid="portal"]')?.textContent).toBe('hello')
   })
 
+  it('renders a drag-in widget that has a component but no id (#2976)', async () => {
+    const T = defineComponent({
+      props: { label: { type: String, default: '' } },
+      setup(props) {
+        return () => h('span', { 'data-testid': 'portal' }, props.label)
+      },
+    })
+
+    const Root = defineComponent({
+      setup() {
+        const options = {
+          column: 12, cellHeight: 50, margin: 0,
+          children: [],
+        }
+        return () =>
+          h(GridStack, { options, components: { T } })
+      },
+    })
+
+    ;({ app, container } = mountApp(Root))
+    await flush()
+
+    const gridEl = container.querySelector('.grid-stack') as GridHTMLElement
+    const grid = gridEl.gridstack!
+
+    // drag-in nodes don't have ids, only the spec they carry.
+    grid.addWidget({ x: 0, y: 0, w: 2, h: 2, component: 'T', props: { label: 'hello' } })
+    await flush()
+
+    expect(document.querySelector('[data-testid="portal"]')?.textContent).toBe('hello')
+  })
+
   it('save() merges useWidgetSerializer into widget props', async () => {
     const Num = defineComponent({
       props: { start: { type: Number, default: 0 } },

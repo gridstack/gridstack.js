@@ -159,7 +159,7 @@ Change log
 [title_drag.html](https://gridstackjs.com/demo/title_drag.html).
 * fix: [#3188](https://github.com/gridstack/gridstack.js/issues/3188) release the global touch latch when a widget is destroyed mid-touch
 * fix: [#2953](https://github.com/gridstack/gridstack.js/issues/2953) API update() honors maxRow like dragging does
-* fix: [#2976](https://github.com/gridstack/gridstack.js/issues/2976) (react): render a drag-in widget that has a component but no id
+* fix: [#2976](https://github.com/gridstack/gridstack.js/issues/2976) (react, vue): render a drag-in widget that has a component but no id
 * fix: [#2703](https://github.com/gridstack/gridstack.js/issues/2703) allow dragging from elements nested inside a button/input handle
 
 ## 13.3.0 (2026-09-11)
