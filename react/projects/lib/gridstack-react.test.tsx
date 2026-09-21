@@ -255,4 +255,50 @@ describe("GridStack React wrapper", () => {
     // ...and its React-rendered content must have followed, not been unmounted.
     expect(document.querySelector("[data-testid=\"portal\"]")?.textContent).toBe("hello");
   });
+
+  it("#2976 renders a sidebar drag-in widget that has a component but no id", async () => {
+    await act(async () => {
+      root.render(
+        <GridStack
+          options={{ column: 12, cellHeight: 50, margin: 0, children: [] }}
+          components={{
+            Side: (p: Record<string, unknown>) => (
+              <span data-testid="dragin">{String(p.label ?? "")}</span>
+            ),
+          }}
+        />
+      );
+    });
+    await act(flush);
+
+    const gridEl = container.querySelector(".grid-stack") as GridHTMLElement;
+    const g = gridEl?.gridstack as GridStackInstance;
+    expect(g).toBeTruthy();
+
+    // What GS core does at the end of its `drop` handler for a sidebar item
+    // (gridstack.ts: `el = this.addWidget(node)`): the spec comes straight from
+    // GridStack.setupDragIn(..., widgets) so it has NO id of its own.
+    await act(async () => {
+      g.addWidget({ w: 2, h: 2, component: "Side", props: { label: "dropped" } } as GridStackWidget);
+    });
+    await act(flush);
+
+    expect(
+      document.querySelector('[data-testid="dragin"]')?.textContent
+    ).toBe("dropped");
+
+    // a second drop of the same spec must get its own portal, not collide with the first
+    await act(async () => {
+      g.addWidget({ w: 2, h: 2, component: "Side", props: { label: "again" } } as GridStackWidget);
+    });
+    await act(flush);
+    const both = Array.from(document.querySelectorAll('[data-testid="dragin"]')).map(e => e.textContent);
+    expect(both.sort()).toEqual(["again", "dropped"]);
+
+    // and the minted id round-trips through save() so layouts stay reloadable
+    const saved = g.save(false) as GridStackWidget[];
+    expect(saved.length).toBe(2);
+    expect(saved.every(w => !!w.id)).toBe(true);
+    expect(new Set(saved.map(w => w.id)).size).toBe(2);
+  });
 });

@@ -10,6 +10,9 @@ import type {
   GridStackWidget,
 } from "./types";
 
+/** @internal minted ids for widgets that arrive without one (sidebar drag-in) - see gsCreateReactComponents */
+let syntheticIdSeq = 0;
+
 export function installGridStackReactCallbacks(): void {
   if (!GridStack.addRemoveCB) {
     GridStack.addRemoveCB = gsCreateReactComponents;
@@ -59,6 +62,12 @@ export function gsCreateReactComponents(
     if (w.class) itemClasses.push(...w.class.split(" ").filter(Boolean));
     const el = Utils.createDiv(itemClasses) as GridItemHTMLElement;
     Utils.createDiv(["grid-stack-item-content"], el);
+
+    // Widgets dropped in from a sidebar (GridStack.setupDragIn) carry no id - the same spec is
+    // dropped over and over, so it can't have one - yet the portal that renders `component` is
+    // keyed by id. Without one we used to silently skip rendering and leave an empty item (#2976).
+    // `w` is the object GS turns into the node, so writing it back sticks for save()/updateCB too.
+    if (!w.id && w.component) w.id = `gs-react-${++syntheticIdSeq}`;
 
     const id = w.id;
     if (id) {
