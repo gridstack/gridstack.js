@@ -1688,7 +1688,9 @@ export class GridStack {
   private moveNode(n: GridStackNode, m: GridStackMoveOpts) {
     const wasUpdating = n._updating;
     if (!wasUpdating) this.engine.cleanNodes().beginUpdate(n);
-    this.engine.moveNode(n, m);
+    // moveNodeCheck() not moveNode() so API moves honor maxRow the same way dragging does: it simulates
+    // in a clone first and refuses rather than letting the items it can't push down overlap (#2953)
+    this.engine.moveNodeCheck(n, m);
     this._updateContainerHeight();
     if (!wasUpdating) {
       this._triggerChangeEvent();
