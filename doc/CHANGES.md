@@ -148,6 +148,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 14.0.0 (TBD)
+* fix: [#3188](https://github.com/gridstack/gridstack.js/issues/3188) release the global touch latch when a widget is destroyed mid-touch
 * feat: [#754](https://github.com/gridstack/gridstack.js/issues/754), [#2866](https://github.com/gridstack/gridstack.js/issues/2866) new `mode?: 'top' | 'float' | 'list' | 'compact'` - items are continuously re-flowed in sequential (row-major) order, like a re-orderable list: dragging, resizing, adding or removing an item re-flows everyone else instead of pushing them down, and dropping an item on another takes its place. See new
 [list.html](https://gridstackjs.com/demo/list.html) demo.
 * feat: [#2583](https://github.com/gridstack/gridstack.js/issues/2583), [#787](https://github.com/gridstack/gridstack.js/issues/787) new `cellHeight: 'fill'` - rows divide the container height. See new 'fill' option 
@@ -157,6 +158,7 @@ Change log
 * fix: [#3226](https://github.com/gridstack/gridstack.js/issues/3226) don't reveal other widgets' resize handles during a resize - thank you [dvd233](https://github.com/dvd233)
 * fix: [#3148](https://github.com/gridstack/gridstack.js/issues/3148) find drag handles inside open shadow roots. See
 [title_drag.html](https://gridstackjs.com/demo/title_drag.html).
+* fix: [#3188](https://github.com/gridstack/gridstack.js/issues/3188) release the global touch latch when a widget is destroyed mid-touch
 
 ## 13.3.0 (2026-09-11)
 * feat: [#2781](https://github.com/gridstack/gridstack.js/issues/3177), [#2781](https://github.com/gridstack/gridstack.js/issues/3177) mobile: pause to drag/reszie vs scroll behavior

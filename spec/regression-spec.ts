@@ -1,8 +1,10 @@
 import { GridItemHTMLElement, GridStack, GridStackWidget } from '../src/gridstack';
 import type { GridStackNode } from '../src/types';
 import { Utils } from '../src/utils';
-import { DDManager } from '../src/dd-manager';
 import { DDElement } from '../src/dd-element';
+import { DDDraggable } from '../src/dd-draggable';
+import { DDManager } from '../src/dd-manager';
+import { DDTouch, touchstart, cancelPendingTouchDrag } from '../src/dd-touch';
 
 describe('regression >', () => {
   'use strict';
@@ -571,6 +573,66 @@ describe('regression >', () => {
       const dd = DDElement.init(host).setupDraggable({handle: '.drag-handle'}).ddDraggable!;
       // that handle belongs to .inner (through the shadow host), not to us
       expect(dd['dragEls']).toEqual([host]); // fell back to ourself, correctly
+    });
+  });
+
+  describe('3188 touch blocked after removing a widget >', () => {
+    let el: GridItemHTMLElement;
+    afterEach(() => {
+      DDTouch.touchHandled = false;
+      delete DDManager.mouseHandled;
+      delete DDManager.dragElement;
+      el?.remove();
+    });
+
+    const makeDraggable = (): DDDraggable => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div class="grid-stack-item"><div class="grid-stack-item-content">x</div></div>');
+      el = document.querySelector('.grid-stack-item') as GridItemHTMLElement;
+      return DDElement.init(el).setupDraggable({handle: '.grid-stack-item-content'}).ddDraggable!;
+    };
+
+    it('destroying a widget mid-touch releases the global touch latch', () => {
+      const dd = makeDraggable();
+      const handle = el.querySelector('.grid-stack-item-content') as HTMLElement;
+
+      // what the delayed touchstart does once the 300ms long-press elapses
+      DDTouch.touchHandled = true;
+      const down = new MouseEvent('mousedown', {button: 0, bubbles: true});
+      Object.defineProperty(down, 'target', {value: handle});
+      Object.defineProperty(down, 'currentTarget', {value: handle});
+      dd['_mouseDown'](down);
+      expect(dd['mouseDownEvent']).toBeTruthy();
+
+      // now the widget gets removed out from under the touch - no touchend will ever arrive
+      dd.destroy();
+
+      expect(DDTouch.touchHandled).toBe(false);
+      expect(DDManager.mouseHandled).toBeFalsy();
+    });
+
+    it('a later touchstart is no longer swallowed', () => {
+      const dd = makeDraggable();
+      const handle = el.querySelector('.grid-stack-item-content') as HTMLElement;
+      DDTouch.touchHandled = true;
+      const down = new MouseEvent('mousedown', {button: 0, bubbles: true});
+      Object.defineProperty(down, 'target', {value: handle});
+      Object.defineProperty(down, 'currentTarget', {value: handle});
+      dd['_mouseDown'](down);
+      dd.destroy();
+
+      // touchstart() bails out at the top on a set latch, so nothing could ever drag again
+      const next = makeDraggable();
+      const nextHandle = el.querySelector('.grid-stack-item-content') as HTMLElement;
+      const touch = {clientX: 5, clientY: 5} as Touch;
+      const ev = {
+        type: 'touchstart', currentTarget: nextHandle, touches: [touch], changedTouches: [touch],
+        cancelable: true, preventDefault: () => undefined,
+      } as unknown as TouchEvent;
+      touchstart(ev);
+      expect(DDTouch.touchDelayTimer).toBeTruthy(); // it armed, instead of early-returning
+      cancelPendingTouchDrag();
+      next.destroy();
     });
   });
 });
