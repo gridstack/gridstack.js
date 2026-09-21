@@ -17,7 +17,7 @@ Defined in: [vue/projects/lib/src/composables.ts:51](https://github.com/adumesny
 
 ### UseWidgetSerializerOptions\<T\>
 
-Defined in: [vue/projects/lib/src/composables.ts:87](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L87)
+Defined in: [vue/projects/lib/src/composables.ts:85](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L85)
 
 #### Type Parameters
 
@@ -29,8 +29,8 @@ Defined in: [vue/projects/lib/src/composables.ts:87](https://github.com/adumesny
 
 | Property | Type | Defined in |
 | ------ | ------ | ------ |
-| <a id="serialize"></a> `serialize?` | () => `T` | [vue/projects/lib/src/composables.ts:88](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L88) |
-| <a id="deserialize"></a> `deserialize?` | (`data`) => `void` | [vue/projects/lib/src/composables.ts:89](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L89) |
+| <a id="serialize"></a> `serialize?` | () => `T` | [vue/projects/lib/src/composables.ts:86](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L86) |
+| <a id="deserialize"></a> `deserialize?` | (`data`) => `void` | [vue/projects/lib/src/composables.ts:87](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L87) |
 
 ## Functions
 
@@ -86,7 +86,7 @@ Uses recursive grid search so items dragged to sub-grids are still found.
 function useWidgetSerializer<T>(opts): void;
 ```
 
-Defined in: [vue/projects/lib/src/composables.ts:109](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L109)
+Defined in: [vue/projects/lib/src/composables.ts:107](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/composables.ts#L107)
 
 Optional composable for widget components that need to participate in `grid.save()` / `grid.load()`.
 

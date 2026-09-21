@@ -8,7 +8,7 @@
 function installGridStackVueCallbacks(): void;
 ```
 
-Defined in: [vue/projects/lib/src/registry.ts:13](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L13)
+Defined in: [vue/projects/lib/src/registry.ts:16](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L16)
 
 #### Returns
 
@@ -22,7 +22,7 @@ Defined in: [vue/projects/lib/src/registry.ts:13](https://github.com/adumesny/gr
 function gsSaveAdditionalVueInfo(node, w): void;
 ```
 
-Defined in: [vue/projects/lib/src/registry.ts:85](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L85)
+Defined in: [vue/projects/lib/src/registry.ts:94](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L94)
 
 #### Parameters
 
@@ -43,7 +43,7 @@ Defined in: [vue/projects/lib/src/registry.ts:85](https://github.com/adumesny/gr
 function gsUpdateVueComponents(node): void;
 ```
 
-Defined in: [vue/projects/lib/src/registry.ts:101](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L101)
+Defined in: [vue/projects/lib/src/registry.ts:110](https://github.com/adumesny/gridstack.js/blob/master/vue/projects/lib/src/registry.ts#L110)
 
 #### Parameters
 

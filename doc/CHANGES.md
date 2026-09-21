@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [14.0.0 (TBD)](#1400-tbd)
+- [14.0.0 (2026-09-20)](#1400-2026-09-20)
 - [13.3.0 (2026-09-11)](#1330-2026-09-11)
 - [13.2.0 (2026-08-19)](#1320-2026-08-19)
 - [13.1.2 (2026-07-26)](#1312-2026-07-26)
@@ -147,7 +147,7 @@ Change log
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## 14.0.0 (TBD)
+## 14.0.0 (2026-09-20)
 * feat: [#754](https://github.com/gridstack/gridstack.js/issues/754), [#2866](https://github.com/gridstack/gridstack.js/issues/2866) new `mode?: 'top' | 'float' | 'list' | 'compact'` - items are continuously re-flowed in sequential (row-major) order, like a re-orderable list: dragging, resizing, adding or removing an item re-flows everyone else instead of pushing them down, and dropping an item on another takes its place. See new
 [list.html](https://gridstackjs.com/demo/list.html) demo.
 * feat: [#2583](https://github.com/gridstack/gridstack.js/issues/2583), [#787](https://github.com/gridstack/gridstack.js/issues/787) new `cellHeight: 'fill'` - rows divide the container height. See new 'fill' option 
