@@ -520,6 +520,18 @@ export class Utils {
     }
   }
 
+  /** @internal V bounds (viewport coordinates) of what the user can actually see.
+   * Use this instead of `window.innerHeight` for clipping math: on iOS Safari `innerHeight` is the
+   * *layout* viewport, which extends underneath the overlaying URL/tool bars (and ignores pinch-zoom),
+   * so an item hidden behind the bottom bar still measured as fully visible and auto-scroll never
+   * kicked in - see #2666. `visualViewport` reports what is truly on screen on every browser. */
+  static getVisibleViewport(): { top: number, bottom: number } {
+    const vv = typeof window !== 'undefined' ? window.visualViewport : undefined;
+    if (vv) return { top: vv.offsetTop, bottom: vv.offsetTop + vv.height };
+    const h = window.innerHeight || document.documentElement.clientHeight;
+    return { top: 0, bottom: h };
+  }
+
   /** @internal returns the passed element if vertically scrollable, else the closest parent that will, up to the entire document scrolling element */
   static getScrollElement(el?: HTMLElement): HTMLElement {
     if (!el) return document.scrollingElement as HTMLElement || document.documentElement; // IE support

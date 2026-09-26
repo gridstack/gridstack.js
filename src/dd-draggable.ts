@@ -62,6 +62,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     xOffset: 0,
     yOffset: 0
   };
+  /** @internal element we bound the touch handlers to in _mouseDown(), so _mouseUp() can un-bind the same one */
+  protected _touchTarget?: HTMLElement;
   /** @internal auto-scroll animation variables */
   protected _autoScrollAnimId?: number;
   protected _autoScrollContainer?: HTMLElement;
@@ -222,9 +224,13 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     document.addEventListener('mousemove', this._mouseMove, { capture: true, passive: true }); // true=capture, not bubble
     document.addEventListener('mouseup', this._mouseUp as EventListener, true);
     if (isTouch && e.currentTarget) {
-      (e.currentTarget as HTMLElement).addEventListener('touchmove', touchmove);
-      (e.currentTarget as HTMLElement).addEventListener('touchend', touchend);
-      (e.currentTarget as HTMLElement).addEventListener('touchcancel', touchend); // browser aborting on us, clean up too
+      // remember what we bound to: _mouseUp() is a document handler so its own currentTarget is
+      // NOT this element, and these were added bubbling - removing with capture=true never matched,
+      // leaking a handler per drag that then replayed each touchmove N times over (#2666).
+      this._touchTarget = e.currentTarget as HTMLElement;
+      this._touchTarget.addEventListener('touchmove', touchmove);
+      this._touchTarget.addEventListener('touchend', touchend);
+      this._touchTarget.addEventListener('touchcancel', touchend); // browser aborting on us, clean up too
     }
     if (DDTouch.wasDelayed) {
       // the long-press wait just elapsed - signal the item is now armed & ready to drag
@@ -306,10 +312,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.el.classList.remove('ui-draggable-armed');
     document.removeEventListener('mousemove', this._mouseMove, true);
     document.removeEventListener('mouseup', this._mouseUp as EventListener, true);
-    if (isTouch && e.currentTarget) { // destroy() during nested grid call us again wit fake _mouseUp
-      e.currentTarget.removeEventListener('touchmove', touchmove as EventListener, true);
-      e.currentTarget.removeEventListener('touchend', touchend as EventListener, true);
-      e.currentTarget.removeEventListener('touchcancel', touchend as EventListener, true);
+    if (isTouch && this._touchTarget) { // destroy() during nested grid call us again wit fake _mouseUp
+      this._touchTarget.removeEventListener('touchmove', touchmove as EventListener);
+      this._touchTarget.removeEventListener('touchend', touchend as EventListener);
+      this._touchTarget.removeEventListener('touchcancel', touchend as EventListener);
+      delete this._touchTarget;
     }
     if (this.dragging) {
       delete this.dragging;
@@ -512,10 +519,11 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _getClipping(el: HTMLElement, scrollEl: HTMLElement): number {
     const elRect = el.getBoundingClientRect();
     const scrollRect = scrollEl.getBoundingClientRect();
-    const viewportH = window.innerHeight || document.documentElement.clientHeight;
+    // what's really on screen, NOT window.innerHeight which sits under iOS's overlaying tool bars (#2666)
+    const view = Utils.getVisibleViewport();
     if (elRect.bottom < scrollRect.top || elRect.top > scrollRect.bottom) return 0; // fully outside
-    const clippedBelow = elRect.bottom - Math.min(scrollRect.bottom, viewportH);
-    const clippedAbove = elRect.top - Math.max(scrollRect.top, 0);
+    const clippedBelow = elRect.bottom - Math.min(scrollRect.bottom, view.bottom);
+    const clippedAbove = elRect.top - Math.max(scrollRect.top, view.top);
     if (clippedAbove < 0) return clippedAbove;
     if (clippedBelow > 0) return clippedBelow;
     return 0;
@@ -530,8 +538,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (clipping === 0) { this._stopScrolling(); return; }
 
     if (!this._autoScrollMaxSpeed) {
-      const viewportH = window.innerHeight || document.documentElement.clientHeight;
-      this._autoScrollMaxSpeed = Math.max(viewportH / 150, 4);
+      const view = Utils.getVisibleViewport();
+      this._autoScrollMaxSpeed = Math.max((view.bottom - view.top) / 150, 4);
     }
     const absPx = Math.abs(clipping);
     const speed = Math.min(absPx * 0.5, this._autoScrollMaxSpeed);
