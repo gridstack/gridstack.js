@@ -2624,7 +2624,9 @@ export class GridStack {
       };
 
       if (node._temporaryRemoved) {
-        node.x = Math.max(0, Math.round(left / cellWidth));
+        // A drag preview outside the right edge is not a wider responsive layout.
+        // Clamp before nodeBoundFix() can cache it and later override save().
+        node.x = Math.max(0, Math.min(this.getColumn() - node.w!, Math.round(left / cellWidth)));
         node.y = Math.max(0, Math.round(top / cellHeight));
         delete node.autoPosition;
         this.engine.nodeBoundFix(node);
