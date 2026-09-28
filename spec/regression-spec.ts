@@ -715,4 +715,69 @@ describe('regression >', () => {
       expect(mouseDown(action)).toBe(false); // must NOT start a drag
     });
   });
+
+  describe('2819 diagonal drag stuck on a tall neighbour it barely grazes >', () => {
+    const CH = 50, CW = 50;
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    // reporter's video: dragging mostly sideways, with a small amount of vertical mouse creep,
+    // froze completely against a tall neighbour instead of continuing to slide horizontally -
+    // even though the row the item started on was completely free the whole way across.
+    it('still slides sideways when the vertical component fails 50% coverage', () => {
+      grid = GridStack.init({column: 12, cellHeight: CH, mode: 'float', children: [
+        {id: 'move', x: 5, y: 0, w: 2, h: 1},
+        {id: 'big', x: 0, y: 1, w: 2, h: 6},
+      ]});
+      const move = grid.engine.nodes.find(n => n.id === 'move')!;
+      const big = grid.engine.nodes.find(n => n.id === 'big')!;
+
+      grid.engine.cleanNodes().beginUpdate(move);
+      move._moving = true;
+      grid.engine.cacheRects(CW, CH, 0, 0, 0, 0);
+
+      // dx=-4 (mostly horizontal), dy=1 (a sliver dipping into 'big' row) - only 1 of 6 rows of
+      // overlap (~17%), nowhere near the 50% needed to push 'big' out of the way
+      grid.engine.moveNodeCheck(move, {x: 1, y: 1, w: 2, h: 1, cellWidth: CW, cellHeight: CH,
+        rect: {x: 1 * CW, y: 1 * CH, w: 2 * CW, h: 1 * CH}});
+
+      expect(big.y).toBe(1); // untouched, correctly - coverage really is too small to push it
+      expect(move.y).toBe(0); // stayed on its original free row...
+      expect(move.x).toBe(1); // ...but still allowed to slide over sideways, not stuck at x=5
+      grid.engine.endUpdate();
+    });
+
+    it('does not slide sideways into something actually blocking that row', () => {
+      grid = GridStack.init({column: 12, cellHeight: CH, mode: 'float', children: [
+        {id: 'move', x: 5, y: 0, w: 2, h: 1},
+        {id: 'big', x: 0, y: 1, w: 2, h: 6},
+        {id: 'blocker', x: 1, y: 0, w: 2, h: 1},
+      ]});
+      const move = grid.engine.nodes.find(n => n.id === 'move')!;
+
+      grid.engine.cleanNodes().beginUpdate(move);
+      move._moving = true;
+      grid.engine.cacheRects(CW, CH, 0, 0, 0, 0);
+
+      grid.engine.moveNodeCheck(move, {x: 1, y: 1, w: 2, h: 1, cellWidth: CW, cellHeight: CH,
+        rect: {x: 1 * CW, y: 1 * CH, w: 2 * CW, h: 1 * CH}});
+
+      // the horizontal-only fallback still engaged (not frozen at its starting spot)...
+      expect(move.x === 5 && move.y === 0).toBe(false);
+      // ...but went through the normal collision/push logic rather than teleporting onto 'blocker'
+      const ns = grid.engine.nodes;
+      for (let i = 0; i < ns.length; i++) {
+        for (let j = i + 1; j < ns.length; j++) {
+          const a = ns[i], b = ns[j];
+          const overlap = a.x! < b.x! + b.w! && b.x! < a.x! + a.w! && a.y! < b.y! + b.h! && b.y! < a.y! + a.h!;
+          expect(overlap).toBe(false);
+        }
+      }
+      grid.engine.endUpdate();
+    });
+  });
 });
