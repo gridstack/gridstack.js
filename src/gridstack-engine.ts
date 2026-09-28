@@ -1039,13 +1039,30 @@ export class GridStackEngine {
         // check to make sure we actually collided over 50% surface area while dragging
         let collide = activeDrag ? this.directionCollideCoverage(node, o, collides) : collides[0];
         // if we're enabling creation of sub-grids on the fly, see if we're covering 80% of either one, if we didn't already do that
-        if (activeDrag && this._makeDynamicSubGrid(node, o, collide)) collide = undefined;
+        const madeSubGrid = activeDrag && this._makeDynamicSubGrid(node, o, collide);
+        if (madeSubGrid) collide = undefined;
 
         if (collide) {
           needToMove = !this._fixCollisions(node, nn, collide, o); // check if already moved...
         } else {
           needToMove = false; // we didn't cover >50% for a move, skip...
           if (wasUndefinedPack) delete o.pack;
+
+          // #2819 a diagonal drag can fail coverage purely because of the axis we're only grazing
+          // (ex: a sliver of vertical overlap against a much taller neighbor below), even though the
+          // axis we're actually traveling along is completely clear. Retry with the other, barely-
+          // moving axis locked back to its current value so the drag can keep sliding along the
+          // dominant direction instead of freezing solid until 50% coverage is met.
+          if (!madeSubGrid && activeDrag && nn.x !== node.x && nn.y !== node.y) {
+            const horizontal = Math.abs(nn.x! - node.x!) >= Math.abs(nn.y! - node.y!);
+            const nnAxis: GridStackNode = horizontal ? {...nn, y: node.y} : {...nn, x: node.x};
+            const collidesAxis = this.collideAll(node, nnAxis, o.skip);
+            const collideAxis = collidesAxis.length ? this.directionCollideCoverage(node, o, collidesAxis) : undefined;
+            if (!collidesAxis.length || collideAxis) {
+              needToMove = collidesAxis.length ? !this._fixCollisions(node, nnAxis, collideAxis, o) : true;
+              if (needToMove) Utils.copyPos(nn, nnAxis);
+            }
+          }
         }
       }
 
