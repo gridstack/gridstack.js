@@ -693,14 +693,20 @@ export class Utils {
    * returns the scale and offsets from said element
   */
   public static getValuesFromTransformedElement(parent: HTMLElement): DragTransform {
+    // use a large probe rather than 1x1px: getBoundingClientRect() reflects the browser's
+    // device-pixel-snapped render, and that snapping error (up to ~1 device pixel) is a huge
+    // relative error on a 1px probe (can be several %) but negligible on a large one, at
+    // fractional OS/browser zoom (125%, 150%,...). A wrong scale here directly corrupts
+    // drag/resize pixel->grid-unit math downstream. #3230
+    const probeSize = 1000;
     const transformReference = document.createElement('div');
     Utils.addElStyles(transformReference, {
       opacity: '0',
       position: 'fixed',
       top: 0 + 'px',
       left: 0 + 'px',
-      width: '1px',
-      height: '1px',
+      width: probeSize + 'px',
+      height: probeSize + 'px',
       zIndex: '-999999',
     });
     parent.appendChild(transformReference);
@@ -708,8 +714,8 @@ export class Utils {
     parent.removeChild(transformReference);
     transformReference.remove();
     return {
-      xScale: 1 / transformValues.width,
-      yScale: 1 / transformValues.height,
+      xScale: probeSize / transformValues.width,
+      yScale: probeSize / transformValues.height,
       xOffset: transformValues.left,
       yOffset: transformValues.top,
     }
