@@ -1,5 +1,5 @@
 import { GridItemHTMLElement, GridStack, GridStackWidget } from '../src/gridstack';
-import type { GridStackNode } from '../src/types';
+import type { GridStackNode, GridStackMode } from '../src/types';
 import { Utils } from '../src/utils';
 import { DDElement } from '../src/dd-element';
 import { DDDraggable } from '../src/dd-draggable';
@@ -817,6 +817,71 @@ describe('regression >', () => {
       expect(40 * ch).toBeCloseTo(40 * window.innerWidth / 100, 6);
       expect(Number.isFinite(ch)).toBe(true);
       expect(ch).toBeGreaterThan(0);
+    });
+  });
+
+  describe('1959 update() must not overlap a locked item >', () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    const overlaps = (a: GridStackNode, b: GridStackNode): boolean =>
+      a.y! < b.y! + b.h! && b.y! < a.y! + a.h! && a.x! < b.x! + b.w! && b.x! < a.x! + a.w!;
+
+    const setup = (mode: GridStackMode, lockY: number, startY: number) => {
+      grid?.destroy(false);
+      document.getElementById('gs-cont')!.innerHTML = '<div class="grid-stack"></div>';
+      grid = GridStack.init({column: 12, cellHeight: 50, mode, children: [
+        {id: 'lock', x: 0, y: lockY, w: 2, h: 2, locked: true, noMove: true, noResize: true},
+        {id: 'move', x: 0, y: startY, w: 2, h: 2},
+      ]});
+      const move = grid.engine.nodes.find(n => n.id === 'move')!;
+      const lock = grid.engine.nodes.find(n => n.id === 'lock')!;
+      expect(overlaps(move, lock)).toBe(false); // sane starting layout
+      return { move, lock };
+    };
+
+    it('stays put rather than overlapping, across modes and targets', () => {
+      const bad: string[] = [];
+      (['top', 'float', 'list', 'compact'] as GridStackMode[]).forEach(mode => {
+        [0, 2, 4].forEach(lockY => {
+          [6, 7].forEach(startY => {
+            [0, 1, 2, 3, 4, 5].forEach(targetY => {
+              const { move, lock } = setup(mode, lockY, startY);
+              grid.update(move.el!, {y: targetY});
+              if (overlaps(move, lock)) {
+                bad.push(`${mode} lock@${lockY} ${startY}->${targetY} landed @${move.y}`);
+              }
+            });
+          });
+        });
+      });
+      expect(bad).toEqual([]);
+    });
+
+    it('still moves when the locked item is not in the way', () => {
+      const { move, lock } = setup('top', 0, 6);
+      grid.update(move.el!, {y: 2}); // right below the locked rows 0-1
+      expect(move.y).toBe(2);
+      expect(overlaps(move, lock)).toBe(false);
+    });
+
+    it('still pushes a plain (unlocked) neighbour out of the way', () => {
+      grid?.destroy(false);
+      document.getElementById('gs-cont')!.innerHTML = '<div class="grid-stack"></div>';
+      grid = GridStack.init({column: 12, cellHeight: 50, mode: 'float', children: [
+        {id: 'free', x: 0, y: 0, w: 2, h: 2},
+        {id: 'move', x: 0, y: 6, w: 2, h: 2},
+      ]});
+      const move = grid.engine.nodes.find(n => n.id === 'move')!;
+      const free = grid.engine.nodes.find(n => n.id === 'free')!;
+      grid.update(move.el!, {y: 0});
+      expect(overlaps(move, free)).toBe(false);
+      expect(move.y).toBe(0); // took the spot, pushed the other one
+      expect(free.y).toBe(2);
     });
   });
 });
