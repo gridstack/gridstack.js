@@ -1008,4 +1008,76 @@ describe('regression >', () => {
       expect(dragStarted(host.querySelector('.grid-stack-item-content') as HTMLElement)).toBe(true);
     });
   });
+
+  describe('3355 nested scroll containers dead-end the drag >', () => {
+    let inner: HTMLElement, outer: HTMLElement, item: HTMLElement;
+    afterEach(() => {
+      vi.restoreAllMocks();
+      document.getElementById('gs-cont')?.remove();
+    });
+
+    /** an item inside a scroller inside another scroller, each with its own limits */
+    const nest = (innerAtLimit: boolean) => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div id="gs-cont"><div class="outer"><div class="inner">' +
+        '<div class="grid-stack-item"><div class="grid-stack-item-content">x</div></div>' +
+        '</div></div></div>');
+      outer = document.querySelector('.outer') as HTMLElement;
+      inner = document.querySelector('.inner') as HTMLElement;
+      item = document.querySelector('.grid-stack-item') as HTMLElement;
+
+      const mk = (el: HTMLElement, top: number, max: number) => {
+        const box = {top};
+        Object.defineProperty(el, 'scrollTop', {
+          get: () => box.top,
+          set: (v: number) => { box.top = Math.max(0, Math.min(v, max)); },
+          configurable: true,
+        });
+        return box;
+      };
+      const innerBox = mk(inner, innerAtLimit ? 500 : 0, 500);
+      const outerBox = mk(outer, 0, 500);
+
+      const dd = DDElement.init(item as GridItemHTMLElement).setupDraggable({}).ddDraggable!;
+      const self = dd as unknown as {
+        helper?: HTMLElement; _autoScrollContainer?: HTMLElement; _autoScrollMaxSpeed?: number;
+        _getClipping(el: HTMLElement, s: HTMLElement): number;
+        _autoScrollTick(): void; dragging?: boolean;
+      };
+      self.helper = item;
+      self._autoScrollContainer = inner;
+      self._autoScrollMaxSpeed = 10;
+      // pretend the helper is hanging below the visible area so we want to scroll DOWN
+      vi.spyOn(self as unknown as Record<string, () => number>, '_getClipping').mockReturnValue(40);
+      // getScrollElement walks up and should find `outer` above `inner`
+      vi.spyOn(Utils, 'getScrollElement').mockImplementation(() => outer);
+      return { dd, self, innerBox, outerBox };
+    };
+
+    it('hands off to the outer container when the inner one is pinned', () => {
+      const { self, innerBox, outerBox } = nest(true);
+      expect(innerBox.top).toBe(500); // already at its limit
+
+      self._autoScrollTick();
+
+      expect(outerBox.top).toBeGreaterThan(0); // the page behind finally moves
+      expect(self._autoScrollContainer).toBe(outer); // and we keep going on that one
+    });
+
+    it('stays on the inner container while it can still scroll', () => {
+      const { self, innerBox, outerBox } = nest(false);
+      self._autoScrollTick();
+      expect(innerBox.top).toBeGreaterThan(0);
+      expect(outerBox.top).toBe(0); // outer untouched
+      expect(self._autoScrollContainer).toBe(inner);
+    });
+
+    it('gives up once everything is pinned', () => {
+      const { self, outerBox } = nest(true);
+      outerBox.top = 500; // both at their limits
+      const stop = vi.spyOn(self as unknown as Record<string, () => void>, '_stopScrolling');
+      self._autoScrollTick();
+      expect(stop).toHaveBeenCalled();
+    });
+  });
 });
