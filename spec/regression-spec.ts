@@ -962,4 +962,50 @@ describe('regression >', () => {
       expect(dd['_cbDrift']).toEqual({dx: 0, dy: 0});
     });
   });
+
+  describe('2729 draggable cancel inside shadow DOM >', () => {
+    let host: HTMLElement;
+    afterEach(() => {
+      delete DDManager.mouseHandled;
+      host?.remove();
+    });
+
+    /** item whose content holds a web component with `.no-drag` inside its shadow root */
+    const build = (cancel: string) => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div class="grid-stack-item"><div class="grid-stack-item-content">' +
+        '<div class="wc"></div><span class="plain">plain</span>' +
+        '</div></div>');
+      host = document.querySelector('.grid-stack-item');
+      const wc = host.querySelector('.wc') as HTMLElement;
+      const shadow = wc.attachShadow({mode: 'open'});
+      shadow.innerHTML = '<div class="no-drag">handle off</div><div class="ok">draggable</div>';
+      DDElement.init(host as GridItemHTMLElement).setupDraggable({handle: '.grid-stack-item-content', cancel});
+      return shadow;
+    };
+
+    /** dispatch a real composed mousedown so the browser/jsdom retargets e.target like it would live */
+    const dragStarted = (target: HTMLElement): boolean => {
+      const dd = (host as GridItemHTMLElement).ddElement!.ddDraggable!;
+      target.dispatchEvent(new MouseEvent('mousedown', {button: 0, bubbles: true, composed: true, cancelable: true}));
+      const started = !!dd['mouseDownEvent'];
+      dd['_mouseUp'](new MouseEvent('mouseup'));
+      delete DDManager.mouseHandled;
+      return started;
+    };
+
+    it('honors cancel for an element inside a shadow root', () => {
+      const shadow = build('.no-drag');
+      expect(dragStarted(shadow.querySelector('.ok') as HTMLElement)).toBe(true);
+      // #2729: e.target is retargeted to the <div class="wc"> host out here, and closest()
+      // does not cross the shadow boundary, so this used to start a drag anyway
+      expect(dragStarted(shadow.querySelector('.no-drag') as HTMLElement)).toBe(false);
+    });
+
+    it('still honors cancel in the light DOM', () => {
+      build('.plain');
+      expect(dragStarted(host.querySelector('.plain') as HTMLElement)).toBe(false);
+      expect(dragStarted(host.querySelector('.grid-stack-item-content') as HTMLElement)).toBe(true);
+    });
+  });
 });

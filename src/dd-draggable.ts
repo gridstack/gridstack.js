@@ -195,6 +195,21 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     if (!wasDisabled) this.enable();
   }
 
+  /** @internal does any element on the event's path match the selector?
+   * Same walk as `e.target.closest(sel)` but through shadow DOM: for a listener outside the shadow
+   * tree the browser retargets `e.target` to the *host*, and `closest()` won't cross the boundary
+   * either, so a `cancel` selector living inside a web component could never match (#2729). */
+  protected _matchInPath(e: Event, selector: string): HTMLElement | undefined {
+    const path = e.composedPath?.() as EventTarget[] | undefined;
+    if (!path?.length) return (e.target as HTMLElement)?.closest(selector) as HTMLElement ?? undefined;
+    for (const t of path) {
+      const el = t as HTMLElement;
+      if (el?.nodeType !== 1) continue; // skip ShadowRoot / document / window
+      if (el.matches?.(selector)) return el;
+    }
+    return undefined;
+  }
+
   /** @internal call when mouse goes down before a dragstart happens */
   protected _mouseDown(e: MouseEvent): boolean {
     // if real browser event (trusted:true vs false for our simulated ones) and prior touch/mouse state didn't clean up, reset it.
@@ -217,7 +232,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     const skipEl = (e.target as HTMLElement).closest(skipMouseDown);
     if (skipEl && !this.dragEls.some(el => el === e.target || el === skipEl)) return true;
     if (this.option.cancel) {
-      if ((e.target as HTMLElement).closest(this.option.cancel)) return true;
+      if (this._matchInPath(e, this.option.cancel)) return true;
     }
 
     this.mouseDownEvent = e;
