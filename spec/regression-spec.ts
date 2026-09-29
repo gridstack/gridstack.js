@@ -884,4 +884,82 @@ describe('regression >', () => {
       expect(free.y).toBe(2);
     });
   });
+
+  describe('2728 drag + page scroll under a css transform >', () => {
+    let host: HTMLElement;
+    // jsdom has no layout, so the real probe measures 0x0 -> scale Infinity. Feed it a
+    // believable translate(50,100) scale(0.5) reading like demo/transform.html has.
+    const SCALED = {xScale: 2, yScale: 2, xOffset: 50, yOffset: 100};
+
+    afterEach(() => {
+      delete DDManager.mouseHandled;
+      delete DDManager.dragElement;
+      vi.restoreAllMocks();
+      document.getElementById('gs-cont')?.remove();
+    });
+
+    /** get into a live dragging state so helper/dragOffset/dragTransform are all set up */
+    const startDrag = (transform = SCALED) => {
+      vi.spyOn(Utils, 'getValuesFromTransformedElement').mockReturnValue({...transform});
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div id="gs-cont"><div class="scaled"><div class="grid-stack">' +
+        '<div class="grid-stack-item"><div class="grid-stack-item-content">x</div></div>' +
+        '</div></div></div>');
+      host = document.querySelector('.grid-stack-item');
+      const handle = host.querySelector('.grid-stack-item-content') as HTMLElement;
+      const dd = DDElement.init(host as GridItemHTMLElement).setupDraggable({handle: '.grid-stack-item-content'}).ddDraggable!;
+      const down = new MouseEvent('mousedown', {button: 0, bubbles: true, clientX: 100, clientY: 100});
+      Object.defineProperty(down, 'target', {value: handle});
+      Object.defineProperty(down, 'currentTarget', {value: handle});
+      dd['_mouseDown'](down);
+      dd['_mouseMove'](new MouseEvent('mousemove', {clientX: 120, clientY: 120}));
+      expect(dd['dragging']).toBe(true);
+      return dd;
+    };
+
+    it('backs the helper out by however far the containing block scrolled', () => {
+      const dd = startDrag();
+      expect(dd['_cbDrift']).toEqual({dx: 0, dy: 0});
+
+      const move = new MouseEvent('mousemove', {clientX: 120, clientY: 120});
+      dd['_dragFollow'](move);
+      const before = parseFloat(dd['helper']!.style.top);
+      expect(Number.isFinite(before)).toBe(true);
+
+      // page scrolls down 200px: the transformed block - and the fixed probe inside it - slides up 200
+      vi.mocked(Utils.getValuesFromTransformedElement).mockReturnValue({...SCALED, yOffset: SCALED.yOffset - 200});
+      document.dispatchEvent(new Event('scroll'));
+      expect(dd['_cbDrift']).toEqual({dx: 0, dy: -200});
+
+      dd['_dragFollow'](move);
+      const after = parseFloat(dd['helper']!.style.top);
+      // pushed back down by the scroll, expressed in the block's own unscaled units
+      expect(after - before).toBeCloseTo(200 * SCALED.yScale, 5);
+
+      dd['_mouseUp'](new MouseEvent('mouseup'));
+      expect(dd['_cbDrift']).toEqual({dx: 0, dy: 0});
+    });
+
+    it('no transform: the fixed probe reads (0,0) at any scroll, so nothing is corrected', () => {
+      const NONE = {xScale: 1, yScale: 1, xOffset: 0, yOffset: 0};
+      const dd = startDrag(NONE);
+      const move = new MouseEvent('mousemove', {clientX: 120, clientY: 120});
+      dd['_dragFollow'](move);
+      const before = parseFloat(dd['helper']!.style.top);
+
+      document.dispatchEvent(new Event('scroll')); // probe still (0,0) - viewport is the containing block
+      expect(dd['_cbDrift']).toEqual({dx: 0, dy: 0});
+      dd['_dragFollow'](move);
+      expect(parseFloat(dd['helper']!.style.top)).toBe(before);
+      dd['_mouseUp'](new MouseEvent('mouseup'));
+    });
+
+    it('stops listening for scroll once the drag ends', () => {
+      const dd = startDrag();
+      dd['_mouseUp'](new MouseEvent('mouseup'));
+      vi.mocked(Utils.getValuesFromTransformedElement).mockReturnValue({...SCALED, yOffset: SCALED.yOffset - 500});
+      document.dispatchEvent(new Event('scroll'));
+      expect(dd['_cbDrift']).toEqual({dx: 0, dy: 0});
+    });
+  });
 });
