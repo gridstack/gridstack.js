@@ -818,15 +818,47 @@ describe('gridstack utils', () => {
     it('should get transform values from parent', () => {
       const parent = document.createElement('div');
       document.body.appendChild(parent);
-      
+
       const result = Utils.getValuesFromTransformedElement(parent);
-      
+
       expect(result.xScale).toBeDefined();
       expect(result.yScale).toBeDefined();
       expect(result.xOffset).toBeDefined();
       expect(result.yOffset).toBeDefined();
-      
+
       document.body.removeChild(parent);
+    });
+
+    // Regression test for https://github.com/gridstack/gridstack.js/issues/3230
+    it('keeps scale close to 1 despite device-pixel snapping error, thanks to a large probe', () => {
+      const parent = document.createElement('div');
+      document.body.appendChild(parent);
+      const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+
+      // Simulate what real browsers do at fractional OS/browser zoom (125%, 150%,...): any
+      // measured element's getBoundingClientRect() is off from its authored CSS size by a fixed
+      // absolute snapping error, regardless of how big that element is.
+      const snapError = 0.5;
+      HTMLElement.prototype.getBoundingClientRect = function (this: HTMLElement) {
+        const width = parseFloat(this.style.width) || 0;
+        const height = parseFloat(this.style.height) || 0;
+        return {
+          width: width + snapError,
+          height: height + snapError,
+          top: 0, left: 0, right: width + snapError, bottom: height + snapError, x: 0, y: 0,
+          toJSON: () => ({}),
+        } as DOMRect;
+      };
+
+      const { xScale, yScale } = Utils.getValuesFromTransformedElement(parent);
+
+      HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+      document.body.removeChild(parent);
+
+      // a 0.5px absolute snapping error is only a 0.05% relative deviation on a 1000px probe -
+      // it would have been a 33% deviation (scale 0.667) on the old 1x1px probe
+      expect(xScale).toBeCloseTo(1, 3);
+      expect(yScale).toBeCloseTo(1, 3);
     });
   });
 
@@ -936,11 +968,11 @@ describe('gridstack utils', () => {
     it('should handle scroll resize events', () => {
       // Test that the function exists and can be called
       expect(typeof Utils.updateScrollResize).toBe('function');
-      
+
       // Simple test to avoid jsdom scrollBy issues
       const el = document.createElement('div');
       const mockEvent = { clientY: 50 } as MouseEvent;
-      
+
       // The function implementation involves DOM scrolling which is complex in jsdom
       // We just verify it's callable without extensive mocking
       try {
@@ -951,4 +983,5 @@ describe('gridstack utils', () => {
       }
     });
   });
+
 });

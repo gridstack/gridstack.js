@@ -3129,9 +3129,13 @@ export class GridStack {
       // Scrolling page if needed
       Utils.updateScrollResize(event, el, cellHeight);
 
-      // get new size
-      p.w = Math.round((ui.size!.width - mLeft) / cellWidth);
-      p.h = Math.round((ui.size!.height - mTop) / cellHeight);
+      // get new size - only re-derive the dimension(s) the active handle actually changes.
+      // re-deriving an untouched dimension from measured pixels is lossy (subpixel/rounding noise)
+      // and can drift it by a row/column on fine grids where cellWidth/cellHeight are only a few
+      // pixels (e.g. high column count + cellHeight:1). #3230
+      const dir = event.resizeDir || '';
+      p.w = (dir.indexOf('e') > -1 || dir.indexOf('w') > -1) ? Math.round((ui.size!.width - mLeft) / cellWidth) : node.w!;
+      p.h = (dir.indexOf('n') > -1 || dir.indexOf('s') > -1) ? Math.round((ui.size!.height - mTop) / cellHeight) : node.h!;
       if (node.w === p.w && node.h === p.h) return;
       if (node._lastTried && node._lastTried.w === p.w && node._lastTried.h === p.h) return; // skip one we tried (but failed)
 
