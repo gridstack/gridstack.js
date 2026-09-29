@@ -911,6 +911,15 @@ export class GridStack {
     if (this.opts.cellHeightUnit === 'mm') {
       return (this.opts.cellHeight as number) * (96 / 2.54) / 10;
     }
+    // viewport units: parseHeight() accepts these but we used to fall through to measuring the first
+    // item below, which is only approximate - and since item positions are y*cellHeight that error
+    // multiplies by the row index, so items drifted more the further down they were (#2208).
+    if (this.opts.cellHeightUnit === 'vw' || this.opts.cellHeightUnit === 'vh') {
+      const view = this.opts.cellHeightUnit === 'vw'
+        ? (window.innerWidth || document.documentElement.clientWidth)
+        : (window.innerHeight || document.documentElement.clientHeight);
+      return (this.opts.cellHeight as number) * view / 100;
+    }
     // else get first cell height
     const el = this.el.querySelector('.' + this.opts.itemClass) as HTMLElement;
     if (el) {

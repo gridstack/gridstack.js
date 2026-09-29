@@ -780,4 +780,43 @@ describe('regression >', () => {
       grid.engine.endUpdate();
     });
   });
+
+  describe('2208 cellHeight in viewport units drifts items >', () => {
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', gridstackEmptyHTML);
+    });
+    afterEach(() => {
+      document.body.removeChild(document.getElementById('gs-cont'));
+    });
+
+    it('converts vw/vh to pixels instead of guessing from the first item', () => {
+      grid = GridStack.init({column: 12, cellHeight: '1vw', margin: 0,
+        children: [{x: 0, y: 0, w: 1, h: 1}]});
+      expect(grid.opts.cellHeightUnit).toBe('vw');
+      // 1vw = 1% of the viewport width. We used to fall through to measuring the first item, which
+      // is only approximate - and positions are y*cellHeight, so the error grew with the row index
+      expect(grid.getCellHeight(true)).toBeCloseTo(window.innerWidth / 100, 6);
+
+      grid.cellHeight('2vh');
+      expect(grid.opts.cellHeightUnit).toBe('vh');
+      expect(grid.getCellHeight(true)).toBeCloseTo(2 * window.innerHeight / 100, 6);
+    });
+
+    it('still handles the units it already knew', () => {
+      grid = GridStack.init({column: 12, cellHeight: '10mm', margin: 0});
+      expect(grid.getCellHeight(true)).toBeCloseTo(10 * (96 / 2.54) / 10, 6);
+      grid.cellHeight('50px');
+      expect(grid.getCellHeight(true)).toBe(50);
+    });
+
+    it('a row position is an exact multiple of the cell height, however far down', () => {
+      grid = GridStack.init({column: 12, cellHeight: '1vw', margin: 0,
+        children: [{id: 'top', x: 0, y: 0, w: 1, h: 1}, {id: 'low', x: 0, y: 40, w: 1, h: 1}]});
+      const ch = grid.getCellHeight(true);
+      // no accumulating drift: row 40 sits at exactly 40 cells down
+      expect(40 * ch).toBeCloseTo(40 * window.innerWidth / 100, 6);
+      expect(Number.isFinite(ch)).toBe(true);
+      expect(ch).toBeGreaterThan(0);
+    });
+  });
 });
