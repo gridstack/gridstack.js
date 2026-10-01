@@ -74,6 +74,16 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _autoScrollAnimId?: number;
   protected _autoScrollContainer?: HTMLElement;
   protected _autoScrollMaxSpeed?: number;
+  /** @internal auto-scroll trigger band: cursor within this fraction of the visible scroll height from an
+   * edge starts scrolling, with a px floor so short containers still trigger. See _getScrollAmount() #3356 */
+  protected static autoScrollBand = 0.08;
+  protected static autoScrollBandMin = 30;
+  /** @internal min fraction of max speed when the cursor just enters the band, ramping to full at the edge #3356 */
+  protected static autoScrollMinRatio = 0.4;
+  /** @internal px the cursor must have moved toward an edge (from where the drag started) before auto-scroll
+   * STARTS - unless it's already this close to the edge (or past it). So sitting in the band, or sliding
+   * sideways along it, with a clipped item doesn't scroll - only heading for that edge does #3356 */
+  protected static autoScrollStartMove = 10;
 
   constructor(public el: GridItemHTMLElement, public option: DDDragOpt = {}) {
     super();
@@ -294,6 +304,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       } else {
         this._callDrag(e);
       }
+      // once the cursor leaves the grid (pushed past its edge, the natural way to scroll) the grid stops
+      // listening to 'drag' and never calls updateScrollPosition() again, so check ourself while over empty
+      // space, else a quick push past the edge never starts the scroll #3356
+      if (!DDManager.dropElement && this._autoScrollContainer) this._checkAutoScroll();
     } else if (Math.abs(e.x - s.x) + Math.abs(e.y - s.y) > 3) {
       /**
        * don't start unless we've moved at least 3 pixels
@@ -306,6 +320,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       const grid = this.el.gridstackNode?.grid;
       if (grid) {
         DDManager.dropElement = (grid.el as DDElementHost).ddElement?.ddDroppable;
+        // register our grid's scroll container now rather than on its first 'drag' event: a quick push can
+        // take the cursor off the grid before it ever gets one, leaving nothing to auto-scroll #3356
+        if (grid.opts.draggable?.scroll !== false) this._autoScrollContainer = Utils.getScrollElement(grid.el);
       } else {
         delete DDManager.dropElement;
       }
@@ -323,6 +340,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
         this.option.start(ev, this.ui());
       }
       this.triggerEvent('dragstart', ev);
+      this._checkAutoScroll(); // the very move that started the drag may already be at/past an edge
       // now track keyboard events to cancel or rotate
       document.addEventListener('keydown', this._keyEvent);
     }
@@ -542,29 +560,65 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     };
   }
 
-  /** @internal starts or continues auto-scroll when the dragged helper is clipped by the scroll container.
+  /** @internal starts or continues auto-scroll when the cursor nears a scroll edge during a drag.
    * Takes the grid's own element to find the scroll container so external/sidebar drags work too (#2074). */
   public updateScrollPosition(gridEl: HTMLElement): void {
     this._autoScrollContainer = Utils.getScrollElement(gridEl); // always use latest active grid
-    const clipping = this._getClipping(this.helper!, this._autoScrollContainer);
-    if (clipping === 0) {
-      this._stopScrolling();
-    } else if (!this._autoScrollAnimId) {
+    this._checkAutoScroll();
+  }
+
+  /** @internal start/stop auto-scroll of _autoScrollContainer for the current cursor position */
+  protected _checkAutoScroll(): void {
+    if (!this.lastDrag || !this.helper || !this._autoScrollContainer) return;
+    const y = this.lastDrag.clientY;
+    const amount = this._getScrollAmount(this.helper, this._autoScrollContainer, y);
+    if (!amount) { this._stopScrolling(); return; } // cursor not near an edge (or item not clipped there)
+    if (this._autoScrollAnimId) return; // already scrolling - keep going even if the cursor now sits still
+
+    // only START once the cursor has headed for that edge since the drag began (net, so speed doesn't matter),
+    // not just because it sits in the band with a clipped item - unless it's already right at (or past) the edge
+    const dir = Math.sign(amount); // -1 = up, +1 = down
+    const moved = (y - (this.mouseDownEvent?.clientY ?? y)) * dir;
+    const edges = this._scrollEdges(this._autoScrollContainer);
+    const toEdge = dir < 0 ? y - edges.top : edges.bottom - y; // <= 0 once past the edge
+    if (moved >= DDDraggable.autoScrollStartMove || toEdge <= DDDraggable.autoScrollStartMove) {
       this._autoScrollAnimId = requestAnimationFrame(this._autoScrollTick);
     }
   }
 
-  /** @internal compute how many pixels the element is clipped: negative = above, positive = below, 0 = fully inside OR outside (stop scrolling) */
-  protected _getClipping(el: HTMLElement, scrollEl: HTMLElement): number {
-    const elRect = el.getBoundingClientRect();
-    const scrollRect = scrollEl.getBoundingClientRect();
-    // what's really on screen, NOT window.innerHeight which sits under iOS's overlaying tool bars (#2666)
+  /** @internal V edges (viewport coords) of the scroll container that are actually on screen - what's really
+   * visible, NOT window.innerHeight which sits under iOS's overlaying tool bars (#2666) */
+  protected _scrollEdges(scrollEl: HTMLElement): { top: number, bottom: number } {
+    const rect = scrollEl.getBoundingClientRect();
     const view = Utils.getVisibleViewport();
-    if (elRect.bottom < scrollRect.top || elRect.top > scrollRect.bottom) return 0; // fully outside
-    const clippedBelow = elRect.bottom - Math.min(scrollRect.bottom, view.bottom);
-    const clippedAbove = elRect.top - Math.max(scrollRect.top, view.top);
-    if (clippedAbove < 0) return clippedAbove;
-    if (clippedBelow > 0) return clippedBelow;
+    return { top: Math.max(rect.top, view.top), bottom: Math.min(rect.bottom, view.bottom) };
+  }
+
+  /** @internal how many px to scroll this frame based on the CURSOR: negative = up, positive = down, 0 = don't scroll.
+   * We trigger off the cursor nearing an edge (intentional - the user is driving toward it) rather than the dragged
+   * box touching it: an item taller than the view overhangs both edges for the whole drag and would scroll non-stop
+   * (#3356). We still require the item to be clipped on that side so we don't scroll when nothing of it is left to
+   * reveal that way. Speed ramps up the closer the cursor gets to the edge, capped at `_autoScrollMaxSpeed`. */
+  protected _getScrollAmount(el: HTMLElement, scrollEl: HTMLElement, clientY: number): number {
+    const elRect = el.getBoundingClientRect();
+    const { top: topEdge, bottom: botEdge } = this._scrollEdges(scrollEl);
+    if (botEdge <= topEdge) return 0; // scroll region fully off-screen
+
+    // trigger band = a slice of the visible scroll height (with a px floor for short containers)
+    const band = Math.max((botEdge - topEdge) * DDDraggable.autoScrollBand, DDDraggable.autoScrollBandMin);
+    if (!this._autoScrollMaxSpeed) this._autoScrollMaxSpeed = Math.max((botEdge - topEdge) / 50, 12);
+
+    // speed ramps from a floor (so entering the band already moves at a good clip, not a crawl) up to
+    // full speed right at the edge - otherwise most of the band scrolls too slowly to feel responsive
+    const ramp = (depth: number): number => this._autoScrollMaxSpeed! *
+      (DDDraggable.autoScrollMinRatio + (1 - DDDraggable.autoScrollMinRatio) * Math.min(depth / band, 1));
+
+    // cursor near the top edge and item still overhanging above it -> scroll up
+    const topDepth = topEdge + band - clientY;
+    if (topDepth > 0 && elRect.top < topEdge - 1) return -ramp(topDepth);
+    // cursor near the bottom edge and item still overhanging below it -> scroll down
+    const botDepth = clientY - (botEdge - band);
+    if (botDepth > 0 && elRect.bottom > botEdge + 1) return ramp(botDepth);
     return 0;
   }
 
@@ -572,17 +626,9 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   protected _autoScrollTick = (): void => {
     const el = this.helper;
     const scrollCont = this._autoScrollContainer;
-    if (!el || !scrollCont) { this._stopScrolling(); return; }
-    const clipping = this._getClipping(el, scrollCont);
-    if (clipping === 0) { this._stopScrolling(); return; }
-
-    if (!this._autoScrollMaxSpeed) {
-      const view = Utils.getVisibleViewport();
-      this._autoScrollMaxSpeed = Math.max((view.bottom - view.top) / 150, 4);
-    }
-    const absPx = Math.abs(clipping);
-    const speed = Math.min(absPx * 0.5, this._autoScrollMaxSpeed);
-    const scrollAmount = clipping > 0 ? speed : -speed;
+    if (!el || !scrollCont || !this.lastDrag) { this._stopScrolling(); return; }
+    const scrollAmount = this._getScrollAmount(el, scrollCont, this.lastDrag.clientY);
+    if (!scrollAmount) { this._stopScrolling(); return; }
 
     const prevScroll = scrollCont.scrollTop;
     scrollCont.scrollTop += scrollAmount;

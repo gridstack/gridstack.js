@@ -1041,14 +1041,16 @@ describe('regression >', () => {
       const dd = DDElement.init(item as GridItemHTMLElement).setupDraggable({}).ddDraggable!;
       const self = dd as unknown as {
         helper?: HTMLElement; _autoScrollContainer?: HTMLElement; _autoScrollMaxSpeed?: number;
-        _getClipping(el: HTMLElement, s: HTMLElement): number;
+        lastDrag?: MouseEvent;
+        _getScrollAmount(el: HTMLElement, s: HTMLElement, y: number): number;
         _autoScrollTick(): void; dragging?: boolean;
       };
       self.helper = item;
       self._autoScrollContainer = inner;
       self._autoScrollMaxSpeed = 10;
-      // pretend the helper is hanging below the visible area so we want to scroll DOWN
-      vi.spyOn(self as unknown as Record<string, () => number>, '_getClipping').mockReturnValue(40);
+      self.lastDrag = { clientY: 0 } as MouseEvent; // tick reads the cursor from here
+      // pretend the cursor is near the bottom edge with the item still clipped there, so we want to scroll DOWN
+      vi.spyOn(self as unknown as Record<string, () => number>, '_getScrollAmount').mockReturnValue(40);
       // getScrollElement walks up and should find `outer` above `inner`
       vi.spyOn(Utils, 'getScrollElement').mockImplementation(() => outer);
       return { dd, self, innerBox, outerBox };
@@ -1078,6 +1080,155 @@ describe('regression >', () => {
       const stop = vi.spyOn(self as unknown as Record<string, () => void>, '_stopScrolling');
       self._autoScrollTick();
       expect(stop).toHaveBeenCalled();
+    });
+  });
+
+  describe('3356 auto-scroll follows the cursor, not the dragged box >', () => {
+    let item: HTMLElement, scrollEl: HTMLElement;
+    afterEach(() => {
+      vi.restoreAllMocks();
+      document.getElementById('gs-cont')?.remove();
+    });
+
+    // a 500px-tall visible scroll region ([0,500]); band = max(500*0.08,30) = 40px, maxSpeed = max(500/150,4) = 4
+    const setup = (itemTop: number, itemBottom: number) => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div id="gs-cont"><div class="grid-stack-item"><div class="grid-stack-item-content">x</div></div></div>');
+      item = document.querySelector('.grid-stack-item') as HTMLElement;
+      scrollEl = document.getElementById('gs-cont') as HTMLElement;
+      const rect = (top: number, bottom: number) => () =>
+        ({ top, bottom, height: bottom - top, left: 0, right: 0, width: 0, x: 0, y: top, toJSON: () => ({}) } as DOMRect);
+      item.getBoundingClientRect = rect(itemTop, itemBottom);
+      scrollEl.getBoundingClientRect = rect(0, 500);
+      vi.spyOn(Utils, 'getVisibleViewport').mockReturnValue({ top: 0, bottom: 1000 }); // viewport bigger than the region
+
+      const dd = DDElement.init(item as GridItemHTMLElement).setupDraggable({}).ddDraggable!;
+      const self = dd as unknown as { helper?: HTMLElement; _getScrollAmount(el: HTMLElement, s: HTMLElement, y: number): number };
+      self.helper = item;
+      return (clientY: number) => self._getScrollAmount(item, scrollEl, clientY);
+    };
+
+    it('an oversized item overhanging both edges does NOT scroll while the cursor sits mid-region', () => {
+      const scroll = setup(-200, 700); // hangs past top AND bottom the whole drag
+      expect(scroll(250)).toBe(0); // old box-based logic scrolled here since the box was always clipped
+    });
+
+    it('scrolls down when the cursor nears the bottom edge and the item is clipped below', () => {
+      const scroll = setup(-200, 700);
+      expect(scroll(480)).toBeGreaterThan(0);
+    });
+
+    it('scrolls up when the cursor nears the top edge and the item is clipped above', () => {
+      const scroll = setup(-200, 700);
+      expect(scroll(20)).toBeLessThan(0);
+    });
+
+    it('does NOT scroll toward an edge the item is already clear of (clip guard)', () => {
+      const scroll = setup(100, 400); // fully inside the region
+      expect(scroll(480)).toBe(0); // cursor at the bottom band, but nothing of the item hangs below
+    });
+
+    it('scrolls faster the closer the cursor gets to the edge', () => {
+      const scroll = setup(-200, 700);
+      expect(Math.abs(scroll(495))).toBeGreaterThan(Math.abs(scroll(470)));
+    });
+
+    /** drives updateScrollPosition() for a drag that started at `startY`, with a controllable "wants to scroll"
+     * amount. Scroll container visible over [0,500] so the bottom edge is at 500, the top edge at 0 */
+    const gate = (startY: number) => {
+      document.body.insertAdjacentHTML('afterbegin',
+        '<div id="gs-cont"><div class="grid-stack-item"><div class="grid-stack-item-content">x</div></div></div>');
+      const el = document.querySelector('.grid-stack-item') as HTMLElement;
+      const dd = DDElement.init(el as GridItemHTMLElement).setupDraggable({}).ddDraggable!;
+      const self = dd as unknown as {
+        helper?: HTMLElement; lastDrag?: MouseEvent; _autoScrollAnimId?: number; _autoScrollContainer?: HTMLElement;
+        dragging?: boolean; mouseDownEvent?: MouseEvent;
+        _getScrollAmount(el: HTMLElement, s: HTMLElement, y: number): number;
+        _mouseMove(e: MouseEvent): boolean;
+        updateScrollPosition(g: HTMLElement): void;
+      };
+      self.helper = el;
+      self.mouseDownEvent = { clientY: startY } as MouseEvent;
+      el.getBoundingClientRect = () => ({ top: 0, bottom: 500, height: 500, left: 0, right: 0, width: 0, x: 0, y: 0, toJSON: () => ({}) } as DOMRect);
+      vi.spyOn(Utils, 'getVisibleViewport').mockReturnValue({ top: 0, bottom: 1000 });
+      const box = { amount: 5 }; // >0 = wants to scroll DOWN, <0 = UP, 0 = cursor not near an edge
+      vi.spyOn(Utils, 'getScrollElement').mockReturnValue(el);
+      vi.spyOn(self as unknown as Record<string, () => number>, '_getScrollAmount').mockImplementation(() => box.amount);
+      // mocked so the loop never actually runs; we assert on this instance's own anim id (no shared-global pollution)
+      vi.spyOn(window, 'requestAnimationFrame').mockReturnValue(123 as unknown as number);
+      const move = (clientY: number) => { self.lastDrag = { clientY } as MouseEvent; self.updateScrollPosition(el); };
+      return { el, self, move, box };
+    };
+
+    it('waits until the cursor has moved 10px toward the edge from where the drag started', () => {
+      const { self, move } = gate(460); // started in the bottom band, 40px from the edge
+      move(460); move(465);             // not moved / only 5px toward the edge
+      expect(self._autoScrollAnimId).toBeUndefined();
+      move(455);                        // moved AWAY from the edge
+      expect(self._autoScrollAnimId).toBeUndefined();
+      move(470);                        // 10px toward the edge since the start -> STARTS
+      expect(self._autoScrollAnimId).toBe(123);
+    });
+
+    it('sliding sideways along the band with a clipped item does NOT start', () => {
+      const { self, move } = gate(470);
+      move(472); move(468); move(471); move(470); // a little vertical wobble, but no net move toward the edge
+      expect(self._autoScrollAnimId).toBeUndefined();
+    });
+
+    it('speed does not matter - a single jump counts, since it is measured from the start', () => {
+      const { self, move } = gate(300); // started mid-grid
+      move(470);                        // one big move straight into the band
+      expect(self._autoScrollAnimId).toBe(123);
+    });
+
+    it('already within 10px of the edge (or past it) starts right away', () => {
+      const { self, move } = gate(495);
+      move(495);                        // hasn't moved, but is right at the edge
+      expect(self._autoScrollAnimId).toBe(123);
+    });
+
+    it('works the same toward the top edge', () => {
+      const { self, move, box } = gate(35);
+      box.amount = -5;                  // wants to scroll UP
+      move(35); move(30);               // only 5px up from the start, 30px from the top edge
+      expect(self._autoScrollAnimId).toBeUndefined();
+      move(25);                         // 10px up -> STARTS
+      expect(self._autoScrollAnimId).toBe(123);
+    });
+
+    it('still STARTS after a quick push takes the cursor off the grid (grid no longer sends drag events)', () => {
+      const { el, self } = gate(300);
+      vi.spyOn(self as unknown as Record<string, () => void>, '_dragFollow').mockImplementation(() => {});
+      vi.spyOn(self as unknown as Record<string, () => void>, '_callDrag').mockImplementation(() => {}); // grid did _leave(): nobody calls updateScrollPosition
+      self.dragging = true;
+      self._autoScrollContainer = el; // registered by the grid while the cursor was still over it
+      const prevDrop = DDManager.dropElement;
+      delete DDManager.dropElement;   // cursor is now over empty space
+      try {
+        self._mouseMove({ clientY: 340 } as MouseEvent); // one fast 40px push toward the bottom edge
+        expect(self._autoScrollAnimId).toBe(123);
+      } finally {
+        DDManager.dropElement = prevDrop;
+      }
+    });
+
+    it('leaves the start to the grid while the cursor is over one (no double handling)', () => {
+      const { el, self } = gate(300);
+      vi.spyOn(self as unknown as Record<string, () => void>, '_dragFollow').mockImplementation(() => {});
+      vi.spyOn(self as unknown as Record<string, () => void>, '_callDrag').mockImplementation(() => {});
+      const check = vi.spyOn(self as unknown as Record<string, () => void>, '_checkAutoScroll');
+      self.dragging = true;
+      self.mouseDownEvent = { clientY: 300 } as MouseEvent;
+      self._autoScrollContainer = el;
+      const prevDrop = DDManager.dropElement;
+      DDManager.dropElement = {} as typeof DDManager.dropElement; // over some grid's droppable
+      try {
+        self._mouseMove({ clientY: 340 } as MouseEvent);
+        expect(check).not.toHaveBeenCalled();
+      } finally {
+        DDManager.dropElement = prevDrop;
+      }
     });
   });
 });
