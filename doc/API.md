@@ -4069,7 +4069,7 @@ Note: Use enable()/disable() methods to change state as other operations need to
 new DDDraggable(el, option): DDDraggable;
 ```
 
-Defined in: [dd-draggable.ts:82](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L82)
+Defined in: [dd-draggable.ts:88](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L88)
 
 ###### Parameters
 
@@ -4094,7 +4094,7 @@ Defined in: [dd-draggable.ts:82](https://github.com/adumesny/gridstack.js/blob/m
 destroy(): void;
 ```
 
-Defined in: [dd-draggable.ts:166](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L166)
+Defined in: [dd-draggable.ts:172](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L172)
 
 Destroy this drag & drop implementation and clean up resources.
 Removes all event handlers and clears internal state.
@@ -4113,7 +4113,7 @@ Removes all event handlers and clears internal state.
 disable(forDestroy): void;
 ```
 
-Defined in: [dd-draggable.ts:152](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L152)
+Defined in: [dd-draggable.ts:158](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L158)
 
 Disable this drag & drop implementation.
 Subclasses should override to perform additional cleanup.
@@ -4138,7 +4138,7 @@ Subclasses should override to perform additional cleanup.
 enable(): void;
 ```
 
-Defined in: [dd-draggable.ts:138](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L138)
+Defined in: [dd-draggable.ts:144](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L144)
 
 Enable this drag & drop implementation.
 Subclasses should override to perform additional setup.
@@ -4157,7 +4157,7 @@ Subclasses should override to perform additional setup.
 protected getAllHandles(): HTMLElement[];
 ```
 
-Defined in: [dd-draggable.ts:101](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L101)
+Defined in: [dd-draggable.ts:107](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L107)
 
 return all handles omitting other nested `.grid-stack-item` children (in case node.subGrid isn't set for some reason)
 
@@ -4171,7 +4171,7 @@ return all handles omitting other nested `.grid-stack-item` children (in case no
 off(event): void;
 ```
 
-Defined in: [dd-draggable.ts:134](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L134)
+Defined in: [dd-draggable.ts:140](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L140)
 
 Unregister an event callback for the specified event.
 
@@ -4195,7 +4195,7 @@ Unregister an event callback for the specified event.
 on(event, callback): void;
 ```
 
-Defined in: [dd-draggable.ts:130](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L130)
+Defined in: [dd-draggable.ts:136](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L136)
 
 Register an event callback for the specified event.
 
@@ -4220,7 +4220,7 @@ Register an event callback for the specified event.
 refreshHandles(): void;
 ```
 
-Defined in: [dd-draggable.ts:187](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L187)
+Defined in: [dd-draggable.ts:193](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L193)
 
 Re-scans the item element for drag-handle elements after delayed content (React portal,
 Angular component, etc.) has been rendered into the item.  Removes listeners from the
@@ -4264,7 +4264,7 @@ Result from the callback function, if any
 updateOption(opts): DDDraggable;
 ```
 
-Defined in: [dd-draggable.ts:176](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L176)
+Defined in: [dd-draggable.ts:182](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L182)
 
 Method to update the options and return the DD implementation
 
@@ -4289,8 +4289,8 @@ Method to update the options and return the DD implementation
 | <a id="_autoscrollcontainer"></a> `_autoScrollContainer?` | `protected` | `HTMLElement` | `undefined` | - | [dd-draggable.ts:75](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L75) |
 | <a id="_autoscrollmaxspeed"></a> `_autoScrollMaxSpeed?` | `protected` | `number` | `undefined` | - | [dd-draggable.ts:76](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L76) |
 | <a id="autoscrollbandmin"></a> `autoScrollBandMin` | `static` | `number` | `30` | - | [dd-draggable.ts:80](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L80) |
-| <a id="el"></a> `el` | `public` | [`GridItemHTMLElement`](#griditemhtmlelement) | `undefined` | The HTML element being extended | [dd-draggable.ts:82](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L82) |
-| <a id="option"></a> `option` | `public` | [`DDDragOpt`](#dddragopt) | `{}` | The drag & drop options/configuration | [dd-draggable.ts:82](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L82) |
+| <a id="el"></a> `el` | `public` | [`GridItemHTMLElement`](#griditemhtmlelement) | `undefined` | The HTML element being extended | [dd-draggable.ts:88](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L88) |
+| <a id="option"></a> `option` | `public` | [`DDDragOpt`](#dddragopt) | `{}` | The drag & drop options/configuration | [dd-draggable.ts:88](https://github.com/adumesny/gridstack.js/blob/master/src/dd-draggable.ts#L88) |
 
 ***
 

@@ -521,6 +521,33 @@ describe('gridstack engine:', () => {
       expect(overlaps(e)).toEqual([]);
     });
 
+    (['list', 'compact'] as const).forEach(mode => it(`${mode}: dragging tall items only reorders once >50% of a target is covered`, () => {
+      // 12 columns, w:2,h:4 -> 6 per row. cells are 100x25px so a 1 cell nudge up/down crosses no more than 25px
+      const cw = 100, ch = 25;
+      ePriv = e = new GridStackEngine({mode, column: 12});
+      for (let i = 1; i <= 20; i++) e.addNode({w: 2, h: 4, id: String(i), autoPosition: true});
+      const order = () => e.nodes.slice().sort((a, b) => (a.y! - b.y!) || (a.x! - b.x!)).map(n => n.id);
+      const drag = (n: GridStackNode, px: number, py: number) => {
+        e.cacheRects(cw, ch, 0, 0, 0, 0);
+        const rect = {x: px, y: py, w: n.w! * cw, h: n.h! * ch};
+        return e.moveNode(n, {x: Math.round(px / cw), y: Math.round(py / ch), rect});
+      };
+      const n8 = findNode('8')!; // 2nd row, 2nd col: x=2,y=4
+      n8._moving = true;
+      const before = order();
+
+      // 1 cell up (and a few more) is nowhere near 50% of the item above, nor the neighbor to the left
+      expect(drag(n8, 200, 3 * ch)).toBe(false);
+      expect(order()).toEqual(before);
+      expect(drag(n8, 200, 5 * ch)).toBe(false);
+      expect(order()).toEqual(before);
+
+      // >50% over the left neighbor '7' -> takes its slot, '7' shifts back
+      drag(n8, 50, 4 * ch);
+      expect(order().slice(5, 9)).toEqual(['6', '8', '7', '9']);
+      expect(overlaps(e)).toEqual([]);
+    }));
+
     it('list keeps the load order (no back-filling), compact re-uses the gap', () => {
       const items = [[4,1],[2,1],[2,2],[4,2],[2,1],[6,1],[2,1],[2,1],[4,1],[2,2],[2,1],[4,1]];
       const load = (mode: 'list' | 'compact') => {
