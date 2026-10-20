@@ -34,10 +34,10 @@
   <script type="text/javascript">
     let count = 0;
     let children = [];
-    for (let i = 0; i < 20; i++) children.push({w: 2, h: 1, content: String(++count)}); // 6 per row in the default 12 column grid
+    for (let i = 0; i < 20; i++) children.push({w: 2, h: 4, content: String(++count)}); // 6 per row in the default 12 column grid
 
     let grid = GridStack.init({
-      cellHeight: 100,
+      cellHeight: 25,
       mode: 'list',
       children
     });

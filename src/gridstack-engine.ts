@@ -1016,7 +1016,20 @@ export class GridStackEngine {
           if (wasUndefinedPack) delete o.pack;
         }
       }
-      if (!nested) {
+      // while dragging, only reorder once we cover >50% of a target (same test as float/top), else a 1 cell nudge on tall
+      // items would jump the sort order. Then insert into that target's slot and let the reflow shift everyone else.
+      let skip = false;
+      if (!nested && node._moving && !o.nested && o.rect && node._rect) {
+        const collides = this.collideAll(node, nn, o.skip);
+        if (collides.length) {
+          const target = this.directionCollideCoverage(node, o, collides);
+          if (target) { nn.x = target.x; nn.y = target.y; }
+          else skip = true; // not enough coverage yet: stay put
+        }
+      }
+      if (skip) {
+        if (wasUndefinedPack) delete o.pack;
+      } else if (!nested) {
         node._dirty = true;
         const prevIndex = prevPos.y! * this.column + prevPos.x!;
         Utils.copyPos(node, nn);
