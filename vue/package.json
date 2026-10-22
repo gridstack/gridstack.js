@@ -24,11 +24,11 @@
     "globals": "^15.9.0",
     "jsdom": "^26.1.0",
     "typescript": "^5.5.3",
-    "vite": "^6.4.3",
+    "vite": "^6.4.4",
     "vitest": "^4.1.0",
     "vue-tsc": "^2.2.10"
   },
   "resolutions": {
-    "vite": "^6.4.3"
+    "vite": "^6.4.4"
   }
 }
