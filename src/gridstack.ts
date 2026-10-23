@@ -2578,6 +2578,11 @@ export class GridStack {
       // restore any temp removed (dragged over trash)
       GridStack._itemRemoving(n.el!, false);
     }
+    if (!n._isExternal && n._temporaryRemoved && n._orig) {
+      // our item left us (_leave removed it from the engine, so restoreInitial() below won't see it)
+      // go back to the original position, which onEndMoving() will add it back at
+      Utils.copyPos(n, n._orig);
+    }
 
     this.engine.restoreInitial();
   }
