@@ -160,6 +160,7 @@ Change log
 * fix: [#3230](https://github.com/gridstack/gridstack.js/issues/3230) don't recompute w/h unless side can change (rounding errors)
 * fix: [#2208](https://github.com/gridstack/gridstack.js/issues/2208) `cellHeight` in `vw`/`vh` units converts straight to pixels drift issue
 * fix: [#754](https://github.com/gridstack/gridstack.js/issues/754) fix `mode?: 'list' | 'compact'` for h:2 and taller items.
+* fix: [#3443](https://github.com/gridstack/gridstack.js/pull/3443) Esc restores item (and pushed nodes) dragged out of its grid
 
 ## 14.0.0 (2026-09-20)
 * feat: [#754](https://github.com/gridstack/gridstack.js/issues/754), [#2866](https://github.com/gridstack/gridstack.js/issues/2866) new `mode?: 'top' | 'float' | 'list' | 'compact'` - items are continuously re-flowed in sequential (row-major) order, like a re-orderable list: dragging, resizing, adding or removing an item re-flows everyone else instead of pushing them down, and dropping an item on another takes its place. See new
