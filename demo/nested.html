@@ -21,7 +21,7 @@
       <a class="btn btn-primary" onClick="addNewWidget('.sub2')" href="#">Add Widget Grid2</a>
       <a class="btn btn-primary" onClick="addNested()" href="#">Add Nested Grid</a>
       <!-- add .grid-stack-item for acceptWidgets:true -->
-      <div class="sidebar-item grid-stack-item">Drag nested</div>
+      <div class="sidebar-item grid-stack-item">Outside Drag</div>
     </div>
     <br />
     <div>
@@ -65,7 +65,7 @@
       resizable: { handles: 'se,e,s,sw,w'},
       // subGridOpts, // options for all subgrids, but defaults to column='auto' now so no need.
       children: [
-        {x:0, y:0, content: 'regular item'},
+        {x:0, y:0, w: 2, h: 2, content: `<div style="width: 90%" class="sidebar-item grid-stack-item">Drag new widget</div>`},
         {x:1, y:0, w:4, h:4, sizeToContent: true, content: '<div>nested grid sizeToContent:true with some header content</div>', subGridOpts: {children: sub1, id:'sub1_grid', class: 'sub1'}},
         {x:5, y:0, w:3, h:4, subGridOpts: {children: sub2, id:'sub2_grid', class: 'sub2'}},
       ]
