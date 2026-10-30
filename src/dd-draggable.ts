@@ -340,12 +340,30 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
         this.option.start(ev, this.ui());
       }
       this.triggerEvent('dragstart', ev);
+      if (!grid) {
+        this._enterStartingDroppable(e);
+      }
       this._checkAutoScroll(); // the very move that started the drag may already be at/past an edge
       // now track keyboard events to cancel or rotate
       document.addEventListener('keydown', this._keyEvent);
     }
     // e.preventDefault(); // passive = true. OLD: was needed otherwise we get text sweep text selection as we drag around
     return true;
+  }
+
+  /**
+   * @internal a drag-in item that lives inside a droppable (eg. in a grid item content) starts with the
+   * cursor already over it, so no mouseenter ever fires until we leave & re-enter. Send the enter ourself
+   * to the innermost accepting droppable we're in.
+   */
+  protected _enterStartingDroppable(e: MouseEvent): void {
+    let p = this.el.parentElement as DDElementHost | null;
+    while (p && !DDManager.dropElement) {
+      let drop = p.ddElement?.ddDroppable;
+      console.log("drop333", drop);
+      if (drop && !drop.disabled && !DDManager.dropElement) drop._mouseEnter(e);
+      p = p.parentElement as DDElementHost | null;
+    }
   }
 
   /** @internal call when the mouse gets released to drop the item at current location */
