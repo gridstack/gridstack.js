@@ -113,6 +113,19 @@ var grid = GridStack.init();
 grid.addWidget({w: 2, content: 'item 1'});
 ```
 
+Add multiple widgets in a single batch while keeping existing widgets:
+
+```js
+const elements = grid.addWidgets([
+  {w: 3, h: 2, content: 'Chart'},
+  {w: 2, h: 2, content: 'Stats'}
+]);
+```
+
+`addWidgets()` returns widget elements in input order, omitting widgets skipped by `addWidget()` (for example, when `GridStack.addRemoveCB` returns `undefined`). If a batch is already open, `added` and `change` events remain deferred until the caller ends it with `grid.batchUpdate(false)`. An empty list returns `[]` without changing the batch state.
+
+If adding a widget throws, the error propagates and earlier additions remain. The method closes only the batch it started.
+
 ... or creating from list
 
 ```js

@@ -906,6 +906,210 @@ describe('gridstack >', () => {
 
   });
 
+  describe('addWidgets() >', () => {
+    let addRemoveCB: typeof GridStack.addRemoveCB;
+    let renderCB: typeof GridStack.renderCB;
+
+    beforeEach(() => {
+      addRemoveCB = GridStack.addRemoveCB;
+      renderCB = GridStack.renderCB;
+      document.body.insertAdjacentHTML('afterbegin', gridstackHTML);
+      grid = GridStack.init({animate: false});
+    });
+    afterEach(() => {
+      GridStack.addRemoveCB = addRemoveCB;
+      GridStack.renderCB = renderCB;
+      vi.restoreAllMocks();
+      grid.destroy(false);
+      document.getElementById('gs-cont').remove();
+    });
+
+    it('keeps existing widgets and returns elements in input order', () => {
+      const existing = [...grid.engine.nodes];
+      const elements = grid.addWidgets([
+        {id: 'right', x: 10, y: 0, w: 2, content: 'Right'},
+        {id: 'left', x: 8, y: 0, w: 2, content: 'Left'}
+      ]);
+
+      expect(elements.map(el => el.gridstackNode.id)).toEqual(['right', 'left']);
+      expect(elements.map(el => el.querySelector('.grid-stack-item-content').textContent)).toEqual(['Right', 'Left']);
+      expect(elements.every(el => el.parentElement === grid.el)).toBe(true);
+      expect(grid.engine.nodes).toHaveLength(existing.length + 2);
+      existing.forEach(n => expect(grid.engine.nodes).toContain(n));
+      expect(grid.engine.batchMode).toBe(false);
+    });
+
+    it.each(['top', 'float', 'list', 'compact'] as const)('preserves %s mode and resolves collisions', mode => {
+      grid.mode(mode);
+      grid.addWidgets([
+        {x: 0, y: 0, w: 4, h: 2},
+        {w: 4, h: 2}
+      ]);
+
+      expect(grid.getMode()).toBe(mode);
+      expect(grid.engine.nodes).toHaveLength(4);
+      grid.engine.nodes.forEach((n, i, nodes) => {
+        nodes.slice(i + 1).forEach(other => expect(Utils.isIntercepted(n, other)).toBe(false));
+      });
+    });
+
+    it('emits one added event and one change event for moved existing widgets', () => {
+      const existing = [...grid.engine.nodes];
+      const added = vi.fn();
+      const changed = vi.fn();
+      grid.on('added', added).on('change', changed);
+
+      const elements = grid.addWidgets([
+        {x: 0, y: 0, w: 12, h: 1},
+        {x: 0, y: 0, w: 12, h: 1}
+      ]);
+
+      expect(added).toHaveBeenCalledTimes(1);
+      expect(added.mock.calls[0][1]).toEqual(elements.map(el => el.gridstackNode));
+      expect(changed).toHaveBeenCalledTimes(1);
+      expect(changed.mock.calls[0][1]).toEqual(expect.arrayContaining(existing));
+      expect(changed.mock.calls[0][1]).toHaveLength(existing.length);
+    });
+
+    it('leaves an existing batch open and defers events until the caller ends it', () => {
+      const added = vi.fn();
+      grid.on('added', added);
+      grid.batchUpdate();
+      const first = grid.addWidget({id: 'first'});
+      const elements = grid.addWidgets([{id: 'second'}, {id: 'third'}]);
+
+      expect(grid.engine.batchMode).toBe(true);
+      expect(added).not.toHaveBeenCalled();
+      const last = grid.addWidget({id: 'last'});
+      grid.batchUpdate(false);
+
+      expect(added).toHaveBeenCalledTimes(1);
+      expect(added.mock.calls[0][1]).toEqual([first, ...elements, last].map(el => el.gridstackNode));
+    });
+
+    it('does nothing for an empty list, including during an existing batch', () => {
+      const nodes = [...grid.engine.nodes];
+      const events = vi.fn();
+      grid.on('added change removed', events);
+      const batchUpdate = vi.spyOn(grid, 'batchUpdate');
+
+      expect(grid.addWidgets([])).toEqual([]);
+      expect(batchUpdate).not.toHaveBeenCalled();
+      expect(grid.engine.nodes).toEqual(nodes);
+      expect(events).not.toHaveBeenCalled();
+
+      grid.batchUpdate();
+      const el = grid.addWidget({id: 'pending'});
+      batchUpdate.mockClear();
+      expect(grid.addWidgets([])).toEqual([]);
+      expect(batchUpdate).not.toHaveBeenCalled();
+      expect(grid.engine.batchMode).toBe(true);
+      expect(events).not.toHaveBeenCalled();
+      grid.batchUpdate(false);
+      expect(events).toHaveBeenCalledTimes(1);
+      expect(events.mock.calls[0][1]).toEqual([el.gridstackNode]);
+    });
+
+    it('uses the custom creation callback and omits widgets it skips', () => {
+      const added = vi.fn();
+      grid.on('added', added);
+      GridStack.addRemoveCB = vi.fn((_parent, w) => w.id === 'skip' ? undefined : grid.createWidgetDivs(w));
+
+      const elements = grid.addWidgets([{id: 'first'}, {id: 'skip'}, {id: 'last'}]);
+
+      expect(GridStack.addRemoveCB).toHaveBeenCalledTimes(3);
+      expect(elements.map(el => el.gridstackNode.id)).toEqual(['first', 'last']);
+      expect(grid.engine.nodes).toHaveLength(4);
+      expect(added).toHaveBeenCalledTimes(1);
+      expect(added.mock.calls[0][1]).toEqual(elements.map(el => el.gridstackNode));
+    });
+
+    it('does not emit events when the creation callback skips every widget', () => {
+      const nodes = [...grid.engine.nodes];
+      const events = vi.fn();
+      grid.on('added change removed', events);
+      GridStack.addRemoveCB = () => undefined;
+
+      expect(grid.addWidgets([{id: 'skip-first'}, {id: 'skip-last'}])).toEqual([]);
+
+      expect(grid.engine.nodes).toEqual(nodes);
+      expect(grid.engine.batchMode).toBe(false);
+      expect(events).not.toHaveBeenCalled();
+    });
+
+    it('restores widget widths and positions after adding in one column', () => {
+      grid.column(1);
+      const elements = grid.addWidgets([
+        {id: 'positioned', x: 8, y: 0, w: 4, h: 2},
+        {id: 'automatic', w: 3, h: 2}
+      ]);
+      expect(elements.every(el => el.gridstackNode.w === 1)).toBe(true);
+
+      grid.column(12);
+
+      expect(find('positioned')).toEqual(expect.objectContaining({x: 8, y: 0, w: 4, h: 2}));
+      expect(find('automatic')).toEqual(expect.objectContaining({w: 3, h: 2}));
+      expect(find('gsItem1')).toEqual(expect.objectContaining({x: 0, w: 4, h: 2}));
+      expect(find('gsItem2')).toEqual(expect.objectContaining({x: 4, w: 4, h: 4}));
+    });
+
+    it('creates nested grids and continues adding sibling widgets', () => {
+      const elements = grid.addWidgets([
+        {id: 'parent', w: 4, h: 4, subGridOpts: {children: [{id: 'child', w: 2}]}},
+        {id: 'sibling', w: 2}
+      ]);
+
+      expect(elements.map(el => el.gridstackNode.id)).toEqual(['parent', 'sibling']);
+      const subGrid = find('parent').subGrid;
+      expect(subGrid.parentGridNode).toBe(find('parent'));
+      expect(subGrid.engine.nodes).toHaveLength(1);
+      expect(subGrid.engine.nodes[0]).toEqual(expect.objectContaining({id: 'child', w: 2}));
+      expect(subGrid.engine.batchMode).toBe(false);
+      expect(grid.engine.batchMode).toBe(false);
+      expect(grid.engine.nodes).toHaveLength(4);
+    });
+
+    it('keeps the outer batch open when a rendering callback adds more widgets', () => {
+      const added = vi.fn();
+      grid.on('added', added);
+      GridStack.renderCB = (_el, w) => {
+        if (w.id === 'outer-first') grid.addWidgets([{id: 'inner'}]);
+        expect(grid.engine.batchMode).toBe(true);
+        expect(added).not.toHaveBeenCalled();
+      };
+
+      const elements = grid.addWidgets([{id: 'outer-first'}, {id: 'outer-last'}]);
+
+      expect(elements.map(el => el.gridstackNode.id)).toEqual(['outer-first', 'outer-last']);
+      expect(grid.engine.batchMode).toBe(false);
+      expect(added).toHaveBeenCalledTimes(1);
+      expect(added.mock.calls[0][1]).toEqual([find('inner'), ...elements.map(el => el.gridstackNode)]);
+    });
+
+    it.each([false, true])('restores batch ownership after a rendering error (existing batch: %s)', existingBatch => {
+      const error = new Error('Rendering failed');
+      GridStack.renderCB = (_el, w) => { if (w.id === 'fail') throw error; };
+      const added = vi.fn();
+      grid.on('added', added);
+      if (existingBatch) grid.batchUpdate();
+
+      expect(() => grid.addWidgets([{id: 'first'}, {id: 'fail'}, {id: 'last'}])).toThrow(error);
+
+      expect(grid.engine.batchMode).toBe(existingBatch);
+      expect(grid.engine.nodes).toHaveLength(3);
+      expect(find('first')).toBeDefined();
+      expect(find('fail')).toBeUndefined();
+      expect(find('last')).toBeUndefined();
+      if (existingBatch) {
+        expect(added).not.toHaveBeenCalled();
+        grid.batchUpdate(false);
+      }
+      expect(added).toHaveBeenCalledTimes(1);
+      expect(added.mock.calls[0][1]).toEqual([find('first')]);
+      expect(grid.addWidget({id: 'after-error'})).toBeDefined();
+    });
+  });
+
   describe('addWidget() >', () => {
     beforeEach(() => {
       document.body.insertAdjacentHTML('afterbegin', gridstackHTML);

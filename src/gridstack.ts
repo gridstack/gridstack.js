@@ -490,6 +490,38 @@ export class GridStack {
   }
 
   /**
+   * Add multiple widgets in a single batch, keeping existing widgets.
+   * Uses addWidget() for each definition, with layout updates and events deferred until the batch ends.
+   * If a batch is already active, it remains open for the caller to finish.
+   * An empty list returns [] without changing the batch state.
+   * If adding a widget throws, previously added widgets remain and any batch started here is closed.
+   *
+   * @param widgets list of widget definitions to add in order
+   * @returns widget elements in input order, omitting definitions for which addWidget() returns undefined
+   *
+   * @example
+   * const elements = grid.addWidgets([
+   *   {w: 3, h: 2, content: 'Chart'},
+   *   {w: 2, h: 2, content: 'Stats'}
+   * ]);
+   */
+  public addWidgets(widgets: GridStackWidget[]): GridItemHTMLElement[] {
+    if (!widgets.length) return [];
+    const wasBatch = this.engine.batchMode;
+    if (!wasBatch) this.batchUpdate();
+    try {
+      const elements: GridItemHTMLElement[] = [];
+      for (const w of widgets) {
+        const el = this.addWidget(w);
+        if (el) elements.push(el);
+      }
+      return elements;
+    } finally {
+      if (!wasBatch) this.batchUpdate(false);
+    }
+  }
+
+  /**
    * Create the default grid item divs and content (possibly lazy loaded) by using GridStack.renderCB().
    *
    * @param n GridStackNode definition containing widget configuration
@@ -867,6 +899,7 @@ export class GridStack {
   /**
    * use before calling a bunch of `addWidget()` to prevent un-necessary relayouts in between (more efficient)
    * and get a single event callback. You will see no changes until `batchUpdate(false)` is called.
+   * Use `addWidgets()` to add multiple widgets with automatic batch handling.
    */
   public batchUpdate(flag = true): GridStack {
     this.engine.batchUpdate(flag);
