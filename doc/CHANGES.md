@@ -149,6 +149,7 @@ Change log
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## 14.0.1 (TBD)
+* feat: [#3443](https://github.com/gridstack/gridstack.js/pull/3443) dragging between grids now goes by how much of the item is over a grid (like jquery-ui's `intersect` before v6) rather than where the cursor is. Also make it possible to insert above a nested grid even when parent grid overlapps exactly.
 * feat: [#3356](https://github.com/gridstack/gridstack.js/issues/3356) auto-scroll triggers off the cursor nearing an edge (not just widget being clipped)
 * fix: [#3355](https://github.com/gridstack/gridstack.js/issues/3355) auto-scroll hands off to the outer container when a nested scroll container is pinned
 * fix: [#2729](https://github.com/gridstack/gridstack.js/issues/2729) `cancel` selector now matches elements inside a shadow root
