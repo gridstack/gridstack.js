@@ -10,6 +10,7 @@ import { Utils } from './utils';
 import { DDElementHost } from './dd-element';
 import { DDTouch, isTouch, pointerenter, pointerleave } from './dd-touch';
 import { DDUIData } from './types';
+import type { GridHTMLElement } from './gridstack';
 
 export interface DDDroppableOpt {
   accept?: string | ((el: HTMLElement) => boolean);
@@ -18,23 +19,41 @@ export interface DDDroppableOpt {
   out?: (event: DragEvent, ui: DDUIData) => void;
 }
 
+/** @internal the part of a DOMRect we use for overlaps */
+export type Box = Pick<DOMRect, 'left' | 'top' | 'right' | 'bottom' | 'width' | 'height'>;
+
 // let count = 0; // TEST
 
 export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt<DDDroppableOpt> {
 
   public accept!: (el: HTMLElement) => boolean;
 
-  protected eventEl: HTMLElement;
+  /** @internal element we track the cursor on (a sub-grid's whole cell), also what the item's shape is measured against */
+  public eventEl: HTMLElement;
+
+  /** @internal droppable by its eventEl, so DDDraggable can find the ones under the dragged item */
+  public static byEventEl = new WeakMap<HTMLElement, DDDroppable>();
+
+  /**
+   * @internal how much of the dragged item must be over a grid for it to go in, and to stay in. A sub-grid takes more
+   * to go in than to stay (else we'd flip right back out to its parent grid), while an outermost grid holds on to it
+   * longer since nothing else would take it.
+   */
+  public static enterOver = { grid: 0.5, sub: 0.75 };
+  public static stayOver = { grid: 0.25, sub: 0.5 };
+  /** @internal how much more of the dragged item must be over a neighbor grid than the one it's in to switch to it */
+  public static switchBy = 0.2;
 
   constructor(public el: HTMLElement, public option: DDDroppableOpt = {}) {
     super();
     // create var event binding so we can easily remove and still look like TS methods (unlike anonymous functions)
-    this._mouseEnter = this._mouseEnter.bind(this);
-    this._mouseLeave = this._mouseLeave.bind(this);
+    this._domEnter = this._domEnter.bind(this);
+    this._domLeave = this._domLeave.bind(this);
     // For sub-grids the .grid-stack element is inset from the .grid-stack-item cell by the item
     // margins (--gs-item-margin-*).  Register on the outer .grid-stack-item instead so adjacent
     // cells are gapless — moving from one sub-grid to a sibling never passes through dead space.
     this.eventEl = (this.el.closest('.grid-stack-item') as HTMLElement) || this.el;
+    DDDroppable.byEventEl.set(this.eventEl, this);
     this.enable();
     this._setupAccept();
   }
@@ -52,8 +71,8 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     super.enable();
     this.el.classList.add('ui-droppable');
     this.el.classList.remove('ui-droppable-disabled');
-    this.eventEl.addEventListener('mouseenter', this._mouseEnter);
-    this.eventEl.addEventListener('mouseleave', this._mouseLeave);
+    this.eventEl.addEventListener('mouseenter', this._domEnter);
+    this.eventEl.addEventListener('mouseleave', this._domLeave);
     if (isTouch) {
       this.eventEl.addEventListener('pointerenter', pointerenter);
       this.eventEl.addEventListener('pointerleave', pointerleave);
@@ -65,8 +84,8 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     super.disable();
     this.el.classList.remove('ui-droppable');
     if (!forDestroy) this.el.classList.add('ui-droppable-disabled');
-    this.eventEl.removeEventListener('mouseenter', this._mouseEnter);
-    this.eventEl.removeEventListener('mouseleave', this._mouseLeave);
+    this.eventEl.removeEventListener('mouseenter', this._domEnter);
+    this.eventEl.removeEventListener('mouseleave', this._domLeave);
     if (isTouch) {
       this.eventEl.removeEventListener('pointerenter', pointerenter);
       this.eventEl.removeEventListener('pointerleave', pointerleave);
@@ -77,6 +96,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     this.disable(true);
     this.el.classList.remove('ui-droppable');
     this.el.classList.remove('ui-droppable-disabled');
+    if (DDDroppable.byEventEl.get(this.eventEl) === this) DDDroppable.byEventEl.delete(this.eventEl);
     super.destroy();
   }
 
@@ -86,8 +106,31 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     return this;
   }
 
-  /** @internal called when the cursor enters our area - prepare for a possible drop and track leaving */
-  protected _mouseEnter(e: MouseEvent): void {
+  /**
+   * @internal the cursor came in or went out. Grids instead go by how much of the item is over them as it moves (see
+   * DDDraggable._checkDropTarget) as the cursor depends on where the item was grabbed, so this is for other targets (a trash).
+   */
+  protected _domEnter(e: MouseEvent): void {
+    if (!this._byShape()) this._mouseEnter(e);
+  }
+  protected _domLeave(e: MouseEvent): void {
+    if (!this._byShape()) this._mouseLeave(e);
+  }
+
+  /**
+   * @internal true if the dragged item's shape decides if we're its target rather than the cursor: we're a grid and it can
+   * be measured (has a size, and we can find what's under it). Not for a temporary sub-grid (subGridDynamic) which is made
+   * to receive it, so the cursor leaves.
+   */
+  public _byShape(): boolean {
+    const grid = (this.el as GridHTMLElement).gridstack;
+    if (!grid || grid._isTemp || !document.elementFromPoint) return false;
+    const rect = DDManager.dragElement?.helper?.getBoundingClientRect();
+    return !!(rect?.width && rect.height);
+  }
+
+  /** @internal called when the item enters our area - prepare for a possible drop and track leaving */
+  public _mouseEnter(e: MouseEvent): void {
     // console.log(`${count++} Enter ${this.el.id}`); // TEST
     if (!DDManager.dragElement) return;
     // During touch drag operations, ignore real browser-generated mouseenter events (isTrusted:true) vs our simulated ones (isTrusted:false).
@@ -114,8 +157,8 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     // console.log('tracking'); // TEST
   }
 
-  /** @internal called when the item is leaving our area, stop tracking if we had moving item */
-  protected _mouseLeave(e: MouseEvent, calledByEnter = false): void {
+  /** @internal called when the item is leaving our area, stop tracking if we had moving item. toParent=false to not hand it to our parent */
+  public _mouseLeave(e: MouseEvent, calledByEnter = false, toParent = true): void {
     // console.log(`${count++} Leave ${this.el.id}`); // TEST
     if (!DDManager.dragElement || DDManager.dropElement !== this) return;
     e.preventDefault();
@@ -134,18 +177,29 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
       // console.log('not tracking'); // TEST
 
       // if we're still over a parent droppable, send it an enter as we don't get one from leaving nested children
-      if (!calledByEnter) {
-        let parentDrop: DDDroppable | undefined;
-        let parent: DDElementHost | null = this.el.parentElement;
-        while (!parentDrop && parent) {
-          parentDrop = parent.ddElement?.ddDroppable;
-          parent = parent.parentElement as DDElementHost | null;
-        }
-        if (parentDrop) {
-          parentDrop._mouseEnter(e);
-        }
+      if (!calledByEnter && toParent) {
+        this.parentDroppable()?._mouseEnter(e);
       }
     }
+  }
+
+  /** @internal fraction (0-1) of the smaller box that is covered by the intersection of the two */
+  public static overlap(a: Box, b: Box): number {
+    const w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+    const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+    const area = Math.min(a.width * a.height, b.width * b.height);
+    return w > 0 && h > 0 && area > 0 ? (w * h) / area : 0;
+  }
+
+  /** @internal the closest droppable above us (the parent grid when we're a sub-grid) */
+  public parentDroppable(): DDDroppable | undefined {
+    let parentDrop: DDDroppable | undefined;
+    let parent: DDElementHost | null = this.el.parentElement;
+    while (!parentDrop && parent) {
+      parentDrop = parent.ddElement?.ddDroppable;
+      parent = parent.parentElement as DDElementHost | null;
+    }
+    return parentDrop;
   }
 
   /** item is being dropped on us - called by the drag mouseup handler - this calls the client drop event */
@@ -159,7 +213,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   }
 
   /** @internal true if element matches the string/method accept option */
-  protected _canDrop(el: HTMLElement): boolean {
+  public _canDrop(el: HTMLElement): boolean {
     return el && (!this.accept || this.accept(el));
   }
 

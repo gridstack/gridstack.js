@@ -2637,6 +2637,21 @@ export class GridStack {
         node.y = Math.max(0, Math.round(top / cellHeight));
         delete node.autoPosition;
         this.engine.nodeBoundFix(node);
+        // coming in over a sub-grid that would take us (likely the one we just came out of) don't push it out of the way,
+        // which with gravity lands us above it even when we came out below or beside it. Go on the side of it we're on
+        // instead (above still pushes it down, to insert above it)
+        const sub = this._acceptingSubGrid(node);
+        if (sub) {
+          const dx = (left / cellWidth + node.w! / 2 - (sub.x! + sub.w! / 2)) / sub.w!;
+          const dy = (top / cellHeight + node.h! / 2 - (sub.y! + sub.h! / 2)) / sub.h!;
+          if (Math.abs(dy) >= Math.abs(dx)) {
+            if (dy > 0) node.y = sub.y! + sub.h!;
+          } else if (dx > 0) {
+            if (sub.x! + sub.w! + node.w! <= this.getColumn()) node.x = sub.x! + sub.w!;
+          } else if (sub.x! >= node.w!) {
+            node.x = sub.x! - node.w!;
+          }
+        }
 
         // don't accept *initial* location if doesn't fit #1419 (locked drop region, or can't grow), but maybe try if it will go somewhere
         if (!this.engine.willItFit(node)) {
@@ -3129,6 +3144,9 @@ export class GridStack {
       if (this._extraDragRow !== prev) this._updateContainerHeight();
 
       if (node.x === p.x && node.y === p.y) return; // skip same
+      // a sub-grid that would take us isn't something to push out of the way (it'd keep running ahead of us), we go into
+      // it once mostly over it instead (see DDDraggable._checkDropTarget) so stay put till then
+      if (this._acceptingSubGrid(node, p)) return;
       // DON'T skip one we tried as we might have failed because of coverage <50% before
       // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
     } else if (event.type === 'resize') {
@@ -3184,6 +3202,16 @@ export class GridStack {
       }
       this.triggerEvent(event, target);
     }
+  }
+
+  /** @internal sub-grid node at the given spot that would take the dragged item in (when going by its shape, see DDDraggable._checkDropTarget) */
+  protected _acceptingSubGrid(node: GridStackNode, p: GridStackPosition = node): GridStackNode | undefined {
+    const drag = DDManager.dragElement;
+    if (!drag) return undefined;
+    return this.engine.collideAll(node, {...node, ...p}).find(n => {
+      const drop = (n.subGrid?.el as DDElementHost | undefined)?.ddElement?.ddDroppable;
+      return drop?._byShape() && drop._canDrop(drag.el);
+    });
   }
 
   /** call given event callback on our main top-most grid (if we're nested) */
