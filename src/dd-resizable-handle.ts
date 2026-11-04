@@ -3,7 +3,7 @@
  * Copyright (c) 2021-2025  Alain Dumesny - see GridStack root license
  */
 
-import { isTouch, pointerdown, touchend, touchmove, touchstart, cancelPendingTouchDrag, DDTouch } from './dd-touch';
+import { isTouch, touchend, touchmove, touchstart, cancelPendingTouchDrag, DDTouch } from './dd-touch';
 import { GridItemHTMLElement } from './gridstack';
 
 export interface DDResizableHandleOpt {
@@ -57,8 +57,6 @@ export class DDResizableHandle {
     this.el.addEventListener('mousedown', this._mouseDown);
     if (isTouch) {
       this.el.addEventListener('touchstart', touchstart);
-      this.el.addEventListener('pointerdown', pointerdown);
-      // this.el.style.touchAction = 'none'; // not needed unlike pointerdown doc comment
     }
 
     return this;
@@ -73,7 +71,6 @@ export class DDResizableHandle {
     this.el.removeEventListener('mousedown', this._mouseDown);
     if (isTouch) {
       this.el.removeEventListener('touchstart', touchstart);
-      this.el.removeEventListener('pointerdown', pointerdown);
     }
     if (!this.option.element) {
       this.host.removeChild(this.el);

@@ -1217,6 +1217,7 @@ describe('regression >', () => {
       const { el, self } = gate(300);
       vi.spyOn(self as unknown as Record<string, () => void>, '_dragFollow').mockImplementation(() => {});
       vi.spyOn(self as unknown as Record<string, () => void>, '_callDrag').mockImplementation(() => {});
+      vi.spyOn(self as unknown as Record<string, () => void>, '_checkDropTarget').mockImplementation(() => {}); // stays over it
       const check = vi.spyOn(self as unknown as Record<string, () => void>, '_checkAutoScroll');
       self.dragging = true;
       self.mouseDownEvent = { clientY: 300 } as MouseEvent;
@@ -1238,7 +1239,6 @@ describe('regression >', () => {
     const box = (left: number, top: number, w: number, h: number) =>
       ({left, top, right: left + w, bottom: top + h, width: w, height: h, x: left, y: top} as DOMRect);
     const inside = (b: DOMRect | undefined, x: number, y: number) => !!b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
-    type Drop = { _domEnter(e: MouseEvent): void; _domLeave(e: MouseEvent): void };
     const self = () => dd as unknown as { helper?: HTMLElement; _checkDropTarget(e: MouseEvent): void };
     const subDrop = () => sub.el.ddElement!.ddDroppable!;
     const mainDrop = () => main.el.ddElement!.ddDroppable!;
@@ -1298,12 +1298,12 @@ describe('regression >', () => {
       });
     }
 
-    it('ignores the cursor coming in or going out of grids', () => {
-      (subDrop() as unknown as Drop)._domLeave(new MouseEvent('mouseleave'));
+    it('ignores the cursor coming in or going out', () => {
+      cell.dispatchEvent(new MouseEvent('mouseleave'));
       expect(DDManager.dropElement).toBe(subDrop());
       moveTo(150, 40); // into the parent
-      (subDrop() as unknown as Drop)._domEnter(new MouseEvent('mouseenter'));
-      (mainDrop() as unknown as Drop)._domLeave(new MouseEvent('mouseleave'));
+      cell.dispatchEvent(new MouseEvent('mouseenter'));
+      main.el.dispatchEvent(new MouseEvent('mouseleave'));
       expect(DDManager.dropElement).toBe(mainDrop());
     });
 
@@ -1393,7 +1393,6 @@ describe('regression >', () => {
       expect(DDManager.dropElement).toBe(subDrop());
       moveTo(470, 200); // 70%: straight there
       expect(DDManager.dropElement).toBe(otherDrop);
-      (otherDrop as unknown as Drop)._domLeave(new MouseEvent('mouseleave')); // the cursor doesn't matter
       expect(DDManager.dropElement).toBe(otherDrop);
       moveTo(445, 200); // 45/55, not clearly more over the nest yet
       expect(DDManager.dropElement).toBe(otherDrop);
@@ -1452,27 +1451,63 @@ describe('regression >', () => {
       expect([g.y, i.y]).toEqual([0, 4]); // ...yet its top is in its last row: it didn't get pushed (and us float up above it)
     });
 
-    it('leaves non-grid targets (a trash) to the cursor', () => {
-      const trashEl = document.createElement('div');
-      document.getElementById('gs-cont')!.appendChild(trashEl);
-      const trash = DDElement.init(trashEl as GridItemHTMLElement).setupDroppable({}).ddDroppable! as unknown as Drop;
-      trash._domEnter(new MouseEvent('mouseenter'));
+    /** the grid's trash (removable), drawn at b */
+    const trashAt = (b: DOMRect) => {
+      const trashEl = document.getElementById('gs-cont')!.appendChild(document.createElement('div'));
+      trashEl.id = 'trash';
+      main.opts.removable = '#trash';
+      (main as unknown as { _setupRemoveDrop(): void })._setupRemoveDrop();
+      vi.spyOn(trashEl, 'getBoundingClientRect').mockImplementation(() => b);
+      const find = document.elementFromPoint;
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) => inside(b, x, y) ? trashEl : find(x, y);
+      return trashEl.ddElement!.ddDroppable!;
+    };
+    const removing = () => item.classList.contains('grid-stack-item-removing');
+
+    it('goes in and out of a trash by the item shape too', () => {
+      const trash = trashAt(box(1000, 100, 200, 200)); // right of the grid
+      moveTo(940, 150); // 40% over it
+      expect(DDManager.dropElement).toBeUndefined();
+      moveTo(960, 150); // 60%
+      expect([DDManager.dropElement, removing()]).toEqual([trash, true]);
+      moveTo(945, 150); // 45%: still enough to stay (not flicker on its edge)
       expect(DDManager.dropElement).toBe(trash);
-      moveTo(150, 150); // all over the sub-grid
-      expect(DDManager.dropElement).toBe(trash);
-      trash._domLeave(new MouseEvent('mouseleave'));
-      moveTo(150, 150); // back
-      expect(DDManager.dropElement).toBe(subDrop());
+      moveTo(935, 150); // 35%: out soon after, unlike a grid
+      expect([DDManager.dropElement, removing()]).toEqual([undefined, false]);
+      moveTo(945, 150); // 45%: not back in yet
+      expect(DDManager.dropElement).toBeUndefined();
     });
 
-    it('leaves a temporary sub-grid (subGridDynamic) to the cursor', () => {
-      sub._isTemp = true;
-      moveTo(600, 200); // all out of it, over the parent
-      expect(DDManager.dropElement).toBe(subDrop());
-      (subDrop() as unknown as Drop)._domLeave(new MouseEvent('mouseleave')); // the cursor leaves: it goes away
-      expect(DDManager.dropElement).not.toBe(subDrop());
-      moveTo(600, 200);
+    it('goes into a trash drawn over the grid (a bar fixed at the bottom), and back into the grid', () => {
+      const trash = trashAt(box(100, 400, 800, 100)); // over the grid's bottom
+      moveTo(600, 200); // out of our sub-grid into the parent
       expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(600, 420); // 80% over the bar (and still all over the grid)
+      expect([DDManager.dropElement, removing()]).toEqual([trash, true]);
+      moveTo(600, 300); // back up
+      expect([DDManager.dropElement, removing()]).toEqual([mainDrop(), false]);
+    });
+
+    it('goes right into a sub-grid made on the fly (subGridDynamic), and out of it by the item shape', async () => {
+      mainBox = box(100, 100, 800, 600); // room below the nest
+      const pEl = main.addWidget({x: 6, y: 0, w: 6, h: 4, id: 'p'}); // what we paused over to nest in
+      const pBox = box(500, 100, 400, 400);
+      vi.spyOn(pEl, 'getBoundingClientRect').mockImplementation(() => pBox);
+      const node = item.gridstackNode!;
+      node._moving = true;
+      node._event = new MouseEvent('mousemove');
+      const temp = main.makeSubGrid(pEl, undefined, node);
+      const find = document.elementFromPoint;
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) => inside(pBox, x, y) ? temp.el : find(x, y);
+      await new Promise(r => setTimeout(r));
+      expect(DDManager.dropElement).toBe(temp.el.ddElement!.ddDroppable); // without waiting to be mostly over it
+
+      moveTo(600, 430); // 70% over it
+      expect(DDManager.dropElement).toBe(temp.el.ddElement!.ddDroppable);
+      moveTo(600, 470); // 30%: out to the parent, which un-nests it
+      expect(DDManager.dropElement).toBe(mainDrop());
+      expect(temp.el.isConnected).toBe(false);
+      expect(main.engine.nodes.find(n => n.id === 'p')?.subGrid).toBeUndefined();
     });
 
     it('leaves to nowhere if the parent grid will not take it, and back once mostly over the sub-grid', () => {
@@ -1483,6 +1518,39 @@ describe('regression >', () => {
       expect(DDManager.dropElement).toBeUndefined();
       moveTo(150, 80); // 80%
       expect(DDManager.dropElement).toBe(subDrop());
+    });
+
+    /** a web component in the given parent holding a grid in its shadow root, drawn at b (elementFromPoint() only finds its host) */
+    const shadowGrid = (parent: HTMLElement, b: DOMRect) => {
+      const host = parent.appendChild(document.createElement('div'));
+      const root = host.attachShadow({mode: 'open'});
+      root.innerHTML = '<div><div class="grid-stack"></div></div>';
+      const grid = GridStack.init({acceptWidgets: true}, root.querySelector('.grid-stack') as HTMLElement);
+      vi.spyOn(grid.el, 'getBoundingClientRect').mockImplementation(() => b);
+      (root as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) => inside(b, x, y) ? grid.el : host;
+      const find = document.elementFromPoint;
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) => inside(b, x, y) ? host : find(x, y);
+      return grid.el.ddElement!.ddDroppable!;
+    };
+
+    it('finds a grid inside a web component (shadow DOM)', () => {
+      mainBox = box(100, 100, 400, 400);
+      const shadowDrop = shadowGrid(document.getElementById('gs-cont')!, box(500, 100, 400, 400));
+      moveTo(470, 200); // 70% over it
+      expect(DDManager.dropElement).toBe(shadowDrop);
+    });
+
+    it('a grid inside a web component widget is a sub-grid of its parent (in and out of it like the others)', () => {
+      const wc = main.addWidget({x: 6, y: 0, w: 6, h: 2, id: 'wc'});
+      const shadowDrop = shadowGrid(wc.querySelector('.grid-stack-item-content')!, box(500, 100, 400, 200));
+      moveTo(600, 400); // out of our sub-grid, in the parent below the web component
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(600, 230); // 70%, not enough for a sub-grid
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(600, 220); // 80%
+      expect(DDManager.dropElement).toBe(shadowDrop);
+      moveTo(600, 260); // 40%: out to its parent
+      expect(DDManager.dropElement).toBe(mainDrop());
     });
   });
 });
