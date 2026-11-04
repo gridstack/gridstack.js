@@ -1,5 +1,5 @@
 /**
- * dd-resizable-handle.ts 14.1.0
+ * dd-resizable-handle.ts 14.1.0-dev
  * Copyright (c) 2021-2025  Alain Dumesny - see GridStack root license
  */
 
