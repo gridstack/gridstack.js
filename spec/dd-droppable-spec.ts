@@ -166,11 +166,9 @@ describe('DDDroppable', () => {
     describe('_mouseEnter', () => {
       it('should handle mouse enter when dragging', () => {
         const event = new MouseEvent('mouseenter', { bubbles: true });
-        const spy = vi.spyOn(event, 'preventDefault');
         
         droppable._mouseEnter(event);
         
-        expect(spy).toHaveBeenCalled();
         expect(DDManager.dropElement).toBe(droppable);
         expect(element.classList.contains('ui-droppable-over')).toBe(true);
         expect(droppable.option.over).toHaveBeenCalled();
@@ -205,11 +203,9 @@ describe('DDDroppable', () => {
 
       it('should handle mouse leave when this is the current drop element', () => {
         const event = new MouseEvent('mouseleave', { bubbles: true });
-        const spy = vi.spyOn(event, 'preventDefault');
         
         droppable._mouseLeave(event);
         
-        expect(spy).toHaveBeenCalled();
         expect(DDManager.dropElement).toBeUndefined();
         expect(droppable.option.out).toHaveBeenCalled();
       });

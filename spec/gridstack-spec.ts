@@ -1464,6 +1464,7 @@ describe('gridstack >', () => {
     });
     afterEach(() => {
       Element.prototype.getBoundingClientRect = origRect;
+      delete (document as unknown as {elementFromPoint?: unknown}).elementFromPoint;
       document.body.removeChild(document.getElementById('gs-cont'));
     });
 
@@ -1494,7 +1495,7 @@ describe('gridstack >', () => {
 
       mouse('mousedown', 5, 5, sb);
       mouse('mousemove', 40, 40); // drag starts outside the grid
-      grid.el.dispatchEvent(new MouseEvent('mouseenter', {bubbles: true})); // cursor enters the grid
+      (document as unknown as {elementFromPoint: () => Element}).elementFromPoint = () => grid.el; // then it's over it (jsdom has no layout)
       mouse('mousemove', 300, 100);
       mouse('mouseup', 300, 100); // drop it
 

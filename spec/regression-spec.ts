@@ -1217,6 +1217,7 @@ describe('regression >', () => {
       const { el, self } = gate(300);
       vi.spyOn(self as unknown as Record<string, () => void>, '_dragFollow').mockImplementation(() => {});
       vi.spyOn(self as unknown as Record<string, () => void>, '_callDrag').mockImplementation(() => {});
+      vi.spyOn(self as unknown as Record<string, () => void>, '_checkDropTarget').mockImplementation(() => {}); // stays over it
       const check = vi.spyOn(self as unknown as Record<string, () => void>, '_checkAutoScroll');
       self.dragging = true;
       self.mouseDownEvent = { clientY: 300 } as MouseEvent;
@@ -1229,6 +1230,327 @@ describe('regression >', () => {
       } finally {
         DDManager.dropElement = prevDrop;
       }
+    });
+  });
+  describe('drop target by item shape, not the cursor >', () => {
+    let main: GridStack, sub: GridStack, item: GridItemHTMLElement, dd: DDDraggable;
+    let cell: HTMLElement & { getAnimations?: () => object[] }; // the sub-grid's .grid-stack-item
+    let cellBox: DOMRect, mainBox: DOMRect, otherBox: DOMRect | undefined, other: GridStack | undefined;
+    const box = (left: number, top: number, w: number, h: number) =>
+      ({left, top, right: left + w, bottom: top + h, width: w, height: h, x: left, y: top} as DOMRect);
+    const inside = (b: DOMRect | undefined, x: number, y: number) => !!b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom;
+    const self = () => dd as unknown as { helper?: HTMLElement; _checkDropTarget(e: MouseEvent): void };
+    const subDrop = () => sub.el.ddElement!.ddDroppable!;
+    const mainDrop = () => main.el.ddElement!.ddDroppable!;
+
+    /** the item (100x100) at the given spot, as a mouse move would report (the cursor doesn't matter) */
+    const moveTo = (left: number, top: number) => {
+      vi.spyOn(self().helper!, 'getBoundingClientRect').mockReturnValue(box(left, top, 100, 100));
+      self()._checkDropTarget(new MouseEvent('mousemove', {clientX: left + 50, clientY: top + 5}));
+    };
+    const leaveAll = () => {
+      moveTo(150, 40); // into the parent
+      moveTo(150, -10); // and out of it all
+      expect(DDManager.dropElement).toBeUndefined();
+    };
+
+    beforeEach(() => {
+      document.body.insertAdjacentHTML('afterbegin', '<div id="gs-cont" style="width: 800px"><div class="grid-stack main"></div></div>');
+      main = GridStack.init({column: 12, acceptWidgets: true, children: [
+        {x: 0, y: 0, w: 6, h: 4, id: 'g', subGridOpts: {acceptWidgets: true, children: [{x: 0, y: 0, id: 'i'}]}},
+      ]}, '.grid-stack.main');
+      sub = main.engine.nodes[0].subGrid!;
+      item = sub.engine.nodes[0].el!;
+      cell = main.engine.nodes[0].el!;
+      // the sub-grid fills the top left of the main one, flush with its top/left/bottom edges like in nested.html
+      cellBox = box(100, 100, 400, 400);
+      mainBox = box(100, 100, 800, 400);
+      otherBox = other = undefined;
+      vi.spyOn(cell, 'getBoundingClientRect').mockImplementation(() => cellBox);
+      vi.spyOn(main.el, 'getBoundingClientRect').mockImplementation(() => mainBox);
+      // what's under a point (jsdom has no layout)
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) =>
+        inside(cellBox, x, y) ? sub.el : inside(otherBox, x, y) ? other!.el : inside(mainBox, x, y) ? main.el : document.body;
+      dd = item.ddElement!.ddDraggable!;
+      self().helper = item;
+      vi.spyOn(item, 'getBoundingClientRect').mockReturnValue(box(150, 150, 100, 100)); // being dragged in the sub-grid
+      DDManager.dragElement = dd;
+      DDManager.dropElement = subDrop();
+    });
+    afterEach(() => {
+      vi.restoreAllMocks();
+      delete (document as unknown as {elementFromPoint?: unknown}).elementFromPoint;
+      delete DDManager.dragElement;
+      delete DDManager.dropElement;
+      document.getElementById('gs-cont')?.remove();
+    });
+
+    it('stays in the sub-grid while at least half of the item is over it', () => {
+      moveTo(150, 50); // exactly half above
+      expect(DDManager.dropElement).toBe(subDrop());
+    });
+
+    for (const [dir, left, top] of [['above', 150, 40], ['below', 150, 460], ['left', 40, 200], ['right', 460, 200]] as const) {
+      it(`hands the item to the parent grid once more than half is ${dir} the sub-grid`, () => {
+        moveTo(left, top);
+        expect(DDManager.dropElement).toBe(mainDrop());
+        expect(sub.engine.nodes.find(n => n.id === 'i')).toBeUndefined(); // left the sub-grid
+      });
+    }
+
+    it('ignores the cursor coming in or going out', () => {
+      cell.dispatchEvent(new MouseEvent('mouseleave'));
+      expect(DDManager.dropElement).toBe(subDrop());
+      moveTo(150, 40); // into the parent
+      cell.dispatchEvent(new MouseEvent('mouseenter'));
+      main.el.dispatchEvent(new MouseEvent('mouseleave'));
+      expect(DDManager.dropElement).toBe(mainDrop());
+    });
+
+    it('goes into a sub-grid once mostly over it, so it does not flip right back out', () => {
+      moveTo(150, 40); // into the parent
+      moveTo(150, 60); // 60% over the sub-grid
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(150, 80); // 80%
+      expect(DDManager.dropElement).toBe(subDrop());
+    });
+
+    it('goes by where the sub-grid is drawn, once it has settled', () => {
+      moveTo(150, 40); // into the parent, which pushes the sub-grid down to make room...
+      cell.getAnimations = () => [{transitionProperty: 'top'}]; // ...sliding down
+      moveTo(150, 90); // over where it was, but it's on its way
+      expect(DDManager.dropElement).toBe(mainDrop());
+
+      cell.getAnimations = () => [];
+      cellBox = box(100, 210, 400, 400); // settled below our placeholder
+      moveTo(150, 120); // over where it used to be (now our own placeholder) isn't going back in
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(150, 190); // mostly over where it is now
+      expect(DDManager.dropElement).toBe(subDrop());
+
+      cell.getAnimations = () => [{transitionProperty: 'top'}]; // the parent no longer has us, so it slides back up
+      cellBox = box(100, 300, 400, 400); // whatever mid way says...
+      moveTo(150, 195);
+      expect(DDManager.dropElement).toBe(subDrop()); // ...is ignored
+      cell.getAnimations = () => [];
+      cellBox = box(100, 100, 400, 400); // back home, we're well inside
+      moveTo(150, 200);
+      expect(DDManager.dropElement).toBe(subDrop());
+    });
+
+    it('measures the whole sub-grid cell, not just its rows', () => {
+      vi.spyOn(sub.el, 'getBoundingClientRect').mockReturnValue(box(100, 100, 400, 100)); // the nested .grid-stack is 1 row
+      moveTo(150, 300); // well inside the cell, below its rows
+      expect(DDManager.dropElement).toBe(subDrop());
+    });
+
+    it('leaves the outermost grid only once the item is mostly out of it', () => {
+      moveTo(150, 40); // into the parent
+      moveTo(150, 30); // 30% still over it
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(150, 20); // 20%
+      expect(DDManager.dropElement).toBeUndefined();
+    });
+
+    it('enters the outermost grid once half of the item is over it', () => {
+      leaveAll();
+      moveTo(150, 30); // 30%
+      expect(DDManager.dropElement).toBeUndefined();
+      moveTo(150, 60); // 60%
+      expect(DDManager.dropElement).toBe(mainDrop());
+    });
+
+    it('coming in at the edge of a nest it goes into the outermost grid first, as it went out', () => {
+      leaveAll();
+      moveTo(150, 55); // 55% over both: enough for the outer grid, not the sub-grid
+      expect(DDManager.dropElement).toBe(mainDrop());
+    });
+
+    it('coming in fast right over a sub-grid goes straight in (not pushing it out of the way first)', () => {
+      leaveAll();
+      const enter = vi.spyOn(mainDrop(), '_mouseEnter');
+      moveTo(150, 150);
+      expect(DDManager.dropElement).toBe(subDrop());
+      expect(enter).not.toHaveBeenCalled();
+    });
+
+    it('flying out fast leaves it all at once (not dropping it in the parent grid for a moment)', () => {
+      const enter = vi.spyOn(mainDrop(), '_mouseEnter');
+      moveTo(150, -200);
+      expect(DDManager.dropElement).toBeUndefined();
+      expect(enter).not.toHaveBeenCalled();
+    });
+
+    it('moves between plain grids once half of the item is over the other one', () => {
+      document.getElementById('gs-cont')!.insertAdjacentHTML('beforeend', '<div class="grid-stack other"></div>');
+      other = GridStack.init({acceptWidgets: true}, '.grid-stack.other');
+      mainBox = box(100, 100, 400, 400);
+      otherBox = box(500, 100, 400, 400);
+      vi.spyOn(other.el, 'getBoundingClientRect').mockImplementation(() => otherBox!);
+      const otherDrop = other.el.ddElement!.ddDroppable!;
+
+      moveTo(440, 200); // 40% over the other grid
+      expect(DDManager.dropElement).toBe(subDrop());
+      moveTo(470, 200); // 70%: straight there
+      expect(DDManager.dropElement).toBe(otherDrop);
+      expect(DDManager.dropElement).toBe(otherDrop);
+      moveTo(445, 200); // 45/55, not clearly more over the nest yet
+      expect(DDManager.dropElement).toBe(otherDrop);
+      moveTo(430, 200); // back: 70% over the nest, enough for its outer grid but not the sub-grid
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(420, 200); // 80%
+      expect(DDManager.dropElement).toBe(subDrop());
+    });
+
+    it('does not push a sub-grid that would take it out of the way (so we can get over it, and in)', () => {
+      // as a real drag start does (the node then points to the placeholder, not the item)
+      (sub as unknown as { _onStartMoving(...a: unknown[]): void })._onStartMoving(item, new Event('dragstart'), {position: {top: 0, left: 0}}, sub.engine.nodes[0], 66, 100);
+      moveTo(150, 40); // into the parent above the sub-grid, which makes room
+      const g = main.engine.nodes.find(n => n.id === 'g')!, i = main.engine.nodes.find(n => n.id === 'i')!;
+      expect([i.y, g.y]).toEqual([0, 1]); // pushed down below us
+      // the parent's drag handling, well down onto the sub-grid (the engine alone would push it by now)
+      const dragTo = (top: number) => (main as unknown as { _dragOrResize(...a: unknown[]): void })
+        ._dragOrResize(item, {type: 'drag', target: item}, {position: {left: 0, top}}, i, 800 / 12, 100);
+      dragTo(320);
+      expect([i.y, g.y]).toEqual([0, 1]); // not pushed any further
+
+      sub.opts.acceptWidgets = false; // one that won't take us is moved around as before (we get past it)
+      dragTo(330);
+      expect(i.y).toBeGreaterThan(g.y!);
+    });
+
+    it('moves between side by side sub-grids once clearly more over the other one, not on the line between them', () => {
+      // a second sub-grid right of the first one, both flush in the parent
+      main.addWidget({x: 6, y: 0, w: 6, h: 4, id: 'g2', subGridOpts: {acceptWidgets: true}});
+      const g2 = main.engine.nodes.find(n => n.id === 'g2')!, sub2 = g2.subGrid!, sub2Drop = sub2.el.ddElement!.ddDroppable!;
+      const cell2Box = box(500, 100, 400, 400);
+      vi.spyOn(g2.el!, 'getBoundingClientRect').mockImplementation(() => cell2Box);
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) =>
+        inside(cellBox, x, y) ? sub.el : inside(cell2Box, x, y) ? sub2.el : inside(mainBox, x, y) ? main.el : document.body;
+
+      moveTo(445, 200); // 45/55 over the other one: stays, rather than dropping it in the parent in between
+      expect(DDManager.dropElement).toBe(subDrop());
+      moveTo(465, 200); // 35/65
+      expect(DDManager.dropElement).toBe(sub2Drop);
+      moveTo(445, 200); // back on the line: no flip
+      expect(DDManager.dropElement).toBe(sub2Drop);
+      moveTo(430, 200); // 70/30
+      expect(DDManager.dropElement).toBe(subDrop());
+    });
+
+    it('coming out of a sub-grid below or beside it lands there in the parent, not above it (pushed out of the way)', () => {
+      vi.spyOn(main, 'cellWidth').mockReturnValue(800 / 12);
+      vi.spyOn(main, 'getCellHeight').mockReturnValue(100);
+      vi.spyOn(sub, 'getCellHeight').mockReturnValue(100);
+      sub.update(item, {h: 2}); // 2 rows, like item 6 in nested.html
+      (sub as unknown as { _onStartMoving(...a: unknown[]): void })._onStartMoving(item, new Event('dragstart'), {position: {top: 0, left: 0}}, sub.engine.nodes[0], 66, 100);
+      vi.spyOn(self().helper!, 'getBoundingClientRect').mockReturnValue(box(150, 410, 100, 200)); // more than half below it...
+      self()._checkDropTarget(new MouseEvent('mousemove'));
+      const g = main.engine.nodes.find(n => n.id === 'g')!, i = main.engine.nodes.find(n => n.id === 'i')!;
+      expect(DDManager.dropElement).toBe(mainDrop());
+      expect([g.y, i.y]).toEqual([0, 4]); // ...yet its top is in its last row: it didn't get pushed (and us float up above it)
+    });
+
+    /** the grid's trash (removable), drawn at b */
+    const trashAt = (b: DOMRect) => {
+      const trashEl = document.getElementById('gs-cont')!.appendChild(document.createElement('div'));
+      trashEl.id = 'trash';
+      main.opts.removable = '#trash';
+      (main as unknown as { _setupRemoveDrop(): void })._setupRemoveDrop();
+      vi.spyOn(trashEl, 'getBoundingClientRect').mockImplementation(() => b);
+      const find = document.elementFromPoint;
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) => inside(b, x, y) ? trashEl : find(x, y);
+      return trashEl.ddElement!.ddDroppable!;
+    };
+    const removing = () => item.classList.contains('grid-stack-item-removing');
+
+    it('goes in and out of a trash by the item shape too', () => {
+      const trash = trashAt(box(1000, 100, 200, 200)); // right of the grid
+      moveTo(940, 150); // 40% over it
+      expect(DDManager.dropElement).toBeUndefined();
+      moveTo(960, 150); // 60%
+      expect([DDManager.dropElement, removing()]).toEqual([trash, true]);
+      moveTo(945, 150); // 45%: still enough to stay (not flicker on its edge)
+      expect(DDManager.dropElement).toBe(trash);
+      moveTo(935, 150); // 35%: out soon after, unlike a grid
+      expect([DDManager.dropElement, removing()]).toEqual([undefined, false]);
+      moveTo(945, 150); // 45%: not back in yet
+      expect(DDManager.dropElement).toBeUndefined();
+    });
+
+    it('goes into a trash drawn over the grid (a bar fixed at the bottom), and back into the grid', () => {
+      const trash = trashAt(box(100, 400, 800, 100)); // over the grid's bottom
+      moveTo(600, 200); // out of our sub-grid into the parent
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(600, 420); // 80% over the bar (and still all over the grid)
+      expect([DDManager.dropElement, removing()]).toEqual([trash, true]);
+      moveTo(600, 300); // back up
+      expect([DDManager.dropElement, removing()]).toEqual([mainDrop(), false]);
+    });
+
+    it('goes right into a sub-grid made on the fly (subGridDynamic), and out of it by the item shape', async () => {
+      mainBox = box(100, 100, 800, 600); // room below the nest
+      const pEl = main.addWidget({x: 6, y: 0, w: 6, h: 4, id: 'p'}); // what we paused over to nest in
+      const pBox = box(500, 100, 400, 400);
+      vi.spyOn(pEl, 'getBoundingClientRect').mockImplementation(() => pBox);
+      const node = item.gridstackNode!;
+      node._moving = true;
+      node._event = new MouseEvent('mousemove');
+      const temp = main.makeSubGrid(pEl, undefined, node);
+      const find = document.elementFromPoint;
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) => inside(pBox, x, y) ? temp.el : find(x, y);
+      await new Promise(r => setTimeout(r));
+      expect(DDManager.dropElement).toBe(temp.el.ddElement!.ddDroppable); // without waiting to be mostly over it
+
+      moveTo(600, 430); // 70% over it
+      expect(DDManager.dropElement).toBe(temp.el.ddElement!.ddDroppable);
+      moveTo(600, 470); // 30%: out to the parent, which un-nests it
+      expect(DDManager.dropElement).toBe(mainDrop());
+      expect(temp.el.isConnected).toBe(false);
+      expect(main.engine.nodes.find(n => n.id === 'p')?.subGrid).toBeUndefined();
+    });
+
+    it('leaves to nowhere if the parent grid will not take it, and back once mostly over the sub-grid', () => {
+      main.opts.acceptWidgets = false;
+      moveTo(150, 40);
+      expect(DDManager.dropElement).toBeUndefined();
+      moveTo(150, 60); // 60% back
+      expect(DDManager.dropElement).toBeUndefined();
+      moveTo(150, 80); // 80%
+      expect(DDManager.dropElement).toBe(subDrop());
+    });
+
+    /** a web component in the given parent holding a grid in its shadow root, drawn at b (elementFromPoint() only finds its host) */
+    const shadowGrid = (parent: HTMLElement, b: DOMRect) => {
+      const host = parent.appendChild(document.createElement('div'));
+      const root = host.attachShadow({mode: 'open'});
+      root.innerHTML = '<div><div class="grid-stack"></div></div>';
+      const grid = GridStack.init({acceptWidgets: true}, root.querySelector('.grid-stack') as HTMLElement);
+      vi.spyOn(grid.el, 'getBoundingClientRect').mockImplementation(() => b);
+      (root as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) => inside(b, x, y) ? grid.el : host;
+      const find = document.elementFromPoint;
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) => inside(b, x, y) ? host : find(x, y);
+      return grid.el.ddElement!.ddDroppable!;
+    };
+
+    it('finds a grid inside a web component (shadow DOM)', () => {
+      mainBox = box(100, 100, 400, 400);
+      const shadowDrop = shadowGrid(document.getElementById('gs-cont')!, box(500, 100, 400, 400));
+      moveTo(470, 200); // 70% over it
+      expect(DDManager.dropElement).toBe(shadowDrop);
+    });
+
+    it('a grid inside a web component widget is a sub-grid of its parent (in and out of it like the others)', () => {
+      const wc = main.addWidget({x: 6, y: 0, w: 6, h: 2, id: 'wc'});
+      const shadowDrop = shadowGrid(wc.querySelector('.grid-stack-item-content')!, box(500, 100, 400, 200));
+      moveTo(600, 400); // out of our sub-grid, in the parent below the web component
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(600, 230); // 70%, not enough for a sub-grid
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(600, 220); // 80%
+      expect(DDManager.dropElement).toBe(shadowDrop);
+      moveTo(600, 260); // 40%: out to its parent
+      expect(DDManager.dropElement).toBe(mainDrop());
     });
   });
 });

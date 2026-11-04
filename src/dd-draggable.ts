@@ -4,11 +4,12 @@
  */
 
 import { DDManager } from './dd-manager';
+import { Box, DDDroppable } from './dd-droppable';
 import { DragTransform, Utils } from './utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
 import { GridItemHTMLElement, DDUIData, GridStackNode, GridStackPosition, DDDragOpt } from './types';
 import { DDElementHost } from './dd-element';
-import { isTouch, touchend, touchmove, touchstart, pointerdown, cancelPendingTouchDrag, DDTouch } from './dd-touch';
+import { isTouch, touchend, touchmove, touchstart, cancelPendingTouchDrag, DDTouch } from './dd-touch';
 import { GridHTMLElement } from './gridstack';
 
 interface DragOffset {
@@ -148,8 +149,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       dragEl.addEventListener('mousedown', this._mouseDown);
       if (isTouch) {
         dragEl.addEventListener('touchstart', touchstart);
-        dragEl.addEventListener('pointerdown', pointerdown);
-        // dragEl.style.touchAction = 'none'; // not needed unlike pointerdown doc comment
       }
     });
     this.el.classList.remove('ui-draggable-disabled');
@@ -163,7 +162,6 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       dragEl.removeEventListener('mousedown', this._mouseDown);
       if (isTouch) {
         dragEl.removeEventListener('touchstart', touchstart);
-        dragEl.removeEventListener('pointerdown', pointerdown);
       }
     });
     if (!forDestroy) this.el.classList.add('ui-draggable-disabled');
@@ -288,6 +286,68 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
     this.triggerEvent('drag', ev);
   }
 
+  /**
+   * @internal fraction of the dragged item over the given drop target (a sub-grid's whole cell, as its nested .grid-stack
+   * is only as tall as its rows), or undefined while a sub-grid is still sliding into place: its parent grid pushes it
+   * out of our way as we go in or out, and deciding on that mid-way position would flip us right back.
+   */
+  public _overlap(drop: DDDroppable, rect: Box): number | undefined {
+    if (drop.eventEl !== drop.el && drop.eventEl.getAnimations?.().some(a => 'transitionProperty' in a)) return undefined;
+    return DDDroppable.overlap(rect, drop.eventEl.getBoundingClientRect());
+  }
+
+  /**
+   * Which grid (or trash) we're over goes by how much of the item is over it rather than where the cursor is, which depends on
+   * where the item was grabbed (and can't get it above/below a sub-grid flush with its parent's edge, as both share that edge).
+   * Go into the innermost one under the item's center once enough of it is over it (DDDroppable.enterOver - more for a
+   * sub-grid, so coming in at the edge of a nest we go into its outer grid first, as we come out of it), and out once not
+   * enough is (stayOver) to the closest outer grid still having enough of it. Going to a neighbor instead takes clearly
+   * more of it over that one than ours (switchBy).
+   */
+  protected _checkDropTarget(e: MouseEvent): void {
+    const shape = this.helper?.getBoundingClientRect();
+    const rect: Box = shape?.width && shape.height ? shape // else nothing to measure (an unsized helper): go by the cursor
+      : { left: e.clientX, top: e.clientY, right: e.clientX + 1, bottom: e.clientY + 1, width: 1, height: 1 };
+    const cur = DDManager.dropElement;
+
+    // drop targets under the item's center, innermost first - looking inside web components, as elementFromPoint() stops at their host
+    const x = rect.left + rect.width / 2, y = rect.top + rect.height / 2;
+    let el: Element | null | undefined = document.elementFromPoint?.(x, y);
+    while (el?.shadowRoot) {
+      const inner = el.shadowRoot.elementFromPoint?.(x, y);
+      if (!inner || !el.shadowRoot.contains(inner)) break;
+      el = inner;
+    }
+    const under: DDDroppable[] = [];
+    for (; el; el = DDDroppable.parentOf(el)) {
+      const d = DDDroppable.byEventEl.get(el as HTMLElement);
+      if (d && !d.disabled && d._canDrop(this.el)) under.push(d);
+    }
+    const kind = (d: DDDroppable) => !(d.el as GridHTMLElement).gridstack ? 'trash' : d.parentDroppable() ? 'sub' : 'grid';
+    const over = cur ? this._overlap(cur, rect) : 0;
+    if (over === undefined) return; // the one we're in is still sliding into place
+
+    // going in (not to one we're already in, or around): an inner one (or drawn over ours, like a trash bar over the grid) once
+    // enough of us is over it, a neighbor (other grid, or a sibling sub-grid at just half) once clearly more of us is over it
+    // than ours, so we don't flip on the line between them
+    for (const d of under) {
+      if (cur?.within(d)) break;
+      const o = this._overlap(d, rect) ?? 0;
+      const neighbor = cur && !d.within(cur) && DDDroppable.overlap(d.eventEl.getBoundingClientRect(), cur.eventEl.getBoundingClientRect()) < 0.5;
+      const sibling = neighbor && cur.within(d.parentDroppable());
+      if (o >= (sibling ? 0.5 : DDDroppable.enterOver[kind(d)]) && (!neighbor || o >= over + DDDroppable.switchBy)) return d._mouseEnter(e);
+    }
+
+    // going out: once not enough of us is over it (unless a neighbor has most of us, see above) to the closest outer grid
+    // that still has enough of us, if any (so flying out fast doesn't drop it in the parent grid for a moment)
+    if (!cur || over >= DDDroppable.stayOver[kind(cur)]) return;
+    if (under.some(d => !cur.within(d) && (this._overlap(d, rect) ?? 0) >= 0.5)) return;
+    let to = cur.parentDroppable();
+    while (to && !(to._canDrop(this.el) && (this._overlap(to, rect) ?? 1) >= DDDroppable.stayOver[kind(to)])) to = to.parentDroppable();
+    if (to) to._mouseEnter(e);
+    else cur._mouseLeave(e);
+  }
+
   /** @internal called when the main page (after successful mousedown) receives a move event to drag the item around the screen */
   protected _mouseMove(e: MouseEvent): boolean {
     // console.log(`${count++} move ${e.x},${e.y}`)
@@ -304,6 +364,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       } else {
         this._callDrag(e);
       }
+      this._checkDropTarget(e);
       // once the cursor leaves the grid (pushed past its edge, the natural way to scroll) the grid stops
       // listening to 'drag' and never calls updateScrollPosition() again, so check ourself while over empty
       // space, else a quick push past the edge never starts the scroll #3356
