@@ -1,4 +1,4 @@
-# gridstack v14.0.0
+# gridstack v14.1.0
 
 ## Classes
 
@@ -1457,7 +1457,7 @@ or `sizeToContent` gridItem options.
 prepareDragDrop(el, force?): GridStack;
 ```
 
-Defined in: [gridstack.ts:2933](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2933)
+Defined in: [gridstack.ts:2940](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2940)
 
 prepares the element for drag&drop - this is normally called by makeWidget() unless are are delay loading
 
@@ -1478,7 +1478,7 @@ prepares the element for drag&drop - this is normally called by makeWidget() unl
 refreshDragHandles(els): GridStack;
 ```
 
-Defined in: [gridstack.ts:2921](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2921)
+Defined in: [gridstack.ts:2928](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L2928)
 
 Re-scans one or more widget elements for drag handle elements after delayed content
 (React portal, Angular component, etc.) has been rendered inside the item.
@@ -1811,7 +1811,7 @@ is dynamically create and needs to be set later.
 protected triggerEvent(event, target): void;
 ```
 
-Defined in: [gridstack.ts:3212](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3212)
+Defined in: [gridstack.ts:3219](https://github.com/adumesny/gridstack.js/blob/master/src/gridstack.ts#L3219)
 
 call given event callback on our main top-most grid (if we're nested)
 
@@ -4578,6 +4578,7 @@ Method to update the options and return the DD implementation
 | <a id="stayover"></a> `stayOver` | `static` | `object` | `undefined` | - | [dd-droppable.ts:41](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L41) |
 | `stayOver.grid` | `public` | `number` | `0.25` | - | [dd-droppable.ts:41](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L41) |
 | `stayOver.sub` | `public` | `number` | `0.5` | - | [dd-droppable.ts:41](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L41) |
+| `stayOver.trash` | `public` | `number` | `0.4` | - | [dd-droppable.ts:41](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L41) |
 
 ***
 
