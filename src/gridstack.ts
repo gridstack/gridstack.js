@@ -602,8 +602,8 @@ export class GridStack {
     // now add any additional node
     if (nodeToAdd) {
       if (nodeToAdd._moving) {
-        // create an artificial event even for the just created grid to receive this item
-        window.setTimeout(() => Utils.simulateMouseEvent(nodeToAdd._event!, 'mouseenter', subGrid!.el), 0);
+        // it paused mostly over the item to nest in it, so it goes right in (once we're done here)
+        window.setTimeout(() => (subGrid!.el as DDElementHost).ddElement?.ddDroppable?._mouseEnter(nodeToAdd._event!), 0);
       } else {
         subGrid!.makeWidget(node!.el!, node!);
       }
@@ -640,19 +640,13 @@ export class GridStack {
     if (this.parentGridNode) delete this.parentGridNode.subGrid;
     delete this.parentGridNode;
 
-    // create an artificial event for the original grid now that this one is gone (got a leave, but won't get enter)
+    // the dragged item left us, and goes back into the original grid once mostly over it (see DDDraggable._checkDropTarget)
     if (nodeThatRemoved) {
       // _leave() already restored el.gridstackNode to the original pGrid node (via _gridstackNodeOrig), but that
       // original node has grid===pGrid and no _temporaryRemoved, so pGrid's dropover would silently skip it.
-      // Mark it so the simulated mouseenter is actually processed and the item gets a placeholder in pGrid.
+      // Mark it so the item gets a placeholder in pGrid as it comes in.
       const origNode = nodeThatRemoved.el?.gridstackNode as GridStackNode;
       if (origNode && origNode !== nodeThatRemoved) origNode._temporaryRemoved = true;
-      // nodeThatRemoved._event was cleared by cleanupNode() when the item entered the subgrid, so use the
-      // always-current lastDrag from the active DDDraggable instead.
-      window.setTimeout(() => {
-        const dragEvent = DDManager.dragElement?.lastDrag || nodeThatRemoved._event;
-        if (dragEvent) Utils.simulateMouseEvent(dragEvent, 'mouseenter', pGrid.el);
-      }, 0);
     }
   }
 
@@ -3204,13 +3198,13 @@ export class GridStack {
     }
   }
 
-  /** @internal sub-grid node at the given spot that would take the dragged item in (when going by its shape, see DDDraggable._checkDropTarget) */
+  /** @internal sub-grid node at the given spot that would take the dragged item in (once mostly over it, see DDDraggable._checkDropTarget) */
   protected _acceptingSubGrid(node: GridStackNode, p: GridStackPosition = node): GridStackNode | undefined {
     const drag = DDManager.dragElement;
     if (!drag) return undefined;
     return this.engine.collideAll(node, {...node, ...p}).find(n => {
       const drop = (n.subGrid?.el as DDElementHost | undefined)?.ddElement?.ddDroppable;
-      return drop?._byShape() && drop._canDrop(drag.el);
+      return drop && !drop.disabled && drop._canDrop(drag.el);
     });
   }
 

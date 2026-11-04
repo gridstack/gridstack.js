@@ -33,7 +33,6 @@ const touchDelayMoveThreshold = 10;
 export class DDTouch {
   /** set to true while we are handling touch dragging, to prevent accepting browser real mouse events (trusted:true) vs our simulated ones (trusted:false) */
   public static touchHandled?: boolean;
-  public static pointerLeaveTimeout?: number;
   /** @internal timer waiting to see if the user pauses (drag) or moves/releases (scroll/tap) */
   public static touchDelayTimer?: number;
   /** @internal true right before we simulate the delayed mousedown, so DDDraggable knows to show the 'armed' drag feedback */
@@ -96,20 +95,6 @@ function simulateMouseEvent(e: TouchEvent, simulatedType: string) {
   Utils.simulateMouseEvent(e.changedTouches[0], simulatedType);
 }
 
-/**
- * Simulate a mouse event based on a corresponding Pointer event
- * @param {Object} e A pointer event
- * @param {String} simulatedType The corresponding mouse event
- */
-function simulatePointerMouseEvent(e: PointerEvent, simulatedType: string) {
-
-  // Prevent "Ignored attempt to cancel a touchmove event with cancelable=false" errors
-  if (e.cancelable) e.preventDefault();
-
-  // Dispatch the simulated event to the target element
-  Utils.simulateMouseEvent(e, simulatedType);
-}
-
 
 /**
  * Handle the touchstart events - waits for `touchDragDelay` (a pause/long-press) before starting
@@ -168,12 +153,6 @@ export function touchend(e: TouchEvent): void {
 
   restoreContextMenu();
 
-  // cancel delayed leave event when we release on ourself which happens BEFORE we get this!
-  if (DDTouch.pointerLeaveTimeout) {
-    window.clearTimeout(DDTouch.pointerLeaveTimeout);
-    delete DDTouch.pointerLeaveTimeout;
-  }
-
   const wasDragging = !!DDManager.dragElement;
 
   simulateMouseEvent(e, 'mouseup');
@@ -187,41 +166,3 @@ export function touchend(e: TouchEvent): void {
   // Unset the flag to allow other widgets to inherit the touch event
   DDTouch.touchHandled = false;
 }
-
-/**
- * Note we don't get touchenter/touchleave (which are deprecated)
- * see https://stackoverflow.com/questions/27908339/js-touch-equivalent-for-mouseenter
- * so instead of PointerEvent to still get enter/leave and send the matching mouse event.
- */
-export function pointerdown(e: PointerEvent): void {
-  // console.log("pointer down")
-  if (e.pointerType === 'mouse') return;
-  (e.target as HTMLElement).releasePointerCapture(e.pointerId) // <- Important!
-}
-
-export function pointerenter(e: PointerEvent): void {
-  // ignore the initial one we get on pointerdown on ourself
-  if (!DDManager.dragElement) {
-    // console.log('pointerenter ignored');
-    return;
-  }
-  // console.log('pointerenter');
-  if (e.pointerType === 'mouse') return;
-  simulatePointerMouseEvent(e, 'mouseenter');
-}
-
-export function pointerleave(e: PointerEvent): void {
-  // ignore the leave on ourself we get before releasing the mouse over ourself
-  // by delaying sending the event and having the up event cancel us
-  if (!DDManager.dragElement) {
-    // console.log('pointerleave ignored');
-    return;
-  }
-  if (e.pointerType === 'mouse') return;
-  DDTouch.pointerLeaveTimeout = window.setTimeout(() => {
-    delete DDTouch.pointerLeaveTimeout;
-    // console.log('pointerleave delayed');
-    simulatePointerMouseEvent(e, 'mouseleave');
-  }, 10);
-}
-
