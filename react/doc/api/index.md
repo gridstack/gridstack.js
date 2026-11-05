@@ -1,4 +1,4 @@
-# GridStack React Library v14.1.0
+# GridStack React Library v14.1.0-dev
 
 ## Modules
 
