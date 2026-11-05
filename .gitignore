@@ -18,6 +18,7 @@ vue/
 doc/.DS_Store
 .claude/
 .cursor/
+test-results/
 
 !node_modules/
 node_modules/*
