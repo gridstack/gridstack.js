@@ -158,6 +158,7 @@ search for ['gridstack' under NPM](https://www.npmjs.com/search?q=gridstack&rank
 - **Angular**: we ship out of the box an Angular wrapper - see <a href="https://github.com/gridstack/gridstack.js/tree/master/angular" target="_blank">Angular Component</a>.
 - **Angular9**: [lb-gridstack](https://github.com/pfms84/lb-gridstack) Note: very old v0.3 gridstack instance so recommend for **concept ONLY if you wish to use directive instead**. Code has **not been vented** at as I use components.
 - **AngularJS**: [gridstack-angular](https://github.com/kdietrich/gridstack-angular)
+- **Blaze (Meteor)**: [dupontbertrand:gridstack](https://github.com/dupontbertrand/blaze-gridstack)
 - **Ember**: [ember-gridstack](https://github.com/yahoo/ember-gridstack)
 - **knockout**: see [demo](https://gridstackjs.com/demo/knockout.html) using component, but check [custom bindings ticket](https://github.com/gridstack/gridstack.js/issues/465) which is likely better approach.
 - **Rails**: [gridstack-js-rails](https://github.com/randoum/gridstack-js-rails)
