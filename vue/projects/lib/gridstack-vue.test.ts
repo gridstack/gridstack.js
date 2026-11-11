@@ -301,4 +301,45 @@ describe('GridStack Vue wrapper', () => {
 
     expect(document.querySelector('[data-testid="h"]')?.textContent).toBe('5')
   })
+
+  it('keeps item content mounted when change fires while node.el is the drag placeholder (#3459)', async () => {
+    let mounts = 0
+    const Probe = defineComponent({
+      setup() {
+        mounts++
+        return () => h('span', { 'data-testid': 'probe' }, 'hi')
+      },
+    })
+
+    const Root = defineComponent({
+      setup() {
+        const options = {
+          column: 12, cellHeight: 50, margin: 0,
+          children: [{ id: 'p1', x: 0, y: 0, w: 2, h: 2, component: 'P' }],
+        }
+        return () => h(GridStack, { options, components: { P: Probe } })
+      },
+    })
+
+    ;({ app, container } = mountApp(Root))
+    await flush()
+    expect(document.querySelector('[data-testid="probe"]')).not.toBeNull()
+
+    const g = (container.querySelector('.grid-stack') as GridHTMLElement).gridstack!
+    const node = g.engine.nodes[0]
+    const realEl = node.el!
+
+    // what _onStartMoving leaves behind: node.el is the placeholder (no .grid-stack-item-content)
+    node.el = g.placeholder
+    const t = g as unknown as { _triggerChangeEvent(): unknown }
+    node.h = 3
+    node._dirty = true
+    t._triggerChangeEvent()
+    await flush()
+
+    expect(document.querySelector('[data-testid="probe"]')).not.toBeNull()
+    expect(mounts).toBe(1)
+
+    node.el = realEl
+  })
 })

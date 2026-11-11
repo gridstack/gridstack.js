@@ -51,6 +51,9 @@ export const GridStackItem = defineComponent({
       if (!g) return
       const node = Utils.findInGrid(g, props.id, true)
       const cont = (node?.el?.querySelector('.grid-stack-item-content') as HTMLElement | null) ?? null
+      // Mid drag/resize `node.el` is GS's placeholder (no content container); a `change` fired then
+      // must not null the target or the teleport unmounts and the widget loses its state (#3459).
+      if (!cont && node && containerEl.value?.isConnected) return
       containerEl.value = cont
     }
 

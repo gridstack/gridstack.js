@@ -75,7 +75,9 @@ export function GridStackItem({
     const node = Utils.findInGrid(grid, id, true);
     const cont =
       (node?.el?.querySelector(".grid-stack-item-content") as HTMLElement | null) ?? null;
-    setContainer((prev) => (prev === cont ? prev : cont));
+    // Mid drag/resize `node.el` is GS's placeholder (no content container); a `change` fired then
+    // must not null the container or the portal unmounts and the widget loses its state (#3459).
+    setContainer((prev) => (prev === cont ? prev : !cont && node && prev?.isConnected ? prev : cont));
   }, [grid, id, layoutVersion, optsKey]);
 
   // Tracks whether the component is "truly unmounting" vs. Strict Mode double-invoke.
