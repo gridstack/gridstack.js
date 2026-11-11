@@ -1,6 +1,6 @@
 /**
  * dd-draggable.ts 14.1.0-dev
- * Copyright (c) 2021-2025  Alain Dumesny - see GridStack root license
+ * Copyright (c) 2021-2026 Alain Dumesny - see GridStack root license
  */
 
 import { DDManager } from './dd-manager';

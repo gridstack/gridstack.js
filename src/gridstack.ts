@@ -2,7 +2,7 @@
  * GridStack 14.1.0-dev
  * https://gridstackjs.com/
  *
- * Copyright (c) 2021-2025  Alain Dumesny
+ * Copyright (c) 2021-2026 Alain Dumesny
  * see root license https://github.com/gridstack/gridstack.js/tree/master/LICENSE
  */
 import { GridStackEngine } from './gridstack-engine';
