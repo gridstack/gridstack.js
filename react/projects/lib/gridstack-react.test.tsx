@@ -338,6 +338,47 @@ describe("GridStack React wrapper", () => {
     expect(document.querySelector('[data-testid="h"]')?.textContent).toBe("5");
   });
 
+  it("#3459 keeps item content mounted when change fires while node.el is the drag placeholder", async () => {
+    let mounts = 0;
+    function Probe() {
+      useState(() => { mounts++; return 0; });
+      return <span data-testid="probe">hi</span>;
+    }
+
+    await act(async () => {
+      root.render(
+        <GridStack
+          options={{
+            column: 12, cellHeight: 50, margin: 0,
+            children: [{ id: "p1", x: 0, y: 0, w: 2, h: 2, component: "P" }],
+          }}
+          components={{ P: () => <Probe /> }}
+        />
+      );
+    });
+    await act(flush);
+    expect(document.querySelector('[data-testid="probe"]')).not.toBeNull();
+
+    const g = (container.querySelector(".grid-stack") as GridHTMLElement).gridstack as GridStackInstance;
+    const node = g.engine.nodes[0];
+    const realEl = node.el!;
+
+    // what _onStartMoving leaves behind: node.el is the placeholder (no .grid-stack-item-content)
+    node.el = g.placeholder;
+    const t = g as unknown as { _triggerChangeEvent(): unknown };
+    await act(async () => {
+      node.h = 3;
+      node._dirty = true;
+      t._triggerChangeEvent();
+    });
+    await act(flush);
+
+    expect(document.querySelector('[data-testid="probe"]')).not.toBeNull();
+    expect(mounts).toBe(1);
+
+    node.el = realEl;
+  });
+
   it("#2960 useGridStack().removeWidget takes an element, matching core's signature", async () => {
     let api: ReturnType<typeof useGridStack> | undefined;
     function Probe() {

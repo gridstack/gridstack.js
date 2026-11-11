@@ -5,6 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
+- [14.1.1 (TBD)](#1411-tbd)
 - [14.1.0 (2026-11-04)](#1410-2026-11-04)
 - [14.0.0 (2026-09-20)](#1400-2026-09-20)
 - [13.3.0 (2026-09-11)](#1330-2026-09-11)
@@ -147,6 +148,9 @@ Change log
 - [v0.1.0 (2014-11-18)](#v010-2014-11-18)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## 14.1.1 (TBD)
+* fix: [#3459](https://github.com/gridstack/gridstack.js/issues/3459) React/Vue wrappers: a `change` event fired mid drag/resize no longer unmounts the item's content (state lost)
 
 ## 14.1.0 (2026-11-04)
 * feat: [#3451](https://github.com/gridstack/gridstack.js/pull/3451), [#3452](https://github.com/gridstack/gridstack.js/pull/3452) dragging between grids now goes by how much of the item is over a grid (like jquery-ui's `intersect` before v6) rather than where the cursor is. Also make it possible to insert above a nested grid even when parent grid overlapps exactly.
