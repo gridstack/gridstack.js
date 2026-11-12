@@ -47,6 +47,36 @@ describe('gridstack engine:', () => {
     });
   });
 
+  describe('3447 dragging past an overlapping edge >', () => {
+    [
+      {name: 'up', target: {x: 0, y: 0, w: 10, h: 2}, start: {x: 8, y: 2, w: 4, h: 1}, mid: {x: 8, y: 1}, end: {x: 8, y: 0}, targetY: 1},
+      {name: 'down', target: {x: 2, y: 1, w: 10, h: 2}, start: {x: 0, y: 0, w: 4, h: 1}, mid: {x: 0, y: 1}, end: {x: 0, y: 2}, targetY: 3},
+      {name: 'left', target: {x: 0, y: 0, w: 2, h: 10}, start: {x: 2, y: 8, w: 1, h: 4}, mid: {x: 1, y: 8}, end: {x: 0, y: 8}, targetY: 12},
+      {name: 'right', target: {x: 1, y: 2, w: 2, h: 10}, start: {x: 0, y: 0, w: 1, h: 4}, mid: {x: 1, y: 0}, end: {x: 2, y: 0}, targetY: 4},
+    ].forEach(({name, target, start, mid, end, targetY}) => {
+      it(`can drag ${name} when the other axis already overlaps`, () => {
+        e = new GridStackEngine({mode: 'float', column: 12});
+        const other = e.addNode({...target, id: 'target'});
+        const move = e.addNode({...start, id: 'move'});
+        e.cleanNodes().beginUpdate(move);
+        move._moving = true;
+        e.cacheRects(50, 50, 0, 0, 0, 0);
+
+        // Exactly half of the target is still too little to push it.
+        e.moveNodeCheck(move, {...mid, rect: {x: mid.x * 50, y: mid.y * 50, w: start.w * 50, h: start.h * 50}});
+        expect(move).toEqual(expect.objectContaining(start));
+        expect(other).toEqual(expect.objectContaining(target));
+
+        e.moveNodeCheck(move, {...end, rect: {x: end.x * 50, y: end.y * 50, w: start.w * 50, h: start.h * 50}});
+
+        expect(move).toEqual(expect.objectContaining(end));
+        expect(other.y).toBe(targetY);
+        expect(overlaps(e)).toEqual([]);
+        e.endUpdate();
+      });
+    });
+  });
+
   describe('test constructor >', () => {
   
     it('should be setup properly', () => {
