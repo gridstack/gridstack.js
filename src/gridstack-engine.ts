@@ -239,16 +239,16 @@ export class GridStackEngine {
       }
       const r2 = n._rect; // overlapping target
       let yOver = Number.MAX_VALUE, xOver = Number.MAX_VALUE;
-      // depending on which side we started from, compute the overlap % of coverage
-      // (ex: from above/below we only compute the max horizontal line coverage)
-      if (r0.y! < r2.y!) { // from above
+      // Only initially separated axes determine the entry direction. An already-overlapping
+      // axis must not prevent crossing the target midpoint along the other axis.
+      if (r0.y! + r0.h! <= r2.y!) { // from above
         yOver = ((r.y! + r.h!) - r2.y!) / r2.h!;
-      } else if (r0.y! + r0.h! > r2.y! + r2.h!) { // from below
+      } else if (r0.y! >= r2.y! + r2.h!) { // from below
         yOver = ((r2.y! + r2.h!) - r.y!) / r2.h!;
       }
-      if (r0.x! < r2.x!) { // from the left
+      if (r0.x! + r0.w! <= r2.x!) { // from the left
         xOver = ((r.x! + r.w!) - r2.x!) / r2.w!;
-      } else if (r0.x! + r0.w! > r2.x! + r2.w!) { // from the right
+      } else if (r0.x! >= r2.x! + r2.w!) { // from the right
         xOver = ((r2.x! + r2.w!) - r.x!) / r2.w!;
       }
       const over = Math.min(xOver, yOver);
