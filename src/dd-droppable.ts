@@ -41,6 +41,8 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
   public static stayOver = { grid: 0.25, sub: 0.5, trash: 0.4 };
   /** @internal how much more of the dragged item must be over a neighbor grid than the one it's in to switch to it */
   public static switchBy = 0.2;
+  /** @internal edge of a hidden target (eg: collapsed sub-grid), as part of its smaller side, that puts us beside it */
+  public static hiddenEdge = 0.25;
 
   constructor(public el: HTMLElement, public option: DDDroppableOpt = {}) {
     super();
@@ -126,6 +128,7 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
       this.option.out(ev, this._ui(DDManager.dragElement))
     }
     this.triggerEvent('dropout', ev);
+    this.el.classList.remove('ui-droppable-over');
 
     if (DDManager.dropElement === this) {
       delete DDManager.dropElement;
@@ -139,6 +142,12 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
     const area = Math.min(a.width * a.height, b.width * b.height);
     return w > 0 && h > 0 && area > 0 ? (w * h) / area : 0;
+  }
+
+  /** @internal if a's center is inside b, away from its edges (see hiddenEdge) */
+  public static inMiddle(a: Box, b: Box): boolean {
+    const x = a.left + a.width / 2, y = a.top + a.height / 2, m = Math.min(b.width, b.height) * DDDroppable.hiddenEdge;
+    return x > b.left + m && x < b.right - m && y > b.top + m && y < b.bottom - m;
   }
 
   /** @internal the closest droppable above us (the parent grid when we're a sub-grid) */
