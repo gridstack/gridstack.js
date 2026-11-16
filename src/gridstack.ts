@@ -25,6 +25,7 @@ import { DDCallback, DDDropOpt, DDGridStack } from './dd-gridstack';
 import { isTouch } from './dd-touch';
 import { DDManager } from './dd-manager';
 import { DDElementHost } from './dd-element'; /** global instance */
+import { DDDroppable } from './dd-droppable';
 const dd = new DDGridStack;
 
 // export all dependent file as well to make it easier for users to just import the main file
@@ -2631,6 +2632,16 @@ export class GridStack {
         }
       };
 
+      // a hidden (collapsed) sub-grid has no layout to place us by: go in as its first widget, and stay there
+      if (this.el.checkVisibility?.() === false) {
+        if (!node._temporaryRemoved) return;
+        node.x = node.y = 0;
+        delete node.autoPosition;
+        this.engine.nodeBoundFix(node);
+        this._onStartMoving(helper, event, ui, node, cellWidth, cellHeight);
+        return;
+      }
+
       if (node._temporaryRemoved) {
         // A drag preview outside the right edge is not a wider responsive layout.
         // Clamp before nodeBoundFix() can cache it and later override save().
@@ -2643,8 +2654,12 @@ export class GridStack {
         // instead (above still pushes it down, to insert above it)
         const sub = this._acceptingSubGrid(node);
         if (sub) {
-          const dx = (left / cellWidth + node.w! / 2 - (sub.x! + sub.w! / 2)) / sub.w!;
-          const dy = (top / cellHeight + node.h! / 2 - (sub.y! + sub.h! / 2)) / sub.h!;
+          // side by where we're measured from: the grabbed handle's center if any, else ours
+          const drag = DDManager.dragElement, s = drag?._handleBox ? drag._dropShape(event) : undefined;
+          const cx = s ? (s.left + s.width / 2 - rect.left) / cellWidth : left / cellWidth + node.w! / 2;
+          const cy = s ? (s.top + s.height / 2 - rect.top) / cellHeight : top / cellHeight + node.h! / 2;
+          const dx = (cx - (sub.x! + sub.w! / 2)) / sub.w!;
+          const dy = (cy - (sub.y! + sub.h! / 2)) / sub.h!;
           if (Math.abs(dy) >= Math.abs(dx)) {
             if (dy > 0) node.y = sub.y! + sub.h!;
           } else if (dx > 0) {
@@ -3147,7 +3162,7 @@ export class GridStack {
       if (node.x === p.x && node.y === p.y) return; // skip same
       // a sub-grid that would take us isn't something to push out of the way (it'd keep running ahead of us), we go into
       // it once mostly over it instead (see DDDraggable._checkDropTarget) so stay put till then
-      if (this._acceptingSubGrid(node, p)) return;
+      if (this._acceptingSubGrid(node, p, n => !this._pastCollapsed(n, node, event))) return;
       // DON'T skip one we tried as we might have failed because of coverage <50% before
       // if (node._lastTried && node._lastTried.x === x && node._lastTried.y === y) return;
     } else if (event.type === 'resize') {
@@ -3206,13 +3221,23 @@ export class GridStack {
   }
 
   /** @internal sub-grid node at the given spot that would take the dragged item in (once mostly over it, see DDDraggable._checkDropTarget) */
-  protected _acceptingSubGrid(node: GridStackNode, p: GridStackPosition = node): GridStackNode | undefined {
+  protected _acceptingSubGrid(node: GridStackNode, p: GridStackPosition = node, keep?: (n: GridStackNode) => boolean): GridStackNode | undefined {
     const drag = DDManager.dragElement;
     if (!drag) return undefined;
     return this.engine.collideAll(node, {...node, ...p}).find(n => {
-      const drop = (n.subGrid?.el as DDElementHost | undefined)?.ddElement?.ddDroppable;
-      return drop && !drop.disabled && drop._canDrop(drag.el);
+      // by its cell, so a collapsed one (hidden, maybe even unset from n.subGrid) counts too
+      const drop = n.el && DDDroppable.byEventEl.get(n.el);
+      return drop && (drop.el as GridHTMLElement).gridstack && !drop.disabled && drop._canDrop(drag.el) && (!keep || keep(n));
     });
+  }
+
+  /** @internal if we move past this collapsed (hidden) sub-grid like any widget: below us, or above us from its top edge */
+  protected _pastCollapsed(n: GridStackNode, node: GridStackNode, event: Event): boolean {
+    const drop = DDDroppable.byEventEl.get(n.el!)!, drag = DDManager.dragElement!;
+    if (drop.el.checkVisibility?.() !== false) return false;
+    if (n.y! >= node.y! + node.h!) return true;
+    const s = drag._dropShape(event as MouseEvent), b = drop.eventEl.getBoundingClientRect();
+    return s.top + s.height / 2 <= b.top + Math.min(b.width, b.height) * DDDroppable.hiddenEdge;
   }
 
   /** call given event callback on our main top-most grid (if we're nested) */

@@ -7,7 +7,7 @@ import { DDManager } from './dd-manager';
 import { Box, DDDroppable } from './dd-droppable';
 import { DragTransform, Utils } from './utils';
 import { DDBaseImplement, HTMLElementExtendOpt } from './dd-base-impl';
-import { GridItemHTMLElement, DDUIData, GridStackNode, GridStackPosition, DDDragOpt } from './types';
+import { GridItemHTMLElement, DDUIData, GridStackNode, GridStackPosition, DDDragOpt, Rect } from './types';
 import { DDElementHost } from './dd-element';
 import { isTouch, touchend, touchmove, touchstart, cancelPendingTouchDrag, DDTouch } from './dd-touch';
 import { GridHTMLElement } from './gridstack';
@@ -65,6 +65,10 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
   };
   /** @internal element we bound the touch handlers to in _mouseDown(), so _mouseUp() can un-bind the same one */
   protected _touchTarget?: HTMLElement;
+  /** @internal the grabbed handle's spot in the widget (px), set at drag start, see _getHandleBox() */
+  public _handleBox?: Rect;
+  /** @internal smallest the handle drop targets are measured by can be, as a fraction of the widget each way */
+  public static minDropShape = 0.1;
   /** @internal how far the helper's containing block has slid since dragstart.
    * A transform on an ancestor makes IT - not the viewport - the containing block for our
    * position:fixed helper, so the left/top we write are relative to that element, and it scrolls
@@ -293,7 +297,40 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
    */
   public _overlap(drop: DDDroppable, rect: Box): number | undefined {
     if (drop.eventEl !== drop.el && drop.eventEl.getAnimations?.().some(a => 'transitionProperty' in a)) return undefined;
-    return DDDroppable.overlap(rect, drop.eventEl.getBoundingClientRect());
+    const b = drop.eventEl.getBoundingClientRect();
+    // a hidden one (eg: collapsed sub-grid) is a single slot, like a folder: all in from its middle, out at its edges
+    if (drop.el.checkVisibility?.() === false) return DDDroppable.inMiddle(rect, b) ? 1 : 0;
+    return DDDroppable.overlap(rect, b);
+  }
+
+  /** @internal what's measured against drop targets (screen px): the grabbed handle (see _getHandleBox), the widget, else the cursor */
+  public _dropShape(e: MouseEvent): Box {
+    const s = this.helper?.getBoundingClientRect();
+    if (!s?.width || !s.height) return { left: e.clientX, top: e.clientY, right: e.clientX + 1, bottom: e.clientY + 1, width: 1, height: 1 };
+    const b = this._handleBox;
+    if (!b) return s;
+    const left = s.left + b.left, top = s.top + b.top;
+    return { left, top, width: b.width, height: b.height, right: left + b.width, bottom: top + b.height };
+  }
+
+  /**
+   * @internal the grabbed handle's spot in the widget (px), so a widget dragged by a header goes where that is rather than mostly
+   * past an edge. Grown to at least minDropShape of the widget each way (a tiny handle isn't much to hit), kept inside it.
+   */
+  protected _getHandleBox(): Rect | undefined {
+    const target = this.mouseDownEvent?.target as Node | undefined;
+    const handle = target && this.dragEls.find(h => h !== this.el && h.contains(target));
+    if (!handle) return undefined;
+    const i = this.el.getBoundingClientRect(), h = handle.getBoundingClientRect();
+    if (!h.width || !h.height) return undefined;
+    // grow around its center, then slide back inside the widget
+    const fit = (start: number, size: number, max: number): [number, number] => {
+      const s = Math.min(max, Math.max(size, max * DDDraggable.minDropShape));
+      return [Math.max(0, Math.min(max - s, start - (s - size) / 2)), s];
+    };
+    const [left, width] = fit(h.left - i.left, h.width, i.width);
+    const [top, height] = fit(h.top - i.top, h.height, i.height);
+    return { left, top, width, height };
   }
 
   /**
@@ -305,9 +342,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
    * more of it over that one than ours (switchBy).
    */
   protected _checkDropTarget(e: MouseEvent): void {
-    const shape = this.helper?.getBoundingClientRect();
-    const rect: Box = shape?.width && shape.height ? shape // else nothing to measure (an unsized helper): go by the cursor
-      : { left: e.clientX, top: e.clientY, right: e.clientX + 1, bottom: e.clientY + 1, width: 1, height: 1 };
+    const rect = this._dropShape(e);
     const cur = DDManager.dropElement;
 
     // drop targets under the item's center, innermost first - looking inside web components, as elementFromPoint() stops at their host
@@ -377,6 +412,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       Utils.pauseIframePointerEvents(true);
       this.el.classList.remove('ui-draggable-armed');
       DDManager.dragElement = this;
+      this._handleBox = this._getHandleBox(); // before the helper moves
       // if we're dragging an actual grid item, set the current drop as the grid (to detect enter/leave)
       const grid = this.el.gridstackNode?.grid;
       if (grid) {
@@ -429,6 +465,8 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
       document.removeEventListener('scroll', this._updateCBDrift, true);
       this._cbDrift = { dx: 0, dy: 0 };
 
+      delete this._handleBox;
+      DDManager.dropElement?.el.classList.remove('ui-droppable-over');
       // reset the drop target if dragging over ourself (already parented, just moving during stop callback below)
       if (DDManager.dropElement?.el === this.el.parentElement) {
         delete DDManager.dropElement;
@@ -483,6 +521,7 @@ export class DDDraggable extends DDBaseImplement implements HTMLElementExtendOpt
         .setAnimation();
       n._moving = true;
       this.dragOffset = this._getDragOffset(this.lastDrag, n.el!, this.helperContainment);
+      this._handleBox = this._getHandleBox();
       this.helper!.style.width = this.dragOffset.width + 'px';
       this.helper!.style.height = this.dragOffset.height + 'px';
       Utils.swap(n._orig, 'w', 'h');

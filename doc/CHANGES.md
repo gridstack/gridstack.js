@@ -151,6 +151,9 @@ Change log
 
 ## 14.1.1 (TBD)
 * fix: [#3459](https://github.com/gridstack/gridstack.js/issues/3459) React/Vue wrappers: a `change` event fired mid drag/resize no longer unmounts the item's content (state lost)
+* feat: [#3463](https://github.com/gridstack/gridstack.js/pull/3463) drop target goes by the grabbed handle (min 10%) rather than the whole widget, so widgets dragged by a header follow the mouse more closely
+* feat: a hidden (collapsed) sub-grid works like a folder: the widget goes in (as its first widget) from its middle, and beside it near its edges, so you can insert between collapsed ones
+* fix: `ui-droppable-over` class is now removed when the widget leaves or drops
 
 ## 14.1.0 (2026-11-04)
 * feat: [#3451](https://github.com/gridstack/gridstack.js/pull/3451), [#3452](https://github.com/gridstack/gridstack.js/pull/3452) dragging between grids now goes by how much of the item is over a grid (like jquery-ui's `intersect` before v6) rather than where the cursor is. Also make it possible to insert above a nested grid even when parent grid overlapps exactly.

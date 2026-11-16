@@ -208,6 +208,7 @@ describe('DDDroppable', () => {
         
         expect(DDManager.dropElement).toBeUndefined();
         expect(droppable.option.out).toHaveBeenCalled();
+        expect(element.classList.contains('ui-droppable-over')).toBe(false);
       });
 
       it('should not handle mouse leave when not the current drop element', () => {

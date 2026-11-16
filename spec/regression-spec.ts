@@ -1438,6 +1438,129 @@ describe('regression >', () => {
       expect(DDManager.dropElement).toBe(subDrop());
     });
 
+    it('drops into a hidden (collapsed) sub-grid as its first widget, which its parent does not push out of the way', () => {
+      main.addWidget({x: 6, y: 0, w: 6, h: 4, id: 'g2', subGridOpts: {acceptWidgets: true, children: [{x: 0, y: 0, id: 'j'}]}});
+      const g2 = main.engine.nodes.find(n => n.id === 'g2')!, sub2 = g2.subGrid!, sub2Drop = sub2.el.ddElement!.ddDroppable!;
+      const cell2Box = box(500, 100, 400, 400);
+      vi.spyOn(g2.el!, 'getBoundingClientRect').mockImplementation(() => cell2Box);
+      // a hidden grid isn't hit itself, only its cell (eg: the section header)
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) =>
+        inside(cellBox, x, y) ? sub.el : inside(cell2Box, x, y) ? g2.el! : inside(mainBox, x, y) ? main.el : document.body;
+      (sub2.el as unknown as {checkVisibility: () => boolean}).checkVisibility = () => false; // jsdom has no layout
+      delete g2.subGrid; // as an app may do while it's collapsed
+
+      moveTo(150, 40); // out to the parent
+      const accepting = (main as unknown as { _acceptingSubGrid(n: GridStackNode, p: object): GridStackNode | undefined })._acceptingSubGrid;
+      expect(accepting.call(main, main.engine.nodes.find(n => n.id === 'i')!, {x: 6, y: 0})).toBe(g2);
+      moveTo(650, 200); // on its middle
+      expect(DDManager.dropElement).toBe(sub2Drop);
+      expect(sub2.el.classList.contains('ui-droppable-over')).toBe(true);
+      const yOf = (id: string) => sub2.engine.nodes.find(n => n.id === id)?.y;
+      expect([yOf('i'), yOf('j')]).toEqual([0, 1]);
+      moveTo(150, 40); // out again
+      expect(sub2.el.classList.contains('ui-droppable-over')).toBe(false);
+      moveTo(650, 200);
+      sub2Drop.drop(new MouseEvent('mouseup'));
+      expect(item.parentElement).toBe(sub2.el);
+      expect([yOf('i'), yOf('j')]).toEqual([0, 1]);
+    });
+
+    it('goes into a hidden (collapsed) sub-grid from its middle only, so near its edges it goes in between instead', () => {
+      // two collapsed ones stacked, as tall as the widget: some of it is always over one or the other
+      const hidden = (y: number, b: DOMRect) => {
+        const n = main.addWidget({x: 6, y, w: 6, h: 1, subGridOpts: {acceptWidgets: true}}).gridstackNode!;
+        vi.spyOn(n.el!, 'getBoundingClientRect').mockImplementation(() => b);
+        (n.subGrid!.el as unknown as {checkVisibility: () => boolean}).checkVisibility = () => false; // jsdom has no layout
+        return n;
+      };
+      const pBox = box(500, 100, 400, 100), sBox = box(500, 200, 400, 100); // middles at y 125-175 and 225-275
+      const p = hidden(0, pBox), s = hidden(1, sBox);
+      const pDrop = p.subGrid!.el.ddElement!.ddDroppable!, sDrop = s.subGrid!.el.ddElement!.ddDroppable!;
+      (document as unknown as {elementFromPoint: (x: number, y: number) => Element}).elementFromPoint = (x, y) =>
+        inside(cellBox, x, y) ? sub.el : inside(pBox, x, y) ? p.el! : inside(sBox, x, y) ? s.el! : inside(mainBox, x, y) ? main.el : document.body;
+
+      moveTo(150, 40); // out to the parent
+      moveTo(650, 200); // centered on the lower one
+      expect(DDManager.dropElement).toBe(sDrop);
+      moveTo(650, 160); // center on its top edge (60% of the widget still over it): in between, in the parent
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(650, 200);
+      moveTo(650, 125); // its top edge to the upper one's bottom edge: in between too, rather than straight in the upper one
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(650, 100); // centered on the upper one
+      expect(DDManager.dropElement).toBe(pDrop);
+    });
+
+    it('moves past a collapsed sub-grid in its parent like any widget, but into it from its middle', () => {
+      vi.spyOn(main, 'cellWidth').mockReturnValue(800 / 12);
+      vi.spyOn(main, 'getCellHeight').mockReturnValue(100);
+      main.update(cell, {h: 1}); // collapsed: 1 row, its middle at y 125-175 while at the top
+      cellBox = box(100, 100, 400, 100);
+      (sub.el as unknown as {checkVisibility: () => boolean}).checkVisibility = () => false;
+      (sub as unknown as { _onStartMoving(...a: unknown[]): void })._onStartMoving(item, new Event('dragstart'), {position: {top: 0, left: 0}}, sub.engine.nodes[0], 66, 100);
+      moveTo(150, 40); // into the parent above it
+      const g = main.engine.nodes.find(n => n.id === 'g')!, i = main.engine.nodes.find(n => n.id === 'i')!;
+      expect([i.y, g.y]).toEqual([0, 1]);
+      // the parent's drag handling, the widget drawn there (top relative to the grid)
+      const dragTo = (top: number) => {
+        vi.spyOn(self().helper!, 'getBoundingClientRect').mockReturnValue(box(150, 100 + top, 100, 100));
+        (main as unknown as { _dragOrResize(...a: unknown[]): void })
+          ._dragOrResize(item, {type: 'drag', target: item}, {position: {left: 0, top}}, i, 800 / 12, 100);
+      };
+      dragTo(80); // down onto it: past it
+      expect([g.y, i.y]).toEqual([0, 1]);
+      dragTo(30); // back up, center on its middle: stay below it (going in)
+      expect([g.y, i.y]).toEqual([0, 1]);
+      dragTo(-30); // center on its top edge: above it
+      expect(g.y).toBe(1);
+      expect(i.y).toBeLessThan(1);
+    });
+
+    it('goes by the grabbed handle, so a tall widget leaves by its header', () => {
+      mainBox = box(100, 0, 800, 500); // room above the sub-grid
+      moveTo(150, 80); // 80% of the widget still over the sub-grid
+      expect(DDManager.dropElement).toBe(subDrop());
+      const content = item.querySelector<HTMLElement>('.grid-stack-item-content')!; // the handle
+      vi.spyOn(item, 'getBoundingClientRect').mockReturnValue(box(150, 150, 100, 100));
+      vi.spyOn(content, 'getBoundingClientRect').mockReturnValue(box(150, 150, 100, 20));
+      const d = dd as unknown as { mouseDownEvent: object, _handleBox?: object, _getHandleBox(): object };
+      d.mouseDownEvent = {target: content};
+      d._handleBox = d._getHandleBox();
+      expect(d._handleBox).toEqual({left: 0, top: 0, width: 100, height: 20});
+      moveTo(150, 81); // the handle is out
+      expect(DDManager.dropElement).toBe(mainDrop());
+    });
+
+    it('grows a small handle to 10% of the widget each way, kept inside it', () => {
+      const content = item.querySelector<HTMLElement>('.grid-stack-item-content')!;
+      const d = dd as unknown as { mouseDownEvent: object, _getHandleBox(): object | undefined };
+      d.mouseDownEvent = {target: content};
+      vi.spyOn(item, 'getBoundingClientRect').mockReturnValue(box(0, 0, 200, 400));
+      const handleAt = (b: DOMRect) => { vi.spyOn(content, 'getBoundingClientRect').mockReturnValue(b); return d._getHandleBox(); };
+      expect(handleAt(box(0, 0, 200, 20))).toEqual({left: 0, top: 0, width: 200, height: 40}); // header: taller, down from the top
+      expect(handleAt(box(90, 190, 4, 4))).toEqual({left: 82, top: 172, width: 20, height: 40}); // grip: around its center
+      expect(handleAt(box(196, 396, 4, 4))).toEqual({left: 180, top: 360, width: 20, height: 40}); // in the corner: slid back inside
+      expect(handleAt(box(0, 0, 0, 0))).toBeUndefined(); // nothing to measure: the whole widget
+    });
+
+    it('comes out of a sub-grid on the side its grabbed handle is, not the widget center', () => {
+      vi.spyOn(main, 'cellWidth').mockReturnValue(800 / 12);
+      vi.spyOn(main, 'getCellHeight').mockReturnValue(100);
+      vi.spyOn(sub, 'getCellHeight').mockReturnValue(100);
+      main.mode('float');
+      main.update(cell, {y: 1, h: 2}); // rows 1-2, center at 2
+      cellBox = box(100, 100, 400, 200);
+      mainBox = box(100, 0, 800, 500);
+      sub.update(item, {w: 6, h: 3});
+      (sub as unknown as { _onStartMoving(...a: unknown[]): void })._onStartMoving(item, new Event('dragstart'), {position: {top: 0, left: 0}}, sub.engine.nodes[0], 66, 100);
+      dd._handleBox = {left: 0, top: 0, width: 400, height: 60}; // its top 60px
+      vi.spyOn(self().helper!, 'getBoundingClientRect').mockReturnValue(box(100, 60, 400, 300)); // center below the sub-grid's, handle above
+      self()._checkDropTarget(new MouseEvent('mousemove'));
+      const g = main.engine.nodes.find(n => n.id === 'g')!, i = main.engine.nodes.find(n => n.id === 'i')!;
+      expect(DDManager.dropElement).toBe(mainDrop());
+      expect(i.y).toBeLessThan(g.y!); // above it (by the widget center, it'd be below)
+    });
+
     it('coming out of a sub-grid below or beside it lands there in the parent, not above it (pushed out of the way)', () => {
       vi.spyOn(main, 'cellWidth').mockReturnValue(800 / 12);
       vi.spyOn(main, 'getCellHeight').mockReturnValue(100);
