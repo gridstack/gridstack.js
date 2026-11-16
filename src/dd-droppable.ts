@@ -136,12 +136,16 @@ export class DDDroppable extends DDBaseImplement implements HTMLElementExtendOpt
     }
   }
 
-  /** @internal fraction (0-1) of the smaller box that is covered by the intersection of the two */
+  /**
+   * @internal how much (0-1) the two boxes overlap, each way by the smaller of their sides there - so a tall narrow item
+   * spanning a short wide sub-grid's whole height is all over it (as much as can fit) rather than stuck at their height ratio.
+   * Same as the part of the smaller box covered, when one box is no bigger than the other either way.
+   */
   public static overlap(a: Box, b: Box): number {
     const w = Math.min(a.right, b.right) - Math.max(a.left, b.left);
     const h = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
-    const area = Math.min(a.width * a.height, b.width * b.height);
-    return w > 0 && h > 0 && area > 0 ? (w * h) / area : 0;
+    const sw = Math.min(a.width, b.width), sh = Math.min(a.height, b.height);
+    return w > 0 && h > 0 && sw > 0 && sh > 0 ? (w / sw) * (h / sh) : 0;
   }
 
   /** @internal if a's center is inside b, away from its edges (see hiddenEdge) */
