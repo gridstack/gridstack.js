@@ -5,7 +5,7 @@ Change log
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [14.1.1 (TBD)](#1411-tbd)
+- [14.1.1 (2026-11-16)](#1411-2026-11-16)
 - [14.1.0 (2026-11-04)](#1410-2026-11-04)
 - [14.0.0 (2026-09-20)](#1400-2026-09-20)
 - [13.3.0 (2026-09-11)](#1330-2026-09-11)
