@@ -16,7 +16,7 @@
   },
   "homepage": "http://gridstackjs.com",
   "dependencies": {
-    "gridstack": "14.1.0"
+    "gridstack": "14.1.1"
   },
   "devDependencies": {
     "prettier": "3.2.5"
