@@ -1,4 +1,4 @@
-# gridstack v14.1.0-dev
+# gridstack v14.1.1
 
 ## Classes
 
@@ -4435,7 +4435,7 @@ Subclasses should override to perform additional cleanup.
 drop(e): void;
 ```
 
-Defined in: [dd-droppable.ts:176](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L176)
+Defined in: [dd-droppable.ts:180](https://github.com/adumesny/gridstack.js/blob/master/src/dd-droppable.ts#L180)
 
 item is being dropped on us - called by the drag mouseup handler - this calls the client drop event
 
