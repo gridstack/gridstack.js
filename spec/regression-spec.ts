@@ -1352,6 +1352,16 @@ describe('regression >', () => {
       expect(DDManager.dropElement).toBeUndefined();
     });
 
+    it('goes into a sub-grid shorter than the item once it spans its whole height #3198', () => {
+      cellBox = box(100, 100, 400, 50); // half the item's height
+      moveTo(150, 300); // out to the parent
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(150, 120); // over 60% of its height
+      expect(DDManager.dropElement).toBe(mainDrop());
+      moveTo(150, 75); // over all of it (half the item): as much as can fit
+      expect(DDManager.dropElement).toBe(subDrop());
+    });
+
     it('enters the outermost grid once half of the item is over it', () => {
       leaveAll();
       moveTo(150, 30); // 30%
