@@ -28,7 +28,7 @@ export const gridDefaults: GridStackOptions = {
   placeholderClass: 'grid-stack-placeholder',
   placeholderText: '',
   removableOptions: { accept: 'grid-stack-item', decline: 'grid-stack-non-removable'},
-  resizable: { handles: 'se' },
+  resizable: { handles: 'se', scroll: true },
   rtl: 'auto',
 
   // **** same as not being set ****
@@ -356,7 +356,7 @@ export interface GridStackOptions {
   /** placeholder default content (default?: '') */
   placeholderText?: string;
 
-  /** allows to override UI resizable options. default is { handles: 'se', autoHide: true on desktop, false on mobile } */
+  /** allows to override UI resizable options. default is { handles: 'se', scroll: true, autoHide: true on desktop, false on mobile } */
   resizable?: DDResizeOpt;
 
   /**
@@ -501,6 +501,8 @@ export interface GridStackWidget extends GridStackPosition {
 export interface DDResizeOpt {
   /** do resize handle hide by default until mouse over. default: true on desktop, false on mobile */
   autoHide?: boolean;
+  /** auto-scroll when resizing near the container edges. default to `true` */
+  scroll?: boolean;
   /**
    * sides where you can resize from (ex: 'e, se, s, sw, w') - default 'se' (south-east)
    * Note: it is not recommended to resize from the top sides as weird side effect may occur.

@@ -3168,7 +3168,9 @@ export class GridStack {
     } else if (event.type === 'resize') {
       if ((p.x ?? 0) < 0) return;
       // Scrolling page if needed
-      Utils.updateScrollResize(event, el, cellHeight);
+      if (this.opts.resizable?.scroll !== false) {
+        Utils.updateScrollResize(event, el, cellHeight);
+      }
 
       // get new size - only re-derive the dimension(s) the active handle actually changes.
       // re-deriving an untouched dimension from measured pixels is lossy (subpixel/rounding noise)

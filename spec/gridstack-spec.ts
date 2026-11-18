@@ -1520,6 +1520,30 @@ describe('gridstack >', () => {
       expect(resizestop).toHaveBeenCalled();
       expect(find('gsItem1')).toBeDefined();
     });
+
+    it.each([undefined, true, false])('should respect resizable.scroll=%s independently of draggable.scroll >', (scroll) => {
+      grid = GridStack.init({
+        cellHeight: 80,
+        draggable: {scroll: false},
+        ...(scroll === undefined ? {} : {resizable: {scroll}})
+      });
+      const updateScrollResize = vi.spyOn(Utils, 'updateScrollResize').mockImplementation(() => {});
+      const handle = findEl('gsItem1').querySelector('.ui-resizable-se')!;
+
+      try {
+        mouse('mousedown', 100, 100, handle);
+        mouse('mousemove', 160, 170);
+        mouse('mouseup', 160, 170);
+
+        if (scroll === false) expect(updateScrollResize).not.toHaveBeenCalled();
+        else expect(updateScrollResize).toHaveBeenCalled();
+        expect(find('gsItem1').w).toBeGreaterThan(4);
+        expect(find('gsItem1').h).toBeGreaterThan(2);
+      } finally {
+        grid.destroy();
+        updateScrollResize.mockRestore();
+      }
+    });
   });
 
   describe('GridStack.setupDragIn() >', () => {
