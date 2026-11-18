@@ -287,6 +287,8 @@ GridStack.init({
 });
 ```
 
+Set `resizable: { scroll: false }` to disable auto-scrolling during resizing (default: `true`), independently of `draggable.scroll`.
+
 ## Touch devices support
 
 gridstack v6+ now support mobile out of the box, with the addition of native touch event (along with mouse event) for drag&drop and resize.
