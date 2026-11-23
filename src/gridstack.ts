@@ -2621,10 +2621,11 @@ export class GridStack {
         helper.style.transformOrigin = `0px 0px`
       }
 
-      let { top, left } = helper.getBoundingClientRect();
+      const helperRect = helper.getBoundingClientRect();
       const rect = this.el.getBoundingClientRect();
-      left -= rect.left;
-      top -= rect.top;
+      // Match internal dragging: RTL layout coordinates start at the grid's right edge.
+      const left = this.opts.rtl ? rect.right - helperRect.right : helperRect.left - rect.left;
+      const top = helperRect.top - rect.top;
       const ui: DDUIData = {
         position: {
           top: top * this.dragTransform.xScale,
